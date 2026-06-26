@@ -112,7 +112,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-white border border-gray-200/50 rounded-xl p-3 sm:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] relative group/card overflow-visible transition-all duration-200"
+      className="bg-white border border-gray-100 rounded p-3 sm:p-5 shadow-[0_1px_4px_rgba(0,0,0,0.025)] relative group/card overflow-visible transition-all duration-200"
     >
       {isExpanded && !isModal && (
         <button 
@@ -148,10 +148,10 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
             {/* Core Content Stack - Tightly grouped for precise spacing */}
             <div className="flex flex-col gap-0.5 items-start w-full">
               {/* Compressed Metadata Section */}
-              <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/50 rounded-xl border border-gray-100/50">
+              <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/60 rounded">
                 {/* Row 1: Primary Identity (Retailer & Cuisine) */}
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 justify-start">
-                  <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest bg-white px-1.5 py-0.5 rounded border border-gray-200/50">
+                  <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest bg-white/70 px-1.5 py-0.5 rounded">
                     {meal.cuisine}
                   </span>
                   {meal.retailer && (
@@ -165,7 +165,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
                   {(meal.costPerPortion || meal.price) && (
                     <Tooltip text="Estimated price for one adult portion">
-                      <span className="cursor-help whitespace-nowrap bg-white px-1.5 py-0.5 rounded border border-gray-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                      <span className="cursor-help whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
                         {meal.costPerPortion || meal.price} pp
                       </span>
                     </Tooltip>
@@ -177,23 +177,23 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                   )}
                   {(meal.caloriesPerPortion || meal.calories) && (
                     <Tooltip text="Estimated calories for one adult portion">
-                      <span className="cursor-help whitespace-nowrap bg-white px-1.5 py-0.5 rounded border border-gray-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                      <span className="cursor-help whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
                         {meal.caloriesPerPortion || meal.calories} kcal pp
                       </span>
                     </Tooltip>
                   )}
                   {meal.totalTime && (
-                    <span className="whitespace-nowrap bg-white px-1.5 py-0.5 rounded border border-gray-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                    <span className="whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
                       {meal.totalTime} mins
                     </span>
                   )}
                   {meal.saladType && meal.saladType !== 'none' && (
-                    <span className="text-neutral-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white px-1.5 py-0.5 rounded border border-gray-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                    <span className="text-neutral-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
                       🥗 {meal.saladType}
                     </span>
                   )}
                   {meal.isAirFryerFriendly && (
-                    <span className="bg-orange-50 text-orange-700 border border-orange-100 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
+                    <span className="bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
                       ⚡ Air Fryer
                     </span>
                   )}
@@ -202,10 +202,10 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               
               <div className="w-full flex flex-col gap-0 items-start">
                 <RetailerCtaLink product={meal} />
-                <div className="w-full border-t border-gray-100/30 sm:border-gray-100/60 my-0.5 sm:my-1" />
+                <div className="w-full h-px bg-gray-100/70 my-0.5 sm:my-1" />
               </div>
               
-              <div className="w-full bg-white rounded-xl">
+              <div className="w-full bg-white rounded">
                 <RecipeActionRow 
                   recipe={{ ...meal, ...enrichedData, requestedServings }}
                   isSaved={isSaved}

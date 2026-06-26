@@ -1025,18 +1025,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             animate={{ opacity: 1, y: 0 }} 
             className="space-y-6"
           >
-            <div id="subscription-section" className="bg-white border border-gray-100 rounded-lg p-5 sm:p-6 shadow-xs space-y-4">
+            <div id="subscription-section" className="bg-white rounded p-5 sm:p-6 shadow-xs space-y-4">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Subscription</h3>
                 {(accessStatus === 'paid' || accessStatus === 'trial') && (
-                  <div className="flex items-center gap-1.5 text-green-600 font-bold text-[11px] bg-green-50 px-2.5 py-1 rounded-lg border border-green-100/50 uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5 text-green-600 font-bold text-[11px] bg-green-50 px-2.5 py-1 rounded uppercase tracking-wider">
                      <ShieldCheck size={14} strokeWidth={2.5} />
                      <span>Account active</span>
                   </div>
                 )}
               </div>
 
-              <div className="bg-gray-50/50 border border-gray-100 rounded-xl p-5 space-y-4">
+              <div className="bg-gray-50/50 rounded p-5 space-y-4">
                 {(accessStatus === 'read_only') ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-stretch pt-2">
                     <div className="space-y-4 flex flex-col justify-center">
@@ -1077,7 +1077,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className={`p-4 border rounded-lg space-y-1 ${accessStatus === 'paid' ? 'bg-emerald-50/20 border-emerald-100' : 'bg-blue-50/20 border-blue-100'}`}>
+                    <div className={`p-4 rounded space-y-1 ${accessStatus === 'paid' ? 'bg-emerald-50/40' : 'bg-blue-50/40'}`}>
                       <p className="text-[13.5px] text-gray-900 font-bold">
                         {accessStatus === 'paid' 
                           ? 'Your subscription is currently active!' 
@@ -1091,7 +1091,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     </div>
 
                     {accessStatus === 'trial' && (
-                      <div className="p-4 bg-white border border-gray-100 rounded-lg space-y-3">
+                      <div className="p-4 bg-white rounded space-y-3">
                         <div className="space-y-1">
                           <p className="text-[13px] text-gray-900 font-bold leading-snug">
                             Subscribe before your trial ends
@@ -1108,7 +1108,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                       <button
                         onClick={handleManageBilling}
                         disabled={isPortalLoading}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-900 text-[12px] font-bold rounded-lg hover:bg-gray-50 transition-all font-bold disabled:opacity-50"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 text-[12px] font-bold rounded hover:bg-gray-50 transition-all font-bold disabled:opacity-50"
                       >
                         {isPortalLoading ? (
                           <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
