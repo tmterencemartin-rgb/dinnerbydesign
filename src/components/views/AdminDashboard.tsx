@@ -174,9 +174,11 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const filteredUsers = users.filter(user => {
+    const email = user.email || '';
+    const displayName = user.displayName || '';
     const matchesSearch = 
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      user.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      email.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.uid.includes(searchTerm);
     
     const status = user.subscription?.accessStatus || user.accessStatus || 'trial';
@@ -185,10 +187,39 @@ export const AdminDashboard: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const formatDate = (date: any) => {
-    if (!date) return 'N/A';
+  const toDate = (date: any): Date | null => {
+    if (!date) return null;
     const d = date instanceof Timestamp ? date.toDate() : new Date(date);
+    return Number.isNaN(d.getTime()) ? null : d;
+  };
+
+  const formatDate = (date: any) => {
+    const d = toDate(date);
+    if (!d) return 'N/A';
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
+  const formatDateTime = (date: any) => {
+    const d = toDate(date);
+    if (!d) return 'N/A';
+    return d.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+  };
+
+  const formatShortId = (id?: string | null) => id ? `${id.substring(0, 16)}...` : 'N/A';
+
+  const getTrialEndDate = (user: UserProfile) => {
+    if (user.subscription?.trialEnd) return user.subscription.trialEnd;
+    const trialStart = toDate(user.trialStartedAt || user.createdAt);
+    if (!trialStart) return null;
+    const trialEnd = new Date(trialStart);
+    trialEnd.setDate(trialEnd.getDate() + 7);
+    return trialEnd;
+  };
+
+  const getPeriodLabel = (user: UserProfile) => {
+    const status = user.subscription?.subscriptionStatus;
+    if (status === 'canceled' || status === 'unpaid' || status === 'paused') return 'Ends';
+    return 'Renews';
   };
 
   const getStatusBadge = (user: UserProfile) => {
@@ -288,93 +319,131 @@ export const AdminDashboard: React.FC = () => {
                 <tr className="bg-gray-50 border-b border-gray-100">
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">User</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Status</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Billing Cycle</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Stripe</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Key Dates</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Support Notes</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filteredUsers.map((user) => (
-                  <tr key={user.uid} className="hover:bg-gray-50 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-gray-900 text-sm leading-tight">{user.displayName || user.email || 'User'}</span>
-                        <span className="text-gray-400 text-xs font-mono mt-0.5">{user.email || 'No email'}</span>
-                        <span className="text-[10px] text-gray-300 font-mono mt-1 opacity-0 group-hover:opacity-100 transition-opacity">ID: {user.uid}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      {getStatusBadge(user)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col gap-1">
-                        {user.subscription?.stripeCustomerId ? (
-                          <div className="flex items-center gap-1.5 text-gray-600">
-                            <CreditCard className="w-3.5 h-3.5" />
-                            <span className="text-xs font-medium font-mono">Stripe User</span>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-gray-400 italic">None</span>
-                        )}
-                        {user.subscription?.stripeSubscriptionId && (
-                          <span className="text-[10px] text-gray-400 font-mono">ID: {user.subscription.stripeSubscriptionId.substring(0, 12)}...</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                          <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                          <span>Joined: {formatDate(user.createdAt)}</span>
+                {filteredUsers.map((user) => {
+                  const subscription = user.subscription;
+                  const trialEnd = getTrialEndDate(user);
+                  const hasStripe = !!subscription?.stripeCustomerId;
+                  const confirmationSent = !!user.subscriptionConfirmationEmailSent;
+
+                  return (
+                    <tr key={user.uid} className="hover:bg-gray-50 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-gray-900 text-sm leading-tight">{user.displayName || user.email || 'User'}</span>
+                          <span className="text-gray-400 text-xs font-mono mt-0.5">{user.email || 'No email'}</span>
+                          <span className="text-[10px] text-gray-300 font-mono mt-1 opacity-0 group-hover:opacity-100 transition-opacity">UID: {user.uid}</span>
                         </div>
-                        {user.subscription?.currentPeriodEnd && (
-                          <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
-                            <Clock className="w-3.5 h-3.5" />
-                            <span>Ends: {formatDate(user.subscription.currentPeriodEnd)}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-2">
+                          {getStatusBadge(user)}
+                          {subscription?.subscriptionStatus && (
+                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                              Stripe: {subscription.subscriptionStatus}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1.5">
+                          {hasStripe ? (
+                            <>
+                              <div className="flex items-center gap-1.5 text-gray-600">
+                                <CreditCard className="w-3.5 h-3.5" />
+                                <span className="text-xs font-bold">Customer linked</span>
+                              </div>
+                              <span className="text-[10px] text-gray-400 font-mono">Customer: {formatShortId(subscription?.stripeCustomerId)}</span>
+                              <span className="text-[10px] text-gray-400 font-mono">Sub: {formatShortId(subscription?.stripeSubscriptionId)}</span>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-400 italic">No Stripe customer yet</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                            <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                            <span>Joined: {formatDate(user.createdAt)}</span>
                           </div>
-                        )}
-                        {!user.subscription && user.trialStartedAt && (
-                          <div className="flex items-center gap-1.5 text-xs text-blue-600/70">
-                            <Clock className="w-3.5 h-3.5" />
-                            <span>Trial Start: {formatDate(user.trialStartedAt)}</span>
+                          {trialEnd && (
+                            <div className="flex items-center gap-1.5 text-xs text-blue-600/80">
+                              <Clock className="w-3.5 h-3.5" />
+                              <span>Trial end: {formatDate(trialEnd)}</span>
+                            </div>
+                          )}
+                          {subscription?.currentPeriodEnd && (
+                            <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                              <Clock className="w-3.5 h-3.5" />
+                              <span>{getPeriodLabel(user)}: {formatDate(subscription.currentPeriodEnd)}</span>
+                            </div>
+                          )}
+                          {subscription?.updatedAt && (
+                            <div className="text-[10px] text-gray-400 font-mono">
+                              Last Stripe update: {formatDateTime(subscription.updatedAt)}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="space-y-1.5 text-xs">
+                          <div className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight ${
+                            confirmationSent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'
+                          }`}>
+                            {confirmationSent ? 'Sub email sent' : 'No sub email yet'}
                           </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        {user.subscription?.stripeCustomerId && (
-                          <a 
-                            href={`https://dashboard.stripe.com/customers/${user.subscription.stripeCustomerId}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-dbd-accent hover:bg-dbd-accent/5 rounded-md transition-colors"
-                          >
-                            View Stripe
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        )}
-                        {user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com' && (
-                          <button
-                            onClick={() => handleDeleteUser(user.uid, user.email)}
-                            disabled={loading || actionLoading !== null}
-                            className={`p-1.5 rounded-lg transition-all ${
-                              actionLoading === user.uid 
-                                ? 'text-gray-400 bg-gray-50 cursor-not-allowed' 
-                                : 'text-red-500 hover:text-red-600 hover:bg-red-50'
-                            } disabled:opacity-50`}
-                            title="Delete user"
-                          >
-                            <Trash2 className={`w-4 h-4 ${actionLoading === user.uid ? 'animate-pulse' : ''}`} />
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                          {user.subscriptionConfirmationEmailSentAt && (
+                            <div className="text-[10px] text-gray-400 font-mono">
+                              Email: {formatDateTime(user.subscriptionConfirmationEmailSentAt)}
+                            </div>
+                          )}
+                          <div className="text-[10px] text-gray-400 font-mono">
+                            Profile: {user.accessStatus || 'trial'}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {subscription?.stripeCustomerId && (
+                            <a 
+                              href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-dbd-accent hover:bg-dbd-accent/5 rounded-md transition-colors"
+                            >
+                              View Stripe
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                          {user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com' && (
+                            <button
+                              onClick={() => handleDeleteUser(user.uid, user.email)}
+                              disabled={loading || actionLoading !== null}
+                              className={`p-1.5 rounded-lg transition-all ${
+                                actionLoading === user.uid 
+                                  ? 'text-gray-400 bg-gray-50 cursor-not-allowed' 
+                                  : 'text-red-500 hover:text-red-600 hover:bg-red-50'
+                              } disabled:opacity-50`}
+                              title="Delete user"
+                            >
+                              <Trash2 className={`w-4 h-4 ${actionLoading === user.uid ? 'animate-pulse' : ''}`} />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
                 {filteredUsers.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-400 italic">
+                    <td colSpan={6} className="px-6 py-12 text-center text-gray-400 italic">
                       No users match your current selection
                     </td>
                   </tr>
