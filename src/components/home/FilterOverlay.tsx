@@ -267,13 +267,13 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: "100%", opacity: 0, transition: { duration: 0.25 } }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="bg-white w-full max-w-lg rounded-t-lg sm:rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="bg-white w-full max-w-lg rounded-t-md sm:rounded-md shadow-xl overflow-hidden flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="px-4 sm:px-6 py-4 border-b border-gray-100 sticky top-0 bg-white z-10 shrink-0">
           <div className="flex items-center justify-between">
-            <h2 className="text-[15px] font-bold text-gray-900 uppercase tracking-[0.05em]">Recipe preferences</h2>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0">
+            <h2 className="text-[16px] font-bold text-gray-950 tracking-normal">Recipe preferences</h2>
+            <button onClick={onClose} className="p-2 hover:bg-gray-50 rounded transition-colors shrink-0">
               <CircleX className="w-5 h-5 text-gray-400" />
             </button>
           </div>
@@ -282,7 +282,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
           </div>
         </div>
 
-        <div className="px-4 sm:px-6 pt-4 pb-0 overflow-y-auto space-y-2.5 flex-1 scrollbar-hide no-scrollbar">
+        <div className="px-4 sm:px-6 pt-3 pb-0 overflow-y-auto space-y-2 flex-1 scrollbar-hide no-scrollbar">
           {/* Suppressed Filters Notification */}
           {(isDietaryRuleSuppressed || (suppressedPermanentKeys && suppressedPermanentKeys.length > 0)) && (
             <div className="p-2.5 bg-accent/5 border border-accent/10 rounded-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
@@ -298,7 +298,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               {clearSuppression && (
                 <button 
                   onClick={clearSuppression}
-                  className="px-2 py-1 text-[10px] font-bold text-accent uppercase tracking-wider hover:underline bg-accent/10 rounded shrink-0"
+                  className="px-2 py-1 text-[10px] font-bold text-accent tracking-[0.04em] hover:underline bg-accent/10 rounded shrink-0"
                 >
                   Restore
                 </button>
@@ -310,15 +310,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
           <div className="space-y-3.5 pb-4">
             
             {/* Category 1: Dietary Essentials */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+            <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
               <button
                 type="button"
                 onClick={() => toggleSection('dietary')}
-                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+                className="w-full h-12 flex items-center justify-between px-4 bg-white hover:bg-gray-50/70 transition-colors text-left font-display outline-none select-none cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Apple className="w-4 h-4 text-gray-500" />
-                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Dietary Essentials</span>
+                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Dietary essentials</span>
                   {(() => {
                     const cnt = (localDietaryRule !== 'none' ? 1 : 0) + 
                                   (localSaladPreference !== 'all' ? 1 : 0) + 
@@ -338,15 +338,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               </button>
               
               {openSections.dietary && (
-                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
                   {/* Dietary Preference */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Dietary preference</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Dietary preference</label>
                     <div className="relative mt-1">
                       <select 
                         value={localDietaryRule}
                         onChange={(e) => setLocalDietaryRule(e.target.value as any)}
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         {DIETARY_TAXONOMY.dietaryPreferences.options.map(opt => (
                           <option key={opt} value={opt}>{DIETARY_TAXONOMY.dietaryPreferences.labels[opt]}</option>
@@ -358,12 +358,12 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                   {/* Salad Preference */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Salad preference</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Salad preference</label>
                     <div className="relative mt-1">
                       <select 
                         value={localSaladPreference}
                         onChange={(e) => setLocalSaladPreference(e.target.value as any)}
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         {Object.entries(DIETARY_TAXONOMY.saladPreferences.labels).map(([val, label]) => (
                           <option key={val} value={val}>{label}</option>
@@ -374,16 +374,16 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   </div>
 
                   {/* Safety Note */}
-                  <div className="bg-amber-50/40 border border-amber-100/50 p-3 rounded-lg flex items-start gap-2.5 mb-4">
+                  <div className="bg-amber-50/40 border-l-2 border-amber-400 px-3 py-2.5 rounded-sm flex items-start gap-2.5">
                     <ShieldAlert size={14} className="text-amber-600 mt-0.5 shrink-0" />
-                    <p className="text-[11px] text-amber-900/70 font-medium leading-relaxed">
+                    <p className="text-[10.5px] text-amber-900/75 font-medium leading-relaxed">
                       We aim to filter out unsuitable recipes based on your selections, but you should always check ingredients and product labels before cooking or serving.
                     </p>
                   </div>
 
                   {/* Allergies */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Allergies</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Allergies</label>
                     <div className="relative mt-1">
                       <select 
                         value=""
@@ -393,7 +393,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                             setLocalAllergies([...localAllergies, val]);
                           }
                         }}
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         <option value="">Add allergy...</option>
                         {DIETARY_TAXONOMY.allergies.options.map(opt => (
@@ -404,7 +404,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     </div>
                     {localAllergies.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Allergies:</span>
+                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active allergies</span>
                         {localAllergies.map(item => (
                           <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-red-50 text-red-700 border border-red-100 rounded text-[11px] font-medium animate-in fade-in zoom-in-95 duration-100">
                             {item}
@@ -419,7 +419,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                   {/* Religious & Ethical */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Religious & ethical</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Religious & ethical</label>
                     <div className="relative mt-1">
                       <select 
                         value=""
@@ -429,7 +429,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                             setLocalReligiousEthical([...localReligiousEthical, val]);
                           }
                         }}
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         <option value="">Add ethical preference...</option>
                         {DIETARY_TAXONOMY.religiousEthical.options.map(opt => (
@@ -440,7 +440,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     </div>
                     {localReligiousEthical.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Ethical Preferences:</span>
+                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active ethical preferences</span>
                         {localReligiousEthical.map(item => (
                           <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                             {item}
@@ -455,14 +455,14 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                   {/* Excluded Ingredients */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Exclude ingredients for this search</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Exclude ingredients for this search</label>
                     <div className="space-y-2">
                       <div className="flex gap-2">
                         <input 
                           ref={excludeInputRef}
                           type="text"
                           placeholder="e.g. Coriander, Mushrooms"
-                          className="flex-1 h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                          className="flex-1 h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               const val = e.currentTarget.value.trim();
@@ -482,7 +482,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                               if (excludeInputRef.current) excludeInputRef.current.value = '';
                             }
                           }}
-                          className="px-4 h-11 bg-gray-100 text-gray-950 text-[12px] font-bold rounded hover:bg-gray-200 transition-colors shadow-sm cursor-pointer"
+                          className="px-4 h-11 bg-gray-100 text-gray-950 text-[12px] font-bold rounded hover:bg-gray-200 transition-colors cursor-pointer"
                         >
                           Add
                         </button>
@@ -506,15 +506,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </div>
 
             {/* Category 2: Sources & Stores */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+            <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
               <button
                 type="button"
                 onClick={() => toggleSection('sources')}
-                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+                className="w-full h-12 flex items-center justify-between px-4 bg-white hover:bg-gray-50/70 transition-colors text-left font-display outline-none select-none cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Store className="w-4 h-4 text-gray-500" />
-                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Sources & Stores</span>
+                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Sources & stores</span>
                   <Info className="w-3 h-3 text-gray-300 ml-0.5 select-none" />
                   {(() => {
                     const cnt = source === 'cook' ? localPreferredSourceIds.length : localSupermarkets.length;
@@ -525,13 +525,13 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                 </div>
                 <ChevronDown 
                   className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                    openSections.sources ? 'rotate-180 text-gray-705' : ''
+                    openSections.sources ? 'rotate-180 text-gray-700' : ''
                   }`} 
                 />
               </button>
               
               {openSections.sources && (
-                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
                   <p className="text-[11px] text-gray-400 font-medium leading-relaxed italic pl-1 border-l-2 border-accent/20">
                     Your selected sources help shape recommendations and shopping links, but recipe searches may still include relevant results from other sources.
                   </p>
@@ -539,8 +539,8 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     /* Trusted Sources */
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Trusted sources</label>
-                        <span className="text-[9px] font-semibold text-accent uppercase tracking-wider bg-accent/5 px-2 py-0.5 border border-accent/10 rounded">Cook mode active</span>
+                        <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Trusted sources</label>
+                        <span className="text-[9.5px] font-semibold text-accent bg-accent/5 px-2 py-0.5 rounded">Cook mode</span>
                       </div>
                       <div className="relative mt-1">
                         <select 
@@ -551,7 +551,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                               setLocalPreferredSourceIds([...localPreferredSourceIds, val]);
                             }
                           }}
-                          className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                          className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                         >
                           <option value="">Add trusted source...</option>
                           {PREFERRED_SOURCES.map(sourceOpt => (
@@ -562,7 +562,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       </div>
                       {localPreferredSourceIds.length > 0 && (
                         <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                          <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Trusted Sources:</span>
+                          <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active trusted sources</span>
                           {localPreferredSourceIds.map(id => {
                             const sourceObj = PREFERRED_SOURCES.find(s => s.id === id);
                             const label = sourceObj ? sourceObj.label : id;
@@ -582,8 +582,8 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     /* Preferred Supermarkets */
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Preferred supermarkets</label>
-                        <span className="text-[9px] font-semibold text-accent uppercase tracking-wider bg-accent/5 px-2 py-0.5 border border-accent/10 rounded">Ready-made mode active</span>
+                        <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Preferred supermarkets</label>
+                        <span className="text-[9.5px] font-semibold text-accent bg-accent/5 px-2 py-0.5 rounded">Ready-made mode</span>
                       </div>
                       <div className="relative mt-1">
                         <select 
@@ -594,7 +594,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                               setLocalSupermarkets([...localSupermarkets, val]);
                             }
                           }}
-                          className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                          className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                         >
                           <option value="">Add supermarket...</option>
                           {DIETARY_TAXONOMY.supermarkets.options.map(opt => (
@@ -605,7 +605,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       </div>
                       {localSupermarkets.length > 0 && (
                         <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                          <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active supermarket preferences:</span>
+                          <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active supermarket preferences</span>
                           {localSupermarkets.map(item => (
                             <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                               {item}
@@ -623,15 +623,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </div>
 
             {/* Category 3: Time, Portions & Budget */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+            <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
               <button
                 type="button"
                 onClick={() => toggleSection('timeBudget')}
-                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+                className="w-full h-12 flex items-center justify-between px-4 bg-white hover:bg-gray-50/70 transition-colors text-left font-display outline-none select-none cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Clock className="w-4 h-4 text-gray-500" />
-                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Time, Portions & Budget</span>
+                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Time, portions & budget</span>
                   {(() => {
                     const readyTimeActive = (source === 'cook' ? localMaxTotalTime : localMaxHeatingTime) ? 1 : 0;
                     const portionsActive = localServings !== '2' ? 1 : 0;
@@ -651,11 +651,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               </button>
               
               {openSections.timeBudget && (
-                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
                   {/* Portions Counter */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Portions</label>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded border border-gray-200">
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Portions</label>
+                    <div className="flex items-center justify-between p-3 bg-gray-50/80 rounded border border-gray-200">
                       <span className="text-[13px] font-semibold text-gray-700">Adult portions</span>
                       <NumberStepper 
                         value={parseInt(localServings) || 2} 
@@ -668,30 +668,30 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                   {/* Ready in under (Time) */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Ready in under</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Ready in under</label>
                     <div className="relative">
                       <input 
                         type="number"
                         value={source === 'cook' ? localMaxTotalTime : localMaxHeatingTime}
                         onChange={(e) => source === 'cook' ? setLocalMaxTotalTime(e.target.value) : setLocalMaxHeatingTime(e.target.value)}
                         placeholder="e.g. 30"
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium"
                       />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 font-bold uppercase tracking-wider">mins</span>
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 font-semibold">mins</span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {/* Calories */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Max calories</label>
+                      <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Max calories</label>
                       <div className="relative">
                         <input 
                           type="number"
                           value={localMaxCalories}
                           onChange={(e) => setLocalMaxCalories(e.target.value)}
                           placeholder="e.g. 600"
-                          className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                          className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-medium text-gray-400 uppercase">kcal</span>
                       </div>
@@ -699,7 +699,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                     {/* Price */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Max cost per portion</label>
+                      <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Max cost per portion</label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[13px] text-gray-400 font-bold">£</span>
                         <input 
@@ -708,7 +708,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           value={localMaxCostPerPortion}
                           onChange={(e) => setLocalMaxCostPerPortion(e.target.value)}
                           placeholder="e.g. 5.00"
-                          className="w-full h-11 pl-8 pr-4 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                          className="w-full h-11 pl-8 pr-4 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium"
                         />
                       </div>
                     </div>
@@ -718,15 +718,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </div>
 
             {/* Category 4: Cooking Preferences */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+            <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
               <button
                 type="button"
                 onClick={() => toggleSection('cooking')}
-                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+                className="w-full h-12 flex items-center justify-between px-4 bg-white hover:bg-gray-50/70 transition-colors text-left font-display outline-none select-none cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Utensils className="w-4 h-4 text-gray-500" />
-                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Cooking Preferences</span>
+                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Cooking preferences</span>
                   {(() => {
                     const cnt = localCuisines.length + localCookingMethods.length + localCookingFats.length;
                     return cnt > 0 ? (
@@ -742,10 +742,10 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               </button>
               
               {openSections.cooking && (
-                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
                   {/* Cuisine Preferences */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Cuisine preferences</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Cuisine preferences</label>
                     <div className="relative mt-1">
                       <select 
                         value=""
@@ -755,7 +755,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                             setLocalCuisines([...localCuisines, val]);
                           }
                         }}
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         <option value="">Select cuisine...</option>
                         {DIETARY_TAXONOMY.cuisinePreferences.options.map(opt => (
@@ -766,7 +766,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     </div>
                     {localCuisines.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100 font-display">
-                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Cuisines:</span>
+                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active cuisines</span>
                         {localCuisines.map(item => (
                           <div key={item} className="flex items-center justify-between py-1 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100 font-sans">
                             {item}
@@ -781,7 +781,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                   {/* Cooking Methods */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Cooking methods</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Cooking methods</label>
                     <div className="relative mt-1">
                       <select 
                         value=""
@@ -791,7 +791,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                             setLocalCookingMethods([...localCookingMethods, val]);
                           }
                         }}
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         <option value="">Any method</option>
                         {[
@@ -804,7 +804,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     </div>
                     {localCookingMethods.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Methods:</span>
+                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active methods</span>
                         {localCookingMethods.map(item => (
                           <div key={item} className="flex items-center justify-between py-1 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                             {item}
@@ -819,7 +819,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                   {/* Cooking Fats */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Cooking fats</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Cooking fats</label>
                     <div className="relative mt-1">
                       <select 
                         value=""
@@ -829,7 +829,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                             setLocalCookingFats([...localCookingFats, val]);
                           }
                         }}
-                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         <option value="">Any cooking fat</option>
                         {DIETARY_TAXONOMY.cookingFats.options.map(opt => (
@@ -840,7 +840,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     </div>
                     {localCookingFats.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100 font-display">
-                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Cooking Fats:</span>
+                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active cooking fats</span>
                         {localCookingFats.map(item => (
                           <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                             {item}
@@ -857,15 +857,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </div>
 
             {/* Category 5: Priorities */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+            <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
               <button
                 type="button"
                 onClick={() => toggleSection('goals')}
-                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+                className="w-full h-12 flex items-center justify-between px-4 bg-white hover:bg-gray-50/70 transition-colors text-left font-display outline-none select-none cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Heart className="w-4 h-4 text-gray-500" />
-                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Priorities</span>
+                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Priorities</span>
                   {(() => {
                     const cnt = (localNutritiousChoice ? 1 : 0) + 
                                   (localIsSimple ? 1 : 0) + 
@@ -879,13 +879,13 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                 </div>
                 <ChevronDown 
                   className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                    openSections.goals ? 'rotate-180 text-gray-705' : ''
+                    openSections.goals ? 'rotate-180 text-gray-700' : ''
                   }`} 
                 />
               </button>
               
               {openSections.goals && (
-                <div className="p-4 border-t border-gray-100 space-y-3 bg-white animate-in fade-in duration-200">
+                <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-2.5 bg-white animate-in fade-in duration-200">
                   {[
                     { 
                       id: 'wholesome', 
@@ -925,7 +925,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   ].map(item => (
                     <div 
                       key={item.id} 
-                      className="flex items-start justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors gap-3"
+                      className="flex items-start justify-between p-3 bg-gray-50/70 border border-gray-100 rounded hover:border-gray-200 transition-colors gap-3"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="text-[13px] font-bold text-gray-800 leading-tight flex items-center gap-1.5">
@@ -958,31 +958,31 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
         </div>
 
         {/* Dual-Action Footer Buttons */}
-        <div className="p-4 sm:p-6 border-t border-gray-100 bg-white space-y-2.5 shrink-0">
+        <div className="p-4 sm:p-5 border-t border-gray-100 bg-white space-y-2.5 shrink-0">
           <div className="flex flex-col sm:flex-row gap-2.5">
             <button 
               type="button"
               onClick={handleApplyToThisSearch}
-              className="flex-1 h-12 bg-gray-900 hover:bg-black text-white rounded text-[12px] font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.99] cursor-pointer"
+              className="flex-1 h-12 bg-gray-900 hover:bg-black text-white rounded text-[12px] font-bold tracking-[0.04em] flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99] cursor-pointer"
             >
               <Search className="w-4 h-4" />
-              Apply to This Search
+              Apply to this search
             </button>
             <button 
               type="button"
               onClick={handleSaveAsDefault}
-              className="flex-1 h-12 bg-dbd-accent hover:bg-dbd-accent-mid text-white rounded text-[12px] font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.99] cursor-pointer"
+              className="flex-1 h-12 bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 rounded text-[12px] font-bold tracking-[0.04em] flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              Save as My Default
+              Save as my default
             </button>
           </div>
           <button 
             type="button"
             onClick={resetAllLocalFilters}
-            className="w-full py-2 bg-white text-gray-400 hover:text-gray-700 text-[11px] font-bold uppercase tracking-[0.1em] text-center hover:bg-gray-50 transition-all rounded"
+            className="w-full py-2 bg-white text-gray-400 hover:text-gray-700 text-[11px] font-bold tracking-[0.04em] text-center hover:bg-gray-50 transition-all rounded"
           >
-            Clear Preferences
+            Clear preferences
           </button>
         </div>
       </motion.div>
