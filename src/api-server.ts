@@ -570,7 +570,7 @@ export function createApp() {
   const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
 
   if (isProd) {
-    const distPath = path.resolve(__dirname, "../dist");
+    const distPath = path.resolve(process.cwd(), "dist");
     const indexPath = path.resolve(distPath, "index.html");
     
     console.log(`[API] Serving static files from: ${distPath}`);

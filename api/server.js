@@ -163750,7 +163750,7 @@ function createApp() {
   });
   const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
   if (isProd) {
-    const distPath = path2.resolve(__dirname, "../dist");
+    const distPath = path2.resolve(process.cwd(), "dist");
     const indexPath = path2.resolve(distPath, "index.html");
     console.log(`[API] Serving static files from: ${distPath}`);
     app.use(import_express.default.static(distPath));
