@@ -32,7 +32,7 @@ ALLOWED_ORIGINS=https://dinnerbydesign.app,https://www.dinnerbydesign.app
 
 ## Firebase
 
-Deploy `firestore.rules` to the Firebase project before public launch.
+`firestore.rules` were deployed to Firebase project `gen-lang-client-0925408841` on 2026-06-26.
 
 Add the Vercel production domain and any custom domain to Firebase Authentication -> Settings -> Authorized domains.
 
