@@ -59,5 +59,5 @@ npm run build
 The API function entry is:
 
 ```text
-api/server.cjs
+api/server.js
 ```
