@@ -257,7 +257,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
       exit={{ opacity: 0 }}
       className="pb-20"
     >
-      <div className="space-y-6">
+      <div className="space-y-4 -mt-4">
         {viewingPlannerEntry ? (
           <div className="space-y-6 overflow-visible pt-5 sm:pt-6">
             <div className="flex items-center justify-between">
@@ -423,7 +423,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
           </div>
         ) : (
           <>
-            <div className="space-y-1 pt-5 sm:pt-6">
+            <div className="space-y-1 pt-4 sm:pt-5">
               <div className="flex justify-between items-center">
                 <button 
                   id="back-to-search-btn"
@@ -434,23 +434,19 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                   <span id="back-text">Back to search</span>
                 </button>
               </div>
+
+              <div className="flex flex-col items-center pb-2 pt-0 space-y-2">
+                <h2 className="text-[20px] font-bold text-gray-900 text-center">Save & Schedule</h2>
+                <p className="text-[12px] text-gray-400 font-medium text-center max-w-md">
+                  {(!user || user.isAnonymous) 
+                    ? "Keep track of your weekly dinners and browse your temporary collection below."
+                    : "Schedule your dinners, browse your saved collection, and build your shopping list for the week ahead."}
+                </p>
+              </div>
             </div>
 
             {/* Unified Save & Schedule Panel */}
-            <div className="mt-4 bg-white rounded shadow-xs overflow-hidden flex flex-col">
-              
-              {/* Panel Header */}
-              <div className="p-3 sm:p-5 bg-gray-50/30 border-b border-gray-100">
-                <div className="flex flex-col items-center space-y-1">
-                  <h2 className="text-[20px] font-bold text-gray-900 text-center">Save & Schedule</h2>
-                  <p className="text-[12px] text-gray-400 font-medium text-center max-w-md">
-                    {(!user || user.isAnonymous) 
-                      ? "Keep track of your weekly dinners and browse your temporary collection below."
-                      : "Schedule your dinners, browse your saved collection, and build your shopping list for the week ahead."}
-                  </p>
-                </div>
-              </div>
-
+            <div className="mt-0 bg-white rounded shadow-xs overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
               <div className="px-1 sm:px-3.5 py-5 sm:py-7 space-y-10">
                 
