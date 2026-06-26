@@ -6,6 +6,7 @@ import {
   getAuth,
   signInAnonymously,
   signInWithPopup,
+  signInWithRedirect,
   signInWithCredential,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
@@ -107,7 +108,7 @@ interface AuthContextType {
   trialDaysLeft: number;
   trialTimeRemaining: string;
   isAdmin: boolean;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: () => Promise<boolean>;
   signOut: () => Promise<void>;
   signUpWithEmail: (email: string, pass: string, firstName: string, lastName: string, phone: string) => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
@@ -497,10 +498,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (): Promise<boolean> => {
     if (isAuthInProgress.current) {
       addLog("AUTH: Sign-In already in progress, skipping.");
-      return;
+      return false;
     }
     isAuthInProgress.current = true;
     setError(null);
@@ -524,6 +525,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(result.user);
           addLog("AUTH: linkWithPopup SUCCESS.");
           showToast("Account linked successfully!");
+          return true;
         } catch (linkErr: any) {
           const errorCode = linkErr.code || "";
           const errorMessage = linkErr.message || "";
@@ -544,7 +546,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setUser(result.user);
                 addLog(`AUTH: Automatic credential sign-in SUCCESS: ${result.user.email}`);
                 showToast("Signed in to your existing account.");
-                return;
+                return true;
               } catch (credErr: any) {
                 addLog(`AUTH ERROR: Automatic credential sign-in failed code: ${credErr.code}`);
               }
@@ -557,17 +559,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               setUser(result.user);
               addLog(`AUTH: Automatic popup switch SUCCESS: ${result.user.email}`);
               showToast("Signed in to your existing account.");
+              return true;
             } catch (switchErr: any) {
               addLog(`AUTH ERROR: Automatic popup switch failed code: ${switchErr.code}`);
               setError(`Failed to sign in to existing account: ${switchErr.message}`);
+              return false;
             }
-            return;
           }
           
           if (errorCode === 'auth/popup-blocked') {
             showToast("Popup blocked. Please allow popups and try again.");
+            return false;
           } else if (errorCode === 'auth/cancelled-popup-request' || errorCode === 'auth/popup-closed-by-user') {
             addLog("AUTH: Link popup closed by user.");
+            return false;
           } else {
             throw linkErr; // Let the main catch handle it
           }
@@ -578,15 +583,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(result.user);
         addLog(`AUTH: Standard SUCCESS: ${result.user.email}`);
         showToast("Signed in successfully!");
+        return true;
       }
     } catch (err: any) {
       const errorCode = err.code || "";
       const errorMessage = err.message || "";
 
       if (errorCode === 'auth/popup-blocked') {
-        showToast("Popup blocked. Please allow popups and try again.");
+        showToast("Popup blocked. Redirecting to Google sign-in...");
+        await signInWithRedirect(auth, provider);
+        return false;
       } else if (errorCode === 'auth/cancelled-popup-request' || errorCode === 'auth/popup-closed-by-user') {
         addLog("AUTH: Popup closed by user.");
+        return false;
       } else {
         console.error("Google Sign-In failed:", err);
         addLog(`AUTH ERROR: External Catch - Code: ${errorCode}, Msg: ${errorMessage}`);
@@ -603,7 +612,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             addLog("AUTH: Retrying sign-in without linkage...");
             signInWithGoogle();
           });
-          return;
+          return false;
         }
 
         if (errorCode === 'auth/unauthorized-domain') {
@@ -611,6 +620,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } else {
           setError(`Authentication failed: ${errorMessage}`);
         }
+        return false;
       }
     } finally {
       isAuthInProgress.current = false;

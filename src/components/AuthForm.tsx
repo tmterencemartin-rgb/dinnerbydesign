@@ -216,8 +216,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             setError(null);
             setLoading(true);
             try {
-              await signInWithGoogle();
-              onSuccess?.();
+              const success = await signInWithGoogle();
+              if (success) {
+                onSuccess?.();
+              }
             } catch (err: any) {
               setError(err.message || "Google sign-in failed");
             } finally {
