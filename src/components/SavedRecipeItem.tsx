@@ -418,7 +418,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         </div>
 
         {/* Right Side: Consolidated Action Buttons */}
-        <div className={`flex items-center gap-1.5 shrink-0 pt-0.5 w-full sm:w-auto justify-end transition-opacity duration-150 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 ${isChoosingDay || showCheck || (scheduledDate && !isBacklog) ? 'sm:opacity-100' : ''}`}>
+        <div className="flex items-center gap-1.5 shrink-0 pt-0.5 w-full sm:w-auto justify-end">
           {!isBacklog && (
             <button 
               onClick={(e) => {
