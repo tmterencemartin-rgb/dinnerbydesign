@@ -163369,7 +163369,10 @@ function createApp() {
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true
   }));
-  app.use(import_express.default.json());
+  app.use((req, res, next) => {
+    if (req.path === "/api/stripe-webhook") return next();
+    return import_express.default.json()(req, res, next);
+  });
   app.get("/api/connection-test", (req, res) => {
     if (isProdEnv) {
       return res.status(404).json({ ok: false });

@@ -96,7 +96,10 @@ export function createApp() {
     credentials: true
   }));
 
-  app.use(express.json());
+  app.use((req, res, next) => {
+    if (req.path === "/api/stripe-webhook") return next();
+    return express.json()(req, res, next);
+  });
 
   app.get("/api/connection-test", (req, res) => {
     if (isProdEnv) { return res.status(404).json({ ok: false }); }
