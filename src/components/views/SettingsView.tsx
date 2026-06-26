@@ -950,7 +950,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                                 </span>
                               )}
                               {profile.preferences.isSimple && (
-                                <span className="bg-sky-50 text-sky-700 text-[10px] px-2 py-0.5 rounded font-bold border border-sky-100 uppercase tracking-tight">
+                                <span className="bg-gray-50 text-gray-700 text-[10px] px-2 py-0.5 rounded font-bold border border-gray-100 uppercase tracking-tight">
                                   Quick & Easy
                                 </span>
                               )}
@@ -960,12 +960,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                                 </span>
                               )}
                               {profile.preferences.highOmega3 && (
-                                <span className="bg-indigo-50 text-indigo-700 text-[10px] px-2 py-0.5 rounded font-bold border border-indigo-100 uppercase tracking-tight">
+                                <span className="bg-gray-50 text-gray-700 text-[10px] px-2 py-0.5 rounded font-bold border border-gray-100 uppercase tracking-tight">
                                   High Omega-3
                                 </span>
                               )}
                               {profile.preferences.highProtein && (
-                                <span className="bg-rose-50 text-rose-700 text-[10px] px-2 py-0.5 rounded font-bold border border-rose-100 uppercase tracking-tight">
+                                <span className="bg-gray-50 text-gray-700 text-[10px] px-2 py-0.5 rounded font-bold border border-gray-100 uppercase tracking-tight">
                                   High Protein
                                 </span>
                               )}
@@ -1029,7 +1029,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Subscription</h3>
                 {(accessStatus === 'paid' || accessStatus === 'trial') && (
-                  <div className="flex items-center gap-1.5 text-green-600 font-bold text-[11px] bg-green-50 px-2.5 py-1 rounded uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-[11px] bg-emerald-50 px-2.5 py-1 rounded uppercase tracking-wider">
                      <ShieldCheck size={14} strokeWidth={2.5} />
                      <span>Account active</span>
                   </div>
@@ -1077,7 +1077,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className={`p-4 rounded space-y-1 ${accessStatus === 'paid' ? 'bg-emerald-50/40' : 'bg-blue-50/40'}`}>
+                    <div className={`p-4 rounded space-y-1 ${accessStatus === 'paid' ? 'bg-emerald-50/40' : 'bg-gray-50/70'}`}>
                       <p className="text-[13.5px] text-gray-900 font-bold">
                         {accessStatus === 'paid' 
                           ? 'Your subscription is currently active!' 

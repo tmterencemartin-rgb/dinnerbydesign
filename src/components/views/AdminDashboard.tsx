@@ -235,7 +235,7 @@ export const AdminDashboard: React.FC = () => {
         );
       case 'trial':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 uppercase tracking-tight">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-700 uppercase tracking-tight">
             Trial
           </span>
         );
@@ -374,7 +374,7 @@ export const AdminDashboard: React.FC = () => {
                             <span>Joined: {formatDate(user.createdAt)}</span>
                           </div>
                           {trialEnd && (
-                            <div className="flex items-center gap-1.5 text-xs text-blue-600/80">
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
                               <Clock className="w-3.5 h-3.5" />
                               <span>Trial end: {formatDate(trialEnd)}</span>
                             </div>

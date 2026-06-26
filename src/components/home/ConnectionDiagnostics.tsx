@@ -86,7 +86,7 @@ export const ConnectionDiagnostics: React.FC = () => {
   return (
     <div className="w-full space-y-2">
       <div className={`flex items-center justify-between p-2.5 rounded-lg border text-[12px] font-medium transition-all ${
-        status === 'connected' ? 'bg-green-50 border-green-100 text-green-700' :
+        status === 'connected' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' :
         status === 'failed' ? 'bg-red-50 border-red-100 text-red-700' :
         'bg-gray-50 border-gray-100 text-gray-500'
       }`}>

@@ -372,7 +372,7 @@ export const LandingView: React.FC = () => {
               <div className="flex gap-1.5 select-none shrink-0">
                 <span className="w-3 h-3 rounded-full bg-red-400" />
                 <span className="w-3 h-3 rounded-full bg-amber-400" />
-                <span className="w-3 h-3 rounded-full bg-green-400" />
+                <span className="w-3 h-3 rounded-full bg-emerald-400" />
               </div>
               <div className="flex-grow flex justify-center max-w-[500px] mx-auto bg-white border border-dbd-rule rounded-md py-1 px-3 text-center text-[11px] sm:text-[12px] font-mono text-dbd-ink-3 select-none flex items-center justify-center gap-1.5">
                 <GlobeIcon className="w-3 h-3 text-dbd-ink-3" />

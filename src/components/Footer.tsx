@@ -15,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
             <a 
               href="mailto:chef@dinnerbydesign.app" 
-              className="relative z-50 block text-orange-600 font-semibold hover:text-orange-700 hover:underline transition-colors py-0.5 text-xs"
+              className="relative z-50 block text-accent font-semibold hover:text-accent/80 hover:underline transition-colors py-0.5 text-xs"
             >
               chef@dinnerbydesign.app
             </a>

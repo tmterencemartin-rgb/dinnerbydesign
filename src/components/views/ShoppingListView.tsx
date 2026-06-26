@@ -410,7 +410,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   </button>
                   <button 
                     onClick={handleCopyList}
-                    className={`flex items-center gap-1.5 transition-all active:scale-95 group ${copyStatus === 'Copied!' ? 'text-green-500' : 'text-gray-400 hover:text-accent'}`}
+                    className={`flex items-center gap-1.5 transition-all active:scale-95 group ${copyStatus === 'Copied!' ? 'text-emerald-500' : 'text-gray-400 hover:text-accent'}`}
                   >
                     <PlusCircle className={`w-3.5 h-3.5 ${copyStatus === 'Copied!' ? 'hidden' : ''}`} />
                     {copyStatus === 'Copied!' && <Check className="w-3.5 h-3.5" />}
@@ -498,9 +498,9 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         ) : (
           <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-4">
             {categories.length === 0 && pantryGotItItems.length > 0 && (
-               <div className="py-6 text-center space-y-3 px-4 sm:px-6 bg-green-50/20 rounded max-w-lg mx-auto">
+               <div className="py-6 text-center space-y-3 px-4 sm:px-6 bg-emerald-50/20 rounded max-w-lg mx-auto">
                   <div className="bg-white w-10 h-10 rounded shadow-sm flex items-center justify-center mx-auto mb-2">
-                     <CheckCircle className="w-5 h-5 text-green-500" />
+                     <CheckCircle className="w-5 h-5 text-emerald-500" />
                   </div>
                   <p className="text-[14px] text-gray-900 font-bold">You're all set!</p>
                   <p className="text-[12px] text-gray-500 leading-relaxed font-semibold">
@@ -518,7 +518,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
             {/* List Categories (To Buy List) */}
             {categories.length > 0 && (
               <div className="space-y-2">
-                <p className="text-[12px] text-gray-500 font-medium bg-blue-50/40 py-1.5 px-3 rounded inline-block mb-1">
+                <p className="text-[12px] text-gray-500 font-medium bg-gray-50/80 py-1.5 px-3 rounded inline-block mb-1">
                   Tick items you already have to refine your estimated spend.
                 </p>
                 <div className="shopping-category-list mt-2">

@@ -316,7 +316,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                     
                     if (viewingPlannerEntry.isAirFryerFriendly) {
                       parts.push(
-                        <span key="airfryer" className="text-orange-600 font-medium uppercase tracking-wider inline-flex items-center gap-0.5 text-[10px]">
+                        <span key="airfryer" className="text-accent font-medium uppercase tracking-wider inline-flex items-center gap-0.5 text-[10px]">
                           <Wind className="w-2.5 h-2.5" /> Air Fryer
                         </span>
                       );

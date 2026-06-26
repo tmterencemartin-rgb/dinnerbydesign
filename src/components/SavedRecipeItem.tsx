@@ -130,7 +130,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           {/* Title */}
           <h3 
             onClick={() => onViewDetail ? onViewDetail(recipe) : setIsExpanded(!isExpanded)}
-            className="text-[13px] font-bold text-gray-900 leading-tight hover:text-orange-600 cursor-pointer line-clamp-2 transition-colors"
+            className="text-[13px] font-bold text-gray-900 leading-tight hover:text-accent cursor-pointer line-clamp-2 transition-colors"
             title="Click to view full recipe details"
           >
             {recipe.title}
@@ -139,32 +139,32 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           {/* Compressed Badge Grid */}
           <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
             {recipe.totalTime && (
-              <span className="bg-gray-50 text-neutral-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
+              <span className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
                 ⏱️ {recipe.totalTime}m
               </span>
             )}
             {recipe.costPerPortion && (
-              <span className="bg-gray-50 text-neutral-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
+              <span className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
                 💰 {recipe.costPerPortion}
               </span>
             )}
             {recipe.calories && (
-              <span className="bg-gray-50 text-neutral-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
+              <span className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
                 🔥 {recipe.calories} kcal
               </span>
             )}
             {recipe.saladType && recipe.saladType !== 'none' && (
-              <span className="text-neutral-500 font-medium uppercase tracking-wider text-[10.5px]">
+              <span className="text-gray-500 font-medium uppercase tracking-wider text-[10.5px]">
                 🥗 {recipe.saladType}
               </span>
             )}
             {recipe.isAirFryerFriendly && (
-              <span className="bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-0.5">
+              <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-0.5">
                 <Wind className="w-2.5 h-2.5" /> Air Fryer
               </span>
             )}
             {profile?.preferences?.dietaryRule === 'none' && (recipe.isVegetarian || recipe.isVegan) && (
-              <span className="bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded text-[10.5px] font-semibold">
+              <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[10.5px] font-semibold">
                 🍃 {recipe.isVegan ? 'Plant' : 'Veg'}
               </span>
             )}
@@ -172,13 +172,13 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               const cp = recipe.convenienceProfile || getConvenienceProfile(recipe);
               if (cp === 'scratch') {
                 return (
-                  <span className="bg-neutral-100 text-neutral-700 text-[10.5px] px-2 py-0.5 rounded flex items-center gap-1">
+                  <span className="bg-gray-100 text-gray-700 text-[10.5px] px-2 py-0.5 rounded flex items-center gap-1">
                     🍳 Homemade
                   </span>
                 );
               } else {
                 return (
-                  <span className="bg-neutral-50 text-neutral-600 text-[10.5px] px-2 py-0.5 rounded flex items-center gap-1">
+                  <span className="bg-gray-50 text-gray-600 text-[10.5px] px-2 py-0.5 rounded flex items-center gap-1">
                     📦 Ready-made
                   </span>
                 );
@@ -194,7 +194,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               e.stopPropagation();
               handlePrintRecipe(recipe);
             }}
-            className="text-[10.5px] text-gray-400 hover:text-orange-600 font-bold transition-colors cursor-pointer"
+            className="text-[10.5px] text-gray-400 hover:text-accent font-bold transition-colors cursor-pointer"
           >
             Print
           </button>
@@ -337,7 +337,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   
                   if (recipe.isAirFryerFriendly) {
                     items.push(
-                      <span key="airfryer" className="bg-neutral-100 text-neutral-700 px-1.5 py-0.5 rounded text-[11px] font-medium flex items-center gap-0.5">
+                      <span key="airfryer" className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[11px] font-medium flex items-center gap-0.5">
                         <Wind className="w-2.5 h-2.5" /> Air Fryer
                       </span>
                     );
@@ -345,7 +345,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   
                   if (recipe.saladType && recipe.saladType !== 'none') {
                     items.push(
-                      <span key="salad" className="text-neutral-500 font-medium uppercase tracking-wider">
+                      <span key="salad" className="text-gray-500 font-medium uppercase tracking-wider">
                         🥗 {recipe.saladType}
                       </span>
                     );
@@ -353,7 +353,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   
                   if (recipe.totalTime) {
                     items.push(
-                      <span key="time" className="text-neutral-600">
+                      <span key="time" className="text-gray-600">
                         ⏱️ {recipe.totalTime} mins
                       </span>
                     );
@@ -361,7 +361,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   
                   if (recipe.calories) {
                     items.push(
-                      <span key="calories" className="text-neutral-600">
+                      <span key="calories" className="text-gray-600">
                         🔥 {recipe.calories} kcal
                       </span>
                     );
@@ -369,7 +369,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   
                   if (recipe.costPerPortion) {
                     items.push(
-                      <span key="cost" className="border-b border-dotted border-gray-200 text-neutral-600">
+                      <span key="cost" className="border-b border-dotted border-gray-200 text-gray-600">
                         💰 {recipe.costPerPortion} pp
                       </span>
                     );
@@ -378,13 +378,13 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   const cp = recipe.convenienceProfile || getConvenienceProfile(recipe);
                   if (cp === 'scratch') {
                     items.push(
-                      <span key="convenience-profile" className="bg-neutral-100 text-neutral-700 text-[11px] px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
+                      <span key="convenience-profile" className="bg-gray-100 text-gray-700 text-[11px] px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
                         🍳 Homemade
                       </span>
                     );
                   } else {
                     items.push(
-                      <span key="convenience-profile" className="bg-neutral-50 text-neutral-600 text-[11px] px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
+                      <span key="convenience-profile" className="bg-gray-50 text-gray-600 text-[11px] px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
                         📦 Ready-made
                       </span>
                     );
@@ -395,7 +395,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     items.push(
                       <span 
                         key="dietary-variety" 
-                        className="bg-neutral-100 text-neutral-700 text-[11.1px] px-1.5 py-0.5 rounded font-semibold flex items-center gap-1"
+                        className="bg-gray-100 text-gray-700 text-[11.1px] px-1.5 py-0.5 rounded font-semibold flex items-center gap-1"
                       >
                         🍃 {recipe.isVegan ? 'Plant' : 'Veg'}
                       </span>

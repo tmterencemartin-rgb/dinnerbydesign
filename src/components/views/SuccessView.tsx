@@ -72,9 +72,9 @@ export const SuccessView: React.FC<SuccessViewProps> = ({ setView }) => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md w-full bg-white border border-gray-100 rounded-2xl p-8 md:p-12 shadow-sm text-center space-y-6"
       >
-        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2 ${isSubscriptionConfirmed ? 'bg-green-50' : 'bg-amber-50'}`}>
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2 ${isSubscriptionConfirmed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
           {isSubscriptionConfirmed ? (
-            <CheckCircle className="w-8 h-8 text-green-500" />
+            <CheckCircle className="w-8 h-8 text-emerald-500" />
           ) : (
             <Loader2 className="w-8 h-8 text-amber-500 animate-spin" />
           )}
@@ -84,7 +84,7 @@ export const SuccessView: React.FC<SuccessViewProps> = ({ setView }) => {
           <div className="flex justify-center">
             <span className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
               isSubscriptionConfirmed
-                ? 'bg-green-50 text-green-700 border border-green-100'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                 : 'bg-amber-50 text-amber-700 border border-amber-100'
             }`}>
               {isSubscriptionConfirmed ? 'Subscription confirmed' : 'Payment received'}

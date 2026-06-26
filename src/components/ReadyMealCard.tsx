@@ -155,7 +155,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     {meal.cuisine}
                   </span>
                   {meal.retailer && (
-                    <span className="text-[9px] sm:text-[10px] text-orange-600 font-bold uppercase tracking-wider">
+                    <span className="text-[9px] sm:text-[10px] text-accent font-bold uppercase tracking-wider">
                       {meal.retailer}
                     </span>
                   )}
@@ -188,12 +188,12 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     </span>
                   )}
                   {meal.saladType && meal.saladType !== 'none' && (
-                    <span className="text-neutral-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                    <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
                       🥗 {meal.saladType}
                     </span>
                   )}
                   {meal.isAirFryerFriendly && (
-                    <span className="bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
+                    <span className="bg-accent/10 text-accent px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
                       ⚡ Air Fryer
                     </span>
                   )}
@@ -260,7 +260,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     </div>
 
                     {meal.matchReason && meal.matchReason.length > 0 && (
-                      <div className="bg-blue-50/50 p-2 rounded-lg border border-blue-100/40">
+                      <div className="bg-gray-50/70 p-2 rounded-lg border border-gray-100/60">
                         <p className="text-[11.5px] text-gray-500 leading-relaxed italic">
                           <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9.5px]">Why this match:</span> {meal.matchReason}
                         </p>

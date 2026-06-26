@@ -112,7 +112,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         
         <form onSubmit={handleSubmit} className="space-y-1 relative">
           {error && (
-            <p className={`text-[12px] font-bold leading-tight mb-3 ${error.includes('sent') ? 'text-green-600' : 'text-red-500'}`}>
+            <p className={`text-[12px] font-bold leading-tight mb-3 ${error.includes('sent') ? 'text-emerald-600' : 'text-red-500'}`}>
               {error}
             </p>
           )}

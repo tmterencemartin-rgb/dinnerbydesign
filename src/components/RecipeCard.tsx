@@ -205,7 +205,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     </span>
                   )}
                   {recipe.saladType && recipe.saladType !== 'none' && (
-                    <span className="text-neutral-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                    <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
                       🥗 {recipe.saladType}
                     </span>
                   )}
@@ -222,7 +222,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 const costFloat = recipe.costPerPortion ? parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) : NaN;
                 if ((('isLowCost' in recipe && (recipe as any).isLowCost)) || (!isNaN(costFloat) && costFloat <= 2.0)) {
                   badges.push(
-                    <span key="low-cost" className="bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                    <span key="low-cost" className="bg-accent/10 text-accent px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
                       💰 Low Cost
                     </span>
                   );
@@ -231,7 +231,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 // 2. Cooking Methods: One-Pot (🍲 One-Pot)
                 if (titleLower.includes('one-pot') || titleLower.includes('one pot') || descLower.includes('one-pot') || descLower.includes('one pot')) {
                   badges.push(
-                    <span key="one-pot" className="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                    <span key="one-pot" className="bg-gray-50 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
                       🍲 One-Pot
                     </span>
                   );
@@ -240,7 +240,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 // 3. Cooking Methods: Air Fryer (⚡ Air Fryer)
                 if ((recipe as any).isAirFryerFriendly || titleLower.includes('air fryer') || titleLower.includes('airfryer') || descLower.includes('air fryer') || descLower.includes('airfryer')) {
                   badges.push(
-                    <span key="air-fryer" className="bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                    <span key="air-fryer" className="bg-accent/10 text-accent px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
                       ⚡ Air Fryer
                     </span>
                   );
@@ -249,13 +249,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 // 4. Dietary Focus: Vegan/Vegetarian
                 if (recipe.isVegan) {
                   badges.push(
-                    <span key="vegan" className="bg-green-50 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                    <span key="vegan" className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
                       🌱 Vegan
                     </span>
                   );
                 } else if (recipe.isVegetarian) {
                   badges.push(
-                    <span key="vegetarian" className="bg-green-50 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                    <span key="vegetarian" className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
                       🍃 Vegetarian
                     </span>
                   );
@@ -452,7 +452,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                           )}
                         </div>
 
-                        <div className="bg-blue-50/50 p-2 rounded-lg border border-blue-100/40">
+                        <div className="bg-gray-50/70 p-2 rounded-lg border border-gray-100/60">
                           <p className="text-[11px] text-gray-500 leading-relaxed italic">
                             <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9px]">Why this match:</span> {recipe.matchReason}
                           </p>

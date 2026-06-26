@@ -87,7 +87,7 @@ export const InstallPrompt: React.FC = () => {
                 {platform === 'ios' ? (
                   <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 space-y-3">
                     <div className="flex items-start gap-3 text-[13px] text-gray-700">
-                      <Share className="w-5 h-5 text-blue-500 shrink-0" />
+                      <Share className="w-5 h-5 text-accent shrink-0" />
                       <span>Tap the <b>Share icon</b> at the bottom of your screen.</span>
                     </div>
                     <div className="flex items-start gap-3 text-[13px] text-gray-700">
@@ -125,4 +125,3 @@ export const InstallPrompt: React.FC = () => {
     </AnimatePresence>
   );
 };
-

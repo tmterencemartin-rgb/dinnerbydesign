@@ -92,7 +92,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, sour
               )}
 
               {source === 'ready-made' && (item as ReadyMeal).isAirFryerFriendly && (
-                <div className="ml-2 text-[10px] text-orange-600 font-bold bg-orange-50 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                <div className="ml-2 text-[10px] text-accent font-bold bg-accent/10 px-2 py-0.5 rounded-md uppercase tracking-wider">
                   Air Fryer
                 </div>
               )}
