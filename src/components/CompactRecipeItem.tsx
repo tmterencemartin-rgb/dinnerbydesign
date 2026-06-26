@@ -30,7 +30,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, sour
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white border border-gray-100 rounded-xl p-4 hover:border-accent/30 hover:shadow-sm transition-all duration-200 group active:scale-[0.98]"
+      className="w-full text-left bg-white border border-gray-100 rounded p-4 hover:border-accent/30 hover:shadow-sm transition-all duration-200 group active:scale-[0.98]"
     >
       <div className="flex items-center justify-between gap-4">
         {/* Content */}
@@ -68,7 +68,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, sour
                 <div className="flex items-center gap-1.5 whitespace-nowrap">
                    <span>{costPerPortion} pp</span>
                    {totalCost && (
-                     <span className="text-[10px] bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded border border-gray-100/50">
+                     <span className="text-[10px] bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded">
                         Total {isCook ? `£${(totalCost as number).toFixed(2)}` : totalCost}
                      </span>
                    )}
@@ -102,7 +102,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, sour
 
         {/* Text-only action cue */}
         <div className="shrink-0 flex items-center gap-2">
-          <span className="min-w-[44px] text-center rounded-full border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:border-dbd-accent/20 group-hover:bg-dbd-accent/5 group-hover:text-dbd-accent transition-colors">View</span>
+          <span className="min-w-[44px] text-center rounded bg-gray-50 px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:bg-dbd-accent/5 group-hover:text-dbd-accent transition-colors">View</span>
         </div>
       </div>
     </button>

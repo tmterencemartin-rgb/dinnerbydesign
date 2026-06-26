@@ -400,7 +400,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                     <div className="space-y-0">
                       {viewingPlannerEntry.instructions?.map((step, i) => (
                         <div key={`${viewingPlannerEntry.id || viewingPlannerEntry.title}-step-${i}`} className="flex items-start gap-3 pb-3 border-b border-gray-50 last:border-0 mb-3 last:mb-0">
-                          <div className="w-5 h-5 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500 shrink-0 mt-0.5">
+                          <div className="w-5 h-5 rounded bg-gray-50 flex items-center justify-center text-[10px] font-bold text-gray-500 shrink-0 mt-0.5">
                             {i + 1}
                           </div>
                           <p className="text-sm text-gray-600 leading-relaxed max-w-2xl">{step}</p>
@@ -437,7 +437,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
             </div>
 
             {/* Unified Save & Schedule Panel */}
-            <div className="mt-4 bg-white rounded-[14px] shadow-sm overflow-hidden flex flex-col">
+            <div className="mt-4 bg-white rounded shadow-xs overflow-hidden flex flex-col">
               
               {/* Panel Header */}
               <div className="p-3 sm:p-5 bg-gray-50/30 border-b border-gray-100">
@@ -496,7 +496,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                   </div>
 
                   {savedRecipes.length === 0 ? (
-                    <div className="w-full py-12 px-4 rounded-lg text-center max-w-xl mx-auto my-4 bg-white/50">
+                    <div className="w-full py-12 px-4 rounded text-center max-w-xl mx-auto my-4 bg-white/50">
                       <h5 className="font-semibold text-gray-800 mb-2 font-display text-[15px] tracking-tight">Your Saved List is Empty</h5>
                       <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-md mx-auto">
                         Click the bookmark icon on any recipe while browsing the <span className="font-medium text-gray-700">Search</span> tab to start building your personal, curated dinner collection.
@@ -521,7 +521,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
                               placeholder="Search saved recipes..."
-                              className="w-full h-8 bg-white border border-gray-200 rounded pl-9 pr-9 text-xs font-medium outline-none focus:border-accent/40 transition-all"
+                              className="w-full h-8 bg-white border border-gray-100 rounded pl-9 pr-9 text-xs font-medium outline-none focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
                               <button 
@@ -542,7 +542,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                                 className={`text-xs font-semibold h-8 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
                                   isFilterDropdownOpen || convenienceFilter !== 'all' || quickPills.under20 || quickPills.budget || quickPills.healthy
                                     ? 'border-accent bg-accent/5 text-accent shadow-xs'
-                                    : 'border-gray-200 bg-white hover:bg-gray-50 text-gray-700'
+                                    : 'border-gray-100 bg-white hover:bg-gray-50 text-gray-700'
                                 }`}
                               >
                                 <Settings className="w-3.5 h-3.5" />
@@ -556,7 +556,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                               {isFilterDropdownOpen && (
                                 <>
                                   <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsFilterDropdownOpen(false)} />
-                                  <div className="absolute left-0 md:left-auto md:right-0 top-full mt-1.5 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                                  <div className="absolute left-0 md:left-auto md:right-0 top-full mt-1.5 w-56 bg-white border border-gray-100 rounded shadow-lg p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
                                     <div className="mb-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1 text-left">COOKING STYLE</div>
                                     <div className="space-y-1">
                                       <label className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded cursor-pointer text-xs font-medium text-gray-700 select-none">
@@ -590,7 +590,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                             </div>
 
                             {/* 2. Sort Dropdown */}
-                            <div className="flex items-center gap-1 px-1.5 bg-white hover:bg-gray-50 rounded border border-gray-200 h-8 transition-colors">
+                            <div className="flex items-center gap-1 px-1.5 bg-white hover:bg-gray-50 rounded border border-gray-100 h-8 transition-colors">
                               <History className="w-3.5 h-3.5 text-gray-400" />
                               <select value={savedSortBy} onChange={(e) => setSavedSortBy(e.target.value as any)} className="bg-transparent text-[11px] font-bold text-gray-500 outline-none cursor-pointer py-0.5 pr-0.5">
                                 <option value="newest">Newest Added</option>
@@ -610,7 +610,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                           <div className="p-0 sm:p-0.5 bg-transparent">
                             <div id="saved-recipes-list">
                               {processed.length === 0 && savedRecipes.length > 0 ? (
-                                <div className="py-10 text-center bg-gray-50/50 rounded-lg border border-dashed border-gray-200 p-6 mx-2 my-2">
+                                <div className="py-10 text-center bg-gray-50/50 rounded p-6 mx-2 my-2">
                                   <p className="text-[13px] text-gray-950 font-medium">No saved recipes match that filter.</p>
                                   <button onClick={handleResetFilters} className="text-[12px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Clear Filters</button>
                                 </div>
@@ -730,7 +730,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                       return (
                         <div key={dayId} className="py-1.5 px-1.5 flex items-start gap-2 sm:gap-3 group min-h-[44px] transition-colors hover:bg-gray-50/50">
                           <div className="w-12 shrink-0 flex items-start justify-start pt-[2px]">
-                            <span className="bg-gray-50 text-gray-500 border border-gray-100 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
+                            <span className="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
                               {dayLabel}
                             </span>
                           </div>
@@ -831,7 +831,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                             </div>
 
                             {targetPlannerDay === dayId && (
-                              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded-lg shadow-xl p-3 min-w-[200px]">
+                              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-lg p-3 min-w-[200px]">
                                 <div className="flex justify-between items-center mb-2">
                                   <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Choose from Saved</span>
                                   <button onClick={() => setTargetPlannerDay(null)}><CircleX size={12} /></button>
@@ -907,7 +907,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                 </div>
 
                 {planner.length === 0 && savedRecipes.length === 0 && (
-                  <div className="py-12 bg-gray-50/50 rounded-lg text-center border border-gray-100 border-dashed">
+                  <div className="py-12 bg-gray-50/50 rounded text-center">
                     <p className="text-[14px] text-gray-900 font-bold mb-1">Your week is looking clear</p>
                     <p className="text-[13px] text-gray-500 font-normal">
                       Start by <button onClick={() => setView('home')} className="text-accent font-bold hover:underline">searching for dinner</button>.

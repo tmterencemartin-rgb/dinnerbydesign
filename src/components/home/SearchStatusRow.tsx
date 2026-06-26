@@ -56,7 +56,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
         exit={{ opacity: 0, y: -10, height: 0 }}
         className="overflow-hidden"
       >
-        <div className="py-3 px-4 bg-white border border-gray-100 rounded-lg shadow-sm mb-4">
+        <div className="py-3 px-4 bg-gray-50/70 rounded mb-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -101,7 +101,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
 
 
             {showSearching && filterLabels && (
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded border border-gray-100">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white/70 rounded">
                 <Filter className="w-3 h-3 text-gray-400" />
                 <span className="text-[10px] text-gray-400 font-medium whitespace-nowrap">
                   Checking: <span className="text-gray-600 italic">{filterLabels}{hasMoreFilters ? '...' : ''}</span>

@@ -176,10 +176,10 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
       <div className="flex flex-wrap items-center gap-1 sm:gap-2">
         <button 
           onClick={handleSaveAndSchedule}
-          className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap shadow-sm border ${
+          className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap shadow-sm border ${
             isSaved 
               ? 'bg-accent text-white border-accent hover:bg-accent/90' 
-              : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+              : 'bg-white text-gray-700 border-gray-100 hover:bg-gray-50'
           }`}
         >
           <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -190,7 +190,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
           <button 
             onClick={handleEmailRecipe}
             disabled={isEmailing}
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap shadow-sm"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-100 rounded text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap shadow-sm"
           >
             {isEmailing ? <Loader2 className="w-3 w-3 sm:w-3.5 sm:h-3.5 animate-spin" /> : <Mail className="w-3 w-3 sm:w-3.5 sm:h-3.5" />}
             <span>Email</span>
@@ -198,7 +198,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
           
           <button 
             onClick={() => handlePrintRecipe(recipe)}
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 whitespace-nowrap shadow-sm"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-100 rounded text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 whitespace-nowrap shadow-sm"
           >
             <Printer className="w-3 w-3 sm:w-3.5 sm:h-3.5" />
             <span>Print</span>

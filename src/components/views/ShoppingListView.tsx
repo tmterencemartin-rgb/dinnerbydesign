@@ -421,7 +421,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
 
                   <span className="w-px h-3.5 bg-gray-200 mx-1" />
 
-                  <div className="inline-flex border border-gray-100 rounded-full p-0.5 bg-white shadow-sm">
+                  <div className="inline-flex rounded bg-white p-0.5 shadow-sm">
                     <button
                       type="button"
                       onClick={() => setUnitSystem('metric')}
@@ -478,8 +478,8 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         </div>
 
         {shoppingList.length === 0 ? (
-          <div className="py-24 text-center space-y-6 px-4 bg-white rounded-lg border border-gray-50 max-w-lg mx-auto">
-            <div className="bg-gray-50 w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-2 border border-gray-100">
+          <div className="py-24 text-center space-y-6 px-4 bg-white rounded max-w-lg mx-auto">
+            <div className="bg-gray-50 w-16 h-16 rounded flex items-center justify-center mx-auto mb-2">
                <ShoppingCart className="w-8 h-8 text-gray-300" />
             </div>
             <div className="space-y-2">
@@ -498,8 +498,8 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         ) : (
           <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-4">
             {categories.length === 0 && pantryGotItItems.length > 0 && (
-               <div className="py-6 text-center space-y-3 px-4 sm:px-6 bg-green-50/10 rounded-lg border border-dashed border-green-100/50 max-w-lg mx-auto">
-                  <div className="bg-white w-10 h-10 rounded-lg shadow-sm border border-green-100 flex items-center justify-center mx-auto mb-2">
+               <div className="py-6 text-center space-y-3 px-4 sm:px-6 bg-green-50/20 rounded max-w-lg mx-auto">
+                  <div className="bg-white w-10 h-10 rounded shadow-sm flex items-center justify-center mx-auto mb-2">
                      <CheckCircle className="w-5 h-5 text-green-500" />
                   </div>
                   <p className="text-[14px] text-gray-900 font-bold">You're all set!</p>
@@ -518,7 +518,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
             {/* List Categories (To Buy List) */}
             {categories.length > 0 && (
               <div className="space-y-2">
-                <p className="text-[12px] text-gray-500 font-medium bg-blue-50/30 py-1.5 px-3 rounded-lg border border-blue-100/30 inline-block mb-1">
+                <p className="text-[12px] text-gray-500 font-medium bg-blue-50/40 py-1.5 px-3 rounded inline-block mb-1">
                   Tick items you already have to refine your estimated spend.
                 </p>
                 <div className="shopping-category-list mt-2">
@@ -527,7 +527,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   return (
                     <div 
                       key={category} 
-                      className={`shopping-category-card mb-3 bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition-shadow ${
+                      className={`shopping-category-card mb-3 bg-white border border-gray-100 rounded shadow-sm hover:shadow transition-shadow ${
                         isSmall ? 'p-2 md:p-1.5 lg:p-2' : 'p-2.5 md:p-2 lg:p-2.5'
                       }`}
                     >
@@ -558,7 +558,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                       {groupedItems[category].map(item => (
                         <div 
                           key={item.id} 
-                          className={`flex items-center justify-between py-0 px-2 -mx-2 rounded-lg group transition-all relative ${
+                          className={`flex items-center justify-between py-0 px-2 -mx-2 rounded group transition-all relative ${
                             (item.inStock || item.checked) ? 'bg-gray-50/50 opacity-60' : 'hover:bg-gray-50/30'
                           }`}
                         >
@@ -587,7 +587,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                                   onChange={(e) => setEditValue(e.target.value)}
                                   onBlur={saveEdit}
                                   onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
-                                  className="w-full bg-white border border-gray-200 py-1 text-[13px] outline-none rounded px-2 shadow-sm"
+                                  className="w-full bg-white border border-gray-100 py-1 text-[13px] outline-none rounded px-2 shadow-sm"
                                 />
                               ) : (
                                 <span 
@@ -607,7 +607,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                               {item.sourceDays && item.sourceDays.length > 0 && item.sourceDays.map(d => (
                                 <span 
                                   key={d} 
-                                  className="text-[9px] leading-none font-bold bg-gray-100/80 text-gray-500 border border-gray-200/50 px-1 py-[1.5px] rounded uppercase"
+                                  className="text-[9px] leading-none font-bold bg-gray-100/80 text-gray-500 px-1 py-[1.5px] rounded uppercase"
                                 >
                                   {d.slice(0, 3)}
                                 </span>
@@ -664,7 +664,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                       {pantryGotItItems.map(item => (
                         <div 
                           key={item.id} 
-                          className="flex items-center justify-between py-2 px-3 bg-gray-50/50 hover:bg-gray-50 border border-gray-100/35 hover:border-gray-100 rounded-lg group transition-all"
+                          className="flex items-center justify-between py-2 px-3 bg-gray-50/50 hover:bg-gray-50 rounded group transition-all"
                         >
                           <div className="flex items-center gap-3 flex-grow min-w-0">
                             <button 
@@ -702,7 +702,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Manual Staples & Extras</p>
                           <div className="flex flex-wrap gap-2 pt-1">
                             {pantry.map(p => (
-                              <div key={p.id} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-gray-100 rounded-lg text-[12px] text-gray-500 hover:border-gray-200 transition-colors shadow-sm">
+                              <div key={p.id} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-gray-100 rounded text-[12px] text-gray-500 hover:border-gray-200 transition-colors shadow-sm">
                                 <span>{p.name}</span>
                                 <button 
                                   onClick={() => removeFromPantry(p.id)}

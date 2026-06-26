@@ -14,7 +14,7 @@ export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ 
       exit={{ opacity: 0, scale: 0.95 }}
       className="w-full"
     >
-      <div className="bg-white border border-dbd-rule rounded-xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.015)] relative overflow-hidden group">
+      <div className="bg-white rounded p-5 shadow-[0_1px_5px_rgba(0,0,0,0.02)] relative overflow-hidden group">
         {/* Accent strip */}
         <div className="absolute top-0 left-0 w-1 h-full bg-dbd-accent/20" />
         
