@@ -1089,6 +1089,20 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                           : `You have full access to all features. Your trial ends on ${trialEndFormatted}.`}
                       </p>
                     </div>
+
+                    {accessStatus === 'trial' && (
+                      <div className="p-4 bg-white border border-gray-100 rounded-lg space-y-3">
+                        <div className="space-y-1">
+                          <p className="text-[13px] text-gray-900 font-bold leading-snug">
+                            Subscribe before your trial ends
+                          </p>
+                          <p className="text-[12px] text-gray-400 leading-normal font-semibold">
+                            Choose a monthly or annual plan now to keep DinnerByDesign active without interruption.
+                          </p>
+                        </div>
+                        <StripeCheckoutButton className="w-full" />
+                      </div>
+                    )}
                     
                     {(profile?.isPremium || profile?.subscription?.stripeCustomerId) && (
                       <button
