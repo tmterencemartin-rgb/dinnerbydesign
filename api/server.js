@@ -163482,7 +163482,7 @@ function createApp() {
         client_reference_id: userId,
         customer_email: req.body.email,
         // Use email from body if provided
-        metadata: { userId },
+        metadata: { userId, plan: isYearly ? "annual" : "monthly" },
         line_items: [
           {
             price_data: {
@@ -163573,26 +163573,42 @@ function createApp() {
             const userDoc = await userRef.get();
             const userData = userDoc.data();
             const userEmail = userData?.email || session.customer_details?.email;
-            if (userEmail) {
+            if (userEmail && !userData?.subscriptionConfirmationEmailSent) {
               try {
-                const origin = req.headers.origin || req.headers.referer || `https://${req.get("host")}`;
+                const appUrl = `https://${req.get("host")}`;
                 await sendEmail({
                   to: userEmail,
-                  subject: "Thanks for subscribing to DinnerByDesign",
+                  subject: "Your DinnerByDesign subscription is active",
                   html: `
-                    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-                      <h2 style="color: #111;">Welcome to DinnerByDesign!</h2>
-                      <p>Thanks for subscribing. Your account is now active and you have full access to all premium features, including advanced search and unlimited meal planning.</p>
-                      <div style="margin: 30px 0;">
-                        <a href="${origin}/?view=home" style="background-color: #111; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600;">Go to recipe search</a>
+                    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937; line-height: 1.55;">
+                      <p style="margin: 0 0 16px; color: #6b7280; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">DinnerByDesign</p>
+                      <h2 style="color: #111827; margin: 0 0 16px; font-size: 26px; line-height: 1.2;">Your subscription is active</h2>
+                      <p style="margin: 0 0 14px;">Thanks for subscribing. Your DinnerByDesign account now has full access to recipe search, saved recipes, planning tools, shopping lists, and personalised settings while your subscription remains active.</p>
+                      <p style="margin: 0 0 22px;">Stripe handles your secure payment, receipts, invoices, and card details. This email is simply our confirmation that DinnerByDesign has activated your account.</p>
+                      <div style="background: #f9fafb; border: 1px solid #eef0f3; border-radius: 12px; padding: 16px 18px; margin: 22px 0;">
+                        <p style="margin: 0 0 8px; font-weight: 700; color: #111827;">What you can do now</p>
+                        <ul style="margin: 0; padding-left: 18px; color: #4b5563;">
+                          <li>Search for unlimited dinner ideas.</li>
+                          <li>Save recipes and sync them across devices.</li>
+                          <li>Plan meals and build shopping lists.</li>
+                          <li>Manage your subscription from Settings.</li>
+                        </ul>
                       </div>
-                      <p style="font-size: 14px; color: #666;">If you have any questions, just reply to this email.</p>
+                      <div style="margin: 28px 0;">
+                        <a href="${appUrl}/?view=home" style="background-color: #111827; color: #ffffff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Open DinnerByDesign</a>
+                      </div>
+                      <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">To change or cancel your subscription, open DinnerByDesign and go to Settings \u2192 Subscription.</p>
+                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
                     </div>
                   `
                 });
-                console.log(`[Webhook] Welcome email sent to ${userEmail}`);
+                await userRef.set({
+                  subscriptionConfirmationEmailSent: true,
+                  subscriptionConfirmationEmailSentAt: FieldValue.serverTimestamp()
+                }, { merge: true });
+                console.log(`[Webhook] Subscription confirmation email sent to ${userEmail}`);
               } catch (emailErr) {
-                console.error(`[Webhook] Failed to send welcome email:`, emailErr);
+                console.error(`[Webhook] Failed to send subscription confirmation email:`, emailErr);
               }
             }
           }

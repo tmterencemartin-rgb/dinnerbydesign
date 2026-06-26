@@ -147,6 +147,8 @@ export interface UserProfile {
   lastName?: string;
   phoneNumber?: string;
   welcomeEmailSent?: boolean;
+  subscriptionConfirmationEmailSent?: boolean;
+  subscriptionConfirmationEmailSentAt?: Timestamp | FieldValue;
   preferences: UserPreferences;
   isPremium?: boolean;
   accessStatus?: AccessStatus;
