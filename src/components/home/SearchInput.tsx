@@ -49,7 +49,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     if (isLeftoverMode) {
       return "What's in the fridge? Some leftover chicken or corned beef? A couple of red peppers?  Maybe some sticks of celery?";
     }
-    return "What do you have in mind for dinner tonight?";
+    return "What sounds good for dinner?";
   };
   return (
     <form
@@ -97,7 +97,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           onChange={(e) => setInput(e.target.value)}
           disabled={isReadOnly}
           placeholder={isReadOnly ? "Upgrade to search again" : getSearchPlaceholder()}
-          className={`flex-grow px-2 bg-transparent text-[13px] text-gray-800 outline-none placeholder:text-gray-400 h-full ${isListening ? 'placeholder:text-dbd-accent font-medium' : ''}`}
+          className={`flex-grow min-w-0 px-2 bg-transparent text-[13px] text-gray-800 outline-none placeholder:text-gray-400 h-full ${isListening ? 'placeholder:text-dbd-accent font-medium' : ''}`}
         />
 
         {input && !isGenerating && !isReadOnly && (
@@ -118,7 +118,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       <button 
         type="submit"
         disabled={isListening || isReadOnly}
-        className={`shrink-0 px-5 text-white text-[11px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center border-l border-gray-100 ${
+        className={`shrink-0 px-3 sm:px-5 text-white text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center border-l border-gray-100 ${
           isReadOnly ? 'bg-gray-400' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
         }`}
       >

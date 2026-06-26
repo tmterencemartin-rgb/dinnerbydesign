@@ -102,7 +102,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, sour
 
         {/* Text-only action cue */}
         <div className="shrink-0 flex items-center gap-2">
-          <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest group-hover:text-accent transition-colors">View</span>
+          <span className="min-w-[44px] text-center rounded-full border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:border-dbd-accent/20 group-hover:bg-dbd-accent/5 group-hover:text-dbd-accent transition-colors">View</span>
         </div>
       </div>
     </button>

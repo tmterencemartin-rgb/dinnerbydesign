@@ -52,13 +52,13 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
           {/* Row 1: Brand & Utilities */}
           <div className="flex justify-between items-center mb-2 md:mb-3 lg:mb-4">
             <button 
-              className="flex items-center cursor-pointer group focus:outline-none" 
+              className="flex shrink-0 items-center cursor-pointer group focus:outline-none" 
               onClick={() => {
                 setView('landing');
               }}
               aria-label="Logo - Back to landing page"
             >
-              <div className="w-9 h-9 bg-dbd-surface-2 border border-dbd-rule/40 rounded-xl flex items-center justify-center mr-3 group-hover:border-dbd-accent transition-all">
+              <div className="w-9 h-9 bg-dbd-surface-2 border border-dbd-rule/40 rounded-xl flex items-center justify-center mr-2 sm:mr-3 group-hover:border-dbd-accent transition-all">
                 <LogoIcon className="w-7 h-7 transition-transform group-hover:scale-105" />
               </div>
               <div className="flex flex-col items-start text-left min-w-0">
@@ -66,7 +66,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
                   initial="hidden"
                   animate="visible"
                   variants={logoVariants}
-                  className="text-[19px] font-display font-semibold text-dbd-ink tracking-tight leading-none whitespace-nowrap"
+                  className="text-[17px] sm:text-[19px] font-display font-semibold text-dbd-ink tracking-tight leading-none whitespace-nowrap"
                 >
                   <motion.span variants={wordVariants} className="inline-block">Dinner</motion.span>
                   <motion.span variants={wordVariants} className="inline-block font-bold text-dbd-accent mx-[1px]">By</motion.span>
@@ -80,7 +80,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
               <Tooltip text={user && !user.isAnonymous ? "View your account and preferences" : "Sign in and save your preferences and recipes for future visits"} position="bottom" align="right">
                 <button 
                   onClick={() => setView('settings')}
-                  className={`text-[12px] font-bold px-2 py-1 transition-all whitespace-nowrap flex items-center gap-1.5 sm:gap-2 ${view === 'settings' ? 'text-dbd-accent font-semibold' : 'text-dbd-accent hover:opacity-70'}`}
+                  className={`text-[11px] sm:text-[12px] font-bold px-1.5 sm:px-2 py-1 transition-all whitespace-nowrap flex items-center gap-1.5 sm:gap-2 ${view === 'settings' ? 'text-dbd-accent font-semibold' : 'text-dbd-accent hover:opacity-70'}`}
                 >
                   {user && !user.isAnonymous && (
                     <div className="w-5 h-5 rounded-full bg-dbd-surface-2 border border-dbd-rule/40 flex items-center justify-center overflow-hidden shrink-0">
