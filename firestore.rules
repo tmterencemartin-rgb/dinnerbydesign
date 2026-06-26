@@ -1,0 +1,288 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: userId (UID)
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required, email format)
+    //   - displayName: string (required)
+    //   - preferences: null (required, migrated to subcollection)
+    //   - createdAt: string (ISO 8601)
+    //
+    // Collection: preferences
+    // Path: /users/{userId}/profile/preferences
+    // Fields:
+    //   - dietType: string or null
+    //   - allergies: list of strings
+    //   - exclusions: list of strings
+    //   - religiousEthical: list of strings
+    //   - cuisinePreferences: list of strings
+    //   - regionalCuisines: list of strings
+    //   - preferredMode: string ('cook' | 'ready-made')
+    //   - calorieCeiling: number or null
+    //   - budgetLimit: number or null
+    //   - cookingMethods: list of strings
+    //   - cookingFats: list of strings
+    //   - saladPreference: string ('include' | 'exclude' | 'main-only')
+    //
+    // Collection: savedRecipes
+    // Path: /users/{userId}/savedRecipes/{recipeId}
+    // Fields:
+    //   - recipeId: string (required)
+    //   - title: string (required)
+    //   - description: string (optional)
+    //   - cuisine: string (required)
+    //   - totalTime: number (optional)
+    //   - prepTime: number (optional)
+    //   - cookTime: number (optional)
+    //   - calories: number (optional)
+    //   - ingredients: list of strings (optional)
+    //   - instructions: list of strings or string (optional)
+    //   - sourceUrl: string (optional)
+    //   - mode: string (required, 'cook' or 'ready-made')
+    //   - savedAt: timestamp (required)
+    //   - updatedAt: timestamp (optional)
+    //   - userId: string (required, matches creator)
+    //   - scheduledDate: string or null (optional, 'monday'..'sunday' or null)
+    //   - mainProtein: string (optional)
+    //   - mainIngredient: string (optional)
+    //   - mainIngredientCategory: string (optional)
+    //   - isNutritious: bool (optional)
+    //   - nutritiousReason: string (optional)
+    //
+    // Collection: shoppingList
+    // Path: /users/{userId}/shoppingList/{itemId}
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required)
+    //   - category: string (required)
+    //   - checked: bool (required)
+    //   - sourceRecipeIds: list of strings (required)
+    //   - sourceDays: list of strings (required)
+    //   - generatedAt: timestamp (required)
+    //   - userId: string (required)
+    //   - isCustom: bool (optional)
+    //   - excludedByPantry: bool (optional)
+    //
+    // Collection: pantry
+    // Path: /users/{userId}/pantry/{itemId}
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required)
+    //   - category: string (required)
+    //   - isStaple: bool (required)
+    //   - userId: string (required)
+    //   - lastUsed: timestamp (optional)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             request.auth.token.get('email', '') == "tmterencemartin@gmail.com";
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function userDocPath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    function isPaid() {
+      return isAuthenticated() && 
+             exists(userDocPath(request.auth.uid)) && 
+             (get(userDocPath(request.auth.uid)).data.get('isPremium', false) == true || 
+              get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'active' ||
+              get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'paid' ||
+              get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'premium');
+    }
+
+    function isTrialActive() {
+      return isAuthenticated() && (
+             !exists(userDocPath(request.auth.uid)) || 
+             (get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'trial' && 
+              (!('trialStartedAt' in get(userDocPath(request.auth.uid)).data) || 
+               (get(userDocPath(request.auth.uid)).data.get('trialStartedAt', request.time) is timestamp && 
+                request.time < get(userDocPath(request.auth.uid)).data.get('trialStartedAt', request.time) + duration.value(7, 'd')))) 
+      );
+    }
+
+    function isReadOnly() {
+      return isAuthenticated() && !isPaid() && !isTrialActive();
+    }
+
+    function canWrite(uid) {
+      return isOwner(uid) && !isReadOnly();
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string && (email == "" || email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"));
+    }
+
+    function isStringList(l, maxSize) {
+      return l is list && l.size() <= maxSize;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUserUpdate(data, existingData) {
+      return hasRequiredFields(['uid', 'email', 'displayName', 'createdAt']) &&
+             data.uid == request.auth.uid &&
+             !data.diff(existingData).affectedKeys().hasAny(['subscription', 'isPremium', 'accessStatus', 'trialStartedAt']);
+    }
+
+    function isValidUserCreate(data) {
+      return hasRequiredFields(['uid', 'email', 'displayName', 'createdAt']) &&
+             hasOnlyAllowedFields([
+               'uid',
+               'email',
+               'displayName',
+               'firstName',
+               'lastName',
+               'phoneNumber',
+               'preferences',
+               'isPremium',
+               'accessStatus',
+               'trialStartedAt',
+               'createdAt',
+               'updatedAt',
+               'welcomeEmailSent',
+               'searchHistory',
+               'searchHistoryCook',
+               'searchHistoryReadyMade'
+             ]) &&
+             data.uid == request.auth.uid &&
+             isValidEmail(data.email) &&
+             data.displayName is string &&
+             data.displayName.size() <= 256 &&
+             data.get('isPremium', false) == false &&
+             data.get('accessStatus', 'trial') == 'trial';
+    }
+
+    function isValidPreferences(d) {
+      return (d.get('dietType', null) == null || d.get('dietType', '') is string) &&
+             (d.get('dietaryRule', 'none') is string) &&
+             (d.get('servings', 2) is int || d.get('servings', 2) is number) &&
+             (d.get('highProtein', false) is bool) &&
+             isStringList(d.get('allergies', []), 50) &&
+             isStringList(d.get('cuisinePreferences', []), 20);
+    }
+
+    function isValidSavedRecipe(data) {
+      return hasRequiredFields(['recipeId', 'title', 'cuisine', 'mode', 'savedAt', 'userId']) &&
+             data.recipeId is string && data.recipeId.size() <= 256 &&
+             data.title is string && data.title.size() <= 256 &&
+             data.cuisine is string && data.cuisine.size() <= 128 &&
+             data.mode in ['cook', 'ready-made'] &&
+             data.savedAt is timestamp &&
+             data.userId == request.auth.uid &&
+             (!('mainProtein' in data) || data.mainProtein == null || data.mainProtein is string) &&
+             (!('mainIngredient' in data) || data.mainIngredient == null || data.mainIngredient is string) &&
+             (!('mainIngredientCategory' in data) || data.mainIngredientCategory == null || data.mainIngredientCategory is string) &&
+             (!('scheduledDate' in data) || data.scheduledDate == null || data.scheduledDate in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']) &&
+             (!('updatedAt' in data) || data.updatedAt == null || data.updatedAt is timestamp);
+    }
+
+    function isValidShoppingListItem(data) {
+      return hasRequiredFields(['id', 'name', 'category', 'checked', 'sourceRecipeIds', 'sourceDays', 'generatedAt', 'userId']) &&
+             data.id is string && data.id.size() <= 256 &&
+             data.name is string && data.name.size() <= 512 &&
+             data.category is string && data.category.size() <= 128 &&
+             data.checked is bool &&
+             data.userId == request.auth.uid &&
+             data.sourceRecipeIds is list && data.sourceRecipeIds.size() <= 100 &&
+             data.sourceDays is list && data.sourceDays.size() <= 10 &&
+             (!('ingredientKey' in data) || data.ingredientKey is string) &&
+             (!('stateHash' in data) || data.stateHash is string) &&
+             (!('isCustom' in data) || data.isCustom is bool) &&
+             (!('excludedByPantry' in data) || data.excludedByPantry is bool);
+    }
+
+    function isValidPantryItem(data) {
+      return hasRequiredFields(['id', 'name', 'category', 'isStaple', 'userId']) &&
+             data.id is string && data.id.size() <= 256 &&
+             data.name is string && data.name.size() <= 512 &&
+             data.category is string && data.category.size() <= 128 &&
+             data.isStaple is bool &&
+             data.userId == request.auth.uid;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // ===============================================================
+    // Connection Test
+    // ===============================================================
+    match /_connection_test_/{docId} {
+      allow read: if true;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidUserCreate(request.resource.data);
+      allow update: if isAdmin() ||
+                    (isOwner(userId) && isValidUserUpdate(request.resource.data, resource.data));
+      allow delete: if isOwner(userId) || isAdmin();
+
+      match /profile/preferences {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create, update: if (canWrite(userId) || isAdmin()) && isValidPreferences(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+
+      match /savedRecipes/{recipeId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create, update: if (canWrite(userId) || isAdmin()) && isValidSavedRecipe(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+
+      match /shoppingList/{itemId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create, update: if (canWrite(userId) || isAdmin()) && isValidShoppingListItem(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+
+      match /pantry/{itemId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create, update: if (canWrite(userId) || isAdmin()) && isValidPantryItem(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+    }
+
+    match /feedback/{feedbackId} {
+      allow create: if isAuthenticated();
+      allow read: if isAdmin();
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

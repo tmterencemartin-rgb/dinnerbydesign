@@ -1,0 +1,8 @@
+{
+  "name": "DinnerByDesign",
+  "description": "7-day meal planning and smart shopping lists. Find exactly what to cook — and everything you need to buy.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,991 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { CircleX, Check, ChevronDown, Sparkles, Info, Save, Search, Apple, Store, Clock, Utensils, Heart, ShieldAlert } from 'lucide-react';
+import { NumberStepper } from '../ui/NumberStepper';
+import { Tooltip } from '../ui/Tooltip';
+import { DIETARY_TAXONOMY } from '../../constants';
+import { useAuth } from '../../contexts/AuthContext';
+import { PREFERRED_SOURCES } from '../../data/preferredSources';
+
+interface FilterOverlayProps {
+  onClose: () => void;
+  onSave: () => void;
+  onReset: () => void;
+  source: 'cook' | 'ready-made';
+  
+  // State from HomeView
+  maxCalories: string;
+  setMaxCalories: (val: string) => void;
+  maxTotalTime: string;
+  handleTotalTimeChange: (val: string) => void;
+  maxHeatingTime: string;
+  setMaxHeatingTime: (val: string) => void;
+  maxCostPerPortion: string;
+  setMaxCostPerPortion: (val: string) => void;
+  cuisines: string[];
+  setCuisines: (val: string[]) => void;
+  cookingMethods: string[];
+  setCookingMethods: (val: string[]) => void;
+  nutritiousChoice: boolean;
+  setNutritiousChoice: (val: boolean) => void;
+  highOmega3: boolean;
+  setHighOmega3: (val: boolean) => void;
+  highProtein: boolean;
+  setHighProtein: (val: boolean) => void;
+  isSimple: boolean;
+  setIsSimple: (val: boolean) => void;
+  isLowCost: boolean;
+  setIsLowCost: (val: boolean) => void;
+  supermarkets: string[];
+  setSupermarkets: (val: string[]) => void;
+  dietaryRule: string;
+  setDietaryRule: (val: any) => void;
+  saladPreference: 'all' | 'main-only' | 'side-only' | 'none';
+  setSaladPreference: (val: 'all' | 'main-only' | 'side-only' | 'none') => void;
+  servings: string;
+  setServings: (val: string) => void;
+  allergies: string[];
+  setAllergies: (val: string[]) => void;
+  religiousEthical: string[];
+  setReligiousEthical: (val: string[]) => void;
+  cookingFats: string[];
+  setCookingFats: (val: string[]) => void;
+  preferredSourceIds: string[];
+  setPreferredSourceIds: (val: string[]) => void;
+  
+  isDietaryRuleSuppressed?: boolean;
+  suppressedPermanentKeys?: string[];
+  clearSuppression?: () => void;
+  
+  excludeInputRef: React.RefObject<HTMLInputElement>;
+  omitInputRef: React.RefObject<HTMLInputElement>;
+  excludeIngredients: string[];
+  setExcludeIngredients: (val: string[]) => void;
+  omitIngredients: string[];
+  setOmitIngredients: (val: string[]) => void;
+}
+
+export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
+  const {
+    onClose, onSave, onReset, source,
+    maxCalories, setMaxCalories,
+    maxTotalTime, handleTotalTimeChange,
+    maxHeatingTime, setMaxHeatingTime,
+    maxCostPerPortion, setMaxCostPerPortion,
+    cuisines, setCuisines,
+    cookingMethods, setCookingMethods,
+    nutritiousChoice, setNutritiousChoice,
+    highOmega3, setHighOmega3,
+    highProtein, setHighProtein,
+    isSimple, setIsSimple,
+    isLowCost, setIsLowCost,
+    supermarkets, setSupermarkets,
+    dietaryRule, setDietaryRule,
+    saladPreference, setSaladPreference,
+    servings, setServings,
+    allergies, setAllergies,
+    religiousEthical, setReligiousEthical,
+    cookingFats, setCookingFats,
+    preferredSourceIds, setPreferredSourceIds,
+    isDietaryRuleSuppressed, suppressedPermanentKeys, clearSuppression,
+    excludeInputRef, omitInputRef,
+    excludeIngredients, setExcludeIngredients,
+    omitIngredients, setOmitIngredients
+  } = props;
+
+  const { savePreferences, profile, showToast } = useAuth();
+
+  // Maintain isolated local states for all interactive filters
+  const [localMaxCalories, setLocalMaxCalories] = React.useState(maxCalories);
+  const [localMaxTotalTime, setLocalMaxTotalTime] = React.useState(maxTotalTime);
+  const [localMaxHeatingTime, setLocalMaxHeatingTime] = React.useState(maxHeatingTime);
+  const [localMaxCostPerPortion, setLocalMaxCostPerPortion] = React.useState(maxCostPerPortion);
+  const [localCuisines, setLocalCuisines] = React.useState<string[]>(cuisines);
+  const [localCookingMethods, setLocalCookingMethods] = React.useState<string[]>(cookingMethods);
+  const [localNutritiousChoice, setLocalNutritiousChoice] = React.useState(nutritiousChoice);
+  const [localHighOmega3, setLocalHighOmega3] = React.useState(highOmega3);
+  const [localHighProtein, setLocalHighProtein] = React.useState(highProtein);
+  const [localIsSimple, setLocalIsSimple] = React.useState(isSimple);
+  const [localIsLowCost, setLocalIsLowCost] = React.useState(isLowCost);
+  const [localSupermarkets, setLocalSupermarkets] = React.useState<string[]>(supermarkets);
+  const [localDietaryRule, setLocalDietaryRule] = React.useState(dietaryRule);
+  const [localSaladPreference, setLocalSaladPreference] = React.useState(saladPreference);
+  const [localServings, setLocalServings] = React.useState(servings);
+  const [localExcludeIngredients, setLocalExcludeIngredients] = React.useState<string[]>(excludeIngredients);
+  const [localOmitIngredients, setLocalOmitIngredients] = React.useState<string[]>(omitIngredients);
+  const [localAllergies, setLocalAllergies] = React.useState<string[]>(allergies);
+  const [localReligiousEthical, setLocalReligiousEthical] = React.useState<string[]>(religiousEthical);
+  const [localCookingFats, setLocalCookingFats] = React.useState<string[]>(cookingFats);
+  const [localPreferredSourceIds, setLocalPreferredSourceIds] = React.useState<string[]>(preferredSourceIds);
+
+  const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
+    dietary: true,
+    sources: false,
+    timeBudget: false,
+    cooking: false,
+    goals: false,
+  });
+
+  const toggleSection = (key: string) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  // Apply inputs and states back to parent variables
+  const commitLocalStatesToParent = (finalExclude: string[]) => {
+    setMaxCalories(localMaxCalories);
+    if (source === 'cook') {
+      handleTotalTimeChange(localMaxTotalTime);
+    } else {
+      setMaxHeatingTime(localMaxHeatingTime);
+    }
+    setMaxCostPerPortion(localMaxCostPerPortion);
+    setCuisines(localCuisines);
+    setCookingMethods(localCookingMethods);
+    setNutritiousChoice(localNutritiousChoice);
+    setHighOmega3(localHighOmega3);
+    setHighProtein(localHighProtein);
+    setIsSimple(localIsSimple);
+    setIsLowCost(localIsLowCost);
+    setSupermarkets(localSupermarkets);
+    setDietaryRule(localDietaryRule);
+    setSaladPreference(localSaladPreference);
+    setServings(localServings);
+    setExcludeIngredients(finalExclude);
+    setOmitIngredients(localOmitIngredients);
+    setAllergies(localAllergies);
+    setReligiousEthical(localReligiousEthical);
+    setCookingFats(localCookingFats);
+    setPreferredSourceIds(localPreferredSourceIds);
+  };
+
+  const handleApplyToThisSearch = () => {
+    // Process final draft input from text field
+    const excludeVal = excludeInputRef.current?.value.trim() || '';
+    let finalExclude = [...localExcludeIngredients];
+    if (excludeVal && !localExcludeIngredients.includes(excludeVal)) {
+      finalExclude = [...localExcludeIngredients, excludeVal];
+      setLocalExcludeIngredients(finalExclude);
+      if (excludeInputRef.current) excludeInputRef.current.value = '';
+    }
+
+    commitLocalStatesToParent(finalExclude);
+    onSave(); // Close and execute search with updated temp filter states
+  };
+
+  const handleSaveAsDefault = async () => {
+    const excludeVal = excludeInputRef.current?.value.trim() || '';
+    let finalExclude = [...localExcludeIngredients];
+    if (excludeVal && !localExcludeIngredients.includes(excludeVal)) {
+      finalExclude = [...localExcludeIngredients, excludeVal];
+      setLocalExcludeIngredients(finalExclude);
+      if (excludeInputRef.current) excludeInputRef.current.value = '';
+    }
+
+    commitLocalStatesToParent(finalExclude);
+
+    const currentPrefs = profile?.preferences || {};
+    const updatedPreferences: any = {
+      ...currentPrefs,
+      dietaryRule: localDietaryRule,
+      saladPreference: localSaladPreference,
+      allergies: localAllergies,
+      nutritiousChoice: localNutritiousChoice,
+      isSimple: localIsSimple,
+      isLowCost: localIsLowCost,
+      highOmega3: localHighOmega3,
+      highProtein: localHighProtein,
+      servings: parseInt(localServings) || 2,
+      calorieCeiling: localMaxCalories ? parseInt(localMaxCalories) : null,
+      budgetLimit: localMaxCostPerPortion ? parseFloat(localMaxCostPerPortion) : null,
+      exclusions: finalExclude,
+      cuisinePreferences: localCuisines,
+      religiousEthical: localReligiousEthical,
+      cookingMethods: localCookingMethods,
+      cookingFats: localCookingFats,
+      readyToEatUnderMins: localMaxTotalTime ? parseInt(localMaxTotalTime) : (localMaxHeatingTime ? parseInt(localMaxHeatingTime) : null),
+      preferredSupermarkets: localSupermarkets,
+      preferredSourceIds: localPreferredSourceIds,
+    };
+
+    try {
+      await savePreferences(updatedPreferences);
+      showToast("Default preferences synchronized!");
+      onSave();
+    } catch (err) {
+      showToast("Error updating default preferences.");
+    }
+  };
+
+  const resetAllLocalFilters = () => {
+    setLocalMaxCalories('');
+    setLocalMaxTotalTime('');
+    setLocalMaxHeatingTime('');
+    setLocalMaxCostPerPortion('');
+    setLocalCuisines([]);
+    setLocalCookingMethods([]);
+    setLocalNutritiousChoice(false);
+    setLocalHighOmega3(false);
+    setLocalHighProtein(false);
+    setLocalIsSimple(false);
+    setLocalIsLowCost(false);
+    setLocalSupermarkets([]);
+    setLocalDietaryRule('none');
+    setLocalSaladPreference('all');
+    setLocalServings('2');
+    setLocalExcludeIngredients([]);
+    setLocalOmitIngredients([]);
+    setLocalAllergies([]);
+    setLocalReligiousEthical([]);
+    setLocalCookingFats([]);
+    setLocalPreferredSourceIds([]);
+
+    if (excludeInputRef.current) excludeInputRef.current.value = '';
+    if (omitInputRef.current) omitInputRef.current.value = '';
+    
+    onReset();
+  };
+
+  return (
+    <motion.div 
+      id="filter-overlay-backdrop"
+      key="filter-overlay-backdrop"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.2 } }}
+      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-gray-900/40 backdrop-blur-sm overflow-hidden"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <motion.div 
+        id="filter-overlay-content"
+        key="filter-overlay-content"
+        initial={{ y: "100%", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: "100%", opacity: 0, transition: { duration: 0.25 } }}
+        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        className="bg-white w-full max-w-lg rounded-t-lg sm:rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="px-4 sm:px-6 py-4 border-b border-gray-100 sticky top-0 bg-white z-10 shrink-0">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[15px] font-bold text-gray-900 uppercase tracking-[0.05em]">Recipe preferences</h2>
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0">
+              <CircleX className="w-5 h-5 text-gray-400" />
+            </button>
+          </div>
+          <div className="text-[12.5px] mt-2 text-gray-500 leading-relaxed font-medium">
+            Customise your recipe filters for this search, or save them as your default.
+          </div>
+        </div>
+
+        <div className="px-4 sm:px-6 pt-4 pb-0 overflow-y-auto space-y-2.5 flex-1 scrollbar-hide no-scrollbar">
+          {/* Suppressed Filters Notification */}
+          {(isDietaryRuleSuppressed || (suppressedPermanentKeys && suppressedPermanentKeys.length > 0)) && (
+            <div className="p-2.5 bg-accent/5 border border-accent/10 rounded-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+              <div className="p-1 bg-accent/10 rounded shrink-0">
+                <Sparkles className="w-3.5 h-3.5 text-accent" />
+              </div>
+              <div className="flex-1">
+                <p className="text-[11.5px] text-accent font-bold leading-tight">
+                  {isDietaryRuleSuppressed ? 'Dietary preferences paused' : 'Permanent preferences hidden'}
+                </p>
+                <p className="text-[10px] text-accent/70 font-medium">Standard rules (diet, allergies) are inactive for this search.</p>
+              </div>
+              {clearSuppression && (
+                <button 
+                  onClick={clearSuppression}
+                  className="px-2 py-1 text-[10px] font-bold text-accent uppercase tracking-wider hover:underline bg-accent/10 rounded shrink-0"
+                >
+                  Restore
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Collapsible Accordions and Filters */}
+          <div className="space-y-3.5 pb-4">
+            
+            {/* Category 1: Dietary Essentials */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <button
+                type="button"
+                onClick={() => toggleSection('dietary')}
+                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Apple className="w-4 h-4 text-gray-500" />
+                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Dietary Essentials</span>
+                  {(() => {
+                    const cnt = (localDietaryRule !== 'none' ? 1 : 0) + 
+                                  (localSaladPreference !== 'all' ? 1 : 0) + 
+                                  localAllergies.length + 
+                                  localReligiousEthical.length + 
+                                  localExcludeIngredients.length;
+                    return cnt > 0 ? (
+                      <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
+                    ) : null;
+                  })()}
+                </div>
+                <ChevronDown 
+                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                    openSections.dietary ? 'rotate-180 text-gray-700' : ''
+                  }`} 
+                />
+              </button>
+              
+              {openSections.dietary && (
+                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                  {/* Dietary Preference */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Dietary preference</label>
+                    <div className="relative mt-1">
+                      <select 
+                        value={localDietaryRule}
+                        onChange={(e) => setLocalDietaryRule(e.target.value as any)}
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                      >
+                        {DIETARY_TAXONOMY.dietaryPreferences.options.map(opt => (
+                          <option key={opt} value={opt}>{DIETARY_TAXONOMY.dietaryPreferences.labels[opt]}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Salad Preference */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Salad preference</label>
+                    <div className="relative mt-1">
+                      <select 
+                        value={localSaladPreference}
+                        onChange={(e) => setLocalSaladPreference(e.target.value as any)}
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                      >
+                        {Object.entries(DIETARY_TAXONOMY.saladPreferences.labels).map(([val, label]) => (
+                          <option key={val} value={val}>{label}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Safety Note */}
+                  <div className="bg-amber-50/40 border border-amber-100/50 p-3 rounded-lg flex items-start gap-2.5 mb-4">
+                    <ShieldAlert size={14} className="text-amber-600 mt-0.5 shrink-0" />
+                    <p className="text-[11px] text-amber-900/70 font-medium leading-relaxed">
+                      We aim to filter out unsuitable recipes based on your selections, but you should always check ingredients and product labels before cooking or serving.
+                    </p>
+                  </div>
+
+                  {/* Allergies */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Allergies</label>
+                    <div className="relative mt-1">
+                      <select 
+                        value=""
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val && !localAllergies.includes(val)) {
+                            setLocalAllergies([...localAllergies, val]);
+                          }
+                        }}
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                      >
+                        <option value="">Add allergy...</option>
+                        {DIETARY_TAXONOMY.allergies.options.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                    {localAllergies.length > 0 && (
+                      <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
+                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Allergies:</span>
+                        {localAllergies.map(item => (
+                          <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-red-50 text-red-700 border border-red-100 rounded text-[11px] font-medium animate-in fade-in zoom-in-95 duration-100">
+                            {item}
+                            <button type="button" onClick={() => setLocalAllergies(localAllergies.filter(i => i !== item))} className="hover:text-red-900 transition-colors p-0.5 cursor-pointer">
+                              <CircleX size={13} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Religious & Ethical */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Religious & ethical</label>
+                    <div className="relative mt-1">
+                      <select 
+                        value=""
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val && !localReligiousEthical.includes(val)) {
+                            setLocalReligiousEthical([...localReligiousEthical, val]);
+                          }
+                        }}
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                      >
+                        <option value="">Add ethical preference...</option>
+                        {DIETARY_TAXONOMY.religiousEthical.options.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                    {localReligiousEthical.length > 0 && (
+                      <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
+                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Ethical Preferences:</span>
+                        {localReligiousEthical.map(item => (
+                          <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
+                            {item}
+                            <button type="button" onClick={() => setLocalReligiousEthical(localReligiousEthical.filter(i => i !== item))} className="hover:text-accent transition-colors p-0.5 cursor-pointer">
+                              <CircleX size={13} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Excluded Ingredients */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Exclude ingredients for this search</label>
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <input 
+                          ref={excludeInputRef}
+                          type="text"
+                          placeholder="e.g. Coriander, Mushrooms"
+                          className="flex-1 h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              const val = e.currentTarget.value.trim();
+                              if (val && !localExcludeIngredients.includes(val)) {
+                                setLocalExcludeIngredients([...localExcludeIngredients, val]);
+                                e.currentTarget.value = '';
+                              }
+                            }
+                          }}
+                        />
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const val = excludeInputRef.current?.value.trim();
+                            if (val && !localExcludeIngredients.includes(val)) {
+                              setLocalExcludeIngredients([...localExcludeIngredients, val]);
+                              if (excludeInputRef.current) excludeInputRef.current.value = '';
+                            }
+                          }}
+                          className="px-4 h-11 bg-gray-100 text-gray-950 text-[12px] font-bold rounded hover:bg-gray-200 transition-colors shadow-sm cursor-pointer"
+                        >
+                          Add
+                        </button>
+                      </div>
+                      {localExcludeIngredients.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2 bg-gray-50/50 p-2 rounded border border-gray-100">
+                          {localExcludeIngredients.map(item => (
+                            <span key={item} className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 bg-gray-100 border border-gray-200 text-[11px] font-semibold text-gray-700 rounded select-none animate-in fade-in zoom-in-95 duration-100">
+                              {item}
+                              <button type="button" onClick={() => setLocalExcludeIngredients(localExcludeIngredients.filter(i => i !== item))} className="hover:text-accent cursor-pointer">
+                                <CircleX size={12} />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Category 2: Sources & Stores */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <button
+                type="button"
+                onClick={() => toggleSection('sources')}
+                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Store className="w-4 h-4 text-gray-500" />
+                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Sources & Stores</span>
+                  <Info className="w-3 h-3 text-gray-300 ml-0.5 select-none" />
+                  {(() => {
+                    const cnt = source === 'cook' ? localPreferredSourceIds.length : localSupermarkets.length;
+                    return cnt > 0 ? (
+                      <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
+                    ) : null;
+                  })()}
+                </div>
+                <ChevronDown 
+                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                    openSections.sources ? 'rotate-180 text-gray-705' : ''
+                  }`} 
+                />
+              </button>
+              
+              {openSections.sources && (
+                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                  <p className="text-[11px] text-gray-400 font-medium leading-relaxed italic pl-1 border-l-2 border-accent/20">
+                    Your selected sources help shape recommendations and shopping links, but recipe searches may still include relevant results from other sources.
+                  </p>
+                  {source === 'cook' ? (
+                    /* Trusted Sources */
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Trusted sources</label>
+                        <span className="text-[9px] font-semibold text-accent uppercase tracking-wider bg-accent/5 px-2 py-0.5 border border-accent/10 rounded">Cook mode active</span>
+                      </div>
+                      <div className="relative mt-1">
+                        <select 
+                          value=""
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val && !localPreferredSourceIds.includes(val)) {
+                              setLocalPreferredSourceIds([...localPreferredSourceIds, val]);
+                            }
+                          }}
+                          className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        >
+                          <option value="">Add trusted source...</option>
+                          {PREFERRED_SOURCES.map(sourceOpt => (
+                            <option key={sourceOpt.id} value={sourceOpt.id}>{sourceOpt.label}</option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      </div>
+                      {localPreferredSourceIds.length > 0 && (
+                        <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
+                          <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Trusted Sources:</span>
+                          {localPreferredSourceIds.map(id => {
+                            const sourceObj = PREFERRED_SOURCES.find(s => s.id === id);
+                            const label = sourceObj ? sourceObj.label : id;
+                            return (
+                              <div key={id} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
+                                {label}
+                                <button type="button" onClick={() => setLocalPreferredSourceIds(localPreferredSourceIds.filter(i => i !== id))} className="hover:text-accent transition-colors p-0.5 cursor-pointer">
+                                  <CircleX size={13} />
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Preferred Supermarkets */
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Preferred supermarkets</label>
+                        <span className="text-[9px] font-semibold text-accent uppercase tracking-wider bg-accent/5 px-2 py-0.5 border border-accent/10 rounded">Ready-made mode active</span>
+                      </div>
+                      <div className="relative mt-1">
+                        <select 
+                          value=""
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val && !localSupermarkets.includes(val)) {
+                              setLocalSupermarkets([...localSupermarkets, val]);
+                            }
+                          }}
+                          className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                        >
+                          <option value="">Add supermarket...</option>
+                          {DIETARY_TAXONOMY.supermarkets.options.map(opt => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      </div>
+                      {localSupermarkets.length > 0 && (
+                        <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
+                          <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active supermarket preferences:</span>
+                          {localSupermarkets.map(item => (
+                            <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
+                              {item}
+                              <button type="button" onClick={() => setLocalSupermarkets(localSupermarkets.filter(i => i !== item))} className="hover:text-accent transition-colors p-0.5 cursor-pointer">
+                                <CircleX size={13} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Category 3: Time, Portions & Budget */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <button
+                type="button"
+                onClick={() => toggleSection('timeBudget')}
+                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Clock className="w-4 h-4 text-gray-500" />
+                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Time, Portions & Budget</span>
+                  {(() => {
+                    const readyTimeActive = (source === 'cook' ? localMaxTotalTime : localMaxHeatingTime) ? 1 : 0;
+                    const portionsActive = localServings !== '2' ? 1 : 0;
+                    const calActive = localMaxCalories ? 1 : 0;
+                    const costActive = localMaxCostPerPortion ? 1 : 0;
+                    const cnt = readyTimeActive + portionsActive + calActive + costActive;
+                    return cnt > 0 ? (
+                      <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
+                    ) : null;
+                  })()}
+                </div>
+                <ChevronDown 
+                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                    openSections.timeBudget ? 'rotate-180 text-gray-700' : ''
+                  }`} 
+                />
+              </button>
+              
+              {openSections.timeBudget && (
+                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                  {/* Portions Counter */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Portions</label>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded border border-gray-200">
+                      <span className="text-[13px] font-semibold text-gray-700">Adult portions</span>
+                      <NumberStepper 
+                        value={parseInt(localServings) || 2} 
+                        onChange={(val) => setLocalServings(val.toString())} 
+                        min={1} 
+                        max={12} 
+                      />
+                    </div>
+                  </div>
+
+                  {/* Ready in under (Time) */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Ready in under</label>
+                    <div className="relative">
+                      <input 
+                        type="number"
+                        value={source === 'cook' ? localMaxTotalTime : localMaxHeatingTime}
+                        onChange={(e) => source === 'cook' ? setLocalMaxTotalTime(e.target.value) : setLocalMaxHeatingTime(e.target.value)}
+                        placeholder="e.g. 30"
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 font-bold uppercase tracking-wider">mins</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Calories */}
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Max calories</label>
+                      <div className="relative">
+                        <input 
+                          type="number"
+                          value={localMaxCalories}
+                          onChange={(e) => setLocalMaxCalories(e.target.value)}
+                          placeholder="e.g. 600"
+                          className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-medium text-gray-400 uppercase">kcal</span>
+                      </div>
+                    </div>
+
+                    {/* Price */}
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Max cost per portion</label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[13px] text-gray-400 font-bold">£</span>
+                        <input 
+                          type="number"
+                          step="0.50"
+                          value={localMaxCostPerPortion}
+                          onChange={(e) => setLocalMaxCostPerPortion(e.target.value)}
+                          placeholder="e.g. 5.00"
+                          className="w-full h-11 pl-8 pr-4 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Category 4: Cooking Preferences */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <button
+                type="button"
+                onClick={() => toggleSection('cooking')}
+                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Utensils className="w-4 h-4 text-gray-500" />
+                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Cooking Preferences</span>
+                  {(() => {
+                    const cnt = localCuisines.length + localCookingMethods.length + localCookingFats.length;
+                    return cnt > 0 ? (
+                      <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
+                    ) : null;
+                  })()}
+                </div>
+                <ChevronDown 
+                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                    openSections.cooking ? 'rotate-180 text-gray-700' : ''
+                  }`} 
+                />
+              </button>
+              
+              {openSections.cooking && (
+                <div className="p-4 border-t border-gray-100 space-y-4 bg-white animate-in fade-in duration-200">
+                  {/* Cuisine Preferences */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Cuisine preferences</label>
+                    <div className="relative mt-1">
+                      <select 
+                        value=""
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val && !localCuisines.includes(val)) {
+                            setLocalCuisines([...localCuisines, val]);
+                          }
+                        }}
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                      >
+                        <option value="">Select cuisine...</option>
+                        {DIETARY_TAXONOMY.cuisinePreferences.options.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                    {localCuisines.length > 0 && (
+                      <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100 font-display">
+                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Cuisines:</span>
+                        {localCuisines.map(item => (
+                          <div key={item} className="flex items-center justify-between py-1 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100 font-sans">
+                            {item}
+                            <button type="button" onClick={() => setLocalCuisines(localCuisines.filter(i => i !== item))} className="hover:text-accent transition-colors p-0.5 cursor-pointer">
+                              <CircleX size={13} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Cooking Methods */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Cooking methods</label>
+                    <div className="relative mt-1">
+                      <select 
+                        value=""
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val && !localCookingMethods.includes(val)) {
+                            setLocalCookingMethods([...localCookingMethods, val]);
+                          }
+                        }}
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                      >
+                        <option value="">Any method</option>
+                        {[
+                          'Air fryer', 'One pot', 'Oven bake', 'Pan fried', 'Slow cooker', 'Stir fry', 'Tray bake'
+                        ].map(method => (
+                          <option key={method} value={method}>{method}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                    {localCookingMethods.length > 0 && (
+                      <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
+                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Methods:</span>
+                        {localCookingMethods.map(item => (
+                          <div key={item} className="flex items-center justify-between py-1 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
+                            {item}
+                            <button type="button" onClick={() => setLocalCookingMethods(localCookingMethods.filter(i => i !== item))} className="hover:text-accent transition-colors p-0.5 cursor-pointer">
+                              <CircleX size={13} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Cooking Fats */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Cooking fats</label>
+                    <div className="relative mt-1">
+                      <select 
+                        value=""
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val && !localCookingFats.includes(val)) {
+                            setLocalCookingFats([...localCookingFats, val]);
+                          }
+                        }}
+                        className="w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium appearance-none"
+                      >
+                        <option value="">Any cooking fat</option>
+                        {DIETARY_TAXONOMY.cookingFats.options.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                    {localCookingFats.length > 0 && (
+                      <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100 font-display">
+                        <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-wider pl-0.5">Active Cooking Fats:</span>
+                        {localCookingFats.map(item => (
+                          <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
+                            {item}
+                            <button type="button" onClick={() => setLocalCookingFats(localCookingFats.filter(i => i !== item))} className="hover:text-accent transition-colors p-0.5 cursor-pointer">
+                              <CircleX size={13} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Category 5: Priorities */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <button
+                type="button"
+                onClick={() => toggleSection('goals')}
+                className="w-full h-12 flex items-center justify-between px-4 bg-gray-50/70 hover:bg-gray-50 transition-colors text-left font-display outline-none select-none cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Heart className="w-4 h-4 text-gray-500" />
+                  <span className="text-[12px] font-bold text-gray-700 uppercase tracking-widest">Priorities</span>
+                  {(() => {
+                    const cnt = (localNutritiousChoice ? 1 : 0) + 
+                                  (localIsSimple ? 1 : 0) + 
+                                  (localIsLowCost ? 1 : 0) + 
+                                  (localHighOmega3 ? 1 : 0) +
+                                  (localHighProtein ? 1 : 0);
+                    return cnt > 0 ? (
+                      <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
+                    ) : null;
+                  })()}
+                </div>
+                <ChevronDown 
+                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                    openSections.goals ? 'rotate-180 text-gray-705' : ''
+                  }`} 
+                />
+              </button>
+              
+              {openSections.goals && (
+                <div className="p-4 border-t border-gray-100 space-y-3 bg-white animate-in fade-in duration-200">
+                  {[
+                    { 
+                      id: 'wholesome', 
+                      label: 'Wholesome Recipes', 
+                      active: localNutritiousChoice, 
+                      toggle: () => setLocalNutritiousChoice(!localNutritiousChoice), 
+                      tooltip: 'Prioritises recipes that are nutrient-dense and less processed as a default search preference.' 
+                    },
+                    { 
+                      id: 'simple', 
+                      label: 'Quick & Easy', 
+                      active: localIsSimple, 
+                      toggle: () => setLocalIsSimple(!localIsSimple), 
+                      tooltip: 'Prioritises recipes with fewer ingredients and steps as a default search preference.' 
+                    },
+                    { 
+                      id: 'low-cost', 
+                      label: 'Low Cost', 
+                      active: localIsLowCost, 
+                      toggle: () => setLocalIsLowCost(!localIsLowCost), 
+                      tooltip: 'Prioritises budget-friendly options based on typical market pricing.' 
+                    },
+                    { 
+                      id: 'omega3', 
+                      label: 'High Omega-3', 
+                      active: localHighOmega3, 
+                      toggle: () => setLocalHighOmega3(!localHighOmega3), 
+                      tooltip: 'Prioritises heart-healthy ingredients rich in essential fatty acids (e.g. oily fish).' 
+                    },
+                    { 
+                      id: 'protein', 
+                      label: 'High Protein', 
+                      active: localHighProtein, 
+                      toggle: () => setLocalHighProtein(!localHighProtein), 
+                      tooltip: 'Prioritises recipes with a higher protein-to-calorie ratio to support your nutrition goals.' 
+                    }
+                  ].map(item => (
+                    <div 
+                      key={item.id} 
+                      className="flex items-start justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors gap-3"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[13px] font-bold text-gray-800 leading-tight flex items-center gap-1.5">
+                          {item.label}
+                          <Tooltip text={item.tooltip} position="bottom" align="center">
+                            <Info className="w-3.5 h-3.5 text-gray-300 hover:text-gray-400 cursor-help transition-colors font-semibold" />
+                          </Tooltip>
+                        </div>
+                        <p className="text-[11px] text-gray-400 font-medium leading-normal mt-0.5">{item.tooltip}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={item.toggle}
+                        className={`w-10 h-6 flex items-center rounded-full p-0.5 transition-colors shrink-0 mt-0.5 cursor-pointer ${
+                          item.active ? 'bg-accent' : 'bg-gray-200'
+                        }`}
+                      >
+                        <div
+                          className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform ${
+                            item.active ? 'translate-x-4' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Dual-Action Footer Buttons */}
+        <div className="p-4 sm:p-6 border-t border-gray-100 bg-white space-y-2.5 shrink-0">
+          <div className="flex flex-col sm:flex-row gap-2.5">
+            <button 
+              type="button"
+              onClick={handleApplyToThisSearch}
+              className="flex-1 h-12 bg-gray-900 hover:bg-black text-white rounded text-[12px] font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.99] cursor-pointer"
+            >
+              <Search className="w-4 h-4" />
+              Apply to This Search
+            </button>
+            <button 
+              type="button"
+              onClick={handleSaveAsDefault}
+              className="flex-1 h-12 bg-dbd-accent hover:bg-dbd-accent-mid text-white rounded text-[12px] font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.99] cursor-pointer"
+            >
+              <Save className="w-4 h-4" />
+              Save as My Default
+            </button>
+          </div>
+          <button 
+            type="button"
+            onClick={resetAllLocalFilters}
+            className="w-full py-2 bg-white text-gray-400 hover:text-gray-700 text-[11px] font-bold uppercase tracking-[0.1em] text-center hover:bg-gray-50 transition-all rounded"
+          >
+            Clear Preferences
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};

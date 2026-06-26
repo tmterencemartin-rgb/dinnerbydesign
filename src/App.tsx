@@ -1,0 +1,316 @@
+import React, { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AppErrorBoundary } from './components/AppErrorBoundary';
+import { Layout } from './components/Layout';
+import { useSearch } from './hooks/useSearch';
+import { getContradictionWarning, renderErrorMessage } from './lib/uiUtils';
+import { AuthLoading, AuthError, AuthSyncing, AuthSignIn } from './components/AuthScreens';
+import { useSeo } from './hooks/useSeo';
+
+// Views
+import { HomeView } from './components/views/HomeView';
+import { SettingsView } from './components/views/SettingsView';
+import { PlannerView } from './components/views/PlannerView';
+import { ShoppingListView } from './components/views/ShoppingListView';
+import { PrivacyPage } from './pages/PrivacyPage';
+import { TermsView } from './components/views/TermsView';
+import { AdminDashboard } from './components/views/AdminDashboard';
+import { LandingView } from './components/views/LandingView';
+import { SourceSwitcher } from './components/SourceSwitcher';
+import { SuccessView } from './components/views/SuccessView';
+import { Toast } from './components/ui/Toast';
+import { InstallPrompt } from './components/InstallPrompt';
+import { AppView } from './types';
+
+import { StatusBanner } from './components/StatusBanner';
+
+const AppContent = () => {
+  const { 
+    user, 
+    profile, 
+    isAuthReady, 
+    error, 
+    authError,
+    view,
+    setView: setViewContext,
+    highlight,
+    clearHighlight,
+    toast,
+    setToast
+  } = useAuth();
+
+  const seoConfig = React.useMemo(() => {
+    switch (view) {
+      case 'planner':
+        return {
+          title: 'Your Meal Planner — DinnerByDesign',
+          description: 'Organise your bespoke recipes, coordinate portion counts, and manage your weekly meal plan schedule with DinnerByDesign.'
+        };
+      case 'shopping':
+        return {
+          title: 'Your Shopping List — DinnerByDesign',
+          description: 'View your dynamic smart shopping list automatically grouped by department for efficient grocery shopping.'
+        };
+      case 'settings':
+        return {
+          title: 'Account Settings — DinnerByDesign',
+          description: 'Manage your dietary rules, allergies, ingredient exclusions, unit system, and account preferences.'
+        };
+      case 'privacy':
+        return {
+          title: 'Privacy Policy — DinnerByDesign',
+          description: 'Read the privacy policy of DinnerByDesign to see how we protect and manage your private data.'
+        };
+      case 'terms':
+        return {
+          title: 'Terms of Service — DinnerByDesign',
+          description: 'Review the terms of service, trial rules, and subscription details for DinnerByDesign.'
+        };
+      case 'success':
+        return {
+          title: 'Subscription Success — DinnerByDesign',
+          description: 'Thank you for subscribing to DinnerByDesign Premium! Your account has been upgraded.'
+        };
+      case 'signin':
+        return {
+          title: 'Sign In / Sign Up — DinnerByDesign',
+          description: 'Access your DinnerByDesign account or create a new profile to start planning your custom menus.'
+        };
+      case 'admin':
+        return {
+          title: 'Admin Dashboard — DinnerByDesign',
+          description: 'DinnerByDesign Administration and Management.'
+        };
+      case 'home':
+      case 'landing':
+      default:
+        return {
+          title: 'DinnerByDesign — Bespoke Food Planning & Smart Shopping Lists',
+          description: 'Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.',
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "DinnerByDesign",
+            "description": "Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
+            "applicationCategory": "HealthAndFitnessApplication, FoodAndDrink",
+            "operatingSystem": "All"
+          }
+        };
+    }
+  }, [view]);
+
+  useSeo(seoConfig);
+
+  const [targetPlannerDay, setTargetPlannerDay] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showInlineSuccess, setShowInlineSuccess] = useState(false);
+
+  const setView = (v: AppView, highlightOrFilters?: string | boolean | null) => {
+    if (typeof highlightOrFilters === 'string') {
+      setViewContext(v, highlightOrFilters);
+      setShowFilters(false);
+    } else if (typeof highlightOrFilters === 'boolean') {
+      setViewContext(v);
+      setShowFilters(highlightOrFilters);
+    } else {
+      setViewContext(v);
+    }
+  };
+
+  const searchState = useSearch();
+
+  // Auto redirect guest user away from protected views to landing
+  const isGuest = !user || user.isAnonymous;
+  React.useEffect(() => {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success') {
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
+      if (isFromEmail) {
+        setView('signin');
+      } else {
+        setView('landing');
+      }
+    }
+    // Auto-redirect signed-in users away from auth and landing views
+    if (!isGuest && (view === 'signin' || view === 'landing')) {
+      setView('home');
+    }
+  }, [isGuest, view]);
+
+  // Check the active auth state upon return from subscription purchase,
+  // and if a valid user session exists, route them straight to the success view.
+  React.useEffect(() => {
+    if (isAuthReady) {
+      const params = new URLSearchParams(window.location.search);
+      const isReturnFromCheckout = params.has('session_id');
+      const hasValidSession = user && !user.isAnonymous;
+      
+      if (isReturnFromCheckout && hasValidSession) {
+        if (view !== 'success') {
+          setView('success');
+        }
+      }
+    }
+  }, [isAuthReady, user, view, setView]);
+
+  if (!isAuthReady) {
+    return <AuthLoading />;
+  }
+
+  // Handle high-latency profile sync to prevent flash of unstyled/empty content
+  if (user && !user.isAnonymous && !profile && isAuthReady) {
+    return <AuthSyncing />;
+  }
+
+  if (view === 'landing') {
+    return <LandingView />;
+  }
+
+  // Allow guests to view Privacy, Terms or Success standalone without forcing registration/sign-in
+  if (view === 'privacy') {
+    return <PrivacyPage setView={setView} />;
+  }
+
+  if (view === 'terms') {
+    return <TermsView setView={setView} />;
+  }
+
+  if (view === 'success') {
+    return (
+      <Layout view={view} setView={setView} onNewSearch={() => {}}>
+        <SuccessView setView={setView} />
+      </Layout>
+    );
+  }
+
+  if (view === 'signin' && (!user || user.isAnonymous)) {
+    if (authError) return <AuthError error={authError} />;
+    const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const isSignInByDefault = params?.get('mode') === 'signin' || params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
+    return <AuthSignIn defaultMode={isSignInByDefault ? 'signin' : 'signup'} />;
+  }
+
+  if (isGuest && view !== 'home') {
+    if (authError) return <AuthError error={authError} />;
+    const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const isSignInByDefault = params?.get('mode') === 'signin' || params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
+    return <AuthSignIn defaultMode={isSignInByDefault ? 'signin' : 'signup'} />;
+  }
+
+  const localContradiction = getContradictionWarning(
+    searchState.input,
+    profile?.preferences || null,
+    searchState.isDietaryRuleSuppressed,
+    () => {
+      searchState.setIsDietaryRuleSuppressed(true);
+      searchState.handleGenerate();
+    },
+    searchState.activeCriteria
+  );
+
+  const contradictionWarning = localContradiction || (searchState.searchContradiction ? {
+    type: searchState.searchContradiction.type,
+    content: searchState.searchContradiction.content,
+    colors: searchState.searchContradiction.type === 'conflict' ? { text: '#8C4A43', bg: '#FDF2F0', border: '#F5E1DE' } : 
+            searchState.searchContradiction.type === 'no_results' ? { text: '#5E554A', bg: '#F7F5F1', border: '#E5E0D8' } :
+            { text: '#5E554A', bg: '#F0EDE8', border: '#D9D2C7' }
+  } : null);
+
+
+  return (
+    <>
+      <StatusBanner setView={setView} />
+      <Layout 
+        view={view} 
+        setView={setView} 
+        onNewSearch={searchState.handleNewSearch}
+      >
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
+          {renderErrorMessage(error)}
+        </div>
+      )}
+      
+      <SourceSwitcher 
+        current={view} 
+        onSelect={(v: any) => setView(v)} 
+        targetDay={targetPlannerDay} 
+        onCancel={() => {
+          setTargetPlannerDay(null);
+          setView('planner');
+        }} 
+      />
+
+      <AnimatePresence>
+        {view === 'home' && (
+          <HomeView 
+            {...searchState}
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            setPreferencesError={() => {}}
+            contradictionWarning={contradictionWarning}
+            isEmptyResults={!searchState.isGenerating && !searchState.isAppending && !searchState.searchError && searchState.lastQuery !== '' && (searchState.source === 'cook' ? (searchState.currentRecipes !== null && searchState.currentRecipes.length === 0) : (searchState.currentReadyMeals !== null && searchState.currentReadyMeals.length === 0))}
+            showInlineSuccess={showInlineSuccess}
+            localPreferences={profile?.preferences || {}}
+            updateLocalPreference={() => {}} 
+            handleTotalTimeChange={(val) => searchState.setMaxTotalTime(val)}
+            timeConflict={null}
+            setView={setView}
+            cookingMethods={searchState.cookingMethods}
+            setCookingMethods={searchState.setCookingMethods}
+            saladPreference={searchState.saladPreference}
+            setSaladPreference={searchState.setSaladPreference}
+          />
+        )}
+        {view === 'settings' && (
+          <SettingsView 
+            setView={setView} 
+            highlight={highlight} 
+            clearHighlight={clearHighlight} 
+          />
+        )}
+        {view === 'planner' && (
+          <PlannerView 
+            setView={setView}
+            onAddToPlanner={(dayId) => {
+              setTargetPlannerDay(dayId);
+              setView('home');
+            }}
+          />
+        )}
+        {view === 'shopping' && (
+          <ShoppingListView setView={setView} />
+        )}
+        {view === 'admin' && (
+          <AdminDashboard />
+        )}
+      </AnimatePresence>
+    </Layout>
+      <AnimatePresence>
+        {toast && (
+          <Toast 
+            key={toast.id}
+            message={toast.message} 
+            actionLabel={toast.actionLabel} 
+            onAction={toast.onAction} 
+            onClose={() => setToast(null)} 
+          />
+        )}
+      </AnimatePresence>
+      <InstallPrompt />
+    </>
+  );
+};
+
+const App = () => {
+  return (
+    <AppErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </AppErrorBoundary>
+  );
+};
+
+export default App;

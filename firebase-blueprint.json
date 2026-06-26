@@ -1,0 +1,177 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user profile with preferences and metadata.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique identifier for the user." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "displayName": { "type": "string", "description": "The user's display name." },
+        "preferences": {
+          "type": "object",
+          "$ref": "Preferences",
+          "description": "User dietary preferences and favorite cuisines."
+        },
+        "isPremium": { "type": "boolean" },
+        "accessStatus": { "type": "string", "enum": ["trial", "read_only", "paid"] },
+        "trialStartedAt": { "type": "timestamp" },
+        "subscription": { "type": "object", "$ref": "SubscriptionSummary" },
+        "searchHistory": { "type": "array", "items": { "type": "string" } },
+        "searchHistoryCook": { "type": "array", "items": { "type": "string" } },
+        "searchHistoryReadyMade": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "timestamp", "description": "When the user profile was created." },
+        "updatedAt": { "type": "timestamp" }
+      },
+      "required": ["uid", "email", "displayName", "preferences", "createdAt"]
+    },
+    "SubscriptionSummary": {
+      "title": "SubscriptionSummary",
+      "description": "Normalised subscription state for the user.",
+      "type": "object",
+      "properties": {
+        "stripeCustomerId": { "type": "string" },
+        "stripeSubscriptionId": { "type": "string" },
+        "subscriptionStatus": { "type": "string", "enum": ["trialing", "active", "past_due", "canceled", "unpaid", "incomplete", "paused"] },
+        "accessStatus": { "type": "string", "enum": ["trial", "paid", "read_only"] },
+        "trialStart": { "type": "timestamp" },
+        "trialEnd": { "type": "timestamp" },
+        "currentPeriodStart": { "type": "timestamp" },
+        "currentPeriodEnd": { "type": "timestamp" },
+        "isTrialing": { "type": "boolean" },
+        "isPaying": { "type": "boolean" },
+        "hasAccess": { "type": "boolean" },
+        "updatedAt": { "type": "timestamp" }
+      }
+    },
+    "Preferences": {
+      "title": "Preferences",
+      "description": "User's active filters and hard constraints.",
+      "type": "object",
+      "properties": {
+        "dietaryRule": { "type": "string", "enum": ["none", "keto", "paleo", "pescatarian", "vegan", "vegetarian", "gluten-free"] },
+        "saladPreference": { "type": "string", "enum": ["all", "main-only", "side-only", "none"] },
+        "allergies": { "type": "array", "items": { "type": "string" } },
+        "nutritiousChoice": { "type": "boolean" },
+        "isSimple": { "type": "boolean" },
+        "isLowCost": { "type": "boolean" },
+        "highOmega3": { "type": "boolean" },
+        "highProtein": { "type": "boolean" },
+        "servings": { "type": "number" },
+        "calorieCeiling": { "type": "number" },
+        "budgetLimit": { "type": "number" },
+        "exclusions": { "type": "array", "items": { "type": "string" } },
+        "cuisinePreferences": { "type": "array", "items": { "type": "string" } },
+        "religiousEthical": { "type": "array", "items": { "type": "string" } },
+        "cookingMethods": { "type": "array", "items": { "type": "string" } },
+        "cookingFats": { "type": "array", "items": { "type": "string" } },
+        "readyToEatUnderMins": { "type": "number" },
+        "preferredSupermarkets": { "type": "array", "items": { "type": "string" } },
+        "preferredSourceIds": { "type": "array", "items": { "type": "string" } },
+        "preferredMode": { "type": "string", "enum": ["cook", "ready-made"] },
+        "customCuisines": { "type": "array", "items": { "type": "string" } },
+        "updatedAt": { "type": "timestamp" }
+      }
+    },
+    "SavedRecipe": {
+      "title": "SavedRecipe",
+      "description": "A recipe or ready meal saved by a user. Can be unscheduled (day: null) or scheduled (day: string).",
+      "type": "object",
+      "properties": {
+        "recipeId": { "type": "string", "description": "Unique identifier for the recipe." },
+        "title": { "type": "string", "description": "Recipe name." },
+        "description": { "type": "string", "description": "Short recipe description." },
+        "cuisine": { "type": "string", "description": "Cuisine label." },
+        "totalTime": { "type": "number", "description": "Total time in minutes." },
+        "prepTime": { "type": "number", "description": "Prep time in minutes." },
+        "cookTime": { "type": "number", "description": "Cook time in minutes." },
+        "calories": { "type": "number", "description": "Calories per serving." },
+        "ingredients": { "type": "array", "items": { "type": "string" }, "description": "Full ingredient list." },
+        "instructions": { "type": "array", "items": { "type": "string" }, "description": "Cooking instructions." },
+        "sourceUrl": { "type": "string", "description": "Link to original third-party recipe." },
+        "mode": { "type": "string", "enum": ["cook", "ready-made"], "description": "Whether it's a recipe to cook or a ready meal." },
+        "savedAt": { "type": "timestamp", "description": "When the recipe was saved." },
+        "updatedAt": { "type": "timestamp", "description": "When the recipe was last updated (e.g. scheduled)." },
+        "userId": { "type": "string", "description": "Authenticated user ID." },
+        "scheduledDate": { "type": "string", "description": "The day of the week (e.g. 'monday') or null if unscheduled." },
+        "mainProtein": { "type": "string", "description": "The primary protein ingredient (e.g. 'chicken', 'fish')." },
+        "mainIngredient": { "type": "string", "description": "The specific primary ingredient (e.g. 'Chicken Thighs', 'Lentils')." },
+        "mainIngredientCategory": { "type": "string", "description": "The broader grouping (e.g. 'chicken', 'fish', 'vegetarian', 'vegetable', 'pasta', 'pulses', 'egg', 'mixed', 'other')." }
+      },
+      "required": ["recipeId", "title", "cuisine", "mode", "savedAt", "userId"]
+    },
+    "ShoppingListItem": {
+      "title": "ShoppingListItem",
+      "description": "An ingredient or item on the user's shopping list.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "quantity": { "type": "string" },
+        "unit": { "type": "string" },
+        "category": { "type": "string" },
+        "checked": { "type": "boolean" },
+        "sourceRecipeIds": { "type": "array", "items": { "type": "string" } },
+        "sourceDays": { "type": "array", "items": { "type": "string" } },
+        "generatedAt": { "type": "timestamp" },
+        "userId": { "type": "string" },
+        "isCustom": { "type": "boolean" },
+        "excludedByPantry": { "type": "boolean" }
+      },
+      "required": ["id", "name", "category", "checked", "sourceRecipeIds", "sourceDays", "generatedAt", "userId"]
+    },
+    "PantryItem": {
+      "title": "PantryItem",
+      "description": "An item the user declares as already having in stock.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "isStaple": { "type": "boolean" },
+        "userId": { "type": "string" },
+        "lastUsed": { "type": "timestamp" }
+      },
+      "required": ["id", "name", "category", "isStaple", "userId"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "User feedback submission.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "timestamp" },
+        "version": { "type": "string" }
+      },
+      "required": ["userId", "message", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents."
+    },
+    "/users/{userId}/profile/preferences": {
+      "schema": "Preferences",
+      "description": "User's active filters and hard constraints."
+    },
+    "/users/{userId}/savedRecipes/{recipeId}": {
+      "schema": "SavedRecipe",
+      "description": "User's saved recipes (includes scheduled planner entries)."
+    },
+    "/users/{userId}/shoppingList/{itemId}": {
+      "schema": "ShoppingListItem",
+      "description": "User's shopping list items generated from the planner."
+    },
+    "/users/{userId}/pantry/{itemId}": {
+      "schema": "PantryItem",
+      "description": "User's pantry inventory."
+    },
+    "/feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "Global user feedback."
+    }
+  }
+}

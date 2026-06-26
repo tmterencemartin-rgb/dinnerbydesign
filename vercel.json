@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/server.cjs"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/server.cjs": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  }
+}
