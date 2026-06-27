@@ -5,9 +5,19 @@ interface CompactRecipeItemProps {
   item: Recipe | ReadyMeal;
   source: 'cook' | 'ready-made';
   onClick: () => void;
+  onCompare?: () => void;
+  isCompareSelected?: boolean;
+  compareDisabled?: boolean;
 }
 
-export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, source, onClick }) => {
+export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
+  item,
+  source,
+  onClick,
+  onCompare,
+  isCompareSelected = false,
+  compareDisabled = false
+}) => {
   const isCook = source === 'cook';
   const recipe = item as Recipe;
   const meal = item as ReadyMeal;
@@ -28,13 +38,18 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, sour
   );
 
   return (
-    <button
-      onClick={onClick}
-      className="w-full text-left bg-white border border-gray-100 rounded p-4 hover:border-accent/30 hover:shadow-sm transition-all duration-200 group active:scale-[0.98]"
+    <div
+      className={`w-full text-left bg-white border rounded p-4 hover:border-accent/30 hover:shadow-sm transition-all duration-200 group ${
+        isCompareSelected ? 'border-accent/50' : 'border-gray-100'
+      }`}
     >
       <div className="flex items-center justify-between gap-4">
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <button
+          type="button"
+          onClick={onClick}
+          className="flex-1 min-w-0 text-left active:scale-[0.99] transition-transform"
+        >
           <div className="flex flex-col">
             {/* Row 1: Taxonomy & Source */}
             <div className="flex items-center gap-1 mb-1">
@@ -98,13 +113,38 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({ item, sour
               )}
             </div>
           </div>
-        </div>
+        </button>
 
         {/* Text-only action cue */}
-        <div className="shrink-0 flex items-center gap-2">
-          <span className="min-w-[44px] text-center rounded bg-gray-50 px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:bg-dbd-accent/5 group-hover:text-dbd-accent transition-colors">View</span>
+        <div className="shrink-0 flex items-center gap-1.5">
+          {onCompare && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCompare();
+              }}
+              disabled={compareDisabled && !isCompareSelected}
+              className={`min-w-[68px] rounded px-2 py-1 text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                isCompareSelected
+                  ? 'bg-dbd-accent text-white'
+                  : compareDisabled
+                    ? 'bg-gray-50 text-gray-300 cursor-not-allowed'
+                    : 'bg-gray-50 text-gray-500 hover:bg-dbd-accent/5 hover:text-dbd-accent'
+              }`}
+            >
+              {isCompareSelected ? 'Selected' : 'Compare'}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onClick}
+            className="min-w-[44px] text-center rounded bg-gray-50 px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:bg-dbd-accent/5 group-hover:text-dbd-accent transition-colors"
+          >
+            View
+          </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 };

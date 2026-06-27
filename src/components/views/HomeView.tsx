@@ -31,6 +31,7 @@ import { isSameRecipe } from '../../lib/recipeUtils';
 import { CompactRecipeItem } from '../CompactRecipeItem';
 import { RecipeDetailOverlay } from '../RecipeDetailOverlay';
 import { SearchOnboardingHelper } from '../home/SearchOnboardingHelper';
+import { RecipeCompareModal } from '../RecipeCompareModal';
 
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { safeStorage } from '../../lib/storage';
@@ -246,9 +247,32 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   // Actually, a simpler way is to just listen for filter count changes if >= 3
 
   const [selectedItem, setSelectedItem] = React.useState<any | null>(null);
+  const [compareItems, setCompareItems] = React.useState<any[]>([]);
+  const [showCompareModal, setShowCompareModal] = React.useState(false);
 
   const isSaved = (recipe: any) => savedRecipes.some(r => isSameRecipe(r, recipe));
   const isScheduled = (recipe: any) => savedRecipes.some(r => isSameRecipe(r, recipe) && !!r.scheduledDate);
+
+  const isCompareSelected = (item: any) => compareItems.some(compareItem => isSameRecipe(compareItem, item));
+
+  const handleCompareToggle = (item: any) => {
+    setCompareItems(prev => {
+      if (prev.some(compareItem => isSameRecipe(compareItem, item))) {
+        const next = prev.filter(compareItem => !isSameRecipe(compareItem, item));
+        if (next.length < 2) setShowCompareModal(false);
+        return next;
+      }
+
+      const next = prev.length >= 2 ? [prev[1], item] : [...prev, item];
+      if (next.length === 2) setShowCompareModal(true);
+      return next;
+    });
+  };
+
+  const handleCompareView = (item: any) => {
+    setShowCompareModal(false);
+    setSelectedItem(item);
+  };
 
   const handleToggleSaved = async (recipe: any) => {
     if (isReadOnly) {
@@ -732,6 +756,39 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-3 pb-16 bg-transparent max-w-4xl mx-auto w-full"
           >
+            {compareItems.length > 0 && (
+              <div className="bg-white border border-gray-100 rounded px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-dbd-accent">Compare</p>
+                  <p className="text-[12px] text-gray-500 font-medium truncate">
+                    {compareItems.length === 1
+                      ? 'Select one more recipe to compare.'
+                      : compareItems.map(item => item.title).join(' vs ')}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    disabled={compareItems.length < 2}
+                    onClick={() => setShowCompareModal(true)}
+                    className="h-8 px-3 rounded bg-gray-900 text-white disabled:bg-gray-200 disabled:text-gray-400 text-[10px] font-bold uppercase tracking-widest transition-colors"
+                  >
+                    Compare
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCompareItems([]);
+                      setShowCompareModal(false);
+                    }}
+                    className="h-8 px-3 rounded bg-white text-gray-400 hover:text-gray-700 text-[10px] font-bold uppercase tracking-widest transition-colors"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            )}
+
             {source === 'cook' ? (
               currentRecipes?.map((recipe, idx) => (
                 <CompactRecipeItem 
@@ -739,6 +796,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   item={recipe}
                   source="cook"
                   onClick={() => setSelectedItem(recipe)}
+                  onCompare={() => handleCompareToggle(recipe)}
+                  isCompareSelected={isCompareSelected(recipe)}
                 />
               ))
             ) : (
@@ -748,6 +807,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   item={meal}
                   source="ready-made"
                   onClick={() => setSelectedItem(meal)}
+                  onCompare={() => handleCompareToggle(meal)}
+                  isCompareSelected={isCompareSelected(meal)}
                 />
               ))
             )}
@@ -784,6 +845,20 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             )}
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showCompareModal && compareItems.length === 2 && (
+          <RecipeCompareModal
+            items={compareItems}
+            onClose={() => setShowCompareModal(false)}
+            onView={handleCompareView}
+            onRemove={(item) => {
+              setCompareItems(prev => prev.filter(compareItem => !isSameRecipe(compareItem, item)));
+              setShowCompareModal(false);
+            }}
+          />
         )}
       </AnimatePresence>
 
