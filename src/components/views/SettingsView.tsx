@@ -485,11 +485,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
   <p>Hi ${firstName},</p>
 
-  <p>As requested, your DinnerByDesign account has been closed, and your personal data (including saved meal plans, pantry logs, and profile info) has been permanently deleted from our systems.</p>
+  <p>As requested, your DinnerByDesign account has been closed, and your personal data (including saved dinner plans, pantry logs, and profile info) has been permanently deleted from our systems.</p>
 
   <p style="font-size: 14px; color: #555;">Please note it may take up to 48 hours for cache layers and automated backup rotations to clear completely.</p>
 
-  <p>You are always welcome back if you ever want to start meal planning again in the future.</p>
+  <p>You are always welcome back if you ever want to start dinner planning again in the future.</p>
 
   <p>Warmly,</p>
   <p>The DinnerByDesign team</p>

@@ -19,17 +19,17 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
 }) => {
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="w-full max-w-[420px] flex p-1 bg-gray-100/80 rounded-2xl relative">
+      <div className="w-full max-w-[420px] flex p-1 bg-gray-100/80 rounded relative">
         <button
           id="mode-cook"
           type="button"
           onClick={() => setSource('cook')}
-          className="relative z-10 flex-1 py-3 transition-colors rounded-xl cursor-pointer flex flex-col items-center justify-center text-center px-2"
+          className="relative z-10 flex-1 py-3 transition-colors rounded cursor-pointer flex flex-col items-center justify-center text-center px-2"
         >
           {source === 'cook' && (
             <motion.div 
               layoutId="activeModePill" 
-              className="absolute inset-0 bg-white border border-[#f1ede9] shadow-sm rounded-xl -z-10"
+              className="absolute inset-0 bg-white border border-[#f1ede9] rounded -z-10"
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
@@ -49,12 +49,12 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
           id="mode-ready-made"
           type="button"
           onClick={() => setSource('ready-made')}
-          className="relative z-10 flex-1 py-3 transition-colors rounded-xl cursor-pointer flex flex-col items-center justify-center text-center px-2"
+          className="relative z-10 flex-1 py-3 transition-colors rounded cursor-pointer flex flex-col items-center justify-center text-center px-2"
         >
           {source === 'ready-made' && (
             <motion.div 
               layoutId="activeModePill" 
-              className="absolute inset-0 bg-white border border-[#f1ede9] shadow-sm rounded-xl -z-10"
+              className="absolute inset-0 bg-white border border-[#f1ede9] rounded -z-10"
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}

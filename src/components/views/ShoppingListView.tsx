@@ -89,7 +89,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
           });
           bodyText += '\n';
         });
-        bodyText += `----------------------------------\nSchedule your next meal at ${window.location.origin}\n`;
+        bodyText += `----------------------------------\nSchedule your next dinner at ${window.location.origin}\n`;
         
         const fallbackMailto = `mailto:?subject=${encodeURIComponent(`Shopping List - ${dateStr}`)}&body=${encodeURIComponent(bodyText)}`;
         const a = document.createElement('a');
@@ -311,7 +311,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
       bodyText += '\n';
     });
     
-    bodyText += `----------------------------------\nSchedule your next meal at ${window.location.origin}\n`;
+    bodyText += `----------------------------------\nSchedule your next dinner at ${window.location.origin}\n`;
     return bodyText;
   })();
 
@@ -369,7 +369,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                             <div className="text-left space-y-1.5 p-0.5 leading-normal font-sans">
                               <p className="font-bold text-[12px] text-white border-b border-white/10 pb-1 mb-1">How is this calculated?</p>
                               <p className="text-gray-300 text-[11px] font-medium leading-relaxed">
-                                This estimate reflects the <strong>exact pro-rata cost of the precise ingredient weights</strong> used in your meals (e.g., exactly 100g of lobster meat) and assumes you have basic cupboard staples like oil and seasoning.
+                                This estimate reflects the <strong>exact pro-rata cost of the precise ingredient weights</strong> used in your planned dinners (e.g., exactly 100g of lobster meat) and assumes you have basic cupboard staples like oil and seasoning.
                               </p>
                               <p className="text-gray-300 text-[11px] font-medium leading-relaxed">
                                 Because supermarkets sell items in fixed pack sizes, your actual receipt total at the checkout will be higher than this baseline minimum.
@@ -504,7 +504,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   </div>
                   <p className="text-[14px] text-gray-900 font-bold">You're all set!</p>
                   <p className="text-[12px] text-gray-500 leading-relaxed font-semibold">
-                    Everything required for your {planner.length} planned {planner.length === 1 ? 'meal' : 'meals'} is in stock.
+                    Everything required for your {planner.length} planned {planner.length === 1 ? 'dinner' : 'dinners'} is in stock.
                   </p>
                   <button 
                     onClick={() => setShowPantry(true)}

@@ -125,7 +125,7 @@ export const LandingView: React.FC = () => {
     'Jamie Oliver': [
       { title: "Jamie Oliver's Tesco Italian Selection", meta: 'Ready to eat · serves 2 · ~£4.50', source: 'Tesco' },
       { title: "Jamie Oliver Chef Special Pasta Sauce", meta: 'Ready to eat · serves 2 · ~£2.50', source: 'Asda' },
-      { title: "Jamie Oliver Veggie Bolognese Meal Pot", meta: 'Ready to eat · serves 1 · ~£3.00', source: 'Tesco' }
+      { title: "Jamie Oliver Veggie Bolognese Pot", meta: 'Ready to eat · serves 1 · ~£3.00', source: 'Tesco' }
     ],
     'Air Fryer': [
       { title: 'Tesco Air-Fryer Ready Crispy Chicken Wings', meta: '18 min · serves 2 · ~£3.80', source: 'Tesco' },

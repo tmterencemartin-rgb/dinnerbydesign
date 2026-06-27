@@ -419,7 +419,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       setShowFilters(true);
                       setPreferencesError(null);
                     }}
-                    className={`flex items-center justify-center p-3 h-11 w-11 rounded-lg border text-gray-500 hover:text-gray-900 transition-colors shadow-sm cursor-pointer shrink-0 ${
+                    className={`flex items-center justify-center p-3 h-11 w-11 rounded border text-gray-500 hover:text-gray-900 transition-colors cursor-pointer shrink-0 ${
                       showFilters
                         ? 'bg-gray-100 border-gray-400 text-gray-900'
                         : 'bg-white border-gray-200 hover:border-gray-400 hover:bg-gray-50'

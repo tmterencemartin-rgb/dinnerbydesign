@@ -59,7 +59,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           handleGenerate();
         }
       }}
-      className={`flex w-full items-stretch h-11 rounded-lg ring-1 transition-all overflow-hidden shadow-sm ${
+      className={`flex w-full items-stretch h-11 rounded ring-1 transition-all overflow-hidden ${
         isReadOnly ? 'bg-gray-100 ring-gray-100 opacity-75' : 'bg-gray-50 ring-gray-200 focus-within:ring-2 focus-within:ring-gray-900/10'
       }`}
     >

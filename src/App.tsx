@@ -44,8 +44,8 @@ const AppContent = () => {
     switch (view) {
       case 'planner':
         return {
-          title: 'Your Meal Planner — DinnerByDesign',
-          description: 'Organise your bespoke recipes, coordinate portion counts, and manage your weekly meal plan schedule with DinnerByDesign.',
+          title: 'Your Dinner Planner — DinnerByDesign',
+          description: 'Organise your bespoke recipes, coordinate portion counts, and manage your weekly dinner schedule with DinnerByDesign.',
           canonicalPath: '/planner',
           noIndex: true
         };
@@ -101,13 +101,13 @@ const AppContent = () => {
       default:
         return {
           title: 'DinnerByDesign — Bespoke Food Planning & Smart Shopping Lists',
-          description: 'Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.',
+          description: 'Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.',
           canonicalPath: '/',
           jsonLd: {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "DinnerByDesign",
-            "description": "Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
+            "description": "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
             "applicationCategory": "HealthAndFitnessApplication, FoodAndDrink",
             "operatingSystem": "All"
           }

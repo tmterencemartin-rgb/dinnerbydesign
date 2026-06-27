@@ -349,7 +349,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                 </h2>
                 <div className="flex items-center gap-2 flex-wrap text-xs text-gray-400 font-normal mt-1.5 mb-4">
                   <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider">
-                    {viewingPlannerEntry.mode === 'ready-made' ? 'Ready Meal' : 'Active Cook'}
+                    {viewingPlannerEntry.mode === 'ready-made' ? 'Ready-made dish' : 'Active Cook'}
                   </span>
                   {(() => {
                     const parts: React.ReactNode[] = [];
@@ -587,7 +587,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <p className="text-[11px] text-gray-400 font-medium leading-relaxed">
-                      This fills the first {planDinnerCount} days of your planner and may replace meals already scheduled there.
+                      This fills the first {planDinnerCount} days of your planner and may replace dinners already scheduled there.
                     </p>
                     <button
                       type="button"
