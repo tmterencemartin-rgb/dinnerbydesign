@@ -673,7 +673,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                 <div className="space-y-6 relative z-10">
                   {/* SCHEDULED HEADER ROW */}
                   <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest pl-1">Scheduled</h3>
+                    <div className="flex items-center gap-2.5">
+                      <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest pl-1">Scheduled</h3>
+                      <span className="text-[11px] text-gray-400 font-medium">
+                        {Math.min(planner.length, 7)}/7 days filled
+                      </span>
+                    </div>
                     <div className="flex items-center gap-3">
                       <span className="text-[12px] text-gray-400 font-medium">
                         {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
@@ -731,7 +736,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                             </span>
                           </div>
                           
-                          <div className="flex-grow min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-x-2 sm:gap-x-4 gap-y-1 sm:gap-y-0">
+                          <div className="flex-grow min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-0">
                             <div 
                               className="min-w-0 cursor-pointer hover:opacity-85 transition-opacity"
                               onClick={() => {
@@ -753,7 +758,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                                 </div>
                               ) : (
                                 <div className="flex flex-col">
-                                  <span className="text-[13px] text-gray-300 font-medium italic">Nothing scheduled yet</span>
+                                  <span className="text-[13px] text-gray-400 font-medium">Nothing scheduled yet</span>
                                   {targetPlannerDay === dayId && (
                                     <p className="text-[11px] text-accent font-semibold mt-1 animate-in fade-in slide-in-from-top-1">Select a recipe below to schedule for {dayId}...</p>
                                   )}
@@ -761,7 +766,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                               )}
                             </div>
 
-                            <div className="flex items-center gap-2 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-2 shrink-0">
                               {entry ? (
                                 <div className="flex items-center gap-1.5">
                                   <button 
@@ -817,7 +822,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                                       if (checkReadOnly("Your trial has ended. Upgrade to add to planner.")) return;
                                       onAddToPlanner?.(dayId);
                                     }}
-                                    className="flex items-center gap-1 text-[11px] font-bold text-accent uppercase tracking-widest hover:underline"
+                                    className="inline-flex items-center gap-1.5 h-8 px-3 bg-white border border-gray-200 text-[11px] font-bold text-gray-700 rounded hover:border-accent/40 hover:text-accent hover:bg-accent/5 transition-colors"
                                   >
                                     <Plus size={12} />
                                     <span>Schedule</span>
