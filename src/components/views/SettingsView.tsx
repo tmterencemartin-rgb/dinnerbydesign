@@ -1117,7 +1117,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                             Subscribe before your trial ends
                           </p>
                           <p className="text-[12px] text-gray-400 leading-normal font-semibold">
-                            Choose a monthly or annual plan now to keep DinnerByDesign active without interruption.
+                            Choose a monthly or annual account now to keep DinnerByDesign active without interruption.
                           </p>
                         </div>
                         <StripeCheckoutButton className="w-full" />

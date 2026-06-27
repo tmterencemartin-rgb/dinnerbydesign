@@ -679,7 +679,7 @@ export function createApp() {
           canonicalPath = "/privacy";
         } else if (pathName === "/terms") {
           title = "Terms of Service — DinnerByDesign";
-          description = "Review terms of use, trials, and premium plan rules for the DinnerByDesign service.";
+          description = "Review terms of use, trials, and premium account rules for the DinnerByDesign service.";
           canonicalPath = "/terms";
         } else if (pathName === "/planner") {
           title = "Your Dinner Planner — DinnerByDesign";

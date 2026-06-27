@@ -676,7 +676,7 @@ export const LandingView: React.FC = () => {
             
             <div>
               <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-dbd-accent block mb-1 select-none uppercase">
-                The Full Plan
+                The Full Account
               </span>
 
               {/* Pricing toggle wrapper - now inside the card */}
