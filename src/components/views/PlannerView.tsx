@@ -830,17 +830,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                 {/* SECTION 2: SCHEDULED (WEEKLY PLAN) */}
                 <div className="space-y-6 relative z-10">
                   {/* SCHEDULED HEADER ROW */}
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-100 pb-2">
-                    <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex flex-col gap-2 border-b border-gray-100 pb-2">
+                    <div className="flex items-center justify-between gap-3">
                       <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest pl-1">Scheduled</h3>
-                      <span className="text-[11px] text-gray-400 font-medium">
-                        {Math.min(planner.length, 7)}/7 days filled
-                      </span>
-                    </div>
-                    <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-3">
-                      <span className="text-[12px] text-gray-400 font-medium whitespace-nowrap">
-                        {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
-                      </span>
                       {planner.length > 0 && (
                         <div className="flex items-center justify-end gap-2 min-w-0">
                           {showClearWeekConfirm ? (
@@ -878,6 +870,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                           )}
                         </div>
                       )}
+                    </div>
+                    <div className="flex items-center gap-4 pl-1">
+                      <span className="text-[12px] text-gray-400 font-medium whitespace-nowrap">
+                        {Math.min(planner.length, 7)}/7 days filled
+                      </span>
+                      <span className="text-[12px] text-gray-400 font-medium whitespace-nowrap">
+                        {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
+                      </span>
                     </div>
                   </div>
 
