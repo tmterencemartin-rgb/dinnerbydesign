@@ -422,6 +422,7 @@ export function createApp() {
               accessStatus: isPaying ? 'paid' : (isTrialing ? 'trial' : 'read_only'),
               trialStart: subscription.trial_start ? Timestamp.fromMillis(subscription.trial_start * 1000) : null,
               trialEnd: subscription.trial_end ? Timestamp.fromMillis(subscription.trial_end * 1000) : null,
+              subscriptionCreatedAt: subscription.created ? Timestamp.fromMillis(subscription.created * 1000) : null,
               currentPeriodStart: Timestamp.fromMillis(subscription.current_period_start * 1000),
               currentPeriodEnd: Timestamp.fromMillis(subscription.current_period_end * 1000),
               isTrialing,

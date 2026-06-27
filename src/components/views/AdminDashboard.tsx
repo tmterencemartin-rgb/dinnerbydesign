@@ -3,15 +3,17 @@ import { collection, query, getDocs, doc, deleteDoc, Timestamp } from 'firebase/
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
-import { ArrowLeft, Search, Filter, Download, ExternalLink, Calendar, CreditCard, Clock, Trash2 } from 'lucide-react';
+import { ArrowLeft, Search, Download, ExternalLink, Calendar, CreditCard, Clock, Trash2, Users, MailCheck, AlertTriangle, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+type AdminStatusFilter = AccessStatus | 'all' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
 
 export const AdminDashboard: React.FC = () => {
   const { setView, isAdmin, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<AccessStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<AdminStatusFilter>('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [modal, setModal] = useState<{
     isOpen: boolean;
@@ -173,6 +175,24 @@ export const AdminDashboard: React.FC = () => {
     });
   };
 
+  const paymentIssueStatuses = ['past_due', 'unpaid', 'incomplete', 'paused'];
+
+  const getAccessStatus = (user: UserProfile): AccessStatus => {
+    return user.subscription?.accessStatus || user.accessStatus || 'trial';
+  };
+
+  const getSearchCount = (user: UserProfile) => {
+    const combined = user.searchHistory?.length || 0;
+    const cook = user.searchHistoryCook?.length || 0;
+    const readyMade = user.searchHistoryReadyMade?.length || 0;
+    return combined + cook + readyMade;
+  };
+
+  const hasPaymentIssue = (user: UserProfile) => {
+    const status = user.subscription?.subscriptionStatus;
+    return !!status && paymentIssueStatuses.includes(status);
+  };
+
   const filteredUsers = users.filter(user => {
     const email = user.email || '';
     const displayName = user.displayName || '';
@@ -181,8 +201,13 @@ export const AdminDashboard: React.FC = () => {
       displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.uid.includes(searchTerm);
     
-    const status = user.subscription?.accessStatus || user.accessStatus || 'trial';
-    const matchesStatus = statusFilter === 'all' || status === statusFilter;
+    const status = getAccessStatus(user);
+    const matchesStatus =
+      statusFilter === 'all' ||
+      status === statusFilter ||
+      (statusFilter === 'stripe_linked' && !!user.subscription?.stripeCustomerId) ||
+      (statusFilter === 'payment_issue' && hasPaymentIssue(user)) ||
+      (statusFilter === 'no_stripe' && !user.subscription?.stripeCustomerId);
 
     return matchesSearch && matchesStatus;
   });
@@ -207,6 +232,62 @@ export const AdminDashboard: React.FC = () => {
 
   const formatShortId = (id?: string | null) => id ? `${id.substring(0, 16)}...` : 'N/A';
 
+  const escapeCsv = (value: any) => {
+    const raw = value == null ? '' : String(value);
+    const safe = /^[=+\-@]/.test(raw) ? `'${raw}` : raw;
+    return `"${safe.replace(/"/g, '""')}"`;
+  };
+
+  const handleExportCsv = () => {
+    const headers = [
+      'Name',
+      'Email',
+      'UID',
+      'Access status',
+      'Stripe status',
+      'Stripe customer ID',
+      'Stripe subscription ID',
+      'Joined',
+      'Trial end',
+      'Subscription created',
+      'Current period start',
+      'Current period end',
+      'Welcome email sent',
+      'Subscription email sent',
+      'Search count'
+    ];
+
+    const rows = filteredUsers.map(user => {
+      const subscription = user.subscription;
+      return [
+        user.displayName || '',
+        user.email || '',
+        user.uid,
+        getAccessStatus(user),
+        subscription?.subscriptionStatus || '',
+        subscription?.stripeCustomerId || '',
+        subscription?.stripeSubscriptionId || '',
+        formatDate(user.createdAt),
+        formatDate(getTrialEndDate(user)),
+        formatDate(subscription?.subscriptionCreatedAt),
+        formatDate(subscription?.currentPeriodStart),
+        formatDate(subscription?.currentPeriodEnd),
+        user.welcomeEmailSent ? 'yes' : 'no',
+        user.subscriptionConfirmationEmailSent ? 'yes' : 'no',
+        getSearchCount(user)
+      ];
+    });
+
+    const csv = [headers, ...rows].map(row => row.map(escapeCsv).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `dinnerbydesign-subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const getTrialEndDate = (user: UserProfile) => {
     if (user.subscription?.trialEnd) return user.subscription.trialEnd;
     const trialStart = toDate(user.trialStartedAt || user.createdAt);
@@ -223,7 +304,7 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const getStatusBadge = (user: UserProfile) => {
-    const status = user.subscription?.accessStatus || user.accessStatus || 'trial';
+    const status = getAccessStatus(user);
     const subStatus = user.subscription?.subscriptionStatus;
 
     switch (status) {
@@ -249,6 +330,27 @@ export const AdminDashboard: React.FC = () => {
         return null;
     }
   };
+
+  const summaryStats = React.useMemo(() => {
+    const paid = users.filter(user => getAccessStatus(user) === 'paid').length;
+    const trial = users.filter(user => getAccessStatus(user) === 'trial').length;
+    const readOnly = users.filter(user => getAccessStatus(user) === 'read_only').length;
+    const stripeLinked = users.filter(user => !!user.subscription?.stripeCustomerId).length;
+    const paymentIssues = users.filter(hasPaymentIssue).length;
+    const subscriptionEmails = users.filter(user => !!user.subscriptionConfirmationEmailSent).length;
+    const totalSearches = users.reduce((sum, user) => sum + getSearchCount(user), 0);
+
+    return {
+      total: users.length,
+      paid,
+      trial,
+      readOnly,
+      stripeLinked,
+      paymentIssues,
+      subscriptionEmails,
+      totalSearches
+    };
+  }, [users]);
 
   if (!isAdmin) return null;
 
@@ -292,7 +394,20 @@ export const AdminDashboard: React.FC = () => {
               <option value="paid">Paid</option>
               <option value="trial">Trial</option>
               <option value="read_only">Read Only</option>
+              <option value="stripe_linked">Stripe Linked</option>
+              <option value="payment_issue">Payment Issues</option>
+              <option value="no_stripe">No Stripe Customer</option>
             </select>
+
+            <button
+              onClick={handleExportCsv}
+              disabled={loading || filteredUsers.length === 0}
+              className="px-3 py-2 text-xs font-bold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors flex items-center gap-1.5 uppercase tracking-wider disabled:opacity-50"
+              title="Export the current filtered subscriber list"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Export CSV
+            </button>
 
             <button
               onClick={handleDeleteAllUsers}
@@ -313,19 +428,45 @@ export const AdminDashboard: React.FC = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dbd-accent"></div>
           </div>
         ) : (
-          <div className="overflow-x-auto border border-gray-100 rounded-xl shadow-sm">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">User</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Status</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Stripe</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Key Dates</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Support Notes</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
+          <div className="space-y-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
+                { label: 'Paid subscribers', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe customers`, icon: CreditCard },
+                { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid or incomplete', icon: AlertTriangle },
+                { label: 'Usage', value: summaryStats.totalSearches, detail: `${summaryStats.subscriptionEmails} sub emails sent`, icon: Activity }
+              ].map(item => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.label} className="bg-white border border-gray-100 rounded-lg p-4 shadow-xs">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{item.label}</p>
+                        <p className="text-2xl font-bold text-gray-950 mt-1">{item.value}</p>
+                        <p className="text-[11px] font-medium text-gray-400 mt-1">{item.detail}</p>
+                      </div>
+                      <div className="w-8 h-8 rounded bg-gray-50 flex items-center justify-center">
+                        <Icon className="w-4 h-4 text-gray-500" />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="overflow-x-auto border border-gray-100 rounded-xl shadow-sm">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-100">
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">User</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Status</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Stripe</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Key Dates</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Emails & Usage</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => {
                   const subscription = user.subscription;
                   const trialEnd = getTrialEndDate(user);
@@ -379,6 +520,12 @@ export const AdminDashboard: React.FC = () => {
                               <span>Trial end: {formatDate(trialEnd)}</span>
                             </div>
                           )}
+                          {subscription?.subscriptionCreatedAt && (
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                              <CreditCard className="w-3.5 h-3.5" />
+                              <span>Subscribed: {formatDate(subscription.subscriptionCreatedAt)}</span>
+                            </div>
+                          )}
                           {subscription?.currentPeriodEnd && (
                             <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                               <Clock className="w-3.5 h-3.5" />
@@ -394,16 +541,27 @@ export const AdminDashboard: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="space-y-1.5 text-xs">
-                          <div className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight ${
-                            confirmationSent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'
-                          }`}>
-                            {confirmationSent ? 'Sub email sent' : 'No sub email yet'}
+                          <div className="flex flex-wrap gap-1.5">
+                            <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight ${
+                              user.welcomeEmailSent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'
+                            }`}>
+                              <MailCheck className="w-3 h-3" />
+                              {user.welcomeEmailSent ? 'Welcome sent' : 'No welcome'}
+                            </div>
+                            <div className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight ${
+                              confirmationSent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'
+                            }`}>
+                              {confirmationSent ? 'Sub email sent' : 'No sub email yet'}
+                            </div>
                           </div>
                           {user.subscriptionConfirmationEmailSentAt && (
                             <div className="text-[10px] text-gray-400 font-mono">
                               Email: {formatDateTime(user.subscriptionConfirmationEmailSentAt)}
                             </div>
                           )}
+                          <div className="text-[10px] text-gray-400 font-mono">
+                            Searches: {getSearchCount(user)}
+                          </div>
                           <div className="text-[10px] text-gray-400 font-mono">
                             Profile: {user.accessStatus || 'trial'}
                           </div>
@@ -450,6 +608,7 @@ export const AdminDashboard: React.FC = () => {
                 )}
               </tbody>
             </table>
+          </div>
           </div>
         )}
       </div>

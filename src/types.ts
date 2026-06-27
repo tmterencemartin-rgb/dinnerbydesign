@@ -131,6 +131,7 @@ export interface UserSubscriptionSummary {
   accessStatus: AccessStatus | null;
   trialStart: Timestamp | FieldValue | null;
   trialEnd: Timestamp | FieldValue | null;
+  subscriptionCreatedAt?: Timestamp | FieldValue | null;
   currentPeriodStart: Timestamp | FieldValue | null;
   currentPeriodEnd: Timestamp | FieldValue | null;
   isTrialing: boolean;
