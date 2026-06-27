@@ -18,15 +18,17 @@ import {
   List,
   LayoutGrid,
   Clock,
-  Coins
+  Coins,
+  Loader2,
+  WandSparkles
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { SavedRecipe } from '../../types';
+import { Recipe, SavedRecipe } from '../../types';
 import { Tooltip } from '../ui/Tooltip';
 import { RetailerCtaLink } from '../RetailerCtaLink';
 import { SavedRecipeItem } from '../SavedRecipeItem';
 import { passesHardConstraints, passesDietaryRule } from '../../lib/dietarySafety';
-import { checkSearchMatch } from '../../lib/searchUtils';
+import { buildSearchParams, checkSearchMatch, cleanSearchParams } from '../../lib/searchUtils';
 import { getConvenienceProfile } from '../../lib/recipeUtils';
 
 interface PlannerViewProps {
@@ -122,6 +124,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
   const [hasExhaustedSaved, setHasExhaustedSaved] = useState(false);
   const [savedDisplayOffset, setSavedDisplayOffset] = useState(0);
   const [showAllSaved, setShowAllSaved] = useState(false);
+  const [showPlanWeek, setShowPlanWeek] = useState(false);
+  const [planDinnerCount, setPlanDinnerCount] = useState<3 | 5 | 7>(5);
+  const [planBudget, setPlanBudget] = useState('40');
+  const [planProtein, setPlanProtein] = useState('mixed');
+  const [planTime, setPlanTime] = useState<'any' | 'quick' | 'under30'>('any');
+  const [isPlanningWeek, setIsPlanningWeek] = useState(false);
 
   useEffect(() => {
     setHasExhaustedSaved(false);
@@ -232,6 +240,60 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
       return true;
     }
     return false;
+  };
+
+  const handlePlanWeek = async () => {
+    if (checkReadOnly("Your trial has ended. Upgrade to plan your week.")) return;
+    if (!user) {
+      showToast("Sign in to create a weekly plan.", "Sign In", () => setView('settings'));
+      return;
+    }
+
+    setIsPlanningWeek(true);
+    try {
+      const servingsCount = profile?.preferences?.servings || 2;
+      const budgetValue = Number(planBudget);
+      const perPortionBudget = Number.isFinite(budgetValue) && budgetValue > 0
+        ? Number((budgetValue / planDinnerCount / servingsCount).toFixed(2))
+        : undefined;
+      const proteinText = planProtein === 'mixed' ? 'mixed proteins' : planProtein;
+      const timeText = planTime === 'quick'
+        ? 'quick dinners'
+        : planTime === 'under30'
+          ? 'dinners under 30 minutes'
+          : 'varied dinners';
+      const query = `Plan ${planDinnerCount} ${timeText}${planProtein !== 'mixed' ? ` with ${proteinText}` : ''}${budgetValue ? ` under £${budgetValue} total` : ''}`;
+      const params = cleanSearchParams(buildSearchParams(query, 'cook', profile?.preferences || null, {
+        count: planDinnerCount,
+        servings: servingsCount,
+        maxCostPerPortion: perPortionBudget,
+        maxTotalTime: planTime === 'under30' ? 30 : undefined,
+        isSimple: planTime === 'quick' ? true : undefined,
+        isLowCost: !!perPortionBudget,
+        excludeTitles: planner.map(item => item.title)
+      }));
+
+      const { generateDinnerSuggestions } = await import('../../services/geminiService');
+      const result = await generateDinnerSuggestions(params, profile?.preferences || undefined);
+      const recipes = ((result.recipes || []) as Recipe[]).slice(0, planDinnerCount);
+      if (recipes.length === 0) {
+        showToast("I couldn't create a weekly plan from those settings. Try a higher budget or fewer dinners.");
+        return;
+      }
+
+      const targetDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].slice(0, recipes.length);
+      for (let i = 0; i < recipes.length; i += 1) {
+        await updatePlanner(targetDays[i], recipes[i]);
+      }
+
+      showToast(`Planned ${recipes.length} ${recipes.length === 1 ? 'dinner' : 'dinners'} for your week.`);
+      setShowPlanWeek(false);
+    } catch (err: any) {
+      addLog(`UI ERROR: handlePlanWeek failed: ${err?.message || err}`);
+      showToast("Could not create the weekly plan. Please try again.");
+    } finally {
+      setIsPlanningWeek(false);
+    }
   };
 
   const handleDeleteSavedRecipe = async (recipe: SavedRecipe) => {
@@ -443,6 +505,102 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                     : "Schedule your dinners, browse your saved collection, and build your shopping list for the week ahead."}
                 </p>
               </div>
+            </div>
+
+            <div className="bg-white rounded shadow-xs px-4 sm:px-5 py-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded bg-dbd-accent/10 flex items-center justify-center shrink-0">
+                    <WandSparkles className="w-4 h-4 text-dbd-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-[13.5px] font-bold text-gray-950">Plan my week</h3>
+                    <p className="text-[11.5px] text-gray-400 font-medium leading-relaxed">
+                      Create several dinners at once, with budget, protein and time preferences.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPlanWeek(prev => !prev)}
+                  className="h-9 px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0"
+                >
+                  {showPlanWeek ? 'Close' : 'Plan week'}
+                </button>
+              </div>
+
+              {showPlanWeek && (
+                <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <label className="space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Dinners</span>
+                      <select
+                        value={planDinnerCount}
+                        onChange={(e) => setPlanDinnerCount(Number(e.target.value) as 3 | 5 | 7)}
+                        className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
+                      >
+                        <option value={3}>3 dinners</option>
+                        <option value={5}>5 dinners</option>
+                        <option value={7}>7 dinners</option>
+                      </select>
+                    </label>
+                    <label className="space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Budget</span>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] font-bold text-gray-400">£</span>
+                        <input
+                          value={planBudget}
+                          onChange={(e) => setPlanBudget(e.target.value)}
+                          inputMode="decimal"
+                          className="w-full h-10 bg-gray-50 border border-gray-100 rounded pl-7 pr-3 text-[12px] font-semibold text-gray-700 outline-none"
+                        />
+                      </div>
+                    </label>
+                    <label className="space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Protein</span>
+                      <select
+                        value={planProtein}
+                        onChange={(e) => setPlanProtein(e.target.value)}
+                        className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
+                      >
+                        <option value="mixed">Mixed</option>
+                        <option value="chicken">Chicken</option>
+                        <option value="fish">Fish</option>
+                        <option value="beef">Beef</option>
+                        <option value="pork">Pork</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                      </select>
+                    </label>
+                    <label className="space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Time</span>
+                      <select
+                        value={planTime}
+                        onChange={(e) => setPlanTime(e.target.value as 'any' | 'quick' | 'under30')}
+                        className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
+                      >
+                        <option value="any">Any</option>
+                        <option value="quick">Quick</option>
+                        <option value="under30">Under 30 mins</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <p className="text-[11px] text-gray-400 font-medium leading-relaxed">
+                      This fills the first {planDinnerCount} days of your planner and may replace meals already scheduled there.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handlePlanWeek}
+                      disabled={isPlanningWeek}
+                      className="h-10 px-4 rounded bg-dbd-accent text-white text-[11px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
+                    >
+                      {isPlanningWeek && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                      Create plan
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Unified Save & Schedule Panel */}
