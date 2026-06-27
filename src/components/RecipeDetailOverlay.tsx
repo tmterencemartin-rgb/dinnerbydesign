@@ -89,7 +89,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
         initial={{ y: '20%' }}
         animate={{ y: 0 }}
         exit={{ y: '20%' }}
-        className="w-full h-full sm:h-[90vh] sm:max-w-4xl bg-white sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
+        className="w-full h-full sm:h-[90vh] sm:max-w-4xl bg-white sm:rounded-md shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -111,7 +111,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
         </div>
 
         {/* Modal Content */}
-        <div className="flex-1 overflow-y-auto bg-gray-50/30 p-2 sm:p-8 overscroll-contain custom-scrollbar">
+        <div className="flex-1 overflow-y-auto bg-white p-2 sm:p-8 overscroll-contain custom-scrollbar">
           <div className="max-w-3xl mx-auto pb-8 sm:pb-12">
              {mode === 'cook' ? (
                 <RecipeCard 

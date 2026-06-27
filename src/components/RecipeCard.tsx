@@ -127,7 +127,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-white border border-gray-100 rounded p-3 sm:p-5 shadow-[0_1px_4px_rgba(0,0,0,0.025)] relative group/card overflow-visible transition-all duration-200"
+      className={`bg-white rounded p-3 sm:p-5 relative group/card overflow-visible transition-all duration-200 ${
+        isModal
+          ? 'border-0 shadow-none'
+          : 'border border-gray-100 shadow-[0_1px_4px_rgba(0,0,0,0.025)]'
+      }`}
     >
       {isExpanded && !isModal && (
         <button 
@@ -375,11 +379,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     </div>
 
                     {/* Responsive side-by-side view for expanded recipe */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-12 items-start w-full pt-1 border-t border-gray-100">
+                    <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-12 items-start w-full pt-3">
                       
                       {/* Left column: Sticky Ingredients */}
-                      <div className="w-full md:sticky md:top-24 h-fit pb-3 md:pb-0 border-b md:border-b-0 md:border-r md:pr-6 lg:pr-8 border-gray-100 flex flex-col gap-2">
-                        <div className="flex flex-col gap-2 pb-0.5 border-b border-gray-100">
+                      <div className="w-full md:sticky md:top-24 h-fit pb-4 md:pb-0 flex flex-col gap-2.5">
+                        <div className="flex items-center justify-between gap-3 pb-1">
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                             Ingredients
                           </span>
@@ -415,10 +419,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                             <span>Fetching details...</span>
                           </div>
                         ) : (
-                          <ul className="text-[12px] text-gray-750 space-y-0.5">
+                          <ul className="text-[12.5px] text-gray-750 space-y-1">
                             {currentIngredients.map((ing, i) => (
-                              <li key={`${recipe.title.replace(/\s+/g, '-')}-expanded-ing-${i}`} className="flex items-start">
-                                <span className="text-gray-350 mr-1.5 select-none">•</span>
+                              <li key={`${recipe.title.replace(/\s+/g, '-')}-expanded-ing-${i}`} className="flex items-start gap-2 leading-relaxed">
+                                <span className="mt-[0.45em] h-1 w-1 rounded-full bg-gray-300 shrink-0" />
                                 <span>{convertIngredient(ing, unitSystem)}</span>
                               </li>
                             ))}
@@ -429,7 +433,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       {/* Right column: Instructions & Match Reason */}
                        <div className="w-full flex flex-col gap-3">
                         <div>
-                          <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider pb-0.5 border-b border-gray-100 mb-1">Preparation</h4>
+                          <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Preparation</h4>
                           {(recipe as any).totalServings && (
                             <p className="text-[11px] text-gray-500 mb-1">Recipe makes {(recipe as any).totalServings} adult portions</p>
                           )}
@@ -439,10 +443,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                               <span>Sourcing steps...</span>
                             </div>
                           ) : (
-                            <ol className="text-[12px] text-gray-750 space-y-1.5">
+                            <ol className="text-[12.5px] text-gray-750 space-y-3">
                               {currentInstructions.map((step, i) => (
-                                <li key={`${recipe.title.replace(/\s+/g, '-')}-step-${i}`} className="flex gap-2">
-                                  <span className="flex-shrink-0 w-4.5 h-4.5 rounded-full bg-gray-50 text-gray-600 text-[10.5px] font-medium flex items-center justify-center border border-gray-100">
+                                <li key={`${recipe.title.replace(/\s+/g, '-')}-step-${i}`} className="flex gap-3">
+                                  <span className="flex-shrink-0 w-5 h-5 rounded bg-gray-100 text-gray-600 text-[10.5px] font-bold flex items-center justify-center">
                                     {i + 1}
                                   </span>
                                   <span className="leading-relaxed">{step}</span>
@@ -452,7 +456,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                           )}
                         </div>
 
-                        <div className="bg-gray-50/70 p-2 rounded-lg border border-gray-100/60">
+                        <div className="bg-gray-50/70 p-3 rounded">
                           <p className="text-[11px] text-gray-500 leading-relaxed italic">
                             <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9px]">Why this match:</span> {recipe.matchReason}
                           </p>
