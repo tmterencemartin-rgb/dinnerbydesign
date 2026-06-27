@@ -584,12 +584,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
   const [debugClicks, setDebugClicks] = useState(0);
   const isDebugUrl = typeof window !== 'undefined' && window.location.search.includes('debug=true');
   const isProd = (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'production') || import.meta.env.MODE === 'production';
-  const showDebug = isAdmin && (
-    (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') || 
-    import.meta.env.MODE === 'development' || 
-    (debugClicks >= 5 && !isProd) || 
-    isDebugUrl
-  );
+  const showDebug = isAdmin;
 
   const handleDebugClick = () => {
     if (isProd && !isDebugUrl) return;
