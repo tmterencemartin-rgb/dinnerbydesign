@@ -17,6 +17,7 @@ import {
   linkWithPopup,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  linkWithRedirect,
   updatePassword
 } from 'firebase/auth';
 import { 
@@ -568,7 +569,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
           
           if (errorCode === 'auth/popup-blocked') {
-            showToast("Popup blocked. Please allow popups and try again.");
+            showToast("Popup blocked. Redirecting to Google sign-in...");
+            await linkWithRedirect(currentFirebaseUser, provider);
             return false;
           } else if (errorCode === 'auth/cancelled-popup-request' || errorCode === 'auth/popup-closed-by-user') {
             addLog("AUTH: Link popup closed by user.");
