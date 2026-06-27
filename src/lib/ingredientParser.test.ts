@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { parseAndNormaliseIngredients } from './ingredientParser';
+import { detectIngredientIntent, parseAndNormaliseIngredients } from './ingredientParser';
 
 describe('Ingredient Parser & Normalizer', () => {
   test('splits on commas and the word-and', () => {
@@ -34,5 +34,26 @@ describe('Ingredient Parser & Normalizer', () => {
   test('handles clean array when query is empty or invalid', () => {
     expect(parseAndNormaliseIngredients('')).toEqual([]);
     expect(parseAndNormaliseIngredients('   ')).toEqual([]);
+  });
+
+  test('detects comma-separated ingredient searches', () => {
+    expect(detectIngredientIntent('chicken, spinach and rice')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['chicken', 'spinach', 'rice'],
+      reason: 'list'
+    });
+  });
+
+  test('detects natural ingredient-led phrases', () => {
+    expect(detectIngredientIntent('I have chicken, spinach and rice')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['chicken', 'spinach', 'rice'],
+      reason: 'phrase'
+    });
+  });
+
+  test('does not treat ordinary dish names as ingredient-led searches', () => {
+    expect(detectIngredientIntent('chicken curry')).toBeNull();
+    expect(detectIngredientIntent('Jamie Oliver pasta')).toBeNull();
   });
 });

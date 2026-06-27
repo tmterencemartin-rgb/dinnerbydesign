@@ -183,3 +183,42 @@ export function parseAndNormaliseIngredients(query: string): string[] {
   
   return results;
 }
+
+export function detectIngredientIntent(query: string): {
+  isIngredientLed: boolean;
+  ingredients: string[];
+  reason: 'list' | 'phrase' | 'short-food-list';
+} | null {
+  const trimmed = query?.trim();
+  if (!trimmed) return null;
+
+  const lower = trimmed.toLowerCase();
+  const ingredientPhrases = /\b(i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only|what can i make with|what can i cook with)\b/i;
+  const hasListPunctuation = /[,;]/.test(trimmed);
+  const hasSimpleAndList = /\b\w+\b\s+\band\b\s+\b\w+\b/i.test(lower) && lower.split(/\s+/).length <= 7;
+
+  const withoutLeadIn = lower
+    .replace(/\b(what can i make with|what can i cook with|i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only)\b/gi, '')
+    .replace(/[?!.]/g, ' ')
+    .trim();
+
+  const ingredients = parseAndNormaliseIngredients(withoutLeadIn || trimmed)
+    .map(item => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, '').trim())
+    .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
+
+  if (ingredients.length < 2) return null;
+
+  if (ingredientPhrases.test(trimmed)) {
+    return { isIngredientLed: true, ingredients, reason: 'phrase' };
+  }
+
+  if (hasListPunctuation) {
+    return { isIngredientLed: true, ingredients, reason: 'list' };
+  }
+
+  if (hasSimpleAndList && ingredients.length >= 2) {
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list' };
+  }
+
+  return null;
+}

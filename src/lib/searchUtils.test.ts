@@ -49,6 +49,20 @@ describe('searchUtils', () => {
       expect(params.maxCostPerPortion).toBeUndefined();
     });
 
+    it('marks ingredient-list searches as ingredient-led for cook mode', () => {
+      const params = buildSearchParams('chicken, spinach and rice', 'cook', mockPreferences);
+      expect(params.ingredientIntent).toMatchObject({
+        isIngredientLed: true,
+        ingredients: ['chicken', 'spinach', 'rice']
+      });
+      expect(params.isLeftoverMode).toBe(true);
+    });
+
+    it('does not mark dish-name searches as ingredient-led', () => {
+      const params = buildSearchParams('chicken curry', 'cook', mockPreferences);
+      expect(params.ingredientIntent).toBeUndefined();
+    });
+
     it('does not merge preferences for similarity searches', () => {
       const params = buildSearchParams('Pasta', 'cook', mockPreferences, { 
         similarityContext: { title: 'Old Pasta', cuisine: 'Italian', description: 'Old recipe' } 

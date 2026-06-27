@@ -28,6 +28,7 @@ import { FilterOverlay } from '../home/FilterOverlay';
 import { ConnectionDiagnostics } from '../home/ConnectionDiagnostics';
 import { DIETARY_TAXONOMY } from '../../constants';
 import { isSameRecipe } from '../../lib/recipeUtils';
+import { detectIngredientIntent } from '../../lib/ingredientParser';
 import { CompactRecipeItem } from '../CompactRecipeItem';
 import { RecipeDetailOverlay } from '../RecipeDetailOverlay';
 import { SearchOnboardingHelper } from '../home/SearchOnboardingHelper';
@@ -196,6 +197,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   } = props;
 
   const isSearching = status === 'searching';
+  const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
 
@@ -468,6 +470,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               startTime={searchStartTime}
               activeCriteria={activeCriteria}
               query={input}
+              ingredientIntent={ingredientIntent}
             />
 
             {(hasPerformedSearch || isSearching || (currentRecipes && currentRecipes.length > 0) || (currentReadyMeals && currentReadyMeals.length > 0)) && (

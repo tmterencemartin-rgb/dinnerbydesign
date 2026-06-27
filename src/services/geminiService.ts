@@ -512,7 +512,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   }
 
   const start = Date.now();
-  const { query, count = 3, source, excludeTitles, cuisines: targetCuisines, cuisine: legacyCuisine, isLeftoverMode } = searchParams;
+  const { query, count = 3, source, excludeTitles, cuisines: targetCuisines, cuisine: legacyCuisine, isLeftoverMode, ingredientIntent } = searchParams;
   const isReadyMade = source === 'ready-made';
   
   const appliedFilters: string[] = [];
@@ -549,7 +549,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   if (activeHighOmega3) appliedFilters.push("High Omega-3");
   if (activeHighProtein) appliedFilters.push("High Protein");
   if (activeMaxTime) appliedFilters.push(`Under ${activeMaxTime}min`);
-  if (isLeftoverMode) appliedFilters.push("Leftovers");
+  if (ingredientIntent?.isIngredientLed || isLeftoverMode) appliedFilters.push("Ingredient-led");
 
   const saladLogic = (activeSaladPref === 'main-only' || activeSaladPref === 'side-only')
     ? `\nSALAD RESTRICTION ACTIVE (${activeSaladPref === 'main-only' ? 'Main course salads only' : 'Side salads only'}):
@@ -601,25 +601,30 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - Ensure the main protein component is prominent and well-defined.`
     : '';
 
-  const leftoversLogic = isLeftoverMode
-    ? `\nLEFTOVER MODE ACTIVE:
-- The search terms provided are a list of leftover kitchen ingredients.
-- STRICTLY prioritize and select recipes that maximize the use of these specific items in order to eliminate food waste.
-- You must suggest plates where these leftovers are the primary or key ingredients.`
+  const leftoversLogic = ingredientIntent?.isIngredientLed || isLeftoverMode
+    ? `\nINGREDIENT-LED SEARCH ACTIVE:
+- The user appears to be starting from ingredients they already have.
+- Listed ingredients: ${(ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query)).join(', ') || query}.
+- STRICTLY prioritise recipes that use most or all listed ingredients as primary or key ingredients.
+- Minimise extra shopping. Avoid recipes that need many additional fresh or expensive ingredients.
+- If a recipe needs extra ingredients, keep them essential and ordinary UK supermarket items.
+- In the description or matchReason, briefly explain how the listed ingredients are used.`
     : '';
 
   try {
     const ai = getAI();
     
     // Parse and normalise search query elements for ingredient-focused searches
-    const parsedIngredients = parseAndNormaliseIngredients(query);
-    const parsedIngredientsInstruction = parsedIngredients.length > 0
+    const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
+    const parsedIngredientsInstruction = ingredientIntent?.isIngredientLed && parsedIngredients.length > 0
       ? `\nINGREDIENT PARSING & INTERPRETATION (CRITICAL):
 - The user's query "${query}" represents one or more listed ingredients.
 - Split these on commas and the word 'and'. The independent parsed ingredients are: ${parsedIngredients.map(i => `'${i}'`).join(', ')}.
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
-- Always try to return recipes/dishes that contain ALL of these listed ingredients. Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible.`
+- Always try to return recipes/dishes that contain ALL of these listed ingredients.
+- Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible.
+- Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.`
       : '';
 
     // Core system logic - fixed for model efficiency
@@ -666,7 +671,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 
     // Dynamic prompt - minimal and direct
     const prompt = `Search intent: "${query}". 
-    ${parsedIngredients.length > 0 ? `Target Ingredients: MUST contain as many specified parsed ingredients (${parsedIngredients.join(', ')}) as possible. Don't return empty dishes; try to feature these ingredients prominently.` : ''}
+    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: MUST contain as many specified parsed ingredients (${parsedIngredients.join(', ')}) as possible. Minimise extra shopping and feature these ingredients prominently.` : ''}
     ${activeSaladPref === 'main-only' ? 'Requirement: MUST be a main-course salad.' : ''}
     ${activeSaladPref === 'side-only' ? 'Requirement: MUST be a side salad.' : ''}
     ${activeSaladPref === 'none' ? 'Requirement: NO salads.' : ''}
@@ -675,7 +680,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     ${activeNutritious ? 'Priority: Nutritious.' : ''}
     ${activeHighOmega3 ? 'Priority: High Omega-3 (focus on oily fish, walnuts, chia, flaxseed).' : ''}
     ${activeHighProtein ? 'Priority: High Protein (focus on lean meats, fish, pulses, eggs).' : ''}
-    ${isLeftoverMode ? 'Priority: The query is a list of leftover kitchen ingredients. Prioritize recipes that maximize the use of these specific items to eliminate food waste.' : ''}
+    ${ingredientIntent?.isIngredientLed || isLeftoverMode ? 'Priority: Ingredient-led search. Prioritize recipes that maximize the use of these specific items and require few extra ingredients.' : ''}
     ${activePreferredSourceNames.length > 0 ? `Requirement: Gently favour recipes from these trusted sources: ${activePreferredSourceNames.join(', ')}.` : ''}
     ${activeMaxTime ? `Must be under ${activeMaxTime} mins.` : ''}
     ${excludeTitles?.length ? `MANDATORY EXCLUSION: Do NOT suggest any of these recipes: ${excludeTitles.join(', ')}.` : ''}

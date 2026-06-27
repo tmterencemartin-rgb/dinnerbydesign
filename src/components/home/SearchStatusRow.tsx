@@ -10,6 +10,10 @@ interface SearchStatusRowProps {
   startTime: number | null;
   activeCriteria: any[];
   query?: string;
+  ingredientIntent?: {
+    isIngredientLed: boolean;
+    ingredients: string[];
+  } | null;
 }
 
 export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
@@ -19,7 +23,8 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
   source,
   startTime,
   activeCriteria,
-  query
+  query,
+  ingredientIntent
 }) => {
   const [elapsed, setElapsed] = useState(0);
 
@@ -47,6 +52,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
   const isBroadSearch = filterCount <= 1;
 
   const isReadyMade = source === 'ready-made';
+  const isIngredientLed = !!ingredientIntent?.isIngredientLed && source === 'cook';
 
   return (
     <AnimatePresence>
@@ -73,7 +79,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
                 <p className="text-[12px] font-bold text-gray-900 leading-tight">
                   {showSearching ? (
                     isBroadSearch && displayQuery ? (
-                      `Searching for "${displayQuery}"...`
+                      isIngredientLed ? "Searching from your listed ingredients..." : `Searching for "${displayQuery}"...`
                     ) : (
                     `Searching with ${filterCount} preferences...`
                     )
@@ -87,10 +93,10 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
                   {showSearching ? (
                     isLowPerf 
                       ? (isBroadSearch 
-                          ? (isReadyMade ? "Searching for ready-made dinner products across a range of supermarkets" : "This is a general search based on your keywords. To pinpoint precise recipes, try adding more criteria in Preferences.")
+                          ? (isReadyMade ? "Searching for ready-made dinner products across a range of supermarkets" : isIngredientLed ? "Prioritising recipes that use most or all of your listed ingredients with minimal extra shopping." : "This is a general search based on your keywords. To pinpoint precise recipes, try adding more criteria in Preferences.")
                           : "This is a very precise search – identifying the best matches can take a few seconds.")
                       : (isBroadSearch
-                          ? (isReadyMade ? "Searching for ready-made dinner products across a range of supermarkets" : "Searching broadly across all matches – add preferences for more precise results.")
+                          ? (isReadyMade ? "Searching for ready-made dinner products across a range of supermarkets" : isIngredientLed ? `Using ${ingredientIntent?.ingredients.slice(0, 4).join(', ')} as the starting point.` : "Searching broadly across all matches – add preferences for more precise results.")
                           : "Applying your specific preferences to find the perfect match.")
                   ) : (status === 'partial' || showEnriching) ? (
                     "Refining descriptions and match rationales."

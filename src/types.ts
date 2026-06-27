@@ -195,6 +195,11 @@ export interface SearchParams {
   isSimple?: boolean;
   isLowCost?: boolean;
   isLeftoverMode?: boolean;
+  ingredientIntent?: {
+    isIngredientLed: boolean;
+    ingredients: string[];
+    reason: 'list' | 'phrase' | 'short-food-list';
+  };
   nutritiousChoice?: boolean;
   preferredSourceIds?: string[];
   highOmega3?: boolean;

@@ -1,5 +1,6 @@
 import { SearchParams, UserPreferences, DinnerSource, Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { PREFERRED_SOURCES } from '../data/preferredSources';
+import { detectIngredientIntent } from './ingredientParser';
 
 /**
  * Builds search parameters by combining user input, active filters, and persistent preferences.
@@ -16,6 +17,14 @@ export const buildSearchParams = (
     source,
     ...overrides
   };
+
+  if (overrides.ingredientIntent === undefined && source === 'cook') {
+    const ingredientIntent = detectIngredientIntent(query);
+    if (ingredientIntent) {
+      params.ingredientIntent = ingredientIntent;
+      params.isLeftoverMode = true;
+    }
+  }
 
   // 1. Salad Preference
   // If not overridden, we use preference. Default to 'all' if neither exists.
