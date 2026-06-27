@@ -1,12 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Search } from 'lucide-react';
+import { X, Search, Sparkles } from 'lucide-react';
 
 interface SearchOnboardingHelperProps {
   onDismiss: () => void;
+  onSuggestionSelect?: (suggestion: string) => void;
 }
 
-export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ onDismiss }) => {
+const STARTER_SUGGESTIONS = [
+  'Something quick with chicken',
+  'Low-cost vegetarian dinner',
+  'Use up what I have in the fridge'
+];
+
+export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ onDismiss, onSuggestionSelect }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
@@ -41,8 +48,21 @@ export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ 
             <p className="text-[13px] text-dbd-ink-2 font-medium leading-relaxed">
               Search by ingredient, dish, cuisine or chef. Or whatever you have in mind.
             </p>
-            <p className="text-[12.5px] text-dbd-ink-3 font-medium leading-relaxed">
-              Use Preferences to set diet, budget, portions and ingredients to avoid.
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {STARTER_SUGGESTIONS.map(suggestion => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => onSuggestionSelect?.(suggestion)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-50 hover:bg-gray-100 text-[11.5px] text-dbd-ink-2 font-semibold rounded border border-gray-100 transition-colors"
+                >
+                  <Sparkles size={12} className="text-dbd-accent" />
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+            <p className="text-[12.5px] text-dbd-ink-3 font-medium leading-relaxed pt-0.5">
+              Use Preferences for diet, budget, portions and ingredients to avoid.
             </p>
           </div>
         </div>

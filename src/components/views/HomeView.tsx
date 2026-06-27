@@ -331,13 +331,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     }
   };
 
-  console.log('[HomeView] Render:', { 
-    isGenerating, 
-    isLowCost, 
-    activeCriteriaLabels: activeCriteria.map(c => c.label),
-    suppressedPermanentKeys 
-  });
-
   return (
     <motion.div 
       key="home"
@@ -417,6 +410,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
                   {!hasDismissedSearchOnboarding && !isSearching && (
                     <SearchOnboardingHelper 
+                      onSuggestionSelect={(suggestion) => {
+                        setInput(suggestion);
+                        searchInputRef.current?.focus();
+                      }}
                       onDismiss={() => {
                         setHasDismissedSearchOnboarding(true);
                         safeStorage.setItem('dbd_search_onboarding_dismissed', 'true');

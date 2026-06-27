@@ -219,7 +219,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     }
   };
 
-  const resetAllLocalFilters = () => {
+  const resetAllLocalFilters = (commitReset = true) => {
     setLocalMaxCalories('');
     setLocalMaxTotalTime('');
     setLocalMaxHeatingTime('');
@@ -245,8 +245,30 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     if (excludeInputRef.current) excludeInputRef.current.value = '';
     if (omitInputRef.current) omitInputRef.current.value = '';
     
-    onReset();
+    if (commitReset) {
+      onReset();
+    }
   };
+
+  const activePreferenceCount =
+    (localDietaryRule !== 'none' ? 1 : 0) +
+    (localSaladPreference !== 'all' ? 1 : 0) +
+    localAllergies.length +
+    localReligiousEthical.length +
+    localExcludeIngredients.length +
+    (source === 'cook' ? localPreferredSourceIds.length : localSupermarkets.length) +
+    ((source === 'cook' ? localMaxTotalTime : localMaxHeatingTime) ? 1 : 0) +
+    (localServings !== '2' ? 1 : 0) +
+    (localMaxCalories ? 1 : 0) +
+    (localMaxCostPerPortion ? 1 : 0) +
+    localCuisines.length +
+    localCookingMethods.length +
+    localCookingFats.length +
+    (localNutritiousChoice ? 1 : 0) +
+    (localIsSimple ? 1 : 0) +
+    (localIsLowCost ? 1 : 0) +
+    (localHighOmega3 ? 1 : 0) +
+    (localHighProtein ? 1 : 0);
 
   return (
     <motion.div 
@@ -279,6 +301,22 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
           </div>
           <div className="text-[12.5px] mt-2 text-gray-500 leading-relaxed font-medium">
             Customise your recipe filters for this search, or save them as your default.
+          </div>
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <span className="text-[11px] font-semibold text-gray-400">
+              {activePreferenceCount > 0
+                ? `${activePreferenceCount} active preference${activePreferenceCount === 1 ? '' : 's'}`
+                : 'No active preferences'}
+            </span>
+            {activePreferenceCount > 0 && (
+              <button
+                type="button"
+                onClick={() => resetAllLocalFilters(false)}
+                className="text-[10.5px] font-bold text-gray-500 hover:text-gray-900 transition-colors"
+              >
+                Clear all
+              </button>
+            )}
           </div>
         </div>
 
@@ -979,7 +1017,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
           </div>
           <button 
             type="button"
-            onClick={resetAllLocalFilters}
+            onClick={() => resetAllLocalFilters()}
             className="w-full py-2 bg-white text-gray-400 hover:text-gray-700 text-[11px] font-bold tracking-[0.04em] text-center hover:bg-gray-50 transition-all rounded"
           >
             Clear preferences

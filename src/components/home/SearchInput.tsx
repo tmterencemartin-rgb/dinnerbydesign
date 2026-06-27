@@ -44,7 +44,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       return "Search low-cost recipes matching your ingredients";
     }
     if (isLowCost) {
-      return "Budget-friendly based on estimated ingredients and typical supermarket pricing; actual costs may vary.";
+      return "Budget-friendly dinner ideas";
     }
     if (isLeftoverMode) {
       return "What's in the fridge? Some leftover chicken or corned beef? A couple of red peppers?  Maybe some sticks of celery?";
