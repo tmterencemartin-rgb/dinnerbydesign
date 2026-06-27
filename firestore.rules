@@ -280,6 +280,11 @@ service cloud.firestore {
       allow read: if isAdmin();
     }
 
+    match /stripeWebhookEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     // Default deny
     match /{path=**} {
       allow read, write: if false;

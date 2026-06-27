@@ -8,9 +8,25 @@ import { motion } from 'framer-motion';
 
 type AdminStatusFilter = AccessStatus | 'all' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
 
+interface StripeWebhookHealthEvent {
+  eventId: string;
+  type: string;
+  status: 'processing' | 'succeeded' | 'failed';
+  stripeCreatedAt?: Timestamp | null;
+  receivedAt?: Timestamp | null;
+  updatedAt?: Timestamp | null;
+  customerId?: string | null;
+  userId?: string | null;
+  subscriptionId?: string | null;
+  invoiceId?: string | null;
+  message?: string | null;
+  error?: string | null;
+}
+
 export const AdminDashboard: React.FC = () => {
   const { setView, isAdmin, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const [webhookEvents, setWebhookEvents] = useState<StripeWebhookHealthEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<AdminStatusFilter>('all');
@@ -53,10 +69,10 @@ export const AdminDashboard: React.FC = () => {
       return;
     }
 
-    const fetchUsers = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const q = query(collection(db, 'users'));
-        const querySnapshot = await getDocs(q);
+        const usersQuery = query(collection(db, 'users'));
+        const querySnapshot = await getDocs(usersQuery);
         const userData = querySnapshot.docs.map(doc => ({
           ...doc.data(),
           uid: doc.id
@@ -70,14 +86,28 @@ export const AdminDashboard: React.FC = () => {
         });
 
         setUsers(userData);
+
+        const webhookSnapshot = await getDocs(collection(db, 'stripeWebhookEvents'));
+        const eventData = webhookSnapshot.docs.map(doc => ({
+          ...doc.data(),
+          eventId: doc.id
+        })) as StripeWebhookHealthEvent[];
+
+        eventData.sort((a, b) => {
+          const dateA = toDate(a.updatedAt || a.receivedAt || a.stripeCreatedAt) || new Date(0);
+          const dateB = toDate(b.updatedAt || b.receivedAt || b.stripeCreatedAt) || new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        setWebhookEvents(eventData.slice(0, 12));
       } catch (err) {
-        console.error('Error fetching users:', err);
+        console.error('Error fetching admin dashboard data:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUsers();
+    fetchDashboardData();
   }, [isAdmin, setView]);
 
   const handleDeleteUser = (userId: string, email: string) => {
@@ -356,6 +386,14 @@ export const AdminDashboard: React.FC = () => {
     };
   }, [users]);
 
+  const latestWebhookEvent = webhookEvents[0];
+
+  const getWebhookStatusClass = (status?: StripeWebhookHealthEvent['status']) => {
+    if (status === 'succeeded') return 'bg-emerald-50 text-emerald-700';
+    if (status === 'failed') return 'bg-red-50 text-red-700';
+    return 'bg-amber-50 text-amber-700';
+  };
+
   if (!isAdmin) return null;
 
   return (
@@ -456,6 +494,53 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                 );
               })}
+            </div>
+
+            <div className="bg-white border border-gray-100 rounded-lg p-4 shadow-xs">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-gray-500" />
+                    <h2 className="text-[13px] font-bold text-gray-950">Stripe webhook health</h2>
+                    {latestWebhookEvent ? (
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight ${getWebhookStatusClass(latestWebhookEvent.status)}`}>
+                        {latestWebhookEvent.status}
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
+                        No events yet
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11.5px] text-gray-400 font-medium">
+                    {latestWebhookEvent
+                      ? `${latestWebhookEvent.type} · ${formatDateTime(latestWebhookEvent.updatedAt || latestWebhookEvent.receivedAt || latestWebhookEvent.stripeCreatedAt)}`
+                      : 'No Stripe webhook health records have been received since this feature was added.'}
+                  </p>
+                  {latestWebhookEvent?.message && (
+                    <p className="text-[11.5px] text-gray-600 font-semibold">{latestWebhookEvent.message}</p>
+                  )}
+                  {latestWebhookEvent?.error && (
+                    <p className="text-[11.5px] text-red-600 font-semibold">{latestWebhookEvent.error}</p>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 min-w-0 lg:max-w-3xl">
+                  {webhookEvents.slice(0, 6).map(event => (
+                    <div key={event.eventId} className="border border-gray-100 rounded p-2.5 bg-gray-50/40 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10.5px] font-bold text-gray-800 truncate">{event.type}</span>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${getWebhookStatusClass(event.status)}`}>
+                          {event.status}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.eventId}</p>
+                      <p className="text-[10px] text-gray-400 font-medium mt-1">
+                        {formatDateTime(event.updatedAt || event.receivedAt || event.stripeCreatedAt)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="overflow-x-auto border border-gray-100 rounded-xl shadow-sm">

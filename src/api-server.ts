@@ -63,6 +63,30 @@ function getDb() {
   return _db;
 }
 
+async function recordStripeWebhookEvent(event: any, status: "processing" | "succeeded" | "failed", details: Record<string, any> = {}) {
+  try {
+    const eventId = event?.id || `unverified_${Date.now()}`;
+    const record: Record<string, any> = {
+      eventId,
+      type: event?.type || "unknown",
+      status,
+      stripeCreatedAt: event?.created ? Timestamp.fromMillis(event.created * 1000) : null,
+      receivedAt: details.receivedAt || FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      message: details.message || null,
+      error: details.error || null
+    };
+
+    ["customerId", "userId", "subscriptionId", "invoiceId"].forEach((key) => {
+      if (details[key]) record[key] = details[key];
+    });
+
+    await getDb().collection("stripeWebhookEvents").doc(eventId).set(record, { merge: true });
+  } catch (logErr) {
+    console.error("[Webhook Health] Failed to record Stripe webhook event:", logErr);
+  }
+}
+
 // Safe path resolution for ESM/cjs
 let _filename = "";
 let _dirname = "";
@@ -326,6 +350,9 @@ export function createApp() {
     }
 
     console.log(`[Webhook] Handling event: ${event.type}`);
+    await recordStripeWebhookEvent(event, "processing", {
+      message: "Webhook received and verified"
+    });
 
     try {
       // const db = admin.firestore(); // already defined at top level
@@ -335,6 +362,11 @@ export function createApp() {
           const session = event.data.object;
           const userId = session.client_reference_id || session.metadata?.userId;
           const customerId = session.customer;
+          await recordStripeWebhookEvent(event, "processing", {
+            userId,
+            customerId,
+            message: "Checkout session completed"
+          });
 
           if (userId && customerId) {
             console.log(`[Webhook] Linking customer ${customerId} to user ${userId}`);
@@ -399,6 +431,11 @@ export function createApp() {
         case 'customer.subscription.deleted': {
           const subscription = event.data.object;
           const customerId = subscription.customer;
+          await recordStripeWebhookEvent(event, "processing", {
+            customerId,
+            subscriptionId: subscription.id,
+            message: `Subscription event ${subscription.status || "unknown"}`
+          });
 
           // Find user by customer ID
           const userQuery = await getDb().collection('users')
@@ -409,6 +446,12 @@ export function createApp() {
           if (!userQuery.empty) {
             const userDoc = userQuery.docs[0];
             const userId = userDoc.id;
+            await recordStripeWebhookEvent(event, "processing", {
+              userId,
+              customerId,
+              subscriptionId: subscription.id,
+              message: `Updating subscription to ${subscription.status || "unknown"}`
+            });
             
             const status = subscription.status;
             const isTrialing = status === 'trialing';
@@ -446,6 +489,12 @@ export function createApp() {
 
         case 'invoice.paid': {
           const invoice = event.data.object;
+          await recordStripeWebhookEvent(event, "processing", {
+            customerId: invoice.customer,
+            subscriptionId: invoice.subscription,
+            invoiceId: invoice.id,
+            message: "Invoice paid"
+          });
           if (invoice.subscription) {
             const customerId = invoice.customer;
             const userQuery = await getDb().collection('users')
@@ -467,6 +516,12 @@ export function createApp() {
         case 'invoice.payment_failed': {
           const invoice = event.data.object;
           const customerId = invoice.customer;
+          await recordStripeWebhookEvent(event, "processing", {
+            customerId,
+            subscriptionId: invoice.subscription,
+            invoiceId: invoice.id,
+            message: "Invoice payment failed"
+          });
           const userQuery = await getDb().collection('users')
             .where('subscription.stripeCustomerId', '==', customerId)
             .limit(1)
@@ -484,9 +539,16 @@ export function createApp() {
         }
       }
 
+      await recordStripeWebhookEvent(event, "succeeded", {
+        message: "Webhook handled successfully"
+      });
       res.json({ received: true });
     } catch (err: any) {
       console.error(`[Webhook Handler Error] ${err.message}`);
+      await recordStripeWebhookEvent(event, "failed", {
+        error: err?.message || String(err),
+        message: "Webhook handler failed"
+      });
       res.status(500).send(`Webhook Handler Error: ${err.message}`);
     }
   });

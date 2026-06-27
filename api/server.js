@@ -163342,6 +163342,27 @@ function getDb() {
   }
   return _db;
 }
+async function recordStripeWebhookEvent(event, status, details = {}) {
+  try {
+    const eventId = event?.id || `unverified_${Date.now()}`;
+    const record = {
+      eventId,
+      type: event?.type || "unknown",
+      status,
+      stripeCreatedAt: event?.created ? Timestamp.fromMillis(event.created * 1e3) : null,
+      receivedAt: details.receivedAt || FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      message: details.message || null,
+      error: details.error || null
+    };
+    ["customerId", "userId", "subscriptionId", "invoiceId"].forEach((key) => {
+      if (details[key]) record[key] = details[key];
+    });
+    await getDb().collection("stripeWebhookEvents").doc(eventId).set(record, { merge: true });
+  } catch (logErr) {
+    console.error("[Webhook Health] Failed to record Stripe webhook event:", logErr);
+  }
+}
 var _filename = "";
 var _dirname = "";
 try {
@@ -163555,12 +163576,20 @@ function createApp() {
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
     console.log(`[Webhook] Handling event: ${event.type}`);
+    await recordStripeWebhookEvent(event, "processing", {
+      message: "Webhook received and verified"
+    });
     try {
       switch (event.type) {
         case "checkout.session.completed": {
           const session = event.data.object;
           const userId = session.client_reference_id || session.metadata?.userId;
           const customerId = session.customer;
+          await recordStripeWebhookEvent(event, "processing", {
+            userId,
+            customerId,
+            message: "Checkout session completed"
+          });
           if (userId && customerId) {
             console.log(`[Webhook] Linking customer ${customerId} to user ${userId}`);
             const userRef = getDb().collection("users").doc(userId);
@@ -163619,10 +163648,21 @@ function createApp() {
         case "customer.subscription.deleted": {
           const subscription = event.data.object;
           const customerId = subscription.customer;
+          await recordStripeWebhookEvent(event, "processing", {
+            customerId,
+            subscriptionId: subscription.id,
+            message: `Subscription event ${subscription.status || "unknown"}`
+          });
           const userQuery = await getDb().collection("users").where("subscription.stripeCustomerId", "==", customerId).limit(1).get();
           if (!userQuery.empty) {
             const userDoc = userQuery.docs[0];
             const userId = userDoc.id;
+            await recordStripeWebhookEvent(event, "processing", {
+              userId,
+              customerId,
+              subscriptionId: subscription.id,
+              message: `Updating subscription to ${subscription.status || "unknown"}`
+            });
             const status = subscription.status;
             const isTrialing = status === "trialing";
             const isPaying = status === "active";
@@ -163656,6 +163696,12 @@ function createApp() {
         }
         case "invoice.paid": {
           const invoice = event.data.object;
+          await recordStripeWebhookEvent(event, "processing", {
+            customerId: invoice.customer,
+            subscriptionId: invoice.subscription,
+            invoiceId: invoice.id,
+            message: "Invoice paid"
+          });
           if (invoice.subscription) {
             const customerId = invoice.customer;
             const userQuery = await getDb().collection("users").where("subscription.stripeCustomerId", "==", customerId).limit(1).get();
@@ -163672,6 +163718,12 @@ function createApp() {
         case "invoice.payment_failed": {
           const invoice = event.data.object;
           const customerId = invoice.customer;
+          await recordStripeWebhookEvent(event, "processing", {
+            customerId,
+            subscriptionId: invoice.subscription,
+            invoiceId: invoice.id,
+            message: "Invoice payment failed"
+          });
           const userQuery = await getDb().collection("users").where("subscription.stripeCustomerId", "==", customerId).limit(1).get();
           if (!userQuery.empty) {
             console.log(`[Webhook] Payment failed for user ${userQuery.docs[0].id}`);
@@ -163684,9 +163736,16 @@ function createApp() {
           break;
         }
       }
+      await recordStripeWebhookEvent(event, "succeeded", {
+        message: "Webhook handled successfully"
+      });
       res.json({ received: true });
     } catch (err) {
       console.error(`[Webhook Handler Error] ${err.message}`);
+      await recordStripeWebhookEvent(event, "failed", {
+        error: err?.message || String(err),
+        message: "Webhook handler failed"
+      });
       res.status(500).send(`Webhook Handler Error: ${err.message}`);
     }
   });

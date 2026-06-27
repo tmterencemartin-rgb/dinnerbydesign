@@ -827,6 +827,31 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               )}
             </div>
 
+            {isAdmin && user && !user.isAnonymous && (
+              <div className="bg-white rounded p-5 sm:p-6 shadow-xs space-y-4 border border-gray-100">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded bg-dbd-accent/10 flex items-center justify-center shrink-0">
+                      <ShieldCheck className="w-4 h-4 text-dbd-accent" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-[13.5px] text-gray-900 font-bold">Admin dashboard</h3>
+                      <p className="text-[11.5px] text-gray-400 font-semibold leading-relaxed max-w-xl">
+                        Review subscribers, subscription status, Stripe webhook health, email status and CSV exports.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setView('admin')}
+                    className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-[11px] font-bold rounded transition-all flex items-center justify-center gap-1.5 shrink-0"
+                  >
+                    <Database className="w-3.5 h-3.5" />
+                    Open dashboard
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Read-Only Dietary Profile Summary */}
             {user && !user.isAnonymous && (
               <div id="dietary-profile-summary" className="space-y-4 pt-1">
