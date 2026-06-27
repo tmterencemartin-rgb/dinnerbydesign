@@ -108,7 +108,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
 
   if (layoutMode === 'grid') {
     return (
-      <div className={`bg-white border border-gray-100 rounded p-4 shadow-sm hover:shadow transition-all duration-200 flex flex-col justify-between h-full relative group min-h-[160px] ${isChoosingDay ? 'z-40' : 'z-10'}`}>
+      <div className={`bg-white border border-gray-100 rounded p-4 hover:border-gray-200 transition-all duration-200 flex flex-col justify-between h-full relative group min-h-[160px] ${isChoosingDay ? 'z-40' : 'z-10'}`}>
         <div className="space-y-2">
           {/* Header row: Cuisine / Retailer + Delete Button */}
           <div className="flex items-center justify-between">
@@ -200,7 +200,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           </button>
 
           {scheduledDate ? (
-            <span className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-0.5 rounded-full uppercase text-[9.5px] font-bold tracking-wider">
+            <span className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-0.5 rounded uppercase text-[9.5px] font-bold tracking-wider">
               {scheduledDate.slice(0, 3)}
             </span>
           ) : (
@@ -226,7 +226,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               </button>
 
               {isChoosingDay && (
-                <div className="absolute right-0 bottom-full mb-2 z-50 bg-white border border-gray-100 rounded shadow-lg p-3 min-w-[170px]">
+                <div className="absolute right-0 bottom-full mb-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[170px]">
                   <div className="flex justify-between items-center mb-1.5 border-b border-gray-50 pb-1">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Dinner Day</span>
                     <button onClick={() => setIsChoosingDay(false)} className="text-gray-400 hover:text-gray-600"><CircleX size={10} /></button>
@@ -439,7 +439,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               }}
               className={`flex items-center gap-1 px-2.5 py-1 rounded border text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                 scheduledDate || showCheck
-                  ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700 font-semibold shadow-xs'
+                  ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700 font-semibold'
                   : 'border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800'
               }`}
               title="Add to Schedule"
@@ -453,7 +453,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             </button>
 
             {isChoosingDay && (
-              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-lg p-3 min-w-[200px] animate-in fade-in slide-in-from-top-1 duration-150">
+              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[200px] animate-in fade-in slide-in-from-top-1 duration-150">
                 <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-1">
                   <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Schedule Dinner</span>
                   <button onClick={() => setIsChoosingDay(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer"><CircleX size={12} /></button>

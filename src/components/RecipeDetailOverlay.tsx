@@ -76,6 +76,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
   if (!item) return null;
 
   const mode = (item as any).retailer ? 'ready-made' : 'cook';
+  const detailLabel = mode === 'ready-made' ? 'Ready-made dish' : 'Recipe detail';
 
   return (
     <motion.div
@@ -104,7 +105,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
           </button>
           
           <div className="flex flex-col items-center flex-1 mx-4 overflow-hidden">
-             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">Detailed Recipe</span>
+             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">{detailLabel}</span>
           </div>
 
           <div className="w-10 sm:w-20" /> {/* Balanced Spacer */}

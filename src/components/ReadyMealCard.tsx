@@ -112,7 +112,11 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-white border border-gray-100 rounded p-3 sm:p-5 shadow-[0_1px_4px_rgba(0,0,0,0.025)] relative group/card overflow-visible transition-all duration-200"
+      className={`bg-white rounded p-3 sm:p-5 relative group/card overflow-visible transition-all duration-200 ${
+        isModal
+          ? 'border-0 shadow-none'
+          : 'border border-gray-100 shadow-[0_1px_4px_rgba(0,0,0,0.025)]'
+      }`}
     >
       {isExpanded && !isModal && (
         <button 
@@ -260,7 +264,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     </div>
 
                     {meal.matchReason && meal.matchReason.length > 0 && (
-                      <div className="bg-gray-50/70 p-2 rounded-lg border border-gray-100/60">
+                      <div className="bg-gray-50/70 p-2 rounded border border-gray-100/60">
                         <p className="text-[11.5px] text-gray-500 leading-relaxed italic">
                           <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9.5px]">Why this match:</span> {meal.matchReason}
                         </p>
