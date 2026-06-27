@@ -665,26 +665,42 @@ export function createApp() {
       try {
         let html = await fs.promises.readFile(indexPath, "utf8");
         
+        const siteUrl = "https://dinnerbydesignv2.vercel.app";
         let title = "DinnerByDesign — Bespoke Food Planning & Smart Shopping Lists";
         let description = "Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
+        let canonicalPath = "/";
+        let noIndex = false;
         let schema: any = null;
 
         const pathName = req.path;
         if (pathName === "/privacy") {
           title = "Privacy Policy — DinnerByDesign";
           description = "Read how DinnerByDesign handles and secures your personal profiles, tastes, and recipe data.";
+          canonicalPath = "/privacy";
         } else if (pathName === "/terms") {
           title = "Terms of Service — DinnerByDesign";
           description = "Review terms of use, trials, and premium plan rules for the DinnerByDesign service.";
+          canonicalPath = "/terms";
         } else if (pathName === "/planner") {
           title = "Your Meal Planner — DinnerByDesign";
           description = "Your weekly bespoke meal schedule and preparation planner.";
+          canonicalPath = "/planner";
+          noIndex = true;
         } else if (pathName === "/shopping") {
           title = "Your Shopping List — DinnerByDesign";
           description = "Your smart, interactive shopping and grocery lists automatically grouped by department.";
+          canonicalPath = "/shopping";
+          noIndex = true;
         } else if (pathName === "/settings") {
           title = "Account Settings — DinnerByDesign";
           description = "Manage your dietary rule taxonomies, allergies, excluded ingredients, and account credentials.";
+          canonicalPath = "/settings";
+          noIndex = true;
+        } else if (pathName === "/signin" || pathName === "/success" || pathName === "/admin") {
+          title = pathName === "/signin" ? "Sign In / Sign Up — DinnerByDesign" : pathName === "/success" ? "Subscription Success — DinnerByDesign" : "Admin Dashboard — DinnerByDesign";
+          description = pathName === "/signin" ? "Access your DinnerByDesign account or create a new profile to start planning your custom menus." : pathName === "/success" ? "Thank you for subscribing to DinnerByDesign Premium! Your account has been upgraded." : "DinnerByDesign Administration and Management.";
+          canonicalPath = pathName;
+          noIndex = true;
         } else {
           // Default Landing Page / Home / fallback
           schema = {
@@ -705,6 +721,20 @@ export function createApp() {
           html = html.replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${description}" />`);
         } else {
           html = html.replace("</head>", `<meta name="description" content="${description}" />\n</head>`);
+        }
+
+        const canonicalUrl = `${siteUrl}${canonicalPath}`;
+        if (html.includes('rel="canonical"')) {
+          html = html.replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${canonicalUrl}" />`);
+        } else {
+          html = html.replace("</head>", `<link rel="canonical" href="${canonicalUrl}" />\n</head>`);
+        }
+
+        const robotsContent = noIndex ? "noindex, nofollow" : "index, follow";
+        if (html.includes('<meta name="robots"')) {
+          html = html.replace(/<meta name="robots" content=".*?"\s*\/?>/, `<meta name="robots" content="${robotsContent}" />`);
+        } else {
+          html = html.replace("</head>", `<meta name="robots" content="${robotsContent}" />\n</head>`);
         }
 
         // Insert schema if present

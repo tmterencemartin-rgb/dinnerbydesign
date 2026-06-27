@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /settings
+Disallow: /planner
+Disallow: /shopping
+Disallow: /success
+Disallow: /signin
+
+Sitemap: https://dinnerbydesignv2.vercel.app/sitemap.xml

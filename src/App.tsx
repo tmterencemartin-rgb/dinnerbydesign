@@ -45,42 +45,56 @@ const AppContent = () => {
       case 'planner':
         return {
           title: 'Your Meal Planner — DinnerByDesign',
-          description: 'Organise your bespoke recipes, coordinate portion counts, and manage your weekly meal plan schedule with DinnerByDesign.'
+          description: 'Organise your bespoke recipes, coordinate portion counts, and manage your weekly meal plan schedule with DinnerByDesign.',
+          canonicalPath: '/planner',
+          noIndex: true
         };
       case 'shopping':
         return {
           title: 'Your Shopping List — DinnerByDesign',
-          description: 'View your dynamic smart shopping list automatically grouped by department for efficient grocery shopping.'
+          description: 'View your dynamic smart shopping list automatically grouped by department for efficient grocery shopping.',
+          canonicalPath: '/shopping',
+          noIndex: true
         };
       case 'settings':
         return {
           title: 'Account Settings — DinnerByDesign',
-          description: 'Manage your dietary rules, allergies, ingredient exclusions, unit system, and account preferences.'
+          description: 'Manage your dietary rules, allergies, ingredient exclusions, unit system, and account preferences.',
+          canonicalPath: '/settings',
+          noIndex: true
         };
       case 'privacy':
         return {
           title: 'Privacy Policy — DinnerByDesign',
-          description: 'Read the privacy policy of DinnerByDesign to see how we protect and manage your private data.'
+          description: 'Read the privacy policy of DinnerByDesign to see how we protect and manage your private data.',
+          canonicalPath: '/privacy'
         };
       case 'terms':
         return {
           title: 'Terms of Service — DinnerByDesign',
-          description: 'Review the terms of service, trial rules, and subscription details for DinnerByDesign.'
+          description: 'Review the terms of service, trial rules, and subscription details for DinnerByDesign.',
+          canonicalPath: '/terms'
         };
       case 'success':
         return {
           title: 'Subscription Success — DinnerByDesign',
-          description: 'Thank you for subscribing to DinnerByDesign Premium! Your account has been upgraded.'
+          description: 'Thank you for subscribing to DinnerByDesign Premium! Your account has been upgraded.',
+          canonicalPath: '/success',
+          noIndex: true
         };
       case 'signin':
         return {
           title: 'Sign In / Sign Up — DinnerByDesign',
-          description: 'Access your DinnerByDesign account or create a new profile to start planning your custom menus.'
+          description: 'Access your DinnerByDesign account or create a new profile to start planning your custom menus.',
+          canonicalPath: '/signin',
+          noIndex: true
         };
       case 'admin':
         return {
           title: 'Admin Dashboard — DinnerByDesign',
-          description: 'DinnerByDesign Administration and Management.'
+          description: 'DinnerByDesign Administration and Management.',
+          canonicalPath: '/admin',
+          noIndex: true
         };
       case 'home':
       case 'landing':
@@ -88,6 +102,7 @@ const AppContent = () => {
         return {
           title: 'DinnerByDesign — Bespoke Food Planning & Smart Shopping Lists',
           description: 'Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.',
+          canonicalPath: '/',
           jsonLd: {
             "@context": "https://schema.org",
             "@type": "WebApplication",
