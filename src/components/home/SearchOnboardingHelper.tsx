@@ -9,8 +9,8 @@ interface SearchOnboardingHelperProps {
 
 const STARTER_SUGGESTIONS = [
   'Something quick with chicken',
-  'Low-cost vegetarian dinner',
-  'Use up what I have in the fridge'
+  'A low-cost vegetarian dinner',
+  "Use what's in the fridge"
 ];
 
 export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ onDismiss, onSuggestionSelect }) => {
@@ -43,7 +43,7 @@ export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ 
 
           <div className="space-y-2 text-left pl-0.5">
             <p className="text-[14px] text-dbd-ink font-bold leading-tight">
-              Find your first dinner idea.
+              Find your first dinner recipe.
             </p>
             <p className="text-[13px] text-dbd-ink-2 font-medium leading-relaxed">
               Search by ingredient, dish, cuisine or chef. Or whatever you have in mind.
