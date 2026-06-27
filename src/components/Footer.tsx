@@ -13,6 +13,9 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
         <div className="flex flex-col items-center lg:items-start space-y-2">
           <div className="text-gray-500 text-[13px] flex flex-col items-center lg:items-start gap-1 relative z-10">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
+            <span className="text-gray-400 text-[12px] font-semibold">
+              Real-world recipes, planned around your preferences.
+            </span>
             <a 
               href="mailto:chef@dinnerbydesign.app" 
               className="relative z-50 block text-accent font-semibold hover:text-accent/80 hover:underline transition-colors py-0.5 text-xs"
@@ -21,7 +24,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             </a>
           </div>
           <div className="text-gray-400 text-[11px] max-w-2xl text-center lg:text-left leading-relaxed mt-4 pt-2 border-t border-gray-200/50 relative">
-            DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, or food brand mentioned on this platform. Chef names are used solely as descriptive search filters to help users find recipes in a particular culinary style. All recipes are sourced from their respective websites and full attribution is provided. DinnerByDesign claims no ownership of third-party recipe content.
+            DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
           </div>
         </div>
         
