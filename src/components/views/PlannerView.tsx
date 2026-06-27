@@ -830,21 +830,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                 {/* SECTION 2: SCHEDULED (WEEKLY PLAN) */}
                 <div className="space-y-6 relative z-10">
                   {/* SCHEDULED HEADER ROW */}
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <div className="flex items-center gap-2.5">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-100 pb-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest pl-1">Scheduled</h3>
                       <span className="text-[11px] text-gray-400 font-medium">
                         {Math.min(planner.length, 7)}/7 days filled
                       </span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[12px] text-gray-400 font-medium">
+                    <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-3">
+                      <span className="text-[12px] text-gray-400 font-medium whitespace-nowrap">
                         {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
                       </span>
                       {planner.length > 0 && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-end gap-2 min-w-0">
                           {showClearWeekConfirm ? (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-end gap-2 flex-wrap">
                               <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Are you sure?</span>
                               <button 
                                 onClick={async () => {
@@ -887,7 +887,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                       const entry = planner.find(e => e.scheduledDate === dayId);
                       const dayLabel = dayId.slice(0, 3).toUpperCase();
                       return (
-                        <div key={dayId} className="py-1.5 px-1.5 flex items-start gap-2 sm:gap-3 group min-h-[44px] transition-colors hover:bg-gray-50/50">
+                        <div key={dayId} className="relative py-2 px-1.5 flex items-start gap-2 sm:gap-3 group min-h-[48px] transition-colors hover:bg-gray-50/50">
                           <div className="w-12 shrink-0 flex items-start justify-start pt-[2px]">
                             <span className="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
                               {dayLabel}
@@ -990,7 +990,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                             </div>
 
                             {targetPlannerDay === dayId && (
-                              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[200px]">
+                              <div className="absolute left-0 right-0 sm:left-auto sm:right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-0 sm:min-w-[240px]">
                                 <div className="flex justify-between items-center mb-2">
                                   <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Choose from Saved</span>
                                   <button onClick={() => setTargetPlannerDay(null)}><CircleX size={12} /></button>
