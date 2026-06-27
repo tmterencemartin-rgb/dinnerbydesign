@@ -105,7 +105,7 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
             onClick={() => setPlan('monthly')}
             className={`flex-grow flex items-center justify-center px-2 rounded-sm transition-all outline-none text-center text-[9.5px] font-bold ${
               plan === 'monthly' 
-                ? 'bg-white text-dbd-accent shadow-sm border border-gray-200/20' 
+                ? 'bg-white text-dbd-accent border border-gray-200/20'
                 : 'text-gray-400 hover:text-gray-600'
             }`}
           >
@@ -117,7 +117,7 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
             onClick={() => setPlan('yearly')}
             className={`flex-grow flex items-center justify-center px-2 rounded-sm transition-all outline-none text-center text-[9.5px] font-bold gap-1 ${
               plan === 'yearly' 
-                ? 'bg-white text-dbd-accent shadow-sm border border-gray-200/20' 
+                ? 'bg-white text-dbd-accent border border-gray-200/20'
                 : 'text-gray-400 hover:text-gray-600'
             }`}
           >
@@ -146,7 +146,7 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
             className={`w-full h-8 px-4 text-[10px] font-bold uppercase tracking-[0.12em] rounded-sm transition-all flex items-center justify-center ${
               loading 
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                : 'bg-dbd-accent text-white hover:bg-dbd-accent-mid shadow-sm'
+                : 'bg-dbd-accent text-white hover:bg-dbd-accent-mid'
             }`}
           >
             {loading ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : 'Activate Full Access'}
