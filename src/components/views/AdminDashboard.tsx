@@ -269,7 +269,7 @@ export const AdminDashboard: React.FC = () => {
         subscription?.stripeSubscriptionId || '',
         formatDate(user.createdAt),
         formatDate(getTrialEndDate(user)),
-        formatDate(subscription?.subscriptionCreatedAt),
+        formatDate(getSubscriptionStartDate(user)),
         formatDate(subscription?.currentPeriodStart),
         formatDate(subscription?.currentPeriodEnd),
         user.welcomeEmailSent ? 'yes' : 'no',
@@ -301,6 +301,10 @@ export const AdminDashboard: React.FC = () => {
     const status = user.subscription?.subscriptionStatus;
     if (status === 'canceled' || status === 'unpaid' || status === 'paused') return 'Ends';
     return 'Renews';
+  };
+
+  const getSubscriptionStartDate = (user: UserProfile) => {
+    return user.subscription?.subscriptionCreatedAt || user.subscription?.currentPeriodStart || null;
   };
 
   const getStatusBadge = (user: UserProfile) => {
@@ -520,10 +524,10 @@ export const AdminDashboard: React.FC = () => {
                               <span>Trial end: {formatDate(trialEnd)}</span>
                             </div>
                           )}
-                          {subscription?.subscriptionCreatedAt && (
+                          {getSubscriptionStartDate(user) && (
                             <div className="flex items-center gap-1.5 text-xs text-gray-500">
                               <CreditCard className="w-3.5 h-3.5" />
-                              <span>Subscribed: {formatDate(subscription.subscriptionCreatedAt)}</span>
+                              <span>Subscribed: {formatDate(getSubscriptionStartDate(user))}</span>
                             </div>
                           )}
                           {subscription?.currentPeriodEnd && (
