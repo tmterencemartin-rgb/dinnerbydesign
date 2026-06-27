@@ -507,7 +507,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
               </div>
             </div>
 
-            <div className="bg-white rounded shadow-xs px-4 sm:px-5 py-4">
+            <div className="bg-white rounded border border-gray-100 px-4 sm:px-5 py-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 rounded bg-dbd-accent/10 flex items-center justify-center shrink-0">
@@ -604,7 +604,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
             </div>
 
             {/* Unified Save & Schedule Panel */}
-            <div className="mt-0 bg-white rounded shadow-xs overflow-hidden flex flex-col">
+            <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
               <div className="px-1 sm:px-3.5 py-5 sm:py-7 space-y-10">
                 
@@ -657,7 +657,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                       </p>
                       <button 
                         onClick={() => setView('home')}
-                        className="uppercase tracking-widest text-[10px] font-bold bg-gray-900 text-white px-5 py-2.5 rounded hover:bg-black transition-all inline-block cursor-pointer shadow-sm"
+                        className="uppercase tracking-widest text-[10px] font-bold bg-gray-900 text-white px-5 py-2.5 rounded hover:bg-black transition-all inline-block cursor-pointer"
                       >
                         Browse Recipes
                       </button>
@@ -695,7 +695,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                                 onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
                                 className={`text-xs font-semibold h-8 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
                                   isFilterDropdownOpen || convenienceFilter !== 'all' || quickPills.under20 || quickPills.budget || quickPills.healthy
-                                    ? 'border-accent bg-accent/5 text-accent shadow-xs'
+                                    ? 'border-accent bg-accent/5 text-accent'
                                     : 'border-gray-100 bg-white hover:bg-gray-50 text-gray-700'
                                 }`}
                               >
@@ -710,7 +710,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                               {isFilterDropdownOpen && (
                                 <>
                                   <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsFilterDropdownOpen(false)} />
-                                  <div className="absolute left-0 md:left-auto md:right-0 top-full mt-1.5 w-56 bg-white border border-gray-100 rounded shadow-lg p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                                  <div className="absolute left-0 md:left-auto md:right-0 top-full mt-1.5 w-56 bg-white border border-gray-100 rounded shadow-md p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
                                     <div className="mb-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1 text-left">COOKING STYLE</div>
                                     <div className="space-y-1">
                                       <label className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded cursor-pointer text-xs font-medium text-gray-700 select-none">
@@ -990,7 +990,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                             </div>
 
                             {targetPlannerDay === dayId && (
-                              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-lg p-3 min-w-[200px]">
+                              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[200px]">
                                 <div className="flex justify-between items-center mb-2">
                                   <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Choose from Saved</span>
                                   <button onClick={() => setTargetPlannerDay(null)}><CircleX size={12} /></button>
