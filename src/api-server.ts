@@ -274,7 +274,7 @@ export function createApp() {
               currency: "gbp",
               product_data: {
                 name: `DinnerByDesign Access (${isYearly ? 'Annual' : 'Monthly'})`,
-                description: "Unlock advanced search and unlimited meal planning",
+                description: "Unlock advanced search and unlimited dinner planning",
               },
               unit_amount: isYearly ? 3000 : 299, // £30.00 or £2.99
               recurring: {
@@ -401,7 +401,7 @@ export function createApp() {
                         <ul style="margin: 0; padding-left: 18px; color: #4b5563;">
                           <li>Search for unlimited dinner ideas.</li>
                           <li>Save recipes and sync them across devices.</li>
-                          <li>Plan meals and build shopping lists.</li>
+                          <li>Plan dinners and build shopping lists.</li>
                           <li>Manage your subscription from Settings.</li>
                         </ul>
                       </div>
@@ -665,9 +665,9 @@ export function createApp() {
       try {
         let html = await fs.promises.readFile(indexPath, "utf8");
         
-        const siteUrl = "https://dinnerbydesignv2.vercel.app";
+        const siteUrl = "https://dinnerbydesign.app";
         let title = "DinnerByDesign — Bespoke Food Planning & Smart Shopping Lists";
-        let description = "Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
+        let description = "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
         let canonicalPath = "/";
         let noIndex = false;
         let schema: any = null;
@@ -682,8 +682,8 @@ export function createApp() {
           description = "Review terms of use, trials, and premium plan rules for the DinnerByDesign service.";
           canonicalPath = "/terms";
         } else if (pathName === "/planner") {
-          title = "Your Meal Planner — DinnerByDesign";
-          description = "Your weekly bespoke meal schedule and preparation planner.";
+          title = "Your Dinner Planner — DinnerByDesign";
+          description = "Your weekly bespoke dinner schedule and preparation planner.";
           canonicalPath = "/planner";
           noIndex = true;
         } else if (pathName === "/shopping") {
@@ -707,7 +707,7 @@ export function createApp() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "DinnerByDesign",
-            "description": "Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
+            "description": "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
             "applicationCategory": "HealthAndFitnessApplication, FoodAndDrink",
             "operatingSystem": "All"
           };

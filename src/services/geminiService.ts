@@ -628,7 +628,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
       : '';
 
     // Core system logic - fixed for model efficiency
-    const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? 'UK supermarket ready-made meal products' : 'recipe'} stubs based on the user's intent.
+    const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? 'UK supermarket ready-made products' : 'recipe'} stubs based on the user's intent.
 Target: UK audience, Metric units, UK English spelling.
 Portion Basis: ONE adult portion.
 
@@ -637,7 +637,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR RECIPES (HOMEMADE): You MUST provide a "sourceUrl" and an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return. If you can attribute the recipe to a real UK source (e.g. BBC Good Food, Jamie Oliver, Tesco Real Food), use their domain or a representative search URL. If it's a generic classic, use "recipe-search" or a similar descriptive string.
-- CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based meals, ready-meals, or convenience shortcuts.
+- CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
 ${parsedIngredientsInstruction}
 
 HARD CONSTRAINTS:
@@ -659,7 +659,7 @@ ${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Log
 
     const rejectionPolicy = `Return { "items": [] } if:
 - The query "${query}" strictly violates any HARD DIETARY, RELIGIOUS, or ALLERGY constraint.
-${isReadyMade ? `- ONLY commercially available UK ready-meals (branded or own-brand) from ${activeSupermarkets.length > 0 ? activeSupermarkets.join(' or ') : 'any major UK supermarket, e.g., Tesco, Waitrose, Sainsbury’s, Morrisons, Aldi, Asda, Lidl, Co-op, Marks & Spencer, Ocado'}. NO home recipes. Under NO circumstances return products from other supermarkets when preferred supermarkets are specified above.` : '- Home-cooking recipes only. NO "retailer" fields.'}
+${isReadyMade ? `- ONLY commercially available UK ready-made products (branded or own-brand) from ${activeSupermarkets.length > 0 ? activeSupermarkets.join(' or ') : 'any major UK supermarket, e.g., Tesco, Waitrose, Sainsbury’s, Morrisons, Aldi, Asda, Lidl, Co-op, Marks & Spencer, Ocado'}. NO home recipes. Under NO circumstances return products from other supermarkets when preferred supermarkets are specified above.` : '- Home-cooking recipes only. NO "retailer" fields.'}
 
 BUDGET POLICY: 
 If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" under £2), do NOT return empty. Instead:
@@ -844,7 +844,7 @@ ORIGINALITY:
 - NO verbatim copying from external sites.
 
 REQUISITES:
-${mode === 'cook' ? '- Ingredients MUST include specific quantities/units (e.g. "200g", "1 tsp").' : '- Must be a real commercial UK ready-meal. Instructions reflect heating (oven/microwave/air-fryer).'}
+${mode === 'cook' ? '- Ingredients MUST include specific quantities/units (e.g. "200g", "1 tsp").' : '- Must be a real commercial UK ready-made product. Instructions reflect heating (oven/microwave/air-fryer).'}
 - DESCRIPTION: Synthesize the best aspects in a professional tone.
 - SOURCE URL: Explicitly provide a representative source for this recipe (domain or search url).
 - TOTAL INGREDIENTS COUNT: Provide an accurate total count of all ingredients required.

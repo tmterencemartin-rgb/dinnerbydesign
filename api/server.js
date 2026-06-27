@@ -157811,7 +157811,7 @@ INGREDIENT PARSING & INTERPRETATION (CRITICAL):
 - Always try to return recipes/dishes that contain ALL of these listed ingredients.
 - Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible.
 - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.` : "";
-    const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? "UK supermarket ready-made meal products" : "recipe"} stubs based on the user's intent.
+    const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs based on the user's intent.
 Target: UK audience, Metric units, UK English spelling.
 Portion Basis: ONE adult portion.
 
@@ -157820,7 +157820,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR RECIPES (HOMEMADE): You MUST provide a "sourceUrl" and an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return. If you can attribute the recipe to a real UK source (e.g. BBC Good Food, Jamie Oliver, Tesco Real Food), use their domain or a representative search URL. If it's a generic classic, use "recipe-search" or a similar descriptive string.
-- CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based meals, ready-meals, or convenience shortcuts.
+- CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
 ${parsedIngredientsInstruction}
 
 HARD CONSTRAINTS:
@@ -157841,7 +157841,7 @@ ${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Log
 `;
     const rejectionPolicy = `Return { "items": [] } if:
 - The query "${query}" strictly violates any HARD DIETARY, RELIGIOUS, or ALLERGY constraint.
-${isReadyMade ? `- ONLY commercially available UK ready-meals (branded or own-brand) from ${activeSupermarkets.length > 0 ? activeSupermarkets.join(" or ") : "any major UK supermarket, e.g., Tesco, Waitrose, Sainsbury\u2019s, Morrisons, Aldi, Asda, Lidl, Co-op, Marks & Spencer, Ocado"}. NO home recipes. Under NO circumstances return products from other supermarkets when preferred supermarkets are specified above.` : '- Home-cooking recipes only. NO "retailer" fields.'}
+${isReadyMade ? `- ONLY commercially available UK ready-made products (branded or own-brand) from ${activeSupermarkets.length > 0 ? activeSupermarkets.join(" or ") : "any major UK supermarket, e.g., Tesco, Waitrose, Sainsbury\u2019s, Morrisons, Aldi, Asda, Lidl, Co-op, Marks & Spencer, Ocado"}. NO home recipes. Under NO circumstances return products from other supermarkets when preferred supermarkets are specified above.` : '- Home-cooking recipes only. NO "retailer" fields.'}
 
 BUDGET POLICY: 
 If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" under \xA32), do NOT return empty. Instead:
@@ -157998,7 +157998,7 @@ ORIGINALITY:
 - NO verbatim copying from external sites.
 
 REQUISITES:
-${mode === "cook" ? '- Ingredients MUST include specific quantities/units (e.g. "200g", "1 tsp").' : "- Must be a real commercial UK ready-meal. Instructions reflect heating (oven/microwave/air-fryer)."}
+${mode === "cook" ? '- Ingredients MUST include specific quantities/units (e.g. "200g", "1 tsp").' : "- Must be a real commercial UK ready-made product. Instructions reflect heating (oven/microwave/air-fryer)."}
 - DESCRIPTION: Synthesize the best aspects in a professional tone.
 - SOURCE URL: Explicitly provide a representative source for this recipe (domain or search url).
 - TOTAL INGREDIENTS COUNT: Provide an accurate total count of all ingredients required.
@@ -163515,7 +163515,7 @@ function createApp() {
               currency: "gbp",
               product_data: {
                 name: `DinnerByDesign Access (${isYearly ? "Annual" : "Monthly"})`,
-                description: "Unlock advanced search and unlimited meal planning"
+                description: "Unlock advanced search and unlimited dinner planning"
               },
               unit_amount: isYearly ? 3e3 : 299,
               // £30.00 or £2.99
@@ -163624,7 +163624,7 @@ function createApp() {
                         <ul style="margin: 0; padding-left: 18px; color: #4b5563;">
                           <li>Search for unlimited dinner ideas.</li>
                           <li>Save recipes and sync them across devices.</li>
-                          <li>Plan meals and build shopping lists.</li>
+                          <li>Plan dinners and build shopping lists.</li>
                           <li>Manage your subscription from Settings.</li>
                         </ul>
                       </div>
@@ -163846,9 +163846,9 @@ function createApp() {
       }
       try {
         let html = await import_fs2.default.promises.readFile(indexPath, "utf8");
-        const siteUrl = "https://dinnerbydesignv2.vercel.app";
+        const siteUrl = "https://dinnerbydesign.app";
         let title = "DinnerByDesign \u2014 Bespoke Food Planning & Smart Shopping Lists";
-        let description = "Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
+        let description = "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
         let canonicalPath = "/";
         let noIndex = false;
         let schema = null;
@@ -163862,8 +163862,8 @@ function createApp() {
           description = "Review terms of use, trials, and premium plan rules for the DinnerByDesign service.";
           canonicalPath = "/terms";
         } else if (pathName === "/planner") {
-          title = "Your Meal Planner \u2014 DinnerByDesign";
-          description = "Your weekly bespoke meal schedule and preparation planner.";
+          title = "Your Dinner Planner \u2014 DinnerByDesign";
+          description = "Your weekly bespoke dinner schedule and preparation planner.";
           canonicalPath = "/planner";
           noIndex = true;
         } else if (pathName === "/shopping") {
@@ -163886,7 +163886,7 @@ function createApp() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "DinnerByDesign",
-            "description": "Bespoke, AI-powered food planning, meal prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
+            "description": "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
             "applicationCategory": "HealthAndFitnessApplication, FoodAndDrink",
             "operatingSystem": "All"
           };

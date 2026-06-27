@@ -8,7 +8,7 @@ export interface SeoConfig {
   noIndex?: boolean;
 }
 
-const SITE_URL = 'https://dinnerbydesignv2.vercel.app';
+const SITE_URL = 'https://dinnerbydesign.app';
 
 export function useSeo({ title, description, jsonLd, canonicalPath = '/', noIndex = false }: SeoConfig) {
   useEffect(() => {

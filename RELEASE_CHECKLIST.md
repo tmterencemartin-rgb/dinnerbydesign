@@ -5,7 +5,7 @@ Use this before sharing the app publicly, after changing environment variables, 
 ## Production URL
 
 - [ ] Use this as the production app URL:
-  `https://dinnerbydesignv2.vercel.app/`
+  `https://dinnerbydesign.app/`
 - [ ] Do not share or test production sign-in on old/alternate Vercel URLs unless they are also configured everywhere.
 - [ ] If a custom domain is added later, update Firebase, Stripe, Resend links, and this checklist.
 
@@ -24,12 +24,12 @@ Use this before sharing the app publicly, after changing environment variables, 
 - [ ] `RESEND_FROM_EMAIL` is:
   `chef@dinnerbydesign.app`
 - [ ] Live health check opens without a Vercel function error:
-  `https://dinnerbydesignv2.vercel.app/api/health`
+  `https://dinnerbydesign.app/api/health`
 
 ## Firebase
 
 - [ ] Firebase Authentication authorized domains include:
-  `dinnerbydesignv2.vercel.app`
+  `dinnerbydesign.app`
 - [ ] Email/password sign-in works.
 - [ ] Google sign-in works, if enabled.
 - [ ] Firestore rules are deployed.
@@ -48,7 +48,7 @@ Use this before sharing the app publicly, after changing environment variables, 
 - [ ] Checkout opens from Settings -> Subscription.
 - [ ] Trial users can subscribe before their trial ends.
 - [ ] Stripe webhook endpoint is:
-  `https://dinnerbydesignv2.vercel.app/api/stripe-webhook`
+  `https://dinnerbydesign.app/api/stripe-webhook`
 - [ ] Webhook signing secret is saved in Vercel as:
   `STRIPE_WEBHOOK_SECRET`
 - [ ] Stripe webhook events include:
@@ -121,4 +121,4 @@ Then push to GitHub and wait for Vercel to deploy.
 - Checkout fails: check Stripe publishable and secret keys in Vercel.
 - Paid user stays on trial: check Stripe webhook deliveries and `STRIPE_WEBHOOK_SECRET`.
 - Email fails: check `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and Resend domain verification.
-- Wrong site behaves differently: confirm you are using `https://dinnerbydesignv2.vercel.app/`.
+- Wrong site behaves differently: confirm you are using `https://dinnerbydesign.app/`.
