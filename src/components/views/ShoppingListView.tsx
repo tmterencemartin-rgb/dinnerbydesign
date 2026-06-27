@@ -421,13 +421,13 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
 
                   <span className="w-px h-3.5 bg-gray-200 mx-1" />
 
-                  <div className="inline-flex rounded bg-white p-0.5 shadow-sm">
+                  <div className="inline-flex rounded bg-white p-0.5 border border-gray-100">
                     <button
                       type="button"
                       onClick={() => setUnitSystem('metric')}
-                      className={`px-2.5 py-0.5 text-[9.5px] font-bold rounded-full transition-all duration-150 cursor-pointer ${
+                      className={`px-2.5 py-0.5 text-[9.5px] font-bold rounded transition-all duration-150 cursor-pointer ${
                         unitSystem === 'metric'
-                          ? 'bg-gray-900 text-white shadow-sm'
+                          ? 'bg-gray-900 text-white'
                           : 'text-gray-400 hover:text-gray-600'
                       }`}
                     >
@@ -436,9 +436,9 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                     <button
                       type="button"
                       onClick={() => setUnitSystem('imperial')}
-                      className={`px-2.5 py-0.5 text-[9.5px] font-bold rounded-full transition-all duration-150 cursor-pointer ${
+                      className={`px-2.5 py-0.5 text-[9.5px] font-bold rounded transition-all duration-150 cursor-pointer ${
                         unitSystem === 'imperial'
-                          ? 'bg-gray-900 text-white shadow-sm'
+                          ? 'bg-gray-900 text-white'
                           : 'text-gray-400 hover:text-gray-600'
                       }`}
                     >
@@ -465,7 +465,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
               value={customItem}
               onChange={(e) => setCustomItem(e.target.value)}
               placeholder="Add an extra item to your list..."
-              className="w-full py-2 bg-white border border-gray-100 rounded text-[14px] focus:ring-4 focus:ring-accent/5 focus:border-accent/20 outline-none transition-all px-4 shadow-sm"
+              className="w-full py-2 bg-white border border-gray-100 rounded text-[14px] focus:ring-4 focus:ring-accent/5 focus:border-accent/20 outline-none transition-all px-4"
             />
             <button 
               type="submit"
@@ -490,7 +490,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
             </div>
             <button 
               onClick={onBackToPlan}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded text-[13px] font-bold hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded text-[13px] font-bold hover:bg-black transition-all active:scale-95"
             >
               Go to Schedule
             </button>
@@ -499,7 +499,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
           <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-4">
             {categories.length === 0 && pantryGotItItems.length > 0 && (
                <div className="py-6 text-center space-y-3 px-4 sm:px-6 bg-emerald-50/20 rounded max-w-lg mx-auto">
-                  <div className="bg-white w-10 h-10 rounded shadow-sm flex items-center justify-center mx-auto mb-2">
+                  <div className="bg-white border border-gray-100 w-10 h-10 rounded flex items-center justify-center mx-auto mb-2">
                      <CheckCircle className="w-5 h-5 text-emerald-500" />
                   </div>
                   <p className="text-[14px] text-gray-900 font-bold">You're all set!</p>
@@ -527,7 +527,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   return (
                     <div 
                       key={category} 
-                      className={`shopping-category-card mb-3 bg-white border border-gray-100 rounded shadow-sm hover:shadow transition-shadow ${
+                      className={`shopping-category-card mb-3 bg-white border border-gray-100 rounded hover:border-gray-200 transition-colors ${
                         isSmall ? 'p-2 md:p-1.5 lg:p-2' : 'p-2.5 md:p-2 lg:p-2.5'
                       }`}
                     >
@@ -569,7 +569,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                               aria-label={`Mark ${item.name} as ${item.inStock || item.checked ? 'needing purchase' : 'already in stock'}`}
                               className="p-2 -ml-2 group/cb focus:outline-none"
                             >
-                              <div className={`w-[17px] h-[17px] rounded border flex items-center justify-center transition-all flex-shrink-0 cursor-pointer shadow-sm group-focus-visible/cb:ring-2 group-focus-visible/cb:ring-accent/30 ${
+                              <div className={`w-[17px] h-[17px] rounded border flex items-center justify-center transition-all flex-shrink-0 cursor-pointer group-focus-visible/cb:ring-2 group-focus-visible/cb:ring-accent/30 ${
                                 (item.inStock || item.checked) 
                                   ? 'bg-gray-900 border-gray-900' 
                                   : 'bg-white border-gray-200 group-hover/cb:border-accent group-hover/cb:ring-2 group-hover/cb:ring-accent/10'
@@ -587,7 +587,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                                   onChange={(e) => setEditValue(e.target.value)}
                                   onBlur={saveEdit}
                                   onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
-                                  className="w-full bg-white border border-gray-100 py-1 text-[13px] outline-none rounded px-2 shadow-sm"
+                                  className="w-full bg-white border border-gray-100 py-1 text-[13px] outline-none rounded px-2"
                                 />
                               ) : (
                                 <span 
@@ -648,7 +648,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   {/* Info Tooltip */}
                   <div className="relative group/pantry-tooltip flex items-center">
                     <Info className="w-4 h-4 text-gray-300 hover:text-gray-500 cursor-help" />
-                    <span className="absolute bottom-full right-0 mb-2 w-64 p-2.5 bg-gray-900 text-white text-[11px] leading-relaxed rounded-lg opacity-0 pointer-events-none group-hover/pantry-tooltip:opacity-100 transition-opacity z-20 shadow-xl font-medium">
+                    <span className="absolute bottom-full right-0 mb-2 w-64 p-2.5 bg-gray-900 text-white text-[11px] leading-relaxed rounded opacity-0 pointer-events-none group-hover/pantry-tooltip:opacity-100 transition-opacity z-20 shadow-md font-medium">
                       Items marked here will automatically stay in your pantry for future shopping lists.
                     </span>
                   </div>
@@ -670,7 +670,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                             <button 
                               onClick={() => handleToggleItem(item)}
                               aria-label={`Restore ${item.name} to shopping list`}
-                              className="w-[20px] h-[20px] rounded-md border bg-gray-900 border-gray-900 text-white shadow-sm flex items-center justify-center flex-shrink-0 cursor-pointer"
+                              className="w-[20px] h-[20px] rounded border bg-gray-900 border-gray-900 text-white flex items-center justify-center flex-shrink-0 cursor-pointer"
                             >
                               <Check className="w-3.5 h-3.5" strokeWidth={3} />
                             </button>
@@ -702,7 +702,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Manual Staples & Extras</p>
                           <div className="flex flex-wrap gap-2 pt-1">
                             {pantry.map(p => (
-                              <div key={p.id} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-gray-100 rounded text-[12px] text-gray-500 hover:border-gray-200 transition-colors shadow-sm">
+                              <div key={p.id} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-gray-100 rounded text-[12px] text-gray-500 hover:border-gray-200 transition-colors">
                                 <span>{p.name}</span>
                                 <button 
                                   onClick={() => removeFromPantry(p.id)}
