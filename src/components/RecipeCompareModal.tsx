@@ -75,10 +75,10 @@ export const RecipeCompareModal: React.FC<RecipeCompareModalProps> = ({
         initial={{ y: 24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 24, opacity: 0 }}
-        className="w-full max-w-4xl max-h-[92vh] overflow-hidden bg-white rounded-t-md sm:rounded-md shadow-2xl"
+        className="w-full max-w-4xl h-[92dvh] sm:h-auto sm:max-h-[92vh] overflow-hidden bg-white rounded-t-md sm:rounded-md shadow-2xl flex flex-col"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-4 sm:px-6 py-4">
+        <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-4 sm:px-6 py-4 shrink-0">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-dbd-accent">Recipe compare</p>
             <h2 className="text-[18px] font-bold text-gray-950 tracking-tight">Choose the best fit</h2>
@@ -93,7 +93,7 @@ export const RecipeCompareModal: React.FC<RecipeCompareModalProps> = ({
           </button>
         </div>
 
-        <div className="overflow-y-auto px-4 sm:px-6 py-4">
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 sm:px-6 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {items.map((item, index) => {
               const price = getPrice(item);
