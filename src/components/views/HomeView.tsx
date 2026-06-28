@@ -200,6 +200,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
+  const hasPreferenceConflictNotice = !!contradictionWarning && contradictionWarning.type !== 'no_results';
 
   // Stale Results logic for Batch Apply
   const [dirty, setDirty] = React.useState(false);
@@ -723,23 +724,21 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               </div>
             ) : (
-              <div className="space-y-4 px-4 sm:px-6 max-w-xl mx-auto w-full py-8">
-                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Search className="w-6 h-6 text-gray-300" />
-                </div>
+              <div className={`space-y-4 px-4 sm:px-6 max-w-xl mx-auto w-full ${hasPreferenceConflictNotice ? 'py-4' : 'py-8'}`}>
+                {!hasPreferenceConflictNotice && (
+                  <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Search className="w-6 h-6 text-gray-300" />
+                  </div>
+                )}
                 
-                <div className="space-y-1.5">
-                  <h3 className="text-[16px] font-bold text-gray-900">
-                    {contradictionWarning?.type === 'conflict'
-                      ? 'Your search may conflict with your preferences.'
-                      : 'No recipes match all selected preferences.'}
-                  </h3>
-                  <p className="text-[13px] text-gray-500 mx-auto leading-relaxed font-medium">
-                    {contradictionWarning?.type === 'conflict'
-                      ? contradictionWarning.content
-                      : 'Try removing one or two preferences to broaden the search.'}
-                  </p>
-                </div>
+                {!hasPreferenceConflictNotice && (
+                  <div className="space-y-1.5">
+                    <h3 className="text-[16px] font-bold text-gray-900">No recipes match all selected preferences.</h3>
+                    <p className="text-[13px] text-gray-500 mx-auto leading-relaxed font-medium">
+                      Try removing one or two preferences to broaden the search.
+                    </p>
+                  </div>
+                )}
 
                 {activeCriteria.length > 0 && (
                   <div className="pt-2 flex flex-col gap-3 max-w-sm mx-auto w-full">
