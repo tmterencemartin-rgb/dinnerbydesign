@@ -387,7 +387,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               />
             </div>
 
-            {/* Row 2: Main Input Field and Settings sliders on the side */}
+            {/* Row 2: Main Input Field and Preferences control on the side */}
             <div className="flex flex-col gap-3 relative w-full">
               <div className="flex gap-2 items-center w-full">
                 <div className="flex-grow min-w-0">
@@ -412,22 +412,25 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     isReadOnly={isReadOnly}
                   />
                 </div>
-                <Tooltip text="Set your dietary rules, portion count, budget, calorie targets and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
+                <Tooltip text="Open Preferences to set dietary rules, portions, budget, calorie targets and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
                   <button
                     type="button"
                     onClick={() => {
                       setShowFilters(true);
                       setPreferencesError(null);
                     }}
-                    className={`flex items-center justify-center p-3 h-11 w-11 rounded border text-gray-500 hover:text-gray-900 transition-colors cursor-pointer shrink-0 ${
+                    className={`flex items-center justify-center gap-2 px-3 h-11 rounded border text-gray-500 hover:text-gray-900 transition-colors cursor-pointer shrink-0 ${
                       showFilters
                         ? 'bg-gray-100 border-gray-400 text-gray-900'
                         : 'bg-white border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                     }`}
-                    aria-label="Set dietary rules and targets"
-                    title="Set dietary rules and targets"
+                    aria-label="Open search preferences"
+                    title="Open search preferences"
                   >
                     <Settings className="w-4.5 h-4.5" />
+                    <span className="hidden sm:inline text-[12px] font-bold font-ibm-plex-mono uppercase tracking-wider">
+                      Preferences
+                    </span>
                   </button>
                 </Tooltip>
               </div>

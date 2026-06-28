@@ -1392,8 +1392,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
     <tr>
       <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
-        <span style="font-size: 15px; font-weight: bold; color: #111;">1. Set your preferences ⚙️</span><br>
-        <span style="color: #555; font-size: 13.5px;">In Settings, set your dietary rules, portion count, budget, calorie targets and any ingredients to exclude.</span>
+        <span style="font-size: 15px; font-weight: bold; color: #111;">1. Set your preferences</span><br>
+        <span style="color: #555; font-size: 13.5px;">On the search page, tap Preferences beside the search box to set dietary rules, portions, budget, calorie targets and any ingredients to exclude.</span>
       </td>
     </tr>
     <tr>
