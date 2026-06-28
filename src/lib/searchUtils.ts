@@ -189,6 +189,129 @@ export const buildSearchParams = (
   return params;
 };
 
+const containsSearchTerm = (query: string, terms: string[]) => {
+  const normalised = ` ${query.toLowerCase().replace(/[^a-z0-9]+/g, ' ')} `;
+  return terms.find(term => normalised.includes(` ${term.toLowerCase()} `));
+};
+
+const queryConflictGroups = {
+  meat: ['beef', 'steak', 'burger', 'mince', 'lamb', 'mutton', 'pork', 'bacon', 'ham', 'sausage', 'chorizo', 'chicken', 'turkey', 'duck', 'goose', 'venison'],
+  fish: ['fish', 'salmon', 'tuna', 'cod', 'haddock', 'sardine', 'mackerel', 'trout', 'anchovy', 'prawn', 'shrimp', 'crab', 'lobster', 'mussel', 'clam', 'scallop', 'squid'],
+  eggs: ['egg', 'eggs', 'omelette', 'frittata', 'quiche'],
+  dairy: ['milk', 'cheese', 'cheddar', 'parmesan', 'mozzarella', 'butter', 'cream', 'yoghurt', 'yogurt'],
+  gluten: ['wheat', 'barley', 'rye', 'couscous', 'seitan'],
+  nuts: ['almond', 'almonds', 'walnut', 'walnuts', 'cashew', 'cashews', 'hazelnut', 'hazelnuts', 'pecan', 'pecans', 'pistachio', 'pistachios'],
+  peanuts: ['peanut', 'peanuts'],
+  soy: ['soy', 'soya', 'tofu', 'tempeh', 'edamame'],
+  sesame: ['sesame', 'tahini'],
+  mustard: ['mustard'],
+  celery: ['celery'],
+  lupin: ['lupin']
+};
+
+const allergyTerms: Record<string, string[]> = {
+  'Celery': queryConflictGroups.celery,
+  'Cereals containing gluten': queryConflictGroups.gluten,
+  'Crustaceans': ['prawn', 'prawns', 'shrimp', 'crab', 'lobster'],
+  'Eggs': queryConflictGroups.eggs,
+  'Fish': queryConflictGroups.fish,
+  'Lupin': queryConflictGroups.lupin,
+  'Milk': queryConflictGroups.dairy,
+  'Molluscs': ['mussel', 'mussels', 'clam', 'clams', 'scallop', 'scallops', 'squid'],
+  'Mustard': queryConflictGroups.mustard,
+  'Peanuts': queryConflictGroups.peanuts,
+  'Sesame': queryConflictGroups.sesame,
+  'Soybeans': queryConflictGroups.soy,
+  'Tree nuts': queryConflictGroups.nuts
+};
+
+export const detectPreferenceContradiction = (
+  params: SearchParams,
+  preferences: UserPreferences | null
+): { type: 'conflict'; content: string; conflictLabel: string } | null => {
+  const query = params.query || '';
+  if (!query.trim()) return null;
+
+  const dietaryRule = params.dietaryRule || preferences?.dietaryRule || 'none';
+  const activeAllergies = [...new Set([...(preferences?.allergies || []), ...(params.allergies || [])])];
+  const activeExclusions = [...new Set([...(preferences?.exclusions || []), ...(params.exclusions || []), ...(params.excludeIngredients || [])])];
+
+  if (dietaryRule === 'vegetarian') {
+    const meat = containsSearchTerm(query, [...queryConflictGroups.meat, ...queryConflictGroups.fish]);
+    if (meat) {
+      return {
+        type: 'conflict',
+        conflictLabel: 'Vegetarian',
+        content: `Your search may conflict with Vegetarian. You searched for "${meat}", which is usually unsuitable for a vegetarian preference.`
+      };
+    }
+  }
+
+  if (dietaryRule === 'vegan') {
+    const animalTerm = containsSearchTerm(query, [
+      ...queryConflictGroups.meat,
+      ...queryConflictGroups.fish,
+      ...queryConflictGroups.eggs,
+      ...queryConflictGroups.dairy,
+      'honey'
+    ]);
+    if (animalTerm) {
+      return {
+        type: 'conflict',
+        conflictLabel: 'Vegan',
+        content: `Your search may conflict with Vegan. You searched for "${animalTerm}", which is usually unsuitable for a vegan preference.`
+      };
+    }
+  }
+
+  if (dietaryRule === 'pescatarian') {
+    const meat = containsSearchTerm(query, queryConflictGroups.meat);
+    if (meat) {
+      return {
+        type: 'conflict',
+        conflictLabel: 'Pescatarian',
+        content: `Your search may conflict with Pescatarian. You searched for "${meat}", which is usually unsuitable for a pescatarian preference.`
+      };
+    }
+  }
+
+  if (dietaryRule === 'gluten-free') {
+    const gluten = containsSearchTerm(query, queryConflictGroups.gluten);
+    if (gluten) {
+      return {
+        type: 'conflict',
+        conflictLabel: 'Gluten-free',
+        content: `Your search may conflict with Gluten-free. You searched for "${gluten}", which may contain gluten.`
+      };
+    }
+  }
+
+  for (const allergy of activeAllergies) {
+    const terms = allergyTerms[allergy] || [allergy];
+    const match = containsSearchTerm(query, terms);
+    if (match) {
+      return {
+        type: 'conflict',
+        conflictLabel: `No ${allergy}`,
+        content: `Your search may conflict with your ${allergy} allergy setting. You searched for "${match}".`
+      };
+    }
+  }
+
+  for (const exclusion of activeExclusions) {
+    const match = containsSearchTerm(query, [exclusion]);
+    if (match) {
+      return {
+        type: 'conflict',
+        conflictLabel: `No ${exclusion}`,
+        content: `Your search may conflict with an excluded ingredient. You searched for "${match}".`
+      };
+    }
+  }
+
+  return null;
+};
+
 /**
  * Builds a list of active criteria for UI display (chips/tags).
  * Separates permanent from temporary filters.

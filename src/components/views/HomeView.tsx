@@ -44,7 +44,7 @@ interface HomeViewProps {
   source: 'cook' | 'ready-made';
   setSource: (val: 'cook' | 'ready-made') => void;
   isGenerating: boolean;
-  handleGenerate: (queryOverride?: string, paramOverrides?: any, preferencesOverride?: any) => Promise<void>;
+  handleGenerate: (queryOverride?: string, paramOverrides?: any, preferencesOverride?: any, options?: { skipHistory?: boolean; force?: boolean }) => Promise<void>;
   handleStopSearch: () => void;
   isSpeechSupported: boolean;
   isListening: boolean;
@@ -729,14 +729,43 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
                 
                 <div className="space-y-1.5">
-                  <h3 className="text-[16px] font-bold text-gray-900">No recipes match all selected preferences.</h3>
+                  <h3 className="text-[16px] font-bold text-gray-900">
+                    {contradictionWarning?.type === 'conflict'
+                      ? 'Your search may conflict with your preferences.'
+                      : 'No recipes match all selected preferences.'}
+                  </h3>
                   <p className="text-[13px] text-gray-500 mx-auto leading-relaxed font-medium">
-                    Try removing one or two preferences to broaden the search.
+                    {contradictionWarning?.type === 'conflict'
+                      ? contradictionWarning.content
+                      : 'Try removing one or two preferences to broaden the search.'}
                   </p>
                 </div>
 
                 {activeCriteria.length > 0 && (
-                  <div className="pt-2 flex flex-col gap-2 max-w-xs mx-auto w-full">
+                  <div className="pt-2 flex flex-col gap-3 max-w-sm mx-auto w-full">
+                    <div className="flex flex-wrap justify-center gap-1.5">
+                      {activeCriteria.slice(0, 8).map((criterion) => (
+                        <span
+                          key={`${criterion.type}-${criterion.value}`}
+                          className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-500 uppercase tracking-wider"
+                        >
+                          {criterion.label}
+                        </span>
+                      ))}
+                      {activeCriteria.length > 8 && (
+                        <span className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                          +{activeCriteria.length - 8} more
+                        </span>
+                      )}
+                    </div>
+                    {contradictionWarning?.type === 'conflict' && (
+                      <button
+                        onClick={() => handleGenerate(undefined, {}, undefined, { force: true })}
+                        className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
+                      >
+                        Search anyway
+                      </button>
+                    )}
                     <button 
                       onClick={handleReset}
                       className="w-full py-3 bg-gray-900 text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-md"

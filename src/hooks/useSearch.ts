@@ -20,7 +20,8 @@ import {
   buildSearchParams, 
   cleanSearchParams, 
   hasActiveFilters, 
-  buildActiveCriteria 
+  buildActiveCriteria,
+  detectPreferenceContradiction
 } from '../lib/searchUtils';
 import { DIETARY_TAXONOMY } from '../constants';
 import { handleFirestoreError } from '../firebase';
@@ -560,12 +561,15 @@ export function useSearch() {
         supermarkets,
         dietaryRule,
         saladPreference,
+        allergies,
         isSimple,
         isLowCost,
         isLeftoverMode,
         nutritiousChoice,
         highOmega3,
+        highProtein,
         servings: (servings && !isNaN(parseInt(servings))) ? parseInt(servings) : undefined,
+        preferredSourceIds,
         excludeTitles: dismissedTitles.length > 0 ? dismissedTitles : undefined,
         count: source === 'cook' ? INITIAL_COOK_FROM_SCRATCH_RESULTS : INITIAL_READY_MADE_RESULTS,
         ...paramOverrides
@@ -573,6 +577,18 @@ export function useSearch() {
 
       const params = buildSearchParams(searchQuery, source, activePrefs, combinedOverrides);
       const cleaned = cleanSearchParams(params);
+
+      const contradiction = detectPreferenceContradiction(params, activePrefs);
+      if (contradiction && !options?.force) {
+        setSearchContradiction(contradiction);
+        setStatus('noResults');
+        setIsGenerating(false);
+        setIsAppending(false);
+        setLocalError(null);
+        setCurrentRecipes([]);
+        setCurrentReadyMeals([]);
+        return;
+      }
 
       // Add to search history if it's a real query and not from auto-search
       if (searchQuery && searchQuery.length > 2 && !options?.skipHistory) {
@@ -589,7 +605,7 @@ export function useSearch() {
     input, cuisines, dietTypes, exclusions, religiousEthical, styleWellness, 
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
-    saladPreference, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, highOmega3, servings, dismissedTitles, 
+    saladPreference, allergies, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, highOmega3, highProtein, servings, preferredSourceIds, dismissedTitles, 
     source, profile?.preferences, addToSearchHistory, performSearch, setError, setIsGenerating
   ]);
 
@@ -620,6 +636,7 @@ export function useSearch() {
     cuisines,
     dietTypes,
     exclusions,
+    allergies,
     excludeIngredients,
     omitIngredients,
     maxCalories,
@@ -632,10 +649,12 @@ export function useSearch() {
     saladPreference,
     nutritiousChoice,
     highOmega3,
+    highProtein,
     isSimple,
     isLowCost,
     isLeftoverMode,
     supermarkets,
+    preferredSourceIds,
     servings
   });
 
@@ -645,6 +664,7 @@ export function useSearch() {
       cuisines,
       dietTypes,
       exclusions,
+      allergies,
       excludeIngredients,
       omitIngredients,
       maxCalories,
@@ -657,10 +677,12 @@ export function useSearch() {
       saladPreference,
       nutritiousChoice,
       highOmega3,
+      highProtein,
       isSimple,
       isLowCost,
       isLeftoverMode,
       supermarkets,
+      preferredSourceIds,
       servings
     };
 
@@ -675,6 +697,7 @@ export function useSearch() {
       hasArrayChanged(cuisines, lastFiltersRef.current.cuisines) ||
       hasArrayChanged(dietTypes, lastFiltersRef.current.dietTypes) ||
       hasArrayChanged(exclusions, lastFiltersRef.current.exclusions) ||
+      hasArrayChanged(allergies, lastFiltersRef.current.allergies) ||
       hasArrayChanged(excludeIngredients, lastFiltersRef.current.excludeIngredients) ||
       hasArrayChanged(omitIngredients, lastFiltersRef.current.omitIngredients) ||
       maxCalories !== lastFiltersRef.current.maxCalories ||
@@ -687,10 +710,12 @@ export function useSearch() {
       saladPreference !== lastFiltersRef.current.saladPreference ||
       nutritiousChoice !== lastFiltersRef.current.nutritiousChoice ||
       highOmega3 !== lastFiltersRef.current.highOmega3 ||
+      highProtein !== lastFiltersRef.current.highProtein ||
       isSimple !== lastFiltersRef.current.isSimple ||
       isLowCost !== lastFiltersRef.current.isLowCost ||
       isLeftoverMode !== lastFiltersRef.current.isLeftoverMode ||
       hasArrayChanged(supermarkets, lastFiltersRef.current.supermarkets) ||
+      hasArrayChanged(preferredSourceIds, lastFiltersRef.current.preferredSourceIds) ||
       servings !== lastFiltersRef.current.servings;
 
     // Update ref to the latest filters

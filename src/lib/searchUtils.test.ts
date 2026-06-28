@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildActiveCriteria, buildSearchParams, cleanSearchParams } from './searchUtils';
+import { buildActiveCriteria, buildSearchParams, cleanSearchParams, detectPreferenceContradiction } from './searchUtils';
 import { UserPreferences, DinnerSource } from '../types';
 import { DIETARY_TAXONOMY } from '../constants';
 
@@ -233,6 +233,86 @@ describe('searchUtils', () => {
       expect(labels).toContain('Side salads');
       expect(labels).not.toContain('No Eggs');
       expect(labels).not.toContain('No Mushrooms');
+    });
+  });
+
+  describe('detectPreferenceContradiction', () => {
+    const basePreferences: UserPreferences = {
+      dietaryRule: 'none',
+      saladPreference: 'all',
+      allergies: [],
+      nutritiousChoice: false,
+      isSimple: false,
+      isLowCost: false,
+      highOmega3: false,
+      highProtein: false,
+      servings: 2,
+      calorieCeiling: null,
+      budgetLimit: null,
+      exclusions: [],
+      cuisinePreferences: [],
+      religiousEthical: [],
+      cookingMethods: [],
+      cookingFats: [],
+      readyToEatUnderMins: null,
+      preferredMode: 'cook',
+      customCuisines: [],
+      preferredSupermarkets: [],
+      preferredSourceIds: []
+    };
+
+    it('flags vegetarian searches for beef', () => {
+      const conflict = detectPreferenceContradiction({
+        query: 'beef stew',
+        source: 'cook',
+        dietaryRule: 'vegetarian'
+      }, basePreferences);
+
+      expect(conflict?.conflictLabel).toBe('Vegetarian');
+    });
+
+    it('flags vegan searches for eggs', () => {
+      const conflict = detectPreferenceContradiction({
+        query: 'egg fried rice',
+        source: 'cook',
+        dietaryRule: 'vegan'
+      }, basePreferences);
+
+      expect(conflict?.conflictLabel).toBe('Vegan');
+    });
+
+    it('flags allergy conflicts from saved preferences', () => {
+      const conflict = detectPreferenceContradiction({
+        query: 'omelette',
+        source: 'cook'
+      }, {
+        ...basePreferences,
+        allergies: ['Eggs']
+      });
+
+      expect(conflict?.conflictLabel).toBe('No Eggs');
+    });
+
+    it('flags excluded ingredient conflicts', () => {
+      const conflict = detectPreferenceContradiction({
+        query: 'mushroom risotto',
+        source: 'cook'
+      }, {
+        ...basePreferences,
+        exclusions: ['mushroom']
+      });
+
+      expect(conflict?.conflictLabel).toBe('No mushroom');
+    });
+
+    it('allows searches without obvious conflicts', () => {
+      const conflict = detectPreferenceContradiction({
+        query: 'vegetable curry',
+        source: 'cook',
+        dietaryRule: 'vegetarian'
+      }, basePreferences);
+
+      expect(conflict).toBeNull();
     });
   });
 });

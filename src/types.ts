@@ -174,6 +174,7 @@ export interface SearchParams {
   cuisine?: string; // legacy support
   dietaryRule?: DietaryRule;
   dietTypes?: string[];
+  allergies?: string[];
   exclusions?: string[];
   religiousEthical?: string[];
   styleWellness?: string[];
