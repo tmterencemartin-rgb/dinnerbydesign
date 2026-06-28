@@ -746,21 +746,23 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
                 {activeCriteria.length > 0 && (
                   <div className="pt-2 flex flex-col gap-3 max-w-sm mx-auto w-full">
-                    <div className="flex flex-wrap justify-center gap-1.5">
-                      {activeCriteria.slice(0, 8).map((criterion) => (
-                        <span
-                          key={`${criterion.type}-${criterion.value}`}
-                          className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-500 uppercase tracking-wider"
-                        >
-                          {criterion.label}
-                        </span>
-                      ))}
-                      {activeCriteria.length > 8 && (
-                        <span className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                          +{activeCriteria.length - 8} more
-                        </span>
-                      )}
-                    </div>
+                    {!hasPreferenceConflictNotice && (
+                      <div className="flex flex-wrap justify-center gap-1.5">
+                        {activeCriteria.slice(0, 8).map((criterion) => (
+                          <span
+                            key={`${criterion.type}-${criterion.value}`}
+                            className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-500 uppercase tracking-wider"
+                          >
+                            {criterion.label}
+                          </span>
+                        ))}
+                        {activeCriteria.length > 8 && (
+                          <span className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                            +{activeCriteria.length - 8} more
+                          </span>
+                        )}
+                      </div>
+                    )}
                     {hasPreferenceConflictNotice && dietaryConflictCriterion && (
                       <button
                         onClick={() => {
@@ -769,7 +771,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         }}
                         className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
                       >
-                        Ignore {dietaryConflictCriterion.label} this search
+                        Search anyway
                       </button>
                     )}
                     {contradictionWarning?.type === 'conflict' && !dietaryConflictCriterion && (

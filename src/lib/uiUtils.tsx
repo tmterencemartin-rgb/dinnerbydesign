@@ -91,7 +91,7 @@ export const getContradictionWarning = (
           <div className="flex gap-2.5 items-start">
             <div className="mt-0.5 shrink-0 opacity-70 cursor-help" title="Conflict detected">{getColors('hard').icon}</div>
             <p>
-              Just to note: your <Emphasised type="hard">{prefLabel}</Emphasised> rule excludes <Emphasised type="hard">{found[0]}</Emphasised>. To search anyway, <button onClick={disableRule} className="underline hover:opacity-80 transition-opacity font-bold">ignore this rule</button> for this search.
+              Your preference excludes <Emphasised type="hard">{found[0]}</Emphasised>.
             </p>
           </div>
         )
@@ -165,4 +165,3 @@ export const getContradictionWarning = (
 
   return null;
 };
-
