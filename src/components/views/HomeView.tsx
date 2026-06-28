@@ -201,6 +201,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
   const hasPreferenceConflictNotice = !!contradictionWarning && contradictionWarning.type !== 'no_results';
+  const dietaryConflictCriterion = React.useMemo(
+    () => activeCriteria.find(criterion => criterion.type === 'dietaryRule'),
+    [activeCriteria]
+  );
 
   // Stale Results logic for Batch Apply
   const [dirty, setDirty] = React.useState(false);
@@ -757,7 +761,18 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         </span>
                       )}
                     </div>
-                    {contradictionWarning?.type === 'conflict' && (
+                    {hasPreferenceConflictNotice && dietaryConflictCriterion && (
+                      <button
+                        onClick={() => {
+                          setIsDietaryRuleSuppressed(true);
+                          handleGenerate(undefined, {}, undefined, { force: true });
+                        }}
+                        className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
+                      >
+                        Ignore {dietaryConflictCriterion.label} this search
+                      </button>
+                    )}
+                    {contradictionWarning?.type === 'conflict' && !dietaryConflictCriterion && (
                       <button
                         onClick={() => handleGenerate(undefined, {}, undefined, { force: true })}
                         className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
@@ -765,12 +780,14 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         Search anyway
                       </button>
                     )}
-                    <button 
-                      onClick={handleReset}
-                      className="w-full py-3 bg-gray-900 text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-md"
-                    >
-                      Clear all preferences
-                    </button>
+                    {!hasPreferenceConflictNotice && (
+                      <button
+                        onClick={handleReset}
+                        className="w-full py-3 bg-gray-900 text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-md"
+                      >
+                        Clear all preferences
+                      </button>
+                    )}
                     <button 
                       onClick={() => setShowFilters(true)}
                       className="w-full py-3 bg-white border border-gray-200 text-gray-600 rounded text-[12px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-all"
