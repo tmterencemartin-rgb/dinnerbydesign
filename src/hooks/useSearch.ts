@@ -1222,6 +1222,7 @@ export function useSearch() {
       case 'cookingMethod': setCookingMethods(prev => prev.filter(v => v !== value)); break;
       case 'supermarket': setSupermarkets(prev => prev.filter(v => v !== value)); break;
       case 'dietType': setDietTypes(prev => prev.filter(v => v !== value)); break;
+      case 'allergy': setAllergies(prev => prev.filter(v => v !== value)); break;
       case 'exclusion': setExclusions(prev => prev.filter(v => v !== value)); break;
       case 'religiousEthical': setReligiousEthical(prev => prev.filter(v => v !== value)); break;
       case 'styleWellness': setStyleWellness(prev => prev.filter(v => v !== value)); break;
@@ -1247,7 +1248,7 @@ export function useSearch() {
   }, [
     activeCriteria, profile?.preferences, input, currentRecipes, currentReadyMeals, 
     clearResults,
-    setCuisines, setCookingMethods, setSupermarkets, setDietTypes, setExclusions, 
+    setCuisines, setCookingMethods, setSupermarkets, setDietTypes, setAllergies, setExclusions, 
     setReligiousEthical, setStyleWellness, setExcludeIngredients, setOmitIngredients, 
     setMaxCalories, setMaxTotalTime, setMaxCostPerPortion, setMaxPricePerPerson, 
     setMaxHeatingTime, setServings, setSaladPreference, setIsSimple, setIsLowCost, setNutritiousChoice, setHighOmega3, setHighProtein,

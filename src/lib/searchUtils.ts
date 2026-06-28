@@ -255,15 +255,24 @@ export const buildActiveCriteria = (
     });
   }
 
-  // 2. Allergies (Permanent)
-  if (profilePrefs?.allergies) {
-    profilePrefs.allergies.forEach(a => {
+  // 2. Allergies (Permanent + temporary)
+  const persistentAllergies = profilePrefs?.allergies || [];
+  const temporaryAllergies = params.allergies || [];
+
+  if (persistentAllergies.length > 0) {
+    persistentAllergies.forEach(a => {
       const key = `allergy-${a}`;
       if (!suppressedPermanentKeys.includes(key)) {
         list.push({ type: 'allergy', value: a, label: `No ${a}`, isPermanent: true });
       }
     });
   }
+
+  temporaryAllergies.forEach(a => {
+    if (!persistentAllergies.includes(a)) {
+      list.push({ type: 'allergy', value: a, label: `No ${a}`, isPermanent: false });
+    }
+  });
 
   // 3. Exclusions (Permanent)
   if (profilePrefs?.exclusions) {
