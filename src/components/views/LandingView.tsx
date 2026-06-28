@@ -650,23 +650,35 @@ export const LandingView: React.FC = () => {
             <ul className="space-y-4 font-sans text-[13.5px] sm:text-[14px] text-dbd-ink-2 select-none">
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Saved across devices</strong>: recipes, plans and preferences link to your account and restore on any device after sign-in.</span>
+                <span><strong>Saved across devices</strong>: recipes, preferences, scheduled dinners and shopping lists link to your account and restore after sign-in.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Unlimited searches</strong>: full access to the search engine, no daily limit.</span>
+                <span><strong>Preference-led recipe search</strong>: filter by diet, allergies, budget, portions, time and ingredients to avoid.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Cost and nutrition per portion</strong>: cost-per-portion anchored to UK prices, plus nutritional breakdowns.</span>
+                <span><strong>Ingredient-based dinner ideas</strong>: search with what you already have in the fridge or cupboard.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Cross-device planner</strong>: plan dinners on desktop, check the shopping list on your phone in store.</span>
+                <span><strong>Fast, focused results</strong>: get tailored dinner ideas quickly, without scrolling through ads, back stories or clutter.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Ad-free</strong>. We never sell your data.</span>
+                <span><strong>Cost and nutrition per portion</strong>: see estimated cost-per-portion, calorie information and nutritional breakdowns.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
+                <span><strong>Save, schedule and shop</strong>: save recipes, add them to your week and build a shopping list scaled to your portions.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
+                <span><strong>Recipe comparison</strong>: compare cost, calories, time, source, servings and ingredients side by side.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
+                <span><strong>Clutter-free and ad-free</strong>: no ads, sponsor blocks, long back stories, questionnaires, distracting food photography or unnecessary noise.</span>
               </li>
             </ul>
           </div>
