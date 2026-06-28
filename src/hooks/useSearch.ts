@@ -25,6 +25,75 @@ import {
 import { DIETARY_TAXONOMY } from '../constants';
 import { handleFirestoreError } from '../firebase';
 
+const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v1';
+const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
+const SEARCH_CACHE_MAX_ENTRIES = 12;
+
+type SearchCacheEntry = {
+  createdAt: number;
+  recipes: Recipe[];
+  readyMeals: ReadyMeal[];
+  hasExhaustedSearch: boolean;
+};
+
+type SearchCacheStore = Record<string, SearchCacheEntry>;
+
+const stableStringify = (value: any): string => {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
+  const keys = Object.keys(value).sort();
+  return `{${keys
+    .filter(key => value[key] !== undefined)
+    .map(key => `${JSON.stringify(key)}:${stableStringify(value[key])}`)
+    .join(',')}}`;
+};
+
+const shouldUseSearchCache = (params: SearchParams, options: { isAppend?: boolean; isReplacement?: boolean; isMoreLikeThis?: boolean }) => {
+  return !options.isAppend
+    && !options.isReplacement
+    && !options.isMoreLikeThis
+    && !(params as any)._retry
+    && !params.similarityContext
+    && !(params.excludeTitles && params.excludeTitles.length > 0);
+};
+
+const buildSearchCacheKey = (params: SearchParams, preferences: UserPreferences | null) => stableStringify({
+  params,
+  preferences: preferences ? normaliseUserPreferences(preferences) : null
+});
+
+const readSearchCache = (): SearchCacheStore => {
+  try {
+    const raw = safeStorage.getItem(SEARCH_CACHE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    console.warn('[SearchCache] Failed to read recent search cache:', err);
+    return {};
+  }
+};
+
+const getSearchCacheEntry = (key: string): SearchCacheEntry | null => {
+  const cache = readSearchCache();
+  const entry = cache[key];
+  if (!entry) return null;
+  if (Date.now() - entry.createdAt > SEARCH_CACHE_TTL_MS) return null;
+  return entry;
+};
+
+const writeSearchCacheEntry = (key: string, entry: SearchCacheEntry) => {
+  const cache = readSearchCache();
+  cache[key] = entry;
+
+  const pruned = Object.fromEntries(
+    Object.entries(cache)
+      .filter(([, item]) => Date.now() - item.createdAt <= SEARCH_CACHE_TTL_MS)
+      .sort(([, a], [, b]) => b.createdAt - a.createdAt)
+      .slice(0, SEARCH_CACHE_MAX_ENTRIES)
+  );
+
+  safeStorage.setItem(SEARCH_CACHE_KEY, JSON.stringify(pruned));
+};
+
 export function useSearch() {
   const { 
     user,
@@ -159,10 +228,25 @@ export function useSearch() {
 
     const isAuthorised = !!user;
     const activePrefs = (preferencesOverride !== undefined && (preferencesOverride !== null || !isAuthorised)) ? preferencesOverride : (isAuthorised ? (profile?.preferences || null) : null);
+    const cacheKey = shouldUseSearchCache(params, options) ? buildSearchCacheKey(params, activePrefs) : null;
     
     addLog(`SEARCH: performSearch START (id=${currentSearchId}, mode=${params.source}, query="${params.query}", auth=${isAuthorised})`);
 
     try {
+      if (cacheKey) {
+        const cached = getSearchCacheEntry(cacheKey);
+        if (cached) {
+          addLog(`SEARCH: recent cache HIT (id=${currentSearchId}, mode=${params.source}, query="${params.query}")`);
+          setCurrentRecipes(cached.recipes);
+          setCurrentReadyMeals(cached.readyMeals);
+          setHasExhaustedSearch(cached.hasExhaustedSearch);
+          setSearchContradiction(null);
+          setStatus('complete');
+          setEnriching(false);
+          return;
+        }
+      }
+
       const result = await performServiceSearch(params, activePrefs || undefined, signal);
       const { recipes: accumulatedRecipes = [], readyMeals: accumulatedReadyMeals = [], budgetContradiction: contradiction } = result;
       const alternatives = (result as any).alternatives || [];
@@ -305,6 +389,15 @@ export function useSearch() {
           }
 
           const finalItems = [...recipesWithFinalIds, ...readyMealsWithFinalIds] as (Recipe | ReadyMeal)[];
+          if (cacheKey && finalItems.length > 0) {
+            writeSearchCacheEntry(cacheKey, {
+              createdAt: Date.now(),
+              recipes: recipesWithFinalIds as Recipe[],
+              readyMeals: readyMealsWithFinalIds as ReadyMeal[],
+              hasExhaustedSearch: aiExhausted || totalFound === 0
+            });
+          }
+
           if (finalItems.length > 0) {
             window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
             const currentId = currentSearchId;
