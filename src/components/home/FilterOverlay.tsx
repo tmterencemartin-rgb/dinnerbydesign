@@ -289,7 +289,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: "100%", opacity: 0, transition: { duration: 0.25 } }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="bg-white w-full max-w-lg rounded-t-md sm:rounded-md shadow-xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="bg-white w-full max-w-lg rounded-t-md sm:rounded-md shadow-xl overflow-hidden flex flex-col max-h-[calc(100dvh-2rem)] sm:max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="px-4 sm:px-6 py-4 border-b border-gray-100 sticky top-0 bg-white z-10 shrink-0">
@@ -996,29 +996,31 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
         </div>
 
         {/* Dual-Action Footer Buttons */}
-        <div className="p-4 sm:p-5 border-t border-gray-100 bg-white space-y-2.5 shrink-0">
-          <div className="flex flex-col sm:flex-row gap-2.5">
+        <div className="px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:p-5 border-t border-gray-100 bg-white space-y-3 shrink-0 shadow-[0_-10px_24px_rgba(15,23,42,0.04)]">
+          <div className="grid grid-cols-2 gap-2.5">
             <button 
               type="button"
               onClick={handleApplyToThisSearch}
-              className="flex-1 h-12 bg-gray-900 hover:bg-black text-white rounded text-[12px] font-bold tracking-[0.04em] flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99] cursor-pointer"
+              className="min-h-12 px-3 py-3 bg-gray-900 hover:bg-black text-white rounded text-[11px] sm:text-[12px] font-bold tracking-[0.04em] leading-none whitespace-nowrap flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99] cursor-pointer"
             >
               <Search className="w-4 h-4" />
-              Apply to this search
+              <span className="sm:hidden">Apply</span>
+              <span className="hidden sm:inline">Apply to this search</span>
             </button>
             <button 
               type="button"
               onClick={handleSaveAsDefault}
-              className="flex-1 h-12 bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 rounded text-[12px] font-bold tracking-[0.04em] flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer"
+              className="min-h-12 px-3 py-3 bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 rounded text-[11px] sm:text-[12px] font-bold tracking-[0.04em] leading-none whitespace-nowrap flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              Save as my default
+              <span className="sm:hidden">Save default</span>
+              <span className="hidden sm:inline">Save as my default</span>
             </button>
           </div>
           <button 
             type="button"
             onClick={() => resetAllLocalFilters()}
-            className="w-full py-2 bg-white text-gray-400 hover:text-gray-700 text-[11px] font-bold tracking-[0.04em] text-center hover:bg-gray-50 transition-all rounded"
+            className="w-full min-h-10 px-4 py-2.5 bg-white text-gray-400 hover:text-gray-700 text-[11px] font-bold tracking-[0.04em] leading-none text-center hover:bg-gray-50 transition-all rounded"
           >
             Clear preferences
           </button>
