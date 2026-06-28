@@ -163694,6 +163694,43 @@ function createApp() {
               accessStatus: summary.accessStatus,
               updatedAt: FieldValue.serverTimestamp()
             }, { merge: true });
+            const userData = userDoc.data();
+            const userEmail = userData?.email;
+            const shouldSendCancellationEmail = event.type === "customer.subscription.deleted" && userEmail && !userData?.subscriptionCancellationEmailSent;
+            if (shouldSendCancellationEmail) {
+              try {
+                const appUrl = `https://${req.get("host")}`;
+                const endDate = subscription.current_period_end ? new Date(subscription.current_period_end * 1e3).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric"
+                }) : null;
+                await sendEmail({
+                  to: userEmail,
+                  subject: "Your DinnerByDesign subscription has been cancelled",
+                  html: `
+                    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937; line-height: 1.55;">
+                      <p style="margin: 0 0 16px; color: #6b7280; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">DinnerByDesign</p>
+                      <h2 style="color: #111827; margin: 0 0 16px; font-size: 26px; line-height: 1.2;">Your subscription has been cancelled</h2>
+                      <p style="margin: 0 0 14px;">This email confirms that your DinnerByDesign subscription has been cancelled.</p>
+                      ${endDate ? `<p style="margin: 0 0 14px;">Your paid access is currently scheduled to end on <strong>${endDate}</strong>.</p>` : ""}
+                      <p style="margin: 0 0 22px;">Your DinnerByDesign account remains available, and you can return to Settings if you decide to subscribe again later.</p>
+                      <div style="margin: 28px 0;">
+                        <a href="${appUrl}/?view=settings" style="background-color: #111827; color: #ffffff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Open Account Settings</a>
+                      </div>
+                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
+                    </div>
+                  `
+                });
+                await userDoc.ref.set({
+                  subscriptionCancellationEmailSent: true,
+                  subscriptionCancellationEmailSentAt: FieldValue.serverTimestamp()
+                }, { merge: true });
+                console.log(`[Webhook] Subscription cancellation email sent to ${userEmail}`);
+              } catch (emailErr) {
+                console.error(`[Webhook] Failed to send subscription cancellation email:`, emailErr);
+              }
+            }
           } else {
             console.warn(`[Webhook] No user found for customer ID: ${customerId}`);
           }

@@ -150,6 +150,10 @@ export interface UserProfile {
   welcomeEmailSent?: boolean;
   subscriptionConfirmationEmailSent?: boolean;
   subscriptionConfirmationEmailSentAt?: Timestamp | FieldValue;
+  subscriptionCancellationEmailSent?: boolean;
+  subscriptionCancellationEmailSentAt?: Timestamp | FieldValue;
+  trialEndingReminderEmailSent?: boolean;
+  trialEndingReminderEmailSentAt?: Timestamp | FieldValue;
   preferences: UserPreferences;
   isPremium?: boolean;
   accessStatus?: AccessStatus;

@@ -692,6 +692,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (!profileData.welcomeEmailSent && firebaseUser.email) {
               triggerWelcomeEmail(firebaseUser.email, profileData.displayName);
             }
+
+            if (firebaseUser.email) {
+              triggerTrialEndingReminderEmail(firebaseUser.uid, firebaseUser.email, profileData);
+            }
           } else {
             addLog(`AUTH: No profile exists for ${firebaseUser.uid}. Creating...`);
             const initialPrefs = normaliseUserPreferences(null);
@@ -1360,6 +1364,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const sentEmails = useRef<Set<string>>(new Set());
+  const sentTrialReminderEmails = useRef<Set<string>>(new Set());
 
   const triggerWelcomeEmail = (email: string, displayName?: string) => {
     if (!email || sentEmails.current.has(email)) return;
@@ -1449,6 +1454,91 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         addLog(`AUTH ERROR: Catch inside welcome email timeout block: ${emailTaskErr}`);
       }
     }, 1500);
+  };
+
+  const triggerTrialEndingReminderEmail = (uid: string, email: string, profileData: UserProfile) => {
+    if (!uid || !email || profileData.trialEndingReminderEmailSent || sentTrialReminderEmails.current.has(uid)) return;
+
+    if (profileData.subscription?.accessStatus === 'paid' || profileData.isPremium || profileData.accessStatus === 'paid') {
+      return;
+    }
+
+    const trialEndDate = profileData.subscription?.isTrialing && profileData.subscription.trialEnd
+      ? parseToDate(profileData.subscription.trialEnd)
+      : new Date(parseToDate(profileData.trialStartedAt || profileData.createdAt).getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    const msRemaining = trialEndDate.getTime() - Date.now();
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    if (msRemaining <= 0 || msRemaining > oneDayMs) return;
+
+    sentTrialReminderEmails.current.add(uid);
+    addLog(`AUTH: Triggering trial ending reminder email task for ${email}...`);
+
+    const nameToUse = profileData.displayName || email.split('@')[0] || 'User';
+    const firstName = nameToUse.trim().split(/\s+/)[0]?.includes('@')
+      ? nameToUse.trim().split(/\s+/)[0].split('@')[0]
+      : nameToUse.trim().split(/\s+/)[0] || 'there';
+    const formattedEnd = trialEndDate.toLocaleString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+    const currentAppUrl = typeof window !== 'undefined' ? window.location.origin : 'https://dinnerbydesign.app';
+
+    setTimeout(async () => {
+      const emailHtml = `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <div style="border-bottom: 1px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 24px;">
+    <h2 style="color: #111; margin: 0; font-size: 20px;">DinnerByDesign</h2>
+  </div>
+
+  <p>Hi ${firstName},</p>
+
+  <p>Your DinnerByDesign free trial ends on <strong>${formattedEnd}</strong>.</p>
+
+  <p>If you want to keep unlimited recipe search, saved recipes, scheduling tools, shopping lists and personalised settings active, you can subscribe from Account Settings.</p>
+
+  <div style="margin: 28px 0;">
+    <a href="${currentAppUrl}/?view=settings" style="background-color: #111; color: #fff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Open Account Settings</a>
+  </div>
+
+  <p style="font-size: 14px; color: #666;">No action is needed if you do not want to continue after the trial.</p>
+  <p style="margin-top: 24px; font-weight: 500; margin-bottom: 2px;">The DinnerByDesign team</p>
+  <p style="margin: 0; font-size: 13px; color: #666;"><a href="mailto:chef@dinnerbydesign.app" style="color: #666; text-decoration: underline;">chef@dinnerbydesign.app</a></p>
+</div>
+      `.trim();
+
+      try {
+        const response = await fetch(getApiUrl("/api/send-email"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to: email,
+            subject: "Your DinnerByDesign free trial ends soon",
+            html: emailHtml,
+            from: "DinnerByDesign <chef@dinnerbydesign.app>"
+          })
+        });
+
+        const resp = await response.json().catch(() => null);
+        if (resp?.ok) {
+          await updateDoc(doc(db, 'users', uid), {
+            trialEndingReminderEmailSent: true,
+            trialEndingReminderEmailSentAt: serverTimestamp()
+          });
+          addLog(`AUTH: Trial ending reminder email successfully sent to ${email}`);
+        } else {
+          sentTrialReminderEmails.current.delete(uid);
+          addLog(`AUTH WARNING: Trial ending reminder email API returned error: ${JSON.stringify(resp)}`);
+        }
+      } catch (emailErr) {
+        sentTrialReminderEmails.current.delete(uid);
+        addLog(`AUTH ERROR: Trial ending reminder email failed: ${emailErr}`);
+      }
+    }, 1000);
   };
 
   const triggerPasswordChangedEmail = (email: string, displayName?: string) => {
