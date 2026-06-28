@@ -21,6 +21,7 @@ import { SourceSwitcher } from './components/SourceSwitcher';
 import { SuccessView } from './components/views/SuccessView';
 import { Toast } from './components/ui/Toast';
 import { InstallPrompt } from './components/InstallPrompt';
+import { BookmarkPrompt } from './components/BookmarkPrompt';
 import { AppView } from './types';
 
 import { StatusBanner } from './components/StatusBanner';
@@ -314,6 +315,7 @@ const AppContent = () => {
         )}
       </AnimatePresence>
       <InstallPrompt />
+      <BookmarkPrompt />
     </>
   );
 };
