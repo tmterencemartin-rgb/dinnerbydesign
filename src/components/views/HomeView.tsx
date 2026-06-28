@@ -44,7 +44,7 @@ interface HomeViewProps {
   source: 'cook' | 'ready-made';
   setSource: (val: 'cook' | 'ready-made') => void;
   isGenerating: boolean;
-  handleGenerate: (queryOverride?: string, paramOverrides?: any, preferencesOverride?: any, options?: { skipHistory?: boolean; force?: boolean }) => Promise<void>;
+  handleGenerate: (queryOverride?: string, paramOverrides?: any, preferencesOverride?: any, options?: { skipHistory?: boolean; force?: boolean; suppressDietaryRule?: boolean }) => Promise<void>;
   handleStopSearch: () => void;
   isSpeechSupported: boolean;
   isListening: boolean;
@@ -767,7 +767,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       <button
                         onClick={() => {
                           setIsDietaryRuleSuppressed(true);
-                          handleGenerate(undefined, {}, undefined, { force: true });
+                          handleGenerate(undefined, {}, undefined, { force: true, suppressDietaryRule: true });
                         }}
                         className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
                       >

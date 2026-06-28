@@ -39,6 +39,12 @@ type SearchCacheEntry = {
 
 type SearchCacheStore = Record<string, SearchCacheEntry>;
 
+type GenerateOptions = {
+  skipHistory?: boolean;
+  force?: boolean;
+  suppressDietaryRule?: boolean;
+};
+
 const stableStringify = (value: any): string => {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
@@ -528,11 +534,14 @@ export function useSearch() {
     setTimeout(() => setSearchCancelledHint(false), 3000);
   }, [isGenerating, isAppending, status, currentRecipes, currentReadyMeals]);
 
-  const handleGenerate = useCallback(async (queryOverride?: string, paramOverrides: Partial<SearchParams> = {}, preferencesOverride?: UserPreferences | null, options?: { skipHistory?: boolean; force?: boolean }) => {
+  const handleGenerate = useCallback(async (queryOverride?: string, paramOverrides: Partial<SearchParams> = {}, preferencesOverride?: UserPreferences | null, options?: GenerateOptions) => {
     try {
       const searchQuery = (queryOverride !== undefined ? queryOverride : input).trim();
       const isAuthorised = !!user;
-      const activePrefs = (preferencesOverride !== undefined && (preferencesOverride !== null || !isAuthorised)) ? preferencesOverride : (isAuthorised ? (profile?.preferences || null) : null);
+      const basePrefs = (preferencesOverride !== undefined && (preferencesOverride !== null || !isAuthorised)) ? preferencesOverride : (isAuthorised ? (profile?.preferences || null) : null);
+      const activePrefs = options?.suppressDietaryRule && basePrefs
+        ? { ...basePrefs, dietaryRule: 'none' as DietaryRule }
+        : basePrefs;
       
       // Normalization check: compare trimmed and lowercase
       if (lastQueryRef.current.trim().toLowerCase() === searchQuery.toLowerCase() && !paramOverrides.count && !options?.force) {
@@ -559,7 +568,7 @@ export function useSearch() {
         cookingMethods,
         cookingFats,
         supermarkets,
-        dietaryRule,
+        dietaryRule: options?.suppressDietaryRule ? 'none' : dietaryRule,
         saladPreference,
         allergies,
         isSimple,
@@ -596,7 +605,11 @@ export function useSearch() {
       }
 
       // We don't setIsGenerating(true) here because performSearch does it immediately
-      await performSearch(cleaned, { preferencesOverride: preferencesOverride !== undefined ? preferencesOverride : undefined });
+      await performSearch(cleaned, {
+        preferencesOverride: options?.suppressDietaryRule
+          ? activePrefs
+          : (preferencesOverride !== undefined ? preferencesOverride : undefined)
+      });
     } catch (err) {
       setLocalError("An unexpected error occurred. Please try again.");
       setIsGenerating(false);
