@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { buildSearchParams, cleanSearchParams } from './searchUtils';
+import { buildActiveCriteria, buildSearchParams, cleanSearchParams } from './searchUtils';
 import { UserPreferences, DinnerSource } from '../types';
+import { DIETARY_TAXONOMY } from '../constants';
 
 describe('searchUtils', () => {
   describe('buildSearchParams', () => {
@@ -107,6 +108,131 @@ describe('searchUtils', () => {
       
       const cleaned = cleanSearchParams(params as any);
       expect(cleaned.similarityContext).toEqual({ title: 'Old Pasta' });
+    });
+  });
+
+  describe('buildActiveCriteria', () => {
+    const basePreferences: UserPreferences = {
+      dietaryRule: 'vegetarian',
+      saladPreference: 'side-only',
+      allergies: ['Eggs'],
+      nutritiousChoice: true,
+      isSimple: true,
+      isLowCost: true,
+      highOmega3: true,
+      highProtein: true,
+      servings: 4,
+      calorieCeiling: 500,
+      budgetLimit: 3,
+      exclusions: ['Mushrooms'],
+      cuisinePreferences: ['Italian'],
+      religiousEthical: ['Halal-friendly'],
+      cookingMethods: ['Air fryer'],
+      cookingFats: ['Olive oil'],
+      readyToEatUnderMins: 25,
+      preferredMode: 'cook',
+      customCuisines: [],
+      preferredSupermarkets: ['Tesco'],
+      preferredSourceIds: ['bbc_good_food']
+    };
+
+    const buildLabels = (params: any, prefs: UserPreferences | null = basePreferences) =>
+      buildActiveCriteria(params, prefs, {
+        DIETARY_TAXONOMY,
+        suppressedPermanentKeys: []
+      }).map(c => c.label);
+
+    it('shows saved preference chips for every major preference category', () => {
+      const labels = buildLabels({
+        query: 'pasta',
+        source: 'cook',
+        dietaryRule: 'vegetarian',
+        saladPreference: 'side-only'
+      });
+
+      expect(labels).toEqual(expect.arrayContaining([
+        'Vegetarian',
+        'Side salads',
+        'No Eggs',
+        'No Mushrooms',
+        'Halal-friendly',
+        'Italian',
+        'Air fryer',
+        'Olive oil',
+        'BBC Good Food',
+        'Quick and easy recipes',
+        'Wholesome recipes',
+        'High Omega-3',
+        'Low cost recipes',
+        'High Protein',
+        'Under 25 mins',
+        'Under 500 kcal',
+        '4 portions',
+        'Under £3/port.'
+      ]));
+    });
+
+    it('shows temporary allergies as chips even when they are not saved defaults', () => {
+      const labels = buildLabels({
+        query: 'pasta',
+        source: 'cook',
+        allergies: ['Eggs']
+      }, {
+        ...basePreferences,
+        dietaryRule: 'none',
+        saladPreference: 'all',
+        allergies: [],
+        exclusions: [],
+        religiousEthical: [],
+        cuisinePreferences: [],
+        cookingMethods: [],
+        cookingFats: [],
+        preferredSourceIds: [],
+        nutritiousChoice: false,
+        isSimple: false,
+        isLowCost: false,
+        highOmega3: false,
+        highProtein: false,
+        readyToEatUnderMins: null,
+        calorieCeiling: null,
+        budgetLimit: null,
+        servings: 2
+      });
+
+      expect(labels).toContain('No Eggs');
+    });
+
+    it('does not duplicate temporary chips already covered by saved preferences', () => {
+      const labels = buildLabels({
+        query: 'pasta',
+        source: 'cook',
+        allergies: ['Eggs'],
+        cookingMethods: ['Air fryer'],
+        cookingFats: ['Olive oil'],
+        preferredSourceIds: ['bbc_good_food']
+      });
+
+      expect(labels.filter(label => label === 'No Eggs')).toHaveLength(1);
+      expect(labels.filter(label => label === 'Air fryer')).toHaveLength(1);
+      expect(labels.filter(label => label === 'Olive oil')).toHaveLength(1);
+      expect(labels.filter(label => label === 'BBC Good Food')).toHaveLength(1);
+    });
+
+    it('hides suppressed saved preferences but keeps unsuppressed ones visible', () => {
+      const labels = buildActiveCriteria({
+        query: 'pasta',
+        source: 'cook',
+        dietaryRule: 'vegetarian',
+        saladPreference: 'side-only'
+      } as any, basePreferences, {
+        DIETARY_TAXONOMY,
+        suppressedPermanentKeys: ['allergy-Eggs', 'profileExclusion-Mushrooms']
+      }).map(c => c.label);
+
+      expect(labels).toContain('Vegetarian');
+      expect(labels).toContain('Side salads');
+      expect(labels).not.toContain('No Eggs');
+      expect(labels).not.toContain('No Mushrooms');
     });
   });
 });
