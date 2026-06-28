@@ -1388,30 +1388,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   <p>Hi ${firstName},</p>
   <p>DinnerByDesign helps you decide what to cook, search recipes you can actually make, and build a shopping list as you go — around your diet, budget and the time you have.</p>
   
-  <p>Here is how to start in under a minute:</p>
+  <p>Get started in under a minute:</p>
   <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
     <tr>
       <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
         <span style="font-size: 15px; font-weight: bold; color: #111;">1. Set your preferences</span><br>
-        <span style="color: #555; font-size: 13.5px;">On the search page, tap Preferences beside the search box to set dietary rules, portions, budget, calorie targets and any ingredients to exclude.</span>
+        <span style="color: #555; font-size: 13.5px;">On the search page, tap Preferences beside the search box to set dietary needs, portions, budget, calorie targets and any ingredients to exclude.</span>
       </td>
     </tr>
     <tr>
       <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
-        <span style="font-size: 15px; font-weight: bold; color: #111;">2. Find and schedule dinners</span><br>
+        <span style="font-size: 15px; font-weight: bold; color: #111;">2. Find and schedule recipes</span><br>
         <span style="color: #555; font-size: 13.5px;">Search by ingredients you have in, filter to your constraints, and tap Schedule to add a recipe to your planner.</span>
       </td>
     </tr>
     <tr>
       <td style="padding: 12px 0;">
         <span style="font-size: 15px; font-weight: bold; color: #111;">3. Build your shopping list</span><br>
-        <span style="color: #555; font-size: 13.5px;">Your shopping list updates automatically, scaled to your portions, minus anything you tick off as already in the cupboard.</span>
+        <span style="color: #555; font-size: 13.5px;">Your list updates automatically, scaled to your portions — tick off what you already have and it adjusts.</span>
       </td>
     </tr>
   </table>
 
   <div style="margin: 32px 0; text-align: center;">
-    <a href="${window.location.origin}/?view=home&from=email" style="background-color: #111; color: #fff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block; font-size: 14px;">Find your first recipe</a>
+    <a href="${window.location.origin}/?view=home&from=email" style="background-color: #111; color: #fff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block; font-size: 14px;">Find your first recipe →</a>
   </div>
 
   <p>Questions or feedback? Reply to this email — we read and answer every one.</p>
