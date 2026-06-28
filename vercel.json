@@ -1,5 +1,40 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "dinnerbydesignv2.vercel.app"
+        }
+      ],
+      "destination": "https://dinnerbydesign.app/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "dinner-by-designv2.vercel.app"
+        }
+      ],
+      "destination": "https://dinnerbydesign.app/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "dinner-by-design2.vercel.app"
+        }
+      ],
+      "destination": "https://dinnerbydesign.app/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",

@@ -163334,6 +163334,19 @@ Details: ${details}`);
     console.error("Failed to log API error:", e2);
   }
 }
+var PRODUCTION_APP_URL = "https://dinnerbydesign.app";
+function getAppOrigin(req) {
+  const requestOrigin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get("host")}`;
+  const origin = Array.isArray(requestOrigin) ? requestOrigin[0] : requestOrigin;
+  if (!origin) return PRODUCTION_APP_URL;
+  try {
+    const parsed = new URL(origin);
+    const isLocal = ["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
+    return isLocal ? parsed.origin : PRODUCTION_APP_URL;
+  } catch {
+    return PRODUCTION_APP_URL;
+  }
+}
 var _db = null;
 function getDb() {
   if (!_db) {
@@ -163495,7 +163508,7 @@ function createApp() {
   app.post("/api/create-checkout-session", async (req, res) => {
     try {
       const stripeClient = await getStripe();
-      const origin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get("host")}`;
+      const origin = getAppOrigin(req);
       const { plan, userId } = req.body;
       if (!userId) {
         return res.status(400).json({ error: "Missing userId" });

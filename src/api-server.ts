@@ -48,6 +48,23 @@ function logApiError(type: string, error: any) {
   }
 }
 
+const PRODUCTION_APP_URL = "https://dinnerbydesign.app";
+
+function getAppOrigin(req: express.Request): string {
+  const requestOrigin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get("host")}`;
+  const origin = Array.isArray(requestOrigin) ? requestOrigin[0] : requestOrigin;
+
+  if (!origin) return PRODUCTION_APP_URL;
+
+  try {
+    const parsed = new URL(origin);
+    const isLocal = ["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
+    return isLocal ? parsed.origin : PRODUCTION_APP_URL;
+  } catch {
+    return PRODUCTION_APP_URL;
+  }
+}
+
 // Initialize Firebase Admin lazily
 let _db: any = null;
 function getDb() {
@@ -249,7 +266,7 @@ export function createApp() {
   app.post("/api/create-checkout-session", async (req, res) => {
     try {
       const stripeClient = await getStripe();
-      const origin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get('host')}`;
+      const origin = getAppOrigin(req);
       const { plan, userId } = req.body;
 
       if (!userId) {
