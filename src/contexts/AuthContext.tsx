@@ -258,10 +258,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const diffMs = trialEndDate.getTime() - now.getTime();
       
       if (diffMs <= 0) {
-        // Mock premium limit completely disabled: automatically promote to paid to keep search always unlocked
-        setAccessStatus('paid');
+        setAccessStatus('read_only');
         setTrialDaysLeft(0);
-        setTrialTimeRemaining('Unlimited');
+        setTrialTimeRemaining('Trial ended');
       } else {
         setAccessStatus('trial');
         const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
