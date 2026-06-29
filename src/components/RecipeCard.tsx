@@ -8,7 +8,7 @@ import { isSameRecipe } from '../lib/recipeUtils';
 import { CircleX } from './ui/CircleX';
 import { Tooltip } from './ui/Tooltip';
 import { RetailerCtaLink } from './RetailerCtaLink';
-import { AiSafetyNotice, CostDisclaimerNotice } from './Notices';
+import { GuidanceNotice } from './Notices';
 import { RecipeActionRow } from './RecipeActionRow';
 import { convertIngredient } from '../lib/measurementUtils';
 
@@ -398,8 +398,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     className="overflow-hidden flex flex-col gap-0.5 sm:gap-4"
                   >
                     <div className="max-w-2xl lg:max-w-3xl mr-auto w-full space-y-0.25 sm:space-y-3">
-                      <AiSafetyNotice />
-                      <CostDisclaimerNotice 
+                      <GuidanceNotice 
                         hasCost={hasCost} 
                         mode={mode}
                       />

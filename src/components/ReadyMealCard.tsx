@@ -9,7 +9,7 @@ import { CircleX } from './ui/CircleX';
 import { Tooltip } from './ui/Tooltip';
 import { RetailerCtaLink } from './RetailerCtaLink';
 import { RecipeActionRow } from './RecipeActionRow';
-import { AiSafetyNotice, CostDisclaimerNotice } from './Notices';
+import { GuidanceNotice } from './Notices';
 
 interface ReadyMealCardProps {
   meal: ReadyMeal;
@@ -243,8 +243,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     className="overflow-hidden space-y-4 sm:space-y-3"
                   >
                     <div className="max-w-2xl lg:max-w-3xl mr-auto w-full space-y-2.5 pt-1 border-t border-gray-100">
-                       <AiSafetyNotice />
-                       <CostDisclaimerNotice 
+                       <GuidanceNotice 
                          hasCost={!!(meal.costPerPortion || meal.price)} 
                          mode="ready-made"
                        />
