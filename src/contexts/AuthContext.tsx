@@ -736,6 +736,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               trialStartedAt: serverTimestamp(),
               createdAt: serverTimestamp(),
               updatedAt: serverTimestamp(),
+              searchOnboardingDismissed: false,
               welcomeEmailSent: false
             };
             
@@ -1693,6 +1694,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         trialStartedAt: serverTimestamp(),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
+        searchOnboardingDismissed: false,
         welcomeEmailSent: false
       };
       

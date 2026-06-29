@@ -157,6 +157,8 @@ export interface UserProfile {
   lastName?: string;
   phoneNumber?: string;
   welcomeEmailSent?: boolean;
+  searchOnboardingDismissed?: boolean;
+  searchOnboardingDismissedAt?: Timestamp | FieldValue;
   subscriptionConfirmationEmailSent?: boolean;
   subscriptionConfirmationEmailSentAt?: Timestamp | FieldValue;
   subscriptionCancellationEmailSent?: boolean;

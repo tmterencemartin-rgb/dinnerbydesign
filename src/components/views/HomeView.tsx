@@ -141,6 +141,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     updatePlanner,
     showToast,
     user,
+    profile,
+    updateProfile,
     accessStatus,
     addLog
   } = useAuth();
@@ -209,11 +211,34 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   // Stale Results logic for Batch Apply
   const [dirty, setDirty] = React.useState(false);
   const [hasDismissedSearchOnboarding, setHasDismissedSearchOnboarding] = React.useState(() => {
+    if (profile && !user?.isAnonymous) return profile.searchOnboardingDismissed === true;
     return safeStorage.getItem('dbd_search_onboarding_dismissed') === 'true';
   });
   const [hasPerformedSearch, setHasPerformedSearch] = React.useState(() => {
     return safeStorage.getItem('dbd_has_searched') === 'true';
   });
+
+  React.useEffect(() => {
+    if (profile && !user?.isAnonymous) {
+      setHasDismissedSearchOnboarding(profile.searchOnboardingDismissed === true);
+    }
+  }, [profile?.searchOnboardingDismissed, user?.isAnonymous]);
+
+  const markSearchOnboardingDismissed = React.useCallback(async () => {
+    setHasDismissedSearchOnboarding(true);
+    safeStorage.setItem('dbd_search_onboarding_dismissed', 'true');
+
+    if (user && !user.isAnonymous && profile?.searchOnboardingDismissed !== true) {
+      try {
+        await updateProfile({
+          searchOnboardingDismissed: true,
+          searchOnboardingDismissedAt: new Date() as any
+        });
+      } catch (err: any) {
+        addLog(`ONBOARDING_DISMISS_SAVE_FAIL: ${err?.message || err}`);
+      }
+    }
+  }, [addLog, profile?.searchOnboardingDismissed, updateProfile, user]);
 
   React.useEffect(() => {
     if (status === 'complete' || status === 'partial') {
@@ -232,11 +257,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   React.useEffect(() => {
     if (isSearching) {
       if (!hasDismissedSearchOnboarding) {
-        setHasDismissedSearchOnboarding(true);
-        safeStorage.setItem('dbd_search_onboarding_dismissed', 'true');
+        markSearchOnboardingDismissed();
       }
     }
-  }, [isSearching, hasDismissedSearchOnboarding]);
+  }, [isSearching, hasDismissedSearchOnboarding, markSearchOnboardingDismissed]);
 
   // If filterCount >= 3, removing a chip doesn't auto-search.
   // We should show a "Refresh results" button.
@@ -449,8 +473,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         searchInputRef.current?.focus();
                       }}
                       onDismiss={() => {
-                        setHasDismissedSearchOnboarding(true);
-                        safeStorage.setItem('dbd_search_onboarding_dismissed', 'true');
+                        markSearchOnboardingDismissed();
                       }} 
                     />
                   )}
