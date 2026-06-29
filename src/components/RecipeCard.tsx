@@ -175,7 +175,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   </span>
                   {mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') && (
                     <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px]">
-                      In the style of {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
+                      {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
                     </span>
                   )}
                 </div>

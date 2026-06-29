@@ -60,7 +60,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
                 <>
                   <Separator />
                   <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate">
-                    In the style of {domain}
+                    {domain}
                   </span>
                 </>
               )}

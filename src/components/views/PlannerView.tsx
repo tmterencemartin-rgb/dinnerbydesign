@@ -387,7 +387,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                     if (viewingPlannerEntry.sourceUrl && !viewingPlannerEntry.sourceUrl.includes('recipe-search')) {
                       parts.push(
                         <span key="source" className="text-gray-500 font-bold uppercase tracking-wider text-[10.5px]">
-                          In the style of {viewingPlannerEntry.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
+                          {viewingPlannerEntry.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
                         </span>
                       );
                     }
