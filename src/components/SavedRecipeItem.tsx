@@ -334,7 +334,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           )}
 
           <div 
-            className="flex-grow min-w-0 cursor-pointer hover:opacity-75 transition-opacity sm:pr-32 md:pr-44"
+            className={`flex-grow min-w-0 cursor-pointer hover:opacity-75 transition-opacity ${isBacklog ? '' : 'sm:pr-32 md:pr-44'}`}
             onClick={() => onViewDetail ? onViewDetail(recipe) : setIsExpanded(!isExpanded)}
           >
             <div className="flex flex-col">
@@ -407,6 +407,10 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       </span>
                     );
                   }
+
+                  items.push(
+                    <span key="convenience-line-break" className="basis-full h-0" aria-hidden="true" />
+                  );
  
                   const cp = recipe.convenienceProfile || getConvenienceProfile(recipe);
                   if (cp === 'scratch') {
@@ -436,21 +440,97 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   }
                   
                   return items.reduce<React.ReactNode[]>((acc, item, index) => {
+                    const isBreak = React.isValidElement(item) && item.key === 'convenience-line-break';
+                    const previous = items[index - 1];
+                    const previousIsBreak = React.isValidElement(previous) && previous.key === 'convenience-line-break';
+                    if (isBreak) {
+                      acc.push(item);
+                      return acc;
+                    }
                     if (index > 0) {
                       acc.push(
-                        <span key={`sep-${index}`} className="text-gray-300 select-none">•</span>
+                        <span key={`sep-${index}`} className={`text-gray-300 select-none ${previousIsBreak ? 'hidden' : ''}`}>•</span>
                       );
                     }
                     acc.push(item);
                     return acc;
                   }, []);
                 })()}
+
+                {isBacklog && (
+                  <span className="relative inline-flex">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsChoosingDay(!isChoosingDay);
+                      }}
+                      className={`inline-flex h-6 items-center gap-1 px-2 rounded border text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                        scheduledDate || showCheck
+                          ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700 font-semibold'
+                          : 'border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                      }`}
+                      title="Add to Schedule"
+                    >
+                      {scheduledDate || showCheck ? (
+                        <Check className="w-2.5 h-2.5 text-emerald-600" />
+                      ) : (
+                        <CalendarPlus className="w-2.5 h-2.5 text-gray-400" />
+                      )}
+                      <span>{scheduledDate ? 'Scheduled' : showCheck ? 'Scheduled' : 'Schedule'}</span>
+                    </button>
+
+                    {isChoosingDay && (
+                      <div className="absolute left-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[260px] animate-in fade-in slide-in-from-top-1 duration-150">
+                        <div className="flex justify-between items-start gap-3 mb-2 border-b border-gray-50 pb-1.5">
+                          <div>
+                            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Schedule Dinner</span>
+                            {weekIsFull && !scheduledDate && (
+                              <p className="mt-0.5 text-[11px] text-gray-500 leading-snug">Schedule full. Choose a day to replace.</p>
+                            )}
+                          </div>
+                          <button onClick={(e) => { e.stopPropagation(); setIsChoosingDay(false); }} className="text-gray-400 hover:text-gray-600 cursor-pointer"><CircleX size={12} /></button>
+                        </div>
+                        <div className="grid grid-cols-1 gap-1">
+                          {days.map(day => {
+                            const bookedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
+                            const isBooked = !!bookedRecipe;
+                            return (
+                              <button
+                                key={day}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDaySelect(day);
+                                }}
+                                className={`text-left px-3 py-2 text-[13px] rounded transition-colors flex items-center justify-between cursor-pointer ${
+                                  day === scheduledDate
+                                    ? 'bg-accent text-white font-semibold'
+                                    : isBooked
+                                      ? 'text-gray-700 hover:bg-accent/5'
+                                      : 'text-gray-700 hover:bg-gray-50'
+                                }`}
+                              >
+                                <span className="min-w-0 pr-2">
+                                  <span className="capitalize block">{day}</span>
+                                  {bookedRecipe && (
+                                    <span className="block truncate max-w-[150px] text-[10px] text-gray-400 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
+                                  )}
+                                </span>
+                                {isBooked && day !== scheduledDate && <span className="text-[10px] uppercase font-bold tracking-widest text-accent">Replace</span>}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </span>
+                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* Right Side: Consolidated Action Buttons */}
+        {!isBacklog && (
         <div className="flex items-center gap-1.5 shrink-0 pt-0 w-full sm:w-auto justify-end sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2">
           {!isBacklog && (
             <button 
@@ -543,6 +623,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             </button>
           )}
         </div>
+        )}
       </div>
 
       <AnimatePresence>
