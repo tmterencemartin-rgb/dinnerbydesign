@@ -17,7 +17,6 @@ import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsView } from './components/views/TermsView';
 import { AdminDashboard } from './components/views/AdminDashboard';
 import { LandingView } from './components/views/LandingView';
-import { SourceSwitcher } from './components/SourceSwitcher';
 import { SuccessView } from './components/views/SuccessView';
 import { Toast } from './components/ui/Toast';
 import { InstallPrompt } from './components/InstallPrompt';
@@ -118,7 +117,6 @@ const AppContent = () => {
 
   useSeo(seoConfig);
 
-  const [targetPlannerDay, setTargetPlannerDay] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [showInlineSuccess, setShowInlineSuccess] = useState(false);
 
@@ -248,16 +246,6 @@ const AppContent = () => {
         </div>
       )}
       
-      <SourceSwitcher 
-        current={view} 
-        onSelect={(v: any) => setView(v)} 
-        targetDay={targetPlannerDay} 
-        onCancel={() => {
-          setTargetPlannerDay(null);
-          setView('planner');
-        }} 
-      />
-
       <AnimatePresence>
         {view === 'home' && (
           <HomeView 
@@ -289,10 +277,6 @@ const AppContent = () => {
         {view === 'planner' && (
           <PlannerView 
             setView={setView}
-            onAddToPlanner={(dayId) => {
-              setTargetPlannerDay(dayId);
-              setView('home');
-            }}
           />
         )}
         {view === 'shopping' && (

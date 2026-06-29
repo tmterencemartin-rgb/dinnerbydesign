@@ -33,10 +33,9 @@ import { getConvenienceProfile } from '../../lib/recipeUtils';
 
 interface PlannerViewProps {
   setView: (view: any) => void;
-  onAddToPlanner?: (dayId: string) => void;
 }
 
-export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanner }) => {
+export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const { 
     profile, 
     planner, 
@@ -1048,7 +1047,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       if (checkReadOnly("Your trial has ended. Upgrade to add to planner.")) return;
-                                      onAddToPlanner?.(dayId);
+                                      setTargetPlannerDay(targetPlannerDay === dayId ? null : dayId);
                                     }}
                                     className="inline-flex items-center gap-1.5 h-8 px-3 bg-white border border-gray-200 text-[11px] font-bold text-gray-700 rounded hover:border-accent/40 hover:text-accent hover:bg-accent/5 transition-colors"
                                   >
@@ -1118,8 +1117,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                                 <div className="mt-3 pt-3 border-t border-gray-50">
                                   <button 
                                     onClick={() => {
-                                      if (onAddToPlanner) onAddToPlanner(dayId);
-                                      else setView('home');
+                                      setTargetPlannerDay(null);
+                                      setView('home');
                                     }}
                                     className="w-full text-center text-[12px] text-accent font-medium hover:underline"
                                   >
