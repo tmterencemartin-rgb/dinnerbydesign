@@ -256,26 +256,70 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
       const perPortionBudget = Number.isFinite(budgetValue) && budgetValue > 0
         ? Number((budgetValue / planDinnerCount / servingsCount).toFixed(2))
         : undefined;
+      const shouldApplyLowCostBias = perPortionBudget !== undefined && perPortionBudget <= 2;
       const proteinText = planProtein === 'mixed' ? 'mixed proteins' : planProtein;
       const timeText = planTime === 'quick'
         ? 'quick dinners'
         : planTime === 'under30'
           ? 'dinners under 30 minutes'
           : 'varied dinners';
-      const query = `Plan ${planDinnerCount} ${timeText}${planProtein !== 'mixed' ? ` with ${proteinText}` : ''}${budgetValue ? ` under £${budgetValue} total` : ''}`;
+      const query = `${planDinnerCount} ${timeText}${planProtein !== 'mixed' ? ` with ${proteinText}` : ''}${budgetValue ? ` under £${budgetValue} total` : ''}`;
       const params = cleanSearchParams(buildSearchParams(query, 'cook', profile?.preferences || null, {
         count: planDinnerCount,
         servings: servingsCount,
         maxCostPerPortion: perPortionBudget,
         maxTotalTime: planTime === 'under30' ? 30 : undefined,
         isSimple: planTime === 'quick' ? true : undefined,
-        isLowCost: !!perPortionBudget,
+        isLowCost: shouldApplyLowCostBias,
         excludeTitles: planner.map(item => item.title)
       }));
 
       const { generateDinnerSuggestions } = await import('../../services/geminiService');
-      const result = await generateDinnerSuggestions(params, profile?.preferences || undefined);
-      const recipes = ((result.recipes || []) as Recipe[]).slice(0, planDinnerCount);
+      const collected: Recipe[] = [];
+      try {
+        const result = await generateDinnerSuggestions(params, profile?.preferences || undefined);
+        collected.push(...((result.recipes || []) as Recipe[]));
+      } catch (err: any) {
+        addLog(`UI WARN: weekly batch generation failed, trying focused searches: ${err?.message || err}`);
+      }
+
+      const seenTitles = new Set(collected.map(recipe => recipe.title.toLowerCase()));
+      const baseExcludedTitles = [...planner.map(item => item.title), ...collected.map(recipe => recipe.title)];
+      const dietaryRule = profile?.preferences?.dietaryRule || 'none';
+      const fallbackProteins = (() => {
+        if (planProtein !== 'mixed') return Array(planDinnerCount).fill(planProtein);
+        if (dietaryRule === 'vegetarian') return ['vegetarian', 'vegetarian', 'vegetarian', 'vegetarian', 'vegetarian', 'vegetarian', 'vegetarian'];
+        if (dietaryRule === 'vegan') return ['vegan', 'vegan', 'vegan', 'vegan', 'vegan', 'vegan', 'vegan'];
+        return ['chicken', 'fish', 'vegetarian', 'pork', 'beef', 'pulses', 'turkey'];
+      })();
+
+      for (let i = collected.length; i < planDinnerCount; i += 1) {
+        const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
+        const fallbackQuery = `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} ${fallbackProtein} dinner${budgetValue ? ` under £${budgetValue} total` : ''}`;
+        const fallbackParams = cleanSearchParams(buildSearchParams(fallbackQuery, 'cook', profile?.preferences || null, {
+          count: 1,
+          servings: servingsCount,
+          maxCostPerPortion: perPortionBudget,
+          maxTotalTime: planTime === 'under30' ? 30 : undefined,
+          isSimple: planTime === 'quick' ? true : undefined,
+          isLowCost: shouldApplyLowCostBias,
+          excludeTitles: [...baseExcludedTitles, ...collected.map(recipe => recipe.title)]
+        }));
+
+        try {
+          const fallbackResult = await generateDinnerSuggestions(fallbackParams, profile?.preferences || undefined);
+          const nextRecipe = ((fallbackResult.recipes || []) as Recipe[])
+            .find(recipe => !seenTitles.has(recipe.title.toLowerCase()));
+          if (nextRecipe) {
+            collected.push(nextRecipe);
+            seenTitles.add(nextRecipe.title.toLowerCase());
+          }
+        } catch (err: any) {
+          addLog(`UI WARN: weekly fallback generation failed for ${fallbackProtein}: ${err?.message || err}`);
+        }
+      }
+
+      const recipes = collected.slice(0, planDinnerCount);
       if (recipes.length === 0) {
         showToast("I couldn't create a weekly plan from those settings. Try a higher budget or fewer dinners.");
         return;
