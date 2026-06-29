@@ -173,10 +173,10 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
 
   return (
     <div className="flex flex-col gap-0.5 w-full">
-      <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+      <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] items-center gap-1 sm:flex sm:flex-wrap sm:gap-2">
         <button 
           onClick={handleSaveAndSchedule}
-          className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border ${
+          className={`min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border ${
             isSaved 
               ? 'bg-accent text-white border-accent hover:bg-accent/90' 
               : 'bg-white text-gray-700 border-gray-100 hover:bg-gray-50'
@@ -186,24 +186,22 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
           <span>Save & Schedule</span>
         </button>
         
-        <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
-          <button 
-            onClick={handleEmailRecipe}
-            disabled={isEmailing}
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-100 rounded text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap"
-          >
-            {isEmailing ? <Loader2 className="w-3 w-3 sm:w-3.5 sm:h-3.5 animate-spin" /> : <Mail className="w-3 w-3 sm:w-3.5 sm:h-3.5" />}
-            <span>Email</span>
-          </button>
-          
-          <button 
-            onClick={() => handlePrintRecipe(recipe)}
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-100 rounded text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 whitespace-nowrap"
-          >
-            <Printer className="w-3 w-3 sm:w-3.5 sm:h-3.5" />
-            <span>Print</span>
-          </button>
-        </div>
+        <button 
+          onClick={handleEmailRecipe}
+          disabled={isEmailing}
+          className="min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-100 rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap"
+        >
+          {isEmailing ? <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin" /> : <Mail className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+          <span>Email</span>
+        </button>
+        
+        <button 
+          onClick={() => handlePrintRecipe(recipe)}
+          className="min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border border-gray-100 rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 whitespace-nowrap"
+        >
+          <Printer className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          <span>Print</span>
+        </button>
       </div>
     </div>
   );
