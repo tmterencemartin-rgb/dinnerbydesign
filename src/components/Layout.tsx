@@ -45,9 +45,9 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
   }, []);
 
   return (
-    <div className="min-h-screen border border-dbd-rule/10 bg-gray-50 text-dbd-ink flex flex-col transition-colors duration-250">
+    <div className="min-h-screen border border-dbd-rule/10 bg-gray-50 text-dbd-ink flex flex-col transition-colors duration-250 pb-[env(safe-area-inset-bottom)]">
       {/* Navigation */}
-      <nav className="border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-5 md:pt-7 lg:pt-9 pb-0 transition-colors duration-250">
+      <nav className="border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1.25rem+env(safe-area-inset-top))] md:pt-7 lg:pt-9 pb-0 transition-colors duration-250">
         <div className="max-w-6xl mx-auto px-4 md:px-3 lg:px-6">
           {/* Row 1: Brand & Utilities */}
           <div className="flex justify-between items-center mb-2 md:mb-3 lg:mb-4">

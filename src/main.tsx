@@ -42,15 +42,13 @@ window.addEventListener('unhandledrejection', (event) => {
 });
 
 // Register Service Worker for PWA
-/*
-if ('serviceWorker' in navigator) {
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(err => {
       console.log('SW registration failed: ', err);
     });
   });
 }
-*/
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

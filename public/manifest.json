@@ -1,11 +1,16 @@
 {
   "name": "DinnerByDesign",
   "short_name": "DinnerByDesign",
-  "start_url": "/",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0b1f17",
-  "theme_color": "#0b1f17",
-  "description": "Find exactly what to cook — and everything you need to buy.",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#FAF8F5",
+  "theme_color": "#FAF8F5",
+  "description": "Find dinner recipes, schedule dinners and build shopping lists around your preferences.",
+  "categories": ["food", "productivity", "utilities"],
   "icons": [
     {
       "src": "/logo.svg",

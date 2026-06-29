@@ -68,8 +68,16 @@
 }
 
 @layer base {
+  html {
+    min-height: 100%;
+    background: var(--dbd-surface);
+  }
+
   body {
     @apply font-sans text-gray-900 antialiased bg-gray-50 leading-normal;
+    min-height: 100%;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
