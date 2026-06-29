@@ -303,7 +303,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           <CircleX size={16} />
         </button>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 min-h-[44px] w-full">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 min-h-[44px] w-full sm:relative">
         {/* Left Side: Scheduled Badge + Recipe Heading & Sub-stats */}
         <div className="flex items-start gap-3 flex-grow min-w-0">
           {scheduledDate && !isBacklog && (
@@ -315,7 +315,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           )}
 
           <div 
-            className="flex-grow min-w-0 cursor-pointer hover:opacity-75 transition-opacity"
+            className="flex-grow min-w-0 cursor-pointer hover:opacity-75 transition-opacity sm:pr-32 md:pr-44"
             onClick={() => onViewDetail ? onViewDetail(recipe) : setIsExpanded(!isExpanded)}
           >
             <div className="flex flex-col">
@@ -432,7 +432,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         </div>
 
         {/* Right Side: Consolidated Action Buttons */}
-        <div className="flex items-center gap-1.5 shrink-0 pt-0.5 w-full sm:w-auto justify-end">
+        <div className="flex items-center gap-1.5 shrink-0 pt-0 w-full sm:w-auto justify-end sm:absolute sm:right-0 sm:top-0">
           {!isBacklog && (
             <button 
               onClick={(e) => {
