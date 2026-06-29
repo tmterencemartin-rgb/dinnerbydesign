@@ -1170,15 +1170,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     })}
                   </div>
                 </div>
-
-                {planner.length === 0 && savedRecipes.length === 0 && (
-                  <div className="py-12 bg-gray-50/50 rounded text-center">
-                    <p className="text-[14px] text-gray-900 font-bold mb-1">Your week is looking clear</p>
-                    <p className="text-[13px] text-gray-500 font-normal">
-                      Start by <button onClick={() => setView('home')} className="text-accent font-bold hover:underline">searching for dinner</button>.
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
           </>
