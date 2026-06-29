@@ -7,3 +7,4 @@ coverage/
 api/*.map
 .env*
 !.env.example
+.vercel
