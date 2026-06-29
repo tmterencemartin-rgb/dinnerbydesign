@@ -32,8 +32,8 @@ export const RecipeListActions = ({
   onNavigateToSettings
 }: RecipeListActionsProps) => {
   return (
-    <div className="w-full bg-transparent rounded-t-xl px-2 border-b border-dbd-rule/40 mb-2 transition-colors duration-200">
-      <div className="flex items-center justify-between gap-2 py-1.5 min-h-[44px] w-full">
+    <div className="w-full bg-transparent rounded-t-xl px-2 border-b border-dbd-rule/40 mb-1 sm:mb-2 transition-colors duration-200">
+      <div className="flex items-center justify-between gap-2 py-1 min-h-[36px] sm:py-1.5 sm:min-h-[44px] w-full">
         <div className="flex items-center gap-3">
           {onTryAgain && (
             <Tooltip text="More recipes like this please..." position="bottom">

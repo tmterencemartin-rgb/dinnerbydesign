@@ -830,7 +830,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-3 pb-16 bg-transparent max-w-4xl mx-auto w-full"
+            className="space-y-1.5 sm:space-y-3 pb-16 bg-transparent max-w-4xl mx-auto w-full"
           >
             {compareItems.length > 0 && (
               <div className="bg-white border border-gray-100 rounded px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -890,7 +890,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             )}
 
             {hasExhaustedSearch && (
-              <div className="p-3 bg-gray-50/50 border border-gray-100 rounded-lg space-y-2 mt-4">
+              <div className="p-3 bg-gray-50/50 border border-gray-100 rounded-lg space-y-2 mt-2 sm:mt-4">
                 <div className="flex items-center gap-2 mb-0.5">
                   <Info className="w-3.5 h-3.5 text-gray-400" />
                   <p className="text-[13px] font-bold text-gray-900 leading-tight">No more matching recipes found</p>
@@ -900,12 +900,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </p>
               </div>
             )}             {((currentRecipes?.length || 0) + (currentReadyMeals?.length || 0) > 0) && (
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <div className="flex flex-row gap-1.5 sm:gap-3 pt-0.5 sm:pt-4">
                 {!hasExhaustedSearch && (
                   <button 
                     onClick={() => handleLoadMore()}
                     disabled={isGenerating || isAppending}
-                    className="flex-grow py-3 bg-white border border-gray-100 rounded text-[10px] font-semibold text-accent uppercase tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                    className="flex-1 min-w-0 px-2 py-2.5 sm:py-3 bg-white border border-gray-100 rounded text-[9px] sm:text-[10px] font-semibold text-accent uppercase tracking-[0.14em] sm:tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm cursor-pointer whitespace-nowrap"
                   >
                     {(isGenerating || isAppending) && <Loader2 className="w-3 h-3 animate-spin" />}
                     More choices, please
@@ -914,7 +914,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <button 
                   onClick={handleNewSearch}
                   disabled={isGenerating || isAppending}
-                  className="flex-grow py-3 bg-white border border-gray-100 rounded text-[10px] font-semibold text-gray-400 hover:text-gray-600 hover:border-gray-200 uppercase tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                  className="flex-1 min-w-0 px-2 py-2.5 sm:py-3 bg-white border border-gray-100 rounded text-[9px] sm:text-[10px] font-semibold text-gray-400 hover:text-gray-600 hover:border-gray-200 uppercase tracking-[0.14em] sm:tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm cursor-pointer whitespace-nowrap"
                 >
                   Close & New Search
                 </button>

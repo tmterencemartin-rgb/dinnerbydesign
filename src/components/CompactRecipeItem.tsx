@@ -39,11 +39,11 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
 
   return (
     <div
-      className={`w-full text-left bg-white border rounded p-4 hover:border-accent/30 hover:shadow-sm transition-all duration-200 group ${
+      className={`w-full text-left bg-white border rounded px-3 py-2.5 sm:p-4 hover:border-accent/30 hover:shadow-sm transition-all duration-200 group ${
         isCompareSelected ? 'border-accent/50' : 'border-gray-100'
       }`}
     >
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-2.5 sm:gap-4">
         {/* Content */}
         <button
           type="button"
@@ -52,7 +52,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
         >
           <div className="flex flex-col">
             {/* Row 1: Taxonomy & Source */}
-            <div className="flex items-center gap-1 mb-1">
+            <div className="flex items-center gap-1 mb-0.5 sm:mb-1">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">
                 {isCook ? recipe.cuisine : meal.retailer || meal.cuisine}
               </span>
@@ -71,7 +71,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
             </h3>
 
             {/* Row 2: Visual Metadata (Strictly matching user snippet) */}
-            <div className="flex flex-wrap items-center gap-y-1 mt-2 text-[11px] text-gray-500 font-medium tracking-tight">
+            <div className="flex flex-wrap items-center gap-y-0.5 sm:gap-y-1 mt-1 sm:mt-2 text-[11px] text-gray-500 font-medium tracking-tight">
               {calories && (
                 <>
                   <span className="whitespace-nowrap">{calories} kcal pp</span>
