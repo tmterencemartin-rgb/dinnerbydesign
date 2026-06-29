@@ -127,9 +127,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
   const [showPlanWeek, setShowPlanWeek] = useState(false);
   const [planDinnerCount, setPlanDinnerCount] = useState<3 | 5 | 7>(5);
   const [planBudget, setPlanBudget] = useState('40');
+  const [planServings, setPlanServings] = useState(profile?.preferences?.servings || 2);
   const [planProtein, setPlanProtein] = useState('mixed');
   const [planTime, setPlanTime] = useState<'any' | 'quick' | 'under30'>('any');
   const [isPlanningWeek, setIsPlanningWeek] = useState(false);
+
+  useEffect(() => {
+    setPlanServings(profile?.preferences?.servings || 2);
+  }, [profile?.preferences?.servings]);
 
   useEffect(() => {
     setHasExhaustedSaved(false);
@@ -251,7 +256,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
 
     setIsPlanningWeek(true);
     try {
-      const servingsCount = profile?.preferences?.servings || 2;
+      const servingsCount = planServings;
       const budgetValue = Number(planBudget);
       const perPortionBudget = Number.isFinite(budgetValue) && budgetValue > 0
         ? Number((budgetValue / planDinnerCount / servingsCount).toFixed(2))
@@ -263,10 +268,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
         : planTime === 'under30'
           ? 'dinners under 30 minutes'
           : 'varied dinners';
-      const query = `${planDinnerCount} ${timeText}${planProtein !== 'mixed' ? ` with ${proteinText}` : ''}${budgetValue ? ` under £${budgetValue} total` : ''}`;
+      const weeklySaladPreference = profile?.preferences?.saladPreference === 'main-only' ? 'main-only' : 'all';
+      const query = `${planDinnerCount} cooked dinners for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}`;
       const params = cleanSearchParams(buildSearchParams(query, 'cook', profile?.preferences || null, {
         count: planDinnerCount,
         servings: servingsCount,
+        saladPreference: weeklySaladPreference,
         maxCostPerPortion: perPortionBudget,
         maxTotalTime: planTime === 'under30' ? 30 : undefined,
         isSimple: planTime === 'quick' ? true : undefined,
@@ -295,10 +302,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
 
       for (let i = collected.length; i < planDinnerCount; i += 1) {
         const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
-        const fallbackQuery = `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} ${fallbackProtein} dinner${budgetValue ? ` under £${budgetValue} total` : ''}`;
+        const fallbackQuery = `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} cooked ${fallbackProtein} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
         const fallbackParams = cleanSearchParams(buildSearchParams(fallbackQuery, 'cook', profile?.preferences || null, {
           count: 1,
           servings: servingsCount,
+          saladPreference: weeklySaladPreference,
           maxCostPerPortion: perPortionBudget,
           maxTotalTime: planTime === 'under30' ? 30 : undefined,
           isSimple: planTime === 'quick' ? true : undefined,
@@ -575,7 +583,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
 
               {showPlanWeek && (
                 <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                     <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Dinners</span>
                       <select
@@ -589,7 +597,22 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                       </select>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Budget</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Serves</span>
+                      <select
+                        value={planServings}
+                        onChange={(e) => setPlanServings(Number(e.target.value))}
+                        className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
+                      >
+                        <option value={1}>1 person</option>
+                        <option value={2}>2 people</option>
+                        <option value={3}>3 people</option>
+                        <option value={4}>4 people</option>
+                        <option value={5}>5 people</option>
+                        <option value={6}>6 people</option>
+                      </select>
+                    </label>
+                    <label className="space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Weekly budget</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] font-bold text-gray-400">£</span>
                         <input
@@ -631,7 +654,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <p className="text-[11px] text-gray-400 font-medium leading-relaxed">
-                      This fills the first {planDinnerCount} days of your planner and may replace dinners already scheduled there.
+                      {Number(planBudget) > 0
+                        ? `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}: about £${(Number(planBudget) / planDinnerCount).toFixed(2)} per dinner, or £${(Number(planBudget) / planDinnerCount / planServings).toFixed(2)} per person.`
+                        : `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}.`}
+                      {' '}This may replace dinners already scheduled there.
                     </p>
                     <button
                       type="button"
