@@ -667,6 +667,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       Create plan
                     </button>
                   </div>
+                  {isPlanningWeek && (
+                    <div className="text-[11px] text-gray-500 leading-relaxed bg-gray-50/70 border border-gray-100 px-3 py-2">
+                      <span className="font-semibold text-gray-700">Creating your weekly dinners...</span>{' '}
+                      This takes a moment because we're building several suitable options at once.
+                    </div>
+                  )}
                 </div>
               )}
             </div>
