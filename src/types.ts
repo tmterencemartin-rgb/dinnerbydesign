@@ -16,6 +16,14 @@ export enum OperationType {
   WRITE = 'write',
 }
 
+export interface BatchCookingInfo {
+  suitable: boolean;
+  confidence: 'low' | 'medium' | 'high';
+  reason?: string;
+  storage?: string;
+  reheat?: string;
+}
+
 export interface Recipe {
   id?: string;
   title: string;
@@ -53,6 +61,7 @@ export interface Recipe {
   totalCookTime?: number;
   category?: string;
   convenienceProfile?: 'scratch' | 'convenience';
+  batchCooking?: BatchCookingInfo;
 }
 
 export interface ReadyMeal {
@@ -270,6 +279,7 @@ export interface SavedRecipe {
   totalCookTime?: number;
   category?: string;
   convenienceProfile?: 'scratch' | 'convenience';
+  batchCooking?: BatchCookingInfo;
 }
 
 export interface ShoppingListItem {

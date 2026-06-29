@@ -157821,6 +157821,7 @@ INTENT PARSING (CRITICAL):
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR RECIPES (HOMEMADE): You MUST provide a "sourceUrl" and an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return. If you can attribute the recipe to a real UK source (e.g. BBC Good Food, Jamie Oliver, Tesco Real Food), use their domain or a representative search URL. If it's a generic classic, use "recipe-search" or a similar descriptive string.
 - CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
+- BATCH COOKING CLASSIFICATION (RECIPES ONLY): Add a 'batchCooking' object for home-cooking recipes. Set suitable=true only when the recipe keeps well, reheats well, scales sensibly to extra portions, and is not texture-sensitive. Good candidates include soups, stews, curries, chilli, pasta sauces, tray bakes, casseroles, rice dishes and lentil dishes. Avoid labelling dressed salads, crispy/fried dishes, fresh fish/shellfish-heavy dishes, rare steak, and recipes that should be served immediately. Include a short reason plus storage/reheat notes when suitable=true.
 ${parsedIngredientsInstruction}
 
 HARD CONSTRAINTS:
@@ -157893,7 +157894,18 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                   retailer: { type: Type.STRING },
                   isAirFryerFriendly: { type: Type.BOOLEAN }
                 } : {
-                  saladType: { type: Type.STRING, enum: ["main", "side", "none"] }
+                  saladType: { type: Type.STRING, enum: ["main", "side", "none"] },
+                  batchCooking: {
+                    type: Type.OBJECT,
+                    properties: {
+                      suitable: { type: Type.BOOLEAN },
+                      confidence: { type: Type.STRING, enum: ["low", "medium", "high"] },
+                      reason: { type: Type.STRING },
+                      storage: { type: Type.STRING },
+                      reheat: { type: Type.STRING }
+                    },
+                    required: ["suitable", "confidence"]
+                  }
                 }
               },
               required: ["title", "description", "cuisine", "totalTime", "ingredients", "sourceUrl", "totalIngredientsCount", ...isReadyMade ? ["retailer"] : []]

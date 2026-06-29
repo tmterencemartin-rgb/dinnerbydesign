@@ -221,6 +221,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 const badges: React.ReactNode[] = [];
                 const titleLower = recipe.title.toLowerCase();
                 const descLower = recipe.description.toLowerCase();
+                const batchCooking = 'batchCooking' in recipe ? recipe.batchCooking : undefined;
 
                 // 1. Low Cost (💰 Low Cost)
                 const costFloat = recipe.costPerPortion ? parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) : NaN;
@@ -250,7 +251,27 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   );
                 }
 
-                // 4. Dietary Focus: Vegan/Vegetarian
+                // 4. Batch Cooking
+                if (
+                  batchCooking?.suitable &&
+                  (batchCooking.confidence === 'medium' || batchCooking.confidence === 'high')
+                ) {
+                  const tooltipText = [
+                    batchCooking.reason,
+                    batchCooking.storage ? `Storage: ${batchCooking.storage}` : '',
+                    batchCooking.reheat ? `Reheat: ${batchCooking.reheat}` : ''
+                  ].filter(Boolean).join(' ');
+
+                  badges.push(
+                    <Tooltip key="batch-friendly" text={tooltipText || 'Suitable for cooking extra portions.'}>
+                      <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 cursor-help">
+                        Batch-friendly
+                      </span>
+                    </Tooltip>
+                  );
+                }
+
+                // 5. Dietary Focus: Vegan/Vegetarian
                 if (recipe.isVegan) {
                   badges.push(
                     <span key="vegan" className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
