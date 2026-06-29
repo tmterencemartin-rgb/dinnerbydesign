@@ -130,14 +130,14 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       <div className="">
         <div className="flex flex-col">
           {/* Main Card Content Stack */}
-          <div className="flex flex-col gap-2 sm:gap-4">
+          <div className="flex flex-col gap-4 sm:gap-4">
             {/* Title Block - Hero Section for Mobile */}
-            <div className="flex flex-col gap-1 sm:gap-2 items-start">
-              <h3 className="text-[18px] sm:text-[24px] font-bold text-gray-900 leading-[1.2] tracking-tight text-left">
+            <div className="flex flex-col gap-2 items-start">
+              <h3 className="text-[20px] sm:text-[24px] font-bold text-gray-900 leading-[1.18] tracking-tight text-left">
                 {meal.title}
               </h3>
               
-              <p className="text-[12px] sm:text-[14px] text-gray-400 font-medium leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full line-clamp-2 text-left">
+              <p className={`text-[14px] text-gray-400 font-medium leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isModal ? '' : 'line-clamp-2'}`}>
                 {meal.description}
               </p>
 
@@ -150,66 +150,65 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
             </div>
 
             {/* Core Content Stack - Tightly grouped for precise spacing */}
-            <div className="flex flex-col gap-0.5 items-start w-full">
+            <div className="flex flex-col gap-3 items-start w-full">
               {/* Compressed Metadata Section */}
-              <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/60 rounded">
+              <div className="w-full flex flex-col gap-2 py-2.5 border-y border-gray-100">
                 {/* Row 1: Primary Identity (Retailer & Cuisine) */}
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 justify-start">
-                  <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest bg-white/70 px-1.5 py-0.5 rounded">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 justify-start">
+                  <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                     {meal.cuisine}
                   </span>
                   {meal.retailer && (
-                    <span className="text-[9px] sm:text-[10px] text-accent font-bold uppercase tracking-wider">
+                    <span className="text-[10px] text-accent font-bold uppercase tracking-wider">
                       {meal.retailer}
                     </span>
                   )}
                 </div>
                 
                 {/* Row 2: Performance Stats (Nutrition, Price, Time) */}
-                <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-gray-600 font-medium tracking-tight justify-start">
                   {(meal.costPerPortion || meal.price) && (
                     <Tooltip text="Estimated price for one adult portion">
-                      <span className="cursor-help whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                      <span className="cursor-help whitespace-nowrap">
                         {meal.costPerPortion || meal.price} pp
                       </span>
                     </Tooltip>
                   )}
                   {requestedServings !== 1 && (
-                    <span className="text-gray-400 font-bold text-[8.5px] sm:text-[9px] uppercase tracking-tighter whitespace-nowrap">
+                    <span className="text-gray-400 font-bold text-[10px] uppercase tracking-tight whitespace-nowrap">
                       {Math.ceil(requestedServings / (meal.totalServings || 1))} packs req.
                     </span>
                   )}
                   {(meal.caloriesPerPortion || meal.calories) && (
                     <Tooltip text="Estimated calories for one adult portion">
-                      <span className="cursor-help whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                      <span className="cursor-help whitespace-nowrap">
                         {meal.caloriesPerPortion || meal.calories} kcal pp
                       </span>
                     </Tooltip>
                   )}
                   {meal.totalTime && (
-                    <span className="whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                    <span className="whitespace-nowrap">
                       {meal.totalTime} mins
                     </span>
                   )}
                   {meal.saladType && meal.saladType !== 'none' && (
-                    <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                    <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">
                       🥗 {meal.saladType}
                     </span>
                   )}
                   {meal.isAirFryerFriendly && (
-                    <span className="bg-accent/10 text-accent px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
+                    <span className="text-accent text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
                       ⚡ Air Fryer
                     </span>
                   )}
                 </div>
               </div>
               
-              <div className="w-full flex flex-col gap-0 items-start">
+              <div className="w-full flex flex-col gap-2 items-start">
                 <RetailerCtaLink product={meal} />
-                <div className="w-full h-px bg-gray-100/70 my-0.5 sm:my-1" />
               </div>
               
-              <div className="w-full bg-white rounded">
+              <div className="w-full bg-white rounded pt-1">
                 <RecipeActionRow 
                   recipe={{ ...meal, ...enrichedData, requestedServings }}
                   isSaved={isSaved}
@@ -234,16 +233,16 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 />
               </div>
             </div>
-            <div className="space-y-1 sm:space-y-3">
+            <div className="space-y-4 sm:space-y-3">
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden space-y-1 sm:space-y-3"
+                    className="overflow-hidden space-y-4 sm:space-y-3"
                   >
-                    <div className="max-w-2xl lg:max-w-3xl mr-auto w-full space-y-0.25 sm:space-y-3 pt-1">
+                    <div className="max-w-2xl lg:max-w-3xl mr-auto w-full space-y-2.5 pt-1 border-t border-gray-100">
                        <AiSafetyNotice />
                        <CostDisclaimerNotice 
                          hasCost={!!(meal.costPerPortion || meal.price)} 
@@ -251,15 +250,15 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                        />
                     </div>
 
-                    <div className="pt-0.5 border-t border-gray-100/50">
-                      <h4 className="text-[10px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-0.5">Serving suggestion</h4>
+                    <div className="pt-3 border-t border-gray-100">
+                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2">Serving suggestion</h4>
                       {isEnriching && !currentServingSuggestion ? (
                         <div className="flex items-center gap-2 py-4 text-[13px] text-gray-400 italic">
                           <Loader2 className="w-4 h-4 animate-spin text-accent" />
                           <span>Sourcing details...</span>
                         </div>
                       ) : (
-                        <p className="text-[12.5px] text-gray-700 leading-relaxed">{currentServingSuggestion}</p>
+                        <p className="text-[14px] text-gray-700 leading-relaxed">{currentServingSuggestion}</p>
                       )}
                     </div>
 

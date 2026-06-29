@@ -15,7 +15,7 @@ export const RetailerCtaLink = ({ product, type = 'ready-made' }: RetailerCtaLin
   if (!cta) return null;
 
   return (
-    <div className="pt-0.5 space-y-0.5">
+    <div className="w-full py-1 space-y-0.5">
       <div className="flex items-center gap-2">
         <Tooltip text="Redirects to retailer for purchase" className="relative inline-block">
           <a 
@@ -23,7 +23,7 @@ export const RetailerCtaLink = ({ product, type = 'ready-made' }: RetailerCtaLin
             target="_blank" 
             rel="noopener noreferrer" 
             onClick={(e) => e.stopPropagation()}
-            className="text-[13px] text-accent hover:text-accent hover:underline transition-colors flex items-center gap-1.5 font-bold tracking-tight"
+            className="text-[13px] sm:text-[13.5px] text-accent hover:text-accent hover:underline transition-colors flex items-center gap-1.5 font-bold tracking-tight"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             <span>{cta.label}</span>
@@ -31,7 +31,7 @@ export const RetailerCtaLink = ({ product, type = 'ready-made' }: RetailerCtaLin
         </Tooltip>
       </div>
       {cta.helper && (
-        <p className="text-[10px] text-gray-400 font-normal pl-4 leading-tight">
+        <p className="text-[11px] text-gray-400 font-medium pl-5 leading-tight">
           {cta.helper}
         </p>
       )}
