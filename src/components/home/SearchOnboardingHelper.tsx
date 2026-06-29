@@ -8,8 +8,9 @@ interface SearchOnboardingHelperProps {
 }
 
 const STARTER_SUGGESTIONS = [
-  'Something quick with chicken',
-  'A low-cost vegetarian dinner'
+  'Quick chicken dinner under 30 minutes',
+  'Low-cost vegetarian dinner for two',
+  'A Jamie Oliver recipe'
 ];
 
 export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ onDismiss, onSuggestionSelect }) => {
