@@ -525,7 +525,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                   onClick={() => setShowPlanWeek(prev => !prev)}
                   className="h-9 px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0"
                 >
-                  {showPlanWeek ? 'Close' : 'Plan week'}
+                  {showPlanWeek ? 'Close' : 'Create weekly dinners'}
                 </button>
               </div>
 
