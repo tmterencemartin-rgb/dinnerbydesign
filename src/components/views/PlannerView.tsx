@@ -719,16 +719,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   </div>
 
                   {savedRecipes.length === 0 ? (
-                    <div className="w-full py-12 px-4 rounded text-center max-w-xl mx-auto my-4 bg-white/50">
-                      <h5 className="font-semibold text-gray-800 mb-2 font-display text-[15px] tracking-tight">Your Saved List is Empty</h5>
-                      <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-md mx-auto">
-                        Click the bookmark icon on any recipe while browsing the <span className="font-medium text-gray-700">Search</span> tab to start building your personal, curated dinner collection.
+                    <div className="w-full py-6 px-4 text-center max-w-md mx-auto bg-white/50">
+                      <h5 className="font-semibold text-gray-900 mb-1 font-display text-[14px] tracking-tight">No saved recipes yet</h5>
+                      <p className="text-[12.5px] text-gray-500 leading-relaxed mb-4 max-w-sm mx-auto">
+                        Save recipes from Search, then schedule them here.
                       </p>
                       <button 
                         onClick={() => setView('home')}
-                        className="uppercase tracking-widest text-[10px] font-bold bg-gray-900 text-white px-5 py-2.5 rounded hover:bg-black transition-all inline-block cursor-pointer"
+                        className="uppercase tracking-widest text-[10px] font-bold bg-gray-900 text-white px-4 py-2 rounded hover:bg-black transition-all inline-block cursor-pointer"
                       >
-                        Browse Recipes
+                        Find recipes
                       </button>
                     </div>
                   ) : (
