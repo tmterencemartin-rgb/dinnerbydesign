@@ -89,6 +89,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
       setIsChoosingDay(false);
       return;
     }
+    const replacedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
     const fullRecipe = { 
       ...recipe, 
       ...enrichedData, 
@@ -102,7 +103,14 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
     
     if (result) {
-      showToast(`Added to ${dayLabel}`, "Undo", () => {
+      showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous recipe moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
+        if (replacedRecipe) {
+          updatePlanner(day, replacedRecipe).catch(err => {
+            addLog(`UI ERROR: Undo restore failed: ${err.message || String(err)}`);
+            console.error("[RecipeCard] Undo restore failed:", err);
+          });
+          return;
+        }
         if (result.isNew) {
           removeRecipe(result.id).catch(err => {
             addLog(`UI ERROR: Undo remove failed: ${err.message || String(err)}`);

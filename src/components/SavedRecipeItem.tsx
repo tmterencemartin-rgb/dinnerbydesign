@@ -48,7 +48,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
     return { qtyUnit: '', name: cleanIng };
   };
 
-  const { updatePlanner, planner, addLog, handlePrintRecipe, updateRecipe, profile } = useAuth();
+  const { updatePlanner, planner, addLog, handlePrintRecipe, updateRecipe, profile, showToast, unscheduleRecipe } = useAuth();
 
   const currentIngredients = (enrichedData?.ingredients || recipe.ingredients || [])
     .filter((ing: string) => ing && ing.trim().length > 0);
@@ -95,11 +95,30 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
       return;
     }
     const replacedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
-    await updatePlanner(day, recipe).catch(err => {
+    const result = await updatePlanner(day, recipe).catch(err => {
       console.error("handleDaySelect (SavedRecipeItem) failed:", err);
+      addLog(`UI ERROR: updatePlanner failed (SavedRecipeItem): ${err?.message || err}`);
+      return undefined;
     });
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
-    setToastMessage(replacedRecipe ? `Replaced ${dayLabel}'s dinner` : `Added to ${dayLabel}`);
+    if (result) {
+      showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous recipe moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
+        if (replacedRecipe) {
+          updatePlanner(day, replacedRecipe).catch(err => {
+            addLog(`UI ERROR: Undo restore failed (SavedRecipeItem): ${err?.message || err}`);
+            console.error("[SavedRecipeItem] Undo restore failed:", err);
+          });
+          return;
+        }
+        if (result.id) {
+          unscheduleRecipe(result.id).catch(err => {
+            addLog(`UI ERROR: Undo unschedule failed (SavedRecipeItem): ${err?.message || err}`);
+            console.error("[SavedRecipeItem] Undo unschedule failed:", err);
+          });
+        }
+      });
+    }
+    setToastMessage(null);
     setShowCheck(true);
     setTimeout(() => {
       setToastMessage(null);

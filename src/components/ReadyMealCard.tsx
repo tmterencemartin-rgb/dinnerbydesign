@@ -81,6 +81,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       setIsChoosingDay(false);
       return;
     }
+    const replacedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, meal));
     const result = await updatePlanner(day, { ...meal, requestedServings }).catch(err => {
       addLog(`UI ERROR: updatePlanner failed (ReadyMealCard): ${err.message || String(err)}`);
       console.error("handleDaySelect updatePlanner failed:", err);
@@ -89,7 +90,14 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
     
     if (result) {
-      showToast(`Added to ${dayLabel}`, "Undo", () => {
+      showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous dish moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
+        if (replacedRecipe) {
+          updatePlanner(day, replacedRecipe).catch(err => {
+            addLog(`UI ERROR: Undo restore failed (meal): ${err.message || String(err)}`);
+            console.error("[ReadyMealCard] Undo restore failed:", err);
+          });
+          return;
+        }
         if (result.isNew) {
           removeRecipe(result.id).catch(err => {
             addLog(`UI ERROR: Undo remove failed (meal): ${err.message || String(err)}`);
