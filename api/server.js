@@ -163634,7 +163634,7 @@ function createApp() {
             const userEmail = userData?.email || session.customer_details?.email;
             if (userEmail && !userData?.subscriptionConfirmationEmailSent) {
               try {
-                const appUrl = `https://${req.get("host")}`;
+                const appUrl = PRODUCTION_APP_URL;
                 await sendEmail({
                   to: userEmail,
                   subject: "Your DinnerByDesign subscription is active",
@@ -163724,7 +163724,7 @@ function createApp() {
             const shouldSendCancellationEmail = event.type === "customer.subscription.deleted" && userEmail && !userData?.subscriptionCancellationEmailSent;
             if (shouldSendCancellationEmail) {
               try {
-                const appUrl = `https://${req.get("host")}`;
+                const appUrl = PRODUCTION_APP_URL;
                 const endDate = subscription.current_period_end ? new Date(subscription.current_period_end * 1e3).toLocaleDateString("en-GB", {
                   day: "numeric",
                   month: "long",

@@ -403,7 +403,7 @@ export function createApp() {
 
             if (userEmail && !userData?.subscriptionConfirmationEmailSent) {
               try {
-                const appUrl = `https://${req.get('host')}`;
+                const appUrl = PRODUCTION_APP_URL;
                 await sendEmail({
                   to: userEmail,
                   subject: "Your DinnerByDesign subscription is active",
@@ -507,7 +507,7 @@ export function createApp() {
 
             if (shouldSendCancellationEmail) {
               try {
-                const appUrl = `https://${req.get('host')}`;
+                const appUrl = PRODUCTION_APP_URL;
                 const endDate = subscription.current_period_end
                   ? new Date(subscription.current_period_end * 1000).toLocaleDateString('en-GB', {
                       day: 'numeric',
