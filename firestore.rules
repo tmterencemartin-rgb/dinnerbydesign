@@ -104,11 +104,12 @@ service cloud.firestore {
 
     function isPaid() {
       return isAuthenticated() && 
-             exists(userDocPath(request.auth.uid)) && 
-             (get(userDocPath(request.auth.uid)).data.get('isPremium', false) == true || 
-              get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'active' ||
-              get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'paid' ||
-              get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'premium');
+             (isAdmin() ||
+              (exists(userDocPath(request.auth.uid)) && 
+               (get(userDocPath(request.auth.uid)).data.get('isPremium', false) == true || 
+                get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'active' ||
+                get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'paid' ||
+                get(userDocPath(request.auth.uid)).data.get('accessStatus', 'trial') == 'premium')));
     }
 
     function isTrialActive() {

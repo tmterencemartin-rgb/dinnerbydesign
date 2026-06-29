@@ -125,6 +125,12 @@ interface AuthContextType {
   setUnitSystem: (system: 'metric' | 'imperial') => void;
 }
 
+const OWNER_EMAILS = ["tmterencemartin@gmail.com"];
+
+const isOwnerEmail = (email?: string | null) => (
+  !!email && OWNER_EMAILS.includes(email.toLowerCase())
+);
+
 const parseToDate = (val: any): Date => {
   if (!val) return new Date();
   if (val instanceof Date) return val;
@@ -222,13 +228,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Admin logic
   useEffect(() => {
-    const adminEmails = ["tmterencemartin@gmail.com"];
-    setIsAdmin(!!user?.email && adminEmails.includes(user.email));
+    setIsAdmin(isOwnerEmail(user?.email));
   }, [user]);
 
   // Derived status calculation
   useEffect(() => {
     const calculateStatus = () => {
+      if (isOwnerEmail(user?.email || profile?.email)) {
+        setAccessStatus('paid');
+        setTrialDaysLeft(0);
+        setTrialTimeRemaining('');
+        return;
+      }
+
       if (!profile) {
         setAccessStatus('trial');
         setTrialDaysLeft(7);
@@ -282,7 +294,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     calculateStatus();
     const timer = setInterval(calculateStatus, 10000); // Update every 10s for responsive UX
     return () => clearInterval(timer);
-  }, [profile]);
+  }, [profile, user?.email]);
 
   const [loading, setLoading] = useState(true);
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -719,8 +731,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               lastName: lastName,
               phoneNumber: '',
               preferences: initialPrefs,
-              isPremium: false,
-              accessStatus: 'trial',
+              isPremium: isOwnerEmail(firebaseUser.email),
+              accessStatus: isOwnerEmail(firebaseUser.email) ? 'paid' : 'trial',
               trialStartedAt: serverTimestamp(),
               createdAt: serverTimestamp(),
               updatedAt: serverTimestamp(),
@@ -1676,8 +1688,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         lastName: lastName,
         phoneNumber: phone,
         preferences: initialPrefs,
-        isPremium: false,
-        accessStatus: 'trial',
+        isPremium: isOwnerEmail(email),
+        accessStatus: isOwnerEmail(email) ? 'paid' : 'trial',
         trialStartedAt: serverTimestamp(),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
