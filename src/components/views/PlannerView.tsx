@@ -42,6 +42,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
     planner, 
     savedRecipes, 
     updatePlanner, 
+    saveRecipe,
     unscheduleRecipe, 
     removeRecipe, 
     clearPlannerWeek, 
@@ -333,12 +334,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
         return;
       }
 
-      const targetDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].slice(0, recipes.length);
-      for (let i = 0; i < recipes.length; i += 1) {
-        await updatePlanner(targetDays[i], recipes[i]);
+      for (const recipe of recipes) {
+        await saveRecipe(recipe);
       }
 
-      showToast(`Planned ${recipes.length} ${recipes.length === 1 ? 'dinner' : 'dinners'} for your week.`);
+      showToast(`Added ${recipes.length} ${recipes.length === 1 ? 'dinner' : 'dinners'} to Saved.`);
       setShowPlanWeek(false);
     } catch (err: any) {
       addLog(`UI ERROR: handlePlanWeek failed: ${err?.message || err}`);
@@ -657,7 +657,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                       {Number(planBudget) > 0
                         ? `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}: about £${(Number(planBudget) / planDinnerCount).toFixed(2)} per dinner, or £${(Number(planBudget) / planDinnerCount / planServings).toFixed(2)} per person.`
                         : `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}.`}
-                      {' '}This may replace dinners already scheduled there.
+                      {' '}Results are added to Saved so you can schedule them yourself.
                     </p>
                     <button
                       type="button"
