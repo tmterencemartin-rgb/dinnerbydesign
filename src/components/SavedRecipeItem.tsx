@@ -312,7 +312,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   }
 
   return (
-    <div className={`py-2.5 px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
+    <div className={`py-2 px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
       {isExpanded && (
         <button 
           onClick={() => setIsExpanded(false)}
@@ -322,9 +322,9 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           <CircleX size={16} />
         </button>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 min-h-[44px] w-full sm:relative">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1.5 sm:gap-3 min-h-[38px] w-full sm:relative">
         {/* Left Side: Scheduled Badge + Recipe Heading & Sub-stats */}
-        <div className="flex items-start gap-3 flex-grow min-w-0">
+        <div className="flex items-start gap-2.5 flex-grow min-w-0">
           {scheduledDate && !isBacklog && (
             <div className="w-12 shrink-0 flex items-center justify-start pt-0.5 animate-in fade-in zoom-in duration-150">
               <span className="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
@@ -338,11 +338,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             onClick={() => onViewDetail ? onViewDetail(recipe) : setIsExpanded(!isExpanded)}
           >
             <div className="flex flex-col">
-              <h3 className="text-[14px] font-bold text-gray-900 leading-tight">
+              <h3 className="text-[13.5px] font-bold text-gray-900 leading-tight">
                 {recipe.title}
               </h3>
               
-              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-gray-400 font-normal mt-1.5">
+              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11.5px] text-gray-400 font-normal mt-1">
                 {(() => {
                   const items: React.ReactNode[] = [];
                   
@@ -451,7 +451,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         </div>
 
         {/* Right Side: Consolidated Action Buttons */}
-        <div className="flex items-center gap-1.5 shrink-0 pt-0 w-full sm:w-auto justify-end sm:absolute sm:right-0 sm:top-0">
+        <div className="flex items-center gap-1.5 shrink-0 pt-0 w-full sm:w-auto justify-end sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2">
           {!isBacklog && (
             <button 
               onClick={(e) => {
@@ -470,7 +470,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 e.stopPropagation();
                 setIsChoosingDay(!isChoosingDay);
               }}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded border text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+              className={`flex h-7 items-center gap-1 px-2.5 rounded border text-[11.5px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                 scheduledDate || showCheck
                   ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700 font-semibold'
                   : 'border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800'

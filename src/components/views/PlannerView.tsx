@@ -676,14 +676,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
             {/* Unified Save & Schedule Panel */}
             <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
-              <div className="px-1 sm:px-3.5 py-5 sm:py-7 space-y-10">
+              <div className="px-1 sm:px-3.5 py-4 sm:py-6 space-y-8">
                 
                 {/* SECTION 1: SAVED (BACKLOG) */}
-                <div className="space-y-2.5 relative z-20">
+                <div className="space-y-1.5 relative z-20">
                   {/* SAVED HEADER ROW */}
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest pl-1">Saved</h3>
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-1.5">
+                    <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1">Saved</h3>
+                    <div className="flex items-center gap-2.5">
                       <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} items</span>
                       {user && !user.isAnonymous && savedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
@@ -709,7 +709,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                           ) : (
                             <button 
                               onClick={() => setShowDeleteAllSavedConfirm(true)}
-                              className="text-[11px] font-bold text-accent uppercase tracking-widest hover:underline"
+                              className="text-[10.5px] font-bold text-accent uppercase tracking-widest hover:underline"
                             >
                               Clear Saved List
                             </button>
@@ -735,17 +735,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                   ) : (
                     <div>
                       {/* Search and Organize Controls - Integrated Header */}
-                      <div className="bg-gray-50/50 border-b border-gray-100 px-1.5 py-2 sm:px-2.5">
-                        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4 h-auto md:h-8">
+                      <div className="bg-gray-50/40 border-b border-gray-100 px-1.5 py-1.5 sm:px-2">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
                           {/* Left: Search Bar */}
-                          <div className="relative w-full md:max-w-xs">
+                          <div className="relative w-full sm:max-w-[340px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                             <input 
                               type="text"
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
                               placeholder="Search saved recipes..."
-                              className="w-full h-8 bg-white border border-gray-100 rounded pl-9 pr-9 text-xs font-medium outline-none focus:border-accent/40 transition-all"
+                              className="w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 text-xs font-medium outline-none focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
                               <button 
@@ -758,12 +758,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                           </div>
 
                           {/* Right: Unified Controls */}
-                          <div className="flex items-center gap-1 self-start md:self-auto h-8 relative">
+                          <div className="flex items-center gap-1 self-start sm:self-auto h-8 relative">
                             {/* 1. Filters Dropdown */}
                             <div className="relative">
                               <button 
                                 onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-                                className={`text-xs font-semibold h-8 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
+                                className={`text-[11px] font-semibold h-8 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
                                   isFilterDropdownOpen || convenienceFilter !== 'all' || quickPills.under20 || quickPills.budget || quickPills.healthy
                                     ? 'border-accent bg-accent/5 text-accent'
                                     : 'border-gray-100 bg-white hover:bg-gray-50 text-gray-700'
@@ -831,7 +831,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView, onAddToPlanne
                         const processed = filteredSavedRecipes;
 
                         return (
-                          <div className="p-0 sm:p-0.5 bg-transparent">
+                          <div className="p-0 bg-transparent">
                             <div id="saved-recipes-list">
                               {processed.length === 0 && savedRecipes.length > 0 ? (
                                 <div className="py-10 text-center bg-gray-50/50 rounded p-6 mx-2 my-2">
