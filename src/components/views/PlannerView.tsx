@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { 
   ChevronLeft, 
   CircleX, 
-  Plus, 
   ArrowUpCircle, 
   Trash, 
   Info, 
@@ -965,12 +964,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           
                           <div className="flex-grow min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-0">
                             <div 
-                              className="min-w-0 cursor-pointer hover:opacity-85 transition-opacity"
+                              className={`min-w-0 transition-opacity ${entry ? 'cursor-pointer hover:opacity-85' : ''}`}
                               onClick={() => {
                                 if (entry) {
                                   setViewingPlannerEntry(entry);
-                                } else {
-                                  setTargetPlannerDay(targetPlannerDay === dayId ? null : dayId);
                                 }
                               }}
                             >
@@ -1042,19 +1039,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   </button>
                                 </div>
                               ) : (
-                                <div className="text-right">
-                                  <button 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      if (checkReadOnly("Your trial has ended. Upgrade to add to planner.")) return;
-                                      setTargetPlannerDay(targetPlannerDay === dayId ? null : dayId);
-                                    }}
-                                    className="inline-flex items-center gap-1.5 h-8 px-3 bg-white border border-gray-200 text-[11px] font-bold text-gray-700 rounded hover:border-accent/40 hover:text-accent hover:bg-accent/5 transition-colors"
-                                  >
-                                    <Plus size={12} />
-                                    <span>Schedule</span>
-                                  </button>
-                                </div>
+                                <span className="text-[11px] text-gray-300 font-medium uppercase tracking-wider">Open</span>
                               )}
                             </div>
 
