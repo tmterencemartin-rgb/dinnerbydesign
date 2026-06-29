@@ -263,7 +263,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   ].filter(Boolean).join(' ');
 
                   badges.push(
-                    <Tooltip key="batch-friendly" text={tooltipText || 'Suitable for cooking extra portions.'}>
+                    <Tooltip
+                      key="batch-friendly"
+                      text={tooltipText || 'Suitable for cooking extra portions.'}
+                      position="bottom"
+                      align="left"
+                      maxWidth="max-w-[280px]"
+                    >
                       <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 cursor-help">
                         Batch-friendly
                       </span>
