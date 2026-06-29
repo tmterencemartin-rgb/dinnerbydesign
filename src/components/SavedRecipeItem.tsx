@@ -86,17 +86,20 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   const scheduledDate = recipe.scheduledDate || planner.find(p => isSameRecipe(p, recipe))?.scheduledDate;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showCheck, setShowCheck] = useState(false);
+  const weekIsFull = planner.filter(p => !!p.scheduledDate).length >= 7;
+  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
   const handleDaySelect = async (day: string) => {
     if (day === scheduledDate) {
       setIsChoosingDay(false);
       return;
     }
+    const replacedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
     await updatePlanner(day, recipe).catch(err => {
       console.error("handleDaySelect (SavedRecipeItem) failed:", err);
     });
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
-    setToastMessage(`Added to ${dayLabel}'s Dinner!`);
+    setToastMessage(replacedRecipe ? `Replaced ${dayLabel}'s dinner` : `Added to ${dayLabel}`);
     setShowCheck(true);
     setTimeout(() => {
       setToastMessage(null);
@@ -226,14 +229,20 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               </button>
 
               {isChoosingDay && (
-                <div className="absolute right-0 bottom-full mb-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[170px]">
-                  <div className="flex justify-between items-center mb-1.5 border-b border-gray-50 pb-1">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Dinner Day</span>
+                <div className="absolute right-0 bottom-full mb-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[220px]">
+                  <div className="flex justify-between items-start gap-3 mb-1.5 border-b border-gray-50 pb-1.5">
+                    <div>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Dinner Day</span>
+                      {weekIsFull && !scheduledDate && (
+                        <p className="mt-0.5 text-[10.5px] text-gray-500 leading-snug">Schedule full. Choose a day to replace.</p>
+                      )}
+                    </div>
                     <button onClick={() => setIsChoosingDay(false)} className="text-gray-400 hover:text-gray-600"><CircleX size={10} /></button>
                   </div>
                   <div className="grid grid-cols-1 gap-1">
-                    {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => {
-                      const isBooked = planner.some(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
+                    {days.map(day => {
+                      const bookedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
+                      const isBooked = !!bookedRecipe;
                       return (
                         <button 
                           key={day}
@@ -244,13 +253,18 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                           className={`text-left px-2 py-1.5 text-[11px] rounded transition-colors flex items-center justify-between ${
                             day === scheduledDate 
                               ? 'bg-accent text-white font-semibold' 
-                              : isBooked 
-                                ? 'text-gray-300 line-through' 
+                            : isBooked 
+                                ? 'text-gray-700 hover:bg-accent/5' 
                                 : 'text-gray-700 hover:bg-gray-50'
                           }`}
                         >
-                          <span className="capitalize">{day}</span>
-                          {isBooked && day !== scheduledDate && <span className="text-[8.5px] uppercase font-bold tracking-widest opacity-50">Booked</span>}
+                          <span className="min-w-0">
+                            <span className="capitalize block">{day}</span>
+                            {bookedRecipe && (
+                              <span className="block truncate max-w-[125px] text-[9.5px] text-gray-400 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
+                            )}
+                          </span>
+                          {isBooked && day !== scheduledDate && <span className="text-[8.5px] uppercase font-bold tracking-widest text-accent">Replace</span>}
                         </button>
                       );
                     })}
@@ -453,14 +467,20 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             </button>
 
             {isChoosingDay && (
-              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[200px] animate-in fade-in slide-in-from-top-1 duration-150">
-                <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-1">
-                  <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Schedule Dinner</span>
+              <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[260px] animate-in fade-in slide-in-from-top-1 duration-150">
+                <div className="flex justify-between items-start gap-3 mb-2 border-b border-gray-50 pb-1.5">
+                  <div>
+                    <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Schedule Dinner</span>
+                    {weekIsFull && !scheduledDate && (
+                      <p className="mt-0.5 text-[11px] text-gray-500 leading-snug">Schedule full. Choose a day to replace.</p>
+                    )}
+                  </div>
                   <button onClick={() => setIsChoosingDay(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer"><CircleX size={12} /></button>
                 </div>
                 <div className="grid grid-cols-1 gap-1">
-                  {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => {
-                    const isBooked = planner.some(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
+                  {days.map(day => {
+                    const bookedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
+                    const isBooked = !!bookedRecipe;
                     return (
                       <button 
                         key={day}
@@ -472,12 +492,17 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                           day === scheduledDate 
                             ? 'bg-accent text-white font-semibold' 
                             : isBooked 
-                              ? 'text-gray-300 line-through' 
+                              ? 'text-gray-700 hover:bg-accent/5' 
                               : 'text-gray-700 hover:bg-gray-50'
                         }`}
                       >
-                        <span className="capitalize">{day}</span>
-                        {isBooked && day !== scheduledDate && <span className="text-[10px] uppercase font-bold tracking-widest opacity-50">Already Scheduled</span>}
+                        <span className="min-w-0 pr-2">
+                          <span className="capitalize block">{day}</span>
+                          {bookedRecipe && (
+                            <span className="block truncate max-w-[150px] text-[10px] text-gray-400 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
+                          )}
+                        </span>
+                        {isBooked && day !== scheduledDate && <span className="text-[10px] uppercase font-bold tracking-widest text-accent">Replace</span>}
                       </button>
                     );
                   })}

@@ -36,22 +36,24 @@ export const InlineDayPicker = ({
       <div className="px-3.5 py-2.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
           {days.map(day => {
-            const isPlanned = planner.some(p => p.scheduledDate === day.id);
+            const plannedRecipe = planner.find(p => p.scheduledDate === day.id);
+            const isPlanned = !!plannedRecipe;
             const isSelected = currentDay === day.id;
             
             return (
               <button
                 key={day.id}
                 onClick={() => onSelect(day.id)}
+                title={isPlanned && !isSelected ? `Replace ${plannedRecipe?.title}` : undefined}
                 className={`flex-shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${
                   isSelected 
                     ? 'bg-accent text-white shadow-sm' 
                     : isPlanned 
-                      ? 'bg-white text-gray-400 opacity-50 border border-gray-100' 
+                      ? 'bg-white text-accent border border-accent/20 hover:bg-accent/5' 
                       : 'bg-white text-gray-600 border border-gray-100 hover:border-accent/30'
                 }`}
               >
-                {day.label}
+                {day.label}{isPlanned && !isSelected ? ' Replace' : ''}
               </button>
             );
           })}
