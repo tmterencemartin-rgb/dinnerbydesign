@@ -794,15 +794,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     <div className="min-w-0">
                       <p className="text-[14px] text-gray-900 font-bold leading-none">{user.displayName || user.email || 'User'}</p>
                       <p className="text-[11px] text-gray-400 mt-1.5 font-medium leading-none">{user.email}</p>
-                      {isAdmin && (
-                        <button 
-                          onClick={() => setView('admin')}
-                          className="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold text-dbd-accent hover:underline uppercase tracking-tight"
-                        >
-                          <ShieldCheck className="w-3 h-3" />
-                          Admin Dashboard
-                        </button>
-                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
