@@ -709,7 +709,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </select>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Homemade</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Homemade/Ready-made</span>
                       <select
                         value={planHomemadeCount}
                         onChange={(e) => setPlanHomemadeCount(Number(e.target.value))}
