@@ -247,17 +247,21 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
     }
   };
 
-  const activeItems = shoppingList;
-  const pantryGotItItems = shoppingList.filter(it => it.inStock || it.checked || it.excludedByPantry);
+  const hasScheduledDinners = planner.some(item => !!item.scheduledDate);
+  const activeItems = React.useMemo(
+    () => hasScheduledDinners ? shoppingList : [],
+    [hasScheduledDinners, shoppingList]
+  );
+  const pantryGotItItems = activeItems.filter(it => it.inStock || it.checked || it.excludedByPantry);
   const editingItems = activeItems;
-  const pantryItems = shoppingList.filter(it => it.excludedByPantry);
+  const pantryItems = activeItems.filter(it => it.excludedByPantry);
 
-  const [totalEstimatedCost, setTotalEstimatedCost] = useState<number>(() => calculateActiveIngredientsCost(shoppingList.filter(it => !it.inStock && !it.checked)));
+  const [totalEstimatedCost, setTotalEstimatedCost] = useState<number>(() => calculateActiveIngredientsCost(activeItems.filter(it => !it.inStock && !it.checked)));
 
   useEffect(() => {
-    const total = calculateActiveIngredientsCost(shoppingList.filter(it => !it.inStock && !it.checked));
+    const total = calculateActiveIngredientsCost(activeItems.filter(it => !it.inStock && !it.checked));
     setTotalEstimatedCost(total);
-  }, [shoppingList]);
+  }, [activeItems]);
 
   const handleDeleteItem = async (item: ShoppingListItem) => {
     if (checkReadOnly("Your trial has ended. Upgrade to change your list.")) return;
@@ -458,6 +462,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
 
       {/* Add Item & List Panel */}
       <div className="space-y-4">
+        {hasScheduledDinners && (
         <div className="space-y-1">
           {/* Custom Item Form */}
           <form onSubmit={handleAddCustom} className="relative group max-w-2xl mx-auto">
@@ -477,6 +482,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
             </button>
           </form>
         </div>
+        )}
 
         {!hasVisibleShoppingItems ? (
           <div className="py-24 text-center space-y-6 px-4 bg-white rounded max-w-lg mx-auto">
