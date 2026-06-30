@@ -924,8 +924,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             <div id="saved-recipes-list">
                               {processed.length === 0 && savedRecipes.length > 0 ? (
                                 <div className="py-5 text-center bg-gray-50/50 mx-1 my-1">
-                                  <p className="text-[12px] text-gray-950 font-medium">No saved recipes match that filter.</p>
-                                  <button onClick={handleResetFilters} className="text-[11px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Clear Filters</button>
+                                  <p className="text-[12px] text-gray-950 font-medium">No saved recipes match this view.</p>
+                                  <button onClick={handleResetFilters} className="text-[11px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Show all saved recipes</button>
                                 </div>
                               ) : (
                                 (() => {
