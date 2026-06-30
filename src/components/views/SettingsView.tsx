@@ -581,6 +581,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     return JSON.stringify(localPreferences) !== JSON.stringify(currentPrefs);
   }, [localPreferences, profile?.preferences, exclusionsDraft]);
 
+  const displayedPreferences = localPreferences || profile?.preferences || normaliseUserPreferences(null);
+
   const [debugClicks, setDebugClicks] = useState(0);
   const isDebugUrl = typeof window !== 'undefined' && window.location.search.includes('debug=true');
   const isProd = (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'production') || import.meta.env.MODE === 'production';
@@ -873,22 +875,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
                           <span className="text-gray-500 font-medium">Dietary preference</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {profile?.preferences?.dietaryRule ? (DIETARY_TAXONOMY.dietaryPreferences.labels[profile.preferences.dietaryRule] || profile.preferences.dietaryRule) : 'None'}
+                            {displayedPreferences.dietaryRule ? (DIETARY_TAXONOMY.dietaryPreferences.labels[displayedPreferences.dietaryRule] || displayedPreferences.dietaryRule) : 'None'}
                           </span>
                         </div>
 
                         <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
                           <span className="text-gray-500 font-medium">Salad preference</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {profile?.preferences?.saladPreference ? (DIETARY_TAXONOMY.saladPreferences.labels[profile.preferences.saladPreference] || profile.preferences.saladPreference) : 'All salads permitted'}
+                            {displayedPreferences.saladPreference ? (DIETARY_TAXONOMY.saladPreferences.labels[displayedPreferences.saladPreference] || displayedPreferences.saladPreference) : 'All salads permitted'}
                           </span>
                         </div>
 
-                        {profile?.preferences?.allergies && profile.preferences.allergies.length > 0 && (
+                        {displayedPreferences.allergies && displayedPreferences.allergies.length > 0 && (
                           <div className="space-y-1">
                             <span className="text-gray-500 font-medium text-[13px] block">Allergies / Safe Eating</span>
                             <div className="flex flex-wrap gap-1.5">
-                              {profile.preferences.allergies.map(allergy => (
+                              {displayedPreferences.allergies.map(allergy => (
                                 <span key={allergy} className="inline-flex items-center bg-red-50 text-red-750 text-[10.5px] px-2 py-0.5 rounded font-bold border border-red-100">
                                   No {allergy}
                                 </span>
@@ -897,11 +899,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                           </div>
                         )}
 
-                        {profile?.preferences?.exclusions && profile.preferences.exclusions.length > 0 && (
+                        {displayedPreferences.exclusions && displayedPreferences.exclusions.length > 0 && (
                           <div className="space-y-1 pt-1">
                             <span className="text-gray-500 font-medium text-[13px] block">Excluded ingredients</span>
                             <div className="flex flex-wrap gap-1.5">
-                              {profile.preferences.exclusions.map(exc => (
+                              {displayedPreferences.exclusions.map(exc => (
                                 <span key={exc} className="inline-flex items-center bg-amber-50 text-amber-700 text-[10.5px] px-2 py-0.5 rounded font-bold border border-amber-100">
                                   Exclude: {exc}
                                 </span>
@@ -922,57 +924,57 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
                           <span className="text-gray-500 font-medium">Standard portions</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {profile?.preferences?.servings || 2} adult portions
+                            {displayedPreferences.servings || 2} adult portions
                           </span>
                         </div>
 
                         <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
                           <span className="text-gray-500 font-medium font-semibold">Max calories</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {profile?.preferences?.calorieCeiling ? `${profile.preferences.calorieCeiling} kcal` : 'No calorie limit'}
+                            {displayedPreferences.calorieCeiling ? `${displayedPreferences.calorieCeiling} kcal` : 'No calorie limit'}
                           </span>
                         </div>
 
                         <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
                           <span className="text-gray-500 font-medium font-semibold">Max cost</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {profile?.preferences?.budgetLimit ? `£${profile.preferences.budgetLimit.toFixed(2)}` : 'No budget limit'}
+                            {displayedPreferences.budgetLimit ? `£${displayedPreferences.budgetLimit.toFixed(2)}` : 'No budget limit'}
                           </span>
                         </div>
 
                         <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
                           <span className="text-gray-500 font-medium font-semibold">Ready in under</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {profile?.preferences?.readyToEatUnderMins ? `${profile.preferences.readyToEatUnderMins} mins` : 'No limit'}
+                            {displayedPreferences.readyToEatUnderMins ? `${displayedPreferences.readyToEatUnderMins} mins` : 'No limit'}
                           </span>
                         </div>
 
                         {/* Saved Priorities */}
-                        {(profile?.preferences?.nutritiousChoice || profile?.preferences?.isSimple || profile?.preferences?.isLowCost || profile?.preferences?.highOmega3 || profile?.preferences?.highProtein) && (
+                        {(displayedPreferences.nutritiousChoice || displayedPreferences.isSimple || displayedPreferences.isLowCost || displayedPreferences.highOmega3 || displayedPreferences.highProtein) && (
                           <div className="pt-2 border-t border-gray-100/50">
                             <span className="text-gray-500 font-bold text-[10px] uppercase tracking-wider block mb-1.5 opacity-80">Saved Priorities</span>
                             <div className="flex flex-wrap gap-1.5">
-                              {profile.preferences.nutritiousChoice && (
+                              {displayedPreferences.nutritiousChoice && (
                                 <span className="bg-emerald-50 text-emerald-700 text-[10px] px-2 py-0.5 rounded font-bold border border-emerald-100 uppercase tracking-tight">
                                   Wholesome
                                 </span>
                               )}
-                              {profile.preferences.isSimple && (
+                              {displayedPreferences.isSimple && (
                                 <span className="bg-gray-50 text-gray-700 text-[10px] px-2 py-0.5 rounded font-bold border border-gray-100 uppercase tracking-tight">
                                   Quick & Easy
                                 </span>
                               )}
-                              {profile.preferences.isLowCost && (
+                              {displayedPreferences.isLowCost && (
                                 <span className="bg-amber-50 text-amber-700 text-[10px] px-2 py-0.5 rounded font-bold border border-amber-100 uppercase tracking-tight">
                                   Low Cost
                                 </span>
                               )}
-                              {profile.preferences.highOmega3 && (
+                              {displayedPreferences.highOmega3 && (
                                 <span className="bg-gray-50 text-gray-700 text-[10px] px-2 py-0.5 rounded font-bold border border-gray-100 uppercase tracking-tight">
                                   High Omega-3
                                 </span>
                               )}
-                              {profile.preferences.highProtein && (
+                              {displayedPreferences.highProtein && (
                                 <span className="bg-gray-50 text-gray-700 text-[10px] px-2 py-0.5 rounded font-bold border border-gray-100 uppercase tracking-tight">
                                   High Protein
                                 </span>
@@ -993,24 +995,24 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         <div>
                           <span className="text-gray-500 font-semibold text-[11.5px] block">Cuisine Preferences</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
-                            {profile?.preferences?.cuisinePreferences && profile.preferences.cuisinePreferences.length > 0 
-                              ? profile.preferences.cuisinePreferences.join(', ') 
+                            {displayedPreferences.cuisinePreferences && displayedPreferences.cuisinePreferences.length > 0 
+                              ? displayedPreferences.cuisinePreferences.join(', ') 
                               : 'All world cuisines'}
                           </p>
                         </div>
                         <div>
                           <span className="text-gray-500 font-semibold text-[11.5px] block">Cooking Methods</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
-                            {profile?.preferences?.cookingMethods && profile.preferences.cookingMethods.length > 0 
-                              ? profile.preferences.cookingMethods.join(', ') 
+                            {displayedPreferences.cookingMethods && displayedPreferences.cookingMethods.length > 0 
+                              ? displayedPreferences.cookingMethods.join(', ') 
                               : 'Any methods allowed'}
                           </p>
                         </div>
                         <div>
                           <span className="text-gray-500 font-semibold text-[11.5px] block">Preferred Supermarkets</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
-                            {profile?.preferences?.preferredSupermarkets && profile.preferences.preferredSupermarkets.length > 0 
-                              ? profile.preferences.preferredSupermarkets.join(', ') 
+                            {displayedPreferences.preferredSupermarkets && displayedPreferences.preferredSupermarkets.length > 0 
+                              ? displayedPreferences.preferredSupermarkets.join(', ') 
                               : 'All UK supermarkets'}
                           </p>
                         </div>
