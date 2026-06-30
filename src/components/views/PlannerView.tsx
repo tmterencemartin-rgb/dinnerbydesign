@@ -811,8 +811,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   ) : (
                     <div>
                       {/* Search and Organize Controls - Integrated Header */}
-                      <div className="bg-gray-50/40 border-b border-gray-100 px-1.5 py-1 sm:px-2">
-                        <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
+                      <div className="bg-gray-50/40 border-b border-gray-100 px-1.5 py-0.5 sm:px-2">
+                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
                           {/* Left: Search Bar */}
                           <div className="relative w-full sm:max-w-[340px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
@@ -821,7 +821,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
                               placeholder="Search saved recipes..."
-                              className="w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 text-xs font-medium outline-none focus:border-accent/40 transition-all"
+                              className="w-full h-7 bg-white border border-gray-100 rounded pl-8 pr-8 text-xs font-medium outline-none focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
                               <button 
@@ -834,12 +834,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           </div>
 
                           {/* Right: Unified Controls */}
-                          <div className="flex items-center gap-1 self-start sm:self-auto h-8 relative">
+                          <div className="flex items-center gap-1 self-start sm:self-auto h-7 relative">
                             {/* 1. Filters Dropdown */}
                             <div className="relative">
                               <button 
                                 onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-                                className={`text-[11px] font-semibold h-8 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
+                                className={`text-[11px] font-semibold h-7 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
                                   isFilterDropdownOpen || hasActiveSavedFilters
                                     ? 'border-accent bg-accent/5 text-accent'
                                     : 'border-gray-100 bg-white hover:bg-gray-50 text-gray-700'
@@ -895,7 +895,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             </div>
 
                             {/* 2. Sort Dropdown */}
-                            <div className="flex items-center gap-1 px-1.5 bg-white hover:bg-gray-50 rounded border border-gray-100 h-8 transition-colors">
+                            <div className="flex items-center gap-1 px-1.5 bg-white hover:bg-gray-50 rounded border border-gray-100 h-7 transition-colors">
                               <History className="w-3.5 h-3.5 text-gray-400" />
                               <select value={savedSortBy} onChange={(e) => setSavedSortBy(e.target.value as any)} className="bg-transparent text-[11px] font-bold text-gray-500 outline-none cursor-pointer py-0.5 pr-0.5">
                                 <option value="newest">Newest Added</option>

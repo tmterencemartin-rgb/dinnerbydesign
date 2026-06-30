@@ -312,7 +312,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   }
 
   return (
-    <div className={`py-2 px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
+    <div className={`${isBacklog ? 'py-1.5' : 'py-2'} px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
       {isExpanded && (
         <button 
           onClick={() => setIsExpanded(false)}
