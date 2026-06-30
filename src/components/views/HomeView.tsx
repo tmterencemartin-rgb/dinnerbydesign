@@ -352,12 +352,62 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const excludeInputRef = useRef<HTMLInputElement>(null);
   const omitInputRef = useRef<HTMLInputElement>(null);
 
+  const getCurrentPreferenceSuppressionKeys = React.useCallback(() => {
+    const prefs = profile?.preferences;
+    if (!prefs) return [];
+
+    const keys: string[] = [];
+    if (prefs.saladPreference && prefs.saladPreference !== 'all') keys.push(`saladPreference-${prefs.saladPreference}`);
+    (prefs.allergies || []).forEach(item => keys.push(`allergy-${item}`));
+    (prefs.exclusions || []).forEach(item => keys.push(`profileExclusion-${item}`));
+    (prefs.religiousEthical || []).forEach(item => keys.push(`profileReligious-${item}`));
+    (prefs.cuisinePreferences || []).forEach(item => keys.push(`profileCuisine-${item}`));
+    (prefs.preferredSupermarkets || []).forEach(item => keys.push(`profileSupermarket-${item}`));
+    (prefs.cookingMethods || []).forEach(item => keys.push(`profileCookingMethod-${item}`));
+    (prefs.cookingFats || []).forEach(item => keys.push(`profileCookingFat-${item}`));
+    (prefs.preferredSourceIds || []).forEach(item => keys.push(`profileSource-${item}`));
+    if (prefs.isSimple) keys.push('isSimple-true');
+    if (prefs.isLowCost) keys.push('isLowCost-true');
+    if (prefs.nutritiousChoice) keys.push('nutritiousChoice-true');
+    if (prefs.highOmega3) keys.push('highOmega3-true');
+    if (prefs.highProtein) keys.push('highProtein-true');
+    if (prefs.readyToEatUnderMins) keys.push(`readyToEatUnderMins-${prefs.readyToEatUnderMins}`);
+    if (prefs.calorieCeiling) keys.push(`maxCalories-${prefs.calorieCeiling}`);
+    if (prefs.servings && prefs.servings !== 2) keys.push(`servings-${prefs.servings}`);
+    if (prefs.budgetLimit) keys.push(`budgetLimit-${prefs.budgetLimit}`);
+
+    return [...new Set(keys)];
+  }, [profile?.preferences]);
+
   const handleReset = () => {
-    resetSearchFilters();
+    setCuisines([]);
+    setExclusions([]);
+    setReligiousEthical([]);
+    setStyleWellness([]);
+    setExcludeIngredients([]);
+    setOmitIngredients([]);
+    setMaxCalories('');
+    handleTotalTimeChange('');
+    setMaxHeatingTime('');
+    setMaxCostPerPortion('');
+    setSupermarkets([]);
+    setCookingMethods([]);
+    setCookingFats([]);
+    setDietaryRule('none');
+    setSaladPreference('all');
+    setNutritiousChoice(false);
+    setHighOmega3(false);
+    setHighProtein(false);
+    setIsSimple(false);
+    setIsLowCost(false);
+    setAllergies([]);
+    setPreferredSourceIds([]);
+    setServings('2');
+    setIsDietaryRuleSuppressed(!!profile?.preferences?.dietaryRule && profile.preferences.dietaryRule !== 'none');
+    setSuppressedPermanentKeys(getCurrentPreferenceSuppressionKeys());
     if (excludeInputRef.current) excludeInputRef.current.value = '';
     if (omitInputRef.current) omitInputRef.current.value = '';
     setShowFilters(false);
-    // Removed handleGenerate() call to ensure a "clean sheet" as requested.
   };
 
   const handleSaveFilters = () => {
