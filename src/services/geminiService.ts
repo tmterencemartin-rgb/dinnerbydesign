@@ -388,6 +388,11 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
 // Environment detection
 const isBrowser = typeof window !== 'undefined';
 
+const estimateTokensFromText = (value: string | undefined | null) => {
+  if (!value) return 0;
+  return Math.ceil(value.length / 4);
+};
+
 async function fetchProxySuggestions(searchParams: SearchParams, preferences?: UserPreferences, signal?: AbortSignal): Promise<any> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
@@ -497,7 +502,19 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   isEmpty?: boolean,
   appliedFilters?: string[],
   isCurated?: boolean,
-  diagnostics?: { repaired: boolean; errorType?: string; timings?: any; fromCache?: boolean };
+  diagnostics?: {
+    repaired: boolean;
+    errorType?: string;
+    timings?: any;
+    usage?: {
+      model: string;
+      inputChars: number;
+      outputChars: number;
+      inputTokensEstimate: number;
+      outputTokensEstimate: number;
+    };
+    fromCache?: boolean;
+  };
   budgetContradiction?: {
     ingredient: string;
     budgetLimit: string;
@@ -796,6 +813,13 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       diagnostics: {
         repaired: false,
         timings: { geminiCall: geminiDuration, totalRoundTrip: Date.now() - start },
+        usage: {
+          model: "gemini-3.5-flash",
+          inputChars: finalSystemInstruction.length + prompt.length,
+          outputChars: text.length,
+          inputTokensEstimate: estimateTokensFromText(finalSystemInstruction + prompt),
+          outputTokensEstimate: estimateTokensFromText(text)
+        },
         fromCache: false
       }
     };

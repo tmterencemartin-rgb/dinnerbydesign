@@ -104,6 +104,45 @@ async function recordStripeWebhookEvent(event: any, status: "processing" | "succ
   }
 }
 
+const GEMINI_FLASH_INPUT_USD_PER_MILLION = 1.5;
+const GEMINI_FLASH_OUTPUT_USD_PER_MILLION = 9;
+
+function estimateTokensFromChars(chars: number) {
+  return Math.ceil(Math.max(chars || 0, 0) / 4);
+}
+
+function estimateGeminiCostUsd(inputTokens: number, outputTokens: number) {
+  return (inputTokens / 1_000_000) * GEMINI_FLASH_INPUT_USD_PER_MILLION +
+    (outputTokens / 1_000_000) * GEMINI_FLASH_OUTPUT_USD_PER_MILLION;
+}
+
+function classifyAiRequest(searchParams: any) {
+  const query = String(searchParams?.query || '').toLowerCase();
+  if (
+    query.includes('cooked dinners for') ||
+    query.includes('ready-made dinner products') ||
+    query.includes('ready-made ') ||
+    query.includes('weekday cooked') ||
+    query.includes('weekly')
+  ) {
+    return 'weekly_plan';
+  }
+  return searchParams?.source === 'ready-made' ? 'ready_made_search' : 'recipe_search';
+}
+
+async function recordAiUsageEvent(details: Record<string, any>) {
+  try {
+    const now = new Date();
+    await getDb().collection("aiUsageEvents").add({
+      ...details,
+      dateKey: now.toISOString().slice(0, 10),
+      createdAt: FieldValue.serverTimestamp()
+    });
+  } catch (logErr) {
+    console.error("[AI Usage] Failed to record usage event:", logErr);
+  }
+}
+
 // Safe path resolution for ESM/cjs
 let _filename = "";
 let _dirname = "";
@@ -184,10 +223,43 @@ export function createApp() {
         throw new Error("Missing searchParams in request body");
       }
       const result = await generateDinnerSuggestions(searchParams, preferences);
+      const usage = result?.diagnostics?.usage || null;
+      const inputTokens = usage?.inputTokensEstimate || estimateTokensFromChars((usage?.inputChars || 0) || String(searchParams.query || '').length);
+      const outputTokens = usage?.outputTokensEstimate || estimateTokensFromChars(JSON.stringify(result || {}).length);
+      await recordAiUsageEvent({
+        type: classifyAiRequest(searchParams),
+        source: searchParams.source || 'cook',
+        model: usage?.model || 'gemini-3.5-flash',
+        status: 'succeeded',
+        queryLength: String(searchParams.query || '').length,
+        requestedCount: searchParams.count || 3,
+        resultCount: (result?.recipes?.length || 0) + (result?.readyMeals?.length || 0),
+        latencyMs: result?.diagnostics?.timings?.geminiCall || null,
+        totalRoundTripMs: result?.diagnostics?.timings?.totalRoundTrip || null,
+        inputTokensEstimate: inputTokens,
+        outputTokensEstimate: outputTokens,
+        estimatedCostUsd: estimateGeminiCostUsd(inputTokens, outputTokens)
+      });
       res.json(result);
     } catch (error: any) {
       console.error("[Server API] Gemini Search Error:", error);
       logApiError("generate-suggestions", error);
+      const failedSearchParams = req.body?.searchParams || {};
+      await recordAiUsageEvent({
+        type: classifyAiRequest(failedSearchParams),
+        source: failedSearchParams.source || 'cook',
+        model: 'gemini-3.5-flash',
+        status: 'failed',
+        queryLength: String(failedSearchParams.query || '').length,
+        requestedCount: failedSearchParams.count || 3,
+        resultCount: 0,
+        latencyMs: null,
+        totalRoundTripMs: null,
+        inputTokensEstimate: estimateTokensFromChars(String(failedSearchParams.query || '').length),
+        outputTokensEstimate: 0,
+        estimatedCostUsd: 0,
+        errorCategory: error.category || 'model'
+      });
       
       const category = error.category || 'model';
       let message = error.message || "Internal AI model error";

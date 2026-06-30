@@ -23,10 +23,28 @@ interface StripeWebhookHealthEvent {
   error?: string | null;
 }
 
+interface AiUsageEvent {
+  id: string;
+  type?: 'recipe_search' | 'ready_made_search' | 'weekly_plan' | string;
+  source?: string;
+  model?: string;
+  status?: 'succeeded' | 'failed' | string;
+  requestedCount?: number;
+  resultCount?: number;
+  latencyMs?: number | null;
+  totalRoundTripMs?: number | null;
+  inputTokensEstimate?: number;
+  outputTokensEstimate?: number;
+  estimatedCostUsd?: number;
+  createdAt?: Timestamp | null;
+  dateKey?: string;
+}
+
 export const AdminDashboard: React.FC = () => {
   const { setView, isAdmin, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [webhookEvents, setWebhookEvents] = useState<StripeWebhookHealthEvent[]>([]);
+  const [aiUsageEvents, setAiUsageEvents] = useState<AiUsageEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<AdminStatusFilter>('all');
@@ -100,6 +118,20 @@ export const AdminDashboard: React.FC = () => {
         });
 
         setWebhookEvents(eventData.slice(0, 12));
+
+        const usageSnapshot = await getDocs(collection(db, 'aiUsageEvents'));
+        const usageData = usageSnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as AiUsageEvent[];
+
+        usageData.sort((a, b) => {
+          const dateA = toDate(a.createdAt) || new Date(0);
+          const dateB = toDate(b.createdAt) || new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        setAiUsageEvents(usageData.slice(0, 500));
       } catch (err) {
         console.error('Error fetching admin dashboard data:', err);
       } finally {
@@ -262,6 +294,15 @@ export const AdminDashboard: React.FC = () => {
 
   const formatShortId = (id?: string | null) => id ? `${id.substring(0, 16)}...` : 'N/A';
 
+  const formatCurrency = (value: number, currency: 'GBP' | 'USD' = 'GBP') => {
+    return new Intl.NumberFormat('en-GB', {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: value < 1 ? 2 : 2,
+      maximumFractionDigits: value < 1 ? 4 : 2
+    }).format(value);
+  };
+
   const escapeCsv = (value: any) => {
     const raw = value == null ? '' : String(value);
     const safe = /^[=+\-@]/.test(raw) ? `'${raw}` : raw;
@@ -373,6 +414,19 @@ export const AdminDashboard: React.FC = () => {
     const paymentIssues = users.filter(hasPaymentIssue).length;
     const subscriptionEmails = users.filter(user => !!user.subscriptionConfirmationEmailSent).length;
     const totalSearches = users.reduce((sum, user) => sum + getSearchCount(user), 0);
+    const succeededAiCalls = aiUsageEvents.filter(event => event.status === 'succeeded');
+    const failedAiCalls = aiUsageEvents.filter(event => event.status === 'failed');
+    const estimatedAiCostUsd = aiUsageEvents.reduce((sum, event) => sum + (event.estimatedCostUsd || 0), 0);
+    const estimatedAiCostGbp = estimatedAiCostUsd * 0.79;
+    const weeklyPlanCalls = aiUsageEvents.filter(event => event.type === 'weekly_plan').length;
+    const recipeSearchCalls = aiUsageEvents.filter(event => event.type === 'recipe_search').length;
+    const readyMadeCalls = aiUsageEvents.filter(event => event.type === 'ready_made_search').length;
+    const averageLatencyMs = succeededAiCalls.length
+      ? Math.round(succeededAiCalls.reduce((sum, event) => sum + (event.latencyMs || 0), 0) / succeededAiCalls.length)
+      : 0;
+    const estimatedGrossRevenue = paid * 2.99;
+    const estimatedStripeFees = paid * ((2.99 * 0.015) + 0.2);
+    const estimatedNetAfterStripeAndAi = estimatedGrossRevenue - estimatedStripeFees - estimatedAiCostGbp;
 
     return {
       total: users.length,
@@ -382,9 +436,21 @@ export const AdminDashboard: React.FC = () => {
       stripeLinked,
       paymentIssues,
       subscriptionEmails,
-      totalSearches
+      totalSearches,
+      aiCalls: aiUsageEvents.length,
+      succeededAiCalls: succeededAiCalls.length,
+      failedAiCalls: failedAiCalls.length,
+      estimatedAiCostUsd,
+      estimatedAiCostGbp,
+      weeklyPlanCalls,
+      recipeSearchCalls,
+      readyMadeCalls,
+      averageLatencyMs,
+      estimatedGrossRevenue,
+      estimatedStripeFees,
+      estimatedNetAfterStripeAndAi
     };
-  }, [users]);
+  }, [users, aiUsageEvents]);
 
   const latestWebhookEvent = webhookEvents[0];
 
@@ -476,7 +542,7 @@ export const AdminDashboard: React.FC = () => {
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
                 { label: 'Paid subscribers', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe customers`, icon: CreditCard },
                 { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid or incomplete', icon: AlertTriangle },
-                { label: 'Usage', value: summaryStats.totalSearches, detail: `${summaryStats.subscriptionEmails} sub emails sent`, icon: Activity }
+                { label: 'Usage', value: summaryStats.aiCalls || summaryStats.totalSearches, detail: `${summaryStats.succeededAiCalls} AI calls succeeded`, icon: Activity }
               ].map(item => {
                 const Icon = item.icon;
                 return (
@@ -494,6 +560,56 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                 );
               })}
+            </div>
+
+            <div className="bg-white border border-gray-100 rounded p-4">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-gray-500" />
+                    <h2 className="text-[13px] font-bold text-gray-950">Launch cost monitor</h2>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
+                      Estimate
+                    </span>
+                  </div>
+                  <p className="text-[11.5px] text-gray-400 font-medium max-w-2xl">
+                    Tracks server-side Gemini calls from the point this monitor was added. Token and cost figures are estimates based on prompt and response size.
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 w-full lg:max-w-4xl">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Gemini cost</p>
+                    <p className="text-lg font-bold text-gray-950 mt-1">{formatCurrency(summaryStats.estimatedAiCostGbp)}</p>
+                    <p className="text-[10.5px] text-gray-400 font-medium">{formatCurrency(summaryStats.estimatedAiCostUsd, 'USD')} est.</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">AI calls</p>
+                    <p className="text-lg font-bold text-gray-950 mt-1">{summaryStats.aiCalls}</p>
+                    <p className="text-[10.5px] text-gray-400 font-medium">{summaryStats.failedAiCalls} failed</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Call mix</p>
+                    <p className="text-lg font-bold text-gray-950 mt-1">{summaryStats.recipeSearchCalls}/{summaryStats.readyMadeCalls}/{summaryStats.weeklyPlanCalls}</p>
+                    <p className="text-[10.5px] text-gray-400 font-medium">Recipe / ready-made / weekly</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Net snapshot</p>
+                    <p className="text-lg font-bold text-gray-950 mt-1">{formatCurrency(summaryStats.estimatedNetAfterStripeAndAi)}</p>
+                    <p className="text-[10.5px] text-gray-400 font-medium">After Stripe + Gemini est.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-gray-500">
+                <div className="border-t border-gray-100 pt-2">
+                  <span className="font-bold text-gray-700">Gross subscription value:</span> {formatCurrency(summaryStats.estimatedGrossRevenue)}
+                </div>
+                <div className="border-t border-gray-100 pt-2">
+                  <span className="font-bold text-gray-700">Stripe fees estimate:</span> {formatCurrency(summaryStats.estimatedStripeFees)}
+                </div>
+                <div className="border-t border-gray-100 pt-2">
+                  <span className="font-bold text-gray-700">Average Gemini time:</span> {summaryStats.averageLatencyMs ? `${(summaryStats.averageLatencyMs / 1000).toFixed(1)}s` : 'N/A'}
+                </div>
+              </div>
             </div>
 
             <div className="bg-white border border-gray-100 rounded p-4">
