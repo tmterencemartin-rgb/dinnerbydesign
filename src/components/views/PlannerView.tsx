@@ -18,8 +18,7 @@ import {
   LayoutGrid,
   Clock,
   Coins,
-  Loader2,
-  WandSparkles
+  Loader2
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Recipe, ReadyMeal, SavedRecipe } from '../../types';
@@ -618,16 +617,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
             <div className="bg-white rounded border border-gray-100 px-4 sm:px-5 py-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded bg-dbd-accent/10 flex items-center justify-center shrink-0">
-                    <WandSparkles className="w-4 h-4 text-dbd-accent" />
-                  </div>
-                  <div>
-                    <h3 className="text-[13.5px] font-bold text-gray-950">Plan my week</h3>
-                    <p className="text-[11.5px] text-gray-400 font-medium leading-relaxed">
-                      Create several dinners at once, with budget, protein and time preferences.
-                    </p>
-                  </div>
+                <div>
+                  <h3 className="text-[13.5px] font-bold text-gray-950">Plan my week</h3>
+                  <p className="text-[11.5px] text-gray-400 font-medium leading-relaxed">
+                    Create several dinners at once, with budget, protein and time preferences.
+                  </p>
                 </div>
                 <button
                   type="button"
