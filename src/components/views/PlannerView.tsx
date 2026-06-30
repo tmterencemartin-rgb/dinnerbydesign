@@ -129,7 +129,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planServings, setPlanServings] = useState(profile?.preferences?.servings || 2);
   const [planProtein, setPlanProtein] = useState('mixed');
   const [planTime, setPlanTime] = useState<'any' | 'quick' | 'under30'>('any');
-  const [planIncludeReadyMade, setPlanIncludeReadyMade] = useState(false);
+  const [planHomemadeCount, setPlanHomemadeCount] = useState<number>(5);
   const [planAlert, setPlanAlert] = useState<string | null>(null);
   const [isPlanningWeek, setIsPlanningWeek] = useState(false);
 
@@ -139,7 +139,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
   useEffect(() => {
     setPlanAlert(null);
-  }, [planDinnerCount, planBudget, planServings, planProtein, planTime, planIncludeReadyMade]);
+  }, [planDinnerCount, planBudget, planServings, planProtein, planTime, planHomemadeCount]);
+
+  useEffect(() => {
+    setPlanHomemadeCount(prev => Math.min(prev, planDinnerCount));
+  }, [planDinnerCount]);
 
   useEffect(() => {
     setHasExhaustedSaved(false);
@@ -275,8 +279,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
           ? 'dinners under 30 minutes'
           : 'varied dinners';
       const weeklySaladPreference = profile?.preferences?.saladPreference === 'main-only' ? 'main-only' : 'all';
-      const homemadeTarget = planIncludeReadyMade ? Math.ceil(planDinnerCount / 2) : planDinnerCount;
-      const readyMadeTarget = planIncludeReadyMade ? planDinnerCount - homemadeTarget : 0;
+      const homemadeTarget = Math.min(planHomemadeCount, planDinnerCount);
+      const readyMadeTarget = Math.max(planDinnerCount - homemadeTarget, 0);
       const makeParams = (query: string, sourceMode: 'cook' | 'ready-made', count: number, excludedTitles: string[]) => cleanSearchParams(buildSearchParams(query, sourceMode, profile?.preferences || null, {
         count,
         servings: servingsCount,
@@ -289,12 +293,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
       }));
 
       const { generateDinnerSuggestions } = await import('../../services/geminiService');
-      const collected: Array<Recipe | ReadyMeal> = [];
-      const addCandidates = (items: Array<Recipe | ReadyMeal>) => {
+      const homemadeItems: Recipe[] = [];
+      const readyMadeItems: ReadyMeal[] = [];
+      const addCandidates = <T extends Recipe | ReadyMeal>(items: T[], target: T[], targetCount: number) => {
         for (const item of items) {
           const titleKey = item.title.toLowerCase();
-          if (!seenTitles.has(titleKey) && collected.length < planDinnerCount) {
-            collected.push(item);
+          if (!seenTitles.has(titleKey) && target.length < targetCount) {
+            target.push(item);
             seenTitles.add(titleKey);
           }
         }
@@ -305,23 +310,23 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
         const query = `${homemadeTarget} cooked dinners for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}`;
         const params = makeParams(query, 'cook', homemadeTarget, planner.map(item => item.title));
         const result = await generateDinnerSuggestions(params, profile?.preferences || undefined);
-        addCandidates((result.recipes || []) as Recipe[]);
+        addCandidates((result.recipes || []) as Recipe[], homemadeItems, homemadeTarget);
       } catch (err: any) {
         addLog(`UI WARN: weekly batch generation failed, trying focused searches: ${err?.message || err}`);
       }
 
-      if (planIncludeReadyMade && readyMadeTarget > 0 && collected.length < planDinnerCount) {
+      if (readyMadeTarget > 0) {
         try {
           const readyQuery = `${readyMadeTarget} UK supermarket ready-made dinner products for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}`;
-          const readyParams = makeParams(readyQuery, 'ready-made', readyMadeTarget, [...planner.map(item => item.title), ...collected.map(item => item.title)]);
+          const readyParams = makeParams(readyQuery, 'ready-made', readyMadeTarget, [...planner.map(item => item.title), ...homemadeItems.map(item => item.title)]);
           const readyResult = await generateDinnerSuggestions(readyParams, profile?.preferences || undefined);
-          addCandidates((readyResult.readyMeals || []) as ReadyMeal[]);
+          addCandidates((readyResult.readyMeals || []) as ReadyMeal[], readyMadeItems, readyMadeTarget);
         } catch (err: any) {
           addLog(`UI WARN: weekly ready-made generation failed: ${err?.message || err}`);
         }
       }
 
-      const baseExcludedTitles = [...planner.map(item => item.title), ...collected.map(item => item.title)];
+      const baseExcludedTitles = [...planner.map(item => item.title), ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)];
       const dietaryRule = profile?.preferences?.dietaryRule || 'none';
       const fallbackProteins = (() => {
         if (planProtein !== 'mixed') return Array(planDinnerCount).fill(planProtein);
@@ -330,26 +335,33 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
         return ['chicken', 'fish', 'vegetarian', 'pork', 'beef', 'pulses', 'turkey'];
       })();
 
-      for (let i = collected.length; i < planDinnerCount; i += 1) {
+      for (let i = homemadeItems.length; i < homemadeTarget; i += 1) {
         const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
-        const useReadyMadeFallback = planIncludeReadyMade && i % 2 === 1;
-        const fallbackQuery = useReadyMadeFallback
-          ? `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} UK supermarket ready-made ${fallbackProtein} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`
-          : `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} cooked ${fallbackProtein} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
-        const fallbackParams = makeParams(fallbackQuery, useReadyMadeFallback ? 'ready-made' : 'cook', 1, [...baseExcludedTitles, ...collected.map(item => item.title)]);
+        const fallbackQuery = `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} cooked ${fallbackProtein} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
+        const fallbackParams = makeParams(fallbackQuery, 'cook', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
         try {
           const fallbackResult = await generateDinnerSuggestions(fallbackParams, profile?.preferences || undefined);
-          const candidates = useReadyMadeFallback
-            ? ((fallbackResult.readyMeals || []) as ReadyMeal[])
-            : ((fallbackResult.recipes || []) as Recipe[]);
-          addCandidates(candidates);
+          addCandidates((fallbackResult.recipes || []) as Recipe[], homemadeItems, homemadeTarget);
         } catch (err: any) {
           addLog(`UI WARN: weekly fallback generation failed for ${fallbackProtein}: ${err?.message || err}`);
         }
       }
 
-      const recipes = collected.slice(0, planDinnerCount);
+      for (let i = readyMadeItems.length; i < readyMadeTarget; i += 1) {
+        const fallbackProtein = fallbackProteins[(homemadeTarget + i) % fallbackProteins.length];
+        const fallbackQuery = `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} UK supermarket ready-made ${fallbackProtein} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
+        const fallbackParams = makeParams(fallbackQuery, 'ready-made', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
+
+        try {
+          const fallbackResult = await generateDinnerSuggestions(fallbackParams, profile?.preferences || undefined);
+          addCandidates((fallbackResult.readyMeals || []) as ReadyMeal[], readyMadeItems, readyMadeTarget);
+        } catch (err: any) {
+          addLog(`UI WARN: weekly ready-made fallback generation failed for ${fallbackProtein}: ${err?.message || err}`);
+        }
+      }
+
+      const recipes = [...homemadeItems, ...readyMadeItems].slice(0, planDinnerCount);
       if (recipes.length === 0) {
         setPlanAlert("No weekly dinners found within that budget. Try increasing the weekly budget, reducing the number of dinners, or choosing a different protein.");
         return;
@@ -680,14 +692,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </select>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Type</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Homemade</span>
                       <select
-                        value={planIncludeReadyMade ? 'mixed' : 'homemade'}
-                        onChange={(e) => setPlanIncludeReadyMade(e.target.value === 'mixed')}
+                        value={planHomemadeCount}
+                        onChange={(e) => setPlanHomemadeCount(Number(e.target.value))}
                         className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
                       >
-                        <option value="homemade">Homemade only</option>
-                        <option value="mixed">Mix ready-made</option>
+                        {Array.from({ length: planDinnerCount + 1 }, (_, value) => (
+                          <option key={value} value={value}>
+                            {value} homemade {value === 1 ? 'dinner' : 'dinners'}
+                          </option>
+                        ))}
                       </select>
                     </label>
                   </div>
@@ -696,7 +711,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       {Number(planBudget) > 0
                         ? `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}: about £${(Number(planBudget) / planDinnerCount).toFixed(2)} per dinner, or £${(Number(planBudget) / planDinnerCount / planServings).toFixed(2)} per person.`
                         : `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}.`}
-                      {' '}Results are added to Saved so you can schedule them yourself.
+                      {' '}Includes {planHomemadeCount} homemade {planHomemadeCount === 1 ? 'dinner' : 'dinners'} and {planDinnerCount - planHomemadeCount} ready-made {planDinnerCount - planHomemadeCount === 1 ? 'dinner' : 'dinners'}. Results are added to Saved so you can schedule them yourself.
                     </p>
                     <button
                       type="button"
