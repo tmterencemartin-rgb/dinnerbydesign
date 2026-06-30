@@ -778,70 +778,72 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             animate={{ opacity: 1, y: 0 }} 
             className="space-y-6"
           >
-            {/* Account Card */}
-            <div id="account-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Profile</h3>
-              {user && !user.isAnonymous ? (
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
-                  <div className="flex items-center gap-3">
-                    {user.photoURL ? (
-                      <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded border border-gray-100 object-cover" referrerPolicy="no-referrer" />
-                    ) : (
-                      <div className="w-10 h-10 rounded bg-dbd-accent text-white flex items-center justify-center text-[15px] font-bold border border-gray-100">
-                        {user.email?.charAt(0).toUpperCase() || user.displayName?.charAt(0).toUpperCase() || 'U'}
+            <div className={isAdmin && user && !user.isAnonymous ? "grid gap-4 md:grid-cols-2" : "space-y-4"}>
+              {/* Account Card */}
+              <div id="account-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Profile</h3>
+                {user && !user.isAnonymous ? (
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+                    <div className="flex items-center gap-3">
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded border border-gray-100 object-cover" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="w-10 h-10 rounded bg-dbd-accent text-white flex items-center justify-center text-[15px] font-bold border border-gray-100">
+                          {user.email?.charAt(0).toUpperCase() || user.displayName?.charAt(0).toUpperCase() || 'U'}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-[14px] text-gray-900 font-bold leading-none">{user.displayName || user.email || 'User'}</p>
+                        <p className="text-[11px] text-gray-400 mt-1.5 font-medium leading-none">{user.email}</p>
                       </div>
-                    )}
-                    <div className="min-w-0">
-                      <p className="text-[14px] text-gray-900 font-bold leading-none">{user.displayName || user.email || 'User'}</p>
-                      <p className="text-[11px] text-gray-400 mt-1.5 font-medium leading-none">{user.email}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={signOut}
+                        className="px-3 py-1.5 bg-white border border-gray-100 text-gray-900 text-[11px] font-bold rounded hover:bg-gray-50 hover:border-gray-200 transition-all font-bold"
+                      >
+                        Sign Out
+                      </button>
+                      <button 
+                        onClick={handleSendTestEmail}
+                        disabled={isSendingTest}
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-transparent text-gray-900 text-[11px] font-bold rounded hover:bg-gray-100 transition-all disabled:opacity-50 font-bold"
+                      >
+                        {isSendingTest ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
+                        Test Email
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={signOut}
-                      className="px-3 py-1.5 bg-white border border-gray-100 text-gray-900 text-[11px] font-bold rounded hover:bg-gray-50 hover:border-gray-200 transition-all font-bold"
+                ) : (
+                  <AuthForm onSuccess={() => showToast("Welcome back!")} />
+                )}
+              </div>
+
+              {isAdmin && user && !user.isAnonymous && (
+                <div className="bg-white rounded p-5 sm:p-6 space-y-4 border border-gray-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded bg-dbd-accent/10 flex items-center justify-center shrink-0">
+                        <ShieldCheck className="w-4 h-4 text-dbd-accent" />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-[13.5px] text-gray-900 font-bold">Admin dashboard</h3>
+                        <p className="text-[11.5px] text-gray-400 font-semibold leading-relaxed">
+                          Review subscribers, subscription status, Stripe webhook health, email status and CSV exports.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setView('admin')}
+                      className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-[11px] font-bold rounded transition-all flex items-center justify-center gap-1.5 shrink-0"
                     >
-                      Sign Out
-                    </button>
-                    <button 
-                      onClick={handleSendTestEmail}
-                      disabled={isSendingTest}
-                      className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-transparent text-gray-900 text-[11px] font-bold rounded hover:bg-gray-100 transition-all disabled:opacity-50 font-bold"
-                    >
-                      {isSendingTest ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
-                      Test Email
+                      <Database className="w-3.5 h-3.5" />
+                      Open dashboard
                     </button>
                   </div>
                 </div>
-              ) : (
-                <AuthForm onSuccess={() => showToast("Welcome back!")} />
               )}
             </div>
-
-            {isAdmin && user && !user.isAnonymous && (
-              <div className="bg-white rounded p-5 sm:p-6 space-y-4 border border-gray-100">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded bg-dbd-accent/10 flex items-center justify-center shrink-0">
-                      <ShieldCheck className="w-4 h-4 text-dbd-accent" />
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="text-[13.5px] text-gray-900 font-bold">Admin dashboard</h3>
-                      <p className="text-[11.5px] text-gray-400 font-semibold leading-relaxed max-w-xl">
-                        Review subscribers, subscription status, Stripe webhook health, email status and CSV exports.
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setView('admin')}
-                    className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-[11px] font-bold rounded transition-all flex items-center justify-center gap-1.5 shrink-0"
-                  >
-                    <Database className="w-3.5 h-3.5" />
-                    Open dashboard
-                  </button>
-                </div>
-              </div>
-            )}
 
             {/* Read-Only Dietary Profile Summary */}
             {user && !user.isAnonymous && (
