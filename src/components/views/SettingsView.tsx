@@ -783,7 +783,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               <div id="account-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Profile</h3>
                 {user && !user.isAnonymous ? (
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-1">
                     <div className="flex items-center gap-3">
                       {user.photoURL ? (
                         <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded border border-gray-100 object-cover" referrerPolicy="no-referrer" />
@@ -821,17 +821,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
               {isAdmin && user && !user.isAnonymous && (
                 <div className="bg-white rounded p-5 sm:p-6 space-y-4 border border-gray-100">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded bg-dbd-accent/10 flex items-center justify-center shrink-0">
-                        <ShieldCheck className="w-4 h-4 text-dbd-accent" />
-                      </div>
-                      <div className="space-y-1">
-                        <h3 className="text-[13.5px] text-gray-900 font-bold">Admin dashboard</h3>
-                        <p className="text-[11.5px] text-gray-400 font-semibold leading-relaxed">
-                          Review subscribers, subscription status, Stripe webhook health, email status and CSV exports.
-                        </p>
-                      </div>
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div className="space-y-1">
+                      <h3 className="text-[13.5px] text-gray-900 font-bold">Admin dashboard</h3>
+                      <p className="text-[11.5px] text-gray-400 font-semibold leading-relaxed">
+                        Review subscribers, subscription status, Stripe webhook health, email status and CSV exports.
+                      </p>
                     </div>
                     <button
                       onClick={() => setView('admin')}
