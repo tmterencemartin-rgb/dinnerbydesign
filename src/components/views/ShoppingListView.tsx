@@ -526,7 +526,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
             {categories.length > 0 && (
               <div className="space-y-2">
                 <p className="text-[12px] text-gray-500 font-medium bg-gray-50/80 py-1.5 px-3 rounded inline-block mb-1">
-                  Tick items you already have to refine your estimated spend.
+                  Tick items you already have to reduce your estimated spend.
                 </p>
                 <div className="shopping-category-list mt-2">
                 {categories.map(category => {
