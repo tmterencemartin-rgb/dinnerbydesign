@@ -297,6 +297,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
     if (b === 'Ready-made dinners') return -1;
     return a.localeCompare(b);
   });
+  const hasVisibleShoppingItems = categories.length > 0 || pantryGotItItems.length > 0;
 
   const bodyContent = (() => {
     const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -345,7 +346,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         
         <div className="flex flex-col items-center pb-2 pt-0 space-y-2">
           <h2 className="text-[20px] font-bold text-gray-900">Shop</h2>
-          {shoppingList.length > 0 && (
+          {hasVisibleShoppingItems && (
             <div className="flex flex-col items-center gap-2 text-gray-400">
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <p className="text-[13px] font-medium">
@@ -448,7 +449,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                 </div>
               </div>
               <p className="text-[11px] font-medium text-gray-500 text-center leading-relaxed w-full max-w-2xl mx-auto">
-                <span className="font-semibold text-gray-700">Please Note:</span> Our figures are baseline minimums based on exact pro-rata ingredient proportions. Since you must purchase full retail packs at the supermarket (e.g. whole packs of pork belly or set tubs of crab meat), expect your actual in-store total at the checkout to be higher.
+                <span className="font-semibold text-gray-700">Please note:</span> our figures are baseline minimums based on exact pro-rata ingredient proportions. As supermarkets sell in full packs (e.g. whole packs of bacon or 500g of minced beef), expect your actual checkout total to be higher.
               </p>
             </div>
           )}
@@ -477,7 +478,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
           </form>
         </div>
 
-        {shoppingList.length === 0 ? (
+        {!hasVisibleShoppingItems ? (
           <div className="py-24 text-center space-y-6 px-4 bg-white rounded max-w-lg mx-auto">
             <div className="bg-gray-50 w-16 h-16 rounded flex items-center justify-center mx-auto mb-2">
                <ShoppingCart className="w-8 h-8 text-gray-300" />
