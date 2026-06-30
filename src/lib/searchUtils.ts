@@ -766,10 +766,31 @@ export const checkSearchMatch = (item: Recipe | ReadyMeal | SavedRecipe, query: 
 
   if (keywords.length === 0) return true;
 
+  const searchableItem = item as any;
+  const convenienceProfile = 'convenienceProfile' in item && item.convenienceProfile ? item.convenienceProfile : '';
+  const batchTerms = searchableItem.batchCooking?.suitable
+    ? [
+      'batch friendly',
+      'batch cooking',
+      searchableItem.batchCooking.reason || '',
+      searchableItem.batchCooking.storage || '',
+      searchableItem.batchCooking.reheat || ''
+    ]
+    : [];
+
   const contentNormalized = [
     titleNormalized,
     ...('ingredients' in item && item.ingredients ? item.ingredients.map(i => normalizeForSearch(i)) : []),
     normalizeForSearch(item.description || ''),
+    normalizeForSearch(item.cuisine || ''),
+    normalizeForSearch(item.sourceUrl || ''),
+    normalizeForSearch(searchableItem.retailer || ''),
+    normalizeForSearch(searchableItem.brand || ''),
+    normalizeForSearch(searchableItem.category || ''),
+    normalizeForSearch(searchableItem.mode || ''),
+    normalizeForSearch(searchableItem.saladType || ''),
+    normalizeForSearch(convenienceProfile),
+    ...batchTerms.map(term => normalizeForSearch(term)),
     'chefStyle' in item && item.chefStyle ? normalizeForSearch(item.chefStyle) : '',
     'totalCookTime' in item && item.totalCookTime ? String(item.totalCookTime) : '',
     'totalTime' in item && item.totalTime ? String(item.totalTime) : ''

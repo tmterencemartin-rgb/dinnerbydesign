@@ -485,22 +485,16 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         )}
 
         {!hasVisibleShoppingItems ? (
-          <div className="py-24 text-center space-y-6 px-4 bg-white rounded max-w-lg mx-auto">
-            <div className="bg-gray-50 w-16 h-16 rounded flex items-center justify-center mx-auto mb-2">
-               <ShoppingCart className="w-8 h-8 text-gray-300" />
+          <div className="py-8 text-center space-y-3 px-4 bg-white rounded max-w-md mx-auto">
+            <div className="bg-gray-50 w-10 h-10 rounded flex items-center justify-center mx-auto">
+               <ShoppingCart className="w-5 h-5 text-gray-300" />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-[18px] font-bold text-gray-900 tracking-tight">No shopping list yet</h3>
-              <p className="text-[14px] text-gray-500 mx-auto leading-relaxed font-medium">
-                Add recipes in the Schedule view to generate your list automatically.
+            <div className="space-y-1">
+              <h3 className="text-[15px] font-bold text-gray-900 tracking-tight">No shopping list yet</h3>
+              <p className="text-[13px] text-gray-500 mx-auto leading-relaxed font-medium">
+                Schedule dinners to build your shopping list.
               </p>
             </div>
-            <button 
-              onClick={onBackToPlan}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded text-[13px] font-bold hover:bg-black transition-all active:scale-95"
-            >
-              Go to Schedule
-            </button>
           </div>
         ) : (
           <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-4">

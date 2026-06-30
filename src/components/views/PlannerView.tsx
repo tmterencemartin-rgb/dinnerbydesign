@@ -112,13 +112,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [showDeleteAllSavedConfirm, setShowDeleteAllSavedConfirm] = useState(false);
   const [targetPlannerDay, setTargetPlannerDay] = useState<string | null>(null);
   const [savedSearchQuery, setSavedSearchQuery] = useState('');
-  const [savedSortBy, setSavedSortBy] = useState<'newest' | 'oldest' | 'name'>('newest');
+  const [savedSortBy, setSavedSortBy] = useState<'newest' | 'oldest' | 'name' | 'quickest' | 'lowest-cost'>('newest');
   const [convenienceFilter, setConvenienceFilter] = useState<'all' | 'scratch' | 'convenience'>('all');
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [quickPills, setQuickPills] = useState({
     under20: false,
     budget: false,
     healthy: false,
+    batch: false,
   });
   const [hasExhaustedSaved, setHasExhaustedSaved] = useState(false);
   const [savedDisplayOffset, setSavedDisplayOffset] = useState(0);
@@ -160,6 +161,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
       under20: false,
       budget: false,
       healthy: false,
+      batch: false,
     });
     setSavedSortBy('newest');
     setConvenienceFilter('all');
@@ -213,6 +215,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
         const isHealthy = recipe.isNutritious || (kcal > 0 && kcal < 500);
         if (!isHealthy) return false;
       }
+      if (quickPills.batch) {
+        if (!recipe.batchCooking?.suitable) return false;
+      }
 
       // 3. Convenience Profile Segment Filter
       if (convenienceFilter !== 'all') {
@@ -226,6 +231,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     processed.sort((a, b) => {
       if (savedSortBy === 'name') {
         return a.title.localeCompare(b.title);
+      }
+      if (savedSortBy === 'quickest') {
+        const timeA = getRecipeTime(a) || Number.MAX_SAFE_INTEGER;
+        const timeB = getRecipeTime(b) || Number.MAX_SAFE_INTEGER;
+        return timeA - timeB;
+      }
+      if (savedSortBy === 'lowest-cost') {
+        const costA = parseCost(a) || Number.MAX_SAFE_INTEGER;
+        const costB = parseCost(b) || Number.MAX_SAFE_INTEGER;
+        return costA - costB;
       }
       
       const timeA = (a.savedAt as any)?.seconds || 0;
@@ -245,6 +260,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     savedSortBy,
     convenienceFilter
   ]);
+
+  const hasActiveSavedFilters = convenienceFilter !== 'all' || Object.values(quickPills).some(Boolean);
 
   const source = profile?.preferences?.preferredMode || 'cook';
 
@@ -829,14 +846,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               <button 
                                 onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
                                 className={`text-[11px] font-semibold h-8 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
-                                  isFilterDropdownOpen || convenienceFilter !== 'all' || quickPills.under20 || quickPills.budget || quickPills.healthy
+                                  isFilterDropdownOpen || hasActiveSavedFilters
                                     ? 'border-accent bg-accent/5 text-accent'
                                     : 'border-gray-100 bg-white hover:bg-gray-50 text-gray-700'
                                 }`}
                               >
                                 <Settings className="w-3.5 h-3.5" />
                                 <span>Filters</span>
-                                {(convenienceFilter !== 'all' || quickPills.under20 || quickPills.budget || quickPills.healthy) && (
+                                {hasActiveSavedFilters && (
                                   <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                                 )}
                                 <span className="text-gray-400 text-[10px] ml-0.5">▼</span>
@@ -860,14 +877,19 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     <div className="border-t border-gray-100 my-2"></div>
                                     <div className="mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1 text-left">QUICK MOODS</div>
                                     <div className="space-y-1">
-                                      {[{id: 'under20', label: '⏱️ Under 20 min'}, {id: 'budget', label: '💰 Budget (<£5)'}, {id: 'healthy', label: '🥗 Healthy (<500kcal)'}].map(pill => (
+                                      {[
+                                        {id: 'under20', label: '⏱️ Under 20 min'},
+                                        {id: 'budget', label: '💰 Budget (<£5)'},
+                                        {id: 'healthy', label: '🥗 Healthy (<500kcal)'},
+                                        {id: 'batch', label: 'Batch-friendly'}
+                                      ].map(pill => (
                                         <label key={pill.id} className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded cursor-pointer text-xs font-medium text-gray-700 select-none">
                                           <input type="checkbox" checked={quickPills[pill.id as keyof typeof quickPills]} onChange={() => setQuickPills(p => ({ ...p, [pill.id]: !p[pill.id as keyof typeof quickPills] }))} className="rounded border-gray-300 text-accent h-3.5 w-3.5 cursor-pointer" />
                                           <span>{pill.label}</span>
                                         </label>
                                       ))}
                                     </div>
-                                    {(convenienceFilter !== 'all' || quickPills.under20 || quickPills.budget || quickPills.healthy) && (
+                                    {hasActiveSavedFilters && (
                                       <>
                                         <div className="border-t border-gray-100 my-1.5"></div>
                                         <button onClick={(e) => { e.stopPropagation(); handleResetFilters(); }} className="w-full text-center py-1 text-[10.5px] font-semibold text-accent hover:bg-accent/5 rounded-md transition-colors cursor-pointer">Reset Filters</button>
@@ -885,6 +907,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                 <option value="newest">Newest Added</option>
                                 <option value="oldest">Oldest Added</option>
                                 <option value="name">Alphabetical (A-Z)</option>
+                                <option value="quickest">Quickest first</option>
+                                <option value="lowest-cost">Lowest cost first</option>
                               </select>
                             </div>
                           </div>
@@ -892,7 +916,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </div>
 
                       {(() => {
-                        const isFiltering = !!(savedSearchQuery || quickPills.under20 || quickPills.budget || quickPills.healthy || convenienceFilter !== 'all');
+                        const isFiltering = !!(savedSearchQuery || hasActiveSavedFilters);
                         const processed = filteredSavedRecipes;
 
                         return (
