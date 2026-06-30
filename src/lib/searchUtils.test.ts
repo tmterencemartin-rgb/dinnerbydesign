@@ -207,12 +207,19 @@ describe('searchUtils', () => {
         query: 'pasta',
         source: 'cook',
         allergies: ['Eggs'],
+        excludeIngredients: ['mushrooms', 'Leeks', 'leeks'],
+        exclusions: ['Mushrooms'],
         cookingMethods: ['Air fryer'],
         cookingFats: ['Olive oil'],
         preferredSourceIds: ['bbc_good_food']
+      }, {
+        ...basePreferences,
+        exclusions: ['Mushrooms', 'Leeks']
       });
 
       expect(labels.filter(label => label === 'No Eggs')).toHaveLength(1);
+      expect(labels.filter(label => label.toLowerCase() === 'no mushrooms')).toHaveLength(1);
+      expect(labels.filter(label => label.toLowerCase() === 'no leeks')).toHaveLength(1);
       expect(labels.filter(label => label === 'Air fryer')).toHaveLength(1);
       expect(labels.filter(label => label === 'Olive oil')).toHaveLength(1);
       expect(labels.filter(label => label === 'BBC Good Food')).toHaveLength(1);

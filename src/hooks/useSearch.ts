@@ -450,6 +450,13 @@ export function useSearch() {
         if (!msg) return "Our AI service is experiencing a temporary issue. Please try again.";
         const lower = msg.toLowerCase();
         if (
+          lower.startsWith("our ai service") ||
+          lower.startsWith("our ai provider") ||
+          lower.startsWith("search request timed out")
+        ) {
+          return msg;
+        }
+        if (
           lower.includes("high demand") || 
           lower.includes("503") || 
           lower.includes("unavailable") || 

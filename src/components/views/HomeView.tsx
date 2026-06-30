@@ -771,7 +771,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               Our AI service is experiencing a temporary issue.
             </h3>
             <p className="text-[13px] text-gray-500 mx-auto mb-6 max-w-sm leading-relaxed px-4">
-              Please try again in a moment or simplify your query.
+              {searchError || "Please try again in a moment or simplify your query."}
             </p>
             <button 
               onClick={() => handleGenerate()}

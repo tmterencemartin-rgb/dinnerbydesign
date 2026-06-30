@@ -327,6 +327,7 @@ export const buildActiveCriteria = (
 ) => {
   const { isDietaryRuleSuppressed, suppressedPermanentKeys = [], DIETARY_TAXONOMY } = options;
   const list: { type: string, value: string, label: string, isPermanent?: boolean }[] = [];
+  const normaliseCriterionValue = (value: string | number | undefined | null) => String(value || '').trim().toLowerCase();
   
   console.log('[buildActiveCriteria] START:', { 
     paramsLowCost: params.isLowCost, 
@@ -633,11 +634,17 @@ export const buildActiveCriteria = (
   }
 
   // 10. Temporary Exclusions (excludeIngredients/omitIngredients)
+  const savedExcludedNames = new Set([
+    ...(profilePrefs?.exclusions || []),
+    ...(profilePrefs?.allergies || [])
+  ].map(normaliseCriterionValue));
   const allTempExcludes = [
     ...(params.excludeIngredients || []),
-    ...(params.exclusions || []).filter(e => !profilePrefs?.exclusions?.includes(e) && !profilePrefs?.allergies?.includes(e))
-  ];
-  const uniqueTempExcludes = [...new Set(allTempExcludes)];
+    ...(params.exclusions || [])
+  ].filter(e => !savedExcludedNames.has(normaliseCriterionValue(e)));
+  const uniqueTempExcludes = Array.from(
+    new Map(allTempExcludes.map(item => [normaliseCriterionValue(item), item])).values()
+  );
   uniqueTempExcludes.forEach(i => {
     list.push({ type: 'excludeIngredient', value: i, label: `No ${i}` });
   });
