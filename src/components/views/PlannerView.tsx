@@ -758,12 +758,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
             {/* Unified Save & Schedule Panel */}
             <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
-              <div className="px-1 sm:px-3.5 py-4 sm:py-6 space-y-8">
+              <div className="px-1 sm:px-3.5 py-3 sm:py-5 space-y-5">
                 
                 {/* SECTION 1: SAVED (BACKLOG) */}
                 <div className="space-y-1.5 relative z-20">
                   {/* SAVED HEADER ROW */}
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-1.5">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-1">
                     <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1">Saved</h3>
                     <div className="flex items-center gap-2.5">
                       <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} items</span>
@@ -817,8 +817,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   ) : (
                     <div>
                       {/* Search and Organize Controls - Integrated Header */}
-                      <div className="bg-gray-50/40 border-b border-gray-100 px-1.5 py-1.5 sm:px-2">
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
+                      <div className="bg-gray-50/40 border-b border-gray-100 px-1.5 py-1 sm:px-2">
+                        <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
                           {/* Left: Search Bar */}
                           <div className="relative w-full sm:max-w-[340px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
@@ -923,9 +923,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           <div className="p-0 bg-transparent">
                             <div id="saved-recipes-list">
                               {processed.length === 0 && savedRecipes.length > 0 ? (
-                                <div className="py-10 text-center bg-gray-50/50 rounded p-6 mx-2 my-2">
-                                  <p className="text-[13px] text-gray-950 font-medium">No saved recipes match that filter.</p>
-                                  <button onClick={handleResetFilters} className="text-[12px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Clear Filters</button>
+                                <div className="py-5 text-center bg-gray-50/50 mx-1 my-1">
+                                  <p className="text-[12px] text-gray-950 font-medium">No saved recipes match that filter.</p>
+                                  <button onClick={handleResetFilters} className="text-[11px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Clear Filters</button>
                                 </div>
                               ) : (
                                 (() => {
