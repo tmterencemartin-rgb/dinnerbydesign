@@ -275,6 +275,49 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     () => calculateActiveIngredientsCost(shoppingList.filter(item => !item.inStock && !item.checked)),
     [shoppingList]
   );
+  const cheaperSavedSwap = React.useMemo(() => {
+    const scheduled = planner.filter(item => !!item.scheduledDate);
+    const unscheduledSaved = savedRecipes.filter(item => !item.scheduledDate);
+    const activePrefs = profile?.preferences;
+    const safetyPrefs = activePrefs ? {
+      dietaryRule: activePrefs.dietaryRule || 'none',
+      allergies: activePrefs.allergies || [],
+      exclusions: activePrefs.exclusions || [],
+      religiousEthical: activePrefs.religiousEthical || [],
+      calorieCeiling: activePrefs.calorieCeiling,
+      budgetLimit: activePrefs.budgetLimit
+    } : null;
+    const totalCost = (item: SavedRecipe) => {
+      const costStr = item.costPerPortion || item.price || '';
+      const match = costStr.match(/[\d.]+/);
+      const perPortion = match ? parseFloat(match[0]) : 0;
+      const servings = item.requestedServings || profile?.preferences?.servings || item.totalServings || 1;
+      return perPortion * servings;
+    };
+
+    let best: {
+      scheduled: SavedRecipe;
+      replacement: SavedRecipe;
+      saving: number;
+    } | null = null;
+
+    scheduled.forEach(current => {
+      const currentCost = totalCost(current);
+      if (currentCost <= 0) return;
+
+      unscheduledSaved.forEach(candidate => {
+        if (safetyPrefs && !passesHardConstraints(candidate, safetyPrefs)) return;
+        const candidateCost = totalCost(candidate);
+        const saving = currentCost - candidateCost;
+        if (candidateCost <= 0 || saving < 1) return;
+        if (!best || saving > best.saving) {
+          best = { scheduled: current, replacement: candidate, saving };
+        }
+      });
+    });
+
+    return best;
+  }, [planner, savedRecipes, profile?.preferences]);
 
   const checkReadOnly = (msg: string) => {
     if (isReadOnly) {
@@ -1064,8 +1107,33 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
                             Saved recipes are not included until you schedule them. Prices are based on {supermarketLabel} where available and may vary by pack size and retailer.
                           </p>
+                          {cheaperSavedSwap && (
+                            <div className="mt-3 border border-emerald-100 bg-emerald-50/70 rounded px-3 py-2">
+                              <p className="text-[11px] font-bold text-emerald-800 uppercase tracking-widest">
+                                Cheaper saved option
+                              </p>
+                              <p className="mt-1 text-[12px] text-emerald-900 leading-relaxed">
+                                Swap <span className="font-semibold">{cheaperSavedSwap.scheduled.title}</span> for <span className="font-semibold">{cheaperSavedSwap.replacement.title}</span> and save about £{cheaperSavedSwap.saving.toFixed(2)}.
+                              </p>
+                            </div>
+                          )}
                         </div>
                         <div className="flex flex-wrap gap-2 shrink-0">
+                          {cheaperSavedSwap?.scheduled.scheduledDate && (
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
+                                const day = cheaperSavedSwap.scheduled.scheduledDate;
+                                if (!day) return;
+                                await updatePlanner(day, cheaperSavedSwap.replacement);
+                                showToast(`Swapped ${day} dinner.`);
+                              }}
+                              className="h-9 px-3 rounded bg-emerald-700 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors"
+                            >
+                              Swap dinner
+                            </button>
+                          )}
                           <button
                             type="button"
                             onClick={() => setView('shopping')}
