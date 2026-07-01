@@ -104,8 +104,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   return (
-    <div className={`space-y-5 ${className}`}>
-      <div className="space-y-3">
+    <div className={`space-y-4 ${className}`}>
+      <div className="space-y-2.5">
         <label className="text-[13px] font-bold text-gray-900 block">
           {isSignUp ? 'Create your account' : 'Sign in'}
         </label>
@@ -126,7 +126,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                     placeholder="First Name" 
                     value={firstName} 
                     onChange={(e) => setFirstName(e.target.value)} 
-                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tl px-3 py-3 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
+                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tl px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
                     required={isSignUp}
                   />
                   <input 
@@ -134,7 +134,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                     placeholder="Last Name" 
                     value={lastName} 
                     onChange={(e) => setLastName(e.target.value)} 
-                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tr px-3 py-3 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
+                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tr px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
                     required={isSignUp}
                   />
                 </div>
@@ -142,7 +142,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                   <select
                     value={countryCode}
                     onChange={(e) => setCountryCode(e.target.value)}
-                    className="w-[80px] bg-gray-50 border border-gray-100 px-3 py-3 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 cursor-pointer appearance-none"
+                    className="w-[80px] bg-gray-50 border border-gray-100 px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 cursor-pointer appearance-none"
                     required={isSignUp}
                   >
                     {COUNTRY_CODES.map(c => (
@@ -154,7 +154,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                     placeholder="Telephone Number" 
                     value={phone} 
                     onChange={(e) => setPhone(e.target.value)} 
-                    className="flex-1 bg-gray-50 border border-gray-100 px-3 py-3 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
+                    className="flex-1 bg-gray-50 border border-gray-100 px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
                     required={isSignUp}
                   />
                 </div>
@@ -165,7 +165,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               placeholder="Email address" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
-              className={`w-full bg-gray-50 border border-gray-100 px-3 py-3 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400 ${!isSignUp ? 'rounded-t' : ''}`} 
+              className={`w-full bg-gray-50 border border-gray-100 px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400 ${!isSignUp ? 'rounded-t' : ''}`} 
               required 
             />
             <input 
@@ -173,17 +173,17 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               placeholder="Password" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
-              className="w-full bg-gray-50 border border-gray-100 rounded-b px-3 py-3 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
+              className="w-full bg-gray-50 border border-gray-100 rounded-b px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
               required 
               minLength={6} 
             />
           </div>
           
-          <div className="pt-3 space-y-3">
+          <div className="pt-2.5 space-y-2">
             <button 
               type="submit" 
               disabled={loading} 
-              className="w-full py-3 bg-gray-900 text-white rounded text-[13px] font-bold shadow-sm hover:bg-black transition-all flex items-center justify-center gap-2"
+              className="w-full py-2.5 bg-gray-900 text-white rounded text-[13px] font-bold shadow-sm hover:bg-black transition-all flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 size={16} className="animate-spin" /> : (isSignUp ? 'Create account' : 'Sign in')}
             </button>
@@ -203,8 +203,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         </form>
       </div>
 
-      <div className="space-y-3">
-        <div className="relative flex py-1 items-center">
+      <div className="space-y-2.5">
+        <div className="relative flex py-0.5 items-center">
           <div className="flex-grow border-t border-gray-100"></div>
           <span className="flex-shrink mx-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">or</span>
           <div className="flex-grow border-t border-gray-100"></div>
@@ -227,7 +227,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             }
           }}
           disabled={loading}
-          className="w-full py-3 bg-white border border-gray-100 hover:bg-gray-50/80 rounded text-[13px] font-bold text-gray-700 shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-2.5 bg-white border border-gray-100 hover:bg-gray-50/80 rounded text-[13px] font-bold text-gray-700 shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
@@ -251,7 +251,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         </button>
       </div>
 
-      <div className="pt-4 text-center border-t border-gray-50">
+      <div className="pt-3 text-center border-t border-gray-50">
         {isSignUp ? (
           <p className="text-[13px] text-gray-500 font-medium">
             Already have an account?{' '}

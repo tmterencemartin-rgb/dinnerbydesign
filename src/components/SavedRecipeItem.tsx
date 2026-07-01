@@ -177,7 +177,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             )}
             {recipe.saladType && recipe.saladType !== 'none' && (
               <span className="text-gray-500 font-medium uppercase tracking-wider text-[10.5px]">
-                🥗 {recipe.saladType}
+                🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
               </span>
             )}
             {recipe.isAirFryerFriendly && (
@@ -379,7 +379,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   if (recipe.saladType && recipe.saladType !== 'none') {
                     items.push(
                       <span key="salad" className="text-gray-500 font-medium uppercase tracking-wider">
-                        🥗 {recipe.saladType}
+                        🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
                       </span>
                     );
                   }

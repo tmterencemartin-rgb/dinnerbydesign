@@ -219,7 +219,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   )}
                   {recipe.saladType && recipe.saladType !== 'none' && (
                     <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
-                      🥗 {recipe.saladType}
+                      🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
                     </span>
                   )}
                 </div>

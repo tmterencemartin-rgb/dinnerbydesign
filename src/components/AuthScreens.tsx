@@ -84,21 +84,21 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
   const [isSignUp, setIsSignUp] = React.useState(defaultMode === 'signup');
   
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
-      <div className="w-full max-w-sm border border-gray-100 p-8 rounded-xl shadow-sm">
-        <div className="text-center mb-8">
-          <LogoIcon className="w-10 h-10 mx-auto mb-4" />
-          <div className="mb-8">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
+      <div className="w-full max-w-sm border border-gray-100 p-6 sm:p-7 rounded-xl shadow-sm">
+        <div className="text-center mb-5">
+          <LogoIcon className="w-9 h-9 mx-auto mb-3" />
+          <div className="mb-5">
             <h2 className="text-[18px] font-bold text-gray-900 flex items-center justify-center">
               Dinner<span className="text-accent mx-[1px]">By</span>Design
             </h2>
             <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-1">Real world recipes</p>
           </div>
           
-          <h1 className="text-[20px] font-bold text-gray-900 tracking-tight leading-tight">
+          <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">
             {isSignUp ? 'Start your 7-day free trial.' : 'Sign in to DinnerByDesign'}
           </h1>
-          <p className="text-[13px] text-gray-500 mt-2 leading-relaxed">
+          <p className="text-[13px] text-gray-500 mt-1.5 leading-snug">
             {isSignUp 
               ? 'No credit card details required.' 
               : 'Pick up your saved recipes, planner and shopping list.'}
