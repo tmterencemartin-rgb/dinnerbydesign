@@ -5,7 +5,6 @@ import {
   CircleX, 
   ArrowUpCircle, 
   Trash, 
-  Info, 
   Search, 
   History, 
   Beef,
@@ -17,7 +16,6 @@ import {
   List,
   LayoutGrid,
   Clock,
-  Coins,
   Loader2
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -29,6 +27,7 @@ import { passesHardConstraints, passesDietaryRule } from '../../lib/dietarySafet
 import { buildSearchParams, checkSearchMatch, cleanSearchParams } from '../../lib/searchUtils';
 import { getConvenienceProfile } from '../../lib/recipeUtils';
 import { buildSupermarketPlanSummary } from '../../lib/shoppingUtils';
+import { calculateActiveIngredientsCost } from '../../services/groceryService';
 
 interface PlannerViewProps {
   setView: (view: any) => void;
@@ -50,7 +49,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     showToast,
     updateRecipe,
     user,
-    accessStatus
+    accessStatus,
+    shoppingList
   } = useAuth();
 
   const isReadOnly = accessStatus === 'read_only';
@@ -271,6 +271,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const supermarketLabel = supermarketPlanSummary.preferredSupermarkets.length > 0
     ? supermarketPlanSummary.preferredSupermarkets.join(', ')
     : 'your usual supermarket';
+  const activeShoppingListTotal = React.useMemo(
+    () => calculateActiveIngredientsCost(shoppingList.filter(item => !item.inStock && !item.checked)),
+    [shoppingList]
+  );
 
   const checkReadOnly = (msg: string) => {
     if (isReadOnly) {
@@ -1043,23 +1047,22 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   </div>
 
                   {supermarketPlanSummary.plannedDinnerCount > 0 && (
-                    <div className="border border-gray-100 bg-white rounded px-3 py-3 sm:px-4 sm:py-3.5 space-y-3 shadow-[0_1px_4px_rgba(15,23,42,0.025)]">
+                    <div className="border border-gray-100 bg-white rounded px-3 py-3 sm:px-4 sm:py-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.025)]">
                       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
                         <div className="min-w-0 max-w-2xl">
-                          <div className="flex items-center gap-1.5">
-                            <Coins className="w-3.5 h-3.5 text-accent" />
-                            <h4 className="text-[12px] font-bold text-gray-900 uppercase tracking-widest">
-                              Weekly shop check
-                            </h4>
-                          </div>
+                          <h4 className="text-[12px] font-bold text-gray-900 uppercase tracking-widest">
+                            Weekly shop check
+                          </h4>
                           <p className="mt-2 text-[14px] sm:text-[15px] font-bold text-gray-900 leading-snug">
-                            {supermarketPlanSummary.headline}
+                            Based on your scheduled dinners.
                           </p>
                           <p className="mt-1 text-[12px] text-gray-500 leading-relaxed">
-                            {supermarketPlanSummary.costExplanation}
+                            {activeShoppingListTotal > 0
+                              ? `Your Shopping List currently estimates about £${activeShoppingListTotal.toFixed(2)} for this plan.`
+                              : 'Build the Shopping List to see what this week is likely to cost.'}
                           </p>
                           <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
-                            Based on your scheduled dinners and {supermarketLabel}; exact prices and pack sizes will vary.
+                            Saved recipes are not included until you schedule them. Prices are based on {supermarketLabel} where available and may vary by pack size and retailer.
                           </p>
                         </div>
                         <div className="flex flex-wrap gap-2 shrink-0">
@@ -1077,47 +1080,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           >
                             Find lower-waste swaps
                           </button>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                        <div className="bg-gray-50/70 border border-gray-100 rounded p-2.5">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Worth reusing</p>
-                          {supermarketPlanSummary.reusedIngredients.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {supermarketPlanSummary.reusedIngredients.slice(0, 3).map(item => (
-                                <span key={item.id} className="text-[10.5px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-1.5 py-0.5">
-                                  {item.name}
-                                </span>
-                              ))}
-                              {supermarketPlanSummary.reusedIngredients.length > 3 && (
-                                <span className="text-[10.5px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-1.5 py-0.5">
-                                  +{supermarketPlanSummary.reusedIngredients.length - 3} more
-                                </span>
-                              )}
-                            </div>
-                          ) : (
-                            <p className="text-[11px] text-gray-400 leading-relaxed">No obvious overlap yet.</p>
-                          )}
-                        </div>
-                        <div className="bg-gray-50/70 border border-gray-100 rounded p-2.5">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">May add to the shop</p>
-                          {supermarketPlanSummary.oneUseIngredients.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {supermarketPlanSummary.oneUseIngredients.slice(0, 3).map(item => (
-                                <span key={item.id} className="text-[10.5px] font-semibold text-amber-800 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
-                                  {item.name}
-                                </span>
-                              ))}
-                              {supermarketPlanSummary.oneUseIngredients.length > 3 && (
-                                <span className="text-[10.5px] font-semibold text-amber-800 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
-                                  +{supermarketPlanSummary.oneUseIngredients.length - 3} more
-                                </span>
-                              )}
-                            </div>
-                          ) : (
-                            <p className="text-[11px] text-gray-400 leading-relaxed">No obvious one-use ingredients.</p>
-                          )}
                         </div>
                       </div>
                     </div>
