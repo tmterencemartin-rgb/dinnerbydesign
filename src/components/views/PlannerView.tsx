@@ -1071,14 +1071,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             onClick={() => setView('shopping')}
                             className="h-9 px-3 rounded bg-gray-900 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-black transition-colors"
                           >
-                            Build shopping list
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setView('home')}
-                            className="h-9 px-3 rounded bg-white border border-gray-200 text-gray-700 text-[10.5px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-colors"
-                          >
-                            Find lower-waste swaps
+                            View shopping list
                           </button>
                         </div>
                       </div>
