@@ -148,6 +148,9 @@ export interface SupermarketPlanSummary {
   preferredSupermarkets: string[];
   estimatedDinnerCost: number;
   estimatedBasketCost: number;
+  shopWeight: 'light' | 'balanced' | 'heavy';
+  headline: string;
+  costExplanation: string;
   reusedIngredients: ConsolidatedIngredient[];
   oneUseIngredients: ConsolidatedIngredient[];
   readyMadeCount: number;
@@ -286,6 +289,23 @@ export function buildSupermarketPlanSummary(
     : 0;
   const readyMadeCount = scheduled.filter(item => item.mode === 'ready-made' || !!item.retailer).length;
   const homemadeCount = scheduled.length - readyMadeCount;
+  const shopWeight: SupermarketPlanSummary['shopWeight'] = oneUseIngredients.length >= 16
+    ? 'heavy'
+    : reusedIngredients.length >= 4 || oneUseIngredients.length <= 6
+      ? 'light'
+      : 'balanced';
+  const headline = scheduled.length === 1
+    ? 'Add more dinners to sense-check the week.'
+    : shopWeight === 'heavy'
+      ? 'This plan may feel shop-heavy.'
+      : shopWeight === 'light'
+        ? 'This plan makes good use of the shop.'
+        : 'This plan looks workable, with a few extra buys.';
+  const costExplanation = estimatedDinnerCost > 0
+    ? shopWeight === 'heavy'
+      ? `Dinners total about £${estimatedDinnerCost.toFixed(2)}, but the first shop may feel closer to £${estimatedBasketCost.toFixed(2)} because several ingredients are only used once.`
+      : `Dinners total about £${estimatedDinnerCost.toFixed(2)}; the first shop may feel closer to £${estimatedBasketCost.toFixed(2)} once partial packs and extras are included.`
+    : 'Build the shopping list to see what this week is likely to need.';
   const planNotes: string[] = [];
 
   if (reusedIngredients.length > 0) {
@@ -307,6 +327,9 @@ export function buildSupermarketPlanSummary(
     preferredSupermarkets,
     estimatedDinnerCost,
     estimatedBasketCost,
+    shopWeight,
+    headline,
+    costExplanation,
     reusedIngredients,
     oneUseIngredients,
     readyMadeCount,

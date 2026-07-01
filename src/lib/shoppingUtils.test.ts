@@ -45,6 +45,9 @@ describe('buildSupermarketPlanSummary', () => {
     expect(summary.plannedDinnerCount).toBe(2);
     expect(summary.preferredSupermarkets).toEqual(['Tesco']);
     expect(summary.estimatedDinnerCost).toBe(8.6);
+    expect(summary.shopWeight).toBe('light');
+    expect(summary.headline).toBe('This plan makes good use of the shop.');
+    expect(summary.costExplanation).toContain('Dinners total about £8.60');
     expect(summary.reusedIngredients.map(item => item.name)).toContain('Rice');
     expect(summary.oneUseIngredients.map(item => item.name)).toEqual(
       expect.arrayContaining(['Chicken thighs', 'Red pepper', 'Courgette'])

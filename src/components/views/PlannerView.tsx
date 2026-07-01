@@ -1043,81 +1043,81 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   </div>
 
                   {supermarketPlanSummary.plannedDinnerCount > 0 && (
-                    <div className="border border-gray-100 bg-gray-50/50 rounded px-3 py-3 sm:px-4 sm:py-3.5 space-y-3">
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                        <div className="min-w-0">
+                    <div className="border border-gray-100 bg-white rounded px-3 py-3 sm:px-4 sm:py-3.5 space-y-3 shadow-[0_1px_4px_rgba(15,23,42,0.025)]">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+                        <div className="min-w-0 max-w-2xl">
                           <div className="flex items-center gap-1.5">
                             <Coins className="w-3.5 h-3.5 text-accent" />
                             <h4 className="text-[12px] font-bold text-gray-900 uppercase tracking-widest">
-                              Supermarket view
+                              Weekly shop check
                             </h4>
                           </div>
-                          <p className="mt-1 text-[11.5px] text-gray-500 leading-relaxed">
-                            Planned around {supermarketLabel}, with ingredient reuse and likely one-use buys flagged before you shop.
+                          <p className="mt-2 text-[14px] sm:text-[15px] font-bold text-gray-900 leading-snug">
+                            {supermarketPlanSummary.headline}
+                          </p>
+                          <p className="mt-1 text-[12px] text-gray-500 leading-relaxed">
+                            {supermarketPlanSummary.costExplanation}
+                          </p>
+                          <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
+                            Based on your scheduled dinners and {supermarketLabel}; exact prices and pack sizes will vary.
                           </p>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 sm:min-w-[220px]">
-                          <div className="bg-white border border-gray-100 rounded px-2 py-2">
-                            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400">Dinner cost</p>
-                            <p className="text-[15px] font-bold text-gray-900">
-                              {supermarketPlanSummary.estimatedDinnerCost > 0
-                                ? `£${supermarketPlanSummary.estimatedDinnerCost.toFixed(2)}`
-                                : 'Unknown'}
-                            </p>
-                          </div>
-                          <div className="bg-white border border-gray-100 rounded px-2 py-2">
-                            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400">Basket feel</p>
-                            <p className="text-[15px] font-bold text-gray-900">
-                              {supermarketPlanSummary.estimatedBasketCost > 0
-                                ? `~£${supermarketPlanSummary.estimatedBasketCost.toFixed(2)}`
-                                : 'Build list'}
-                            </p>
-                          </div>
+                        <div className="flex flex-wrap gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => setView('shopping')}
+                            className="h-9 px-3 rounded bg-gray-900 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-black transition-colors"
+                          >
+                            Build shopping list
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setView('home')}
+                            className="h-9 px-3 rounded bg-white border border-gray-200 text-gray-700 text-[10.5px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-colors"
+                          >
+                            Find lower-waste swaps
+                          </button>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-                        <div className="bg-white border border-gray-100 rounded p-2.5">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Reused</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                        <div className="bg-gray-50/70 border border-gray-100 rounded p-2.5">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Worth reusing</p>
                           {supermarketPlanSummary.reusedIngredients.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
-                              {supermarketPlanSummary.reusedIngredients.slice(0, 4).map(item => (
+                              {supermarketPlanSummary.reusedIngredients.slice(0, 3).map(item => (
                                 <span key={item.id} className="text-[10.5px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-1.5 py-0.5">
                                   {item.name}
                                 </span>
                               ))}
+                              {supermarketPlanSummary.reusedIngredients.length > 3 && (
+                                <span className="text-[10.5px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-1.5 py-0.5">
+                                  +{supermarketPlanSummary.reusedIngredients.length - 3} more
+                                </span>
+                              )}
                             </div>
                           ) : (
                             <p className="text-[11px] text-gray-400 leading-relaxed">No obvious overlap yet.</p>
                           )}
                         </div>
-                        <div className="bg-white border border-gray-100 rounded p-2.5">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">One-use watch</p>
+                        <div className="bg-gray-50/70 border border-gray-100 rounded p-2.5">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">May add to the shop</p>
                           {supermarketPlanSummary.oneUseIngredients.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
-                              {supermarketPlanSummary.oneUseIngredients.slice(0, 4).map(item => (
+                              {supermarketPlanSummary.oneUseIngredients.slice(0, 3).map(item => (
                                 <span key={item.id} className="text-[10.5px] font-semibold text-amber-800 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
                                   {item.name}
                                 </span>
                               ))}
+                              {supermarketPlanSummary.oneUseIngredients.length > 3 && (
+                                <span className="text-[10.5px] font-semibold text-amber-800 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
+                                  +{supermarketPlanSummary.oneUseIngredients.length - 3} more
+                                </span>
+                              )}
                             </div>
                           ) : (
                             <p className="text-[11px] text-gray-400 leading-relaxed">No obvious one-use ingredients.</p>
                           )}
-                        </div>
-                        <div className="bg-white border border-gray-100 rounded p-2.5">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Notes</p>
-                          <ul className="space-y-1">
-                            {(supermarketPlanSummary.planNotes.length > 0
-                              ? supermarketPlanSummary.planNotes
-                              : ['Add more scheduled dinners to see basket patterns.']
-                            ).slice(0, 3).map(note => (
-                              <li key={note} className="flex gap-1.5 text-[11px] text-gray-500 leading-snug">
-                                <Info className="w-3 h-3 shrink-0 mt-0.5 text-gray-300" />
-                                <span>{note}</span>
-                              </li>
-                            ))}
-                          </ul>
                         </div>
                       </div>
                     </div>
