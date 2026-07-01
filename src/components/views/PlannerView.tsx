@@ -28,6 +28,7 @@ import { SavedRecipeItem } from '../SavedRecipeItem';
 import { passesHardConstraints, passesDietaryRule } from '../../lib/dietarySafety';
 import { buildSearchParams, checkSearchMatch, cleanSearchParams } from '../../lib/searchUtils';
 import { getConvenienceProfile } from '../../lib/recipeUtils';
+import { buildSupermarketPlanSummary } from '../../lib/shoppingUtils';
 
 interface PlannerViewProps {
   setView: (view: any) => void;
@@ -263,6 +264,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const hasActiveSavedFilters = convenienceFilter !== 'all' || Object.values(quickPills).some(Boolean);
 
   const source = profile?.preferences?.preferredMode || 'cook';
+  const supermarketPlanSummary = React.useMemo(
+    () => buildSupermarketPlanSummary(planner, profile?.preferences?.preferredSupermarkets || []),
+    [planner, profile?.preferences?.preferredSupermarkets]
+  );
+  const supermarketLabel = supermarketPlanSummary.preferredSupermarkets.length > 0
+    ? supermarketPlanSummary.preferredSupermarkets.join(', ')
+    : 'your usual supermarket';
 
   const checkReadOnly = (msg: string) => {
     if (isReadOnly) {
@@ -1033,6 +1041,87 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </span>
                     </div>
                   </div>
+
+                  {supermarketPlanSummary.plannedDinnerCount > 0 && (
+                    <div className="border border-gray-100 bg-gray-50/50 rounded px-3 py-3 sm:px-4 sm:py-3.5 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <Coins className="w-3.5 h-3.5 text-accent" />
+                            <h4 className="text-[12px] font-bold text-gray-900 uppercase tracking-widest">
+                              Supermarket view
+                            </h4>
+                          </div>
+                          <p className="mt-1 text-[11.5px] text-gray-500 leading-relaxed">
+                            Planned around {supermarketLabel}, with ingredient reuse and likely one-use buys flagged before you shop.
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 sm:min-w-[220px]">
+                          <div className="bg-white border border-gray-100 rounded px-2 py-2">
+                            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400">Dinner cost</p>
+                            <p className="text-[15px] font-bold text-gray-900">
+                              {supermarketPlanSummary.estimatedDinnerCost > 0
+                                ? `£${supermarketPlanSummary.estimatedDinnerCost.toFixed(2)}`
+                                : 'Unknown'}
+                            </p>
+                          </div>
+                          <div className="bg-white border border-gray-100 rounded px-2 py-2">
+                            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400">Basket feel</p>
+                            <p className="text-[15px] font-bold text-gray-900">
+                              {supermarketPlanSummary.estimatedBasketCost > 0
+                                ? `~£${supermarketPlanSummary.estimatedBasketCost.toFixed(2)}`
+                                : 'Build list'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                        <div className="bg-white border border-gray-100 rounded p-2.5">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Reused</p>
+                          {supermarketPlanSummary.reusedIngredients.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {supermarketPlanSummary.reusedIngredients.slice(0, 4).map(item => (
+                                <span key={item.id} className="text-[10.5px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-1.5 py-0.5">
+                                  {item.name}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-[11px] text-gray-400 leading-relaxed">No obvious overlap yet.</p>
+                          )}
+                        </div>
+                        <div className="bg-white border border-gray-100 rounded p-2.5">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">One-use watch</p>
+                          {supermarketPlanSummary.oneUseIngredients.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {supermarketPlanSummary.oneUseIngredients.slice(0, 4).map(item => (
+                                <span key={item.id} className="text-[10.5px] font-semibold text-amber-800 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
+                                  {item.name}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-[11px] text-gray-400 leading-relaxed">No obvious one-use ingredients.</p>
+                          )}
+                        </div>
+                        <div className="bg-white border border-gray-100 rounded p-2.5">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Notes</p>
+                          <ul className="space-y-1">
+                            {(supermarketPlanSummary.planNotes.length > 0
+                              ? supermarketPlanSummary.planNotes
+                              : ['Add more scheduled dinners to see basket patterns.']
+                            ).slice(0, 3).map(note => (
+                              <li key={note} className="flex gap-1.5 text-[11px] text-gray-500 leading-snug">
+                                <Info className="w-3 h-3 shrink-0 mt-0.5 text-gray-300" />
+                                <span>{note}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* WEEKLY SCHEDULE GRID */}
                   <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">

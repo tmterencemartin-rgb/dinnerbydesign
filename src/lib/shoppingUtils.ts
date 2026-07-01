@@ -143,6 +143,18 @@ export interface ConsolidatedIngredient {
   unparseableQuantities: string[];
 }
 
+export interface SupermarketPlanSummary {
+  plannedDinnerCount: number;
+  preferredSupermarkets: string[];
+  estimatedDinnerCost: number;
+  estimatedBasketCost: number;
+  reusedIngredients: ConsolidatedIngredient[];
+  oneUseIngredients: ConsolidatedIngredient[];
+  readyMadeCount: number;
+  homemadeCount: number;
+  planNotes: string[];
+}
+
 /**
  * Scans the weekly schedule, pulls ingredient lists from all assigned recipes, 
  * and merges them into a mathematically aggregated, unified data structure.
@@ -238,6 +250,69 @@ export function aggregateWeeklyIngredients(planner: SavedRecipe[]): Consolidated
   });
 
   return Array.from(totalIngredientsMap.values());
+}
+
+const parseMoney = (value?: string): number => {
+  if (!value) return 0;
+  const match = value.match(/[\d.]+/);
+  return match ? parseFloat(match[0]) : 0;
+};
+
+export function buildSupermarketPlanSummary(
+  planner: SavedRecipe[],
+  preferredSupermarkets: string[] = []
+): SupermarketPlanSummary {
+  const scheduled = planner.filter(entry => !!entry.scheduledDate);
+  const ingredients = aggregateWeeklyIngredients(scheduled);
+  const reusedIngredients = ingredients
+    .filter(item => item.sourceRecipeIds.length > 1)
+    .sort((a, b) => b.sourceRecipeIds.length - a.sourceRecipeIds.length || a.name.localeCompare(b.name));
+  const oneUseIngredients = ingredients
+    .filter(item => item.sourceRecipeIds.length === 1 && item.category !== 'Ready-made dinners')
+    .sort((a, b) => {
+      const categoryRank = (category: string) => category === 'Veg & fruit' || category === 'Dairy & eggs' ? 0 : 1;
+      return categoryRank(a.category) - categoryRank(b.category) || a.name.localeCompare(b.name);
+    });
+
+  const estimatedDinnerCost = scheduled.reduce((total, item) => {
+    const perPortion = parseMoney(item.costPerPortion || item.price);
+    const servings = item.requestedServings || item.totalServings || 1;
+    return total + (perPortion * servings);
+  }, 0);
+
+  const extraBasketBuffer = Math.min(oneUseIngredients.length * 0.85, 12);
+  const estimatedBasketCost = estimatedDinnerCost > 0
+    ? estimatedDinnerCost + extraBasketBuffer
+    : 0;
+  const readyMadeCount = scheduled.filter(item => item.mode === 'ready-made' || !!item.retailer).length;
+  const homemadeCount = scheduled.length - readyMadeCount;
+  const planNotes: string[] = [];
+
+  if (reusedIngredients.length > 0) {
+    planNotes.push(`${reusedIngredients.length} ${reusedIngredients.length === 1 ? 'ingredient is' : 'ingredients are'} reused across dinners.`);
+  } else if (scheduled.length > 1) {
+    planNotes.push('No obvious ingredient overlap yet.');
+  }
+
+  if (oneUseIngredients.length > 0) {
+    planNotes.push(`${oneUseIngredients.length} likely one-use ${oneUseIngredients.length === 1 ? 'ingredient' : 'ingredients'} in this plan.`);
+  }
+
+  if (readyMadeCount > 0 && homemadeCount > 0) {
+    planNotes.push(`Mixes ${homemadeCount} homemade and ${readyMadeCount} ready-made ${readyMadeCount === 1 ? 'backup' : 'options'}.`);
+  }
+
+  return {
+    plannedDinnerCount: scheduled.length,
+    preferredSupermarkets,
+    estimatedDinnerCost,
+    estimatedBasketCost,
+    reusedIngredients,
+    oneUseIngredients,
+    readyMadeCount,
+    homemadeCount,
+    planNotes
+  };
 }
 
 const parseNumericQuantity = (q: string): number => {
