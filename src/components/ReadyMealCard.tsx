@@ -10,6 +10,7 @@ import { Tooltip } from './ui/Tooltip';
 import { RetailerCtaLink } from './RetailerCtaLink';
 import { RecipeActionRow } from './RecipeActionRow';
 import { GuidanceNotice } from './Notices';
+import { RecipeRealityChecks } from './RecipeRealityChecks';
 
 interface ReadyMealCardProps {
   meal: ReadyMeal;
@@ -215,6 +216,10 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               <div className="w-full flex flex-col gap-2 items-start">
                 <RetailerCtaLink product={meal} />
               </div>
+
+              {!isExpanded && (
+                <RecipeRealityChecks checks={meal.realityChecks} compact />
+              )}
               
               <div className="w-full bg-white rounded pt-1">
                 <RecipeActionRow 
@@ -255,6 +260,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                          hasCost={!!(meal.costPerPortion || meal.price)} 
                          mode="ready-made"
                        />
+                       <RecipeRealityChecks checks={meal.realityChecks} />
                     </div>
 
                     <div className="pt-3 border-t border-gray-100">

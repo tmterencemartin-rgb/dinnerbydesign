@@ -14,7 +14,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 async function startServer() {
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT || 3000);
   
   // Ensure NODE_ENV is set for the app logic
   if (!process.env.NODE_ENV) {

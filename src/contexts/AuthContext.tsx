@@ -1054,7 +1054,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isPescatarian: ('isPescatarian' in item) ? item.isPescatarian : undefined,
       isVegan: ('isVegan' in item) ? item.isVegan : undefined,
       dietFlagsVerified: ('dietFlagsVerified' in item) ? item.dietFlagsVerified : undefined,
-      isAirFryerFriendly: ('isAirFryerFriendly' in item) ? item.isAirFryerFriendly : undefined
+      isAirFryerFriendly: ('isAirFryerFriendly' in item) ? item.isAirFryerFriendly : undefined,
+      realityChecks: (item as any).realityChecks || undefined
     };
 
     if ('ingredients' in item) {

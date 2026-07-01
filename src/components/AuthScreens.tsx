@@ -101,7 +101,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
           <p className="text-[13px] text-gray-500 mt-2 leading-relaxed">
             {isSignUp 
               ? 'No credit card details required.' 
-              : 'Enter your details to access your account.'}
+              : 'Pick up your saved recipes, planner and shopping list.'}
           </p>
         </div>
         

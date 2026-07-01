@@ -24,6 +24,12 @@ export interface BatchCookingInfo {
   reheat?: string;
 }
 
+export interface RealityCheck {
+  label: string;
+  note: string;
+  tone: 'positive' | 'caution' | 'neutral';
+}
+
 export interface Recipe {
   id?: string;
   title: string;
@@ -62,6 +68,7 @@ export interface Recipe {
   category?: string;
   convenienceProfile?: 'scratch' | 'convenience';
   batchCooking?: BatchCookingInfo;
+  realityChecks?: RealityCheck[];
 }
 
 export interface ReadyMeal {
@@ -105,6 +112,7 @@ export interface ReadyMeal {
   prepTime?: number;
   cookTime?: number;
   convenienceProfile?: 'scratch' | 'convenience';
+  realityChecks?: RealityCheck[];
 }
 
 export interface UserPreferences {
@@ -282,6 +290,7 @@ export interface SavedRecipe {
   category?: string;
   convenienceProfile?: 'scratch' | 'convenience';
   batchCooking?: BatchCookingInfo;
+  realityChecks?: RealityCheck[];
 }
 
 export interface ShoppingListItem {

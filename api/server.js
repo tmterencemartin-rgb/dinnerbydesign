@@ -157625,6 +157625,15 @@ var estimateTokensFromText = (value) => {
   if (!value) return 0;
   return Math.ceil(value.length / 4);
 };
+var sanitizeRealityChecks = (checks) => {
+  if (!Array.isArray(checks)) return [];
+  const allowedTones = /* @__PURE__ */ new Set(["positive", "caution", "neutral"]);
+  return checks.filter((check) => check && typeof check === "object").map((check) => ({
+    label: String(check.label || "").trim().slice(0, 28),
+    note: String(check.note || "").trim().slice(0, 120),
+    tone: allowedTones.has(check.tone) ? check.tone : "neutral"
+  })).filter((check) => check.label && check.note).slice(0, 3);
+};
 async function fetchProxySuggestions(searchParams, preferences, signal) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
@@ -157826,6 +157835,7 @@ INTENT PARSING (CRITICAL):
 - FOR RECIPES (HOMEMADE): You MUST provide a "sourceUrl" and an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return. If you can attribute the recipe to a real UK source (e.g. BBC Good Food, Jamie Oliver, Tesco Real Food), use their domain or a representative search URL. If it's a generic classic, use "recipe-search" or a similar descriptive string.
 - CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
 - BATCH COOKING CLASSIFICATION (RECIPES ONLY): Add a 'batchCooking' object for home-cooking recipes. Set suitable=true only when the recipe keeps well, reheats well, scales sensibly to extra portions, and is not texture-sensitive. Good candidates include soups, stews, curries, chilli, pasta sauces, tray bakes, casseroles, rice dishes and lentil dishes. Avoid labelling dressed salads, crispy/fried dishes, fresh fish/shellfish-heavy dishes, rare steak, and recipes that should be served immediately. Include a short reason plus storage/reheat notes when suitable=true.
+- RECIPE REALITY CHECKS (CRITICAL): Add exactly 3 "realityChecks" to every item. Each check must be practical, plain-English and specific to the item, not generic praise. Use labels such as "Hidden effort", "Shopping friction", "Weeknight fit", "Cost caution", "Leftover friendly", "Portion caution", or "Cleanup". Each check has { label, note, tone }, where tone is "positive", "caution", or "neutral". Notes must be under 110 characters and should help the user decide if this dinner is realistic tonight.
 ${parsedIngredientsInstruction}
 
 HARD CONSTRAINTS:
@@ -157891,6 +157901,18 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                 isVegan: { type: Type.BOOLEAN },
                 isPescatarian: { type: Type.BOOLEAN },
                 convenienceProfile: { type: Type.STRING, enum: ["scratch", "convenience"] },
+                realityChecks: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      label: { type: Type.STRING },
+                      note: { type: Type.STRING },
+                      tone: { type: Type.STRING, enum: ["positive", "caution", "neutral"] }
+                    },
+                    required: ["label", "note", "tone"]
+                  }
+                },
                 ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
                 totalIngredientsCount: { type: Type.NUMBER, description: "Total number of ingredients in the full version of this recipe." },
                 sourceUrl: { type: Type.STRING },
@@ -157912,7 +157934,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                   }
                 }
               },
-              required: ["title", "description", "cuisine", "totalTime", "ingredients", "sourceUrl", "totalIngredientsCount", ...isReadyMade ? ["retailer"] : []]
+              required: ["title", "description", "cuisine", "totalTime", "ingredients", "sourceUrl", "totalIngredientsCount", "realityChecks", ...isReadyMade ? ["retailer"] : []]
             }
           },
           budgetContradiction: {
@@ -157941,6 +157963,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const rawItems = data.items || [];
     let items = rawItems.map((item) => ({
       ...item,
+      realityChecks: sanitizeRealityChecks(item.realityChecks),
       id: item.id || `ai-${Math.random().toString(36).substring(2, 9)}`,
       dietFlagsVerified: true
       // Mandatory for deterministic safety gate
@@ -164121,7 +164144,7 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("FATAL UNHANDLED REJECTION at:", promise, "reason:", reason);
 });
 async function startServer() {
-  const PORT = 3e3;
+  const PORT = Number(process.env.PORT || 3e3);
   if (!process.env.NODE_ENV) {
     const isCompiled = process.argv[1]?.includes("dist") || false;
     process.env.NODE_ENV = isCompiled ? "production" : "development";

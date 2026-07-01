@@ -11,6 +11,7 @@ import { RetailerCtaLink } from './RetailerCtaLink';
 import { GuidanceNotice } from './Notices';
 import { RecipeActionRow } from './RecipeActionRow';
 import { convertIngredient } from '../lib/measurementUtils';
+import { RecipeRealityChecks } from './RecipeRealityChecks';
 
 interface RecipeCardProps {
   recipe: Recipe | ReadyMeal;
@@ -313,6 +314,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 <RetailerCtaLink product={recipe} type={mode} />
                 <div className="w-full h-px bg-gray-100/70 my-0.5 sm:my-1" />
               </div>
+
+              {!isExpanded && (
+                <RecipeRealityChecks checks={(recipe as any).realityChecks} compact />
+              )}
               
               <div className="w-full bg-white rounded">
                 <RecipeActionRow 
@@ -410,6 +415,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         hasCost={hasCost} 
                         mode={mode}
                       />
+                      <RecipeRealityChecks checks={(recipe as any).realityChecks} />
                     </div>
 
                     {/* Responsive side-by-side view for expanded recipe */}
