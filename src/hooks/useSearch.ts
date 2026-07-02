@@ -450,8 +450,19 @@ export function useSearch() {
         if (!msg) return "Our AI service is experiencing a temporary issue. Please try again.";
         const lower = msg.toLowerCase();
         if (
+          lower.includes("permission_denied") ||
+          lower.includes("permission denied") ||
+          lower.includes("lightning dunning") ||
+          lower.includes('"code":403') ||
+          lower.includes("status\":403") ||
+          (lower.includes("deny") && lower.includes("project"))
+        ) {
+          return "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later.";
+        }
+        if (
           lower.startsWith("our ai service") ||
           lower.startsWith("our ai provider") ||
+          lower.startsWith("recipe search is temporarily unavailable") ||
           lower.startsWith("search request timed out")
         ) {
           return msg;
@@ -502,7 +513,7 @@ export function useSearch() {
         setLocalError("AI returned a malformed response. Please try again or simplify your search.");
       } else if (category === 'schema') {
         setLocalError("AI response was incomplete or mismatched. Please try again.");
-      } else if (category === 'quota') {
+      } else if (category === 'quota' || category === 'permission') {
         setLocalError(errorMsg); 
       } else if (category === 'network') {
         setLocalError(errorMsg);

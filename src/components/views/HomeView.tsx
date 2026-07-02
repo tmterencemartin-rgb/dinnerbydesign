@@ -768,7 +768,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <Info className="w-6 h-6 text-red-500" />
             </div>
             <h3 className="text-[16px] font-bold text-gray-900 mb-2">
-              Our AI service is experiencing a temporary issue.
+              Recipe search is unavailable right now.
             </h3>
             <p className="text-[13px] text-gray-500 mx-auto mb-6 max-w-sm leading-relaxed px-4">
               {searchError || "Please try again in a moment or simplify your query."}

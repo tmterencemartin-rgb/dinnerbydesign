@@ -5,6 +5,7 @@ import { PREFERRED_SOURCES } from '../data/preferredSources';
 import { parseAndNormaliseIngredients } from '../lib/ingredientParser';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
+const AI_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later.";
 
 /**
  * Result count constants for search flows.
@@ -22,7 +23,7 @@ export const INITIAL_READY_MADE_RESULTS = DEFAULT_RESULT_COUNT;
  */
 export class GeminiServiceError extends Error {
   constructor(
-    public category: 'model' | 'tool' | 'schema' | 'empty' | 'parsing' | 'network' | 'quota',
+    public category: 'model' | 'tool' | 'schema' | 'empty' | 'parsing' | 'network' | 'quota' | 'permission',
     message: string,
     public details?: unknown
   ) {
@@ -70,10 +71,11 @@ function getAI() {
 /**
  * Parse and sanitize Google GenAI provider errors, handling HTML leakage.
  */
-function parseProviderError(error: any): { status: number; message: string; isTemporary: boolean } {
+function parseProviderError(error: any): { status: number; message: string; isTemporary: boolean; isPermission: boolean } {
   let status = error?.status || error?.error?.code || 0;
   let rawMsg = error?.message || String(error);
   let isTemporary = false;
+  let isPermission = false;
 
   // Try to parse JSON from message like "ApiError: {"error":{...}}"
   if (rawMsg.includes("ApiError:")) {
@@ -95,6 +97,11 @@ function parseProviderError(error: any): { status: number; message: string; isTe
   }
 
   const messageLower = rawMsg.toLowerCase();
+  isPermission = status === 403 ||
+    messageLower.includes("permission_denied") ||
+    messageLower.includes("permission denied") ||
+    messageLower.includes("lightning dunning") ||
+    (messageLower.includes("deny") && messageLower.includes("project"));
   
   if (status === 502 || status === 503 || status === 504 || status === 429) {
     isTemporary = true;
@@ -135,7 +142,8 @@ function parseProviderError(error: any): { status: number; message: string; isTe
   return {
     status,
     message: rawMsg,
-    isTemporary
+    isTemporary,
+    isPermission
   };
 }
 
@@ -874,9 +882,11 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     console.error("[GeminiService] Search failed:", error);
     
     const parsed = parseProviderError(error);
-    let category: 'network' | 'quota' | 'model' = 'model';
+    let category: 'network' | 'quota' | 'model' | 'permission' = 'model';
     
-    if (parsed.status === 429 || parsed.message.toLowerCase().includes("quota") || parsed.message.toLowerCase().includes("resource exhausted")) {
+    if (parsed.isPermission) {
+      category = 'permission';
+    } else if (parsed.status === 429 || parsed.message.toLowerCase().includes("quota") || parsed.message.toLowerCase().includes("resource exhausted")) {
       category = 'quota';
     } else if (parsed.isTemporary) {
       category = 'network';
@@ -884,7 +894,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       category = 'network';
     }
 
-    throw new GeminiServiceError(category, parsed.message);
+    throw new GeminiServiceError(category, parsed.isPermission ? AI_PERMISSION_MESSAGE : parsed.message);
   }
 }
 

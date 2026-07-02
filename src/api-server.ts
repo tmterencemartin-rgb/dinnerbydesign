@@ -271,6 +271,12 @@ export function createApp() {
 
       // Convert any high-demand/temporary/quota error into a clean user-friendly plain English notice
       const messageLower = message.toLowerCase();
+      const isPermission =
+        category === 'permission' ||
+        messageLower.includes("permission_denied") ||
+        messageLower.includes("permission denied") ||
+        messageLower.includes("lightning dunning") ||
+        (messageLower.includes("deny") && messageLower.includes("project"));
       const isTransient = 
         messageLower.includes("high demand") ||
         messageLower.includes("503") ||
@@ -284,8 +290,10 @@ export function createApp() {
 
       const isQuota = category === 'quota' || messageLower.includes("quota") || messageLower.includes("limit") || messageLower.includes("resource exhausted");
 
-      if (isTransient || isQuota) {
-        message = isQuota 
+      if (isPermission || isTransient || isQuota) {
+        message = isPermission
+          ? "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later."
+          : isQuota 
           ? "Our AI service is currently at capacity due to high demand. You didn't do anything wrong! Please wait about 60 seconds and try again."
           : "Our AI provider is experiencing a temporary issue. This is a backend stability matter and usually resolves quickly. Please try again in a moment. [Check Status](https://aistudio.google.com/status)";
       }
@@ -295,11 +303,11 @@ export function createApp() {
       const errorResponse = { 
         ok: false,
         error: {
-          code: isQuota ? "AI_SEARCH_QUOTA_EXHAUSTED" : "AI_SEARCH_TEMPORARY_FAILURE",
+          code: isPermission ? "AI_SEARCH_SERVICE_ACCOUNT_UNAVAILABLE" : isQuota ? "AI_SEARCH_QUOTA_EXHAUSTED" : "AI_SEARCH_TEMPORARY_FAILURE",
           message,
-          retryable: isTransient || isQuota,
+          retryable: !isPermission && (isTransient || isQuota),
           status: status,
-          category
+          category: isPermission ? 'permission' : category
         }
       };
       

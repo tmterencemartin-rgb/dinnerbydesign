@@ -157343,6 +157343,7 @@ function parseAndNormaliseIngredients(query) {
 }
 
 // src/services/geminiService.ts
+var AI_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later.";
 var GeminiServiceError = class extends Error {
   constructor(category, message, details) {
     super(message);
@@ -157381,6 +157382,7 @@ function parseProviderError(error) {
   let status = error?.status || error?.error?.code || 0;
   let rawMsg = error?.message || String(error);
   let isTemporary = false;
+  let isPermission = false;
   if (rawMsg.includes("ApiError:")) {
     try {
       const jsonStart = rawMsg.indexOf("{");
@@ -157398,6 +157400,7 @@ function parseProviderError(error) {
     }
   }
   const messageLower = rawMsg.toLowerCase();
+  isPermission = status === 403 || messageLower.includes("permission_denied") || messageLower.includes("permission denied") || messageLower.includes("lightning dunning") || messageLower.includes("deny") && messageLower.includes("project");
   if (status === 502 || status === 503 || status === 504 || status === 429) {
     isTemporary = true;
   }
@@ -157421,7 +157424,8 @@ function parseProviderError(error) {
   return {
     status,
     message: rawMsg,
-    isTemporary
+    isTemporary,
+    isPermission
   };
 }
 function serializeSchemaForRest(schema) {
@@ -158017,14 +158021,16 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     console.error("[GeminiService] Search failed:", error);
     const parsed = parseProviderError(error);
     let category = "model";
-    if (parsed.status === 429 || parsed.message.toLowerCase().includes("quota") || parsed.message.toLowerCase().includes("resource exhausted")) {
+    if (parsed.isPermission) {
+      category = "permission";
+    } else if (parsed.status === 429 || parsed.message.toLowerCase().includes("quota") || parsed.message.toLowerCase().includes("resource exhausted")) {
       category = "quota";
     } else if (parsed.isTemporary) {
       category = "network";
     } else if (parsed.message.includes("API_KEY")) {
       category = "network";
     }
-    throw new GeminiServiceError(category, parsed.message);
+    throw new GeminiServiceError(category, parsed.isPermission ? AI_PERMISSION_MESSAGE : parsed.message);
   }
 }
 async function enrichRecipe(title, cuisine, mode) {
@@ -163568,20 +163574,21 @@ function createApp() {
         message = "Search is temporarily unavailable. Please try again.";
       }
       const messageLower = message.toLowerCase();
+      const isPermission = category === "permission" || messageLower.includes("permission_denied") || messageLower.includes("permission denied") || messageLower.includes("lightning dunning") || messageLower.includes("deny") && messageLower.includes("project");
       const isTransient = messageLower.includes("high demand") || messageLower.includes("503") || messageLower.includes("unavailable") || messageLower.includes("overloaded") || messageLower.includes("capacity") || messageLower.includes("deadline exceeded") || messageLower.includes("temporary") || messageLower.includes("apierror") || messageLower.includes("internal error");
       const isQuota = category === "quota" || messageLower.includes("quota") || messageLower.includes("limit") || messageLower.includes("resource exhausted");
-      if (isTransient || isQuota) {
-        message = isQuota ? "Our AI service is currently at capacity due to high demand. You didn't do anything wrong! Please wait about 60 seconds and try again." : "Our AI provider is experiencing a temporary issue. This is a backend stability matter and usually resolves quickly. Please try again in a moment. [Check Status](https://aistudio.google.com/status)";
+      if (isPermission || isTransient || isQuota) {
+        message = isPermission ? "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later." : isQuota ? "Our AI service is currently at capacity due to high demand. You didn't do anything wrong! Please wait about 60 seconds and try again." : "Our AI provider is experiencing a temporary issue. This is a backend stability matter and usually resolves quickly. Please try again in a moment. [Check Status](https://aistudio.google.com/status)";
       }
       const status = isQuota ? 429 : 503;
       const errorResponse = {
         ok: false,
         error: {
-          code: isQuota ? "AI_SEARCH_QUOTA_EXHAUSTED" : "AI_SEARCH_TEMPORARY_FAILURE",
+          code: isPermission ? "AI_SEARCH_SERVICE_ACCOUNT_UNAVAILABLE" : isQuota ? "AI_SEARCH_QUOTA_EXHAUSTED" : "AI_SEARCH_TEMPORARY_FAILURE",
           message,
-          retryable: isTransient || isQuota,
+          retryable: !isPermission && (isTransient || isQuota),
           status,
-          category
+          category: isPermission ? "permission" : category
         }
       };
       res.status(status).json(errorResponse);
