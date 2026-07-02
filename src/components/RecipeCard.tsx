@@ -503,6 +503,14 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     </h4>
                     {renderKitItems(kitUpgrades, true)}
                   </div>
+
+                  {recipe.matchReason && (
+                    <div className="bg-gray-50/70 p-3 rounded">
+                      <p className="text-[11px] text-gray-500 leading-relaxed italic">
+                        <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9px]">Why this match:</span> {recipe.matchReason}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -651,11 +659,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                           )}
                         </div>
 
-                        <div className="bg-gray-50/70 p-3 rounded">
-                          <p className="text-[11px] text-gray-500 leading-relaxed italic">
-                            <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9px]">Why this match:</span> {recipe.matchReason}
-                          </p>
-                        </div>
                       </div>
 
                       </div>
