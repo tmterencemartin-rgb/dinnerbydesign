@@ -80,6 +80,9 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     if (cuisineLower.includes('british') || titleLower.includes('pie')) {
       items.push({ name: 'Buttery greens', note: 'Balances rich pastry, gravy or cream' });
       items.push({ name: 'Mashed potato or new potatoes', note: 'Useful when the dish needs extra comfort' });
+    } else if (cuisineLower.includes('spanish') || titleLower.includes('paella')) {
+      items.push({ name: 'Green salad', note: 'Adds freshness beside saffron rice' });
+      items.push({ name: 'Crusty bread', note: 'Useful for catching the last juices' });
     } else if (cuisineLower.includes('indian') || cuisineLower.includes('thai') || cuisineLower.includes('chinese') || cuisineLower.includes('japanese') || cuisineLower.includes('korean')) {
       items.push({ name: 'Steamed rice', note: 'Catches sauce and rounds out the plate' });
       items.push({ name: 'Cucumber or pickled veg', note: 'Cuts through heat and richness' });
@@ -100,7 +103,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   const kitUpgrades = React.useMemo(() => {
     let upgrades: { name: string; note: string }[];
 
-    if (titleLower.includes('fish') || titleLower.includes('salmon') || titleLower.includes('cod') || titleLower.includes('haddock') || titleLower.includes('plaice')) {
+    if (titleLower.includes('paella')) {
+      upgrades = [
+        { name: 'Lemon wedges', note: 'Brightens saffron rice and seafood' },
+        { name: 'Flat-leaf parsley', note: 'Adds colour without overpowering the pan' },
+        { name: 'Smoked paprika', note: 'Deepens the Spanish warmth' }
+      ];
+    } else if (titleLower.includes('fish') || titleLower.includes('salmon') || titleLower.includes('cod') || titleLower.includes('haddock') || titleLower.includes('plaice')) {
       upgrades = [
         { name: 'Lemon wedges', note: 'Brightens fish and buttery sauces' },
         { name: 'Fresh dill or parsley', note: 'Adds a clean, fresh finish' },
@@ -154,6 +163,9 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   }, [cuisineLower, recipe.isVegan, recipe.isVegetarian, titleLower]);
 
   const plateSuggestion = React.useMemo(() => {
+    if (titleLower.includes('paella')) {
+      return 'Serve straight from the pan or in shallow bowls, with lemon wedges and parsley over the top. Keep the seafood visible rather than buried under the rice.';
+    }
     if (titleLower.includes('pie')) {
       return 'Let it stand for five minutes, then portion cleanly and plate with greens on the side so the pastry stays crisp.';
     }
@@ -352,10 +364,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             <div className={isExpanded ? 'grid gap-3 sm:gap-5 sm:grid-cols-[minmax(240px,0.92fr)_minmax(320px,1.08fr)] sm:items-start' : 'grid grid-cols-1 gap-3 sm:gap-5'}>
               <div className="flex flex-col gap-2.5 sm:gap-3 items-start w-full min-w-0">
                 {/* Compressed Metadata Section */}
-                <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/60 rounded">
+                <div className="w-full flex flex-col gap-1 sm:gap-2 py-2 sm:p-3 border-y border-gray-100 sm:border-y-0 sm:bg-gray-50/60 sm:rounded">
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 justify-start">
-                    <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest bg-white/70 px-1.5 py-0.5 rounded">
+                    <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                       {recipe.cuisine}
                     </span>
                     {mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') && (
@@ -366,10 +378,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   </div>
                 
                 {/* Row 2: Performance Stats (Nutrition, Price, Time) */}
-                  <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
                     {(recipe.caloriesPerPortion || recipe.calories) && (
                       <Tooltip text="Estimated calories for one adult portion">
-                        <span className="cursor-help whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                        <span className="cursor-help whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                           {recipe.caloriesPerPortion || recipe.calories} kcal pp
                         </span>
                       </Tooltip>
@@ -377,24 +389,24 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     {recipe.costPerPortion && (
                       <div className="flex items-center gap-1">
                         <Tooltip text="Estimated cost for one adult portion">
-                          <span className="cursor-help border-b border-dotted border-gray-300 whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                          <span className="cursor-help border-b border-dotted border-gray-300 whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                             {recipe.costPerPortion} pp
                           </span>
                         </Tooltip>
                         {requestedServings !== 1 && (
-                          <span className="text-gray-400 font-bold text-[8.5px] sm:text-[9px] uppercase tracking-tighter whitespace-nowrap">
+                          <span className="hidden sm:inline text-gray-400 font-bold text-[9px] uppercase tracking-tighter whitespace-nowrap">
                             Total £{(parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) * requestedServings).toFixed(2)}
                           </span>
                         )}
                       </div>
                     )}
                     {(recipe.totalTime || recipe.prepTime || recipe.cookTime) && (
-                      <span className="whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                      <span className="whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                         {recipe.totalTime} mins
                       </span>
                     )}
                     {recipe.saladType && recipe.saladType !== 'none' && (
-                      <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                      <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                         🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
                       </span>
                     )}
@@ -523,13 +535,15 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
                 {isExpanded && (
                   <>
-                    {kitPanel}
+                    <div className="hidden sm:block w-full">
+                      {kitPanel}
+                    </div>
                   </>
                 )}
               </div>
 
               {isExpanded && (
-                <div className="space-y-3 sm:space-y-4 min-w-0">
+                <div className="hidden sm:block space-y-3 sm:space-y-4 min-w-0">
                   <div>
                     <GuidanceNotice
                       hasCost={hasCost}
@@ -623,7 +637,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     className="overflow-hidden flex flex-col gap-0.5 sm:gap-4"
                   >
                     {/* Responsive side-by-side view for expanded recipe */}
-                    <div className="w-full pt-5 mt-1 border-t border-gray-100">
+                    <div className="w-full pt-3 sm:pt-5 mt-0 sm:mt-1 border-t border-gray-100">
                       <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-x-6 lg:gap-x-12 gap-y-3 items-start">
                         <div className="flex items-center justify-between gap-3">
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
@@ -704,6 +718,30 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </div>
 
                       </div>
+                    </div>
+
+                    <div className="sm:hidden space-y-3 pt-3 border-t border-gray-100">
+                      {kitPanel}
+
+                      <GuidanceNotice
+                        hasCost={hasCost}
+                        mode={mode}
+                      />
+
+                      <RecipeRealityChecks checks={(recipe as any).realityChecks} />
+
+                      <div className="pt-3 border-t border-gray-100">
+                        <h4 className="text-[11px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
+                        <p className="text-[13px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
+                      </div>
+
+                      {recipe.matchReason && (
+                        <div className="bg-gray-50/70 p-3 rounded">
+                          <p className="text-[11px] text-gray-500 leading-relaxed italic">
+                            <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9px]">Why this match:</span> {recipe.matchReason}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}
