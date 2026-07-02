@@ -586,7 +586,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
   const [debugClicks, setDebugClicks] = useState(0);
   const isDebugUrl = typeof window !== 'undefined' && window.location.search.includes('debug=true');
   const isProd = (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'production') || import.meta.env.MODE === 'production';
-  const showDebug = isAdmin;
+  const showDebug = isAdmin || isDebugUrl;
 
   const handleDebugClick = () => {
     if (isProd && !isDebugUrl) return;
@@ -1576,13 +1576,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               </div>
             </div>
 
-            {/* Service Diagnostics Panel */}
-            <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Service Diagnostics</h3>
-              <div className="p-0.5">
-                <ConnectionDiagnostics />
+            {showDebug && (
+              <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Service Diagnostics</h3>
+                <div className="p-0.5">
+                  <ConnectionDiagnostics />
+                </div>
               </div>
-            </div>
+            )}
           </motion.div>
         )}
 
