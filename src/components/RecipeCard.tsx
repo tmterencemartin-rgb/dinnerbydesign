@@ -139,7 +139,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
   const kitPanel = (
     <div className="w-full rounded border border-gray-200 bg-white p-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-start gap-3 mb-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
@@ -151,11 +151,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             Main dish, sides and quick finishes in one place.
           </p>
         </div>
-        {recipe.totalTime && (
-          <span className="shrink-0 w-fit rounded bg-gray-50 border border-gray-100 px-2 py-1 text-[10px] font-bold text-gray-500">
-            About {recipe.totalTime} mins
-          </span>
-        )}
       </div>
 
       <div className="grid gap-3">
@@ -354,6 +349,12 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     )}
                   </div>
                 </div>
+
+                {isExpanded && recipe.totalTime && (
+                  <span className="w-fit rounded bg-gray-50 border border-gray-100 px-2 py-1 text-[10px] font-bold text-gray-500">
+                    Ready in under {Math.ceil(recipe.totalTime / 5) * 5} mins
+                  </span>
+                )}
 
                 {/* Dynamic Card Badges */}
                 {(() => {
