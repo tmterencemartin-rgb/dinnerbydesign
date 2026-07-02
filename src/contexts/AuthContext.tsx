@@ -1070,6 +1070,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       data.retailer = item.retailer;
       data.price = item.price;
       data.servingSuggestion = item.servingSuggestion || undefined;
+      data.readyMadeKit = item.readyMadeKit || undefined;
     }
 
     const clean: any = {};

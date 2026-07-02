@@ -109,10 +109,25 @@ export interface ReadyMeal {
   requestedServings?: number;
   ingredients?: string[];
   instructions?: string[];
+  readyMadeKit?: ReadyMadeKit;
   prepTime?: number;
   cookTime?: number;
   convenienceProfile?: 'scratch' | 'convenience';
   realityChecks?: RealityCheck[];
+}
+
+export interface ReadyMadeKitItem {
+  name: string;
+  role?: string;
+  note?: string;
+}
+
+export interface ReadyMadeKit {
+  coreProduct?: string;
+  sides?: ReadyMadeKitItem[];
+  upgrades?: ReadyMadeKitItem[];
+  totalTimeNote?: string;
+  fitNote?: string;
 }
 
 export interface UserPreferences {
@@ -267,6 +282,7 @@ export interface SavedRecipe {
   saladType?: SaladType;
   mode: 'cook' | 'ready-made';
   instructions?: string[];
+  readyMadeKit?: ReadyMadeKit;
   savedAt: Timestamp | FieldValue | null; // Firestore Timestamp
   updatedAt?: Timestamp | FieldValue | null;
   userId: string;

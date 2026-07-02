@@ -32,6 +32,8 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
   const costPerPortion = isCook ? recipe.costPerPortion : meal.price;
   const totalCost = isCook ? recipe.totalRecipeCost : meal.totalPrice;
   const time = item.totalTime || (meal as any).heatingTime;
+  const kitSideCount = !isCook ? (meal.readyMadeKit?.sides?.length || 0) : 0;
+  const kitUpgradeCount = !isCook ? (meal.readyMadeKit?.upgrades?.length || 0) : 0;
 
   const Separator = () => (
     <span className="inline-block w-[1px] h-3 bg-gray-200 mx-1 sm:mx-2" aria-hidden="true" />
@@ -112,6 +114,19 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
                 </div>
               )}
             </div>
+
+            {!isCook && (
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] font-semibold text-gray-500">
+                <span className="rounded bg-gray-50 px-2 py-0.5 uppercase tracking-wider">
+                  Dinner kit
+                </span>
+                <span className="truncate">
+                  {kitSideCount || kitUpgradeCount
+                    ? `${kitSideCount} add-ons + ${kitUpgradeCount} upgrades`
+                    : 'Add-ons + quick upgrades'}
+                </span>
+              </div>
+            )}
           </div>
         </button>
 

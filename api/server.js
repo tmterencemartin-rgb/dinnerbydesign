@@ -157839,6 +157839,7 @@ INTENT PARSING (CRITICAL):
 - FOR RECIPES (HOMEMADE): You MUST provide a "sourceUrl" and an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return. If you can attribute the recipe to a real UK source (e.g. BBC Good Food, Jamie Oliver, Tesco Real Food), use their domain or a representative search URL. If it's a generic classic, use "recipe-search" or a similar descriptive string.
 - CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
 - BATCH COOKING CLASSIFICATION (RECIPES ONLY): Add a 'batchCooking' object for home-cooking recipes. Set suitable=true only when the recipe keeps well, reheats well, scales sensibly to extra portions, and is not texture-sensitive. Good candidates include soups, stews, curries, chilli, pasta sauces, tray bakes, casseroles, rice dishes and lentil dishes. Avoid labelling dressed salads, crispy/fried dishes, fresh fish/shellfish-heavy dishes, rare steak, and recipes that should be served immediately. Include a short reason plus storage/reheat notes when suitable=true.
+- READY-MADE KIT (READY-MADE ONLY): Add a 'readyMadeKit' object that turns the core product into a complete dinner. Include the core product title, 1-3 optional supermarket sides, and 2-3 tiny upgrades using ordinary UK items such as herbs, yoghurt, lemon, bagged salad, frozen veg, microwave rice, naan, or slaw. Keep upgrades fast, cheap, and realistic for a tired weekday.
 - RECIPE REALITY CHECKS (CRITICAL): Add exactly 3 "realityChecks" to every item. Each check must be practical, plain-English and specific to the item, not generic praise. Use labels such as "Hidden effort", "Shopping friction", "Weeknight fit", "Cost caution", "Leftover friendly", "Portion caution", or "Cleanup". Each check has { label, note, tone }, where tone is "positive", "caution", or "neutral". Notes must be under 110 characters and should help the user decide if this dinner is realistic tonight.
 ${parsedIngredientsInstruction}
 
@@ -157922,7 +157923,39 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                 sourceUrl: { type: Type.STRING },
                 ...isReadyMade ? {
                   retailer: { type: Type.STRING },
-                  isAirFryerFriendly: { type: Type.BOOLEAN }
+                  isAirFryerFriendly: { type: Type.BOOLEAN },
+                  readyMadeKit: {
+                    type: Type.OBJECT,
+                    properties: {
+                      coreProduct: { type: Type.STRING },
+                      sides: {
+                        type: Type.ARRAY,
+                        items: {
+                          type: Type.OBJECT,
+                          properties: {
+                            name: { type: Type.STRING },
+                            role: { type: Type.STRING },
+                            note: { type: Type.STRING }
+                          },
+                          required: ["name"]
+                        }
+                      },
+                      upgrades: {
+                        type: Type.ARRAY,
+                        items: {
+                          type: Type.OBJECT,
+                          properties: {
+                            name: { type: Type.STRING },
+                            role: { type: Type.STRING },
+                            note: { type: Type.STRING }
+                          },
+                          required: ["name"]
+                        }
+                      },
+                      totalTimeNote: { type: Type.STRING },
+                      fitNote: { type: Type.STRING }
+                    }
+                  }
                 } : {
                   saladType: { type: Type.STRING, enum: ["main", "side", "none"] },
                   batchCooking: {
@@ -158051,6 +158084,7 @@ ORIGINALITY:
 
 REQUISITES:
 ${mode === "cook" ? '- Ingredients MUST include specific quantities/units (e.g. "200g", "1 tsp").' : "- Must be a real commercial UK ready-made product. Instructions reflect heating (oven/microwave/air-fryer)."}
+- READY-MADE KIT: For ready-made mode, add a 'readyMadeKit' object with the core product, 1-3 optional supermarket sides, and 2-3 tiny upgrades using ordinary UK items.
 - DESCRIPTION: Synthesize the best aspects in a professional tone.
 - SOURCE URL: Explicitly provide a representative source for this recipe (domain or search url).
 - TOTAL INGREDIENTS COUNT: Provide an accurate total count of all ingredients required.
@@ -158074,7 +158108,39 @@ ${mode === "cook" ? '- Ingredients MUST include specific quantities/units (e.g. 
           ...mode === "ready-made" ? {
             retailer: { type: Type.STRING },
             servingSuggestion: { type: Type.STRING },
-            isAirFryerFriendly: { type: Type.BOOLEAN }
+            isAirFryerFriendly: { type: Type.BOOLEAN },
+            readyMadeKit: {
+              type: Type.OBJECT,
+              properties: {
+                coreProduct: { type: Type.STRING },
+                sides: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      name: { type: Type.STRING },
+                      role: { type: Type.STRING },
+                      note: { type: Type.STRING }
+                    },
+                    required: ["name"]
+                  }
+                },
+                upgrades: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      name: { type: Type.STRING },
+                      role: { type: Type.STRING },
+                      note: { type: Type.STRING }
+                    },
+                    required: ["name"]
+                  }
+                },
+                totalTimeNote: { type: Type.STRING },
+                fitNote: { type: Type.STRING }
+              }
+            }
           } : {}
         },
         required: ["instructions", "ingredients", "description", "sourceUrl", "totalIngredientsCount", ...mode === "ready-made" ? ["retailer"] : []]

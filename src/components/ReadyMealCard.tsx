@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarCheck, Loader2, ChevronUp, ChevronDown, Wind } from 'lucide-react';
-import { ReadyMeal, SavedRecipe } from '../types';
+import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag, Sparkles } from 'lucide-react';
+import { ReadyMeal, ReadyMadeKitItem } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
 import { isSameRecipe } from '../lib/recipeUtils';
@@ -49,6 +49,48 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   const [isChoosingDay, setIsChoosingDay] = useState(false);
 
   const currentServingSuggestion = enrichedData?.servingSuggestion || meal.servingSuggestion;
+  const currentKit = enrichedData?.readyMadeKit || meal.readyMadeKit;
+
+  const fallbackKit = React.useMemo(() => {
+    const cuisine = (meal.cuisine || '').toLowerCase();
+    const title = meal.title || 'Core product';
+    const sides: ReadyMadeKitItem[] = [];
+
+    if (meal.saladType && meal.saladType !== 'none') {
+      sides.push({ name: 'Bagged salad', role: 'fresh crunch', note: 'Keeps the plate lighter' });
+    }
+
+    if (cuisine.includes('indian') || cuisine.includes('thai') || cuisine.includes('chinese') || cuisine.includes('japanese') || cuisine.includes('korean')) {
+      sides.push({ name: 'Microwave rice', role: 'base', note: 'Bulks it out quickly' });
+    } else if (cuisine.includes('italian')) {
+      sides.push({ name: 'Garlic bread', role: 'side', note: 'Adds comfort with no prep' });
+    } else if (cuisine.includes('mexican')) {
+      sides.push({ name: 'Tortilla chips or wraps', role: 'side', note: 'Good for scooping and sharing' });
+    } else {
+      sides.push({ name: 'Steam-bag greens', role: 'veg', note: 'Adds colour in minutes' });
+    }
+
+    const upgrades: ReadyMadeKitItem[] = [
+      { name: cuisine.includes('italian') ? 'Fresh basil or rocket' : 'Fresh herbs', role: 'finish', note: 'Makes it taste less boxed' },
+      { name: cuisine.includes('indian') ? 'Plain yoghurt' : 'Lemon or lime', role: 'lift', note: 'Brightens rich sauces' },
+      { name: 'Toasted seeds or crispy onions', role: 'texture', note: 'Adds crunch at the end' }
+    ];
+
+    return {
+      coreProduct: title,
+      sides: sides.slice(0, 2),
+      upgrades,
+      totalTimeNote: meal.totalTime ? `Around ${meal.totalTime} mins plus any quick sides` : undefined,
+      fitNote: 'Built for a complete dinner with minimal extra prep'
+    };
+  }, [meal.cuisine, meal.saladType, meal.title, meal.totalTime]);
+
+  const dinnerKit = {
+    ...fallbackKit,
+    ...currentKit,
+    sides: currentKit?.sides?.length ? currentKit.sides : fallbackKit.sides,
+    upgrades: currentKit?.upgrades?.length ? currentKit.upgrades : fallbackKit.upgrades
+  };
 
   useEffect(() => {
     if (isExpanded && !currentServingSuggestion && !isEnriching) {
@@ -217,6 +259,50 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 <RetailerCtaLink product={meal} />
               </div>
 
+              <div className="w-full rounded border border-gray-100 bg-gray-50/70 p-3">
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
+                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-700 truncate">
+                      Dinner kit
+                    </h4>
+                  </div>
+                  {dinnerKit.totalTimeNote && (
+                    <span className="text-[10px] font-semibold text-gray-400 truncate">
+                      {dinnerKit.totalTimeNote}
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-[1fr_1fr]">
+                  <div className="min-w-0">
+                    <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                      Add alongside
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {(dinnerKit.sides || []).slice(0, 3).map((side, index) => (
+                        <span key={`${side.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 truncate">
+                          {side.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                      Quick upgrades
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {(dinnerKit.upgrades || []).slice(0, 3).map((upgrade, index) => (
+                        <span key={`${upgrade.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 truncate">
+                          {upgrade.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {!isExpanded && (
                 <RecipeRealityChecks checks={meal.realityChecks} compact />
               )}
@@ -264,7 +350,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     </div>
 
                     <div className="pt-3 border-t border-gray-100">
-                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2">Serving suggestion</h4>
+                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2">How to plate it</h4>
                       {isEnriching && !currentServingSuggestion ? (
                         <div className="flex items-center gap-2 py-4 text-[13px] text-gray-400 italic">
                           <Loader2 className="w-4 h-4 animate-spin text-accent" />
@@ -282,6 +368,26 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                         </p>
                       </div>
                     )}
+
+                    <div className="pt-3 border-t border-gray-100">
+                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-accent" />
+                        Upgrade ideas
+                      </h4>
+                      <div className="grid gap-2">
+                        {(dinnerKit.upgrades || []).slice(0, 3).map((upgrade, index) => (
+                          <div key={`${upgrade.name}-detail-${index}`} className="rounded border border-gray-100 bg-gray-50/70 p-2">
+                            <p className="text-[13px] font-bold text-gray-800">{upgrade.name}</p>
+                            {upgrade.note && (
+                              <p className="text-[12px] text-gray-500 leading-relaxed mt-0.5">{upgrade.note}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      {dinnerKit.fitNote && (
+                        <p className="text-[12px] text-gray-500 leading-relaxed mt-2">{dinnerKit.fitNote}</p>
+                      )}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

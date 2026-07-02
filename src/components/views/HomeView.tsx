@@ -960,7 +960,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <div className="p-3 bg-gray-50/50 border border-gray-100 rounded-lg space-y-2 mt-2 sm:mt-4">
                 <div className="flex items-center gap-2 mb-0.5">
                   <Info className="w-3.5 h-3.5 text-gray-400" />
-                  <p className="text-[13px] font-bold text-gray-900 leading-tight">No more matching recipes found</p>
+                  <p className="text-[13px] font-bold text-gray-900 leading-tight">No more matching dinners found</p>
                 </div>
                 <p className="text-[12px] text-gray-500 leading-relaxed pl-6">
                   Try broadening your search term or loosening some of your permanent preferences in Settings.
