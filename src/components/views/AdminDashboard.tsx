@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, deleteDoc, Timestamp } from 'firebase/firestore';
+import { collection, query, getDocs, doc, deleteDoc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
-import { ArrowLeft, Search, Download, ExternalLink, Calendar, CreditCard, Clock, Trash2, Users, MailCheck, AlertTriangle, Activity } from 'lucide-react';
+import { ArrowLeft, Search, Download, ExternalLink, Calendar, CreditCard, Clock, Trash2, Users, MailCheck, AlertTriangle, Activity, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-type AdminStatusFilter = AccessStatus | 'all' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
+type AdminStatusFilter = AccessStatus | 'all' | 'permanent_access' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
 
 interface StripeWebhookHealthEvent {
   eventId: string;
@@ -51,7 +51,7 @@ export const AdminDashboard: React.FC = () => {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [modal, setModal] = useState<{
     isOpen: boolean;
-    type: 'confirm_delete' | 'confirm_delete_all' | 'alert';
+    type: 'confirm_access' | 'confirm_delete' | 'confirm_delete_all' | 'alert';
     title: string;
     message: string;
     onConfirm?: () => void;
@@ -75,6 +75,16 @@ export const AdminDashboard: React.FC = () => {
     setModal({
       isOpen: true,
       type: 'confirm_delete',
+      title,
+      message,
+      onConfirm
+    });
+  };
+
+  const showAccessConfirm = (title: string, message: string, onConfirm: () => void) => {
+    setModal({
+      isOpen: true,
+      type: 'confirm_access',
       title,
       message,
       onConfirm
@@ -240,7 +250,48 @@ export const AdminDashboard: React.FC = () => {
   const paymentIssueStatuses = ['past_due', 'unpaid', 'incomplete', 'paused'];
 
   const getAccessStatus = (user: UserProfile): AccessStatus => {
+    if (user.permanentAccess) return 'paid';
     return user.subscription?.accessStatus || user.accessStatus || 'trial';
+  };
+
+  const handleTogglePermanentAccess = (targetUser: UserProfile) => {
+    const nextValue = !targetUser.permanentAccess;
+    const action = nextValue ? 'grant' : 'revoke';
+
+    showAccessConfirm(
+      `${nextValue ? 'Grant' : 'Revoke'} Permanent Access`,
+      `This will ${action} permanent full access for "${targetUser.email || targetUser.uid}".\n\nThis is separate from Stripe and will remain active until you revoke it here.`,
+      async () => {
+        setActionLoading(targetUser.uid);
+        try {
+          await updateDoc(doc(db, 'users', targetUser.uid), {
+            permanentAccess: nextValue,
+            permanentAccessGrantedAt: nextValue ? serverTimestamp() : null,
+            permanentAccessGrantedBy: nextValue ? currentUser?.email || currentUser?.uid || null : null,
+            updatedAt: serverTimestamp()
+          });
+          setUsers(prev => prev.map(user => (
+            user.uid === targetUser.uid
+              ? {
+                  ...user,
+                  permanentAccess: nextValue,
+                  permanentAccessGrantedAt: nextValue ? Timestamp.now() : undefined,
+                  permanentAccessGrantedBy: nextValue ? currentUser?.email || currentUser?.uid || null : null
+                }
+              : user
+          )));
+          showCustomAlert(
+            'Access Updated',
+            `Permanent access has been ${nextValue ? 'granted to' : 'revoked for'} "${targetUser.email || targetUser.uid}".`
+          );
+        } catch (err: any) {
+          console.error('Error updating permanent access:', err);
+          showCustomAlert('Error', `Failed to update access: ${err?.message || 'Access denied'}`);
+        } finally {
+          setActionLoading(null);
+        }
+      }
+    );
   };
 
   const getSearchCount = (user: UserProfile) => {
@@ -266,6 +317,7 @@ export const AdminDashboard: React.FC = () => {
     const status = getAccessStatus(user);
     const matchesStatus =
       statusFilter === 'all' ||
+      (statusFilter === 'permanent_access' && !!user.permanentAccess) ||
       status === statusFilter ||
       (statusFilter === 'stripe_linked' && !!user.subscription?.stripeCustomerId) ||
       (statusFilter === 'payment_issue' && hasPaymentIssue(user)) ||
@@ -315,6 +367,9 @@ export const AdminDashboard: React.FC = () => {
       'Email',
       'UID',
       'Access status',
+      'Permanent access',
+      'Permanent access granted',
+      'Permanent access granted by',
       'Stripe status',
       'Stripe customer ID',
       'Stripe subscription ID',
@@ -335,6 +390,9 @@ export const AdminDashboard: React.FC = () => {
         user.email || '',
         user.uid,
         getAccessStatus(user),
+        user.permanentAccess ? 'yes' : 'no',
+        formatDate(user.permanentAccessGrantedAt),
+        user.permanentAccessGrantedBy || '',
         subscription?.subscriptionStatus || '',
         subscription?.stripeCustomerId || '',
         subscription?.stripeSubscriptionId || '',
@@ -382,6 +440,15 @@ export const AdminDashboard: React.FC = () => {
     const status = getAccessStatus(user);
     const subStatus = user.subscription?.subscriptionStatus;
 
+    if (user.permanentAccess) {
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 uppercase tracking-tight">
+          <ShieldCheck className="w-3 h-3" />
+          Permanent
+        </span>
+      );
+    }
+
     switch (status) {
       case 'paid':
         return (
@@ -408,6 +475,7 @@ export const AdminDashboard: React.FC = () => {
 
   const summaryStats = React.useMemo(() => {
     const paid = users.filter(user => getAccessStatus(user) === 'paid').length;
+    const permanentAccess = users.filter(user => !!user.permanentAccess).length;
     const trial = users.filter(user => getAccessStatus(user) === 'trial').length;
     const readOnly = users.filter(user => getAccessStatus(user) === 'read_only').length;
     const stripeLinked = users.filter(user => !!user.subscription?.stripeCustomerId).length;
@@ -431,6 +499,7 @@ export const AdminDashboard: React.FC = () => {
     return {
       total: users.length,
       paid,
+      permanentAccess,
       trial,
       readOnly,
       stripeLinked,
@@ -500,6 +569,7 @@ export const AdminDashboard: React.FC = () => {
             >
               <option value="all">All Status</option>
               <option value="paid">Paid</option>
+              <option value="permanent_access">Permanent Access</option>
               <option value="trial">Trial</option>
               <option value="read_only">Read Only</option>
               <option value="stripe_linked">Stripe Linked</option>
@@ -540,7 +610,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
-                { label: 'Paid subscribers', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe customers`, icon: CreditCard },
+                { label: 'Paid access', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe / ${summaryStats.permanentAccess} permanent`, icon: CreditCard },
                 { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid or incomplete', icon: AlertTriangle },
                 { label: 'Usage', value: summaryStats.aiCalls || summaryStats.totalSearches, detail: `${summaryStats.succeededAiCalls} model calls succeeded`, icon: Activity }
               ].map(item => {
@@ -742,6 +812,12 @@ export const AdminDashboard: React.FC = () => {
                               Last Stripe update: {formatDateTime(subscription.updatedAt)}
                             </div>
                           )}
+                          {user.permanentAccessGrantedAt && (
+                            <div className="flex items-center gap-1.5 text-xs text-blue-600 font-medium">
+                              <ShieldCheck className="w-3.5 h-3.5" />
+                              <span>Permanent: {formatDate(user.permanentAccessGrantedAt)}</span>
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -770,10 +846,30 @@ export const AdminDashboard: React.FC = () => {
                           <div className="text-[10px] text-gray-400 font-mono">
                             Profile: {user.accessStatus || 'trial'}
                           </div>
+                          {user.permanentAccess && (
+                            <div className="text-[10px] text-blue-600 font-mono">
+                              Permanent grant: on
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
+                          {user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com' && (
+                            <button
+                              onClick={() => handleTogglePermanentAccess(user)}
+                              disabled={loading || actionLoading !== null}
+                              className={`inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${
+                                user.permanentAccess
+                                  ? 'text-blue-700 bg-blue-50 hover:bg-blue-100'
+                                  : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+                              } disabled:opacity-50`}
+                              title={user.permanentAccess ? 'Revoke permanent access' : 'Grant permanent access'}
+                            >
+                              <ShieldCheck className="w-3 h-3" />
+                              {user.permanentAccess ? 'Revoke' : 'Grant'}
+                            </button>
+                          )}
                           {subscription?.stripeCustomerId && (
                             <a 
                               href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
@@ -845,10 +941,12 @@ export const AdminDashboard: React.FC = () => {
                     className={`px-4 py-2 text-sm font-bold text-white rounded transition-colors ${
                       modal.type === 'confirm_delete_all' 
                         ? 'bg-red-600 hover:bg-red-700' 
-                        : 'bg-red-500 hover:bg-red-600'
+                        : modal.type === 'confirm_delete'
+                          ? 'bg-red-500 hover:bg-red-600'
+                          : 'bg-dbd-accent hover:bg-dbd-accent/90'
                     }`}
                   >
-                    Confirm Delete
+                    {modal.type === 'confirm_access' ? 'Confirm' : 'Confirm Delete'}
                   </button>
                 </>
               ) : (

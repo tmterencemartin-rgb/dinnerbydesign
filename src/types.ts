@@ -190,6 +190,9 @@ export interface UserProfile {
   trialEndingReminderEmailSentAt?: Timestamp | FieldValue;
   preferences: UserPreferences;
   isPremium?: boolean;
+  permanentAccess?: boolean;
+  permanentAccessGrantedAt?: Timestamp | FieldValue;
+  permanentAccessGrantedBy?: string | null;
   accessStatus?: AccessStatus;
   trialStartedAt?: Timestamp | FieldValue;
   subscription?: UserSubscriptionSummary;

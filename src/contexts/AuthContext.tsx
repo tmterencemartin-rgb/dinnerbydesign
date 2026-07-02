@@ -131,6 +131,8 @@ const isOwnerEmail = (email?: string | null) => (
   !!email && OWNER_EMAILS.includes(email.toLowerCase())
 );
 
+const hasPermanentAccess = (profile?: UserProfile | null) => profile?.permanentAccess === true;
+
 const parseToDate = (val: any): Date => {
   if (!val) return new Date();
   if (val instanceof Date) return val;
@@ -234,7 +236,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Derived status calculation
   useEffect(() => {
     const calculateStatus = () => {
-      if (isOwnerEmail(user?.email || profile?.email)) {
+      if (isOwnerEmail(user?.email || profile?.email) || hasPermanentAccess(profile)) {
         setAccessStatus('paid');
         setTrialDaysLeft(0);
         setTrialTimeRemaining('');
