@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarCheck, Loader2, ChevronUp, ChevronDown } from 'lucide-react';
+import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag, Sparkles } from 'lucide-react';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
@@ -57,6 +57,135 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   const totalCount = enrichedData 
     ? currentIngredients.length
     : Math.max((recipe as any).totalIngredientsCount || 0, currentIngredients.length);
+  const cuisineLower = (recipe.cuisine || '').toLowerCase();
+  const titleLower = recipe.title.toLowerCase();
+
+  const tidyKitText = (text?: string) => {
+    if (!text) return '';
+    return text
+      .replace(/\brecipes\b/gi, 'dinners')
+      .replace(/\brecipe\b/gi, 'dinner')
+      .replace(/\bserving\b/gi, 'plating')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
+  const kitSides = React.useMemo(() => {
+    const items: { name: string; note: string }[] = [];
+
+    if (recipe.saladType && recipe.saladType !== 'none') {
+      items.push({ name: recipe.saladType === 'main' ? 'Crisp green salad' : 'Simple side salad', note: 'Adds freshness beside the main dish' });
+    }
+
+    if (cuisineLower.includes('british') || titleLower.includes('pie')) {
+      items.push({ name: 'Buttery greens', note: 'Balances rich pastry, gravy or cream' });
+      items.push({ name: 'Mashed potato or new potatoes', note: 'Useful when the dish needs extra comfort' });
+    } else if (cuisineLower.includes('indian') || cuisineLower.includes('thai') || cuisineLower.includes('chinese') || cuisineLower.includes('japanese') || cuisineLower.includes('korean')) {
+      items.push({ name: 'Steamed rice', note: 'Catches sauce and rounds out the plate' });
+      items.push({ name: 'Cucumber or pickled veg', note: 'Cuts through heat and richness' });
+    } else if (cuisineLower.includes('italian')) {
+      items.push({ name: 'Rocket salad', note: 'Peppery contrast for pasta or baked dishes' });
+      items.push({ name: 'Garlic bread', note: 'Good for saucy plates' });
+    } else if (cuisineLower.includes('mexican')) {
+      items.push({ name: 'Warm tortillas', note: 'Works for scooping and sharing' });
+      items.push({ name: 'Lime-dressed slaw', note: 'Adds crunch and acidity' });
+    } else {
+      items.push({ name: 'Seasonal greens', note: 'Keeps the plate balanced' });
+      items.push({ name: 'Rice, potatoes or bread', note: 'Choose one if the dish needs more substance' });
+    }
+
+    return items.slice(0, 2);
+  }, [cuisineLower, recipe.saladType, titleLower]);
+
+  const kitUpgrades = React.useMemo(() => {
+    const upgrades = [
+      { name: cuisineLower.includes('italian') ? 'Fresh basil or parsley' : 'Fresh herbs', note: 'Scatter over at the end for colour and lift' },
+      { name: cuisineLower.includes('indian') ? 'Plain yoghurt' : 'Lemon or vinegar', note: 'A little acidity sharpens rich flavours' },
+      { name: recipe.isVegan ? 'Toasted seeds' : 'Crispy onions or grated cheese', note: 'Adds texture just before eating' }
+    ];
+
+    return upgrades.slice(0, 3);
+  }, [cuisineLower, recipe.isVegan]);
+
+  const plateSuggestion = React.useMemo(() => {
+    if (titleLower.includes('pie')) {
+      return 'Let it stand for five minutes, then portion cleanly and plate with greens on the side so the pastry stays crisp.';
+    }
+    if (cuisineLower.includes('indian') || cuisineLower.includes('thai') || cuisineLower.includes('chinese')) {
+      return 'Spoon over a warm rice base, keep any crisp or fresh elements separate until the last moment, then finish with herbs or acidity.';
+    }
+    if (cuisineLower.includes('italian')) {
+      return 'Plate in warm bowls or shallow plates, add a fresh green side, and finish with herbs, oil or cheese at the table.';
+    }
+    return 'Plate the main dish first, add one fresh side for contrast, then finish with herbs, citrus or crunch just before eating.';
+  }, [cuisineLower, titleLower]);
+
+  const renderKitItems = (items: { name: string; note: string }[], detail = false) => (
+    <div className={detail ? "grid gap-0 divide-y divide-gray-100" : "flex flex-wrap gap-1.5"}>
+      {items.map((item, index) => (
+        detail ? (
+          <div key={`${item.name}-detail-${index}`} className="py-2 first:pt-0 last:pb-0">
+            <p className="text-[13px] font-bold text-gray-800 leading-snug">{tidyKitText(item.name)}</p>
+            <p className="text-[12px] text-gray-500 leading-relaxed mt-0.5">{tidyKitText(item.note)}</p>
+          </div>
+        ) : (
+          <span key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 leading-snug">
+            {tidyKitText(item.name)}
+          </span>
+        )
+      ))}
+    </div>
+  );
+
+  const kitPanel = (
+    <div className="w-full rounded border border-gray-200 bg-white p-4 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
+            <h4 className="text-[13px] font-bold uppercase tracking-widest text-gray-900">
+              Dinner kit
+            </h4>
+          </div>
+          <p className="text-[11px] text-gray-400 font-semibold mt-1">
+            Main dish, sides and quick finishes in one place.
+          </p>
+        </div>
+        {recipe.totalTime && (
+          <span className="w-fit rounded bg-gray-50 border border-gray-100 px-2 py-1 text-[10px] font-bold text-gray-500">
+            About {recipe.totalTime} mins
+          </span>
+        )}
+      </div>
+
+      <div className="grid gap-4">
+        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-3">
+          <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+            Core dish
+          </p>
+          <p className="text-[15px] font-bold text-gray-900 leading-snug">
+            {tidyKitText(recipe.title)}
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="min-w-0">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+              Add alongside
+            </p>
+            {renderKitItems(kitSides)}
+          </div>
+
+          <div className="min-w-0">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+              Quick upgrades
+            </p>
+            {renderKitItems(kitUpgrades)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   useEffect(() => {
     if (isExpanded && !currentInstructions?.length && !isEnriching) {
@@ -104,7 +233,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
     
     if (result) {
-      showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous recipe moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
+      showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous dinner moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
         if (replacedRecipe) {
           updatePlanner(day, replacedRecipe).catch(err => {
             addLog(`UI ERROR: Undo restore failed: ${err.message || String(err)}`);
@@ -174,63 +303,63 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             </div>
 
             {/* Core Content Stack - Tightly grouped for precise spacing */}
-            <div className="flex flex-col gap-0.5 items-start w-full">
-              {/* Compressed Metadata Section */}
-              <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/60 rounded">
+            <div className={`grid gap-5 ${isExpanded ? 'sm:grid-cols-[minmax(220px,0.78fr)_minmax(320px,1.22fr)] sm:items-start' : 'grid-cols-1'}`}>
+              <div className="flex flex-col gap-0.5 items-start w-full min-w-0 sm:sticky sm:top-4">
+                {/* Compressed Metadata Section */}
+                <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/60 rounded">
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 justify-start">
-                  <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest bg-white/70 px-1.5 py-0.5 rounded">
-                    {recipe.cuisine}
-                  </span>
-                  {mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') && (
-                    <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px]">
-                      {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 justify-start">
+                    <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest bg-white/70 px-1.5 py-0.5 rounded">
+                      {recipe.cuisine}
                     </span>
-                  )}
-                </div>
+                    {mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') && (
+                      <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px]">
+                        {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
+                      </span>
+                    )}
+                  </div>
                 
                 {/* Row 2: Performance Stats (Nutrition, Price, Time) */}
-                <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
-                  {(recipe.caloriesPerPortion || recipe.calories) && (
-                    <Tooltip text="Estimated calories for one adult portion">
-                      <span className="cursor-help whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
-                        {recipe.caloriesPerPortion || recipe.calories} kcal pp
-                      </span>
-                    </Tooltip>
-                  )}
-                  {recipe.costPerPortion && (
-                    <div className="flex items-center gap-1">
-                      <Tooltip text="Estimated cost for one adult portion">
-                        <span className="cursor-help border-b border-dotted border-gray-300 whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
-                          {recipe.costPerPortion} pp
+                  <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
+                    {(recipe.caloriesPerPortion || recipe.calories) && (
+                      <Tooltip text="Estimated calories for one adult portion">
+                        <span className="cursor-help whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                          {recipe.caloriesPerPortion || recipe.calories} kcal pp
                         </span>
                       </Tooltip>
-                      {requestedServings !== 1 && (
-                        <span className="text-gray-400 font-bold text-[8.5px] sm:text-[9px] uppercase tracking-tighter whitespace-nowrap">
-                          Total £{(parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) * requestedServings).toFixed(2)}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  {(recipe.totalTime || recipe.prepTime || recipe.cookTime) && (
-                    <span className="whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
-                      {recipe.totalTime} mins
-                    </span>
-                  )}
-                  {recipe.saladType && recipe.saladType !== 'none' && (
-                    <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
-                      🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
-                    </span>
-                  )}
+                    )}
+                    {recipe.costPerPortion && (
+                      <div className="flex items-center gap-1">
+                        <Tooltip text="Estimated cost for one adult portion">
+                          <span className="cursor-help border-b border-dotted border-gray-300 whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                            {recipe.costPerPortion} pp
+                          </span>
+                        </Tooltip>
+                        {requestedServings !== 1 && (
+                          <span className="text-gray-400 font-bold text-[8.5px] sm:text-[9px] uppercase tracking-tighter whitespace-nowrap">
+                            Total £{(parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) * requestedServings).toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {(recipe.totalTime || recipe.prepTime || recipe.cookTime) && (
+                      <span className="whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                        {recipe.totalTime} mins
+                      </span>
+                    )}
+                    {recipe.saladType && recipe.saladType !== 'none' && (
+                      <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap bg-white/70 px-1.5 py-0.5 rounded">
+                        🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {/* Dynamic Card Badges */}
-              {(() => {
-                const badges: React.ReactNode[] = [];
-                const titleLower = recipe.title.toLowerCase();
-                const descLower = recipe.description.toLowerCase();
-                const batchCooking = 'batchCooking' in recipe ? recipe.batchCooking : undefined;
+                {/* Dynamic Card Badges */}
+                {(() => {
+                  const badges: React.ReactNode[] = [];
+                  const descLower = recipe.description.toLowerCase();
+                  const batchCooking = 'batchCooking' in recipe ? recipe.batchCooking : undefined;
 
                 // 1. Low Cost (💰 Low Cost)
                 const costFloat = recipe.costPerPortion ? parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) : NaN;
@@ -301,48 +430,75 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   );
                 }
 
-                if (badges.length === 0) return null;
+                  if (badges.length === 0) return null;
 
-                return (
-                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 justify-start">
-                    {badges}
+                  return (
+                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 justify-start">
+                      {badges}
+                    </div>
+                  );
+                })()}
+              
+                <div className="w-full flex flex-col gap-0 items-start">
+                  <RetailerCtaLink product={recipe} type={mode} />
+                  <div className="w-full h-px bg-gray-100/70 my-0.5 sm:my-1" />
+                </div>
+
+                {!isExpanded && (
+                  <RecipeRealityChecks checks={(recipe as any).realityChecks} compact />
+                )}
+              
+                <div className="w-full bg-white rounded">
+                  <RecipeActionRow 
+                    recipe={{ ...recipe, ...enrichedData, requestedServings } as any}
+                    isSaved={isSaved}
+                    scheduledDate={scheduledDate}
+                    onSave={() => {
+                      if (onSave) {
+                        onSave({ ...recipe, requestedServings } as any);
+                      } else if (onToggleSaved) {
+                        onToggleSaved();
+                      }
+                    }}
+                    onRemove={() => {
+                      if (onToggleSaved) {
+                        onToggleSaved();
+                      } else {
+                        const saved = savedRecipes.find(p => isSameRecipe(p, recipe));
+                        if (saved && saved.id) removeRecipe(saved.id).catch(err => console.error("[RecipeCard] Action remove failed:", err));
+                      }
+                    }}
+                    onDaySelect={handleDaySelect}
+                    planner={planner}
+                  />
+                </div>
+              </div>
+
+              {isExpanded && (
+                <div className="space-y-5 min-w-0">
+                  {kitPanel}
+
+                  <GuidanceNotice 
+                    hasCost={hasCost} 
+                    mode={mode}
+                  />
+
+                  <RecipeRealityChecks checks={(recipe as any).realityChecks} />
+
+                  <div className="pt-4 border-t border-gray-100">
+                    <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
+                    <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
                   </div>
-                );
-              })()}
-              
-              <div className="w-full flex flex-col gap-0 items-start">
-                <RetailerCtaLink product={recipe} type={mode} />
-                <div className="w-full h-px bg-gray-100/70 my-0.5 sm:my-1" />
-              </div>
 
-              {!isExpanded && (
-                <RecipeRealityChecks checks={(recipe as any).realityChecks} compact />
+                  <div className="pt-4 border-t border-gray-100">
+                    <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-accent" />
+                      Why these help
+                    </h4>
+                    {renderKitItems(kitUpgrades, true)}
+                  </div>
+                </div>
               )}
-              
-              <div className="w-full bg-white rounded">
-                <RecipeActionRow 
-                  recipe={{ ...recipe, ...enrichedData, requestedServings } as any}
-                  isSaved={isSaved}
-                  scheduledDate={scheduledDate}
-                  onSave={() => {
-                    if (onSave) {
-                      onSave({ ...recipe, requestedServings } as any);
-                    } else if (onToggleSaved) {
-                      onToggleSaved();
-                    }
-                  }}
-                  onRemove={() => {
-                    if (onToggleSaved) {
-                      onToggleSaved();
-                    } else {
-                      const saved = savedRecipes.find(p => isSameRecipe(p, recipe));
-                      if (saved && saved.id) removeRecipe(saved.id).catch(err => console.error("[RecipeCard] Action remove failed:", err));
-                    }
-                  }}
-                  onDaySelect={handleDaySelect}
-                  planner={planner}
-                />
-              </div>
             </div>
             <div className="space-y-1 sm:space-y-3">
               {currentIngredients.length > 0 && !isExpanded && (
@@ -410,14 +566,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden flex flex-col gap-0.5 sm:gap-4"
                   >
-                    <div className="max-w-2xl lg:max-w-3xl mr-auto w-full space-y-0.25 sm:space-y-3">
-                      <GuidanceNotice 
-                        hasCost={hasCost} 
-                        mode={mode}
-                      />
-                      <RecipeRealityChecks checks={(recipe as any).realityChecks} />
-                    </div>
-
                     {/* Responsive side-by-side view for expanded recipe */}
                     <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-12 items-start w-full pt-3">
                       
@@ -475,7 +623,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         <div>
                           <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Preparation</h4>
                           {(recipe as any).totalServings && (
-                            <p className="text-[11px] text-gray-500 mb-1">Recipe makes {(recipe as any).totalServings} adult portions</p>
+                            <p className="text-[11px] text-gray-500 mb-1">Makes {(recipe as any).totalServings} adult portions</p>
                           )}
                           {isEnriching && !currentInstructions.length ? (
                             <div className="flex items-center gap-1.5 py-3 text-[12px] text-gray-400 italic">

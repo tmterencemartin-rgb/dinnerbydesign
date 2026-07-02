@@ -24,7 +24,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
   onPlannerUpdate
 }) => {
   const seoTitle = item ? `${item.title} — DinnerByDesign` : '';
-  const seoDescription = item ? `Recipe details for ${item.title}. ${item.description || ''}` : '';
+  const seoDescription = item ? `Dinner details for ${item.title}. ${item.description || ''}` : '';
   
   const seoJsonLd = React.useMemo(() => {
     if (!item) return undefined;
@@ -76,7 +76,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
   if (!item) return null;
 
   const mode = (item as any).retailer ? 'ready-made' : 'cook';
-  const detailLabel = mode === 'ready-made' ? 'Ready-made dish' : 'Recipe detail';
+  const detailLabel = mode === 'ready-made' ? 'Ready-made dish' : 'Dinner detail';
 
   return (
     <motion.div
