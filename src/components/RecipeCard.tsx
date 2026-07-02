@@ -350,12 +350,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   </div>
                 </div>
 
-                {isExpanded && recipe.totalTime && (
-                  <span className="w-fit rounded bg-gray-50 border border-gray-100 px-2 py-1 text-[10px] font-bold text-gray-500">
-                    Ready in under {Math.ceil(recipe.totalTime / 5) * 5} mins
-                  </span>
-                )}
-
                 {/* Dynamic Card Badges */}
                 {(() => {
                   const badges: React.ReactNode[] = [];
