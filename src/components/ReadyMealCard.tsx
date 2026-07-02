@@ -93,51 +93,75 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   };
   const packCount = Math.ceil(requestedServings / (meal.totalServings || 1));
   const packLabel = packCount === 1 ? '1 pack' : `${packCount} packs`;
+  const retailerPattern = meal.retailer ? new RegExp(`^${meal.retailer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+`, 'i') : null;
+
+  const tidyKitText = (text?: string) => {
+    if (!text) return '';
+    return text
+      .replace(retailerPattern || /^$/, '')
+      .replace(/^Taste the Difference\s+/i, '')
+      .replace(/\bready meal\b/gi, 'ready-made dinner')
+      .replace(/\brecipes\b/gi, 'dinners')
+      .replace(/\brecipe\b/gi, 'dinner')
+      .replace(/\bserving\b/gi, 'plating')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
 
   const renderKitItems = (items: ReadyMadeKitItem[] | undefined, detail = false) => (
-    <div className={detail ? "grid gap-2" : "flex flex-wrap gap-1.5"}>
-      {(items || []).slice(0, 3).map((item, index) => detail ? (
-        <div key={`${item.name}-detail-${index}`} className="rounded border border-gray-100 bg-white p-2">
-          <p className="text-[13px] font-bold text-gray-800">{item.name}</p>
+    <div className={detail ? "grid gap-0 divide-y divide-gray-100" : "flex flex-wrap gap-1.5"}>
+      {(items || []).slice(0, 3).map((item, index) => {
+        const displayName = tidyKitText(item.name);
+        const displayNote = tidyKitText(item.note);
+
+        return detail ? (
+        <div key={`${item.name}-detail-${index}`} className="py-2 first:pt-0 last:pb-0">
+          <p className="text-[13px] font-bold text-gray-800 leading-snug">{displayName}</p>
           {item.note && (
-            <p className="text-[12px] text-gray-500 leading-relaxed mt-0.5">{item.note}</p>
+            <p className="text-[12px] text-gray-500 leading-relaxed mt-0.5">{displayNote}</p>
           )}
         </div>
       ) : (
-        <span key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 truncate">
-          {item.name}
+        <span key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 leading-snug">
+          {displayName}
         </span>
-      ))}
+      );
+      })}
     </div>
   );
 
   const kitPanel = (
-    <div className="w-full rounded border border-gray-100 bg-gray-50/70 p-3 sm:p-4">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
-          <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-700 truncate">
-            Dinner kit
-          </h4>
+    <div className="w-full rounded border border-gray-200 bg-white p-4 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
+            <h4 className="text-[13px] font-bold uppercase tracking-widest text-gray-900">
+              Dinner kit
+            </h4>
+          </div>
+          <p className="text-[11px] text-gray-400 font-semibold mt-1">
+            Product, sides and quick finishes in one place.
+          </p>
         </div>
         {dinnerKit.totalTimeNote && (
-          <span className="w-fit rounded bg-white border border-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-500">
-            {dinnerKit.totalTimeNote}
+          <span className="w-fit rounded bg-gray-50 border border-gray-100 px-2 py-1 text-[10px] font-bold text-gray-500">
+            {tidyKitText(dinnerKit.totalTimeNote)}
           </span>
         )}
       </div>
 
-      <div className="grid gap-3">
-        <div className="min-w-0">
+      <div className="grid gap-4">
+        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-3">
           <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
             Core product
           </p>
-          <p className="text-[13px] font-bold text-gray-900 leading-snug">
-            {dinnerKit.coreProduct || meal.title}
+          <p className="text-[15px] font-bold text-gray-900 leading-snug">
+            {tidyKitText(dinnerKit.coreProduct || meal.title)}
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="min-w-0">
             <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
               Add alongside
@@ -264,8 +288,8 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               )}
             </div>
 
-            <div className={`grid gap-4 ${isExpanded ? 'md:grid-cols-[minmax(0,0.9fr)_minmax(320px,1.1fr)] md:items-start' : 'grid-cols-1'}`}>
-              <div className="flex flex-col gap-3 items-start w-full min-w-0">
+            <div className={`grid gap-5 ${isExpanded ? 'md:grid-cols-[minmax(240px,0.78fr)_minmax(420px,1.22fr)] md:items-start' : 'grid-cols-1'}`}>
+              <div className="flex flex-col gap-3 items-start w-full min-w-0 md:sticky md:top-4">
                 <div className="w-full flex flex-col gap-2 py-2.5 border-y border-gray-100">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 justify-start">
                     <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
@@ -355,7 +379,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 )}
               </div>
 
-              <div className="space-y-4 sm:space-y-3 min-w-0">
+              <div className="space-y-5 min-w-0">
                 {kitPanel}
 
                 {!isExpanded && (
@@ -368,7 +392,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden space-y-4 sm:space-y-3"
+                    className="overflow-hidden space-y-5"
                   >
                     <div className="md:hidden max-w-2xl lg:max-w-3xl mr-auto w-full space-y-2.5 pt-1 border-t border-gray-100">
                        <GuidanceNotice 
@@ -379,34 +403,34 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
                     <RecipeRealityChecks checks={meal.realityChecks} />
 
-                    <div className="pt-3 border-t border-gray-100">
-                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2">How to plate it</h4>
+                    <div className="pt-4 border-t border-gray-100">
+                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
                       {isEnriching && !currentServingSuggestion ? (
                         <div className="flex items-center gap-2 py-4 text-[13px] text-gray-400 italic">
                           <Loader2 className="w-4 h-4 animate-spin text-accent" />
                           <span>Sourcing details...</span>
                         </div>
                       ) : (
-                        <p className="text-[14px] text-gray-700 leading-relaxed">{currentServingSuggestion}</p>
+                        <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(currentServingSuggestion)}</p>
                       )}
                     </div>
 
                     {meal.matchReason && meal.matchReason.length > 0 && (
-                      <div className="bg-gray-50/70 p-2 rounded border border-gray-100/60">
-                        <p className="text-[11.5px] text-gray-500 leading-relaxed italic">
-                          <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9.5px]">Why this match:</span> {meal.matchReason}
+                      <div className="bg-gray-50/70 p-2.5 rounded border border-gray-100/60">
+                        <p className="text-[12px] text-gray-500 leading-relaxed">
+                          <span className="font-bold tracking-widest uppercase text-[9.5px] text-gray-400">Why this fits:</span> {tidyKitText(meal.matchReason)}
                         </p>
                       </div>
                     )}
 
-                    <div className="pt-3 border-t border-gray-100">
-                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <div className="pt-4 border-t border-gray-100">
+                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-accent" />
                         Why these help
                       </h4>
                       {renderKitItems(dinnerKit.upgrades, true)}
                       {dinnerKit.fitNote && (
-                        <p className="text-[12px] text-gray-500 leading-relaxed mt-2">{dinnerKit.fitNote}</p>
+                        <p className="text-[12px] text-gray-500 leading-relaxed mt-3">{tidyKitText(dinnerKit.fitNote)}</p>
                       )}
                     </div>
                   </motion.div>
@@ -415,10 +439,10 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
               <button 
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full py-1 text-[11px] text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent/30"
+                className="w-full py-1.5 text-[11px] text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent/30"
               >
                 {isExpanded ? (
-                  <>Hide <ChevronUp className="w-3 h-3" /></>
+                  <>Show less <ChevronUp className="w-3 h-3" /></>
                 ) : (
                   <>Details <ChevronDown className="w-3 h-3" /></>
                 )}
