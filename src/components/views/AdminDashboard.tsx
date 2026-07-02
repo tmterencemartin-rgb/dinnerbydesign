@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
 import { ArrowLeft, Search, Download, ExternalLink, Calendar, CreditCard, Clock, Trash2, Users, MailCheck, AlertTriangle, Activity, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getApiUrl } from '../../lib/api';
 
 type AdminStatusFilter = AccessStatus | 'all' | 'permanent_access' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
 
@@ -89,6 +90,64 @@ export const AdminDashboard: React.FC = () => {
       message,
       onConfirm
     });
+  };
+
+  const escapeHtml = (value: string) => value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+  const getFirstName = (targetUser: UserProfile) => {
+    const rawName = targetUser.firstName || targetUser.displayName || targetUser.email?.split('@')[0] || 'there';
+    const firstName = rawName.trim().split(/\s+/)[0] || 'there';
+    return firstName.includes('@') ? firstName.split('@')[0] : firstName;
+  };
+
+  const sendPermanentAccessEmail = async (targetUser: UserProfile) => {
+    if (!targetUser.email) {
+      throw new Error('This account does not have an email address.');
+    }
+
+    const appUrl = typeof window !== 'undefined' ? window.location.origin : 'https://dinnerbydesign.app';
+    const firstName = escapeHtml(getFirstName(targetUser));
+    const safeAppUrl = escapeHtml(appUrl);
+
+    const html = `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <div style="border-bottom: 1px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 24px;">
+    <h2 style="color: #111; margin: 0; font-size: 20px;">DinnerByDesign</h2>
+  </div>
+
+  <p>Hello ${firstName},</p>
+
+  <p>Your DinnerByDesign account now has permanent access.</p>
+
+  <p>Use the app without a subscription &mdash; indefinitely. Please try it in your everyday dinner planning and let me know what works for you and what doesn't.</p>
+
+  <p>Sign in: <a href="${safeAppUrl}" style="color: #111; text-decoration: underline; font-weight: 600;">${safeAppUrl}</a></p>
+
+  <p style="margin-top: 24px; margin-bottom: 2px;">Best,</p>
+  <p style="margin: 0;">Terry (Executive chef at DinnerByDesign)</p>
+</div>
+    `.trim();
+
+    const response = await fetch(getApiUrl('/api/send-email'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: targetUser.email,
+        subject: 'Your DinnerByDesign access is now permanent',
+        html,
+        from: 'DinnerByDesign <chef@dinnerbydesign.app>'
+      })
+    });
+
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      throw new Error(result?.error?.message || result?.message || 'The email service did not confirm delivery.');
+    }
   };
 
   useEffect(() => {
@@ -280,9 +339,24 @@ export const AdminDashboard: React.FC = () => {
                 }
               : user
           )));
+
+          let emailSent = false;
+          let emailError = '';
+          if (nextValue) {
+            try {
+              await sendPermanentAccessEmail(targetUser);
+              emailSent = true;
+            } catch (err: any) {
+              emailError = err?.message || 'Email delivery failed.';
+              console.error('Permanent access email failed:', err);
+            }
+          }
+
           showCustomAlert(
             'Access Updated',
-            `Permanent access has been ${nextValue ? 'granted to' : 'revoked for'} "${targetUser.email || targetUser.uid}".`
+            nextValue
+              ? `Permanent access has been granted to "${targetUser.email || targetUser.uid}".${emailSent ? '\n\nEmail sent.' : `\n\nEmail not sent: ${emailError}`}`
+              : `Permanent access has been revoked for "${targetUser.email || targetUser.uid}".`
           );
         } catch (err: any) {
           console.error('Error updating permanent access:', err);
