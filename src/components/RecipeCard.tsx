@@ -599,8 +599,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         </button>
                       </div>
                       
-                      {/* Left column: Sticky Ingredients */}
-                      <div className="w-full md:sticky md:top-24 h-fit pb-4 md:pb-0 flex flex-col gap-2.5">
+                      {/* Left column: Ingredients */}
+                      <div className="w-full h-fit pb-4 md:pb-0 flex flex-col gap-2.5">
                         <div className="flex items-start justify-between gap-3 pb-1 pr-28">
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                             Ingredients
