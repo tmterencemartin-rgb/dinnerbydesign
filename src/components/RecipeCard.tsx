@@ -573,40 +573,42 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     className="overflow-hidden flex flex-col gap-0.5 sm:gap-4"
                   >
                     {/* Responsive side-by-side view for expanded recipe */}
-                    <div className="relative grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-12 items-start w-full pt-5 mt-1 border-t border-gray-100">
-                      <div className="absolute right-0 top-5 inline-flex w-fit border border-gray-100 rounded-full p-0.5 bg-gray-50 shadow-inner">
-                        <button
-                          type="button"
-                          onClick={() => setUnitSystem('metric')}
-                          className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
-                            unitSystem === 'metric'
-                              ? 'bg-white text-gray-900 shadow-sm border border-gray-100/50'
-                              : 'text-gray-400 hover:text-gray-600'
-                          }`}
-                        >
-                          Metric
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setUnitSystem('imperial')}
-                          className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
-                            unitSystem === 'imperial'
-                              ? 'bg-white text-accent shadow-sm border border-gray-100/50'
-                              : 'text-gray-400 hover:text-gray-600'
-                          }`}
-                        >
-                          Imperial
-                        </button>
-                      </div>
-                      
-                      {/* Left column: Ingredients */}
-                      <div className="w-full h-fit pb-4 md:pb-0 flex flex-col gap-2.5">
-                        <div className="flex items-start justify-between gap-3 pb-1 pr-28">
+                    <div className="w-full pt-5 mt-1 border-t border-gray-100">
+                      <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-x-6 lg:gap-x-12 gap-y-3 items-start">
+                        <div className="flex items-center justify-between gap-3">
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                             Ingredients
                           </span>
+                          <div className="inline-flex w-fit border border-gray-100 rounded-full p-0.5 bg-gray-50 shadow-inner">
+                            <button
+                              type="button"
+                              onClick={() => setUnitSystem('metric')}
+                              className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
+                                unitSystem === 'metric'
+                                  ? 'bg-white text-gray-900 shadow-sm border border-gray-100/50'
+                                  : 'text-gray-400 hover:text-gray-600'
+                              }`}
+                            >
+                              Metric
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setUnitSystem('imperial')}
+                              className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
+                                unitSystem === 'imperial'
+                                  ? 'bg-white text-accent shadow-sm border border-gray-100/50'
+                                  : 'text-gray-400 hover:text-gray-600'
+                              }`}
+                            >
+                              Imperial
+                            </button>
+                          </div>
                         </div>
 
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider md:self-center">Preparation</h4>
+                      
+                      {/* Left column: Ingredients */}
+                      <div className="w-full h-fit pb-4 md:pb-0 flex flex-col gap-2.5">
                         {isEnriching && !currentIngredients.length ? (
                           <div className="flex items-center gap-1.5 py-1 text-[11px] text-gray-400">
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -627,7 +629,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       {/* Right column: Instructions & Match Reason */}
                        <div className="w-full flex flex-col gap-3">
                         <div>
-                          <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Preparation</h4>
                           {(recipe as any).totalServings && (
                             <p className="text-[11px] text-gray-500 mb-1">Makes {(recipe as any).totalServings} adult portions</p>
                           )}
@@ -657,6 +658,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         </div>
                       </div>
 
+                      </div>
                     </div>
                   </motion.div>
                 )}
