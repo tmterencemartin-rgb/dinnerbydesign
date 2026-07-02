@@ -407,7 +407,7 @@ export const LandingView: React.FC = () => {
                 <div className="shrink-0 pl-4 py-3 flex items-center justify-center">
                   <SearchIcon className="w-4 h-4 text-dbd-ink-3" />
                 </div>
-                <div className="flex-grow px-3 py-3 font-mono text-[13px] text-dbd-ink font-semibold flex items-center min-w-0">
+                <div className="flex-grow px-3 py-3 font-ibm-plex-mono text-[12px] uppercase tracking-[0.08em] text-dbd-ink font-semibold flex items-center min-w-0">
                   {sandboxQuery}
                   <span className="animate-pulse font-normal ml-0.5 text-dbd-accent">|</span>
                 </div>

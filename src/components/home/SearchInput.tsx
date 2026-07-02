@@ -97,7 +97,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           onChange={(e) => setInput(e.target.value)}
           disabled={isReadOnly}
           placeholder={isReadOnly ? "Upgrade to search again" : getSearchPlaceholder()}
-          className={`flex-grow min-w-0 px-2 bg-transparent text-[13px] text-gray-800 outline-none placeholder:text-gray-400 h-full ${isListening ? 'placeholder:text-dbd-accent font-medium' : ''}`}
+          className={`flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
         />
 
         {input && !isGenerating && !isReadOnly && (
