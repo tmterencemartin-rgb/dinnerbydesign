@@ -120,13 +120,18 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     return 'Plate the main dish first, add one fresh side for contrast, then finish with herbs, citrus or crunch just before eating.';
   }, [cuisineLower, titleLower]);
 
-  const renderKitItems = (items: { name: string; note: string }[], detail = false) => (
-    <div className={detail ? "grid gap-0 divide-y divide-gray-100" : "flex flex-wrap gap-1.5"}>
+  const renderKitItems = (items: { name: string; note: string }[], detail = false, showNotes = false) => (
+    <div className={detail ? "grid gap-0 divide-y divide-gray-100" : showNotes ? "grid gap-1.5" : "flex flex-wrap gap-1.5"}>
       {items.map((item, index) => (
         detail ? (
           <div key={`${item.name}-detail-${index}`} className="py-1.5 first:pt-0 last:pb-0">
             <p className="text-[12.5px] font-bold text-gray-800 leading-snug">{tidyKitText(item.name)}</p>
             <p className="text-[11.5px] text-gray-500 leading-relaxed mt-0.5">{tidyKitText(item.note)}</p>
+          </div>
+        ) : showNotes ? (
+          <div key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1.5">
+            <p className="text-[10.5px] font-bold text-gray-700 leading-snug">{tidyKitText(item.name)}</p>
+            <p className="mt-0.5 text-[10px] font-medium text-gray-400 leading-snug">{tidyKitText(item.note)}</p>
           </div>
         ) : (
           <span key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-0.5 text-[10.5px] font-medium text-gray-700 leading-snug">
@@ -173,9 +178,9 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
           <div className="min-w-0">
             <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
-              Quick upgrades
+              Easy upgrades
             </p>
-            {renderKitItems(kitUpgrades)}
+            {renderKitItems(kitUpgrades, false, true)}
           </div>
         </div>
       </div>
@@ -434,10 +439,12 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   );
                 })()}
               
-                <div className="w-full flex flex-col gap-0 items-start">
-                  <RetailerCtaLink product={recipe} type={mode} />
-                  <div className="w-full h-px bg-gray-100/70 my-0.5 sm:my-1" />
-                </div>
+                {mode === 'ready-made' && (
+                  <div className="w-full flex flex-col gap-0 items-start">
+                    <RetailerCtaLink product={recipe} type={mode} />
+                    <div className="w-full h-px bg-gray-100/70 my-0.5 sm:my-1" />
+                  </div>
+                )}
 
                 {!isExpanded && (
                   <RecipeRealityChecks checks={(recipe as any).realityChecks} compact />
@@ -471,12 +478,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 {isExpanded && (
                   <>
                     {kitPanel}
-                    <div className="w-full pt-1">
-                      <GuidanceNotice 
-                        hasCost={hasCost} 
-                        mode={mode}
-                      />
-                    </div>
                   </>
                 )}
               </div>
@@ -484,19 +485,19 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
               {isExpanded && (
                 <div className="space-y-4 min-w-0">
                   <div>
+                    <GuidanceNotice
+                      hasCost={hasCost}
+                      mode={mode}
+                    />
+                  </div>
+
+                  <div>
                     <RecipeRealityChecks checks={(recipe as any).realityChecks} />
                   </div>
 
                   <div className="pt-4 border-t border-gray-100">
                     <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
                     <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-100">
-                    <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">
-                      Why these help
-                    </h4>
-                    {renderKitItems(kitUpgrades, true)}
                   </div>
 
                   {recipe.matchReason && (
