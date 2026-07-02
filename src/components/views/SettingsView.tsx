@@ -1009,11 +1009,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                           </p>
                         </div>
                         <div>
-                          <span className="text-gray-500 font-semibold text-[11.5px] block">Preferred Supermarkets</span>
+                          <span className="text-gray-500 font-semibold text-[11.5px] block">Nearby retailers</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
                             {displayedPreferences.preferredSupermarkets && displayedPreferences.preferredSupermarkets.length > 0 
                               ? displayedPreferences.preferredSupermarkets.join(', ') 
-                              : 'All UK supermarkets'}
+                              : 'All UK retailers'}
                           </p>
                         </div>
                       </div>

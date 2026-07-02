@@ -202,6 +202,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
   const isSearching = status === 'searching';
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
+  const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
   const hasPreferenceConflictNotice = !!contradictionWarning && contradictionWarning.type !== 'no_results';
@@ -508,7 +509,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     isReadOnly={isReadOnly}
                   />
                 </div>
-                <Tooltip text="Open Preferences to set dietary rules, portions, budget, calorie targets and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
+                <Tooltip text="Open Preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
                   <button
                     type="button"
                     onClick={() => {
@@ -530,6 +531,23 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   </button>
                 </Tooltip>
               </div>
+
+              {source === 'ready-made' && (
+                <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowFilters(true);
+                      setPreferencesError(null);
+                    }}
+                    className="text-left text-[11.5px] text-gray-400 hover:text-gray-700 leading-relaxed font-semibold transition-colors"
+                  >
+                    {hasNearbyRetailers
+                      ? `Prioritising nearby retailers: ${supermarkets.slice(0, 3).join(', ')}${supermarkets.length > 3 ? '...' : ''}. Change this in Preferences.`
+                      : 'Want more useful Ready-made results? Add nearby retailers in Preferences.'}
+                  </button>
+                </div>
+              )}
               
               {(!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
@@ -550,7 +568,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       <p className="text-[12px] text-gray-400 leading-relaxed font-semibold">
                         {source === 'cook' 
                           ? "Search by ingredient, cuisine, chef or phrase — e.g. 'Low cost recipes'."
-                          : "Search for ready-made dinners from one or more your favourite supermarkets."}
+                          : "Search for ready-made dinners from shops you can easily use."}
                       </p>
                     </div>
                   )}

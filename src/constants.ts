@@ -48,7 +48,7 @@ export const COOKING_FATS = [
 ];
 
 export const UK_SUPERMARKETS = [
-  'Aldi', 'Asda', 'Co-op', 'Lidl', 'Marks & Spencer', 'Morrisons', 'Ocado', 'Sainsbury’s', 'Tesco', 'Waitrose'
+  'Aldi', 'Asda', 'Co-op', 'Iceland', 'Lidl', 'Marks & Spencer', 'Morrisons', 'Ocado', 'Sainsbury’s', 'Tesco', 'Waitrose'
 ];
 
 export const DIETARY_TAXONOMY = {
@@ -115,8 +115,8 @@ export const DIETARY_TAXONOMY = {
     options: COOKING_FATS
   },
   supermarkets: {
-    label: 'Preferred supermarkets (applies to ready-made dinners only)',
-    helperText: 'We prioritize these stores for pricing and availability in ready-made searches.',
+    label: 'Nearby retailers',
+    helperText: 'Choose the shops you can easily use. Ready-made results will prioritise these.',
     options: UK_SUPERMARKETS
   }
 };
@@ -133,4 +133,3 @@ export const RETAILERS = {
   'Specialist/Premium': ['Cook', 'Fortnum & Mason', 'Gousto', 'HelloFresh', 'Ottolenghi'],
   'Supermarkets': UK_SUPERMARKETS
 };
-

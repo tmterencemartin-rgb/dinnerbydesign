@@ -53,6 +53,10 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
 
   const isReadyMade = source === 'ready-made';
   const isIngredientLed = !!ingredientIntent?.isIngredientLed && source === 'cook';
+  const hasRetailerShortlist = isReadyMade && activeCriteria.some(c => c.type === 'profileSupermarket' || c.type === 'supermarket');
+  const readyMadeSearchText = hasRetailerShortlist
+    ? "Prioritising your nearby retailers."
+    : "Searching broadly across UK retailers. Add nearby retailers in Preferences for more useful results.";
 
   return (
     <AnimatePresence>
@@ -86,17 +90,17 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
                   ) : status === 'partial' ? (
                     "Showing the closest matches first"
                   ) : showEnriching ? (
-                    "Adding recipe details..."
+                    "Adding details..."
                   ) : null}
                 </p>
                 <p className="text-[10px] text-gray-500 font-medium whitespace-pre-wrap">
                   {showSearching ? (
                     isLowPerf 
                       ? (isBroadSearch 
-                          ? (isReadyMade ? "Searching for ready-made dinner products across a range of supermarkets" : isIngredientLed ? "Prioritising recipes that use most or all of your listed ingredients with minimal extra shopping." : "This is a general search based on your keywords. To pinpoint precise recipes, try adding more criteria in Preferences.")
+                          ? (isReadyMade ? readyMadeSearchText : isIngredientLed ? "Prioritising results that use most or all of your listed ingredients with minimal extra shopping." : "This is a general search based on your keywords. To pinpoint precise results, try adding more criteria in Preferences.")
                           : "This is a very precise search – identifying the best matches can take a few seconds.")
                       : (isBroadSearch
-                          ? (isReadyMade ? "Searching for ready-made dinner products across a range of supermarkets" : isIngredientLed ? `Using ${ingredientIntent?.ingredients.slice(0, 4).join(', ')} as the starting point.` : "Searching broadly across all matches – add preferences for more precise results.")
+                          ? (isReadyMade ? readyMadeSearchText : isIngredientLed ? `Using ${ingredientIntent?.ingredients.slice(0, 4).join(', ')} as the starting point.` : "Searching broadly across all matches – add preferences for more precise results.")
                           : "Applying your specific preferences to find the perfect match.")
                   ) : (status === 'partial' || showEnriching) ? (
                     "Refining descriptions and match rationales."

@@ -120,7 +120,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
     dietary: true,
-    sources: false,
+    sources: source === 'ready-made',
     timeBudget: false,
     cooking: false,
     goals: false,
@@ -300,7 +300,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </button>
           </div>
           <div className="text-[12.5px] mt-2 text-gray-500 leading-relaxed font-medium">
-            Customise your recipe filters for this search, or save them as your default.
+            Customise this search, or save your choices as the default.
           </div>
           <div className="mt-3 flex items-center justify-between gap-3">
             <span className="text-[11px] font-semibold text-gray-400">
@@ -617,12 +617,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       )}
                     </div>
                   ) : (
-                    /* Preferred Supermarkets */
+                    /* Nearby Retailers */
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Preferred supermarkets</label>
+                        <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Nearby retailers</label>
                         <span className="text-[9.5px] font-semibold text-accent bg-accent/5 px-2 py-0.5 rounded">Ready-made mode</span>
                       </div>
+                      <p className="text-[11px] text-gray-400 leading-relaxed pl-0.5">
+                        Choose the shops you can easily use. Ready-made results will prioritise these.
+                      </p>
                       <div className="relative mt-1">
                         <select 
                           value=""
@@ -634,7 +637,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           }}
                           className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                         >
-                          <option value="">Add supermarket...</option>
+                          <option value="">Add nearby retailer...</option>
                           {DIETARY_TAXONOMY.supermarkets.options.map(opt => (
                             <option key={opt} value={opt}>{opt}</option>
                           ))}
@@ -643,7 +646,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       </div>
                       {localSupermarkets.length > 0 && (
                         <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                          <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active supermarket preferences</span>
+                          <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Your nearby retailers</span>
                           {localSupermarkets.map(item => (
                             <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                               {item}
