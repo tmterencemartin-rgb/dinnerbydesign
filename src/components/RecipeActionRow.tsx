@@ -173,7 +173,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
 
   return (
     <div className="flex flex-col gap-0.5 w-full">
-      <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] items-center gap-1.5 sm:flex sm:flex-wrap sm:gap-2">
+      <div className="grid grid-cols-3 items-center gap-1.5 sm:flex sm:flex-wrap sm:gap-2">
         <button 
           onClick={handleSaveAndSchedule}
           className={`min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border ${
