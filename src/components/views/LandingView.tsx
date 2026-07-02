@@ -84,10 +84,10 @@ export const LandingView: React.FC = () => {
       { title: 'Classic Lobster Thermidor', meta: '45 min · serves 2 · ~£22.00', source: 'BBC Food' },
       { title: 'Creamy Lobster Bisque', meta: '40 min · serves 4 · ~£15.00', source: 'Olive Mag' }
     ],
-    'Grouse': [
-      { title: 'Roast Whole Grouse with Bread Sauce', meta: '50 min · serves 2 · ~£12.50', source: 'Good Food' },
-      { title: 'Pan-Seared Grouse Breast with Berries', meta: '20 min · serves 2 · ~£9.50', source: 'BBC Food' },
-      { title: 'Grouse & Mushroom Pie', meta: '60 min · serves 4 · ~£14.00', source: 'Waitrose' }
+    'Plaice': [
+      { title: 'Pan-Fried Plaice with Lemon Butter', meta: '15 min · serves 2 · ~£6.50', source: 'Good Food' },
+      { title: 'Baked Plaice with Herb Crumb', meta: '20 min · serves 2 · ~£5.80', source: 'BBC Food' },
+      { title: 'Plaice Goujons with Pea Mash', meta: '25 min · serves 4 · ~£7.20', source: 'Waitrose' }
     ],
     'Vegetarian': [
       { title: 'Roasted Mediterranean Vegetable Tart', meta: '35 min · serves 4 · ~£4.20', source: 'Good Food' },
@@ -137,10 +137,10 @@ export const LandingView: React.FC = () => {
       { title: 'Waitrose Whole Cooked Lobster', meta: 'Ready to eat · serves 1 · ~£15.50', source: 'Waitrose' },
       { title: 'Tesco Finest Lobster Thermidor', meta: '15 min · serves 1 · ~£10.50', source: 'Tesco' }
     ],
-    'Grouse': [
-      { title: 'Waitrose Wild Grouse Whole', meta: 'Ready to cook · serves 1 · ~£7.50', source: 'Waitrose' },
-      { title: 'Highlands Game Mixed Grouse & Venison', meta: 'Ready to cook · serves 2 · ~£9.00', source: 'Marks & Spencer' },
-      { title: 'Waitrose Roast Grouse for Two', meta: '35 min · serves 2 · ~£14.00', source: 'Waitrose' }
+    'Plaice': [
+      { title: 'Waitrose Breaded Plaice Fillets', meta: '18 min · serves 2 · ~£5.50', source: 'Waitrose' },
+      { title: 'Tesco Plaice Goujons', meta: '15 min · serves 2 · ~£4.00', source: 'Tesco' },
+      { title: 'M&S Lemon & Parsley Plaice Fillets', meta: '20 min · serves 2 · ~£6.50', source: 'Marks & Spencer' }
     ],
     'Vegetarian': [
       { title: 'Tesco Finest Nut Roast with Cranberries', meta: '45 min · serves 2 · ~£6.50', source: 'Tesco' },
@@ -423,7 +423,7 @@ export const LandingView: React.FC = () => {
               <div className="max-w-2xl mx-auto mt-4 px-1">
                 <p className="text-[12px] font-ibm-plex-mono font-semibold text-dbd-ink-3 mb-2">Try these preset queries:</p>
                 <div className="flex flex-wrap gap-2">
-                  {['Chicken Fricassee', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Grouse', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag) => (
+                  {['Chicken Fricassee', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag) => (
                     <button
                       key={tag}
                       onClick={() => selectSandboxTag(tag)}
