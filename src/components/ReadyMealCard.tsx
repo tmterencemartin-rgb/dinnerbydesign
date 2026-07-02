@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag, Sparkles } from 'lucide-react';
+import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag } from 'lucide-react';
 import { ReadyMeal, ReadyMadeKitItem } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
@@ -108,8 +108,8 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       .trim();
   };
 
-  const renderKitItems = (items: ReadyMadeKitItem[] | undefined, detail = false) => (
-    <div className={detail ? "grid gap-0 divide-y divide-gray-100" : "flex flex-wrap gap-1.5"}>
+  const renderKitItems = (items: ReadyMadeKitItem[] | undefined, detail = false, showNotes = false) => (
+    <div className={detail ? "grid gap-0 divide-y divide-gray-100" : showNotes ? "grid gap-1.5" : "flex flex-wrap gap-1.5"}>
       {(items || []).slice(0, 3).map((item, index) => {
         const displayName = tidyKitText(item.name);
         const displayNote = tidyKitText(item.note);
@@ -119,6 +119,13 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
           <p className="text-[13px] font-bold text-gray-800 leading-snug">{displayName}</p>
           {item.note && (
             <p className="text-[12px] text-gray-500 leading-relaxed mt-0.5">{displayNote}</p>
+          )}
+        </div>
+      ) : showNotes ? (
+        <div key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1.5">
+          <p className="text-[11px] font-bold text-gray-700 leading-snug">{displayName}</p>
+          {item.note && (
+            <p className="mt-0.5 text-[10px] font-medium text-gray-400 leading-snug">{displayNote}</p>
           )}
         </div>
       ) : (
@@ -173,9 +180,15 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
             <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
               Quick upgrades
             </p>
-            {renderKitItems(dinnerKit.upgrades)}
+            {renderKitItems(dinnerKit.upgrades, false, true)}
           </div>
         </div>
+
+        {dinnerKit.fitNote && (
+          <p className="text-[11px] text-gray-400 leading-relaxed pt-2 border-t border-gray-100">
+            {tidyKitText(dinnerKit.fitNote)}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -423,16 +436,6 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                       </div>
                     )}
 
-                    <div className="pt-4 border-t border-gray-100">
-                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-accent" />
-                        Why these help
-                      </h4>
-                      {renderKitItems(dinnerKit.upgrades, true)}
-                      {dinnerKit.fitNote && (
-                        <p className="text-[12px] text-gray-500 leading-relaxed mt-3">{tidyKitText(dinnerKit.fitNote)}</p>
-                      )}
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
