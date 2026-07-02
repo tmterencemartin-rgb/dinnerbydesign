@@ -303,8 +303,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             </div>
 
             {/* Core Content Stack - Tightly grouped for precise spacing */}
-            <div className={`grid gap-5 ${isExpanded ? 'sm:grid-cols-[minmax(220px,0.78fr)_minmax(320px,1.22fr)] sm:items-start' : 'grid-cols-1'}`}>
-              <div className="flex flex-col gap-0.5 items-start w-full min-w-0 sm:sticky sm:top-4">
+            <div className={isExpanded ? 'sm:columns-2 sm:gap-5 lg:gap-6 [column-fill:balance]' : 'grid grid-cols-1 gap-5'}>
+              <div className={`flex flex-col gap-0.5 items-start w-full min-w-0 ${isExpanded ? 'mb-5 break-inside-avoid' : ''}`}>
                 {/* Compressed Metadata Section */}
                 <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/60 rounded">
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
@@ -475,22 +475,28 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
               </div>
 
               {isExpanded && (
-                <div className="space-y-5 min-w-0">
-                  {kitPanel}
+                <div className="contents">
+                  <div className="mb-5 break-inside-avoid">
+                    {kitPanel}
+                  </div>
 
-                  <GuidanceNotice 
-                    hasCost={hasCost} 
-                    mode={mode}
-                  />
+                  <div className="mb-5 break-inside-avoid">
+                    <GuidanceNotice 
+                      hasCost={hasCost} 
+                      mode={mode}
+                    />
+                  </div>
 
-                  <RecipeRealityChecks checks={(recipe as any).realityChecks} />
+                  <div className="mb-5 break-inside-avoid">
+                    <RecipeRealityChecks checks={(recipe as any).realityChecks} />
+                  </div>
 
-                  <div className="pt-4 border-t border-gray-100">
+                  <div className="mb-5 break-inside-avoid pt-4 border-t border-gray-100">
                     <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
                     <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-100">
+                  <div className="mb-5 break-inside-avoid pt-4 border-t border-gray-100">
                     <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-accent" />
                       Why these help
