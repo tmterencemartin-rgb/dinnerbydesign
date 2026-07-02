@@ -200,7 +200,7 @@ describe('useSearch Hook Lifecycle', () => {
     expect(result.current.currentRecipes).toHaveLength(1);
   });
 
-  it('hides raw AI permission-denied provider payloads from users', async () => {
+  it('hides raw permission-denied provider payloads from users', async () => {
     const providerPayload = '{"error":{"code":403,"message":"Lightning dunning decision is deny for project: projects/58614176053","status":"PERMISSION_DENIED"}}';
     (geminiService.generateDinnerSuggestions as any).mockRejectedValue(
       new (geminiService.GeminiServiceError as any)('network', `ApiError: ${providerPayload}`)
@@ -213,7 +213,7 @@ describe('useSearch Hook Lifecycle', () => {
     });
 
     expect(result.current.searchError).toBe(
-      'Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later.'
+      'Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.'
     );
     expect(result.current.searchError).not.toContain('Lightning dunning');
     expect(result.current.searchError).not.toContain('projects/');

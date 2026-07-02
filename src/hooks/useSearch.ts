@@ -283,7 +283,7 @@ export function useSearch() {
       }
 
       if (alternatives && alternatives.length > 0) {
-        addLog(`SEARCH: No results found, AI suggested alternatives: ${alternatives.join(', ')}`);
+        addLog(`SEARCH: No results found, service suggested alternatives: ${alternatives.join(', ')}`);
       }
 
       if (accumulatedRecipes.length === 0 && accumulatedReadyMeals.length === 0) {
@@ -389,7 +389,7 @@ export function useSearch() {
           setCurrentReadyMeals(readyMealsWithFinalIds.length > 0 ? readyMealsWithFinalIds as ReadyMeal[] : []);
           setStatus('partial');
           
-          // Only mark as exhausted if we got SIGNIFICANTLY fewer than requested, or AI says so
+          // Only mark as exhausted if we got significantly fewer than requested, or the service says so
           const totalFound = recipesWithFinalIds.length + readyMealsWithFinalIds.length;
           if (aiExhausted || (totalFound === 0)) {
             setHasExhaustedSearch(true);
@@ -447,7 +447,7 @@ export function useSearch() {
       
       // Clean error messaging to ensure plain English and hide technical details (Operational Silence)
       const cleanErrorMessage = (msg: string): string => {
-        if (!msg) return "Our AI service is experiencing a temporary issue. Please try again.";
+        if (!msg) return "Our search service is experiencing a temporary issue. Please try again.";
         const lower = msg.toLowerCase();
         if (
           lower.includes("permission_denied") ||
@@ -457,11 +457,11 @@ export function useSearch() {
           lower.includes("status\":403") ||
           (lower.includes("deny") && lower.includes("project"))
         ) {
-          return "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later.";
+          return "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
         }
         if (
-          lower.startsWith("our ai service") ||
-          lower.startsWith("our ai provider") ||
+          lower.startsWith("our search service") ||
+          lower.startsWith("our search provider") ||
           lower.startsWith("recipe search is temporarily unavailable") ||
           lower.startsWith("search request timed out")
         ) {
@@ -483,7 +483,7 @@ export function useSearch() {
           lower.includes("apierror") ||
           lower.includes("server error")
         ) {
-          return "Our AI service is experiencing a temporary issue. Please try again.";
+          return "Our search service is experiencing a temporary issue. Please try again.";
         }
         return msg;
       };
@@ -510,9 +510,9 @@ export function useSearch() {
       }
 
       if (isParsingError) {
-        setLocalError("AI returned a malformed response. Please try again or simplify your search.");
+        setLocalError("Search returned a malformed response. Please try again or simplify your search.");
       } else if (category === 'schema') {
-        setLocalError("AI response was incomplete or mismatched. Please try again.");
+        setLocalError("Search response was incomplete or mismatched. Please try again.");
       } else if (category === 'quota' || category === 'permission') {
         setLocalError(errorMsg); 
       } else if (category === 'network') {

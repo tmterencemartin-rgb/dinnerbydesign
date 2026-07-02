@@ -204,7 +204,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                          err.name === "TypeError";
       
       if (isFetchError) {
-        showToast(`Network Error: Ensure the AI service is online. (Target: ${apiUrl})`);
+        showToast(`Network Error: Ensure the search service is online. (Target: ${apiUrl})`);
       } else if (
         err.name === "validation_error" ||
         err.message?.toLowerCase().includes("validation") ||
@@ -234,7 +234,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       showToast("Connection URL saved! Ready to connect.");
     } else {
       safeStorage.removeItem('CUSTOM_API_BASE_URL');
-      showToast("Reverted to default AI Studio cloud endpoints.");
+      showToast("Reverted to default cloud endpoints.");
     }
   };
 
@@ -245,8 +245,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     };
     setApiConfig(cleanedConfig);
     setApiConfigState(cleanedConfig);
-    showToast(`AI Configuration saved in ${apiConfig.mode} mode!`);
-    // Reload if switching to direct to ensure AI instance is re-initialized
+    showToast(`Model configuration saved in ${apiConfig.mode} mode!`);
+    // Reload if switching to direct to ensure the service instance is re-initialized
     if (apiConfig.mode === 'direct') {
       setTimeout(() => window.location.reload(), 1000);
     }
@@ -1461,7 +1461,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               <div className="space-y-1">
                 <h4 className="text-[13.5px] text-gray-900 font-bold">API Backend Server URL</h4>
                 <p className="text-[11.5px] text-gray-400 font-semibold leading-normal">
-                  Override the default remote AI proxy router during local staging and development.
+                  Override the default remote proxy router during local staging and development.
                 </p>
               </div>
 
@@ -1502,7 +1502,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                       onClick={() => {
                         setCustomApiUrl("");
                         safeStorage.removeItem('CUSTOM_API_BASE_URL');
-                        showToast("Reverted to default AI Studio cloud endpoints.");
+                        showToast("Reverted to default cloud endpoints.");
                       }}
                       className="px-2 py-1.5 bg-white hover:bg-red-50 border border-red-200 text-[10.5px] font-bold rounded text-red-600 transition-all"
                     >
@@ -1513,9 +1513,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               </div>
             </div>
 
-            {/* AI Request Routing Settings */}
+            {/* Request Routing Settings */}
             <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">AI Engine Configuration</h3>
+              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Model Configuration</h3>
               <div className="space-y-1">
                 <h4 className="text-[13.5px] text-gray-900 font-bold">Model Request Options</h4>
                 <p className="text-[11.5px] text-gray-400 font-semibold leading-normal">

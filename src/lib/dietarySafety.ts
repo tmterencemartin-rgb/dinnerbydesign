@@ -9,7 +9,7 @@ import { Recipe, SavedRecipe, ReadyMeal, DietaryRule, SaladPreference } from '..
  * Add new retailer formats, synonyms, and edge-case ingredients here.
  * 
  * Logic:
- * 1. AI Verification: Must have dietFlagsVerified = true.
+ * 1. Service verification: Must have dietFlagsVerified = true.
  * 2. Keyword Safety Net: Scans title, description, and ingredients for obvious forbidden terms.
  * 3. Spelling/Formatting: Uses regex word boundaries to catch pluralisations and common retailer ingredient formats.
  */
@@ -54,7 +54,7 @@ export function passesDietaryRule(recipe: Recipe | SavedRecipe | ReadyMeal, rule
   const isVegan = recipe.isVegan !== undefined ? recipe.isVegan : !match(MEAT_POULTRY) && !match(FISH_SEAFOOD) && !match(ANIMAL_DERIVATIVES);
   const dietFlagsVerified = recipe.dietFlagsVerified !== undefined ? recipe.dietFlagsVerified : true;
 
-  // 2. Mandatory AI Flag Check
+  // 2. Mandatory service flag check
   // Fail closed: If flags aren't explicitly verified as 100% accurate, exclude.
   if (!dietFlagsVerified) return false;
 
@@ -156,7 +156,7 @@ export function passesHardConstraints(
   if (saladPreference === 'none') {
     if (isSalad) return false;
   } else if (saladPreference === 'main-only') {
-    // If we have saladType from AI, use it. Otherwise fallback to keyword check.
+    // If we have saladType from the service, use it. Otherwise fallback to keyword check.
     if (recipe.saladType) {
       if (recipe.saladType !== 'main') return false;
     } else {

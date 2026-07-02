@@ -15,13 +15,13 @@ export function isLocalhost(): boolean {
 }
 
 export function getApiConfig(): ApiConfig {
-  let mode = (safeStorage.getItem('AI_API_MODE') as 'proxy' | 'direct') || 'proxy';
+  let mode = (safeStorage.getItem('MODEL_API_MODE') as 'proxy' | 'direct') || 'proxy';
   const customBaseUrl = safeStorage.getItem('CUSTOM_API_BASE_URL') || undefined;
   let directApiKey = safeStorage.getItem('DIRECT_GEMINI_API_KEY') || undefined;
 
   // Production Guard: If not on localhost, force proxy mode to ensure all real traffic goes via Vercel
   if (mode === 'direct' && !isLocalhost()) {
-    console.log("[API] Production environment detected. Forcing AI_API_MODE to 'proxy' for reliability.");
+    console.log("[API] Production environment detected. Forcing MODEL_API_MODE to 'proxy' for reliability.");
     mode = 'proxy';
   }
   
@@ -43,7 +43,7 @@ export function getApiConfig(): ApiConfig {
 }
 
 export function setApiConfig(config: Partial<ApiConfig>) {
-  if (config.mode) safeStorage.setItem('AI_API_MODE', config.mode);
+  if (config.mode) safeStorage.setItem('MODEL_API_MODE', config.mode);
   if (config.customBaseUrl !== undefined) {
     if (config.customBaseUrl) safeStorage.setItem('CUSTOM_API_BASE_URL', config.customBaseUrl);
     else safeStorage.removeItem('CUSTOM_API_BASE_URL');

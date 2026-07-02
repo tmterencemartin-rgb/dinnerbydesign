@@ -157095,11 +157095,11 @@ function isLocalhost() {
   return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname.startsWith("192.168.") || window.location.hostname.startsWith("10.");
 }
 function getApiConfig() {
-  let mode = safeStorage.getItem("AI_API_MODE") || "proxy";
+  let mode = safeStorage.getItem("MODEL_API_MODE") || "proxy";
   const customBaseUrl = safeStorage.getItem("CUSTOM_API_BASE_URL") || void 0;
   let directApiKey = safeStorage.getItem("DIRECT_GEMINI_API_KEY") || void 0;
   if (mode === "direct" && !isLocalhost()) {
-    console.log("[API] Production environment detected. Forcing AI_API_MODE to 'proxy' for reliability.");
+    console.log("[API] Production environment detected. Forcing MODEL_API_MODE to 'proxy' for reliability.");
     mode = "proxy";
   }
   if (directApiKey !== void 0) {
@@ -157343,7 +157343,7 @@ function parseAndNormaliseIngredients(query) {
 }
 
 // src/services/geminiService.ts
-var AI_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later.";
+var SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
 var GeminiServiceError = class extends Error {
   constructor(category, message, details) {
     super(message);
@@ -157414,9 +157414,9 @@ function parseProviderError(error) {
     const apiConfig = getApiConfig();
     const isActuallyProxy = apiConfig.mode === "proxy";
     if (isActuallyProxy) {
-      rawMsg = "The AI search service is currently unavailable. Please try again later.";
+      rawMsg = "The search service is currently unavailable. Please try again later.";
     } else {
-      rawMsg = "The AI request was intercepted by a network login or proxy (HTML returned). This often happens on public Wi-Fi or behind corporate firewalls.";
+      rawMsg = "The search request was intercepted by a network login or proxy (HTML returned). This often happens on public Wi-Fi or behind corporate firewalls.";
     }
     isTemporary = true;
     if (status === 0) status = 502;
@@ -157571,7 +157571,7 @@ async function callGeminiWithRetry(modelId, contents, config, retries = 4, delay
     }
     throw lastError2;
   }
-  const ai = getAI();
+  const modelClient = getAI();
   let lastError;
   for (let i2 = 0; i2 < retries; i2++) {
     try {
@@ -157582,7 +157582,7 @@ async function callGeminiWithRetry(modelId, contents, config, retries = 4, delay
           const timestamp = (/* @__PURE__ */ new Date()).toISOString();
           const promptLength = JSON.stringify(contents).length;
           console.log(`[GeminiService SDK Log] [${timestamp}] Calling model: ${currentModel} | PromptLength: ${promptLength}`);
-          const response2 = await ai.models.generateContent({
+          const response2 = await modelClient.models.generateContent({
             model: currentModel,
             contents: [{ role: "user", parts: [{ text: typeof contents === "string" ? contents : JSON.stringify(contents) }] }],
             config: {
@@ -157817,7 +157817,7 @@ INGREDIENT-LED SEARCH ACTIVE:
 - If a recipe needs extra ingredients, keep them essential and ordinary UK supermarket items.
 - In the description or matchReason, briefly explain how the listed ingredients are used.` : "";
   try {
-    const ai = getAI();
+    const modelClient = getAI();
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
     const parsedIngredientsInstruction = ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `
 INGREDIENT PARSING & INTERPRETATION (CRITICAL):
@@ -157994,14 +157994,14 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const geminiDuration = Date.now() - start;
     console.log(`[GeminiService] Response received in ${geminiDuration}ms. Text length: ${text?.length || 0}`);
     if (!text) {
-      throw new GeminiServiceError("empty", "Empty response from AI model.");
+      throw new GeminiServiceError("empty", "Empty response from search service.");
     }
     const data = JSON.parse(text);
     const rawItems = data.items || [];
     let items = rawItems.map((item) => ({
       ...item,
       realityChecks: sanitizeRealityChecks(item.realityChecks),
-      id: item.id || `ai-${Math.random().toString(36).substring(2, 9)}`,
+      id: item.id || `dbd-${Math.random().toString(36).substring(2, 9)}`,
       dietFlagsVerified: true
       // Mandatory for deterministic safety gate
     }));
@@ -158063,7 +158063,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     } else if (parsed.message.includes("API_KEY")) {
       category = "network";
     }
-    throw new GeminiServiceError(category, parsed.isPermission ? AI_PERMISSION_MESSAGE : parsed.message);
+    throw new GeminiServiceError(category, parsed.isPermission ? SEARCH_PERMISSION_MESSAGE : parsed.message);
   }
 }
 async function enrichRecipe(title, cuisine, mode) {
@@ -158072,7 +158072,7 @@ async function enrichRecipe(title, cuisine, mode) {
     return fetchProxyEnrichment(title, cuisine, mode);
   }
   try {
-    const ai = getAI();
+    const modelClient = getAI();
     const systemInstruction = `You are a professional UK culinary content generator.
 Convert the provided title and cuisine into a complete, high-quality UK ${mode === "ready-made" ? "supermarket product detail" : "recipe"}.
 Units: Metric only.
@@ -158186,7 +158186,7 @@ async function generateMatchRationales(items, searchParams, preferences) {
     }
   }
   try {
-    const ai = getAI();
+    const modelClient = getAI();
     const itemSummaries = items.map((item) => ({
       title: item.title,
       cuisine: item.cuisine,
@@ -163523,7 +163523,7 @@ async function recordAiUsageEvent(details) {
       createdAt: FieldValue.serverTimestamp()
     });
   } catch (logErr) {
-    console.error("[AI Usage] Failed to record usage event:", logErr);
+    console.error("[Usage] Failed to record usage event:", logErr);
   }
 }
 var _filename = "";
@@ -163635,7 +163635,7 @@ function createApp() {
         errorCategory: error.category || "model"
       });
       const category = error.category || "model";
-      let message = error.message || "Internal AI model error";
+      let message = error.message || "Internal search service error";
       if (message.includes("<!DOCTYPE html>") || message.includes("<html")) {
         message = "Search is temporarily unavailable. Please try again.";
       }
@@ -163644,13 +163644,13 @@ function createApp() {
       const isTransient = messageLower.includes("high demand") || messageLower.includes("503") || messageLower.includes("unavailable") || messageLower.includes("overloaded") || messageLower.includes("capacity") || messageLower.includes("deadline exceeded") || messageLower.includes("temporary") || messageLower.includes("apierror") || messageLower.includes("internal error");
       const isQuota = category === "quota" || messageLower.includes("quota") || messageLower.includes("limit") || messageLower.includes("resource exhausted");
       if (isPermission || isTransient || isQuota) {
-        message = isPermission ? "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later." : isQuota ? "Our AI service is currently at capacity due to high demand. You didn't do anything wrong! Please wait about 60 seconds and try again." : "Our AI provider is experiencing a temporary issue. This is a backend stability matter and usually resolves quickly. Please try again in a moment. [Check Status](https://aistudio.google.com/status)";
+        message = isPermission ? "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later." : isQuota ? "Our search service is currently at capacity due to high demand. You didn't do anything wrong! Please wait about 60 seconds and try again." : "Our search provider is experiencing a temporary issue. This is a backend stability matter and usually resolves quickly. Please try again in a moment. [Check Status](https://aistudio.google.com/status)";
       }
       const status = isQuota ? 429 : 503;
       const errorResponse = {
         ok: false,
         error: {
-          code: isPermission ? "AI_SEARCH_SERVICE_ACCOUNT_UNAVAILABLE" : isQuota ? "AI_SEARCH_QUOTA_EXHAUSTED" : "AI_SEARCH_TEMPORARY_FAILURE",
+          code: isPermission ? "SEARCH_SERVICE_ACCOUNT_UNAVAILABLE" : isQuota ? "SEARCH_QUOTA_EXHAUSTED" : "SEARCH_TEMPORARY_FAILURE",
           message,
           retryable: !isPermission && (isTransient || isQuota),
           status,
@@ -163676,8 +163676,8 @@ function createApp() {
       res.status(503).json({
         ok: false,
         error: {
-          code: "AI_ENRICHMENT_TEMPORARY_FAILURE",
-          message: "Recipe enrichment is temporarily unavailable due to high AI demand. Please try again in a moment.",
+          code: "ENRICHMENT_TEMPORARY_FAILURE",
+          message: "Recipe enrichment is temporarily unavailable due to high demand. Please try again in a moment.",
           retryable: true,
           status: 503
         }
@@ -164077,7 +164077,7 @@ function createApp() {
         let html = await import_fs2.default.promises.readFile(indexPath, "utf8");
         const siteUrl = "https://dinnerbydesign.app";
         let title = "DinnerByDesign \u2014 Bespoke Food Planning & Smart Shopping Lists";
-        let description = "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
+        let description = "Bespoke food planning, dinner prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
         let canonicalPath = "/";
         let noIndex = false;
         let schema = null;
@@ -164115,7 +164115,7 @@ function createApp() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "DinnerByDesign",
-            "description": "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
+            "description": "Bespoke food planning, dinner prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
             "applicationCategory": "HealthAndFitnessApplication, FoodAndDrink",
             "operatingSystem": "All"
           };

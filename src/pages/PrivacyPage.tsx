@@ -50,7 +50,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
           <strong className="text-gray-800">B. Application Data & Local Storage:</strong> To provide features like the Save & Schedule planner and the Shop checklist matrix, the Application utilizes your device's native local storage (such as <code className="bg-gray-100 px-1 rounded text-gray-700">localStorage</code> or IndexedDB). Your saved recipes, weekly dinner schedules, and active grocery checklists are stored <span className="underline font-medium">locally on your device</span>. This data is not uploaded to our servers or synced to external databases.
         </p>
         <p>
-          <strong className="text-gray-800">C. Search Queries & Artificial Intelligence Processing:</strong> When you execute a search query (including text inputs, selected filter attributes, or using Leftover Mode), these anonymized keywords are transmitted to third-party artificial intelligence processing services (specifically Google Gemini APIs) to generate tailored recipe suggestions. These queries do not contain personal identification data.
+          <strong className="text-gray-800">C. Search Queries & Automated Processing:</strong> When you execute a search query (including text inputs, selected filter attributes, or using Leftover Mode), these anonymized keywords are transmitted to third-party processing services (specifically Google Gemini APIs) to generate tailored recipe suggestions. These queries do not contain personal identification data.
         </p>
       </div>
 
@@ -65,7 +65,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
 
       <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">3. Disclosure of Your Information</h2>
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        We do not sell, trade, or rent your data to third-party advertisers. We may share anonymized search query attributes with our trusted service providers (such as AI infrastructure endpoints) strictly to fulfill the search functionality of the application. We may also disclose information if required by law to comply with legal obligations or protect user safety.
+        We do not sell, trade, or rent your data to third-party advertisers. We may share anonymized search query attributes with our trusted service providers strictly to fulfill the search functionality of the application. We may also disclose information if required by law to comply with legal obligations or protect user safety.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />

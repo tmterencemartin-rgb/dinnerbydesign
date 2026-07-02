@@ -494,7 +494,7 @@ export const LandingView: React.FC = () => {
           <div className="space-y-1 mb-8 font-sans text-3xl sm:text-4xl leading-[1.15] font-bold text-dbd-ink select-none">
             <h2>No ads.</h2>
             <h2>No backstories.</h2>
-            <h2 className="text-[#bf5324]">No AI-generated recipes.</h2>
+            <h2 className="text-[#bf5324]">No invented dinners.</h2>
             <h2>No tracking, no clutter, no clickbait.</h2>
           </div>
           <p className="text-[14px] sm:text-[17px] text-dbd-ink-2 max-w-2xl leading-relaxed mx-auto font-sans font-light">

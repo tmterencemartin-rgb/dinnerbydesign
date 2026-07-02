@@ -40,7 +40,7 @@ Use this before sharing the app publicly, after changing environment variables, 
 
 - [ ] Recipe search returns results on the live site.
 - [ ] Ingredient normalization and dietary assessment work.
-- [ ] If the app says the AI service is temporarily unavailable, confirm `GEMINI_API_KEY` exists in Vercel and redeploy.
+- [ ] If the app says the search service is temporarily unavailable, confirm `GEMINI_API_KEY` exists in Vercel and redeploy.
 
 ## Stripe
 

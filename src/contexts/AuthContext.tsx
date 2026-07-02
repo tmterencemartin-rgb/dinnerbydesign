@@ -471,7 +471,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const reason = event.reason;
       const msg = (reason?.message || String(reason || "")).toLowerCase();
       
-      // Filter out common persistent noise in the AI Studio environment
+      // Filter out common persistent noise in the hosted studio environment
       if (
         msg.includes("websocket") || 
         msg.includes("hmr") || 

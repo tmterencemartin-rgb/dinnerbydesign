@@ -24,7 +24,7 @@ export const renderErrorMessage = (msg: string | null) => {
       if (lowerError.includes('resend_restriction') || lowerError.includes('restriction')) {
         return "Delivery restricted: Please manually copy these details if your email address isn't verified yet.";
       }
-      return "A database or AI service hiccup occurred. We're on it.";
+      return "A database or search service hiccup occurred. We're on it.";
     }
     
     // Check if the raw string contains the credit error

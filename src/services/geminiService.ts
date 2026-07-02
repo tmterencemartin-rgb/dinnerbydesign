@@ -5,7 +5,7 @@ import { PREFERRED_SOURCES } from '../data/preferredSources';
 import { parseAndNormaliseIngredients } from '../lib/ingredientParser';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
-const AI_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later.";
+const SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
 
 /**
  * Result count constants for search flows.
@@ -69,7 +69,7 @@ function getAI() {
 }
 
 /**
- * Parse and sanitize Google GenAI provider errors, handling HTML leakage.
+ * Parse and sanitize Google Gemini provider errors, handling HTML leakage.
  */
 function parseProviderError(error: any): { status: number; message: string; isTemporary: boolean; isPermission: boolean } {
   let status = error?.status || error?.error?.code || 0;
@@ -131,9 +131,9 @@ function parseProviderError(error: any): { status: number; message: string; isTe
     const isActuallyProxy = apiConfig.mode === 'proxy';
     
     if (isActuallyProxy) {
-      rawMsg = "The AI search service is currently unavailable. Please try again later.";
+      rawMsg = "The search service is currently unavailable. Please try again later.";
     } else {
-      rawMsg = "The AI request was intercepted by a network login or proxy (HTML returned). This often happens on public Wi-Fi or behind corporate firewalls.";
+      rawMsg = "The search request was intercepted by a network login or proxy (HTML returned). This often happens on public Wi-Fi or behind corporate firewalls.";
     }
     isTemporary = true;
     if (status === 0) status = 502; // default 502 Bad Gateway
@@ -328,7 +328,7 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
   }
 
   // Otherwise use the standard SDK (server-side or legacy client support)
-  const ai = getAI();
+  const modelClient = getAI();
   let lastError: any;
 
   for (let i = 0; i < retries; i++) {
@@ -342,7 +342,7 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
           
           console.log(`[GeminiService SDK Log] [${timestamp}] Calling model: ${currentModel} | PromptLength: ${promptLength}`);
 
-	          const response = await ai.models.generateContent({
+	          const response = await modelClient.models.generateContent({
 	            model: currentModel,
 	            contents: [{ role: 'user', parts: [{ text: typeof contents === 'string' ? contents : JSON.stringify(contents) }] }],
 	            config: {
@@ -653,7 +653,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     : '';
 
   try {
-    const ai = getAI();
+    const modelClient = getAI();
     
     // Parse and normalise search query elements for ingredient-focused searches
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
@@ -845,7 +845,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     console.log(`[GeminiService] Response received in ${geminiDuration}ms. Text length: ${text?.length || 0}`);
 
     if (!text) {
-      throw new GeminiServiceError('empty', "Empty response from AI model.");
+      throw new GeminiServiceError('empty', "Empty response from search service.");
     }
 
     const data = JSON.parse(text);
@@ -853,7 +853,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     let items = rawItems.map((item: any) => ({
       ...item,
       realityChecks: sanitizeRealityChecks(item.realityChecks),
-      id: item.id || `ai-${Math.random().toString(36).substring(2, 9)}`,
+      id: item.id || `dbd-${Math.random().toString(36).substring(2, 9)}`,
       dietFlagsVerified: true // Mandatory for deterministic safety gate
     }));
 
@@ -927,7 +927,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       category = 'network';
     }
 
-    throw new GeminiServiceError(category, parsed.isPermission ? AI_PERMISSION_MESSAGE : parsed.message);
+    throw new GeminiServiceError(category, parsed.isPermission ? SEARCH_PERMISSION_MESSAGE : parsed.message);
   }
 }
 
@@ -942,7 +942,7 @@ export async function enrichRecipe(title: string, cuisine: string, mode: 'cook' 
   }
 
   try {
-    const ai = getAI();
+    const modelClient = getAI();
     const systemInstruction = `You are a professional UK culinary content generator.
 Convert the provided title and cuisine into a complete, high-quality UK ${mode === 'ready-made' ? 'supermarket product detail' : 'recipe'}.
 Units: Metric only.
@@ -1073,7 +1073,7 @@ export async function generateMatchRationales(
   }
 
   try {
-    const ai = getAI();
+    const modelClient = getAI();
     const itemSummaries = items.map(item => ({
       title: item.title,
       cuisine: item.cuisine,

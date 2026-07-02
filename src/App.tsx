@@ -100,7 +100,7 @@ const AppContent = () => {
       case 'landing':
       default:
         return {
-          title: 'DinnerByDesign | AI Recipe Finder, Dinner Planner & Shopping List',
+          title: 'DinnerByDesign | Dinner Finder, Planner & Shopping List',
           description: 'Find dinner recipes by ingredient, dish, cuisine or chef. DinnerByDesign helps you compare recipes, schedule dinners and build UK shopping lists around your budget, portions and dietary preferences.',
           canonicalPath: '/',
           jsonLd: {

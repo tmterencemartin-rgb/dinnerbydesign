@@ -126,7 +126,7 @@ export const ConnectionDiagnostics: React.FC = () => {
             <span className="text-[12px] font-bold">Connectivity Error</span>
           </div>
           <p className="text-[11px] text-red-600 leading-normal pl-5">
-            The AI service cannot be reached. Check your network or API keys in the panel below.
+            The search service cannot be reached. Check your network or API keys in the panel below.
           </p>
         </div>
       )}

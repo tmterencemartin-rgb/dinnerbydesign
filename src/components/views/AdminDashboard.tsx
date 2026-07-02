@@ -542,7 +542,7 @@ export const AdminDashboard: React.FC = () => {
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
                 { label: 'Paid subscribers', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe customers`, icon: CreditCard },
                 { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid or incomplete', icon: AlertTriangle },
-                { label: 'Usage', value: summaryStats.aiCalls || summaryStats.totalSearches, detail: `${summaryStats.succeededAiCalls} AI calls succeeded`, icon: Activity }
+                { label: 'Usage', value: summaryStats.aiCalls || summaryStats.totalSearches, detail: `${summaryStats.succeededAiCalls} model calls succeeded`, icon: Activity }
               ].map(item => {
                 const Icon = item.icon;
                 return (
@@ -583,7 +583,7 @@ export const AdminDashboard: React.FC = () => {
                     <p className="text-[10.5px] text-gray-400 font-medium">{formatCurrency(summaryStats.estimatedAiCostUsd, 'USD')} est.</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">AI calls</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Model calls</p>
                     <p className="text-lg font-bold text-gray-950 mt-1">{summaryStats.aiCalls}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">{summaryStats.failedAiCalls} failed</p>
                   </div>

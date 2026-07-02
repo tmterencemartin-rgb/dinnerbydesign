@@ -13,17 +13,17 @@ When testing this web application locally, you can connect to your local backend
 - **Configuration**: The app includes a "Developer Connection Settings" section in the the Settings view (accessible in debug mode) to allow runtime server URL overrides.
 - **API Keys**: When running `npm run dev` locally, provide your own `GEMINI_API_KEY` in your local environment (shell or `.env` file).
 
-# AI Service Architecture
+# Search Service Architecture
 
 - **Model Strategy**: The application uses `gemini-3.5-flash` for all recipe generation and analysis tasks.
 - **Operational Silence**:
-  - Technical status indicators (e.g., "Connected", "AI Key: OK", "Direct Mode") must be hidden from the primary UI.
+  - Technical status indicators (e.g., "Connected", "Service key: OK", "Direct Mode") must be hidden from the primary UI.
   - Diagnostics and connection overrides are moved to a hidden "Service Diagnostics" panel in Settings, accessible via URL parameter (`?debug=true`) or a 5-tap gesture on the Settings title (non-production only).
 - **Connection Modes**:
   - **Cloud Proxy**: Default mode for production traffic.
   - **Direct Mode**: Client-side connection for local development and troubleshooting.
   - **Resilient Fallback**: If Direct Mode is enabled in the client but fails for any reason (e.g. quota limits, invalid API keys, or browser connectivity restrictions), the application automatically catches the error and seamlessly falls back to Cloud Proxy mode. This ensures that the user's planning flow remains uninterrupted.
-- **Error Handling**: Use plain English for all user-facing errors (e.g., "Our AI service is experiencing a temporary issue" instead of "Quota Exceeded"). Avoid exposing technical codes or routing details.
+- **Error Handling**: Use plain English for all user-facing errors (e.g., "Our search service is experiencing a temporary issue" instead of "Quota Exceeded"). Avoid exposing technical codes or routing details.
 
 # Project Persistence & Communication
 
@@ -60,6 +60,5 @@ When testing this web application locally, you can connect to your local backend
 - **Account Deletion & Data Clear Confirmation (Email 2)**:
   - Dispatched client-side via `/api/send-email` within `handleDeleteAccount` in `SettingsView.tsx` right after the user profile data collections are successfully wiped but immediately before `user.delete()` is executed. This prevents session loss during the network fetch.
   - Includes polite support details, a data propagation notice (up to 48 hours), and an interactive link to an exit survey to optimize UX retention efforts.
-
 
 

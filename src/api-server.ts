@@ -139,7 +139,7 @@ async function recordAiUsageEvent(details: Record<string, any>) {
       createdAt: FieldValue.serverTimestamp()
     });
   } catch (logErr) {
-    console.error("[AI Usage] Failed to record usage event:", logErr);
+    console.error("[Usage] Failed to record usage event:", logErr);
   }
 }
 
@@ -262,7 +262,7 @@ export function createApp() {
       });
       
       const category = error.category || 'model';
-      let message = error.message || "Internal AI model error";
+      let message = error.message || "Internal search service error";
       
       // Prevent HTML leakage
       if (message.includes('<!DOCTYPE html>') || message.includes('<html')) {
@@ -292,10 +292,10 @@ export function createApp() {
 
       if (isPermission || isTransient || isQuota) {
         message = isPermission
-          ? "Recipe search is temporarily unavailable because the AI service account needs attention. This is on our side, so please try again later."
+          ? "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later."
           : isQuota 
-          ? "Our AI service is currently at capacity due to high demand. You didn't do anything wrong! Please wait about 60 seconds and try again."
-          : "Our AI provider is experiencing a temporary issue. This is a backend stability matter and usually resolves quickly. Please try again in a moment. [Check Status](https://aistudio.google.com/status)";
+          ? "Our search service is currently at capacity due to high demand. You didn't do anything wrong! Please wait about 60 seconds and try again."
+          : "Our search provider is experiencing a temporary issue. This is a backend stability matter and usually resolves quickly. Please try again in a moment. [Check Status](https://aistudio.google.com/status)";
       }
 
       const status = isQuota ? 429 : 503;
@@ -303,7 +303,7 @@ export function createApp() {
       const errorResponse = { 
         ok: false,
         error: {
-          code: isPermission ? "AI_SEARCH_SERVICE_ACCOUNT_UNAVAILABLE" : isQuota ? "AI_SEARCH_QUOTA_EXHAUSTED" : "AI_SEARCH_TEMPORARY_FAILURE",
+          code: isPermission ? "SEARCH_SERVICE_ACCOUNT_UNAVAILABLE" : isQuota ? "SEARCH_QUOTA_EXHAUSTED" : "SEARCH_TEMPORARY_FAILURE",
           message,
           retryable: !isPermission && (isTransient || isQuota),
           status: status,
@@ -334,8 +334,8 @@ export function createApp() {
       res.status(503).json({ 
         ok: false, 
         error: {
-          code: "AI_ENRICHMENT_TEMPORARY_FAILURE",
-          message: "Recipe enrichment is temporarily unavailable due to high AI demand. Please try again in a moment.",
+          code: "ENRICHMENT_TEMPORARY_FAILURE",
+          message: "Recipe enrichment is temporarily unavailable due to high demand. Please try again in a moment.",
           retryable: true,
           status: 503
         }
@@ -809,7 +809,7 @@ export function createApp() {
         
         const siteUrl = "https://dinnerbydesign.app";
         let title = "DinnerByDesign — Bespoke Food Planning & Smart Shopping Lists";
-        let description = "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
+        let description = "Bespoke food planning, dinner prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.";
         let canonicalPath = "/";
         let noIndex = false;
         let schema: any = null;
@@ -849,7 +849,7 @@ export function createApp() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "DinnerByDesign",
-            "description": "Bespoke, AI-powered food planning, recipe prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
+            "description": "Bespoke food planning, dinner prep, and smart shopping lists tailored to your tastes, budget, and dietary requirements.",
             "applicationCategory": "HealthAndFitnessApplication, FoodAndDrink",
             "operatingSystem": "All"
           };
