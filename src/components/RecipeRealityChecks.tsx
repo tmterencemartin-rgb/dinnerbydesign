@@ -27,21 +27,21 @@ export const RecipeRealityChecks: React.FC<RecipeRealityChecksProps> = ({ checks
   if (visibleChecks.length === 0) return null;
 
   return (
-    <div className="w-full space-y-1.5">
+    <div className="w-full space-y-1 sm:space-y-1.5">
       <div className="flex items-center gap-1.5">
         <span className="text-[9.5px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">
           Reality check
         </span>
         <span className="h-px flex-1 bg-gray-100" />
       </div>
-      <div className={`grid ${compact ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'} gap-1.5`}>
+      <div className={`grid ${compact ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'} gap-1 sm:gap-1.5`}>
         {visibleChecks.map((check, index) => {
           const tone = check.tone || 'neutral';
 
           return (
             <div
               key={`${check.label}-${index}`}
-              className={`flex items-start gap-2 rounded border px-2 py-1.5 ${toneClasses[tone] || toneClasses.neutral}`}
+              className={`flex items-start gap-1.5 sm:gap-2 rounded border px-2 py-1.5 ${toneClasses[tone] || toneClasses.neutral}`}
             >
               <span className="mt-0.5 shrink-0">{toneIcons[tone] || toneIcons.neutral}</span>
               <p className="min-w-0 text-[11px] sm:text-[11.5px] leading-snug">

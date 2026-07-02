@@ -13,8 +13,8 @@ export const GuidanceNotice = ({ hasCost, mode = 'cook', className = "" }: Guida
     : "Estimated cost for one adult portion, based on official UK market data. Actual prices vary by season and retailer.";
 
   return (
-    <div className={`flex items-start gap-2.5 ${className}`}>
-      <Info className="w-3.5 h-3.5 text-gray-400 shrink-0 mt-0.5" />
+    <div className={`flex items-start gap-0 sm:gap-2.5 ${className}`}>
+      <Info className="hidden sm:block w-3.5 h-3.5 text-gray-400 shrink-0 mt-0.5" />
       <div className="space-y-1 min-w-0">
         <p className="text-[10px] sm:text-[10.5px] font-bold text-gray-400 uppercase tracking-widest leading-none">Guidance</p>
         <p className="text-[11px] sm:text-[11.5px] font-medium text-gray-500/90 leading-snug">

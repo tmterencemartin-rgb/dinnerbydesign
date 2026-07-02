@@ -189,8 +189,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   );
 
   const kitPanel = (
-    <div className="w-full rounded border border-gray-200 bg-white p-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
-      <div className="flex items-start gap-3 mb-3">
+    <div className="w-full rounded border border-gray-200 bg-white p-3 sm:p-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+      <div className="flex items-start gap-2.5 mb-2.5 sm:mb-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
@@ -204,8 +204,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
         </div>
       </div>
 
-      <div className="grid gap-3">
-        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-2.5">
+      <div className="grid gap-2.5 sm:gap-3">
+        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-2 sm:p-2.5">
           <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
             Core dish
           </p>
@@ -214,7 +214,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2.5 sm:gap-3 sm:grid-cols-2">
           <div className="min-w-0">
             <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
               Add alongside
@@ -349,8 +349,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             </div>
 
             {/* Core Content Stack - Tightly grouped for precise spacing */}
-            <div className={isExpanded ? 'grid gap-5 sm:grid-cols-[minmax(240px,0.92fr)_minmax(320px,1.08fr)] sm:items-start' : 'grid grid-cols-1 gap-5'}>
-              <div className="flex flex-col gap-3 items-start w-full min-w-0">
+            <div className={isExpanded ? 'grid gap-3 sm:gap-5 sm:grid-cols-[minmax(240px,0.92fr)_minmax(320px,1.08fr)] sm:items-start' : 'grid grid-cols-1 gap-3 sm:gap-5'}>
+              <div className="flex flex-col gap-2.5 sm:gap-3 items-start w-full min-w-0">
                 {/* Compressed Metadata Section */}
                 <div className="w-full flex flex-col gap-0.5 sm:gap-2 pt-1.5 pb-0 px-1.5 sm:p-3 bg-gray-50/60 rounded">
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
@@ -529,7 +529,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
               </div>
 
               {isExpanded && (
-                <div className="space-y-4 min-w-0">
+                <div className="space-y-3 sm:space-y-4 min-w-0">
                   <div>
                     <GuidanceNotice
                       hasCost={hasCost}

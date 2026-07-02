@@ -179,8 +179,8 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   );
 
   const kitPanel = (
-    <div className="w-full rounded border border-gray-200 bg-white p-4 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-4">
+    <div className="w-full rounded border border-gray-200 bg-white p-3 sm:p-4 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2.5 sm:mb-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
@@ -199,8 +199,8 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
         )}
       </div>
 
-      <div className="grid gap-4">
-        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-3">
+      <div className="grid gap-2.5 sm:gap-4">
+        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-2 sm:p-3">
           <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
             Core product
           </p>
@@ -209,7 +209,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-2.5 sm:gap-4 sm:grid-cols-2">
           <div className="min-w-0">
             <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
               Add alongside
@@ -323,7 +323,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       <div className="">
         <div className="flex flex-col">
           {/* Main Card Content Stack */}
-          <div className="flex flex-col gap-4 sm:gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
             {/* Title Block - Hero Section for Mobile */}
             <div className="flex flex-col gap-2 items-start">
               <h3 className="text-[20px] sm:text-[24px] font-bold text-gray-900 leading-[1.18] tracking-tight text-left">
@@ -342,8 +342,8 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               )}
             </div>
 
-            <div className={`grid gap-5 ${isExpanded ? 'md:grid-cols-[minmax(240px,0.78fr)_minmax(420px,1.22fr)] md:items-start' : 'grid-cols-1'}`}>
-              <div className="flex flex-col gap-3 items-start w-full min-w-0 md:sticky md:top-4">
+            <div className={`grid gap-3 sm:gap-5 ${isExpanded ? 'md:grid-cols-[minmax(240px,0.78fr)_minmax(420px,1.22fr)] md:items-start' : 'grid-cols-1'}`}>
+              <div className="flex flex-col gap-2.5 sm:gap-3 items-start w-full min-w-0 md:sticky md:top-4">
                 <div className="w-full flex flex-col gap-2 py-2.5 border-y border-gray-100">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 justify-start">
                     <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
@@ -433,7 +433,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 )}
               </div>
 
-              <div className="space-y-5 min-w-0">
+              <div className="space-y-3 sm:space-y-5 min-w-0">
                 {kitPanel}
 
                 {!isExpanded && (
@@ -446,7 +446,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden space-y-5"
+                    className="overflow-hidden space-y-3 sm:space-y-5"
                   >
                     <div className="md:hidden max-w-2xl lg:max-w-3xl mr-auto w-full space-y-2.5 pt-1 border-t border-gray-100">
                        <GuidanceNotice 
