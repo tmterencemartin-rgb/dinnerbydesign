@@ -98,14 +98,60 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   }, [cuisineLower, recipe.saladType, titleLower]);
 
   const kitUpgrades = React.useMemo(() => {
-    const upgrades = [
-      { name: cuisineLower.includes('italian') ? 'Fresh basil or parsley' : 'Fresh herbs', note: 'Scatter over at the end for colour and lift' },
-      { name: cuisineLower.includes('indian') ? 'Plain yoghurt' : 'Lemon or vinegar', note: 'A little acidity sharpens rich flavours' },
-      { name: recipe.isVegan ? 'Toasted seeds' : 'Crispy onions or grated cheese', note: 'Adds texture just before eating' }
-    ];
+    let upgrades: { name: string; note: string }[];
+
+    if (titleLower.includes('fish') || titleLower.includes('salmon') || titleLower.includes('cod') || titleLower.includes('haddock') || titleLower.includes('plaice')) {
+      upgrades = [
+        { name: 'Lemon wedges', note: 'Brightens fish and buttery sauces' },
+        { name: 'Fresh dill or parsley', note: 'Adds a clean, fresh finish' },
+        { name: 'Capers or cornichons', note: 'Brings sharpness without extra cooking' }
+      ];
+    } else if (cuisineLower.includes('italian') || titleLower.includes('pasta') || titleLower.includes('risotto')) {
+      upgrades = [
+        { name: 'Fresh basil or parsley', note: 'Adds colour and freshness at the end' },
+        { name: 'Chilli flakes', note: 'Gives tomato or cream sauces a little lift' },
+        { name: 'Lemon zest', note: 'Cuts through rich cheese, oil or butter' }
+      ];
+    } else if (cuisineLower.includes('indian') || titleLower.includes('curry') || titleLower.includes('dal')) {
+      upgrades = [
+        { name: 'Plain yoghurt', note: 'Cools spice and rounds out sauces' },
+        { name: 'Fresh coriander or mint', note: 'Adds freshness just before eating' },
+        { name: 'Mango chutney or lime pickle', note: 'Adds sweet-sharp contrast' }
+      ];
+    } else if (cuisineLower.includes('thai') || cuisineLower.includes('chinese') || cuisineLower.includes('japanese') || cuisineLower.includes('korean')) {
+      upgrades = [
+        { name: 'Spring onions', note: 'Adds freshness and a little bite' },
+        { name: 'Lime wedges', note: 'Sharpens salty, sweet or spicy sauces' },
+        { name: 'Sesame oil or chilli crisp', note: 'Adds aroma right at the end' }
+      ];
+    } else if (cuisineLower.includes('mexican') || titleLower.includes('taco') || titleLower.includes('fajita') || titleLower.includes('enchilada')) {
+      upgrades = [
+        { name: 'Lime wedges', note: 'Brightens beans, meat and cheese' },
+        { name: 'Fresh coriander', note: 'Adds a fresh top note' },
+        { name: 'Pickled jalapenos', note: 'Adds heat and acidity with no prep' }
+      ];
+    } else if (recipe.isVegan || recipe.isVegetarian) {
+      upgrades = [
+        { name: 'Toasted seeds', note: 'Adds crunch and nuttiness' },
+        { name: 'Tahini or yoghurt drizzle', note: 'Makes vegetables feel richer' },
+        { name: 'Chilli oil', note: 'Adds warmth and gloss at the table' }
+      ];
+    } else if (cuisineLower.includes('british') || titleLower.includes('pie') || titleLower.includes('chop')) {
+      upgrades = [
+        { name: 'Fresh parsley or chives', note: 'Lifts rich gravy, pastry or mash' },
+        { name: 'English mustard', note: 'Cuts through meat and buttery sides' },
+        { name: 'Lemony greens', note: 'Adds brightness beside richer plates' }
+      ];
+    } else {
+      upgrades = [
+        { name: 'Fresh herbs', note: 'Adds colour and lift at the end' },
+        { name: 'Lemon or vinegar', note: 'Sharpens rich flavours' },
+        { name: 'Toasted nuts or seeds', note: 'Adds a quick finishing crunch' }
+      ];
+    }
 
     return upgrades.slice(0, 3);
-  }, [cuisineLower, recipe.isVegan]);
+  }, [cuisineLower, recipe.isVegan, recipe.isVegetarian, titleLower]);
 
   const plateSuggestion = React.useMemo(() => {
     if (titleLower.includes('pie')) {

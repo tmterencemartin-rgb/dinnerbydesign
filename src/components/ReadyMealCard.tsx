@@ -70,11 +70,52 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       sides.push({ name: 'Steam-bag greens', role: 'veg', note: 'Adds colour in minutes' });
     }
 
-    const upgrades: ReadyMadeKitItem[] = [
-      { name: cuisine.includes('italian') ? 'Fresh basil or rocket' : 'Fresh herbs', role: 'finish', note: 'Makes it taste less boxed' },
-      { name: cuisine.includes('indian') ? 'Plain yoghurt' : 'Lemon or lime', role: 'lift', note: 'Brightens rich sauces' },
-      { name: 'Toasted seeds or crispy onions', role: 'texture', note: 'Adds crunch at the end' }
-    ];
+    const titleLower = title.toLowerCase();
+    let upgrades: ReadyMadeKitItem[];
+
+    if (titleLower.includes('fish') || titleLower.includes('salmon') || titleLower.includes('cod') || titleLower.includes('haddock') || titleLower.includes('plaice') || titleLower.includes('scampi')) {
+      upgrades = [
+        { name: 'Lemon wedges', role: 'lift', note: 'Freshens breaded or buttery fish' },
+        { name: 'Tartare sauce', role: 'dip', note: 'Adds creamy sharpness fast' },
+        { name: 'Malt vinegar', role: 'finish', note: 'Gives a chip-shop edge' }
+      ];
+    } else if (cuisine.includes('italian') || titleLower.includes('pasta') || titleLower.includes('lasagne') || titleLower.includes('meatball')) {
+      upgrades = [
+        { name: 'Fresh basil', role: 'finish', note: 'Makes tomato sauces feel fresher' },
+        { name: 'Rocket leaves', role: 'freshness', note: 'Adds peppery contrast' },
+        { name: 'Chilli flakes', role: 'heat', note: 'Adds a little warmth at the table' }
+      ];
+    } else if (cuisine.includes('indian') || titleLower.includes('curry') || titleLower.includes('tikka') || titleLower.includes('korma')) {
+      upgrades = [
+        { name: 'Plain yoghurt', role: 'cooling', note: 'Softens spice and richness' },
+        { name: 'Mango chutney', role: 'sweet-sharp', note: 'Adds contrast with no prep' },
+        { name: 'Fresh coriander', role: 'finish', note: 'Adds a fresher final note' }
+      ];
+    } else if (cuisine.includes('thai') || cuisine.includes('chinese') || cuisine.includes('japanese') || cuisine.includes('korean')) {
+      upgrades = [
+        { name: 'Spring onions', role: 'finish', note: 'Adds fresh bite' },
+        { name: 'Lime wedges', role: 'lift', note: 'Sharpens sweet or salty sauces' },
+        { name: 'Sesame seeds', role: 'texture', note: 'Adds a simple toasted finish' }
+      ];
+    } else if (cuisine.includes('mexican') || titleLower.includes('taco') || titleLower.includes('fajita') || titleLower.includes('enchilada')) {
+      upgrades = [
+        { name: 'Lime wedges', role: 'lift', note: 'Brightens beans, cheese and spice' },
+        { name: 'Soured cream', role: 'cooling', note: 'Rounds out chilli heat' },
+        { name: 'Jarred jalapenos', role: 'heat', note: 'Adds punch straight from the jar' }
+      ];
+    } else if (titleLower.includes('pie') || titleLower.includes('stroganoff') || cuisine.includes('british')) {
+      upgrades = [
+        { name: 'Fresh parsley or chives', role: 'finish', note: 'Lifts cream, gravy or mash' },
+        { name: 'English mustard', role: 'sharpness', note: 'Cuts through richer sauces' },
+        { name: 'Lemon-dressed greens', role: 'freshness', note: 'Balances heavier plates' }
+      ];
+    } else {
+      upgrades = [
+        { name: 'Fresh herbs', role: 'finish', note: 'Makes the plate feel fresher' },
+        { name: 'Lemon or lime', role: 'lift', note: 'Brightens rich sauces' },
+        { name: 'Toasted seeds', role: 'texture', note: 'Adds quick crunch without cooking' }
+      ];
+    }
 
     return {
       coreProduct: title,
