@@ -1448,7 +1448,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
         )}
 
         {/* Tab 4: Developer */}
-        {activeTab === 'developer' && (
+        {showDebug && activeTab === 'developer' && (
           <motion.div 
             initial={{ opacity: 0, y: 8 }} 
             animate={{ opacity: 1, y: 0 }} 
@@ -1456,18 +1456,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
           >
             {/* Developer Connection Card */}
             <div id="developer-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Developer</h3>
+              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Internal tools</h3>
               
               <div className="space-y-1">
-                <h4 className="text-[13.5px] text-gray-900 font-bold">API Backend Server URL</h4>
+                <h4 className="text-[13.5px] text-gray-900 font-bold">Backend override</h4>
                 <p className="text-[11.5px] text-gray-400 font-semibold leading-normal">
-                  Override the default remote proxy router during local staging and development.
+                  Leave blank for the deployed server. Use only when testing a local backend.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
                 <div className="space-y-2">
-                  <label className="text-[12px] text-gray-800 font-bold block">Developer Base Router URL</label>
+                  <label className="text-[12px] text-gray-800 font-bold block">Local server URL</label>
                   <div className="flex items-center gap-2">
                     <input 
                       type="text"
@@ -1515,17 +1515,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {/* Request Routing Settings */}
             <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Model Configuration</h3>
+              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Request routing</h3>
               <div className="space-y-1">
-                <h4 className="text-[13.5px] text-gray-900 font-bold">Model Request Options</h4>
+                <h4 className="text-[13.5px] text-gray-900 font-bold">Server route</h4>
                 <p className="text-[11.5px] text-gray-400 font-semibold leading-normal">
-                  Configure direct developer endpoint access key or secure remote server proxy defaults.
+                  Cloud Proxy is the normal production route. Direct Mode is for local testing only.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-5 pt-1">
                 <div className="flex-1 space-y-3">
-                  <label className="text-[12px] text-gray-800 font-bold block">Engine Routing Mode</label>
+                  <label className="text-[12px] text-gray-800 font-bold block">Routing mode</label>
                   <div className="flex gap-2">
                     <button 
                       onClick={() => setApiConfigState(prev => ({ ...prev, mode: 'proxy' }))}
@@ -1552,7 +1552,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
                 {apiConfig.mode === 'direct' && (
                   <div className="flex-1 space-y-3 animate-fade-in">
-                    <label className="text-[12px] text-gray-800 font-bold block">Client-Route Api Key</label>
+                    <label className="text-[12px] text-gray-800 font-bold block">Local test key</label>
                     <div className="flex items-center gap-2">
                       <input 
                         type="password"
