@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag, Sparkles } from 'lucide-react';
+import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag } from 'lucide-react';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
@@ -498,8 +498,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   </div>
 
                   <div className="pt-4 border-t border-gray-100">
-                    <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-accent" />
+                    <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">
                       Why these help
                     </h4>
                     {renderKitItems(kitUpgrades, true)}
@@ -574,38 +573,38 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     className="overflow-hidden flex flex-col gap-0.5 sm:gap-4"
                   >
                     {/* Responsive side-by-side view for expanded recipe */}
-                    <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-12 items-start w-full pt-5 mt-1 border-t border-gray-100">
+                    <div className="relative grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-12 items-start w-full pt-5 mt-1 border-t border-gray-100">
+                      <div className="absolute right-0 top-5 inline-flex w-fit border border-gray-100 rounded-full p-0.5 bg-gray-50 shadow-inner">
+                        <button
+                          type="button"
+                          onClick={() => setUnitSystem('metric')}
+                          className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
+                            unitSystem === 'metric'
+                              ? 'bg-white text-gray-900 shadow-sm border border-gray-100/50'
+                              : 'text-gray-400 hover:text-gray-600'
+                          }`}
+                        >
+                          Metric
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setUnitSystem('imperial')}
+                          className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
+                            unitSystem === 'imperial'
+                              ? 'bg-white text-accent shadow-sm border border-gray-100/50'
+                              : 'text-gray-400 hover:text-gray-600'
+                          }`}
+                        >
+                          Imperial
+                        </button>
+                      </div>
                       
                       {/* Left column: Sticky Ingredients */}
                       <div className="w-full md:sticky md:top-24 h-fit pb-4 md:pb-0 flex flex-col gap-2.5">
-                        <div className="flex items-center justify-between gap-3 pb-1">
+                        <div className="flex items-start justify-between gap-3 pb-1 pr-28">
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                             Ingredients
                           </span>
-                          <div className="inline-flex w-fit border border-gray-100 rounded-full p-0.5 bg-gray-50 shadow-inner">
-                            <button
-                              type="button"
-                              onClick={() => setUnitSystem('metric')}
-                              className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
-                                unitSystem === 'metric'
-                                  ? 'bg-white text-gray-900 shadow-sm border border-gray-100/50'
-                                  : 'text-gray-400 hover:text-gray-600'
-                              }`}
-                            >
-                              Metric
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setUnitSystem('imperial')}
-                              className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
-                                unitSystem === 'imperial'
-                                  ? 'bg-white text-accent shadow-sm border border-gray-100/50'
-                                  : 'text-gray-400 hover:text-gray-600'
-                              }`}
-                            >
-                              Imperial
-                            </button>
-                          </div>
                         </div>
 
                         {isEnriching && !currentIngredients.length ? (
