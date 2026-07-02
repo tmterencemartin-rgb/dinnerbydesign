@@ -91,6 +91,70 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
     sides: currentKit?.sides?.length ? currentKit.sides : fallbackKit.sides,
     upgrades: currentKit?.upgrades?.length ? currentKit.upgrades : fallbackKit.upgrades
   };
+  const packCount = Math.ceil(requestedServings / (meal.totalServings || 1));
+  const packLabel = packCount === 1 ? '1 pack' : `${packCount} packs`;
+
+  const renderKitItems = (items: ReadyMadeKitItem[] | undefined, detail = false) => (
+    <div className={detail ? "grid gap-2" : "flex flex-wrap gap-1.5"}>
+      {(items || []).slice(0, 3).map((item, index) => detail ? (
+        <div key={`${item.name}-detail-${index}`} className="rounded border border-gray-100 bg-white p-2">
+          <p className="text-[13px] font-bold text-gray-800">{item.name}</p>
+          {item.note && (
+            <p className="text-[12px] text-gray-500 leading-relaxed mt-0.5">{item.note}</p>
+          )}
+        </div>
+      ) : (
+        <span key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 truncate">
+          {item.name}
+        </span>
+      ))}
+    </div>
+  );
+
+  const kitPanel = (
+    <div className="w-full rounded border border-gray-100 bg-gray-50/70 p-3 sm:p-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
+          <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-700 truncate">
+            Dinner kit
+          </h4>
+        </div>
+        {dinnerKit.totalTimeNote && (
+          <span className="w-fit rounded bg-white border border-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-500">
+            {dinnerKit.totalTimeNote}
+          </span>
+        )}
+      </div>
+
+      <div className="grid gap-3">
+        <div className="min-w-0">
+          <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+            Core product
+          </p>
+          <p className="text-[13px] font-bold text-gray-900 leading-snug">
+            {dinnerKit.coreProduct || meal.title}
+          </p>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="min-w-0">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+              Add alongside
+            </p>
+            {renderKitItems(dinnerKit.sides)}
+          </div>
+
+          <div className="min-w-0">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+              Quick upgrades
+            </p>
+            {renderKitItems(dinnerKit.upgrades)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   useEffect(() => {
     if (isExpanded && !currentServingSuggestion && !isEnriching) {
@@ -200,139 +264,104 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               )}
             </div>
 
-            {/* Core Content Stack - Tightly grouped for precise spacing */}
-            <div className="flex flex-col gap-3 items-start w-full">
-              {/* Compressed Metadata Section */}
-              <div className="w-full flex flex-col gap-2 py-2.5 border-y border-gray-100">
-                {/* Row 1: Primary Identity (Retailer & Cuisine) */}
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 justify-start">
-                  <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                    {meal.cuisine}
-                  </span>
-                  {meal.retailer && (
-                    <span className="text-[10px] text-accent font-bold uppercase tracking-wider">
-                      {meal.retailer}
+            <div className={`grid gap-4 ${isExpanded ? 'md:grid-cols-[minmax(0,0.9fr)_minmax(320px,1.1fr)] md:items-start' : 'grid-cols-1'}`}>
+              <div className="flex flex-col gap-3 items-start w-full min-w-0">
+                <div className="w-full flex flex-col gap-2 py-2.5 border-y border-gray-100">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 justify-start">
+                    <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                      {meal.cuisine}
                     </span>
-                  )}
-                </div>
-                
-                {/* Row 2: Performance Stats (Nutrition, Price, Time) */}
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-gray-600 font-medium tracking-tight justify-start">
-                  {(meal.costPerPortion || meal.price) && (
-                    <Tooltip text="Estimated price for one adult portion">
-                      <span className="cursor-help whitespace-nowrap">
-                        {meal.costPerPortion || meal.price} pp
+                    {meal.retailer && (
+                      <span className="text-[10px] text-accent font-bold uppercase tracking-wider">
+                        {meal.retailer}
                       </span>
-                    </Tooltip>
-                  )}
-                  {requestedServings !== 1 && (
-                    <span className="text-gray-400 font-bold text-[10px] uppercase tracking-tight whitespace-nowrap">
-                      {Math.ceil(requestedServings / (meal.totalServings || 1))} packs req.
-                    </span>
-                  )}
-                  {(meal.caloriesPerPortion || meal.calories) && (
-                    <Tooltip text="Estimated calories for one adult portion">
-                      <span className="cursor-help whitespace-nowrap">
-                        {meal.caloriesPerPortion || meal.calories} kcal pp
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-gray-600 font-medium tracking-tight justify-start">
+                    {(meal.costPerPortion || meal.price) && (
+                      <Tooltip text="Estimated price for one adult portion">
+                        <span className="cursor-help whitespace-nowrap">
+                          {meal.costPerPortion || meal.price} pp
+                        </span>
+                      </Tooltip>
+                    )}
+                    {requestedServings !== 1 && (
+                      <span className="text-gray-400 font-bold text-[10px] uppercase tracking-tight whitespace-nowrap">
+                        Buy {packLabel}
                       </span>
-                    </Tooltip>
-                  )}
-                  {meal.totalTime && (
-                    <span className="whitespace-nowrap">
-                      {meal.totalTime} mins
-                    </span>
-                  )}
-                  {meal.saladType && meal.saladType !== 'none' && (
-                    <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">
-                      🥗 {meal.saladType}
-                    </span>
-                  )}
-                  {meal.isAirFryerFriendly && (
-                    <span className="text-accent text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
-                      ⚡ Air Fryer
-                    </span>
-                  )}
-                </div>
-              </div>
-              
-              <div className="w-full flex flex-col gap-2 items-start">
-                <RetailerCtaLink product={meal} />
-              </div>
-
-              <div className="w-full rounded border border-gray-100 bg-gray-50/70 p-3">
-                <div className="flex items-center justify-between gap-3 mb-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
-                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-700 truncate">
-                      Dinner kit
-                    </h4>
-                  </div>
-                  {dinnerKit.totalTimeNote && (
-                    <span className="text-[10px] font-semibold text-gray-400 truncate">
-                      {dinnerKit.totalTimeNote}
-                    </span>
-                  )}
-                </div>
-
-                <div className="grid gap-2 sm:grid-cols-[1fr_1fr]">
-                  <div className="min-w-0">
-                    <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
-                      Add alongside
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(dinnerKit.sides || []).slice(0, 3).map((side, index) => (
-                        <span key={`${side.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 truncate">
-                          {side.name}
+                    )}
+                    {(meal.caloriesPerPortion || meal.calories) && (
+                      <Tooltip text="Estimated calories for one adult portion">
+                        <span className="cursor-help whitespace-nowrap">
+                          {meal.caloriesPerPortion || meal.calories} kcal pp
                         </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="min-w-0">
-                    <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
-                      Quick upgrades
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(dinnerKit.upgrades || []).slice(0, 3).map((upgrade, index) => (
-                        <span key={`${upgrade.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 truncate">
-                          {upgrade.name}
-                        </span>
-                      ))}
-                    </div>
+                      </Tooltip>
+                    )}
+                    {meal.totalTime && (
+                      <span className="whitespace-nowrap">
+                        {meal.totalTime} mins
+                      </span>
+                    )}
+                    {meal.saladType && meal.saladType !== 'none' && (
+                      <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">
+                        🥗 {meal.saladType}
+                      </span>
+                    )}
+                    {meal.isAirFryerFriendly && (
+                      <span className="text-accent text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
+                        ⚡ Air Fryer
+                      </span>
+                    )}
                   </div>
                 </div>
+
+                <div className="w-full flex flex-col gap-2 items-start">
+                  <RetailerCtaLink product={meal} />
+                </div>
+
+                <div className="w-full bg-white rounded pt-1">
+                  <RecipeActionRow 
+                    recipe={{ ...meal, ...enrichedData, requestedServings }}
+                    isSaved={isSaved}
+                    scheduledDate={scheduledDate}
+                    onSave={() => {
+                      if (onSave) {
+                        onSave({ ...meal, requestedServings });
+                      } else if (onToggleSaved) {
+                        onToggleSaved();
+                      }
+                    }}
+                    onRemove={() => {
+                      if (onToggleSaved) {
+                        onToggleSaved();
+                      } else {
+                        const saved = savedRecipes.find(p => isSameRecipe(p, meal));
+                        if (saved && saved.id) removeRecipe(saved.id).catch(err => console.error("[ReadyMealCard] Action remove failed:", err));
+                      }
+                    }}
+                    onDaySelect={handleDaySelect}
+                    planner={planner}
+                  />
+                </div>
+
+                {isExpanded && (
+                  <div className="hidden md:block w-full pt-1">
+                    <GuidanceNotice 
+                      hasCost={!!(meal.costPerPortion || meal.price)} 
+                      mode="ready-made"
+                    />
+                  </div>
+                )}
               </div>
 
-              {!isExpanded && (
-                <RecipeRealityChecks checks={meal.realityChecks} compact />
-              )}
-              
-              <div className="w-full bg-white rounded pt-1">
-                <RecipeActionRow 
-                  recipe={{ ...meal, ...enrichedData, requestedServings }}
-                  isSaved={isSaved}
-                  scheduledDate={scheduledDate}
-                  onSave={() => {
-                    if (onSave) {
-                      onSave({ ...meal, requestedServings });
-                    } else if (onToggleSaved) {
-                      onToggleSaved();
-                    }
-                  }}
-                  onRemove={() => {
-                    if (onToggleSaved) {
-                      onToggleSaved();
-                    } else {
-                      const saved = savedRecipes.find(p => isSameRecipe(p, meal));
-                      if (saved && saved.id) removeRecipe(saved.id).catch(err => console.error("[ReadyMealCard] Action remove failed:", err));
-                    }
-                  }}
-                  onDaySelect={handleDaySelect}
-                  planner={planner}
-                />
-              </div>
-            </div>
-            <div className="space-y-4 sm:space-y-3">
+              <div className="space-y-4 sm:space-y-3 min-w-0">
+                {kitPanel}
+
+                {!isExpanded && (
+                  <RecipeRealityChecks checks={meal.realityChecks} compact />
+                )}
+
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div
@@ -341,13 +370,14 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden space-y-4 sm:space-y-3"
                   >
-                    <div className="max-w-2xl lg:max-w-3xl mr-auto w-full space-y-2.5 pt-1 border-t border-gray-100">
+                    <div className="md:hidden max-w-2xl lg:max-w-3xl mr-auto w-full space-y-2.5 pt-1 border-t border-gray-100">
                        <GuidanceNotice 
                          hasCost={!!(meal.costPerPortion || meal.price)} 
                          mode="ready-made"
                        />
-                       <RecipeRealityChecks checks={meal.realityChecks} />
                     </div>
+
+                    <RecipeRealityChecks checks={meal.realityChecks} />
 
                     <div className="pt-3 border-t border-gray-100">
                       <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2">How to plate it</h4>
@@ -372,18 +402,9 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     <div className="pt-3 border-t border-gray-100">
                       <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-accent" />
-                        Upgrade ideas
+                        Why these help
                       </h4>
-                      <div className="grid gap-2">
-                        {(dinnerKit.upgrades || []).slice(0, 3).map((upgrade, index) => (
-                          <div key={`${upgrade.name}-detail-${index}`} className="rounded border border-gray-100 bg-gray-50/70 p-2">
-                            <p className="text-[13px] font-bold text-gray-800">{upgrade.name}</p>
-                            {upgrade.note && (
-                              <p className="text-[12px] text-gray-500 leading-relaxed mt-0.5">{upgrade.note}</p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                      {renderKitItems(dinnerKit.upgrades, true)}
                       {dinnerKit.fitNote && (
                         <p className="text-[12px] text-gray-500 leading-relaxed mt-2">{dinnerKit.fitNote}</p>
                       )}
@@ -394,7 +415,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
               <button 
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full py-1 text-[11px] text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100"
+                className="w-full py-1 text-[11px] text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent/30"
               >
                 {isExpanded ? (
                   <>Hide <ChevronUp className="w-3 h-3" /></>
@@ -402,6 +423,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                   <>Details <ChevronDown className="w-3 h-3" /></>
                 )}
               </button>
+              </div>
             </div>
           </div>
         </div>
