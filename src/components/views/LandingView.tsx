@@ -352,7 +352,7 @@ export const LandingView: React.FC = () => {
           </button>
         </div>
         <p className="mt-4 text-[11px] sm:text-xs text-dbd-ink-3 tracking-wide select-none">
-          {accessStatus === 'paid' ? 'Account active' : accessStatus === 'trial' ? `Free trial: ${trialTimeRemaining}` : 'Free for seven days · No credit card required.'}
+          {accessStatus === 'paid' ? 'Account active' : accessStatus === 'trial' ? `Free trial: ${trialTimeRemaining}` : 'No credit card required for the free trial.'}
         </p>
       </section>
 
