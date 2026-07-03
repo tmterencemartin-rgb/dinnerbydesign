@@ -8,9 +8,9 @@ interface RecipeRealityChecksProps {
 }
 
 const toneClasses: Record<RealityCheck['tone'], string> = {
-  positive: 'bg-emerald-50 text-emerald-800 border-emerald-100',
-  caution: 'bg-amber-50 text-amber-900 border-amber-100',
-  neutral: 'bg-gray-50 text-gray-700 border-gray-100'
+  positive: 'bg-transparent sm:bg-emerald-50 text-emerald-800 border-emerald-100',
+  caution: 'bg-transparent sm:bg-amber-50 text-amber-900 border-amber-100',
+  neutral: 'bg-transparent sm:bg-gray-50 text-gray-700 border-gray-100'
 };
 
 const toneIcons: Record<RealityCheck['tone'], React.ReactNode> = {
@@ -41,7 +41,7 @@ export const RecipeRealityChecks: React.FC<RecipeRealityChecksProps> = ({ checks
           return (
             <div
               key={`${check.label}-${index}`}
-              className={`flex items-start gap-1.5 sm:gap-2 rounded border px-2 py-1.5 ${toneClasses[tone] || toneClasses.neutral}`}
+              className={`flex items-start gap-1.5 sm:gap-2 rounded-none border-x-0 border-t-0 border-b px-0 py-1.5 sm:rounded sm:border sm:px-2 ${toneClasses[tone] || toneClasses.neutral}`}
             >
               <span className="mt-0.5 shrink-0">{toneIcons[tone] || toneIcons.neutral}</span>
               <p className="min-w-0 text-[11px] sm:text-[11.5px] leading-snug">

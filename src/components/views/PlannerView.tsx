@@ -1111,7 +1111,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   {/* WEEKLY SCHEDULE GRID */}
                   <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
                     {planner.length > 0 && (
-                      <div className={`flex flex-col gap-3 px-1.5 py-3 sm:flex-row sm:items-start sm:justify-between ${
+                      <div className={`flex flex-col gap-3 px-0 py-3 sm:px-1.5 sm:flex-row sm:items-start sm:justify-between ${
                         bestCostSavingSwap ? 'bg-emerald-50/50' : 'bg-gray-50/60'
                       }`}>
                         <div className="min-w-0">
@@ -1144,7 +1144,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   {showAllSwapOptions && (
                                     <div className="space-y-1.5">
                                       {additionalCostSavingSwaps.map(option => (
-                                        <div key={`${option.scheduled.id || option.scheduled.title}-${option.replacement.id || option.replacement.title}`} className="flex flex-col gap-1 rounded border border-emerald-100 bg-white/65 px-2 py-1.5 sm:flex-row sm:items-center sm:justify-between">
+                                        <div key={`${option.scheduled.id || option.scheduled.title}-${option.replacement.id || option.replacement.title}`} className="flex flex-col gap-1 border-b border-emerald-100 bg-white/65 px-0 py-1.5 sm:rounded sm:border sm:px-2 sm:flex-row sm:items-center sm:justify-between">
                                           <p className="text-[11px] text-emerald-900 leading-relaxed">
                                             Swap <span className="font-semibold">{option.scheduled.title}</span> for <span className="font-semibold">{option.replacement.title}</span> and save about £{option.saving.toFixed(2)}.
                                           </p>
@@ -1205,7 +1205,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       const entry = planner.find(e => e.scheduledDate === dayId);
                       const dayLabel = dayId.slice(0, 3).toUpperCase();
                       return (
-                        <div key={dayId} className="relative py-2 px-1.5 flex items-start gap-2 sm:gap-3 group min-h-[48px] transition-colors hover:bg-gray-50/50">
+                        <div key={dayId} className="relative py-2 px-0 sm:px-1.5 flex items-start gap-2 sm:gap-3 group min-h-[48px] transition-colors hover:bg-gray-50/50">
                           <div className="w-12 shrink-0 flex items-start justify-start pt-[2px]">
                             <span className="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
                               {dayLabel}
