@@ -28,6 +28,8 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
   };
 
   const domain = isCook ? getDomain(recipe.sourceUrl) : getDomain(meal.sourceUrl);
+  const cuisineLabel = isCook ? recipe.cuisine : meal.retailer || meal.cuisine;
+  const shouldShowCuisineLabel = cuisineLabel && cuisineLabel.trim().toLowerCase() !== 'active cook';
   const calories = item.caloriesPerPortion;
   const costPerPortion = isCook ? recipe.costPerPortion : meal.price;
   const totalCost = isCook ? recipe.totalRecipeCost : meal.totalPrice;
@@ -55,12 +57,14 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
           <div className="flex flex-col">
             {/* Row 1: Taxonomy & Source */}
             <div className="flex items-center gap-1 mb-0.5 sm:mb-1">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">
-                {isCook ? recipe.cuisine : meal.retailer || meal.cuisine}
-              </span>
+              {shouldShowCuisineLabel && (
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">
+                  {cuisineLabel}
+                </span>
+              )}
               {domain && (
                 <>
-                  <Separator />
+                  {shouldShowCuisineLabel && <Separator />}
                   <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate">
                     {domain}
                   </span>

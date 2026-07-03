@@ -56,6 +56,8 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   const totalCount = enrichedData 
     ? currentIngredients.length
     : Math.max(recipe.totalIngredientsCount || 0, currentIngredients.length);
+  const cuisineLabel = recipe.cuisine || '';
+  const shouldShowCuisineLabel = cuisineLabel.trim().toLowerCase() !== 'active cook';
 
   useEffect(() => {
     if (isExpanded && (!currentInstructions.length || currentIngredients.length < totalCount) && !isEnriching) {
@@ -354,11 +356,13 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     );
                   }
                   
-                  items.push(
-                    <span key="cuisine" className="capitalize">
-                      {recipe.cuisine}
-                    </span>
-                  );
+                  if (shouldShowCuisineLabel) {
+                    items.push(
+                      <span key="cuisine" className="capitalize">
+                        {recipe.cuisine}
+                      </span>
+                    );
+                  }
                   
                   if (recipe.mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search')) {
                     items.push(
