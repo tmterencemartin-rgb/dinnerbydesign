@@ -312,7 +312,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   }
 
   return (
-    <div className={`${isBacklog ? 'py-0.5' : 'py-2'} px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
+    <div className={`${isBacklog ? 'py-1.5' : 'py-2'} px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
       {isExpanded && (
         <button 
           onClick={() => setIsExpanded(false)}
@@ -370,16 +370,16 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   
                   if (recipe.isAirFryerFriendly) {
                     items.push(
-                      <span key="airfryer" className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[11px] font-medium flex items-center gap-0.5">
-                        <Wind className="w-2.5 h-2.5" /> Air Fryer
+                      <span key="airfryer" className="text-gray-600 font-medium">
+                        Air fryer
                       </span>
                     );
                   }
                   
                   if (recipe.saladType && recipe.saladType !== 'none') {
                     items.push(
-                      <span key="salad" className="text-gray-500 font-medium uppercase tracking-wider">
-                        🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
+                      <span key="salad" className="text-gray-500 font-medium capitalize">
+                        {recipe.saladType === 'main' ? 'Main salad' : 'Side salad'}
                       </span>
                     );
                   }
@@ -387,7 +387,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   if (recipe.totalTime) {
                     items.push(
                       <span key="time" className="text-gray-600">
-                        ⏱️ {recipe.totalTime} mins
+                        {recipe.totalTime} mins
                       </span>
                     );
                   }
@@ -395,7 +395,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   if (recipe.calories) {
                     items.push(
                       <span key="calories" className="text-gray-600">
-                        🔥 {recipe.calories} kcal
+                        {recipe.calories} kcal
                       </span>
                     );
                   }
@@ -403,7 +403,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   if (recipe.costPerPortion) {
                     items.push(
                       <span key="cost" className="border-b border-dotted border-gray-200 text-gray-600">
-                        💰 {recipe.costPerPortion} pp
+                        {recipe.costPerPortion} pp
                       </span>
                     );
                   }
@@ -411,14 +411,14 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   const cp = recipe.convenienceProfile || getConvenienceProfile(recipe);
                   if (cp === 'scratch') {
                     items.push(
-                      <span key="convenience-profile" className="bg-gray-100 text-gray-700 text-[11px] px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
-                        🍳 Homemade
+                      <span key="convenience-profile" className="bg-gray-50 text-gray-700 text-[11px] px-1.5 py-0.5 rounded font-medium">
+                        Homemade
                       </span>
                     );
                   } else {
                     items.push(
-                      <span key="convenience-profile" className="bg-gray-50 text-gray-600 text-[11px] px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
-                        📦 Ready-made
+                      <span key="convenience-profile" className="bg-gray-50 text-gray-600 text-[11px] px-1.5 py-0.5 rounded font-medium">
+                        Ready-made
                       </span>
                     );
                   }
@@ -428,9 +428,9 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     items.push(
                       <span 
                         key="dietary-variety" 
-                        className="bg-gray-100 text-gray-700 text-[11.1px] px-1.5 py-0.5 rounded font-semibold flex items-center gap-1"
+                        className="bg-gray-50 text-gray-700 text-[11px] px-1.5 py-0.5 rounded font-medium"
                       >
-                        🍃 {recipe.isVegan ? 'Plant' : 'Veg'}
+                        {recipe.isVegan ? 'Vegan' : 'Vegetarian'}
                       </span>
                     );
                   }
@@ -460,11 +460,6 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       }`}
                       title="Schedule"
                     >
-                      {scheduledDate || showCheck ? (
-                        <Check className="w-2.5 h-2.5 text-emerald-600" />
-                      ) : (
-                        <CalendarPlus className="w-2.5 h-2.5 text-gray-400" />
-                      )}
                       <span>{scheduledDate ? 'Scheduled' : showCheck ? 'Scheduled' : 'Schedule'}</span>
                     </button>
 
@@ -523,7 +518,6 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     className="inline-flex h-5 items-center gap-1 px-1.5 rounded border border-gray-100 text-[10.5px] font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
                     title="Archive"
                   >
-                    <Archive className="w-2.5 h-2.5" />
                     <span>Archive</span>
                   </button>
                 )}
