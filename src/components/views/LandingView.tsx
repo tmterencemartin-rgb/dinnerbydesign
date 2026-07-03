@@ -716,9 +716,12 @@ export const LandingView: React.FC = () => {
                 <span className="text-dbd-ink-3 text-[12px] font-semibold font-mono ml-1.5">/ month</span>
               </div>
 
-              <div className="mb-3 h-[30px] flex flex-col justify-start">
+              <div className="mb-3 min-h-[42px] flex flex-col justify-start">
                 <p className="text-[11.5px] font-medium text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
                   {billingPeriod === 'monthly' ? 'Billed monthly. Cancel anytime.' : 'Billed annually in advance (£30.00). Cancel anytime.'}
+                </p>
+                <p className="text-[11.5px] font-medium text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
+                  No credit card required for the free trial.
                 </p>
               </div>
 
