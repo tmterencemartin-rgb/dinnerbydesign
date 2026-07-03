@@ -125,6 +125,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [savedDisplayOffset, setSavedDisplayOffset] = useState(0);
   const [showAllSaved, setShowAllSaved] = useState(false);
   const [showPlanWeek, setShowPlanWeek] = useState(false);
+  const [showAllSwapOptions, setShowAllSwapOptions] = useState(false);
   const [planDinnerCount, setPlanDinnerCount] = useState<3 | 5 | 7>(5);
   const [planBudget, setPlanBudget] = useState('40');
   const [planServings, setPlanServings] = useState(profile?.preferences?.servings || 2);
@@ -284,7 +285,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     () => calculateActiveIngredientsCost(shoppingList.filter(item => !item.inStock && !item.checked)),
     [shoppingList]
   );
-  const cheaperSavedSwap = React.useMemo(() => {
+  const costSavingSwaps = React.useMemo(() => {
     const scheduled = planner.filter(item => !!item.scheduledDate);
     const unscheduledSaved = activeSavedRecipes.filter(item => !item.scheduledDate);
     const activePrefs = profile?.preferences;
@@ -304,11 +305,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
       return perPortion * servings;
     };
 
-    let best: {
+    const swaps: Array<{
       scheduled: SavedRecipe;
       replacement: SavedRecipe;
       saving: number;
-    } | null = null;
+    }> = [];
 
     scheduled.forEach(current => {
       const currentCost = totalCost(current);
@@ -319,14 +320,20 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
         const candidateCost = totalCost(candidate);
         const saving = currentCost - candidateCost;
         if (candidateCost <= 0 || saving < 1) return;
-        if (!best || saving > best.saving) {
-          best = { scheduled: current, replacement: candidate, saving };
-        }
+        swaps.push({ scheduled: current, replacement: candidate, saving });
       });
     });
 
-    return best;
+    return swaps
+      .sort((a, b) => b.saving - a.saving)
+      .slice(0, 5);
   }, [planner, activeSavedRecipes, profile?.preferences]);
+  const bestCostSavingSwap = costSavingSwaps[0] || null;
+  const additionalCostSavingSwaps = costSavingSwaps.slice(1);
+
+  useEffect(() => {
+    setShowAllSwapOptions(false);
+  }, [bestCostSavingSwap?.scheduled.id, bestCostSavingSwap?.replacement.id, costSavingSwaps.length]);
 
   const checkReadOnly = (msg: string) => {
     if (isReadOnly) {
@@ -1105,22 +1112,63 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
                     {planner.length > 0 && (
                       <div className={`flex flex-col gap-3 px-1.5 py-3 sm:flex-row sm:items-start sm:justify-between ${
-                        cheaperSavedSwap ? 'bg-emerald-50/50' : 'bg-gray-50/60'
+                        bestCostSavingSwap ? 'bg-emerald-50/50' : 'bg-gray-50/60'
                       }`}>
                         <div className="min-w-0">
                           <p className={`text-[11px] font-bold uppercase tracking-widest ${
-                            cheaperSavedSwap ? 'text-emerald-800' : 'text-gray-500'
+                            bestCostSavingSwap ? 'text-emerald-800' : 'text-gray-500'
                           }`}>
-                            {cheaperSavedSwap ? 'Cost-saving swap found' : 'Cost-saving swap check'}
+                            {bestCostSavingSwap
+                              ? costSavingSwaps.length === 1
+                                ? 'Cost-saving swap found'
+                                : `${costSavingSwaps.length} cost-saving swaps found`
+                              : 'Cost-saving swap check'}
                           </p>
-                          {cheaperSavedSwap ? (
+                          {bestCostSavingSwap ? (
                             <>
                               <p className="mt-1 text-[12px] text-emerald-900 leading-relaxed">
-                                Swap <span className="font-semibold">{cheaperSavedSwap.scheduled.title}</span> for <span className="font-semibold">{cheaperSavedSwap.replacement.title}</span> and save about £{cheaperSavedSwap.saving.toFixed(2)}.
+                                Best option: swap <span className="font-semibold">{bestCostSavingSwap.scheduled.title}</span> for <span className="font-semibold">{bestCostSavingSwap.replacement.title}</span> and save about £{bestCostSavingSwap.saving.toFixed(2)}.
                               </p>
                               <p className="mt-1 text-[11px] text-emerald-800/80 leading-relaxed">
                                 Found in saved dinners that are not already scheduled, fit your preferences, and reduce this week's cost by at least £1.
                               </p>
+                              {additionalCostSavingSwaps.length > 0 && (
+                                <div className="mt-2 space-y-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => setShowAllSwapOptions(prev => !prev)}
+                                    className="text-[11px] font-bold uppercase tracking-widest text-emerald-800 hover:underline"
+                                  >
+                                    {showAllSwapOptions ? 'Hide other swaps' : `Show ${additionalCostSavingSwaps.length} other ${additionalCostSavingSwaps.length === 1 ? 'swap' : 'swaps'}`}
+                                  </button>
+                                  {showAllSwapOptions && (
+                                    <div className="space-y-1.5">
+                                      {additionalCostSavingSwaps.map(option => (
+                                        <div key={`${option.scheduled.id || option.scheduled.title}-${option.replacement.id || option.replacement.title}`} className="flex flex-col gap-1 rounded border border-emerald-100 bg-white/65 px-2 py-1.5 sm:flex-row sm:items-center sm:justify-between">
+                                          <p className="text-[11px] text-emerald-900 leading-relaxed">
+                                            Swap <span className="font-semibold">{option.scheduled.title}</span> for <span className="font-semibold">{option.replacement.title}</span> and save about £{option.saving.toFixed(2)}.
+                                          </p>
+                                          {option.scheduled.scheduledDate && (
+                                            <button
+                                              type="button"
+                                              onClick={async () => {
+                                                if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
+                                                const day = option.scheduled.scheduledDate;
+                                                if (!day) return;
+                                                await updatePlanner(day, option.replacement);
+                                                showToast(`Swapped ${day} dinner.`);
+                                              }}
+                                              className="h-7 px-2.5 rounded bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
+                                            >
+                                              Swap
+                                            </button>
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </>
                           ) : (
                             <>
@@ -1136,14 +1184,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             </>
                           )}
                         </div>
-                        {cheaperSavedSwap?.scheduled.scheduledDate && (
+                        {bestCostSavingSwap?.scheduled.scheduledDate && (
                           <button
                             type="button"
                             onClick={async () => {
                               if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
-                              const day = cheaperSavedSwap.scheduled.scheduledDate;
+                              const day = bestCostSavingSwap.scheduled.scheduledDate;
                               if (!day) return;
-                              await updatePlanner(day, cheaperSavedSwap.replacement);
+                              await updatePlanner(day, bestCostSavingSwap.replacement);
                               showToast(`Swapped ${day} dinner.`);
                             }}
                             className="h-8 px-3 rounded bg-emerald-700 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
