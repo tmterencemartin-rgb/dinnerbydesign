@@ -342,7 +342,7 @@ export const LandingView: React.FC = () => {
             onClick={() => handleStart()}
             className="w-full sm:w-auto bg-dbd-accent hover:bg-dbd-accent-mid text-white font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-8 py-4 rounded-sm transition-all cursor-pointer shadow-md"
           >
-            {hasAccess ? 'Open Recipe Search' : 'Start free trial'}
+            Start free for 7 days
           </button>
           <button 
             onClick={() => scrollToSection('interactive-sandbox')}
