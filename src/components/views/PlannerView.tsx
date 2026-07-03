@@ -1099,11 +1099,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
                       </span>
                     </div>
+                  </div>
+
+                  {/* WEEKLY SCHEDULE GRID */}
+                  <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
                     {planner.length > 0 && (
-                      <div className={`mt-2 flex flex-col gap-3 rounded border px-3 py-3 sm:flex-row sm:items-start sm:justify-between ${
-                        cheaperSavedSwap
-                          ? 'border-emerald-100 bg-emerald-50/70'
-                          : 'border-gray-100 bg-gray-50/70'
+                      <div className={`flex flex-col gap-3 px-1.5 py-3 sm:flex-row sm:items-start sm:justify-between ${
+                        cheaperSavedSwap ? 'bg-emerald-50/50' : 'bg-gray-50/60'
                       }`}>
                         <div className="min-w-0">
                           <p className={`text-[11px] font-bold uppercase tracking-widest ${
@@ -1151,42 +1153,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         )}
                       </div>
                     )}
-                  </div>
-
-                  {supermarketPlanSummary.plannedDinnerCount > 0 && (
-                    <div className="border border-gray-100 bg-white rounded px-3 py-3 sm:px-4 sm:py-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.025)]">
-                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
-                        <div className="min-w-0 max-w-2xl">
-                          <h4 className="text-[12px] font-bold text-gray-900 uppercase tracking-widest">
-                            Weekly shop check
-                          </h4>
-                          <p className="mt-2 text-[14px] sm:text-[15px] font-bold text-gray-900 leading-snug">
-                            Based on your scheduled dinners.
-                          </p>
-                          <p className="mt-1 text-[12px] text-gray-500 leading-relaxed">
-                            {activeShoppingListTotal > 0
-                              ? `Your Shopping List currently estimates about £${activeShoppingListTotal.toFixed(2)} for this plan.`
-                              : 'Build the Shopping List to see what this week is likely to cost.'}
-                          </p>
-                          <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
-                            Saved dinners are not included until you schedule them. Prices are based on {supermarketLabel} where available and may vary by pack size and retailer.
-                          </p>
-                        </div>
-                        <div className="flex flex-wrap gap-2 shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => setView('shopping')}
-                            className="h-9 px-3 rounded bg-gray-900 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-black transition-colors"
-                          >
-                            View shopping list
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* WEEKLY SCHEDULE GRID */}
-                  <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
                     {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(dayId => {
                       const entry = planner.find(e => e.scheduledDate === dayId);
                       const dayLabel = dayId.slice(0, 3).toUpperCase();
@@ -1353,6 +1319,38 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       );
                     })}
                   </div>
+
+                  {supermarketPlanSummary.plannedDinnerCount > 0 && (
+                    <div className="border border-gray-100 bg-white rounded px-3 py-3 sm:px-4 sm:py-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.025)]">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+                        <div className="min-w-0 max-w-2xl">
+                          <h4 className="text-[12px] font-bold text-gray-900 uppercase tracking-widest">
+                            Weekly shop check
+                          </h4>
+                          <p className="mt-2 text-[14px] sm:text-[15px] font-bold text-gray-900 leading-snug">
+                            Based on your scheduled dinners.
+                          </p>
+                          <p className="mt-1 text-[12px] text-gray-500 leading-relaxed">
+                            {activeShoppingListTotal > 0
+                              ? `Your Shopping List currently estimates about £${activeShoppingListTotal.toFixed(2)} for this plan.`
+                              : 'Build the Shopping List to see what this week is likely to cost.'}
+                          </p>
+                          <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
+                            Saved dinners are not included until you schedule them. Prices are based on {supermarketLabel} where available and may vary by pack size and retailer.
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => setView('shopping')}
+                            className="h-9 px-3 rounded bg-gray-900 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-black transition-colors"
+                          >
+                            View shopping list
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
