@@ -637,7 +637,7 @@ export const LandingView: React.FC = () => {
             Start with 7 days of full features.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
-            Try the complete search engine for a week. No payment needed until you're ready to commit.
+            Search once. Compare recipes. Save dinners. Build a shopping list. Know the likely cost.
           </p>
         </div>
 
