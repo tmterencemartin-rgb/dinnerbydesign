@@ -782,11 +782,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
           >
             <div className={isAdmin && user && !user.isAnonymous ? "grid gap-4 md:grid-cols-2" : "space-y-4"}>
               {/* Account Card */}
-              <div id="account-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+              <div id="account-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-3">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Profile</h3>
                 {user && !user.isAnonymous ? (
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-1">
-                    <div className="flex items-center gap-3">
+                  <div className="space-y-3 pb-1">
+                    <div className="flex items-center gap-3 min-w-0">
                       {user.photoURL ? (
                         <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded border border-gray-100 object-cover" referrerPolicy="no-referrer" />
                       ) : (
@@ -796,23 +796,23 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                       )}
                       <div className="min-w-0">
                         <p className="text-[14px] text-gray-900 font-bold leading-none">{user.displayName || user.email || 'User'}</p>
-                        <p className="text-[11px] text-gray-400 mt-1.5 font-medium leading-none">{user.email}</p>
+                        <p className="text-[11px] text-gray-400 mt-1.5 font-medium leading-none truncate">{user.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 sm:pl-[52px]">
                       <button 
                         onClick={signOut}
-                        className="px-3 py-1.5 bg-white border border-gray-100 text-gray-900 text-[11px] font-bold rounded hover:bg-gray-50 hover:border-gray-200 transition-all font-bold"
+                        className="px-3 py-1.5 bg-white border border-gray-100 text-gray-700 text-[11px] font-bold rounded hover:bg-gray-50 hover:border-gray-200 transition-all"
                       >
-                        Sign Out
+                        Sign out
                       </button>
                       <button 
                         onClick={handleSendTestEmail}
                         disabled={isSendingTest}
-                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-transparent text-gray-900 text-[11px] font-bold rounded hover:bg-gray-100 transition-all disabled:opacity-50 font-bold"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 text-gray-700 text-[11px] font-bold rounded hover:bg-gray-100 transition-all disabled:opacity-50"
                       >
                         {isSendingTest ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
-                        Test Email
+                        Test email
                       </button>
                     </div>
                   </div>
