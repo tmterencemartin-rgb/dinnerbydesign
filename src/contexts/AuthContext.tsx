@@ -1041,6 +1041,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       convenienceProfile: item.convenienceProfile || getConvenienceProfile(item),
       savedAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
+      isArchived: false,
+      archivedAt: null,
       userId,
       scheduledDate,
       requestedServings: (item as any).requestedServings || undefined,
@@ -1112,7 +1114,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const saveRecipe = async (item: Recipe | ReadyMeal) => {
     if (!user) return;
     const existing = savedRecipes.find(r => isSameRecipe(r, item));
-    if (existing) return existing.id;
+    if (existing) {
+      if (existing.isArchived && existing.id) {
+        await updateDoc(doc(db, 'users', user.uid, 'savedRecipes', existing.id), {
+          isArchived: false,
+          archivedAt: null,
+          updatedAt: serverTimestamp()
+        });
+      }
+      return existing.id;
+    }
 
     try {
       const docRef = doc(collection(db, 'users', user.uid, 'savedRecipes'));

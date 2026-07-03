@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CircleX } from './ui/CircleX';
-import { Wind, CalendarPlus, Check } from 'lucide-react';
+import { Wind, CalendarPlus, Check, Archive } from 'lucide-react';
 import { SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { isSameRecipe, getConvenienceProfile } from '../lib/recipeUtils';
@@ -143,9 +143,9 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 onRemove();
               }}
               className="p-1 text-gray-300 hover:text-red-400 transition-colors cursor-pointer"
-              title="Remove from cookbook"
+              title="Archive"
             >
-              <CircleX size={14} className="w-3.5 h-3.5" />
+              <Archive size={14} className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -153,7 +153,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           <h3 
             onClick={() => onViewDetail ? onViewDetail(recipe) : setIsExpanded(!isExpanded)}
             className="text-[13px] font-bold text-gray-900 leading-tight hover:text-accent cursor-pointer line-clamp-2 transition-colors"
-            title="Click to view full recipe details"
+            title="View dinner details"
           >
             {recipe.title}
           </h3>
@@ -237,7 +237,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     ? 'bg-emerald-500 text-white scale-105'
                     : 'border border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800'
                 }`}
-                title="Schedule this recipe"
+                title="Schedule"
               >
                 {showCheck ? (
                   <Check className="w-2.5 h-2.5" />
@@ -312,7 +312,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   }
 
   return (
-    <div className={`${isBacklog ? 'py-1' : 'py-2'} px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
+    <div className={`${isBacklog ? 'py-0.5' : 'py-2'} px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
       {isExpanded && (
         <button 
           onClick={() => setIsExpanded(false)}
@@ -322,7 +322,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           <CircleX size={16} />
         </button>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1.5 sm:gap-3 min-h-[38px] w-full sm:relative">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3 min-h-[34px] w-full sm:relative">
         {/* Left Side: Scheduled Badge + Recipe Heading & Sub-stats */}
         <div className="flex items-start gap-2.5 flex-grow min-w-0">
           {scheduledDate && !isBacklog && (
@@ -338,11 +338,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             onClick={() => onViewDetail ? onViewDetail(recipe) : setIsExpanded(!isExpanded)}
           >
             <div className="flex flex-col">
-              <h3 className="text-[13.5px] font-bold text-gray-900 leading-tight">
+              <h3 className="text-[13px] font-bold text-gray-900 leading-tight">
                 {recipe.title}
               </h3>
               
-              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11.5px] text-gray-400 font-normal mt-1">
+              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-gray-400 font-normal mt-0.5">
                 {(() => {
                   const items: React.ReactNode[] = [];
                   
@@ -408,10 +408,6 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     );
                   }
 
-                  items.push(
-                    <span key="convenience-line-break" className="basis-full h-0" aria-hidden="true" />
-                  );
- 
                   const cp = recipe.convenienceProfile || getConvenienceProfile(recipe);
                   if (cp === 'scratch') {
                     items.push(
@@ -440,16 +436,9 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   }
                   
                   return items.reduce<React.ReactNode[]>((acc, item, index) => {
-                    const isBreak = React.isValidElement(item) && item.key === 'convenience-line-break';
-                    const previous = items[index - 1];
-                    const previousIsBreak = React.isValidElement(previous) && previous.key === 'convenience-line-break';
-                    if (isBreak) {
-                      acc.push(item);
-                      return acc;
-                    }
                     if (index > 0) {
                       acc.push(
-                        <span key={`sep-${index}`} className={`text-gray-300 select-none ${previousIsBreak ? 'hidden' : ''}`}>•</span>
+                        <span key={`sep-${index}`} className="text-gray-300 select-none">•</span>
                       );
                     }
                     acc.push(item);
@@ -464,12 +453,12 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                         e.stopPropagation();
                         setIsChoosingDay(!isChoosingDay);
                       }}
-                      className={`inline-flex h-6 items-center gap-1 px-2 rounded border text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                      className={`inline-flex h-5 items-center gap-1 px-1.5 rounded border text-[10.5px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                         scheduledDate || showCheck
                           ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700 font-semibold'
                           : 'border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800'
                       }`}
-                      title="Add to Schedule"
+                      title="Schedule"
                     >
                       {scheduledDate || showCheck ? (
                         <Check className="w-2.5 h-2.5 text-emerald-600" />
@@ -523,6 +512,20 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       </div>
                     )}
                   </span>
+                )}
+
+                {isBacklog && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemove();
+                    }}
+                    className="inline-flex h-5 items-center gap-1 px-1.5 rounded border border-gray-100 text-[10.5px] font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
+                    title="Archive"
+                  >
+                    <Archive className="w-2.5 h-2.5" />
+                    <span>Archive</span>
+                  </button>
                 )}
               </div>
             </div>

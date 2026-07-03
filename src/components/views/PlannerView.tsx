@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { serverTimestamp } from 'firebase/firestore';
 import { 
   ChevronLeft, 
   CircleX, 
@@ -41,9 +42,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     updatePlanner, 
     saveRecipe,
     unscheduleRecipe, 
-    removeRecipe, 
+    removeRecipe,
     clearPlannerWeek, 
-    removeAllSavedRecipes,
     addLog,
     handlePrintRecipe,
     showToast,
@@ -177,9 +177,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     return recipe.totalTime || (recipe.prepTime || 0) + (recipe.cookTime || 0);
   };
 
+  const activeSavedRecipes = React.useMemo(
+    () => savedRecipes.filter(r => !r.isArchived),
+    [savedRecipes]
+  );
+
   const filteredSavedRecipes = React.useMemo(() => {
     const activePrefs = profile?.preferences;
-    const unscheduled = savedRecipes.filter(r => !r.scheduledDate);
+    const unscheduled = activeSavedRecipes.filter(r => !r.scheduledDate);
     
     let processed = unscheduled.filter(recipe => {
       // 0. Hard Constraints (Dietary, Allergies, Exclusions, Calories, Budget)
@@ -253,7 +258,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
     return processed;
   }, [
-    savedRecipes,
+    activeSavedRecipes,
     profile?.preferences,
     savedSearchQuery,
     quickPills,
@@ -277,7 +282,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   );
   const cheaperSavedSwap = React.useMemo(() => {
     const scheduled = planner.filter(item => !!item.scheduledDate);
-    const unscheduledSaved = savedRecipes.filter(item => !item.scheduledDate);
+    const unscheduledSaved = activeSavedRecipes.filter(item => !item.scheduledDate);
     const activePrefs = profile?.preferences;
     const safetyPrefs = activePrefs ? {
       dietaryRule: activePrefs.dietaryRule || 'none',
@@ -317,7 +322,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     });
 
     return best;
-  }, [planner, savedRecipes, profile?.preferences]);
+  }, [planner, activeSavedRecipes, profile?.preferences]);
 
   const checkReadOnly = (msg: string) => {
     if (isReadOnly) {
@@ -461,16 +466,15 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
   const handleDeleteSavedRecipe = async (recipe: SavedRecipe) => {
     if (checkReadOnly("Your trial has ended. Upgrade to edit your collection.")) return;
-    addLog(`UI ACTION: handleDeleteSavedRecipe START for ${recipe.id}`);
+    addLog(`UI ACTION: archiveSavedRecipe START for ${recipe.id}`);
     if (!recipe.id) return;
     
     try {
-      await removeRecipe(recipe.id);
-      addLog(`UI ACTION: handleDeleteSavedRecipe SUCCESS for ${recipe.id}`);
-      // Toast for undo is handled at a higher level or we can add it here if needed
-      // For now, let's just use showToast from context if available
+      await updateRecipe(recipe.id, { isArchived: true, archivedAt: serverTimestamp() });
+      addLog(`UI ACTION: archiveSavedRecipe SUCCESS for ${recipe.id}`);
+      showToast("Archived from Saved");
     } catch (err: any) {
-      addLog(`UI ERROR: handleDeleteSavedRecipe failed for ${recipe.id}: ${err.message}`);
+      addLog(`UI ERROR: archiveSavedRecipe failed for ${recipe.id}: ${err.message}`);
     }
   };
 
@@ -816,18 +820,22 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1">Saved</h3>
                     <div className="flex items-center gap-2.5">
                       <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} items</span>
-                      {user && !user.isAnonymous && savedRecipes.length > 0 && (
+                      {user && !user.isAnonymous && activeSavedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
                           {showDeleteAllSavedConfirm ? (
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Are you sure?</span>
+                              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Archive all?</span>
                               <button 
                                 onClick={async () => {
                                   if (checkReadOnly("Your trial has ended. Upgrade to edit your collection.")) return;
                                   try {
-                                    await removeAllSavedRecipes();
+                                    await Promise.all(
+                                      activeSavedRecipes
+                                        .filter(r => !r.scheduledDate && r.id)
+                                        .map(r => updateRecipe(r.id!, { isArchived: true, archivedAt: serverTimestamp() }))
+                                    );
                                   } catch (err) {
-                                    addLog(`UI ERROR: removeAllSavedRecipes failed: ${err instanceof Error ? err.message : String(err)}`);
+                                    addLog(`UI ERROR: archive all saved failed: ${err instanceof Error ? err.message : String(err)}`);
                                   } finally {
                                     setShowDeleteAllSavedConfirm(false);
                                   }
@@ -842,7 +850,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               onClick={() => setShowDeleteAllSavedConfirm(true)}
                               className="text-[10.5px] font-bold text-accent uppercase tracking-widest hover:underline"
                             >
-                              Clear Saved List
+                              Archive list
                             </button>
                           )}
                         </div>
@@ -850,11 +858,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </div>
                   </div>
 
-                  {savedRecipes.length === 0 ? (
+                  {activeSavedRecipes.length === 0 ? (
                     <div className="w-full py-6 px-4 text-center max-w-md mx-auto bg-white/50">
-                      <h5 className="font-semibold text-gray-900 mb-1 font-display text-[14px] tracking-tight">No saved recipes yet</h5>
+                      <h5 className="font-semibold text-gray-900 mb-1 font-display text-[14px] tracking-tight">Nothing saved yet</h5>
                       <p className="text-[12.5px] text-gray-500 leading-relaxed mb-4 max-w-sm mx-auto">
-                        Save recipes from Search, then schedule them here.
+                        Save dinners from Search, then schedule them here.
                       </p>
                       <button 
                         onClick={() => setView('home')}
@@ -875,7 +883,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               type="text"
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
-                              placeholder="Search saved recipes..."
+                              placeholder="Search saved dinners..."
                               className="w-full h-6 bg-white border border-gray-100 rounded pl-8 pr-8 text-xs font-medium outline-none focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
@@ -971,10 +979,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         return (
                           <div className="p-0 bg-transparent">
                             <div id="saved-recipes-list">
-                              {processed.length === 0 && savedRecipes.length > 0 ? (
+                              {processed.length === 0 && activeSavedRecipes.length > 0 ? (
                                 <div className="py-5 text-center bg-gray-50/50 mx-1 my-1">
-                                  <p className="text-[12px] text-gray-950 font-medium">No saved recipes match this view.</p>
-                                  <button onClick={handleResetFilters} className="text-[11px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Show all saved recipes</button>
+                                  <p className="text-[12px] text-gray-950 font-medium">No saved dinners match this view.</p>
+                                  <button onClick={handleResetFilters} className="text-[11px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Show all saved dinners</button>
                                 </div>
                               ) : (
                                 (() => {
@@ -1021,10 +1029,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               )}
                             </div>
                         
-                            {savedRecipes.length > 6 && !isFiltering && (
+                            {activeSavedRecipes.length > 6 && !isFiltering && (
                               <div className="flex justify-center py-3 border-t border-gray-50 mt-1">
                                 <button onClick={() => setShowAllSaved(!showAllSaved)} className="text-[11px] text-accent font-bold uppercase tracking-widest hover:underline cursor-pointer">
-                                  {showAllSaved ? 'Show less' : 'View all saved recipes'}
+                                  {showAllSaved ? 'Show less' : 'View all saved dinners'}
                                 </button>
                               </div>
                             )}

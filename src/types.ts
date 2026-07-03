@@ -288,6 +288,8 @@ export interface SavedRecipe {
   readyMadeKit?: ReadyMadeKit;
   savedAt: Timestamp | FieldValue | null; // Firestore Timestamp
   updatedAt?: Timestamp | FieldValue | null;
+  isArchived?: boolean;
+  archivedAt?: Timestamp | FieldValue | null;
   userId: string;
   retailer?: string;
   price?: string;
