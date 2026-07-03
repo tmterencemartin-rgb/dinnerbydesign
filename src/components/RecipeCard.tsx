@@ -352,6 +352,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 {recipe.description}
               </p>
 
+              {recipe.matchReason && (
+                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-400 leading-snug">
+                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-400">Match:</span>{' '}
+                  <span className="italic">{recipe.matchReason}</span>
+                </p>
+              )}
+
               {scheduledDate && (
                 <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] text-accent font-bold bg-accent/5 px-2 py-0.5 rounded w-fit">
                   <CalendarCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -560,13 +567,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
                   </div>
 
-                  {recipe.matchReason && (
-                    <div className="bg-gray-50/70 p-3 rounded">
-                      <p className="text-[11px] text-gray-500 leading-relaxed italic">
-                        <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9px]">Why this match:</span> {recipe.matchReason}
-                      </p>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
@@ -735,13 +735,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         <p className="text-[13px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
                       </div>
 
-                      {recipe.matchReason && (
-                        <div className="bg-gray-50/70 p-3 rounded">
-                          <p className="text-[11px] text-gray-500 leading-relaxed italic">
-                            <span className="font-semibold not-italic tracking-[0.05em] uppercase text-[9px]">Why this match:</span> {recipe.matchReason}
-                          </p>
-                        </div>
-                      )}
                     </div>
                   </motion.div>
                 )}

@@ -334,6 +334,13 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 {meal.description}
               </p>
 
+              {meal.matchReason && meal.matchReason.length > 0 && (
+                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-400 leading-snug">
+                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-400">Match:</span>{' '}
+                  <span className="italic">{tidyKitText(meal.matchReason)}</span>
+                </p>
+              )}
+
               {scheduledDate && (
                 <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] text-accent font-bold bg-accent/5 px-2 py-0.5 rounded w-fit">
                   <CalendarCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -468,14 +475,6 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                         <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(currentServingSuggestion)}</p>
                       )}
                     </div>
-
-                    {meal.matchReason && meal.matchReason.length > 0 && (
-                      <div className="bg-gray-50/70 p-2.5 rounded border border-gray-100/60">
-                        <p className="text-[12px] text-gray-500 leading-relaxed">
-                          <span className="font-bold tracking-widest uppercase text-[9.5px] text-gray-400">Why this fits:</span> {tidyKitText(meal.matchReason)}
-                        </p>
-                      </div>
-                    )}
 
                   </motion.div>
                 )}
