@@ -332,7 +332,7 @@ export const LandingView: React.FC = () => {
           Find what to cook, what to buy <br /> and what it might cost.
         </h1>
         <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-light mb-10">
-          An ad-free, UK-focused recipe search engine. Verified and pragmatic dinner ideas from published sources, costed against UK supermarket prices, in twenty seconds or less.
+          An ad-free, UK-focused recipe-finding app. Verified and pragmatic dinner ideas from published sources, costed against UK supermarket prices, in twenty seconds or less.
         </p>
 
         {/* Action button grouping */}
