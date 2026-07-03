@@ -1170,10 +1170,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             ) : (
                               <>
                                 <p className="mt-1 text-[12px] text-gray-600 leading-relaxed">
-                                  Helps keep costs down by checking unscheduled saved dinners against this week.
+                                  Looks for lower-cost saved dinners that could replace something in this week's schedule.
                                 </p>
                                 <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
-                                  Looks for clear cost data, a match with your preferences, and a saving of at least £1.
+                                  Uses saved dinners that are not already scheduled, match your preferences, and save at least £1.
                                   {activeUnscheduledSavedCount > 0
                                     ? ' Nothing cheaper found right now.'
                                     : ' Save more dinners to give it options to compare.'}
