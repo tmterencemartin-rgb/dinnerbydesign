@@ -836,6 +836,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           {showDeleteAllSavedConfirm ? (
                             <div className="flex items-center gap-2">
                               <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Archive all?</span>
+                              <button
+                                onClick={() => setShowDeleteAllSavedConfirm(false)}
+                                className="text-[11px] text-gray-500 font-bold hover:underline"
+                              >
+                                No
+                              </button>
                               <button 
                                 onClick={async () => {
                                   if (checkReadOnly("Your trial has ended. Upgrade to edit your collection.")) return;
