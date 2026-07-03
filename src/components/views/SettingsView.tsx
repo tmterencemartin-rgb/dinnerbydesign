@@ -844,42 +844,42 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {/* Read-Only Dietary Profile Summary */}
             {user && !user.isAnonymous && (
-              <div id="dietary-profile-summary" className="space-y-4 pt-1">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+              <div id="dietary-profile-summary" className="space-y-3 pt-1">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-1.5">
                   <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1">My Dietary Profile</h3>
                 </div>
 
-                <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50/50 p-4 rounded">
-                    <div className="space-y-1">
+                <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
+                    <div className="space-y-0.5">
                       <p className="text-[13px] text-gray-900 font-bold leading-snug">My Search Defaults</p>
                       <p className="text-[11px] text-gray-400 font-semibold">Applied automatically to every search</p>
                     </div>
                     <button
                       onClick={() => setView('home', true)}
-                      className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-[11px] font-bold uppercase tracking-wider rounded transition-all flex items-center justify-center gap-1.5"
+                      className="px-3 py-1.5 bg-gray-900 hover:bg-black text-white text-[10.5px] font-bold uppercase tracking-wider rounded transition-all flex items-center justify-center gap-1.5 w-fit"
                     >
                       <Sliders className="w-3 h-3" />
                       Edit Defaults
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     {/* Core Rules */}
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                       <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
                         <Apple className="w-3.5 h-3.5 text-gray-500" />
                         Core Rules & Restrictions
                       </h4>
-                      <div className="space-y-2.5">
-                        <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
+                      <div className="space-y-1.5">
+                        <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium">Dietary preference</span>
                           <span className="font-bold text-gray-800 text-right">
                             {displayedPreferences.dietaryRule ? (DIETARY_TAXONOMY.dietaryPreferences.labels[displayedPreferences.dietaryRule] || displayedPreferences.dietaryRule) : 'None'}
                           </span>
                         </div>
 
-                        <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
+                        <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium">Salad preference</span>
                           <span className="font-bold text-gray-800 text-right">
                             {displayedPreferences.saladPreference ? (DIETARY_TAXONOMY.saladPreferences.labels[displayedPreferences.saladPreference] || displayedPreferences.saladPreference) : 'All salads permitted'}
@@ -915,34 +915,34 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     </div>
 
                     {/* Limits, Budget & Priorities */}
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                       <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5 text-gray-500" />
                         Limits & Saved Priorities
                       </h4>
-                      <div className="space-y-2.5">
-                        <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
+                      <div className="space-y-1.5">
+                        <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium">Standard portions</span>
                           <span className="font-bold text-gray-800 text-right">
                             {displayedPreferences.servings || 2} adult portions
                           </span>
                         </div>
 
-                        <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
+                        <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium font-semibold">Max calories</span>
                           <span className="font-bold text-gray-800 text-right">
                             {displayedPreferences.calorieCeiling ? `${displayedPreferences.calorieCeiling} kcal` : 'No calorie limit'}
                           </span>
                         </div>
 
-                        <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
+                        <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium font-semibold">Max cost</span>
                           <span className="font-bold text-gray-800 text-right">
                             {displayedPreferences.budgetLimit ? `£${displayedPreferences.budgetLimit.toFixed(2)}` : 'No budget limit'}
                           </span>
                         </div>
 
-                        <div className="flex items-start justify-between text-[13px] border-b border-gray-50 pb-1.5">
+                        <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium font-semibold">Ready in under</span>
                           <span className="font-bold text-gray-800 text-right">
                             {displayedPreferences.readyToEatUnderMins ? `${displayedPreferences.readyToEatUnderMins} mins` : 'No limit'}
@@ -986,12 +986,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     </div>
 
                     {/* Global Culinary & Store Preferences */}
-                    <div className="space-y-4 md:col-span-2 pt-4 border-t border-gray-100">
+                    <div className="space-y-2.5 md:col-span-2 pt-3 border-t border-gray-100">
                       <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
                         <Utensils className="w-3.5 h-3.5 text-gray-500" />
                         Culinary Preferences
                       </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
                           <span className="text-gray-500 font-semibold text-[11.5px] block">Cuisine Preferences</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
