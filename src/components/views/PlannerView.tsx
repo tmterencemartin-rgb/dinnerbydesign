@@ -981,7 +981,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         const processed = filteredSavedRecipes;
 
                         return (
-                          <div className="p-0 bg-transparent">
+                          <div className="pt-1.5 bg-transparent">
                             <div id="saved-recipes-list">
                               {processed.length === 0 && activeSavedRecipes.length > 0 ? (
                                 <div className="py-5 text-center bg-gray-50/50 mx-1 my-1">
