@@ -1175,7 +1175,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               </>
                             ) : (
                               <p className="mt-1 text-[12px] text-gray-600 leading-relaxed">
-                                Quietly watches your scheduled dinners for lower-cost alternatives in Saved. When it finds a saved dinner that fits your preferences and costs at least £1 less, it suggests swapping it in.
+                                Quietly watches your scheduled dinners for lower-cost alternatives in your Saved recipe list. Suggests swapping in a saved dinner when one fits your preferences and costs at least £1 less.
                                 {activeUnscheduledSavedCount > 0
                                   ? ' Nothing cheaper found right now.'
                                   : ' Save more dinners to give it options to compare.'}
