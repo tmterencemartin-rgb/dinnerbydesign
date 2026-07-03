@@ -1100,7 +1100,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </span>
                     </div>
                     {planner.length > 0 && (
-                      <div className={`mt-1 flex flex-col gap-2 rounded border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${
+                      <div className={`mt-2 flex flex-col gap-3 rounded border px-3 py-3 sm:flex-row sm:items-start sm:justify-between ${
                         cheaperSavedSwap
                           ? 'border-emerald-100 bg-emerald-50/70'
                           : 'border-gray-100 bg-gray-50/70'
@@ -1109,18 +1109,29 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           <p className={`text-[11px] font-bold uppercase tracking-widest ${
                             cheaperSavedSwap ? 'text-emerald-800' : 'text-gray-500'
                           }`}>
-                            Swap check
+                            {cheaperSavedSwap ? 'Cost-saving swap found' : 'Cost-saving swap check'}
                           </p>
                           {cheaperSavedSwap ? (
-                            <p className="mt-1 text-[12px] text-emerald-900 leading-relaxed">
-                              Swap <span className="font-semibold">{cheaperSavedSwap.scheduled.title}</span> for <span className="font-semibold">{cheaperSavedSwap.replacement.title}</span> and save about £{cheaperSavedSwap.saving.toFixed(2)}.
-                            </p>
+                            <>
+                              <p className="mt-1 text-[12px] text-emerald-900 leading-relaxed">
+                                Swap <span className="font-semibold">{cheaperSavedSwap.scheduled.title}</span> for <span className="font-semibold">{cheaperSavedSwap.replacement.title}</span> and save about £{cheaperSavedSwap.saving.toFixed(2)}.
+                              </p>
+                              <p className="mt-1 text-[11px] text-emerald-800/80 leading-relaxed">
+                                Found in saved dinners that are not already scheduled, fit your preferences, and reduce this week's cost by at least £1.
+                              </p>
+                            </>
                           ) : (
-                            <p className="mt-1 text-[12px] text-gray-500 leading-relaxed">
-                              {activeUnscheduledSavedCount > 0
-                                ? 'No cheaper saved option found.'
-                                : 'No unscheduled saved dinners available to compare.'}
-                            </p>
+                            <>
+                              <p className="mt-1 text-[12px] text-gray-600 leading-relaxed">
+                                Helps keep costs down by checking unscheduled saved dinners against this week.
+                              </p>
+                              <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
+                                Looks for clear cost data, a match with your preferences, and a saving of at least £1.
+                                {activeUnscheduledSavedCount > 0
+                                  ? ' Nothing cheaper found right now.'
+                                  : ' Save more dinners to give it options to compare.'}
+                              </p>
+                            </>
                           )}
                         </div>
                         {cheaperSavedSwap?.scheduled.scheduledDate && (
