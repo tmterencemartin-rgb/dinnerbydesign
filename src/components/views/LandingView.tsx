@@ -684,7 +684,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Pricing Box card Panel */}
-          <div className="bg-white border border-dbd-rule rounded-xl p-5 sm:p-6 flex flex-col justify-start shadow-md relative overflow-hidden self-start">
+          <div className="bg-white border-y border-dbd-rule sm:border sm:rounded-xl px-0 py-5 sm:p-6 flex flex-col justify-start shadow-none sm:shadow-md relative overflow-hidden self-start">
             
             <div>
               <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-dbd-accent block mb-1 select-none uppercase">
@@ -693,16 +693,16 @@ export const LandingView: React.FC = () => {
 
               {/* Pricing toggle wrapper - now inside the card */}
               <div className="flex justify-start mb-2.5">
-                <div className="bg-dbd-surface-2 p-1 border border-dbd-rule/80 flex rounded-sm font-mono text-[9.5px] sm:text-[10px] h-[32px] items-stretch">
+                <div className="bg-transparent sm:bg-dbd-surface-2 p-0 sm:p-1 border-b sm:border border-dbd-rule/80 flex rounded-none sm:rounded-sm font-mono text-[9.5px] sm:text-[10px] h-[32px] items-stretch">
                   <button 
                     onClick={() => setBillingPeriod('monthly')}
-                    className={`px-2.5 sm:px-3 flex items-center justify-center font-bold cursor-pointer transition-all rounded-sm ${billingPeriod === 'monthly' ? 'bg-white shadow-sm text-dbd-accent' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
+                    className={`px-2.5 sm:px-3 flex items-center justify-center font-bold cursor-pointer transition-all rounded-none sm:rounded-sm ${billingPeriod === 'monthly' ? 'bg-white sm:shadow-sm text-dbd-accent' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                   >
                     Monthly
                   </button>
                   <button 
                     onClick={() => setBillingPeriod('annual')}
-                    className={`px-2.5 sm:px-3 flex items-center justify-center gap-1 font-bold cursor-pointer transition-all rounded-sm ${billingPeriod === 'annual' ? 'bg-white shadow-sm text-dbd-accent' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
+                    className={`px-2.5 sm:px-3 flex items-center justify-center gap-1 font-bold cursor-pointer transition-all rounded-none sm:rounded-sm ${billingPeriod === 'annual' ? 'bg-white sm:shadow-sm text-dbd-accent' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                   >
                     Annual <span className="bg-emerald-100 text-emerald-800 text-[8px] px-1 py-0.5 rounded-sm">save 16%</span>
                   </button>
@@ -728,7 +728,7 @@ export const LandingView: React.FC = () => {
               {/* Conversion email signup box */}
               {hasAccess ? (
                 <div className="space-y-3">
-                  <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-sm">
+                  <div className="py-2 border-y border-emerald-100 bg-transparent sm:bg-emerald-50 sm:border sm:rounded-sm sm:p-3">
                     <p className="text-[11px] text-emerald-800 font-bold flex items-center gap-2">
                        <CheckIcon className="w-3.5 h-3.5" />
                        Account Active

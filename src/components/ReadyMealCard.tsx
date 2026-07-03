@@ -163,14 +163,14 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
           )}
         </div>
       ) : showNotes ? (
-        <div key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1.5">
+        <div key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1.5 sm:rounded sm:bg-white sm:border sm:px-2">
           <p className="text-[11px] font-bold text-gray-700 leading-snug">{displayName}</p>
           {item.note && (
             <p className="mt-0.5 text-[10px] font-medium text-gray-400 leading-snug">{displayNote}</p>
           )}
         </div>
       ) : (
-        <span key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700 leading-snug">
+        <span key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1 text-[11px] font-medium text-gray-700 leading-snug sm:rounded sm:bg-white sm:border sm:px-2">
           {displayName}
         </span>
       );
@@ -179,11 +179,11 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   );
 
   const kitPanel = (
-    <div className="w-full rounded border border-gray-200 bg-white p-3 sm:p-4 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+    <div className="w-full border-y border-gray-100 bg-white py-2 sm:rounded sm:border-gray-200 sm:p-4 sm:shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2.5 sm:mb-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
+            <ShoppingBag className="hidden sm:block w-4 h-4 text-accent shrink-0" />
             <h4 className="text-[13px] font-bold uppercase tracking-widest text-gray-900">
               Dinner kit
             </h4>
@@ -193,14 +193,14 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
           </p>
         </div>
         {dinnerKit.totalTimeNote && (
-          <span className="w-fit rounded bg-gray-50 border border-gray-100 px-2 py-1 text-[10px] font-bold text-gray-500">
+          <span className="w-fit border-b border-gray-100 px-0 py-1 text-[10px] font-bold text-gray-500 sm:rounded sm:bg-gray-50 sm:border sm:px-2">
             {tidyKitText(dinnerKit.totalTimeNote)}
           </span>
         )}
       </div>
 
       <div className="grid gap-2.5 sm:gap-4">
-        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-2 sm:p-3">
+        <div className="min-w-0 border-b border-gray-100 pb-2 sm:rounded sm:bg-gray-50/80 sm:border sm:p-3">
           <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
             Core product
           </p>

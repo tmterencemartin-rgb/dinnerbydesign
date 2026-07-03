@@ -189,12 +189,12 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             <p className="text-[11.5px] text-gray-500 leading-relaxed mt-0.5">{tidyKitText(item.note)}</p>
           </div>
         ) : showNotes ? (
-          <div key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-1.5">
+          <div key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1.5 sm:rounded sm:bg-white sm:border sm:px-2">
             <p className="text-[10.5px] font-bold text-gray-700 leading-snug">{tidyKitText(item.name)}</p>
             <p className="mt-0.5 text-[10px] font-medium text-gray-400 leading-snug">{tidyKitText(item.note)}</p>
           </div>
         ) : (
-          <span key={`${item.name}-${index}`} className="max-w-full rounded bg-white border border-gray-100 px-2 py-0.5 text-[10.5px] font-medium text-gray-700 leading-snug">
+          <span key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1 text-[10.5px] font-medium text-gray-700 leading-snug sm:rounded sm:bg-white sm:border sm:px-2 sm:py-0.5">
             {tidyKitText(item.name)}
           </span>
         )
@@ -203,11 +203,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   );
 
   const kitPanel = (
-    <div className="w-full rounded border border-gray-200 bg-white p-3 sm:p-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+    <div className="w-full border-y border-gray-100 bg-white py-2 sm:rounded sm:border-gray-200 sm:p-3.5 sm:shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
       <div className="flex items-start gap-2.5 mb-2.5 sm:mb-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="w-4 h-4 text-accent shrink-0" />
+            <ShoppingBag className="hidden sm:block w-4 h-4 text-accent shrink-0" />
             <h4 className="text-[13px] font-bold uppercase tracking-widest text-gray-900">
               Dinner kit
             </h4>
@@ -219,7 +219,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
       </div>
 
       <div className="grid gap-2.5 sm:gap-3">
-        <div className="min-w-0 rounded bg-gray-50/80 border border-gray-100 p-2 sm:p-2.5">
+        <div className="min-w-0 border-b border-gray-100 pb-2 sm:rounded sm:bg-gray-50/80 sm:border sm:p-2.5">
           <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
             Core dish
           </p>
