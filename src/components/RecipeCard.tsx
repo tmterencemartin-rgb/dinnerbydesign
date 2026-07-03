@@ -418,7 +418,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     )}
                     {recipe.saladType && recipe.saladType !== 'none' && (
                       <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
-                        🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
+                        {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
                       </span>
                     )}
                   </div>
@@ -430,30 +430,30 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   const descLower = recipe.description.toLowerCase();
                   const batchCooking = 'batchCooking' in recipe ? recipe.batchCooking : undefined;
 
-                // 1. Low Cost (💰 Low Cost)
+                // 1. Low Cost
                 const costFloat = recipe.costPerPortion ? parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) : NaN;
                 if ((('isLowCost' in recipe && (recipe as any).isLowCost)) || (!isNaN(costFloat) && costFloat <= 2.0)) {
                   badges.push(
                     <span key="low-cost" className="bg-accent/10 text-accent px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
-                      💰 Low Cost
+                      Low Cost
                     </span>
                   );
                 }
 
-                // 2. Cooking Methods: One-Pot (🍲 One-Pot)
+                // 2. Cooking Methods: One-Pot
                 if (titleLower.includes('one-pot') || titleLower.includes('one pot') || descLower.includes('one-pot') || descLower.includes('one pot')) {
                   badges.push(
                     <span key="one-pot" className="bg-gray-50 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
-                      🍲 One-Pot
+                      One-Pot
                     </span>
                   );
                 }
 
-                // 3. Cooking Methods: Air Fryer (⚡ Air Fryer)
+                // 3. Cooking Methods: Air Fryer
                 if ((recipe as any).isAirFryerFriendly || titleLower.includes('air fryer') || titleLower.includes('airfryer') || descLower.includes('air fryer') || descLower.includes('airfryer')) {
                   badges.push(
                     <span key="air-fryer" className="bg-accent/10 text-accent px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
-                      ⚡ Air Fryer
+                      Air Fryer
                     </span>
                   );
                 }
@@ -488,13 +488,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 if (recipe.isVegan) {
                   badges.push(
                     <span key="vegan" className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
-                      🌱 Vegan
+                      Vegan
                     </span>
                   );
                 } else if (recipe.isVegetarian) {
                   badges.push(
                     <span key="vegetarian" className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
-                      🍃 Vegetarian
+                      Vegetarian
                     </span>
                   );
                 }

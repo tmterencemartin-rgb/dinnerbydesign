@@ -390,12 +390,12 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     )}
                     {meal.saladType && meal.saladType !== 'none' && (
                       <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">
-                        🥗 {meal.saladType}
+                        {meal.saladType}
                       </span>
                     )}
                     {meal.isAirFryerFriendly && (
                       <span className="text-accent text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
-                        ⚡ Air Fryer
+                        Air Fryer
                       </span>
                     )}
                   </div>

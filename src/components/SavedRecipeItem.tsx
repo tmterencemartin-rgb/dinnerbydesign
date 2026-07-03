@@ -164,22 +164,22 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
             {recipe.totalTime && (
               <span className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
-                ⏱️ {recipe.totalTime}m
+                {recipe.totalTime}m
               </span>
             )}
             {recipe.costPerPortion && (
               <span className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
-                💰 {recipe.costPerPortion}
+                {recipe.costPerPortion}
               </span>
             )}
             {recipe.calories && (
               <span className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
-                🔥 {recipe.calories} kcal
+                {recipe.calories} kcal
               </span>
             )}
             {recipe.saladType && recipe.saladType !== 'none' && (
               <span className="text-gray-500 font-medium uppercase tracking-wider text-[10.5px]">
-                🥗 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
+                {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
               </span>
             )}
             {recipe.isAirFryerFriendly && (
@@ -189,7 +189,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             )}
             {profile?.preferences?.dietaryRule === 'none' && (recipe.isVegetarian || recipe.isVegan) && (
               <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[10.5px] font-semibold">
-                🍃 {recipe.isVegan ? 'Plant' : 'Veg'}
+                {recipe.isVegan ? 'Plant' : 'Veg'}
               </span>
             )}
             {(() => {
@@ -197,13 +197,13 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               if (cp === 'scratch') {
                 return (
                   <span className="bg-gray-100 text-gray-700 text-[10.5px] px-2 py-0.5 rounded flex items-center gap-1">
-                    🍳 Homemade
+                    Homemade
                   </span>
                 );
               } else {
                 return (
                   <span className="bg-gray-50 text-gray-600 text-[10.5px] px-2 py-0.5 rounded flex items-center gap-1">
-                    📦 Ready-made
+                    Ready-made
                   </span>
                 );
               }

@@ -105,7 +105,6 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
 
               {item.saladType && item.saladType !== 'none' && (
                 <>
-                  <span className="mx-1.5">🥗</span>
                   <span className="uppercase text-[10px] font-bold tracking-wider">
                     {item.saladType === 'main' ? 'MAIN SALAD' : 'SIDE SALAD'}
                   </span>
