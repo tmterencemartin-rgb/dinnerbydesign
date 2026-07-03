@@ -50,6 +50,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   const [isChoosingDay, setIsChoosingDay] = useState(false);
 
   const mode = (recipe as any).retailer ? 'ready-made' : 'cook';
+  const cuisineLabel = recipe.cuisine || '';
+  const shouldShowCuisineLabel = cuisineLabel.trim().toLowerCase() !== 'active cook';
   
   const currentIngredients = (enrichedData?.ingredients || (recipe as any).ingredients || [])
     .filter((ing: string) => ing && ing.trim().length > 0);
@@ -341,14 +343,14 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
       <div className="">
         <div className="flex flex-col">
           {/* Main Card Content Stack */}
-          <div className="flex flex-col gap-2 sm:gap-4">
+          <div className="flex flex-col gap-1.5 sm:gap-4">
             {/* Title Block - Hero Section for Mobile */}
-            <div className="flex flex-col gap-1 sm:gap-2 items-start">
+            <div className="flex flex-col gap-0.5 sm:gap-2 items-start">
               <h3 className="text-[18px] sm:text-[24px] font-bold text-gray-900 leading-[1.2] tracking-tight text-left">
                 {recipe.title}
               </h3>
               
-              <p className={`text-[12px] sm:text-[14px] text-gray-400 font-medium leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isExpanded ? '' : 'line-clamp-2'}`}>
+              <p className={`text-[12px] sm:text-[14px] text-gray-400 font-medium leading-snug sm:leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isExpanded ? '' : 'line-clamp-2'}`}>
                 {recipe.description}
               </p>
 
@@ -368,15 +370,17 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             </div>
 
             {/* Core Content Stack - Tightly grouped for precise spacing */}
-            <div className={isExpanded ? 'grid gap-3 sm:gap-5 sm:grid-cols-[minmax(240px,0.92fr)_minmax(320px,1.08fr)] sm:items-start' : 'grid grid-cols-1 gap-3 sm:gap-5'}>
-              <div className="flex flex-col gap-2.5 sm:gap-3 items-start w-full min-w-0">
+            <div className={isExpanded ? 'grid gap-2 sm:gap-5 sm:grid-cols-[minmax(240px,0.92fr)_minmax(320px,1.08fr)] sm:items-start' : 'grid grid-cols-1 gap-3 sm:gap-5'}>
+              <div className="flex flex-col gap-1.5 sm:gap-3 items-start w-full min-w-0">
                 {/* Compressed Metadata Section */}
-                <div className="w-full flex flex-col gap-1 sm:gap-2 px-1.5 py-2 sm:p-3 border-y border-gray-100 sm:border-y-0 sm:bg-gray-50/60 sm:rounded">
+                <div className="w-full flex flex-col gap-0.5 sm:gap-2 px-1.5 py-1.5 sm:p-3 border-y border-gray-100 sm:border-y-0 sm:bg-gray-50/60 sm:rounded">
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 justify-start">
-                    <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
-                      {recipe.cuisine}
-                    </span>
+                    {shouldShowCuisineLabel && (
+                      <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
+                        {recipe.cuisine}
+                      </span>
+                    )}
                     {mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') && (
                       <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px]">
                         {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
@@ -629,11 +633,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden flex flex-col gap-0.5 sm:gap-4"
+                    className="overflow-hidden flex flex-col gap-0 sm:gap-4"
                   >
                     {/* Responsive side-by-side view for expanded recipe */}
-                    <div className="w-full pt-3 sm:pt-5 mt-0 sm:mt-1 border-t border-gray-100">
-                      <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-x-6 lg:gap-x-12 gap-y-3 items-start">
+                    <div className="w-full pt-2 sm:pt-5 mt-0 sm:mt-1 border-t border-gray-100">
+                      <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-x-6 lg:gap-x-12 gap-y-2 sm:gap-y-3 items-start">
                         <div className="flex items-center justify-between gap-3">
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                             Ingredients
@@ -667,16 +671,16 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider md:self-center">Preparation</h4>
                       
                       {/* Left column: Ingredients */}
-                      <div className="w-full h-fit pb-4 md:pb-0 flex flex-col gap-2.5">
+                      <div className="w-full h-fit pb-2 md:pb-0 flex flex-col gap-1.5 sm:gap-2.5">
                         {isEnriching && !currentIngredients.length ? (
                           <div className="flex items-center gap-1.5 py-1 text-[11px] text-gray-400">
                             <Loader2 className="w-3 h-3 animate-spin" />
                             <span>Fetching details...</span>
                           </div>
                         ) : (
-                          <ul className="text-[12.5px] text-gray-750 space-y-1">
+                          <ul className="text-[12.5px] text-gray-750 space-y-0.5 sm:space-y-1">
                             {currentIngredients.map((ing, i) => (
-                              <li key={`${recipe.title.replace(/\s+/g, '-')}-expanded-ing-${i}`} className="flex items-start gap-2 leading-relaxed">
+                              <li key={`${recipe.title.replace(/\s+/g, '-')}-expanded-ing-${i}`} className="flex items-start gap-2 leading-snug sm:leading-relaxed">
                                 <span className="mt-[0.45em] h-1 w-1 rounded-full bg-gray-300 shrink-0" />
                                 <span>{convertIngredient(ing, unitSystem)}</span>
                               </li>
@@ -686,7 +690,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </div>
 
                       {/* Right column: Instructions & Match Reason */}
-                       <div className="w-full flex flex-col gap-3">
+                       <div className="w-full flex flex-col gap-2 sm:gap-3">
                         <div>
                           {(recipe as any).totalServings && (
                             <p className="text-[11px] text-gray-500 mb-1">Makes {(recipe as any).totalServings} adult portions</p>
@@ -697,13 +701,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                               <span>Sourcing steps...</span>
                             </div>
                           ) : (
-                            <ol className="text-[12.5px] text-gray-750 space-y-3">
+                            <ol className="text-[12.5px] text-gray-750 space-y-2 sm:space-y-3">
                               {currentInstructions.map((step, i) => (
-                                <li key={`${recipe.title.replace(/\s+/g, '-')}-step-${i}`} className="flex gap-3">
+                                <li key={`${recipe.title.replace(/\s+/g, '-')}-step-${i}`} className="flex gap-2.5 sm:gap-3">
                                   <span className="flex-shrink-0 w-5 h-5 rounded bg-gray-100 text-gray-600 text-[10.5px] font-bold flex items-center justify-center">
                                     {i + 1}
                                   </span>
-                                  <span className="leading-relaxed">{step}</span>
+                                  <span className="leading-snug sm:leading-relaxed">{step}</span>
                                 </li>
                               ))}
                             </ol>
