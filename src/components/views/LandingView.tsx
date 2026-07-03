@@ -376,7 +376,7 @@ export const LandingView: React.FC = () => {
               </div>
               <div className="flex-grow flex justify-center max-w-[500px] mx-auto bg-white border border-dbd-rule rounded-md py-1 px-3 text-center text-[11px] sm:text-[12px] font-mono text-dbd-ink-3 select-none flex items-center justify-center gap-1.5">
                 <GlobeIcon className="w-3 h-3 text-dbd-ink-3" />
-                app.dinnerbydesign.co / search
+                https://dinnerbydesign.app
               </div>
               <div className="w-12 shrink-0 hidden sm:block" />
             </div>
