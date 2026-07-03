@@ -562,11 +562,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     <RecipeRealityChecks checks={(recipe as any).realityChecks} />
                   </div>
 
-                  <div className="pt-4 border-t border-gray-100">
-                    <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
-                    <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
-                  </div>
-
                 </div>
               )}
             </div>
@@ -720,6 +715,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </div>
                     </div>
 
+                    <div className="pt-3 sm:pt-4 border-t border-gray-100">
+                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
+                      <p className="text-[13px] sm:text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
+                    </div>
+
                     <div className="sm:hidden space-y-3 pt-3 border-t border-gray-100">
                       {kitPanel}
 
@@ -729,11 +729,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       />
 
                       <RecipeRealityChecks checks={(recipe as any).realityChecks} />
-
-                      <div className="pt-3 border-t border-gray-100">
-                        <h4 className="text-[11px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
-                        <p className="text-[13px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
-                      </div>
 
                     </div>
                   </motion.div>
