@@ -642,7 +642,7 @@ export const LandingView: React.FC = () => {
         </div>
 
         {/* Features Checklist column vs Subscription card panel */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 items-start">
           
           {/* Checklist left */}
           <div className="flex flex-col justify-center space-y-4 w-full">
@@ -684,7 +684,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Pricing Box card Panel */}
-          <div className="bg-white border border-dbd-rule rounded-xl p-5 sm:p-6 flex flex-col justify-between shadow-md relative overflow-hidden">
+          <div className="bg-white border border-dbd-rule rounded-xl p-5 sm:p-6 flex flex-col justify-start shadow-md relative overflow-hidden self-start">
             
             <div>
               <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-dbd-accent block mb-1 select-none uppercase">
