@@ -1106,101 +1106,103 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
                       </span>
                     </div>
+                    {planner.length > 0 && (
+                      <div className="pl-1 pt-1">
+                        <div className={`flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between ${
+                          bestCostSavingSwap ? 'text-emerald-900' : 'text-gray-600'
+                        }`}>
+                          <div className="min-w-0">
+                            <p className={`text-[11px] font-bold uppercase tracking-widest ${
+                              bestCostSavingSwap ? 'text-emerald-800' : 'text-gray-500'
+                            }`}>
+                              {bestCostSavingSwap
+                                ? costSavingSwaps.length === 1
+                                  ? 'Cost-saving swap found'
+                                  : `${costSavingSwaps.length} cost-saving swaps found`
+                                : 'Cost-saving swap check'}
+                            </p>
+                            {bestCostSavingSwap ? (
+                              <>
+                                <p className="mt-1 text-[12px] leading-relaxed">
+                                  Best option: swap <span className="font-semibold">{bestCostSavingSwap.scheduled.title}</span> for <span className="font-semibold">{bestCostSavingSwap.replacement.title}</span> and save about £{bestCostSavingSwap.saving.toFixed(2)}.
+                                </p>
+                                <p className="mt-1 text-[11px] text-emerald-800/80 leading-relaxed">
+                                  Found in saved dinners that are not already scheduled, fit your preferences, and reduce this week's cost by at least £1.
+                                </p>
+                                {additionalCostSavingSwaps.length > 0 && (
+                                  <div className="mt-2 space-y-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowAllSwapOptions(prev => !prev)}
+                                      className="text-[11px] font-bold uppercase tracking-widest text-emerald-800 hover:underline"
+                                    >
+                                      {showAllSwapOptions ? 'Hide other swaps' : `Show ${additionalCostSavingSwaps.length} other ${additionalCostSavingSwaps.length === 1 ? 'swap' : 'swaps'}`}
+                                    </button>
+                                    {showAllSwapOptions && (
+                                      <div className="space-y-1.5">
+                                        {additionalCostSavingSwaps.map(option => (
+                                          <div key={`${option.scheduled.id || option.scheduled.title}-${option.replacement.id || option.replacement.title}`} className="flex flex-col gap-1 border-b border-emerald-100 px-0 py-1.5 sm:rounded sm:border sm:px-2 sm:flex-row sm:items-center sm:justify-between">
+                                            <p className="text-[11px] text-emerald-900 leading-relaxed">
+                                              Swap <span className="font-semibold">{option.scheduled.title}</span> for <span className="font-semibold">{option.replacement.title}</span> and save about £{option.saving.toFixed(2)}.
+                                            </p>
+                                            {option.scheduled.scheduledDate && (
+                                              <button
+                                                type="button"
+                                                onClick={async () => {
+                                                  if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
+                                                  const day = option.scheduled.scheduledDate;
+                                                  if (!day) return;
+                                                  await updatePlanner(day, option.replacement);
+                                                  showToast(`Swapped ${day} dinner.`);
+                                                }}
+                                                className="h-7 px-2.5 rounded bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
+                                              >
+                                                Swap
+                                              </button>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <p className="mt-1 text-[12px] text-gray-600 leading-relaxed">
+                                  Helps keep costs down by checking unscheduled saved dinners against this week.
+                                </p>
+                                <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
+                                  Looks for clear cost data, a match with your preferences, and a saving of at least £1.
+                                  {activeUnscheduledSavedCount > 0
+                                    ? ' Nothing cheaper found right now.'
+                                    : ' Save more dinners to give it options to compare.'}
+                                </p>
+                              </>
+                            )}
+                          </div>
+                          {bestCostSavingSwap?.scheduled.scheduledDate && (
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
+                                const day = bestCostSavingSwap.scheduled.scheduledDate;
+                                if (!day) return;
+                                await updatePlanner(day, bestCostSavingSwap.replacement);
+                                showToast(`Swapped ${day} dinner.`);
+                              }}
+                              className="h-8 px-3 rounded bg-emerald-700 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
+                            >
+                              Swap dinner
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* WEEKLY SCHEDULE GRID */}
                   <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
-                    {planner.length > 0 && (
-                      <div className={`flex flex-col gap-3 px-0 py-3 sm:px-1.5 sm:flex-row sm:items-start sm:justify-between ${
-                        bestCostSavingSwap ? 'bg-emerald-50/50' : 'bg-gray-50/60'
-                      }`}>
-                        <div className="min-w-0">
-                          <p className={`text-[11px] font-bold uppercase tracking-widest ${
-                            bestCostSavingSwap ? 'text-emerald-800' : 'text-gray-500'
-                          }`}>
-                            {bestCostSavingSwap
-                              ? costSavingSwaps.length === 1
-                                ? 'Cost-saving swap found'
-                                : `${costSavingSwaps.length} cost-saving swaps found`
-                              : 'Cost-saving swap check'}
-                          </p>
-                          {bestCostSavingSwap ? (
-                            <>
-                              <p className="mt-1 text-[12px] text-emerald-900 leading-relaxed">
-                                Best option: swap <span className="font-semibold">{bestCostSavingSwap.scheduled.title}</span> for <span className="font-semibold">{bestCostSavingSwap.replacement.title}</span> and save about £{bestCostSavingSwap.saving.toFixed(2)}.
-                              </p>
-                              <p className="mt-1 text-[11px] text-emerald-800/80 leading-relaxed">
-                                Found in saved dinners that are not already scheduled, fit your preferences, and reduce this week's cost by at least £1.
-                              </p>
-                              {additionalCostSavingSwaps.length > 0 && (
-                                <div className="mt-2 space-y-1.5">
-                                  <button
-                                    type="button"
-                                    onClick={() => setShowAllSwapOptions(prev => !prev)}
-                                    className="text-[11px] font-bold uppercase tracking-widest text-emerald-800 hover:underline"
-                                  >
-                                    {showAllSwapOptions ? 'Hide other swaps' : `Show ${additionalCostSavingSwaps.length} other ${additionalCostSavingSwaps.length === 1 ? 'swap' : 'swaps'}`}
-                                  </button>
-                                  {showAllSwapOptions && (
-                                    <div className="space-y-1.5">
-                                      {additionalCostSavingSwaps.map(option => (
-                                        <div key={`${option.scheduled.id || option.scheduled.title}-${option.replacement.id || option.replacement.title}`} className="flex flex-col gap-1 border-b border-emerald-100 bg-white/65 px-0 py-1.5 sm:rounded sm:border sm:px-2 sm:flex-row sm:items-center sm:justify-between">
-                                          <p className="text-[11px] text-emerald-900 leading-relaxed">
-                                            Swap <span className="font-semibold">{option.scheduled.title}</span> for <span className="font-semibold">{option.replacement.title}</span> and save about £{option.saving.toFixed(2)}.
-                                          </p>
-                                          {option.scheduled.scheduledDate && (
-                                            <button
-                                              type="button"
-                                              onClick={async () => {
-                                                if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
-                                                const day = option.scheduled.scheduledDate;
-                                                if (!day) return;
-                                                await updatePlanner(day, option.replacement);
-                                                showToast(`Swapped ${day} dinner.`);
-                                              }}
-                                              className="h-7 px-2.5 rounded bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
-                                            >
-                                              Swap
-                                            </button>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              <p className="mt-1 text-[12px] text-gray-600 leading-relaxed">
-                                Helps keep costs down by checking unscheduled saved dinners against this week.
-                              </p>
-                              <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
-                                Looks for clear cost data, a match with your preferences, and a saving of at least £1.
-                                {activeUnscheduledSavedCount > 0
-                                  ? ' Nothing cheaper found right now.'
-                                  : ' Save more dinners to give it options to compare.'}
-                              </p>
-                            </>
-                          )}
-                        </div>
-                        {bestCostSavingSwap?.scheduled.scheduledDate && (
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
-                              const day = bestCostSavingSwap.scheduled.scheduledDate;
-                              if (!day) return;
-                              await updatePlanner(day, bestCostSavingSwap.replacement);
-                              showToast(`Swapped ${day} dinner.`);
-                            }}
-                            className="h-8 px-3 rounded bg-emerald-700 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
-                          >
-                            Swap dinner
-                          </button>
-                        )}
-                      </div>
-                    )}
                     {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(dayId => {
                       const entry = planner.find(e => e.scheduledDate === dayId);
                       const dayLabel = dayId.slice(0, 3).toUpperCase();
