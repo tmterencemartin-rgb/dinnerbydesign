@@ -630,7 +630,7 @@ export const LandingView: React.FC = () => {
             Simple, Transparent Access.
           </span>
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink">
-            Start with 7 days of full features.
+            Try DinnerByDesign free for 7 days.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
             Search once. Compare recipes. Save dinners. Build a shopping list. Know the likely cost.
