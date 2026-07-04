@@ -412,7 +412,7 @@ export const LandingView: React.FC = () => {
                   onClick={() => handleStart(sandboxQuery)}
                   className="shrink-0 bg-dbd-accent hover:bg-dbd-accent-mid text-white font-ibm-plex-mono text-[11px] font-bold uppercase tracking-wider px-5 sm:px-7 transition-all flex items-center justify-center"
                 >
-                  Search
+                  Find options
                 </button>
               </div>
 

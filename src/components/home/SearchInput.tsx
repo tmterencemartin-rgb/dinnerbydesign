@@ -125,7 +125,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         {isGenerating ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : (
-          'Search'
+          'Find options'
         )}
       </button>
     </form>
