@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SavedRecipe } from '../types';
-import { buildSupermarketPlanSummary } from './shoppingUtils';
+import { buildShoppingListData, buildSupermarketPlanSummary } from './shoppingUtils';
 
 const makeRecipe = (overrides: Partial<SavedRecipe>): SavedRecipe => ({
   recipeId: overrides.recipeId || overrides.id || overrides.title || 'recipe',
@@ -53,5 +53,47 @@ describe('buildSupermarketPlanSummary', () => {
       expect.arrayContaining(['Chicken thighs', 'Red pepper', 'Courgette'])
     );
     expect(summary.planNotes.some(note => note.includes('reused'))).toBe(true);
+  });
+});
+
+describe('buildShoppingListData', () => {
+  it('keeps manually added shopping items separate from generated items', () => {
+    const planner = [
+      makeRecipe({
+        id: 'monday',
+        title: 'Chicken rice bowl',
+        scheduledDate: 'monday',
+        requestedServings: 2,
+        totalServings: 2,
+        ingredients: ['200g chicken thighs']
+      })
+    ];
+
+    const list = buildShoppingListData({
+      planner,
+      pantry: [],
+      userId: 'user-1',
+      existingItems: [
+        {
+          id: 'custom-1',
+          name: 'Tomato paste',
+          nameRaw: 'Tomato paste',
+          ingredientKey: 'tomato-paste',
+          quantityNeeded: 1,
+          unitNeeded: 'each',
+          category: 'Other',
+          checked: false,
+          inStock: false,
+          sourceRecipeIds: [],
+          sourceDays: [],
+          generatedAt: null as any,
+          userId: 'user-1',
+          isCustom: true
+        }
+      ]
+    });
+
+    expect(list.find(item => item.id === 'custom-1')?.category).toBe('Added items');
+    expect(list.find(item => item.sourceRecipeIds.includes('monday'))?.category).toBe('Meat & fish');
   });
 });

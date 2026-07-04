@@ -604,7 +604,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                           {/* Day Badges and Hover Actions */}
                           <div className="flex items-center gap-1.5 flex-shrink-0 ml-1.5 relative">
                             {/* Day Badges Grouped on the Right */}
-                            <div className="flex gap-0.5 items-center flex-wrap justify-end group-hover:opacity-0 transition-opacity">
+                            <div className="flex gap-0.5 items-center flex-wrap justify-end sm:group-hover:opacity-0 transition-opacity">
                               {item.sourceDays && item.sourceDays.length > 0 && item.sourceDays.map(d => (
                                 <span 
                                   key={d} 
@@ -616,7 +616,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                             </div>
 
                             {/* Hover Actions Menu */}
-                            <div className="absolute right-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white pl-2">
+                            <div className="static sm:absolute sm:right-0 flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-white pl-1 sm:pl-2">
                               <button 
                                 onClick={() => handleDeleteItem(item)}
                                 className="p-1 text-gray-300 hover:text-red-500 rounded-md transition-colors"

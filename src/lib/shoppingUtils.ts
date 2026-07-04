@@ -439,6 +439,7 @@ export function buildShoppingListData(options: ShoppingListDerivationOptions): S
   customItems.forEach(ci => {
     derivedItems.push({
       ...ci,
+      category: 'Added items',
       checked: ci.checked || false,
       inStock: ci.inStock || ci.checked || false
     });
