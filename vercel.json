@@ -41,6 +41,10 @@
       "destination": "/api/server.js"
     },
     {
+      "source": "/googleadd2ba831c07f99d.html",
+      "destination": "/googleadd2ba831c07f99d.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
