@@ -38,10 +38,68 @@ import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 
+const stripSearchLeadIn = (query: string) =>
+  query
+    .replace(/\b(what can i make with|what can i cook with|i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only)\b/gi, '')
+    .replace(/[?!.]/g, ' ')
+    .trim();
+
+const sentenceCase = (value: string) => {
+  const clean = value.trim().replace(/\s+/g, ' ');
+  return clean ? clean.charAt(0).toUpperCase() + clean.slice(1) : '';
+};
+
+const formatDinnerBrief = (query: string, ingredientIntent: ReturnType<typeof detectIngredientIntent>) => {
+  const cleanQuery = stripSearchLeadIn(query);
+  if (!cleanQuery) return '';
+
+  if (!ingredientIntent?.isIngredientLed) {
+    return sentenceCase(cleanQuery);
+  }
+
+  const parts = cleanQuery
+    .split(/,|\band\b/i)
+    .map(part => sentenceCase(part))
+    .filter(Boolean);
+
+  const displayParts = parts.length >= 2 ? parts : ingredientIntent.ingredients.map(sentenceCase);
+  if (displayParts.length <= 1) return displayParts[0] || sentenceCase(cleanQuery);
+  if (displayParts.length === 2) return `${displayParts[0]} and ${displayParts[1]}`;
+  return `${displayParts.slice(0, -1).join(', ')} and ${displayParts[displayParts.length - 1]}`;
+};
+
+const buildResultsHeading = ({
+  count,
+  query,
+  source,
+  ingredientIntent
+}: {
+  count: number;
+  query: string;
+  source: 'cook' | 'ready-made';
+  ingredientIntent: ReturnType<typeof detectIngredientIntent>;
+}) => {
+  if (!count || !query.trim()) return '';
+
+  const brief = formatDinnerBrief(query, ingredientIntent);
+  if (!brief) return '';
+
+  if (source === 'ready-made') {
+    return `${count} ready-made ${count === 1 ? 'option' : 'options'} for ${brief}`;
+  }
+
+  if (ingredientIntent?.isIngredientLed) {
+    return `${count} ${count === 1 ? 'way' : 'ways'} to cook ${brief}`;
+  }
+
+  return `${count} ${count === 1 ? 'option' : 'options'} for ${brief}`;
+};
+
 interface HomeViewProps {
   // ... (keeping props as they were for compatibility if possible, but adding useAuth internal logic)
   input: string;
   setInput: (val: string) => void;
+  lastQuery: string;
   source: 'cook' | 'ready-made';
   setSource: (val: 'cook' | 'ready-made') => void;
   isGenerating: boolean;
@@ -152,7 +210,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const isReadOnly = accessStatus === 'read_only';
 
   const {
-    input, setInput,
+    input, setInput, lastQuery,
     source, setSource,
     isGenerating, handleGenerate, handleStopSearch,
     isSpeechSupported, isListening, toggleVoiceSearch,
@@ -202,6 +260,18 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
   const isSearching = status === 'searching';
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
+  const resultsQuery = lastQuery || input;
+  const resultsIngredientIntent = React.useMemo(() => detectIngredientIntent(resultsQuery), [resultsQuery]);
+  const resultsCount = (source === 'cook' ? currentRecipes?.length : currentReadyMeals?.length) || 0;
+  const resultsHeading = React.useMemo(
+    () => buildResultsHeading({
+      count: resultsCount,
+      query: resultsQuery,
+      source,
+      ingredientIntent: resultsIngredientIntent
+    }),
+    [resultsCount, resultsQuery, source, resultsIngredientIntent]
+  );
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
@@ -917,6 +987,14 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-1.5 sm:space-y-3 pb-16 bg-transparent max-w-4xl mx-auto w-full"
           >
+            {resultsHeading && (
+              <div className="border-b border-dbd-rule/60 pb-2 sm:pb-2.5">
+                <h2 className="text-[13px] sm:text-[15px] font-bold text-dbd-ink tracking-tight leading-snug">
+                  {resultsHeading}
+                </h2>
+              </div>
+            )}
+
             {compareItems.length > 0 && (
               <div className="bg-white border border-gray-100 rounded px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div className="min-w-0">
