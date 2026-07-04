@@ -101,7 +101,7 @@ const AppContent = () => {
       default:
         return {
           title: 'DinnerByDesign | Ad-free UK Dinner Recipe Finder & Costed Shopping Lists',
-          description: 'DinnerByDesign is an ad-free UK dinner-finding app for verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.',
+          description: 'DinnerByDesign is an ad-free UK dinner recipe app for verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.',
           canonicalPath: '/',
           jsonLd: {
             "@context": "https://schema.org",
@@ -132,7 +132,7 @@ const AppContent = () => {
                     "name": "What is DinnerByDesign?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "DinnerByDesign is an ad-free UK dinner-finding app that helps you search, compare, save, schedule and shop from one place."
+                      "text": "DinnerByDesign is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place."
                     }
                   },
                   {

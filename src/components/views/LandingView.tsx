@@ -783,7 +783,7 @@ export const LandingView: React.FC = () => {
             {[
               {
                 question: 'What is DinnerByDesign?',
-                answer: 'DinnerByDesign is an ad-free UK dinner-finding app that helps you search, compare, save, schedule and shop from one place.'
+                answer: 'DinnerByDesign is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place.'
               },
               {
                 question: 'Can I search by ingredients I already have?',

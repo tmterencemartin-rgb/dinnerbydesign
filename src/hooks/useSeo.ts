@@ -27,7 +27,7 @@ export function useSeo({ title, description, jsonLd, canonicalPath = '/', noInde
     if (description) {
       metaDescription.setAttribute('content', description);
     } else {
-      metaDescription.setAttribute('content', 'DinnerByDesign is an ad-free UK dinner-finding app for verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.');
+      metaDescription.setAttribute('content', 'DinnerByDesign is an ad-free UK dinner recipe app for verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.');
     }
 
     let canonical = document.querySelector('link[rel="canonical"]');
