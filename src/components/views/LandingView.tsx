@@ -733,9 +733,6 @@ export const LandingView: React.FC = () => {
                        <CheckIcon className="w-3.5 h-3.5" />
                        Account Active
                     </p>
-                    <p className="text-[10.5px] text-emerald-600 mt-1 font-medium leading-relaxed">
-                      {accessStatus === 'paid' ? 'You have a paid account' : `Free trial: ${trialTimeRemaining}`}
-                    </p>
                   </div>
                   <button 
                     onClick={() => handleStart()}
