@@ -39,7 +39,7 @@ const wordVariants: any = {
 };
 
 export const LandingView: React.FC = () => {
-  const { setView, user, accessStatus, trialTimeRemaining } = useAuth();
+  const { setView, user, accessStatus } = useAuth();
   const hasAccess = accessStatus === 'paid' || accessStatus === 'trial';
 
   // Scroll tracking & responsive menus
@@ -351,9 +351,6 @@ export const LandingView: React.FC = () => {
             Try a search <ArrowDownIcon className="w-4 h-4 animate-bounce" />
           </button>
         </div>
-        <p className="mt-4 text-[11px] sm:text-xs text-dbd-ink-3 tracking-wide select-none">
-          {accessStatus === 'paid' ? 'Account active' : accessStatus === 'trial' ? `Free trial: ${trialTimeRemaining}` : 'No credit card required for the free trial.'}
-        </p>
       </section>
 
       {/* 3. INTERACTIVE BROWSER PREVIEW SANDBOX */}
