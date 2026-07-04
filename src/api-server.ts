@@ -808,7 +808,7 @@ export function createApp() {
         let html = await fs.promises.readFile(indexPath, "utf8");
         
         const siteUrl = "https://dinnerbydesign.app";
-        let title = "DinnerByDesign | Ad-Free UK Dinner Finder & Costed Shopping Lists";
+        let title = "DinnerByDesign | Ad-free UK Dinner Recipe Finder & Costed Shopping Lists";
         let description = "DinnerByDesign is an ad-free UK dinner-finding app for verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.";
         let canonicalPath = "/";
         let noIndex = false;

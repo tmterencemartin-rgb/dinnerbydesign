@@ -100,7 +100,7 @@ const AppContent = () => {
       case 'landing':
       default:
         return {
-          title: 'DinnerByDesign | Ad-Free UK Dinner Finder & Costed Shopping Lists',
+          title: 'DinnerByDesign | Ad-free UK Dinner Recipe Finder & Costed Shopping Lists',
           description: 'DinnerByDesign is an ad-free UK dinner-finding app for verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.',
           canonicalPath: '/',
           jsonLd: {
