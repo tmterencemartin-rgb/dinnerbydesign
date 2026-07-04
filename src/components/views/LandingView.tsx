@@ -774,7 +774,45 @@ export const LandingView: React.FC = () => {
         </div>
       </section>
 
-      {/* 8. INDEPENDENCE CLAUSE & COGNIZANT LEGAL FOOTER */}
+      {/* 8. SEARCH-FOCUSED FAQ */}
+      <section className="py-10 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
+        <div className="max-w-3xl mx-auto">
+          <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-5">
+            Common Questions
+          </span>
+          <div className="divide-y divide-dbd-rule">
+            {[
+              {
+                question: 'What is DinnerByDesign?',
+                answer: 'DinnerByDesign is an ad-free UK dinner-finding app that helps you search, compare, save, schedule and shop from one place.'
+              },
+              {
+                question: 'Can I search by ingredients I already have?',
+                answer: 'Yes. Search from ingredients in your fridge or cupboard, then use preferences to narrow results by diet, budget, time and cooking method.'
+              },
+              {
+                question: 'Does it include supermarket ready-made options?',
+                answer: 'Yes. Ready-made mode helps find convenient supermarket options and turns each result into a practical dinner kit with sides and simple upgrades.'
+              },
+              {
+                question: 'Does it estimate shopping costs?',
+                answer: 'Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners.'
+              }
+            ].map((item) => (
+              <div key={item.question} className="py-4">
+                <h3 className="text-[14px] sm:text-[15px] font-bold text-dbd-ink">
+                  {item.question}
+                </h3>
+                <p className="mt-1.5 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed">
+                  {item.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. INDEPENDENCE CLAUSE & COGNIZANT LEGAL FOOTER */}
       <footer className="bg-[#FAF8F5] border-t border-dbd-rule pt-10 sm:pt-16 pb-12 px-6 sm:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-8 select-none">
           

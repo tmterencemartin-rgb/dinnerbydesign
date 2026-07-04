@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">DinnerByDesign social preview</title>
-  <desc id="desc">A branded preview card for DinnerByDesign, a dinner planner and smart shopping list app.</desc>
+  <desc id="desc">A branded preview card for DinnerByDesign, an ad-free UK dinner-finding app.</desc>
   <rect width="1200" height="630" fill="#f7f5f0"/>
   <rect x="72" y="72" width="1056" height="486" rx="8" fill="#ffffff"/>
   <path d="M154 188c34-44 78-66 132-66 72 0 129 39 170 117 42-78 99-117 171-117 54 0 98 22 132 66 31 40 46 90 46 150 0 62-16 113-49 153-35 43-80 64-136 64-71 0-126-36-164-108-38 72-93 108-164 108-56 0-101-21-136-64-33-40-49-91-49-153 0-60 16-110 47-150z" fill="#fef2eb"/>
   <text x="112" y="154" fill="#b44a16" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="2">DINNERBYDESIGN</text>
-  <text x="112" y="260" fill="#1a1a18" font-family="Inter, Arial, sans-serif" font-size="70" font-weight="700">Dinner planning</text>
-  <text x="112" y="340" fill="#1a1a18" font-family="Inter, Arial, sans-serif" font-size="70" font-weight="700">for real kitchens</text>
-  <text x="116" y="420" fill="#4a4a46" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">Personalised dinners, weekly plans and smart shopping lists</text>
-  <text x="116" y="468" fill="#4a4a46" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">built around budget, diet and what you already have.</text>
+  <text x="112" y="260" fill="#1a1a18" font-family="Inter, Arial, sans-serif" font-size="70" font-weight="700">Ad-free UK</text>
+  <text x="112" y="340" fill="#1a1a18" font-family="Inter, Arial, sans-serif" font-size="70" font-weight="700">dinner finding</text>
+  <text x="116" y="420" fill="#4a4a46" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">Verified ideas, ready-made options and costed</text>
+  <text x="116" y="468" fill="#4a4a46" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">shopping lists built around your preferences.</text>
   <g transform="translate(898 148)">
     <rect width="150" height="150" rx="8" fill="#1a1a18"/>
     <path d="M44 48h62v16H44zm0 30h62v16H44zm0 30h42v16H44z" fill="#f7f5f0"/>

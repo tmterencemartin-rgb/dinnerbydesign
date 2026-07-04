@@ -100,16 +100,68 @@ const AppContent = () => {
       case 'landing':
       default:
         return {
-          title: 'DinnerByDesign | Dinner Finder, Planner & Shopping List',
-          description: 'Find dinner recipes by ingredient, dish, cuisine or chef. DinnerByDesign helps you compare recipes, schedule dinners and build UK shopping lists around your budget, portions and dietary preferences.',
+          title: 'DinnerByDesign | Ad-Free UK Dinner Finder & Costed Shopping Lists',
+          description: 'DinnerByDesign is an ad-free UK dinner-finding app for verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.',
           canonicalPath: '/',
           jsonLd: {
             "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "DinnerByDesign",
-            "description": "Find dinner recipes by ingredient, dish, cuisine or chef. Compare recipes, schedule dinners and build UK shopping lists around your budget, portions and dietary preferences.",
-            "applicationCategory": "HealthAndFitnessApplication, FoodAndDrink",
-            "operatingSystem": "All"
+            "@graph": [
+              {
+                "@type": "WebApplication",
+                "name": "DinnerByDesign",
+                "url": "https://dinnerbydesign.app/",
+                "description": "Ad-free UK dinner finding with verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.",
+                "applicationCategory": "FoodAndDrinkApplication",
+                "operatingSystem": "Web",
+                "brand": {
+                  "@type": "Brand",
+                  "name": "DinnerByDesign"
+                },
+                "offers": {
+                  "@type": "Offer",
+                  "price": "2.99",
+                  "priceCurrency": "GBP",
+                  "description": "Monthly access after a seven-day free trial."
+                }
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "What is DinnerByDesign?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "DinnerByDesign is an ad-free UK dinner-finding app that helps you search, compare, save, schedule and shop from one place."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Can I search by ingredients I already have?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes. Search from ingredients in your fridge or cupboard, then use preferences to narrow results by diet, budget, time and cooking method."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Does it include supermarket ready-made options?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes. Ready-made mode helps find convenient supermarket options and turns each result into a practical dinner kit with sides and simple upgrades."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Does it estimate shopping costs?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners."
+                    }
+                  }
+                ]
+              }
+            ]
           }
         };
     }
