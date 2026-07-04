@@ -627,7 +627,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 7. SUBSCRIPTION PLANS & CONVERSION CONTAINER */}
-      <section id="pricing" className="py-16 px-6 sm:px-8 max-w-5xl mx-auto scroll-mt-nav">
+      <section id="pricing" className="py-10 sm:py-16 px-6 sm:px-8 max-w-5xl mx-auto scroll-mt-nav">
         
         <div className="text-center mb-10 select-none">
           <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.25em] text-dbd-accent uppercase block mb-3">
@@ -684,7 +684,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Pricing Box card Panel */}
-          <div className="bg-white border-y border-dbd-rule sm:border sm:rounded-xl px-0 py-5 sm:p-6 flex flex-col justify-start shadow-none sm:shadow-md relative overflow-hidden self-start">
+          <div className="bg-white border border-dbd-rule sm:rounded-xl px-4 py-4 sm:p-6 flex flex-col justify-start shadow-none sm:shadow-md relative overflow-hidden self-start">
             
             <div>
               <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-dbd-accent block mb-1 select-none uppercase">
@@ -775,19 +775,13 @@ export const LandingView: React.FC = () => {
                 </form>
               )}
             </div>
-
-            <div className="mt-3 pt-3 border-t border-dbd-rule/40 text-center">
-              <p className="text-[9.5px] text-dbd-ink-3 leading-relaxed max-w-[28ch] mx-auto select-none">
-                Free for seven days · No credit card required.
-              </p>
-            </div>
           </div>
 
         </div>
       </section>
 
       {/* 8. INDEPENDENCE CLAUSE & COGNIZANT LEGAL FOOTER */}
-      <footer className="bg-[#FAF8F5] border-t border-dbd-rule pt-16 pb-12 px-6 sm:px-8">
+      <footer className="bg-[#FAF8F5] border-t border-dbd-rule pt-10 sm:pt-16 pb-12 px-6 sm:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-8 select-none">
           
           <div className="flex flex-col items-center justify-center space-y-1.5">
