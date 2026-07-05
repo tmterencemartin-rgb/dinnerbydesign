@@ -3,7 +3,7 @@ import { collection, query, getDocs, doc, deleteDoc, updateDoc, serverTimestamp,
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
-import { ArrowLeft, Search, Download, ExternalLink, Calendar, CreditCard, Clock, Trash2, Users, MailCheck, AlertTriangle, Activity, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Search, Download, ExternalLink, CreditCard, Trash2, Users, AlertTriangle, Activity, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getApiUrl } from '../../lib/api';
 
@@ -803,187 +803,142 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="overflow-x-auto border border-gray-100 rounded">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">User</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Status</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Stripe</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Key Dates</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Emails & Usage</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
+            <div className="border border-gray-100 rounded bg-white">
+              <div className="grid grid-cols-[minmax(220px,1.1fr)_minmax(360px,2fr)_auto] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-100 text-[11px] font-bold text-gray-500 uppercase tracking-widest max-lg:hidden">
+                <span>Account</span>
+                <span>Details</span>
+                <span className="text-right">Actions</span>
+              </div>
+
+              <div className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => {
                   const subscription = user.subscription;
                   const trialEnd = getTrialEndDate(user);
                   const hasStripe = !!subscription?.stripeCustomerId;
                   const confirmationSent = !!user.subscriptionConfirmationEmailSent;
+                  const canManageUser = user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com';
+                  const dateItems = [
+                    `Joined ${formatDate(user.createdAt)}`,
+                    trialEnd ? `Trial ends ${formatDate(trialEnd)}` : null,
+                    getSubscriptionStartDate(user) ? `Subscribed ${formatDate(getSubscriptionStartDate(user))}` : null,
+                    subscription?.currentPeriodEnd ? `${getPeriodLabel(user)} ${formatDate(subscription.currentPeriodEnd)}` : null,
+                    user.permanentAccessGrantedAt ? `Permanent access ${formatDate(user.permanentAccessGrantedAt)}` : null
+                  ].filter(Boolean);
+                  const emailItems = [
+                    user.welcomeEmailSent ? 'Welcome sent' : 'Welcome not sent',
+                    confirmationSent ? 'Subscription email sent' : 'No subscription email',
+                    `Searches ${getSearchCount(user)}`
+                  ];
 
                   return (
-                    <tr key={user.uid} className="hover:bg-gray-50 transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-gray-900 text-sm leading-tight">{user.displayName || user.email || 'User'}</span>
-                          <span className="text-gray-400 text-xs font-mono mt-0.5">{user.email || 'No email'}</span>
-                          <span className="text-[10px] text-gray-300 font-mono mt-1 opacity-0 group-hover:opacity-100 transition-opacity">UID: {user.uid}</span>
+                    <div key={user.uid} className="grid grid-cols-[minmax(220px,1.1fr)_minmax(360px,2fr)_auto] max-lg:grid-cols-1 gap-4 px-5 py-4 hover:bg-gray-50/70 transition-colors group">
+                      <div className="min-w-0">
+                        <div className="flex items-start justify-between gap-3 lg:block">
+                          <div className="min-w-0">
+                            <p className="font-bold text-gray-950 text-sm leading-tight truncate">{user.displayName || user.email || 'User'}</p>
+                            <p className="text-gray-400 text-xs font-mono mt-1 truncate">{user.email || 'No email'}</p>
+                          </div>
+                          <div className="lg:mt-3 shrink-0">{getStatusBadge(user)}</div>
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col gap-2">
-                          {getStatusBadge(user)}
-                          {subscription?.subscriptionStatus && (
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                              Stripe: {subscription.subscriptionStatus}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col gap-1.5">
+                        {subscription?.subscriptionStatus && (
+                          <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider mt-2">
+                            Stripe: {subscription.subscriptionStatus}
+                          </p>
+                        )}
+                        <p className="text-[10px] text-gray-300 font-mono mt-2 opacity-0 group-hover:opacity-100 transition-opacity truncate">
+                          UID: {user.uid}
+                        </p>
+                      </div>
+
+                      <div className="grid sm:grid-cols-3 gap-3 text-xs min-w-0">
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Stripe</p>
                           {hasStripe ? (
-                            <>
-                              <div className="flex items-center gap-1.5 text-gray-600">
-                                <CreditCard className="w-3.5 h-3.5" />
-                                <span className="text-xs font-bold">Customer linked</span>
-                              </div>
-                              <span className="text-[10px] text-gray-400 font-mono">Customer: {formatShortId(subscription?.stripeCustomerId)}</span>
-                              <span className="text-[10px] text-gray-400 font-mono">Sub: {formatShortId(subscription?.stripeSubscriptionId)}</span>
-                            </>
+                            <div className="space-y-1">
+                              <p className="font-semibold text-gray-700">Customer linked</p>
+                              <p className="text-[11px] text-gray-400 font-mono truncate">Customer {formatShortId(subscription?.stripeCustomerId)}</p>
+                              <p className="text-[11px] text-gray-400 font-mono truncate">Sub {formatShortId(subscription?.stripeSubscriptionId)}</p>
+                            </div>
                           ) : (
-                            <span className="text-xs text-gray-400 italic">No Stripe customer yet</span>
+                            <p className="text-gray-400 italic">No Stripe customer yet</p>
                           )}
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="space-y-1.5">
-                          <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                            <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                            <span>Joined: {formatDate(user.createdAt)}</span>
+
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Dates</p>
+                          <div className="space-y-1">
+                            {dateItems.map(item => (
+                              <p key={item as string} className="text-gray-600 leading-snug">{item}</p>
+                            ))}
+                            {subscription?.updatedAt && (
+                              <p className="text-[11px] text-gray-400 font-mono leading-snug">Stripe updated {formatDateTime(subscription.updatedAt)}</p>
+                            )}
                           </div>
-                          {trialEnd && (
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                              <Clock className="w-3.5 h-3.5" />
-                              <span>Trial end: {formatDate(trialEnd)}</span>
-                            </div>
-                          )}
-                          {getSubscriptionStartDate(user) && (
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                              <CreditCard className="w-3.5 h-3.5" />
-                              <span>Subscribed: {formatDate(getSubscriptionStartDate(user))}</span>
-                            </div>
-                          )}
-                          {subscription?.currentPeriodEnd && (
-                            <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
-                              <Clock className="w-3.5 h-3.5" />
-                              <span>{getPeriodLabel(user)}: {formatDate(subscription.currentPeriodEnd)}</span>
-                            </div>
-                          )}
-                          {subscription?.updatedAt && (
-                            <div className="text-[10px] text-gray-400 font-mono">
-                              Last Stripe update: {formatDateTime(subscription.updatedAt)}
-                            </div>
-                          )}
-                          {user.permanentAccessGrantedAt && (
-                            <div className="flex items-center gap-1.5 text-xs text-blue-600 font-medium">
-                              <ShieldCheck className="w-3.5 h-3.5" />
-                              <span>Permanent: {formatDate(user.permanentAccessGrantedAt)}</span>
-                            </div>
-                          )}
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="space-y-1.5 text-xs">
-                          <div className="flex flex-wrap gap-1.5">
-                            <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${
-                              user.welcomeEmailSent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'
-                            }`}>
-                              <MailCheck className="w-3 h-3" />
-                              {user.welcomeEmailSent ? 'Welcome sent' : 'No welcome'}
-                            </div>
-                            <div className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${
-                              confirmationSent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'
-                            }`}>
-                              {confirmationSent ? 'Sub email sent' : 'No sub email yet'}
-                            </div>
+
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Email & usage</p>
+                          <div className="space-y-1">
+                            {emailItems.map(item => (
+                              <p key={item} className="text-gray-600 leading-snug">{item}</p>
+                            ))}
+                            <p className="text-[11px] text-gray-400 font-mono leading-snug">Profile {user.accessStatus || 'trial'}</p>
                           </div>
-                          {user.subscriptionConfirmationEmailSentAt && (
-                            <div className="text-[10px] text-gray-400 font-mono">
-                              Email: {formatDateTime(user.subscriptionConfirmationEmailSentAt)}
-                            </div>
-                          )}
-                          <div className="text-[10px] text-gray-400 font-mono">
-                            Searches: {getSearchCount(user)}
-                          </div>
-                          <div className="text-[10px] text-gray-400 font-mono">
-                            Profile: {user.accessStatus || 'trial'}
-                          </div>
-                          {user.permanentAccess && (
-                            <div className="text-[10px] text-blue-600 font-mono">
-                              Permanent grant: on
-                            </div>
-                          )}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          {user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com' && (
-                            <button
-                              onClick={() => handleTogglePermanentAccess(user)}
-                              disabled={loading || actionLoading !== null}
-                              className={`inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${
-                                user.permanentAccess
-                                  ? 'text-blue-700 bg-blue-50 hover:bg-blue-100'
-                                  : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
-                              } disabled:opacity-50`}
-                              title={user.permanentAccess ? 'Revoke permanent access' : 'Grant permanent access'}
-                            >
-                              <ShieldCheck className="w-3 h-3" />
-                              {user.permanentAccess ? 'Revoke' : 'Grant'}
-                            </button>
-                          )}
-                          {subscription?.stripeCustomerId && (
-                            <a 
-                              href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-dbd-accent hover:bg-dbd-accent/5 rounded-md transition-colors"
-                            >
-                              View Stripe
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          )}
-                          {user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com' && (
-                            <button
-                              onClick={() => handleDeleteUser(user.uid, user.email)}
-                              disabled={loading || actionLoading !== null}
-                              className={`p-1.5 rounded transition-all ${
-                                actionLoading === user.uid 
-                                  ? 'text-gray-400 bg-gray-50 cursor-not-allowed' 
-                                  : 'text-red-500 hover:text-red-600 hover:bg-red-50'
-                              } disabled:opacity-50`}
-                              title="Delete user"
-                            >
-                              <Trash2 className={`w-4 h-4 ${actionLoading === user.uid ? 'animate-pulse' : ''}`} />
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
+                      </div>
+
+                      <div className="flex items-start justify-end gap-2 max-lg:justify-start">
+                        {canManageUser && (
+                          <button
+                            onClick={() => handleTogglePermanentAccess(user)}
+                            disabled={loading || actionLoading !== null}
+                            className={`inline-flex items-center px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${
+                              user.permanentAccess
+                                ? 'text-blue-700 bg-blue-50 hover:bg-blue-100'
+                                : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+                            } disabled:opacity-50`}
+                            title={user.permanentAccess ? 'Revoke permanent access' : 'Grant permanent access'}
+                          >
+                            {user.permanentAccess ? 'Revoke' : 'Grant'}
+                          </button>
+                        )}
+                        {subscription?.stripeCustomerId && (
+                          <a
+                            href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-dbd-accent hover:bg-dbd-accent/5 rounded-md transition-colors"
+                          >
+                            Stripe
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
+                        {canManageUser && (
+                          <button
+                            onClick={() => handleDeleteUser(user.uid, user.email)}
+                            disabled={loading || actionLoading !== null}
+                            className={`px-2 py-1.5 text-xs font-bold rounded transition-all ${
+                              actionLoading === user.uid
+                                ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                                : 'text-red-500 hover:text-red-600 hover:bg-red-50'
+                            } disabled:opacity-50`}
+                            title="Delete user"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   );
                 })}
+
                 {filteredUsers.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-gray-400 italic">
-                      No users match your current selection
-                    </td>
-                  </tr>
+                  <div className="px-6 py-12 text-center text-gray-400 italic">
+                    No users match your current selection
+                  </div>
                 )}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
