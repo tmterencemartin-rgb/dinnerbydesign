@@ -41,6 +41,11 @@ interface AiUsageEvent {
   dateKey?: string;
 }
 
+interface AdminDinnerStats {
+  savedCount: number;
+  scheduledCount: number;
+}
+
 export const AdminDashboard: React.FC = () => {
   const { setView, isAdmin, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -50,6 +55,10 @@ export const AdminDashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<AdminStatusFilter>('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [dinnerStats, setDinnerStats] = useState<Record<string, AdminDinnerStats>>({});
+  const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const [editingNoteUid, setEditingNoteUid] = useState<string | null>(null);
+  const [noteSavingUid, setNoteSavingUid] = useState<string | null>(null);
   const [modal, setModal] = useState<{
     isOpen: boolean;
     type: 'confirm_access' | 'confirm_delete' | 'confirm_delete_all' | 'alert';
@@ -173,6 +182,28 @@ export const AdminDashboard: React.FC = () => {
         });
 
         setUsers(userData);
+        setNoteDrafts(Object.fromEntries(userData.map(user => [user.uid, user.adminNote || ''])));
+
+        const statsEntries = await Promise.all(userData.map(async user => {
+          try {
+            const savedSnapshot = await getDocs(collection(db, 'users', user.uid, 'savedRecipes'));
+            let scheduledCount = 0;
+            savedSnapshot.docs.forEach(savedDoc => {
+              if (savedDoc.data()?.scheduledDate) scheduledCount += 1;
+            });
+            return [user.uid, {
+              savedCount: savedSnapshot.size,
+              scheduledCount
+            }] as const;
+          } catch (err) {
+            console.warn(`Could not load saved dinner stats for ${user.uid}`, err);
+            return [user.uid, {
+              savedCount: 0,
+              scheduledCount: 0
+            }] as const;
+          }
+        }));
+        setDinnerStats(Object.fromEntries(statsEntries));
 
         const webhookSnapshot = await getDocs(collection(db, 'stripeWebhookEvents'));
         const eventData = webhookSnapshot.docs.map(doc => ({
@@ -368,6 +399,26 @@ export const AdminDashboard: React.FC = () => {
     );
   };
 
+  const handleSaveAdminNote = async (targetUser: UserProfile) => {
+    const note = (noteDrafts[targetUser.uid] || '').trim();
+    setNoteSavingUid(targetUser.uid);
+    try {
+      await updateDoc(doc(db, 'users', targetUser.uid), {
+        adminNote: note,
+        updatedAt: serverTimestamp()
+      });
+      setUsers(prev => prev.map(user => (
+        user.uid === targetUser.uid ? { ...user, adminNote: note } : user
+      )));
+      setEditingNoteUid(null);
+    } catch (err: any) {
+      console.error('Error saving admin note:', err);
+      showCustomAlert('Error', `Failed to save note: ${err?.message || 'Access denied'}`);
+    } finally {
+      setNoteSavingUid(null);
+    }
+  };
+
   const getSearchCount = (user: UserProfile) => {
     const combined = user.searchHistory?.length || 0;
     const cook = user.searchHistoryCook?.length || 0;
@@ -452,13 +503,18 @@ export const AdminDashboard: React.FC = () => {
       'Subscription created',
       'Current period start',
       'Current period end',
+      'Payment grace ends',
       'Welcome email sent',
       'Subscription email sent',
-      'Search count'
+      'Search count',
+      'Saved count',
+      'Scheduled count',
+      'Admin note'
     ];
 
     const rows = filteredUsers.map(user => {
       const subscription = user.subscription;
+      const stats = dinnerStats[user.uid] || { savedCount: 0, scheduledCount: 0 };
       return [
         user.displayName || '',
         user.email || '',
@@ -475,9 +531,13 @@ export const AdminDashboard: React.FC = () => {
         formatDate(getSubscriptionStartDate(user)),
         formatDate(subscription?.currentPeriodStart),
         formatDate(subscription?.currentPeriodEnd),
+        formatDate(user.subscriptionPaymentGraceEndsAt),
         user.welcomeEmailSent ? 'yes' : 'no',
         user.subscriptionConfirmationEmailSent ? 'yes' : 'no',
-        getSearchCount(user)
+        getSearchCount(user),
+        stats.savedCount,
+        stats.scheduledCount,
+        user.adminNote || ''
       ];
     });
 
@@ -811,9 +871,14 @@ export const AdminDashboard: React.FC = () => {
                   const hasStripe = !!subscription?.stripeCustomerId;
                   const confirmationSent = !!user.subscriptionConfirmationEmailSent;
                   const canManageUser = user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com';
+                  const stats = dinnerStats[user.uid] || { savedCount: 0, scheduledCount: 0 };
+                  const graceEndsAt = toDate(user.subscriptionPaymentGraceEndsAt);
+                  const hasActiveGrace = !!graceEndsAt && graceEndsAt.getTime() > Date.now();
                   const primaryDetails = [
                     `Joined ${formatDate(user.createdAt)}`,
                     trialEnd ? `Trial ends ${formatDate(trialEnd)}` : null,
+                    `${stats.savedCount} saved`,
+                    `${stats.scheduledCount} scheduled`,
                     user.welcomeEmailSent ? 'Welcome sent' : 'Welcome not sent',
                     confirmationSent ? 'Subscription email sent' : 'No subscription email',
                     `Searches ${getSearchCount(user)}`
@@ -821,6 +886,7 @@ export const AdminDashboard: React.FC = () => {
                   const secondaryDetails = [
                     hasStripe ? `Stripe customer ${formatShortId(subscription?.stripeCustomerId)}` : 'No Stripe customer yet',
                     subscription?.subscriptionStatus ? `Stripe ${subscription.subscriptionStatus}` : null,
+                    hasActiveGrace ? `Grace ends ${formatDate(graceEndsAt)}` : null,
                     getSubscriptionStartDate(user) ? `Subscribed ${formatDate(getSubscriptionStartDate(user))}` : null,
                     subscription?.currentPeriodEnd ? `${getPeriodLabel(user)} ${formatDate(subscription.currentPeriodEnd)}` : null,
                     user.permanentAccessGrantedAt ? `Permanent access ${formatDate(user.permanentAccessGrantedAt)}` : null,
@@ -859,6 +925,48 @@ export const AdminDashboard: React.FC = () => {
                               </>
                             )}
                             <span className="hidden group-hover:inline text-gray-300 font-mono">· UID {user.uid}</span>
+                          </div>
+                          <div className="mt-2">
+                            {editingNoteUid === user.uid ? (
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                <input
+                                  type="text"
+                                  value={noteDrafts[user.uid] || ''}
+                                  onChange={(e) => setNoteDrafts(prev => ({ ...prev, [user.uid]: e.target.value }))}
+                                  placeholder="Private admin note"
+                                  className="min-w-0 flex-1 border border-gray-200 rounded px-2.5 py-1.5 text-xs text-gray-700 outline-none focus:border-dbd-accent"
+                                />
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => handleSaveAdminNote(user)}
+                                    disabled={noteSavingUid === user.uid}
+                                    className="text-xs font-bold text-dbd-accent hover:text-dbd-accent/80 disabled:opacity-50"
+                                  >
+                                    {noteSavingUid === user.uid ? 'Saving...' : 'Save note'}
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setNoteDrafts(prev => ({ ...prev, [user.uid]: user.adminNote || '' }));
+                                      setEditingNoteUid(null);
+                                    }}
+                                    className="text-xs font-bold text-gray-400 hover:text-gray-600"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setEditingNoteUid(user.uid)}
+                                className={`text-left text-[11px] leading-snug ${
+                                  user.adminNote
+                                    ? 'text-gray-600 hover:text-gray-900'
+                                    : 'text-gray-300 hover:text-gray-500'
+                                }`}
+                              >
+                                {user.adminNote ? `Note: ${user.adminNote}` : 'Add private note'}
+                              </button>
+                            )}
                           </div>
                         </div>
 

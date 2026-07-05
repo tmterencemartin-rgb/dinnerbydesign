@@ -202,6 +202,7 @@ export interface UserProfile {
   searchHistory?: string[];
   searchHistoryCook?: string[];
   searchHistoryReadyMade?: string[];
+  adminNote?: string;
   createdAt: Timestamp | FieldValue;
   updatedAt: Timestamp | FieldValue;
 }
