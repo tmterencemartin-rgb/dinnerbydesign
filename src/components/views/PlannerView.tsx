@@ -526,9 +526,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   {viewingPlannerEntry.title}
                 </h2>
                 <div className="flex items-center gap-2 flex-wrap text-xs text-gray-400 font-normal mt-1.5 mb-4">
-                  <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider">
-                    {viewingPlannerEntry.mode === 'ready-made' ? 'Ready-made dish' : 'Active Cook'}
-                  </span>
                   {(() => {
                     const parts: React.ReactNode[] = [];
                     
