@@ -28,10 +28,10 @@ interface ReadyMealCardProps {
   isModal?: boolean;
 }
 
-export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({ 
-  meal, 
-  onSave, 
-  onMoreLikeThis, 
+export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
+  meal,
+  onSave,
+  onMoreLikeThis,
   isSaved,
   isScheduled = false,
   targetDay,
@@ -273,7 +273,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       return undefined;
     });
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
-    
+
     if (result) {
       showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous dish moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
         if (replacedRecipe) {
@@ -302,7 +302,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className={`bg-white rounded p-3 sm:p-5 relative group/card overflow-visible transition-all duration-200 ${
@@ -312,7 +312,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       }`}
     >
       {isExpanded && !isModal && (
-        <button 
+        <button
           onClick={() => setIsExpanded(false)}
           className="absolute top-4 right-4 z-10 p-1.5 bg-white/80 transition-colors"
           title="Close detail"
@@ -329,7 +329,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               <h3 className="text-[20px] sm:text-[24px] font-bold text-gray-900 leading-[1.18] tracking-tight text-left">
                 {meal.title}
               </h3>
-              
+
               <p className={`text-[14px] text-gray-400 font-medium leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isModal ? '' : 'line-clamp-2'}`}>
                 {meal.description}
               </p>
@@ -406,7 +406,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 </div>
 
                 <div className="w-full bg-white rounded pt-1">
-                  <RecipeActionRow 
+                  <RecipeActionRow
                     recipe={{ ...meal, ...enrichedData, requestedServings }}
                     isSaved={isSaved}
                     scheduledDate={scheduledDate}
@@ -430,14 +430,6 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                   />
                 </div>
 
-                {isExpanded && (
-                  <div className="hidden md:block w-full pt-1">
-                    <GuidanceNotice 
-                      hasCost={!!(meal.costPerPortion || meal.price)} 
-                      mode="ready-made"
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="space-y-3 sm:space-y-5 min-w-0">
@@ -455,13 +447,6 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden space-y-3 sm:space-y-5"
                   >
-                    <div className="md:hidden max-w-2xl lg:max-w-3xl mr-auto w-full space-y-2.5 pt-1 border-t border-gray-100">
-                       <GuidanceNotice 
-                         hasCost={!!(meal.costPerPortion || meal.price)} 
-                         mode="ready-made"
-                       />
-                    </div>
-
                     <RecipeRealityChecks checks={meal.realityChecks} />
 
                     <div className="pt-4 border-t border-gray-100">
@@ -476,11 +461,18 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                       )}
                     </div>
 
+                    <div className="pt-3 sm:pt-4 border-t border-gray-100">
+                      <GuidanceNotice
+                        hasCost={!!(meal.costPerPortion || meal.price)}
+                        mode="ready-made"
+                      />
+                    </div>
+
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <button 
+              <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="w-full py-1.5 text-[11px] text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent/30"
               >

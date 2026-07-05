@@ -556,13 +556,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
               {isExpanded && (
                 <div className="hidden sm:block space-y-3 sm:space-y-4 min-w-0">
                   <div>
-                    <GuidanceNotice
-                      hasCost={hasCost}
-                      mode={mode}
-                    />
-                  </div>
-
-                  <div>
                     <RecipeRealityChecks checks={(recipe as any).realityChecks} />
                   </div>
 
@@ -724,15 +717,22 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       <p className="text-[13px] sm:text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
                     </div>
 
+                    <div className="hidden sm:block pt-3 sm:pt-4 border-t border-gray-100">
+                      <GuidanceNotice
+                        hasCost={hasCost}
+                        mode={mode}
+                      />
+                    </div>
+
                     <div className="sm:hidden space-y-3 pt-3 border-t border-gray-100">
                       {kitPanel}
+
+                      <RecipeRealityChecks checks={(recipe as any).realityChecks} />
 
                       <GuidanceNotice
                         hasCost={hasCost}
                         mode={mode}
                       />
-
-                      <RecipeRealityChecks checks={(recipe as any).realityChecks} />
 
                     </div>
                   </motion.div>
