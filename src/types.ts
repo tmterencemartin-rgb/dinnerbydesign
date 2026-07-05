@@ -186,6 +186,9 @@ export interface UserProfile {
   subscriptionConfirmationEmailSentAt?: Timestamp | FieldValue;
   subscriptionCancellationEmailSent?: boolean;
   subscriptionCancellationEmailSentAt?: Timestamp | FieldValue;
+  subscriptionPaymentFailedEmailLastInvoiceId?: string | null;
+  subscriptionPaymentFailedEmailSentAt?: Timestamp | FieldValue;
+  subscriptionPaymentGraceEndsAt?: Timestamp | FieldValue | null;
   trialEndingReminderEmailSent?: boolean;
   trialEndingReminderEmailSentAt?: Timestamp | FieldValue;
   preferences: UserPreferences;

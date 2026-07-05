@@ -543,6 +543,7 @@ export function createApp() {
           if (!userQuery.empty) {
             const userDoc = userQuery.docs[0];
             const userId = userDoc.id;
+            const userData = userDoc.data();
             await recordStripeWebhookEvent(event, "processing", {
               userId,
               customerId,
@@ -553,13 +554,21 @@ export function createApp() {
             const status = subscription.status;
             const isTrialing = status === 'trialing';
             const isPaying = status === 'active';
-            const hasAccess = isTrialing || isPaying;
+            const graceEndsAt = userData?.subscriptionPaymentGraceEndsAt;
+            const graceEndsAtMillis = typeof graceEndsAt?.toMillis === 'function'
+              ? graceEndsAt.toMillis()
+              : (graceEndsAt instanceof Date ? graceEndsAt.getTime() : 0);
+            const isPaymentGraceActive = status === 'past_due' && graceEndsAtMillis > Date.now();
+            const hasAccess = isTrialing || isPaying || isPaymentGraceActive;
+            const subscriptionAccessStatus = isPaying || isPaymentGraceActive
+              ? 'paid'
+              : (isTrialing ? 'trial' : 'read_only');
             
             const summary = {
               stripeCustomerId: customerId,
               stripeSubscriptionId: subscription.id,
               subscriptionStatus: status,
-              accessStatus: isPaying ? 'paid' : (isTrialing ? 'trial' : 'read_only'),
+              accessStatus: subscriptionAccessStatus,
               trialStart: subscription.trial_start ? Timestamp.fromMillis(subscription.trial_start * 1000) : null,
               trialEnd: subscription.trial_end ? Timestamp.fromMillis(subscription.trial_end * 1000) : null,
               subscriptionCreatedAt: subscription.created ? Timestamp.fromMillis(subscription.created * 1000) : null,
@@ -574,12 +583,11 @@ export function createApp() {
             console.log(`[Webhook] Updating subscription for user ${userId} to ${status}`);
             await userDoc.ref.set({
               subscription: summary,
-              isPremium: isPaying,
+              isPremium: isPaying || isPaymentGraceActive,
               accessStatus: summary.accessStatus,
               updatedAt: FieldValue.serverTimestamp()
             }, { merge: true });
 
-            const userData = userDoc.data();
             const userEmail = userData?.email;
             const shouldSendCancellationEmail = event.type === 'customer.subscription.deleted'
               && userEmail
@@ -648,6 +656,8 @@ export function createApp() {
               await userQuery.docs[0].ref.set({
                 isPremium: true,
                 accessStatus: 'paid',
+                subscriptionPaymentFailedEmailLastInvoiceId: null,
+                subscriptionPaymentGraceEndsAt: null,
                 updatedAt: FieldValue.serverTimestamp()
               }, { merge: true });
             }
@@ -670,12 +680,59 @@ export function createApp() {
             .get();
 
           if (!userQuery.empty) {
-            console.log(`[Webhook] Payment failed for user ${userQuery.docs[0].id}`);
-            await userQuery.docs[0].ref.set({
-              accessStatus: 'read_only',
+            const userDoc = userQuery.docs[0];
+            const userData = userDoc.data();
+            const graceEndsAt = Timestamp.fromMillis(Date.now() + 5 * 24 * 60 * 60 * 1000);
+            console.log(`[Webhook] Payment failed for user ${userDoc.id}`);
+            await userDoc.ref.set({
+              isPremium: true,
+              accessStatus: 'paid',
               'subscription.subscriptionStatus': 'past_due',
+              'subscription.accessStatus': 'paid',
+              'subscription.hasAccess': true,
+              subscriptionPaymentGraceEndsAt: graceEndsAt,
               updatedAt: FieldValue.serverTimestamp()
             }, { merge: true });
+
+            const userEmail = userData?.email || invoice.customer_email;
+            const alreadySentForInvoice = userData?.subscriptionPaymentFailedEmailLastInvoiceId === invoice.id;
+
+            if (userEmail && !alreadySentForInvoice) {
+              try {
+                const appUrl = PRODUCTION_APP_URL;
+                const invoiceUrl = invoice.hosted_invoice_url || null;
+                const amountDue = typeof invoice.amount_due === 'number' && invoice.currency
+                  ? new Intl.NumberFormat('en-GB', {
+                      style: 'currency',
+                      currency: String(invoice.currency).toUpperCase()
+                    }).format(invoice.amount_due / 100)
+                  : null;
+
+                await sendEmail({
+                  to: userEmail,
+                  subject: "Action needed: payment failed for your DinnerByDesign subscription",
+                  html: `
+                    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937; line-height: 1.55;">
+                      <p style="margin: 0 0 16px; color: #6b7280; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">DinnerByDesign</p>
+                      <p style="margin: 0 0 14px;">We couldn't process your payment${amountDue ? ` of <strong>${amountDue}</strong>` : ''}.</p>
+                      <p style="margin: 0 0 22px;">Update your payment details within 5 days to avoid losing access to saved recipes, search, and your dinner schedule.</p>
+                      <div style="margin: 28px 0;">
+                        <a href="${invoiceUrl || `${appUrl}/?view=settings`}" style="background-color: #111827; color: #ffffff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Update payment details</a>
+                      </div>
+                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
+                    </div>
+                  `
+                });
+
+                await userDoc.ref.set({
+                  subscriptionPaymentFailedEmailLastInvoiceId: invoice.id,
+                  subscriptionPaymentFailedEmailSentAt: FieldValue.serverTimestamp()
+                }, { merge: true });
+                console.log(`[Webhook] Payment failed email sent to ${userEmail}`);
+              } catch (emailErr) {
+                console.error(`[Webhook] Failed to send payment failed email:`, emailErr);
+              }
+            }
           }
           break;
         }

@@ -251,7 +251,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // 1. Paid Status (Explicit or from Subscription)
-      if (profile.subscription?.accessStatus === 'paid' || profile.isPremium || profile.accessStatus === 'paid') {
+      const isPastDue = profile.subscription?.subscriptionStatus === 'past_due';
+      const graceEndsAt = profile.subscriptionPaymentGraceEndsAt
+        ? parseToDate(profile.subscriptionPaymentGraceEndsAt)
+        : null;
+      const hasActiveGrace = !!graceEndsAt && graceEndsAt.getTime() > Date.now();
+      const hasPaidFlag = profile.subscription?.accessStatus === 'paid' || profile.isPremium || profile.accessStatus === 'paid';
+
+      if (hasPaidFlag && (!isPastDue || hasActiveGrace)) {
         setAccessStatus('paid');
         setTrialDaysLeft(0);
         setTrialTimeRemaining('');
