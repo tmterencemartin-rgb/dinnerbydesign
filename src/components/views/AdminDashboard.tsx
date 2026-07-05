@@ -803,13 +803,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="border border-gray-100 rounded bg-white">
-              <div className="grid grid-cols-[minmax(220px,1.1fr)_minmax(360px,2fr)_auto] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-100 text-[11px] font-bold text-gray-500 uppercase tracking-widest max-lg:hidden">
-                <span>Account</span>
-                <span>Details</span>
-                <span className="text-right">Actions</span>
-              </div>
-
+            <div className="border-y border-gray-100 bg-white">
               <div className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => {
                   const subscription = user.subscription;
@@ -817,116 +811,98 @@ export const AdminDashboard: React.FC = () => {
                   const hasStripe = !!subscription?.stripeCustomerId;
                   const confirmationSent = !!user.subscriptionConfirmationEmailSent;
                   const canManageUser = user.uid !== currentUser?.uid && user.email !== 'tmterencemartin@gmail.com';
-                  const dateItems = [
+                  const primaryDetails = [
                     `Joined ${formatDate(user.createdAt)}`,
                     trialEnd ? `Trial ends ${formatDate(trialEnd)}` : null,
-                    getSubscriptionStartDate(user) ? `Subscribed ${formatDate(getSubscriptionStartDate(user))}` : null,
-                    subscription?.currentPeriodEnd ? `${getPeriodLabel(user)} ${formatDate(subscription.currentPeriodEnd)}` : null,
-                    user.permanentAccessGrantedAt ? `Permanent access ${formatDate(user.permanentAccessGrantedAt)}` : null
-                  ].filter(Boolean);
-                  const emailItems = [
                     user.welcomeEmailSent ? 'Welcome sent' : 'Welcome not sent',
                     confirmationSent ? 'Subscription email sent' : 'No subscription email',
                     `Searches ${getSearchCount(user)}`
-                  ];
+                  ].filter(Boolean);
+                  const secondaryDetails = [
+                    hasStripe ? `Stripe customer ${formatShortId(subscription?.stripeCustomerId)}` : 'No Stripe customer yet',
+                    subscription?.subscriptionStatus ? `Stripe ${subscription.subscriptionStatus}` : null,
+                    getSubscriptionStartDate(user) ? `Subscribed ${formatDate(getSubscriptionStartDate(user))}` : null,
+                    subscription?.currentPeriodEnd ? `${getPeriodLabel(user)} ${formatDate(subscription.currentPeriodEnd)}` : null,
+                    user.permanentAccessGrantedAt ? `Permanent access ${formatDate(user.permanentAccessGrantedAt)}` : null,
+                    subscription?.updatedAt ? `Stripe updated ${formatDateTime(subscription.updatedAt)}` : null,
+                    `Profile ${user.accessStatus || 'trial'}`
+                  ].filter(Boolean);
 
                   return (
-                    <div key={user.uid} className="grid grid-cols-[minmax(220px,1.1fr)_minmax(360px,2fr)_auto] max-lg:grid-cols-1 gap-4 px-5 py-4 hover:bg-gray-50/70 transition-colors group">
-                      <div className="min-w-0">
-                        <div className="flex items-start justify-between gap-3 lg:block">
-                          <div className="min-w-0">
-                            <p className="font-bold text-gray-950 text-sm leading-tight truncate">{user.displayName || user.email || 'User'}</p>
-                            <p className="text-gray-400 text-xs font-mono mt-1 truncate">{user.email || 'No email'}</p>
+                    <div key={user.uid} className="flex flex-col gap-2 px-5 py-3 hover:bg-gray-50/70 transition-colors group">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <p className="font-bold text-gray-950 text-sm leading-tight">{user.displayName || user.email || 'User'}</p>
+                            {getStatusBadge(user)}
+                            <span className="text-gray-400 text-xs font-mono truncate">{user.email || 'No email'}</span>
                           </div>
-                          <div className="lg:mt-3 shrink-0">{getStatusBadge(user)}</div>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600">
+                            {primaryDetails.map((item, index) => (
+                              <React.Fragment key={item as string}>
+                                {index > 0 && <span className="text-gray-300">·</span>}
+                                <span>{item}</span>
+                              </React.Fragment>
+                            ))}
+                          </div>
+                          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-400">
+                            {secondaryDetails.map((item, index) => (
+                              <React.Fragment key={item as string}>
+                                {index > 0 && <span className="text-gray-300">·</span>}
+                                <span className={String(item).startsWith('No Stripe') ? 'italic' : ''}>{item}</span>
+                              </React.Fragment>
+                            ))}
+                            {subscription?.stripeSubscriptionId && (
+                              <>
+                                <span className="text-gray-300">·</span>
+                                <span className="font-mono">Sub {formatShortId(subscription.stripeSubscriptionId)}</span>
+                              </>
+                            )}
+                            <span className="hidden group-hover:inline text-gray-300 font-mono">· UID {user.uid}</span>
+                          </div>
                         </div>
-                        {subscription?.subscriptionStatus && (
-                          <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider mt-2">
-                            Stripe: {subscription.subscriptionStatus}
-                          </p>
-                        )}
-                        <p className="text-[10px] text-gray-300 font-mono mt-2 opacity-0 group-hover:opacity-100 transition-opacity truncate">
-                          UID: {user.uid}
-                        </p>
-                      </div>
 
-                      <div className="grid sm:grid-cols-3 gap-3 text-xs min-w-0">
-                        <div className="min-w-0">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Stripe</p>
-                          {hasStripe ? (
-                            <div className="space-y-1">
-                              <p className="font-semibold text-gray-700">Customer linked</p>
-                              <p className="text-[11px] text-gray-400 font-mono truncate">Customer {formatShortId(subscription?.stripeCustomerId)}</p>
-                              <p className="text-[11px] text-gray-400 font-mono truncate">Sub {formatShortId(subscription?.stripeSubscriptionId)}</p>
-                            </div>
-                          ) : (
-                            <p className="text-gray-400 italic">No Stripe customer yet</p>
+                        <div className="flex items-center justify-end gap-3 shrink-0">
+                          {canManageUser && (
+                            <button
+                              onClick={() => handleTogglePermanentAccess(user)}
+                              disabled={loading || actionLoading !== null}
+                              className={`text-xs font-bold transition-colors ${
+                                user.permanentAccess
+                                  ? 'text-blue-700 hover:text-blue-900'
+                                  : 'text-gray-600 hover:text-gray-900'
+                              } disabled:opacity-50`}
+                              title={user.permanentAccess ? 'Revoke permanent access' : 'Grant permanent access'}
+                            >
+                              {user.permanentAccess ? 'Revoke' : 'Grant'}
+                            </button>
+                          )}
+                          {subscription?.stripeCustomerId && (
+                            <a
+                              href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-xs font-bold text-dbd-accent hover:text-dbd-accent/80 transition-colors"
+                            >
+                              Stripe
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                          {canManageUser && (
+                            <button
+                              onClick={() => handleDeleteUser(user.uid, user.email)}
+                              disabled={loading || actionLoading !== null}
+                              className={`text-xs font-bold transition-colors ${
+                                actionLoading === user.uid
+                                  ? 'text-gray-400 cursor-not-allowed'
+                                  : 'text-gray-400 hover:text-red-600'
+                              } disabled:opacity-50`}
+                              title="Delete user"
+                            >
+                              Delete
+                            </button>
                           )}
                         </div>
-
-                        <div className="min-w-0">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Dates</p>
-                          <div className="space-y-1">
-                            {dateItems.map(item => (
-                              <p key={item as string} className="text-gray-600 leading-snug">{item}</p>
-                            ))}
-                            {subscription?.updatedAt && (
-                              <p className="text-[11px] text-gray-400 font-mono leading-snug">Stripe updated {formatDateTime(subscription.updatedAt)}</p>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="min-w-0">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Email & usage</p>
-                          <div className="space-y-1">
-                            {emailItems.map(item => (
-                              <p key={item} className="text-gray-600 leading-snug">{item}</p>
-                            ))}
-                            <p className="text-[11px] text-gray-400 font-mono leading-snug">Profile {user.accessStatus || 'trial'}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start justify-end gap-2 max-lg:justify-start">
-                        {canManageUser && (
-                          <button
-                            onClick={() => handleTogglePermanentAccess(user)}
-                            disabled={loading || actionLoading !== null}
-                            className={`inline-flex items-center px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${
-                              user.permanentAccess
-                                ? 'text-blue-700 bg-blue-50 hover:bg-blue-100'
-                                : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
-                            } disabled:opacity-50`}
-                            title={user.permanentAccess ? 'Revoke permanent access' : 'Grant permanent access'}
-                          >
-                            {user.permanentAccess ? 'Revoke' : 'Grant'}
-                          </button>
-                        )}
-                        {subscription?.stripeCustomerId && (
-                          <a
-                            href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-dbd-accent hover:bg-dbd-accent/5 rounded-md transition-colors"
-                          >
-                            Stripe
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        )}
-                        {canManageUser && (
-                          <button
-                            onClick={() => handleDeleteUser(user.uid, user.email)}
-                            disabled={loading || actionLoading !== null}
-                            className={`px-2 py-1.5 text-xs font-bold rounded transition-all ${
-                              actionLoading === user.uid
-                                ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                                : 'text-red-500 hover:text-red-600 hover:bg-red-50'
-                            } disabled:opacity-50`}
-                            title="Delete user"
-                          >
-                            Delete
-                          </button>
-                        )}
                       </div>
                     </div>
                   );
