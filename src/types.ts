@@ -196,6 +196,9 @@ export interface UserProfile {
   permanentAccess?: boolean;
   permanentAccessGrantedAt?: Timestamp | FieldValue;
   permanentAccessGrantedBy?: string | null;
+  permanentAccessEmailSent?: boolean;
+  permanentAccessEmailSentAt?: Timestamp | FieldValue | null;
+  permanentAccessEmailError?: string | null;
   accessStatus?: AccessStatus;
   trialStartedAt?: Timestamp | FieldValue;
   subscription?: UserSubscriptionSummary;

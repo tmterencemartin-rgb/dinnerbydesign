@@ -41,6 +41,17 @@ interface AiUsageEvent {
   dateKey?: string;
 }
 
+interface EmailEvent {
+  id: string;
+  to?: string;
+  subject?: string;
+  type?: string;
+  source?: string;
+  status?: 'sent' | 'failed' | 'simulated' | string;
+  errorMessage?: string | null;
+  createdAt?: Timestamp | null;
+}
+
 interface AdminDinnerStats {
   savedCount: number;
   scheduledCount: number;
@@ -50,6 +61,7 @@ export const AdminDashboard: React.FC = () => {
   const { setView, isAdmin, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [webhookEvents, setWebhookEvents] = useState<StripeWebhookHealthEvent[]>([]);
+  const [emailEvents, setEmailEvents] = useState<EmailEvent[]>([]);
   const [aiUsageEvents, setAiUsageEvents] = useState<AiUsageEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -149,7 +161,10 @@ export const AdminDashboard: React.FC = () => {
         to: targetUser.email,
         subject: 'Your DinnerByDesign access is now permanent',
         html,
-        from: 'DinnerByDesign <chef@dinnerbydesign.app>'
+        from: 'DinnerByDesign <chef@dinnerbydesign.app>',
+        type: 'permanent_access_granted',
+        source: 'admin_dashboard',
+        userId: targetUser.uid
       })
     });
 
@@ -218,6 +233,20 @@ export const AdminDashboard: React.FC = () => {
         });
 
         setWebhookEvents(eventData.slice(0, 12));
+
+        const emailSnapshot = await getDocs(collection(db, 'emailEvents'));
+        const emailData = emailSnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as EmailEvent[];
+
+        emailData.sort((a, b) => {
+          const dateA = toDate(a.createdAt) || new Date(0);
+          const dateB = toDate(b.createdAt) || new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        setEmailEvents(emailData.slice(0, 30));
 
         const usageSnapshot = await getDocs(collection(db, 'aiUsageEvents'));
         const usageData = usageSnapshot.docs.map(doc => ({
@@ -358,6 +387,9 @@ export const AdminDashboard: React.FC = () => {
             permanentAccess: nextValue,
             permanentAccessGrantedAt: nextValue ? serverTimestamp() : null,
             permanentAccessGrantedBy: nextValue ? currentUser?.email || currentUser?.uid || null : null,
+            permanentAccessEmailSent: nextValue ? false : null,
+            permanentAccessEmailSentAt: nextValue ? null : null,
+            permanentAccessEmailError: nextValue ? null : null,
             updatedAt: serverTimestamp()
           });
           setUsers(prev => prev.map(user => (
@@ -366,7 +398,10 @@ export const AdminDashboard: React.FC = () => {
                   ...user,
                   permanentAccess: nextValue,
                   permanentAccessGrantedAt: nextValue ? Timestamp.now() : undefined,
-                  permanentAccessGrantedBy: nextValue ? currentUser?.email || currentUser?.uid || null : null
+                  permanentAccessGrantedBy: nextValue ? currentUser?.email || currentUser?.uid || null : null,
+                  permanentAccessEmailSent: nextValue ? false : undefined,
+                  permanentAccessEmailSentAt: undefined,
+                  permanentAccessEmailError: undefined
                 }
               : user
           )));
@@ -377,9 +412,41 @@ export const AdminDashboard: React.FC = () => {
             try {
               await sendPermanentAccessEmail(targetUser);
               emailSent = true;
+              await updateDoc(doc(db, 'users', targetUser.uid), {
+                permanentAccessEmailSent: true,
+                permanentAccessEmailSentAt: serverTimestamp(),
+                permanentAccessEmailError: null,
+                updatedAt: serverTimestamp()
+              });
+              setUsers(prev => prev.map(user => (
+                user.uid === targetUser.uid
+                  ? {
+                      ...user,
+                      permanentAccessEmailSent: true,
+                      permanentAccessEmailSentAt: Timestamp.now(),
+                      permanentAccessEmailError: null
+                    }
+                  : user
+              )));
             } catch (err: any) {
               emailError = err?.message || 'Email delivery failed.';
               console.error('Permanent access email failed:', err);
+              await updateDoc(doc(db, 'users', targetUser.uid), {
+                permanentAccessEmailSent: false,
+                permanentAccessEmailSentAt: null,
+                permanentAccessEmailError: emailError,
+                updatedAt: serverTimestamp()
+              });
+              setUsers(prev => prev.map(user => (
+                user.uid === targetUser.uid
+                  ? {
+                      ...user,
+                      permanentAccessEmailSent: false,
+                      permanentAccessEmailSentAt: null,
+                      permanentAccessEmailError: emailError
+                    }
+                  : user
+              )));
             }
           }
 
@@ -495,6 +562,9 @@ export const AdminDashboard: React.FC = () => {
       'Permanent access',
       'Permanent access granted',
       'Permanent access granted by',
+      'Permanent access email sent',
+      'Permanent access email sent at',
+      'Permanent access email error',
       'Stripe status',
       'Stripe customer ID',
       'Stripe subscription ID',
@@ -523,6 +593,9 @@ export const AdminDashboard: React.FC = () => {
         user.permanentAccess ? 'yes' : 'no',
         formatDate(user.permanentAccessGrantedAt),
         user.permanentAccessGrantedBy || '',
+        user.permanentAccessEmailSent ? 'yes' : 'no',
+        formatDate(user.permanentAccessEmailSentAt),
+        user.permanentAccessEmailError || '',
         subscription?.subscriptionStatus || '',
         subscription?.stripeCustomerId || '',
         subscription?.stripeSubscriptionId || '',
@@ -656,9 +729,16 @@ export const AdminDashboard: React.FC = () => {
   }, [users, aiUsageEvents]);
 
   const latestWebhookEvent = webhookEvents[0];
+  const latestEmailEvent = emailEvents[0];
 
   const getWebhookStatusClass = (status?: StripeWebhookHealthEvent['status']) => {
     if (status === 'succeeded') return 'bg-emerald-50 text-emerald-700';
+    if (status === 'failed') return 'bg-red-50 text-red-700';
+    return 'bg-amber-50 text-amber-700';
+  };
+
+  const getEmailStatusClass = (status?: EmailEvent['status']) => {
+    if (status === 'sent') return 'bg-emerald-50 text-emerald-700';
     if (status === 'failed') return 'bg-red-50 text-red-700';
     return 'bg-amber-50 text-amber-700';
   };
@@ -863,6 +943,50 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
+            <div className="bg-white border border-gray-100 rounded p-4">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-gray-500" />
+                    <h2 className="text-[13px] font-bold text-gray-950">Email log</h2>
+                    {latestEmailEvent ? (
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${getEmailStatusClass(latestEmailEvent.status)}`}>
+                        {latestEmailEvent.status}
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
+                        No emails yet
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11.5px] text-gray-400 font-medium">
+                    {latestEmailEvent
+                      ? `${latestEmailEvent.type || latestEmailEvent.subject || 'Email'} · ${formatDateTime(latestEmailEvent.createdAt)}`
+                      : 'Automated and user-requested email attempts will appear here once sent.'}
+                  </p>
+                  {latestEmailEvent?.errorMessage && (
+                    <p className="text-[11.5px] text-red-600 font-semibold">{latestEmailEvent.errorMessage}</p>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 min-w-0 lg:max-w-3xl">
+                  {emailEvents.slice(0, 6).map(event => (
+                    <div key={event.id} className="border border-gray-100 rounded p-2.5 bg-gray-50/40 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10.5px] font-bold text-gray-800 truncate">{event.type || event.subject || 'Email'}</span>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${getEmailStatusClass(event.status)}`}>
+                          {event.status || 'unknown'}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.to || 'No recipient'}</p>
+                      <p className="text-[10px] text-gray-400 font-medium mt-1 truncate">
+                        {event.subject || 'No subject'} · {formatDateTime(event.createdAt)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             <div className="border-y border-gray-100 bg-white">
               <div className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => {
@@ -890,6 +1014,8 @@ export const AdminDashboard: React.FC = () => {
                     getSubscriptionStartDate(user) ? `Subscribed ${formatDate(getSubscriptionStartDate(user))}` : null,
                     subscription?.currentPeriodEnd ? `${getPeriodLabel(user)} ${formatDate(subscription.currentPeriodEnd)}` : null,
                     user.permanentAccessGrantedAt ? `Permanent access ${formatDate(user.permanentAccessGrantedAt)}` : null,
+                    user.permanentAccessEmailSentAt ? `Permanent email sent ${formatDate(user.permanentAccessEmailSentAt)}` : null,
+                    user.permanentAccessEmailError ? `Permanent email failed: ${user.permanentAccessEmailError}` : null,
                     subscription?.updatedAt ? `Stripe updated ${formatDateTime(subscription.updatedAt)}` : null,
                     `Profile ${user.accessStatus || 'trial'}`
                   ].filter(Boolean);

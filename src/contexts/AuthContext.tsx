@@ -1464,7 +1464,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             to: email,
             subject: "Welcome to DinnerByDesign",
             html: emailHtml,
-            from: "DinnerByDesign <chef@dinnerbydesign.app>"
+            from: "DinnerByDesign <chef@dinnerbydesign.app>",
+            type: "welcome",
+            source: "auth_context",
+            userId: currentUser?.uid || null
           })
         })
           .then(r => r.json())
@@ -1553,7 +1556,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             to: email,
             subject: "Your DinnerByDesign free trial ends soon",
             html: emailHtml,
-            from: "DinnerByDesign <chef@dinnerbydesign.app>"
+            from: "DinnerByDesign <chef@dinnerbydesign.app>",
+            type: "trial_ending",
+            source: "auth_context",
+            userId: uid
           })
         });
 
@@ -1671,7 +1677,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             to: email,
             subject: "Your DinnerByDesign password has been updated",
             html: emailHtml,
-            from: "DinnerByDesign Security <security@dinnerbydesign.app>"
+            from: "DinnerByDesign Security <security@dinnerbydesign.app>",
+            type: "password_changed",
+            source: "auth_context",
+            userId: auth.currentUser?.uid || null
           })
         });
 

@@ -507,7 +507,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               to: userEmailForEmail,
               subject: "Confirmation: DinnerByDesign account closure & data removal",
               html: emailHtml,
-              from: "DinnerByDesign Support <support@dinnerbydesign.app>"
+              from: "DinnerByDesign Support <support@dinnerbydesign.app>",
+              type: "account_closure",
+              source: "settings_view",
+              userId: user.uid
             })
           });
           addLog(`SETTINGS: Deletion confirmation email API call finished.`);

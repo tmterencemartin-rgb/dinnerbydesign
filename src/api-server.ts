@@ -80,6 +80,83 @@ function getDb() {
   return _db;
 }
 
+interface EmailEventMeta {
+  type?: string;
+  source?: string;
+  userId?: string | null;
+  metadata?: Record<string, any>;
+}
+
+async function recordEmailEvent({
+  to,
+  subject,
+  from,
+  status,
+  simulated = false,
+  error,
+  response,
+  type = "unspecified",
+  source = "server",
+  userId = null,
+  metadata = {}
+}: EmailEventMeta & {
+  to?: string;
+  subject?: string;
+  from?: string;
+  status: "sent" | "failed" | "simulated";
+  simulated?: boolean;
+  error?: any;
+  response?: any;
+}) {
+  try {
+    await getDb().collection("emailEvents").add({
+      to: to || "",
+      subject: subject || "",
+      from: from || "",
+      type,
+      source,
+      userId,
+      status,
+      simulated,
+      errorMessage: error ? (error?.message || String(error)) : null,
+      errorName: error?.name || null,
+      providerId: response?.id || response?.data?.id || null,
+      metadata,
+      createdAt: FieldValue.serverTimestamp()
+    });
+  } catch (logErr) {
+    console.error("[EmailLog] Failed to record email event:", logErr);
+  }
+}
+
+async function sendTrackedEmail(
+  email: { to: string; subject: string; html: string; from?: string },
+  meta: EmailEventMeta
+) {
+  try {
+    const response = await sendEmail(email);
+    await recordEmailEvent({
+      ...meta,
+      to: email.to,
+      subject: email.subject,
+      from: email.from,
+      status: "sent",
+      response
+    });
+    return response;
+  } catch (error) {
+    await recordEmailEvent({
+      ...meta,
+      to: email.to,
+      subject: email.subject,
+      from: email.from,
+      status: "failed",
+      error
+    });
+    throw error;
+  }
+}
+
 async function recordStripeWebhookEvent(event: any, status: "processing" | "succeeded" | "failed", details: Record<string, any> = {}) {
   try {
     const eventId = event?.id || `unverified_${Date.now()}`;
@@ -484,7 +561,7 @@ export function createApp() {
             if (userEmail && !userData?.subscriptionConfirmationEmailSent) {
               try {
                 const appUrl = PRODUCTION_APP_URL;
-                await sendEmail({
+                await sendTrackedEmail({
                   to: userEmail,
                   subject: "Your DinnerByDesign subscription is active",
                   html: `
@@ -509,6 +586,14 @@ export function createApp() {
                       <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
                     </div>
                   `
+                }, {
+                  type: "subscription_active",
+                  source: "stripe_webhook",
+                  userId,
+                  metadata: {
+                    stripeCustomerId: customerId,
+                    stripeSessionId: session.id
+                  }
                 });
                 await userRef.set({
                   subscriptionConfirmationEmailSent: true,
@@ -604,7 +689,7 @@ export function createApp() {
                     })
                   : null;
 
-                await sendEmail({
+                await sendTrackedEmail({
                   to: userEmail,
                   subject: "Your DinnerByDesign subscription has been cancelled",
                   html: `
@@ -620,6 +705,14 @@ export function createApp() {
                       <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
                     </div>
                   `
+                }, {
+                  type: "subscription_cancelled",
+                  source: "stripe_webhook",
+                  userId,
+                  metadata: {
+                    stripeCustomerId: customerId,
+                    stripeSubscriptionId: subscription.id
+                  }
                 });
 
                 await userDoc.ref.set({
@@ -708,7 +801,7 @@ export function createApp() {
                     }).format(invoice.amount_due / 100)
                   : null;
 
-                await sendEmail({
+                await sendTrackedEmail({
                   to: userEmail,
                   subject: "Action needed: payment failed for your DinnerByDesign subscription",
                   html: `
@@ -722,6 +815,17 @@ export function createApp() {
                       <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
                     </div>
                   `
+                }, {
+                  type: "payment_failed",
+                  source: "stripe_webhook",
+                  userId: userDoc.id,
+                  metadata: {
+                    stripeCustomerId: customerId,
+                    stripeSubscriptionId: invoice.subscription,
+                    stripeInvoiceId: invoice.id,
+                    amountDue: invoice.amount_due || null,
+                    currency: invoice.currency || null
+                  }
                 });
 
                 await userDoc.ref.set({
@@ -753,13 +857,33 @@ export function createApp() {
   });
 
   app.post("/api/send-email", async (req, res) => {
-    const { to, subject, html, from } = req.body;
+    const {
+      to,
+      subject,
+      html,
+      from,
+      type = "unspecified",
+      source = "api",
+      userId = null,
+      metadata = {}
+    } = req.body;
     const hasApiKey = !!process.env.RESEND_API_KEY;
     console.log(`[API] /api/send-email: to=${to}, subject=${subject}, hasKey=${hasApiKey}`);
     
     try {
       if (!hasApiKey) {
         console.error("[API] RESEND_API_KEY is missing");
+        await recordEmailEvent({
+          to,
+          subject,
+          from,
+          type,
+          source,
+          userId,
+          metadata,
+          status: "failed",
+          error: new Error("RESEND_API_KEY is missing")
+        });
         return res.status(500).json({ 
           ok: false, 
           error: {
@@ -771,6 +895,17 @@ export function createApp() {
       }
 
       if (!to || !subject || !html) {
+        await recordEmailEvent({
+          to,
+          subject,
+          from,
+          type,
+          source,
+          userId,
+          metadata,
+          status: "failed",
+          error: new Error("Missing 'to', 'subject', or 'html' in body")
+        });
         return res.status(400).json({ 
           ok: false,
           error: {
@@ -782,6 +917,17 @@ export function createApp() {
       }
 
       const data = await sendEmail({ to, subject, html, from });
+      await recordEmailEvent({
+        to,
+        subject,
+        from,
+        type,
+        source,
+        userId,
+        metadata,
+        status: "sent",
+        response: data
+      });
       res.json({ ok: true, data });
     } catch (error: any) {
       const statusCode = error?.status || 500;
@@ -797,6 +943,18 @@ export function createApp() {
       
       if (isValidationError) {
         console.info(`[API] send-email: Resend sandbox/restriction handled (Recipient: ${to}). Simulating success.`);
+        await recordEmailEvent({
+          to,
+          subject,
+          from,
+          type,
+          source,
+          userId,
+          metadata,
+          status: "simulated",
+          simulated: true,
+          error
+        });
         return res.status(200).json({ 
           ok: true, 
           simulated: true,
@@ -806,6 +964,17 @@ export function createApp() {
       
       // Only log genuine unexpected errors
       console.error("[API] send-email caught unexpected error:", error);
+      await recordEmailEvent({
+        to,
+        subject,
+        from,
+        type,
+        source,
+        userId,
+        metadata,
+        status: "failed",
+        error
+      });
       
       res.status(statusCode).json({ 
         ok: false, 

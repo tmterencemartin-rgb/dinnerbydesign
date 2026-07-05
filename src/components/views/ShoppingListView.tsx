@@ -148,7 +148,10 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         body: JSON.stringify({
           to: user.email,
           subject: `Shopping List: ${dateStr}`,
-          html
+          html,
+          type: 'shopping_list_email',
+          source: 'shopping_list_view',
+          userId: user.uid
         })
       });
 

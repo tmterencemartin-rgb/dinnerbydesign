@@ -300,6 +300,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /emailEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     // Default deny
     match /{path=**} {
       allow read, write: if false;

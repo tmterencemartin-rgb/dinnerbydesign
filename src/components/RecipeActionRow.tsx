@@ -119,7 +119,10 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
         body: JSON.stringify({
           to: user.email,
           subject: `Recipe: ${recipe.title}`,
-          html
+          html,
+          type: 'recipe_email',
+          source: 'recipe_action_row',
+          userId: user.uid
         })
       });
 
