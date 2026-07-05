@@ -689,11 +689,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     ) : (
                       <div className="space-y-0">
                         {currentInstructions.map((step, i) => (
-                          <div key={i} className="flex items-start gap-2.5 pb-2 border-b border-gray-50 last:border-0 mb-2 last:mb-0">
+                          <div key={i} className="flex items-start gap-2.5 pb-1.5 border-b border-gray-50 last:border-0 mb-1.5 last:mb-0">
                             <div className="w-4 h-4 rounded bg-gray-50 border border-gray-100 flex items-center justify-center text-[9px] font-bold text-gray-500 shrink-0 mt-0.5">
                               {i + 1}
                             </div>
-                            <p className="text-xs text-gray-600 leading-relaxed max-w-2xl">{step}</p>
+                            <p className="text-xs text-gray-600 leading-normal max-w-2xl">{step}</p>
                           </div>
                         ))}
                       </div>

@@ -701,13 +701,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                               <span>Sourcing steps...</span>
                             </div>
                           ) : (
-                            <ol className="text-[12.5px] text-gray-750 space-y-2 sm:space-y-3">
+                            <ol className="text-[12.5px] text-gray-750 space-y-1.5 sm:space-y-2">
                               {currentInstructions.map((step, i) => (
                                 <li key={`${recipe.title.replace(/\s+/g, '-')}-step-${i}`} className="flex gap-2.5 sm:gap-3">
                                   <span className="flex-shrink-0 w-5 h-5 rounded bg-gray-100 text-gray-600 text-[10.5px] font-bold flex items-center justify-center">
                                     {i + 1}
                                   </span>
-                                  <span className="leading-snug sm:leading-relaxed">{step}</span>
+                                  <span className="leading-snug">{step}</span>
                                 </li>
                               ))}
                             </ol>
