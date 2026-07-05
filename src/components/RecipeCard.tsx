@@ -203,7 +203,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   );
 
   const kitPanel = (
-    <div className="w-full border-y border-gray-100 bg-white py-2 sm:rounded sm:border-gray-200 sm:p-3.5 sm:shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+    <div className="w-full my-3 border-y border-dbd-rule bg-[#FAF9F6] px-3 py-3.5 sm:my-4 sm:rounded sm:border sm:border-dbd-rule sm:p-4 sm:shadow-[0_1px_5px_rgba(15,23,42,0.04)]">
       <div className="flex items-start gap-2.5 mb-2.5 sm:mb-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -219,7 +219,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
       </div>
 
       <div className="grid gap-2.5 sm:gap-3">
-        <div className="min-w-0 border-b border-gray-100 pb-2 sm:rounded sm:bg-gray-50/80 sm:border sm:p-2.5">
+        <div className="min-w-0 border-b border-dbd-rule/70 pb-2 sm:rounded sm:bg-white/75 sm:border sm:p-2.5">
           <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
             Core dish
           </p>
