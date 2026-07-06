@@ -95,6 +95,9 @@ const buildResultsHeading = ({
   return `${count} ${count === 1 ? 'option' : 'options'} for ${brief}`;
 };
 
+const NOT_BORING_SUMMER_SALADS_QUERY =
+  'unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal, under 30 minutes';
+
 interface HomeViewProps {
   // ... (keeping props as they were for compatibility if possible, but adding useAuth internal logic)
   input: string;
@@ -425,6 +428,19 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const excludeInputRef = useRef<HTMLInputElement>(null);
   const omitInputRef = useRef<HTMLInputElement>(null);
 
+  const handleNotBoringSummerSalads = React.useCallback(() => {
+    if (isReadOnly || isSearching) return;
+
+    setInput(NOT_BORING_SUMMER_SALADS_QUERY);
+    setShowFilters(false);
+    setPreferencesError(null);
+    handleGenerate(NOT_BORING_SUMMER_SALADS_QUERY, {
+      saladPreference: 'main-only',
+      maxTotalTime: 30,
+      isSimple: true
+    });
+  }, [handleGenerate, isReadOnly, isSearching, setInput, setPreferencesError, setShowFilters]);
+
   const getSavedPreferenceSuppressionKeys = React.useCallback(() => {
     const prefs = profile?.preferences;
     if (!prefs) return [];
@@ -616,6 +632,34 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       ? `Prioritising nearby retailers: ${supermarkets.slice(0, 3).join(', ')}${supermarkets.length > 3 ? '...' : ''}. Change this in Preferences.`
                       : 'Want more useful Ready-made results? Add nearby retailers in Preferences.'}
                   </button>
+                </div>
+              )}
+
+              {source === 'cook' && (
+                <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
+                  <div className="flex flex-col gap-2 border-t border-gray-100 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                    <button
+                      type="button"
+                      onClick={handleNotBoringSummerSalads}
+                      disabled={isReadOnly || isSearching}
+                      className="text-left disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <span className="font-ibm-plex-mono text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">
+                        Not-boring summer salads
+                      </span>
+                      <span className="block text-[11.5px] font-semibold leading-relaxed text-gray-500">
+                        Fresh, substantial salads with interesting flavour combinations.
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNotBoringSummerSalads}
+                      disabled={isReadOnly || isSearching}
+                      className="self-start text-[10.5px] font-bold uppercase tracking-[0.12em] text-gray-500 hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300 sm:self-auto"
+                    >
+                      Find options
+                    </button>
+                  </div>
                 </div>
               )}
               
