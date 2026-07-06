@@ -561,58 +561,61 @@ export const LandingView: React.FC = () => {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="divide-y divide-dbd-rule/70 border-y border-dbd-rule/70 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:border-y-0 sm:gap-6">
             
             {/* Tab Card 1 */}
-            <div className="bg-white border border-dbd-rule rounded-xl p-5 sm:p-6 lg:p-8 flex flex-col justify-between shadow-xs select-none hover:scale-[1.01] transition-all">
-              <div>
-                <div className="bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center mb-6">
+            <div className="py-4 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
+              <div className="grid grid-cols-[2.25rem_1fr] gap-x-3 sm:block">
+                <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <SearchIcon className="w-5 h-5" />
                 </div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[11px] font-mono text-dbd-accent-mid font-bold">01</span>
+                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent-mid font-bold sm:hidden">01</span>
+                <div className="flex items-center gap-2 mb-1 sm:mb-3">
+                  <span className="hidden text-[11px] font-mono text-dbd-accent-mid font-bold sm:inline">01</span>
                   <h4 className="text-[14px] sm:text-[15px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-ink">
                     Search
                   </h4>
                 </div>
-                <p className="text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light font-sans font-light">
-                  One set of ingredients returns any number of recipes. Verified, costed recipes, or ready-made supermarket options, in seconds.
+                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light">
+                  One set of ingredients returns verified, costed recipes or ready-made supermarket options.
                 </p>
               </div>
             </div>
 
             {/* Tab Card 2 */}
-            <div className="bg-white border border-dbd-rule rounded-xl p-5 sm:p-6 lg:p-8 flex flex-col justify-between shadow-xs select-none hover:scale-[1.01] transition-all">
-              <div>
-                <div className="bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center mb-6">
+            <div className="py-4 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
+              <div className="grid grid-cols-[2.25rem_1fr] gap-x-3 sm:block">
+                <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <CalendarIcon className="w-5 h-5" />
                 </div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[11px] font-mono text-dbd-accent-mid font-bold">02</span>
+                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent-mid font-bold sm:hidden">02</span>
+                <div className="flex items-center gap-2 mb-1 sm:mb-3">
+                  <span className="hidden text-[11px] font-mono text-dbd-accent-mid font-bold sm:inline">02</span>
                   <h4 className="text-[14px] sm:text-[15px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-ink">
                     Save & Schedule
                   </h4>
                 </div>
-                <p className="text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light font-sans font-light">
-                  Pin recipes and drop them onto the week. Build a plan around the dinners you actually want.
+                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light">
+                  Pin recipes and drop them onto the week.
                 </p>
               </div>
             </div>
 
             {/* Tab Card 3 */}
-            <div className="bg-white border border-dbd-rule rounded-xl p-5 sm:p-6 lg:p-8 flex flex-col justify-between shadow-xs select-none hover:scale-[1.01] transition-all">
-              <div>
-                <div className="bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center mb-6">
+            <div className="py-4 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
+              <div className="grid grid-cols-[2.25rem_1fr] gap-x-3 sm:block">
+                <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <ShoppingCartIcon className="w-5 h-5" />
                 </div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[11px] font-mono text-dbd-accent-mid font-bold">03</span>
+                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent-mid font-bold sm:hidden">03</span>
+                <div className="flex items-center gap-2 mb-1 sm:mb-3">
+                  <span className="hidden text-[11px] font-mono text-dbd-accent-mid font-bold sm:inline">03</span>
                   <h4 className="text-[14px] sm:text-[15px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-ink">
                     Shop
                   </h4>
                 </div>
-                <p className="text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light font-sans font-light">
-                  One costed shopping list for the whole week, deduplicated and totalled. Know the bill before you reach the till.
+                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light">
+                  Build one deduplicated, costed shopping list.
                 </p>
               </div>
             </div>
