@@ -82,7 +82,7 @@ const buildResultsHeading = ({
   if (!count || !query.trim()) return '';
 
   if (source === 'cook' && isNotBoringSummerSaladsQuery(query)) {
-    return NOT_BORING_SUMMER_SALADS_TITLE;
+    return NOT_BORING_SUMMER_SALADS_RESULTS_TITLE;
   }
 
   const brief = formatDinnerBrief(query, ingredientIntent);
@@ -99,14 +99,19 @@ const buildResultsHeading = ({
   return `${count} ${count === 1 ? 'option' : 'options'} for ${brief}`;
 };
 
-const NOT_BORING_SUMMER_SALADS_TITLE = 'Out-of-the-ordinary summer salads';
+const NOT_BORING_SUMMER_SALADS_SEARCH_TITLE = 'Non-boring summer salads';
+const NOT_BORING_SUMMER_SALADS_RESULTS_TITLE = 'Out-of-the-ordinary summer salads';
 const NOT_BORING_SUMMER_SALADS_QUERY =
   'unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal, under 30 minutes';
 const NOT_BORING_SUMMER_SALADS_RESULTS_COPY =
   'Three ways to prepare unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal and ready in under 30 minutes.';
 
 const isNotBoringSummerSaladsQuery = (query: string) =>
-  [NOT_BORING_SUMMER_SALADS_QUERY, NOT_BORING_SUMMER_SALADS_TITLE]
+  [
+    NOT_BORING_SUMMER_SALADS_QUERY,
+    NOT_BORING_SUMMER_SALADS_SEARCH_TITLE,
+    NOT_BORING_SUMMER_SALADS_RESULTS_TITLE
+  ]
     .map(value => value.toLowerCase())
     .includes(query.trim().toLowerCase());
 
@@ -445,7 +450,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const handleNotBoringSummerSalads = React.useCallback(() => {
     if (isReadOnly || isSearching) return;
 
-    setInput(NOT_BORING_SUMMER_SALADS_TITLE);
+    setInput(NOT_BORING_SUMMER_SALADS_SEARCH_TITLE);
     setShowFilters(false);
     setPreferencesError(null);
     handleGenerate(NOT_BORING_SUMMER_SALADS_QUERY, {
@@ -659,7 +664,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       className="text-left disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <span className="block text-[12px] font-normal leading-snug text-dbd-accent">
-                        {NOT_BORING_SUMMER_SALADS_TITLE}
+                        {NOT_BORING_SUMMER_SALADS_SEARCH_TITLE}
                       </span>
                       <span className="mt-0.5 block text-[11.5px] font-normal leading-relaxed text-gray-500">
                         Fresh, substantial salads with interesting flavour combinations.
