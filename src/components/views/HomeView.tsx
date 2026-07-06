@@ -106,7 +106,9 @@ const NOT_BORING_SUMMER_SALADS_RESULTS_COPY =
   'Three ways to prepare unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal and ready in under 30 minutes.';
 
 const isNotBoringSummerSaladsQuery = (query: string) =>
-  query.trim().toLowerCase() === NOT_BORING_SUMMER_SALADS_QUERY.toLowerCase();
+  [NOT_BORING_SUMMER_SALADS_QUERY, NOT_BORING_SUMMER_SALADS_TITLE]
+    .map(value => value.toLowerCase())
+    .includes(query.trim().toLowerCase());
 
 interface HomeViewProps {
   // ... (keeping props as they were for compatibility if possible, but adding useAuth internal logic)
