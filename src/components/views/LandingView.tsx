@@ -514,7 +514,7 @@ export const LandingView: React.FC = () => {
 
           <div className="md:col-span-7">
             <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed mb-8 max-w-prose select-none">
-              Set one or more of the 18 filters once, or adjust per search. DinnerByDesign narrows results to recipes that fit your diet, budget, cooking method and time.
+              Set one or more of the 18 filters once, or adjust per search. Dinner by Design shortlists recipes that fit your diet, budget, cooking method and time.
             </p>
             
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-8 text-[11.5px] sm:text-[13px] font-mono font-bold text-dbd-ink-3 uppercase tracking-wider select-none">
