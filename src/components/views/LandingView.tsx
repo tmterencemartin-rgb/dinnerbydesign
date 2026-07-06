@@ -508,7 +508,7 @@ export const LandingView: React.FC = () => {
               Built Around Your Kitchen
             </span>
             <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
-              Tailor every search.
+              Less searching. Better matches. Dinner, decided.
             </h3>
           </div>
 
