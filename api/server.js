@@ -164274,6 +164274,8 @@ function createApp() {
         const siteUrl = "https://dinnerbydesign.app";
         let title = "DinnerByDesign | Ad-free UK Dinner Recipe Finder & Costed Shopping Lists";
         let description = "Ad-free UK dinner recipe search: dinner ideas from trusted UK sources, ready-made supermarket options, preference-led search and costed shopping lists.";
+        let shareTitle = "DinnerByDesign | UK Dinner Recipe Finder";
+        let shareDescription = "Less searching. Better matches. Find verified dinner recipes, ready-made supermarket options and costed shopping lists built around your tastes and budget.";
         let canonicalPath = "/";
         let noIndex = false;
         let schema = null;
@@ -164281,29 +164283,41 @@ function createApp() {
         if (pathName === "/privacy") {
           title = "Privacy & Cookies \u2014 DinnerByDesign";
           description = "Read how DinnerByDesign handles account data, saved dinners, essential browser storage, cookies and privacy.";
+          shareTitle = title;
+          shareDescription = description;
           canonicalPath = "/privacy";
         } else if (pathName === "/terms") {
           title = "Terms of Service \u2014 DinnerByDesign";
           description = "Review terms of use, trials, and premium account rules for the DinnerByDesign service.";
+          shareTitle = title;
+          shareDescription = description;
           canonicalPath = "/terms";
         } else if (pathName === "/planner") {
           title = "Your Dinner Planner \u2014 DinnerByDesign";
           description = "Your weekly bespoke dinner schedule and preparation planner.";
+          shareTitle = title;
+          shareDescription = description;
           canonicalPath = "/planner";
           noIndex = true;
         } else if (pathName === "/shopping") {
           title = "Your Shopping List \u2014 DinnerByDesign";
           description = "Your smart, interactive shopping and grocery lists automatically grouped by department.";
+          shareTitle = title;
+          shareDescription = description;
           canonicalPath = "/shopping";
           noIndex = true;
         } else if (pathName === "/settings") {
           title = "Account Settings \u2014 DinnerByDesign";
           description = "Manage your dietary rule taxonomies, allergies, excluded ingredients, and account credentials.";
+          shareTitle = title;
+          shareDescription = description;
           canonicalPath = "/settings";
           noIndex = true;
         } else if (pathName === "/signin" || pathName === "/success" || pathName === "/admin") {
           title = pathName === "/signin" ? "Sign In / Sign Up \u2014 DinnerByDesign" : pathName === "/success" ? "Subscription Success \u2014 DinnerByDesign" : "Admin Dashboard \u2014 DinnerByDesign";
           description = pathName === "/signin" ? "Access your DinnerByDesign account or create a new profile to start planning your custom menus." : pathName === "/success" ? "Thank you for subscribing to DinnerByDesign Premium! Your account has been upgraded." : "DinnerByDesign Administration and Management.";
+          shareTitle = title;
+          shareDescription = description;
           canonicalPath = pathName;
           noIndex = true;
         } else {
@@ -164389,6 +164403,8 @@ function createApp() {
           html = html.replace("</head>", `<meta name="robots" content="${robotsContent}" />
 </head>`);
         }
+        const shareImage = `${siteUrl}/og-image.svg`;
+        html = html.replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${canonicalUrl}" />`).replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${shareTitle}" />`).replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${shareDescription}" />`).replace(/<meta property="og:image" content=".*?"\s*\/?>/, `<meta property="og:image" content="${shareImage}" />`).replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${shareTitle}" />`).replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${shareDescription}" />`).replace(/<meta name="twitter:image" content=".*?"\s*\/?>/, `<meta name="twitter:image" content="${shareImage}" />`);
         if (schema) {
           const schemaString = `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(schema)}</script>`;
           html = html.replace("</head>", `${schemaString}
