@@ -40,7 +40,7 @@ export const CUISINES = [
 ];
 
 export const COOKING_METHODS = [
-  'Air fryer', 'One pot', 'Oven bake', 'Pan fried', 'Slow cooker', 'Stir fry', 'Tray bake'
+  'Air fryer', 'BBQ', 'One pot', 'Oven bake', 'Pan fried', 'Slow cooker', 'Stir fry', 'Tray bake'
 ];
 
 export const COOKING_FATS = [

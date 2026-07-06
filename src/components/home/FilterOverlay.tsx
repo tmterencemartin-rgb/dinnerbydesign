@@ -836,7 +836,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       >
                         <option value="">Any method</option>
                         {[
-                          'Air fryer', 'One pot', 'Oven bake', 'Pan fried', 'Slow cooker', 'Stir fry', 'Tray bake'
+                          'Air fryer', 'BBQ', 'One pot', 'Oven bake', 'Pan fried', 'Slow cooker', 'Stir fry', 'Tray bake'
                         ].map(method => (
                           <option key={method} value={method}>{method}</option>
                         ))}
