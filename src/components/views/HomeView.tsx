@@ -644,18 +644,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       disabled={isReadOnly || isSearching}
                       className="text-left disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <span className="font-ibm-plex-mono text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">
-                        Not-boring summer salads
-                      </span>
-                      <span className="block text-[11.5px] font-semibold leading-relaxed text-gray-500">
-                        Fresh, substantial salads with interesting flavour combinations.
+                      <span className="block text-[11.5px] font-normal leading-relaxed text-gray-600">
+                        Three ways to prepare unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal and ready in under 30 minutes.
                       </span>
                     </button>
                     <button
                       type="button"
                       onClick={handleNotBoringSummerSalads}
                       disabled={isReadOnly || isSearching}
-                      className="self-start text-[10.5px] font-bold uppercase tracking-[0.12em] text-gray-500 hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300 sm:self-auto"
+                      className="self-start text-[11px] font-normal text-gray-500 hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300 sm:self-auto"
                     >
                       Find options
                     </button>
