@@ -636,7 +636,7 @@ export const LandingView: React.FC = () => {
             Try DinnerByDesign free for 7 days.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
-            Search once. Compare recipes. Save dinners. Build a shopping list. Know the likely cost.
+            Search once. Compare recipes. Save favourites. Build a shopping list. Know the likely cost.
           </p>
         </div>
 
