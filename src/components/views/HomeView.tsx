@@ -99,7 +99,7 @@ const buildResultsHeading = ({
   return `${count} ${count === 1 ? 'option' : 'options'} for ${brief}`;
 };
 
-const NOT_BORING_SUMMER_SALADS_TITLE = 'Not-boring summer salads';
+const NOT_BORING_SUMMER_SALADS_TITLE = 'Out-of-the-ordinary summer salads';
 const NOT_BORING_SUMMER_SALADS_QUERY =
   'unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal, under 30 minutes';
 const NOT_BORING_SUMMER_SALADS_RESULTS_COPY =
