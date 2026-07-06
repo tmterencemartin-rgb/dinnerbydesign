@@ -630,7 +630,7 @@ export const LandingView: React.FC = () => {
         
         <div className="text-center mb-10 select-none">
           <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.25em] text-dbd-accent uppercase block mb-3">
-            Simple, Transparent Access.
+            It's all about you.
           </span>
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink">
             Try DinnerByDesign free for 7 days.
