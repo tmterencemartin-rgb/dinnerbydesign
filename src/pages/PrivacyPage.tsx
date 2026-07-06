@@ -32,11 +32,11 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
         </button>
       )}
 
-      <h1 className="text-xl font-bold text-gray-900">Privacy Policy for DinnerByDesign</h1>
-      <p className="text-[11px] text-gray-400 italic mb-4">Last Updated: May 29, 2026</p>
+      <h1 className="text-xl font-bold text-gray-900">Privacy & cookies</h1>
+      <p className="text-[11px] text-gray-400 italic mb-4">Last Updated: 6 July 2026</p>
       
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        DinnerByDesign ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application and web platform (the "Application"). Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the application.
+        DinnerByDesign is designed to be lean, practical, and low-clutter. This page explains what information the app needs, why it is used, and how cookies or similar browser storage are handled.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
@@ -44,13 +44,16 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
       <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">1. Information We Collect</h2>
       <div className="space-y-3 text-xs text-gray-600">
         <p>
-          <strong className="text-gray-800">A. Personal Data:</strong> DinnerByDesign is designed to be a high-efficiency utility. We do not require you to create an account, log in, or provide personal identifiable information (such as your name, phone number, or physical address) to use the core recipe search features. If you contact us directly via our support channel (<code className="bg-gray-100 px-1 rounded text-gray-700">chef@dinnerbydesign.app</code>), we will retain your email address and message history solely to resolve your inquiry.
+          <strong className="text-gray-800">A. Account details:</strong> If you create an account, we store the details needed to run it, such as your email address, sign-in provider, subscription status, trial status, and account access level.
         </p>
         <p>
-          <strong className="text-gray-800">B. Application Data & Local Storage:</strong> To provide features like the Save & Schedule planner and the Shop checklist matrix, the Application utilizes your device's native local storage (such as <code className="bg-gray-100 px-1 rounded text-gray-700">localStorage</code> or IndexedDB). Your saved recipes, weekly dinner schedules, and active grocery checklists are stored <span className="underline font-medium">locally on your device</span>. This data is not uploaded to our servers or synced to external databases.
+          <strong className="text-gray-800">B. App data:</strong> To provide the service, we store information such as your preferences, saved dinners, weekly schedule, shopping list, search history, account settings, and email notification records.
         </p>
         <p>
-          <strong className="text-gray-800">C. Search Queries & Automated Processing:</strong> When you execute a search query (including text inputs, selected filter attributes, or using Leftover Mode), these anonymized keywords are transmitted to third-party processing services (specifically Google Gemini APIs) to generate tailored recipe suggestions. These queries do not contain personal identification data.
+          <strong className="text-gray-800">C. Search inputs:</strong> When you search, the app processes the words, filters, budget, timing, source choices, retailer choices, and preference settings needed to return suitable dinner results.
+        </p>
+        <p>
+          <strong className="text-gray-800">D. Support messages:</strong> If you contact us at <a href="mailto:chef@dinnerbydesign.app" className="text-accent font-semibold hover:underline">chef@dinnerbydesign.app</a>, we use your message and contact details to respond.
         </p>
       </div>
 
@@ -58,49 +61,71 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
 
       <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">2. How We Use Your Information</h2>
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        We use the processing tokens collected through the application to generate precise, context-aware recipe suggestions matching your budget and ingredient preferences; process input parameters to prioritize zero-waste and food-waste reduction recipes when Leftover Mode is active; and maintain, optimize, and debug the local performance of the application dashboard.
+        We use this information to provide search, saved dinners, scheduling, shopping lists, account access, subscription handling, support, security, and service diagnostics. We do not sell your personal data.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
 
-      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">3. Disclosure of Your Information</h2>
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">3. Cookies and browser storage</h2>
+      <div className="space-y-3 text-xs text-gray-600">
+        <p>
+          DinnerByDesign may use cookies, local storage, IndexedDB, or similar browser storage where needed for sign-in, security, account continuity, saved app state, preferences, and core functionality.
+        </p>
+        <p>
+          These are used to provide the service you request. We do not use advertising cookies, tracking pixels, sponsor tracking, or behavioural ad profiling.
+        </p>
+        <p>
+          If non-essential analytics are added in future, they will be off unless you actively choose to allow them.
+        </p>
+      </div>
+
+      <div className="border-b border-gray-200/60 my-4" />
+
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">4. Service providers</h2>
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        We do not sell, trade, or rent your data to third-party advertisers. We may share anonymized search query attributes with our trusted service providers strictly to fulfill the search functionality of the application. We may also disclose information if required by law to comply with legal obligations or protect user safety.
+        We use trusted service providers to operate the app, including hosting, database, authentication, payment processing, email delivery, and search processing. They receive only the information needed to provide those services. We may also disclose information where required by law or to protect the service and its users.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
 
-      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">4. Third-Party Websites & Content</h2>
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">5. Third-party websites and sources</h2>
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        The Application contains links to external third-party recipe source websites. Once you use these links to leave the Application, any information you provide to these third parties is not covered by this Privacy Policy. We claim no ownership over third-party content and encourage you to review their respective privacy policies.
+        DinnerByDesign links to external publishers, supermarkets, and other third-party sites. Once you leave DinnerByDesign, those sites are responsible for their own privacy practices and content.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
 
-      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">5. Data Security</h2>
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">6. Data security</h2>
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        We implement standard technical and programmatic security measures designed to protect your locally cached app configurations. However, please be aware that no security measures are perfect or impenetrable, and no method of data transmission over the internet can be guaranteed against interception or misuse.
+        We use reasonable technical and organisational measures to protect account and app data. No online service can guarantee complete security, but we aim to keep the data we hold limited, useful, and protected.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
 
-      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">6. Children's Privacy</h2>
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">7. Your choices</h2>
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        Our Application does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13. If we discover that a child under 13 has provided us with personal information, we immediately delete this from our support records.
+        You can update app preferences in your account settings. You can contact us to ask about personal data linked to your account, or to request deletion where applicable.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
 
-      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">7. Changes to This Privacy Policy</h2>
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">8. Children's privacy</h2>
       <p className="text-xs text-gray-600 leading-relaxed mb-4">
-        We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date at the top of this document.
+        DinnerByDesign is not intended for children under 13. We do not knowingly collect personal information from children under 13.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
 
-      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">8. Contact Us</h2>
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">9. Changes to this notice</h2>
+      <p className="text-xs text-gray-600 leading-relaxed mb-4">
+        We may update this notice from time to time. The latest version will be posted on this page.
+      </p>
+
+      <div className="border-b border-gray-200/60 my-4" />
+
+      <h2 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">10. Contact us</h2>
       <p className="text-xs text-gray-600 leading-relaxed font-sans">
-        If you have questions or comments about this Privacy Policy, please contact us at:<br />
+        If you have questions about privacy or cookies, contact:<br />
         <a href="mailto:chef@dinnerbydesign.app" className="text-accent font-semibold hover:underline">chef@dinnerbydesign.app</a>
       </p>
     </motion.div>

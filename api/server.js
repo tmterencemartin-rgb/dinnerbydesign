@@ -164279,8 +164279,8 @@ function createApp() {
         let schema = null;
         const pathName = req.path;
         if (pathName === "/privacy") {
-          title = "Privacy Policy \u2014 DinnerByDesign";
-          description = "Read how DinnerByDesign handles and secures your personal profiles, tastes, and recipe data.";
+          title = "Privacy & Cookies \u2014 DinnerByDesign";
+          description = "Read how DinnerByDesign handles account data, saved dinners, essential browser storage, cookies and privacy.";
           canonicalPath = "/privacy";
         } else if (pathName === "/terms") {
           title = "Terms of Service \u2014 DinnerByDesign";

@@ -65,8 +65,8 @@ const AppContent = () => {
         };
       case 'privacy':
         return {
-          title: 'Privacy Policy — DinnerByDesign',
-          description: 'Read the privacy policy of DinnerByDesign to see how we protect and manage your private data.',
+          title: 'Privacy & Cookies — DinnerByDesign',
+          description: 'Read how DinnerByDesign handles account data, saved dinners, essential browser storage, cookies and privacy.',
           canonicalPath: '/privacy'
         };
       case 'terms':

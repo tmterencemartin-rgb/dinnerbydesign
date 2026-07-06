@@ -853,7 +853,7 @@ export const LandingView: React.FC = () => {
               onClick={() => setView('privacy')} 
               className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"
             >
-              Privacy Policy
+              Privacy & cookies
             </button>
             <button 
               onClick={() => setView('terms')} 

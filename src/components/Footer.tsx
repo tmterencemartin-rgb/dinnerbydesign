@@ -37,7 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             }}
             className="text-gray-500 hover:text-gray-900 text-[13px] transition-colors whitespace-nowrap cursor-pointer"
           >
-            Privacy Policy
+            Privacy & cookies
           </a>
           <a 
             href="/terms"
