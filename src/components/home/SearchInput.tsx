@@ -18,7 +18,6 @@ interface SearchInputProps {
   isLeftoverMode?: boolean;
   isLowCost?: boolean;
   isReadOnly?: boolean;
-  hasPerformedSearch?: boolean;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -35,15 +34,11 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onClear,
   isLeftoverMode = false,
   isLowCost = false,
-  isReadOnly = false,
-  hasPerformedSearch = false
+  isReadOnly = false
 }) => {
   const getSearchPlaceholder = (): string => {
     if (isListening) {
       return "Listening...";
-    }
-    if (!hasPerformedSearch) {
-      return "The BBQ awaits!";
     }
     if (isLowCost && isLeftoverMode) {
       return "Search low-cost recipes matching your ingredients";
@@ -54,7 +49,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     if (isLeftoverMode) {
       return "What's in the fridge? Some leftover chicken or corned beef? A couple of red peppers?  Maybe some sticks of celery?";
     }
-    return "What sounds good for dinner?";
+    return "The BBQ awaits!";
   };
   return (
     <form
