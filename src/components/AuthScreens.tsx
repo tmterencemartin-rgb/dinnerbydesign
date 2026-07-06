@@ -92,7 +92,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
             <h2 className="text-[18px] font-bold text-gray-900 flex items-center justify-center">
               Dinner<span className="text-accent mx-[1px]">By</span>Design
             </h2>
-            <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-1">Real world recipes</p>
+            <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mt-1">Less searching. Better matches. Dinner, decided.</p>
           </div>
           
           <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">

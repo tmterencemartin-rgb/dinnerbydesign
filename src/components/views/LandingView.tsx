@@ -247,8 +247,8 @@ export const LandingView: React.FC = () => {
                 <motion.span variants={wordVariants} className="inline-block text-dbd-accent mx-[1.5px]">By</motion.span>
                 <motion.span variants={wordVariants} className="inline-block">Design</motion.span>
               </motion.div>
-              <span className="text-[8.5px] font-bold text-dbd-ink-3 tracking-[0.08em] mt-1.5 uppercase block leading-none font-ibm-plex-mono">
-                real world recipes
+              <span className="text-[8.5px] font-medium text-dbd-ink-3 tracking-[0.01em] mt-1.5 block leading-none whitespace-nowrap">
+                Less searching. Better matches. Dinner, decided.
               </span>
             </div>
           </div>
