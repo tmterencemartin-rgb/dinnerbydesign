@@ -42,7 +42,7 @@ export const TermsView: React.FC<TermsViewProps> = ({ setView }) => {
           <section className="space-y-3">
             <h2 className="text-[18px] font-bold text-gray-900">2. Nature of Service</h2>
             <p>
-              This application provides generated dinner suggestions. While we strive for accuracy, users should always verify details, especially ingredient safety and cooking times, before preparation.
+              This application provides generated dinner recipe suggestions. While we strive for accuracy, users should always verify details, especially ingredient safety and cooking times, before preparation.
             </p>
           </section>
 
