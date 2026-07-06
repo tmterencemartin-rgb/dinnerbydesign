@@ -612,6 +612,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     isLeftoverMode={isLeftoverMode}
                     isLowCost={isLowCost}
                     isReadOnly={isReadOnly}
+                    hasPerformedSearch={hasPerformedSearch}
                   />
                 </div>
                 <Tooltip text="Open Preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
