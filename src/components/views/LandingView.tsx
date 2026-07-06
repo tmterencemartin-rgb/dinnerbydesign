@@ -825,10 +825,10 @@ export const LandingView: React.FC = () => {
               <span className="text-dbd-ink">Design</span>
             </h5>
             <span className="text-[8.5px] font-bold text-dbd-ink-3 tracking-[0.08em] uppercase block leading-none font-ibm-plex-mono select-none">
-              Real-world recipes
+              Less searching
             </span>
             <p className="text-[12px] text-dbd-ink-3 font-semibold pt-1">
-              Planned around your preferences.
+              Better matches. Dinner, decided.
             </p>
             <p className="text-[11px] sm:text-[12px] text-dbd-ink-3 max-w-4xl mx-auto leading-relaxed pt-3">
               DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.

@@ -72,7 +72,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
                   <motion.span variants={wordVariants} className="inline-block font-bold text-dbd-accent mx-[1px]">By</motion.span>
                   <motion.span variants={wordVariants} className="inline-block">Design</motion.span>
                 </motion.div>
-                <span className="text-[9px] font-medium text-dbd-ink-3 tracking-[0.05em] mt-1 opacity-80 text-left whitespace-nowrap hidden sm:block">Find exactly what to cook — and everything you need to buy.</span>
+                <span className="text-[9px] font-medium text-dbd-ink-3 tracking-[0.05em] mt-1 opacity-80 text-left whitespace-nowrap hidden sm:block">Less searching. Better matches. Dinner, decided.</span>
               </div>
             </button>
             

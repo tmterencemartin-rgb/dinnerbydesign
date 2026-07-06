@@ -14,7 +14,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           <div className="text-gray-500 text-[13px] flex flex-col items-center lg:items-start gap-1 relative z-10">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
             <span className="text-gray-400 text-[12px] font-semibold">
-              Real-world recipes, planned around your preferences.
+              Less searching. Better matches. Dinner, decided.
             </span>
             <a 
               href="mailto:chef@dinnerbydesign.app" 
