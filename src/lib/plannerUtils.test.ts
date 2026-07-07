@@ -223,6 +223,84 @@ describe('plannerUtils', () => {
     expect(generatedQueries[1]).toContain('1 UK supermarket ready-made dinner products');
   });
 
+  it('passes no-preference protein and under 45 minute timing into weekly planning params', async () => {
+    let capturedQuery = '';
+    let capturedMaxTime: number | undefined;
+
+    const result = await createWeeklyDinnerPlan({
+      settings: {
+        dinnerCount: 3,
+        budget: '30',
+        servings: 2,
+        protein: 'no-preference',
+        time: 'under45',
+        homemadeCount: 3,
+      },
+      planner: [],
+      preferences,
+      generateDinnerSuggestions: async params => {
+        capturedQuery = params.query;
+        capturedMaxTime = params.maxTotalTime;
+        return {
+          recipes: [
+            {
+              title: 'Flexible Dinner',
+              description: 'easy dinner',
+              ingredients: [],
+              instructions: [],
+              cuisine: 'Dinner',
+              totalServings: 2,
+              totalTime: 40,
+              saladType: 'none',
+              isVegetarian: false,
+              isPescatarian: false,
+              isVegan: false,
+              dietFlagsVerified: true,
+            },
+            {
+              title: 'Flexible Dinner Two',
+              description: 'easy dinner',
+              ingredients: [],
+              instructions: [],
+              cuisine: 'Dinner',
+              totalServings: 2,
+              totalTime: 35,
+              saladType: 'none',
+              isVegetarian: false,
+              isPescatarian: false,
+              isVegan: false,
+              dietFlagsVerified: true,
+            },
+            {
+              title: 'Flexible Dinner Three',
+              description: 'easy dinner',
+              ingredients: [],
+              instructions: [],
+              cuisine: 'Dinner',
+              totalServings: 2,
+              totalTime: 30,
+              saladType: 'none',
+              isVegetarian: false,
+              isPescatarian: false,
+              isVegan: false,
+              dietFlagsVerified: true,
+            },
+          ],
+        };
+      },
+      addLog: () => {},
+    });
+
+    expect(result.dinners.map(item => item.title)).toEqual([
+      'Flexible Dinner',
+      'Flexible Dinner Two',
+      'Flexible Dinner Three',
+    ]);
+    expect(capturedQuery).toContain('any suitable protein');
+    expect(capturedQuery).toContain('dinners under 45 minutes');
+    expect(capturedMaxTime).toBe(45);
+  });
+
   it('falls back to focused weekly searches and returns a shortage alert', async () => {
     const warnings: string[] = [];
     let calls = 0;

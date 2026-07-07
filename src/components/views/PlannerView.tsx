@@ -579,12 +579,19 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
                       >
                         <option value="mixed">Mixed</option>
+                        <option value="no-preference">No preference</option>
                         <option value="chicken">Chicken</option>
-                        <option value="fish">Fish</option>
+                        <option value="seafood">Fish & seafood</option>
                         <option value="beef">Beef</option>
                         <option value="pork">Pork</option>
+                        <option value="lamb">Lamb</option>
+                        <option value="turkey">Turkey</option>
+                        <option value="pescatarian">Pescatarian</option>
                         <option value="vegetarian">Vegetarian</option>
                         <option value="vegan">Vegan</option>
+                        <option value="plant-based">Tofu / plant-based</option>
+                        <option value="pulses">Pulses</option>
+                        <option value="eggs">Eggs</option>
                       </select>
                     </label>
                     <label className="space-y-1">
@@ -597,6 +604,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         <option value="any">Any</option>
                         <option value="quick">Quick</option>
                         <option value="under30">Under 30 mins</option>
+                        <option value="under45">Under 45 mins</option>
                       </select>
                     </label>
                     <label className="space-y-1">
