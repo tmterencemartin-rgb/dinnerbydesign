@@ -753,33 +753,36 @@ export const AdminDashboard: React.FC = () => {
     >
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex items-center gap-3 lg:min-w-[210px]">
             <button 
               onClick={() => setView('settings')}
-              className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+              className="shrink-0 p-1.5 hover:bg-gray-100 rounded transition-colors"
+              aria-label="Back to settings"
             >
               <ArrowLeft className="w-5 h-5 text-gray-500" />
             </button>
-            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Subscription Dashboard</h1>
+            <div className="min-w-0">
+              <h1 className="text-xl font-bold text-gray-900 tracking-tight leading-tight">Subscription Dashboard</h1>
+            </div>
           </div>
           
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative flex-grow sm:flex-grow-0">
+          <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-[minmax(220px,1fr)_180px] lg:w-auto lg:grid-cols-[260px_180px]">
+            <div className="relative min-w-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input 
                 type="text" 
                 placeholder="Search users..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full sm:w-64 pl-9 pr-4 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-dbd-accent/20 focus:border-dbd-accent"
+                className="h-10 w-full pl-9 pr-4 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-dbd-accent/20 focus:border-dbd-accent"
               />
             </div>
             
             <select 
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-3 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-dbd-accent/20 bg-white"
+              className="h-10 w-full px-3 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-dbd-accent/20 bg-white"
             >
               <option value="all">All Status</option>
               <option value="paid">Paid</option>
@@ -791,25 +794,27 @@ export const AdminDashboard: React.FC = () => {
               <option value="no_stripe">No Stripe Customer</option>
             </select>
 
-            <button
-              onClick={handleExportCsv}
-              disabled={loading || filteredUsers.length === 0}
-              className="px-3 py-2 text-xs font-bold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded transition-colors flex items-center gap-1.5 uppercase tracking-wider disabled:opacity-50"
-              title="Export the current filtered subscriber list"
-            >
-              <Download className="w-3.5 h-3.5" />
-              Export CSV
-            </button>
+            <div className="flex flex-wrap items-center gap-2 sm:col-span-2">
+              <button
+                onClick={handleExportCsv}
+                disabled={loading || filteredUsers.length === 0}
+                className="h-9 px-3 text-xs font-bold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded transition-colors inline-flex items-center justify-center gap-1.5 uppercase tracking-wider disabled:opacity-50"
+                title="Export the current filtered subscriber list"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Export CSV
+              </button>
 
-            <button
-              onClick={handleDeleteAllUsers}
-              disabled={loading || actionLoading !== null}
-              className="px-3 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition-colors flex items-center gap-1.5 uppercase tracking-wider disabled:opacity-50"
-              title="Delete all other user accounts from the database"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              Delete All Users
-            </button>
+              <button
+                onClick={handleDeleteAllUsers}
+                disabled={loading || actionLoading !== null}
+                className="h-9 px-3 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition-colors inline-flex items-center justify-center gap-1.5 uppercase tracking-wider disabled:opacity-50"
+                title="Delete all other user accounts from the database"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Delete All Users
+              </button>
+            </div>
           </div>
         </div>
       </div>
