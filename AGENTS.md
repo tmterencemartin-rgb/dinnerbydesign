@@ -52,13 +52,20 @@ When testing this web application locally, you can connect to your local backend
 
 # Core Transactional Email Automation
 
-- **Password Changed Confirmation (Email 1)**:
-  - Dispatched via `/api/send-email` using `Resend` instantly upon successful client-side updates inside `updateUserPassword` in `AuthContext.tsx`.
-  - Automatically captures browser userAgent metadata and real-time transaction timestamps to include security alerts and OS details.
-  - Includes a prominent warnings block with a security lock indicator if the change was unauthorised, as well as a direct CTA to back to the main app dashboard.
+- **Delivery path**: App-authored transactional emails are sent through `/api/send-email` using `Resend`. Stripe lifecycle emails use `sendTrackedEmail` in `src/api-server.ts` so delivery attempts are recorded in `emailEvents`.
+- **Welcome email**: Sent from `AuthContext.tsx` for first-time users and retried on profile load if `welcomeEmailSent` was not recorded.
+- **Trial ending reminder**: Sent from `AuthContext.tsx` when a non-paying user is within 24 hours of trial expiry. Subject format is `Your free trial ends [trial end date]`.
+- **Password changed confirmation**: Sent after successful password updates inside `updateUserPassword` in `AuthContext.tsx`; includes browser/OS and timestamp context for security awareness.
+- **Account deletion and data clear confirmation**: Sent from `SettingsView.tsx` after profile data collections are wiped and before `user.delete()` removes the authenticated session.
+- **Subscription active confirmation**: Sent from the Stripe `checkout.session.completed` webhook once per user when DinnerByDesign activates paid access.
+- **Subscription cancelled confirmation**: Sent from the Stripe `customer.subscription.deleted` webhook once per user.
+- **Payment failed notice**: Sent from the Stripe `invoice.payment_failed` webhook once per invoice, with grace-period messaging.
+- **Permanent access granted email**: Sent from `AdminDashboard.tsx` when an admin grants permanent full access.
+- **User-requested emails**: Recipe email, shopping-list email, Settings test email, and admin-triggered sends are not treated as automatic lifecycle emails, but they still use `/api/send-email` and appear in email telemetry where metadata is provided.
 
-- **Account Deletion & Data Clear Confirmation (Email 2)**:
-  - Dispatched client-side via `/api/send-email` within `handleDeleteAccount` in `SettingsView.tsx` right after the user profile data collections are successfully wiped but immediately before `user.delete()` is executed. This prevents session loss during the network fetch.
-  - Includes polite support details, a data propagation notice (up to 48 hours), and an interactive link to an exit survey to optimize UX retention efforts.
+# Weekly Planner Controls
 
-
+- **Protein options**: The weekly planner protein dropdown is alphabetised and includes Beef, Chicken, Eggs, Fish & seafood, Lamb, Mixed, No preference, Pescatarian, Pork, Pulses, Tofu / plant-based, Turkey, Vegetarian, and Vegan.
+- **Time options**: Weekly planner time supports Any, Quick, Under 30 mins, and Under 45 mins. Under-30 and under-45 selections set hard `maxTotalTime` limits in weekly-plan search params.
+- **Saved dinner quick filters**: The saved-list quick filters are Under 20 min, Vegetarian, High protein, and Batch-friendly. Cost remains a sort option through `Lowest cost first`, not a duplicate quick filter.
+- **Compact saved rows**: Do not show `Main salad` / `Side salad` in compact saved or planner rows. Salad type can remain visible in richer search-result/detail contexts where it helps comparison.

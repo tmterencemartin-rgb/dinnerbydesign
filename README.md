@@ -1,6 +1,8 @@
 # DinnerByDesign
 
-This contains everything you need to run the app locally.
+DinnerByDesign is a UK-focused dinner planning app for recipe search, saved dinners, weekly scheduling, ready-made supermarket options, and generated shopping lists.
+
+Recent app areas covered by the local documentation include preference-led search, transactional email automation, weekly planner controls, Firestore persistence helpers, and release checks.
 
 ## Run Locally
 

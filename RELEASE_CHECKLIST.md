@@ -70,8 +70,15 @@ Use this before sharing the app publicly, after changing environment variables, 
 - [ ] Email arrives from:
   `chef@dinnerbydesign.app`
 - [ ] Welcome email sends for new accounts.
+- [ ] Trial ending reminder sends within 24 hours of trial end.
+- [ ] Password changed confirmation sends after a password update.
+- [ ] Account closure confirmation sends during account deletion.
 - [ ] Subscription confirmation email sends after successful checkout.
+- [ ] Subscription cancellation email sends after cancellation webhook.
+- [ ] Payment failed email sends after `invoice.payment_failed`.
+- [ ] Permanent access email sends when admin grants permanent access.
 - [ ] Shopping list and recipe email buttons work.
+- [ ] Admin email-events panel shows recent automated and user-requested send attempts.
 
 ## Admin / Support
 
@@ -107,7 +114,6 @@ Use this before sharing the app publicly, after changing environment variables, 
 Run locally:
 
 ```bash
-npm run lint
 npm test
 npm run build
 ```

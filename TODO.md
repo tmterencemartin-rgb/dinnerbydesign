@@ -16,5 +16,5 @@
 - [x] **App.tsx Refactor**: Extracted helper modules and cleaned up component logic.
 - [x] **Gemini Service Overhaul**: Implemented structured output, lean prompts, and robust error handling.
 - [x] **Firestore Audit**: Optimized queries, tightened security rules, and verified listener hygiene.
-- [x] **Utility Tests**: 24/24 tests passing.
+- [x] **Utility and workflow tests**: 103 test cases cover search utilities, dietary safety, measurement conversion, planner utilities/writes, saved recipe persistence, shopping list writes, pantry writes, preference migration, and search hook lifecycle.
 - [x] **Token Usage Monitoring**: Added server-side logging for token counts. Monitor `candidatesTokenCount` post-deployment to determine if `maxOutputTokens` can be safely reduced from 16000.
