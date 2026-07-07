@@ -1031,24 +1031,24 @@ export const AdminDashboard: React.FC = () => {
                           </div>
                           <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600">
                             {primaryDetails.map((item, index) => (
-                              <React.Fragment key={item as string}>
-                                {index > 0 && <span className="text-gray-300">·</span>}
+                              <span key={item as string} className="inline-flex items-center gap-2">
+                                {index > 0 && <span className="text-gray-300" aria-hidden="true">·</span>}
                                 <span>{item}</span>
-                              </React.Fragment>
+                              </span>
                             ))}
                           </div>
                           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-400">
                             {secondaryDetails.map((item, index) => (
-                              <React.Fragment key={item as string}>
-                                {index > 0 && <span className="text-gray-300">·</span>}
+                              <span key={item as string} className="inline-flex items-center gap-2">
+                                {index > 0 && <span className="text-gray-300" aria-hidden="true">·</span>}
                                 <span className={String(item).startsWith('No Stripe') ? 'italic' : ''}>{item}</span>
-                              </React.Fragment>
+                              </span>
                             ))}
                             {subscription?.stripeSubscriptionId && (
-                              <>
-                                <span className="text-gray-300">·</span>
+                              <span className="inline-flex items-center gap-2">
+                                <span className="text-gray-300" aria-hidden="true">·</span>
                                 <span className="font-mono">Sub {formatShortId(subscription.stripeSubscriptionId)}</span>
-                              </>
+                              </span>
                             )}
                             <span className="hidden group-hover:inline text-gray-300 font-mono">· UID {user.uid}</span>
                           </div>
