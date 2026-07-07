@@ -103,14 +103,6 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
                 </>
               )}
 
-              {item.saladType && item.saladType !== 'none' && (
-                <>
-                  <span className="uppercase text-[10px] font-bold tracking-wider">
-                    {item.saladType === 'main' ? 'MAIN SALAD' : 'SIDE SALAD'}
-                  </span>
-                </>
-              )}
-
               {source === 'ready-made' && (item as ReadyMeal).isAirFryerFriendly && (
                 <div className="ml-2 text-[10px] text-accent font-bold bg-accent/10 px-2 py-0.5 rounded-md uppercase tracking-wider">
                   Air Fryer

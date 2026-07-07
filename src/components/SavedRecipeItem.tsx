@@ -203,11 +203,6 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 {recipe.calories} kcal
               </span>
             )}
-            {recipe.saladType && recipe.saladType !== 'none' && (
-              <span className="text-gray-500 font-medium uppercase tracking-wider text-[10.5px]">
-                {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
-              </span>
-            )}
             {personalNote && (
               <span className="bg-orange-50 text-orange-800 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
                 <StickyNote className="w-2.5 h-2.5" /> Note
@@ -465,14 +460,6 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     items.push(
                       <span key="airfryer" className="text-gray-600 font-medium">
                         Air fryer
-                      </span>
-                    );
-                  }
-                  
-                  if (recipe.saladType && recipe.saladType !== 'none') {
-                    items.push(
-                      <span key="salad" className="text-gray-500 font-medium capitalize">
-                        {recipe.saladType === 'main' ? 'Main salad' : 'Side salad'}
                       </span>
                     );
                   }
