@@ -754,11 +754,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               >
                                 <Settings className="w-3.5 h-3.5" />
                                 <span>Filters</span>
-                                {hasActiveSavedFilters && (
-                                  <span className="min-w-[14px] h-[14px] rounded-full bg-accent px-1 text-[9px] font-bold leading-[14px] text-white text-center">
-                                    {activeSavedFilterCount}
-                                  </span>
-                                )}
+                                <span
+                                  className={`min-w-[14px] h-[14px] rounded-full px-1 text-[9px] font-bold leading-[14px] text-white text-center ${
+                                    hasActiveSavedFilters ? 'bg-accent' : 'bg-transparent'
+                                  }`}
+                                  aria-hidden={!hasActiveSavedFilters}
+                                >
+                                  {hasActiveSavedFilters ? activeSavedFilterCount : ''}
+                                </span>
                                 <span className="text-gray-400 text-[10px] ml-0.5">▼</span>
                               </button>
 
