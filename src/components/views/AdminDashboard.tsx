@@ -1013,6 +1013,7 @@ export const AdminDashboard: React.FC = () => {
                     hasActiveGrace ? `Grace ends ${formatDate(graceEndsAt)}` : null,
                     getSubscriptionStartDate(user) ? `Subscribed ${formatDate(getSubscriptionStartDate(user))}` : null,
                     subscription?.currentPeriodEnd ? `${getPeriodLabel(user)} ${formatDate(subscription.currentPeriodEnd)}` : null,
+                    subscription?.stripeSubscriptionId ? `Sub ${formatShortId(subscription.stripeSubscriptionId)}` : null,
                     user.permanentAccessGrantedAt ? `Permanent access ${formatDate(user.permanentAccessGrantedAt)}` : null,
                     user.permanentAccessEmailSentAt ? `Permanent email sent ${formatDate(user.permanentAccessEmailSentAt)}` : null,
                     user.permanentAccessEmailError ? `Permanent email failed: ${user.permanentAccessEmailError}` : null,
@@ -1032,24 +1033,18 @@ export const AdminDashboard: React.FC = () => {
                           <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600">
                             {primaryDetails.map((item, index) => (
                               <span key={item as string} className="inline-flex items-center gap-2">
-                                {index > 0 && <span className="text-gray-300" aria-hidden="true">·</span>}
                                 <span>{item}</span>
+                                {index < primaryDetails.length - 1 && <span className="text-gray-300" aria-hidden="true">·</span>}
                               </span>
                             ))}
                           </div>
                           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-400">
                             {secondaryDetails.map((item, index) => (
                               <span key={item as string} className="inline-flex items-center gap-2">
-                                {index > 0 && <span className="text-gray-300" aria-hidden="true">·</span>}
-                                <span className={String(item).startsWith('No Stripe') ? 'italic' : ''}>{item}</span>
+                                <span className={`${String(item).startsWith('No Stripe') ? 'italic' : ''} ${String(item).startsWith('Sub ') ? 'font-mono' : ''}`}>{item}</span>
+                                {index < secondaryDetails.length - 1 && <span className="text-gray-300" aria-hidden="true">·</span>}
                               </span>
                             ))}
-                            {subscription?.stripeSubscriptionId && (
-                              <span className="inline-flex items-center gap-2">
-                                <span className="text-gray-300" aria-hidden="true">·</span>
-                                <span className="font-mono">Sub {formatShortId(subscription.stripeSubscriptionId)}</span>
-                              </span>
-                            )}
                             <span className="hidden group-hover:inline text-gray-300 font-mono">· UID {user.uid}</span>
                           </div>
                           <div className="mt-2">
