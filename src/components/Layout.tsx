@@ -48,7 +48,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
     <div className="min-h-screen border border-dbd-rule/10 bg-gray-50 text-dbd-ink flex flex-col transition-colors duration-250 pb-[env(safe-area-inset-bottom)]">
       {/* Navigation */}
       <nav className="border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1.25rem+env(safe-area-inset-top))] md:pt-7 lg:pt-9 pb-0 transition-colors duration-250">
-        <div className="max-w-6xl mx-auto px-4 md:px-3 lg:px-6">
+        <div className="max-w-6xl mx-auto px-3 md:px-3 lg:px-6">
           {/* Row 1: Brand & Utilities */}
           <div className="flex justify-between items-center mb-2 md:mb-3 lg:mb-4">
             <button 
@@ -58,8 +58,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
               }}
               aria-label="Logo - Back to landing page"
             >
-              <div className="w-9 h-9 bg-dbd-surface-2 border border-dbd-rule/40 rounded-xl flex items-center justify-center mr-2 sm:mr-3 group-hover:border-dbd-accent transition-all">
-                <LogoIcon className="w-7 h-7 transition-transform group-hover:scale-105" />
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-dbd-surface-2 border border-dbd-rule/40 rounded-full flex items-center justify-center mr-2 group-hover:border-dbd-accent transition-all">
+                <LogoIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-105" />
               </div>
               <div className="flex flex-col items-start text-left min-w-0">
                 <motion.div 

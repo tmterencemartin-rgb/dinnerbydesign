@@ -164350,7 +164350,7 @@ function createApp() {
                     "name": "What is DinnerByDesign?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "DinnerByDesign is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place."
+                      "text": "Dinner by Design is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place."
                     }
                   },
                   {
@@ -164374,7 +164374,7 @@ function createApp() {
                     "name": "Does it estimate shopping costs?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners."
+                      "text": "Yes. Dinner by Design estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners."
                     }
                   }
                 ]

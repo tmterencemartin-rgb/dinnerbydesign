@@ -8,26 +8,27 @@ import {
   Trash, 
   Search, 
   History, 
-  Beef,
   Wind,
   Settings,
-  Lock,
-  ChevronRight,
-  ChevronDown,
   List,
-  LayoutGrid,
-  Clock,
-  Loader2
+  Loader2,
+  StickyNote
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Recipe, ReadyMeal, SavedRecipe } from '../../types';
-import { Tooltip } from '../ui/Tooltip';
+import { SavedRecipe } from '../../types';
 import { RetailerCtaLink } from '../RetailerCtaLink';
 import { SavedRecipeItem } from '../SavedRecipeItem';
-import { passesHardConstraints, passesDietaryRule } from '../../lib/dietarySafety';
-import { buildSearchParams, checkSearchMatch, cleanSearchParams } from '../../lib/searchUtils';
-import { getConvenienceProfile } from '../../lib/recipeUtils';
 import { buildSupermarketPlanSummary } from '../../lib/shoppingUtils';
+import {
+  ConvenienceFilter,
+  SavedSortOption,
+  WeeklyPlanTime,
+  createWeeklyDinnerPlan,
+  filterAndSortSavedRecipes,
+  findCostSavingSwaps,
+  getCompliantUnscheduledRecipes,
+  parseIngredientLine,
+} from '../../lib/plannerUtils';
 import { calculateActiveIngredientsCost } from '../../services/groceryService';
 
 interface PlannerViewProps {
@@ -58,23 +59,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [viewingPlannerEntry, setViewingPlannerEntry] = useState<SavedRecipe | null>(null);
   const [isEnriching, setIsEnriching] = useState(false);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
+  const [editingScheduledNoteId, setEditingScheduledNoteId] = useState<string | null>(null);
+  const [scheduledNoteDraft, setScheduledNoteDraft] = useState('');
+  const [isSavingScheduledNote, setIsSavingScheduledNote] = useState(false);
 
   useEffect(() => {
     setCheckedIngredients({});
   }, [viewingPlannerEntry?.id, viewingPlannerEntry?.title]);
-
-  const parseIngredient = (ing: string) => {
-    const cleanIng = ing.replace(/^[•\-\*\s\.\(\)]+/, '').trim();
-    const match = cleanIng.match(/^([\d\/\.\s\-½⅓¼¾]+(?:(?:oz|g|kg|ml|l|tbsp|tsp|cups?|slices?|pcs|pieces?|cans?|pots?|cloves?|stalks?|tins?|bunches?|sprigs?)\b)?)?(.*)$/i);
-    if (match) {
-      const qtyUnit = (match[1] || '').trim();
-      const name = match[2].trim();
-      if (qtyUnit) {
-        return { qtyUnit, name };
-      }
-    }
-    return { qtyUnit: '', name: cleanIng };
-  };
 
   // Handle enrichment for the detail view
   useEffect(() => {
@@ -112,13 +103,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [showDeleteAllSavedConfirm, setShowDeleteAllSavedConfirm] = useState(false);
   const [targetPlannerDay, setTargetPlannerDay] = useState<string | null>(null);
   const [savedSearchQuery, setSavedSearchQuery] = useState('');
-  const [savedSortBy, setSavedSortBy] = useState<'newest' | 'oldest' | 'name' | 'quickest' | 'lowest-cost'>('newest');
-  const [convenienceFilter, setConvenienceFilter] = useState<'all' | 'scratch' | 'convenience'>('all');
+  const [savedSortBy, setSavedSortBy] = useState<SavedSortOption>('newest');
+  const [convenienceFilter, setConvenienceFilter] = useState<ConvenienceFilter>('all');
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [quickPills, setQuickPills] = useState({
     under20: false,
-    budget: false,
-    healthy: false,
+    vegetarian: false,
+    highProtein: false,
     batch: false,
   });
   const [hasExhaustedSaved, setHasExhaustedSaved] = useState(false);
@@ -130,7 +121,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planBudget, setPlanBudget] = useState('40');
   const [planServings, setPlanServings] = useState(profile?.preferences?.servings || 2);
   const [planProtein, setPlanProtein] = useState('mixed');
-  const [planTime, setPlanTime] = useState<'any' | 'quick' | 'under30'>('any');
+  const [planTime, setPlanTime] = useState<WeeklyPlanTime>('any');
   const [planHomemadeCount, setPlanHomemadeCount] = useState<number>(5);
   const [planAlert, setPlanAlert] = useState<string | null>(null);
   const [isPlanningWeek, setIsPlanningWeek] = useState(false);
@@ -160,22 +151,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     setSavedSearchQuery('');
     setQuickPills({
       under20: false,
-      budget: false,
-      healthy: false,
+      vegetarian: false,
+      highProtein: false,
       batch: false,
     });
     setSavedSortBy('newest');
     setConvenienceFilter('all');
-  };
-
-  const parseCost = (recipe: SavedRecipe): number => {
-    const costStr = recipe.costPerPortion || recipe.price || '';
-    const match = costStr.match(/[\d.]+/);
-    return match ? parseFloat(match[0]) : 0;
-  };
-
-  const getRecipeTime = (recipe: SavedRecipe): number => {
-    return recipe.totalTime || (recipe.prepTime || 0) + (recipe.cookTime || 0);
   };
 
   const activeSavedRecipes = React.useMemo(
@@ -186,82 +167,20 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     () => activeSavedRecipes.filter(item => !item.scheduledDate).length,
     [activeSavedRecipes]
   );
+  const compliantUnscheduledSavedRecipes = React.useMemo(
+    () => getCompliantUnscheduledRecipes(savedRecipes, profile?.preferences),
+    [savedRecipes, profile?.preferences]
+  );
 
   const filteredSavedRecipes = React.useMemo(() => {
-    const activePrefs = profile?.preferences;
-    const unscheduled = activeSavedRecipes.filter(r => !r.scheduledDate);
-    
-    let processed = unscheduled.filter(recipe => {
-      // 0. Hard Constraints (Dietary, Allergies, Exclusions, Calories, Budget)
-      if (activePrefs) {
-        const safetyPrefs = {
-          dietaryRule: activePrefs.dietaryRule || 'none',
-          allergies: activePrefs.allergies || [],
-          exclusions: activePrefs.exclusions || [],
-          religiousEthical: activePrefs.religiousEthical || [],
-          calorieCeiling: activePrefs.calorieCeiling,
-          budgetLimit: activePrefs.budgetLimit
-        };
-        if (!passesHardConstraints(recipe, safetyPrefs)) return false;
-      }
-
-      // 1. Search Query Match
-      if (savedSearchQuery) {
-        const matchesSearch = checkSearchMatch(recipe, savedSearchQuery);
-        if (!matchesSearch) return false;
-      }
-
-      // 2. Quick Pills (Mood Toggles)
-      if (quickPills.under20) {
-        const time = getRecipeTime(recipe);
-        if (!time || time > 20) return false;
-      }
-      if (quickPills.budget) {
-        const cost = parseCost(recipe);
-        if (cost === 0 || cost >= 5) return false;
-      }
-      if (quickPills.healthy) {
-        const kcal = recipe.caloriesPerPortion || recipe.calories || 0;
-        const isHealthy = recipe.isNutritious || (kcal > 0 && kcal < 500);
-        if (!isHealthy) return false;
-      }
-      if (quickPills.batch) {
-        if (!recipe.batchCooking?.suitable) return false;
-      }
-
-      // 3. Convenience Profile Segment Filter
-      if (convenienceFilter !== 'all') {
-        const itemProfile = recipe.convenienceProfile || getConvenienceProfile(recipe);
-        if (itemProfile !== convenienceFilter) return false;
-      }
-
-      return true;
+    return filterAndSortSavedRecipes({
+      recipes: activeSavedRecipes,
+      preferences: profile?.preferences,
+      searchQuery: savedSearchQuery,
+      quickPills,
+      convenienceFilter,
+      sortBy: savedSortBy,
     });
-
-    processed.sort((a, b) => {
-      if (savedSortBy === 'name') {
-        return a.title.localeCompare(b.title);
-      }
-      if (savedSortBy === 'quickest') {
-        const timeA = getRecipeTime(a) || Number.MAX_SAFE_INTEGER;
-        const timeB = getRecipeTime(b) || Number.MAX_SAFE_INTEGER;
-        return timeA - timeB;
-      }
-      if (savedSortBy === 'lowest-cost') {
-        const costA = parseCost(a) || Number.MAX_SAFE_INTEGER;
-        const costB = parseCost(b) || Number.MAX_SAFE_INTEGER;
-        return costA - costB;
-      }
-      
-      const timeA = (a.savedAt as any)?.seconds || 0;
-      const timeB = (b.savedAt as any)?.seconds || 0;
-      if (savedSortBy === 'oldest') {
-        return timeA - timeB;
-      }
-      return timeB - timeA;
-    });
-
-    return processed;
   }, [
     activeSavedRecipes,
     profile?.preferences,
@@ -271,9 +190,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     convenienceFilter
   ]);
 
-  const hasActiveSavedFilters = convenienceFilter !== 'all' || Object.values(quickPills).some(Boolean);
+  const activeSavedFilterCount = (convenienceFilter !== 'all' ? 1 : 0) + Object.values(quickPills).filter(Boolean).length;
+  const hasActiveSavedFilters = activeSavedFilterCount > 0;
 
-  const source = profile?.preferences?.preferredMode || 'cook';
   const supermarketPlanSummary = React.useMemo(
     () => buildSupermarketPlanSummary(planner, profile?.preferences?.preferredSupermarkets || []),
     [planner, profile?.preferences?.preferredSupermarkets]
@@ -286,47 +205,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     [shoppingList]
   );
   const costSavingSwaps = React.useMemo(() => {
-    const scheduled = planner.filter(item => !!item.scheduledDate);
-    const unscheduledSaved = activeSavedRecipes.filter(item => !item.scheduledDate);
-    const activePrefs = profile?.preferences;
-    const safetyPrefs = activePrefs ? {
-      dietaryRule: activePrefs.dietaryRule || 'none',
-      allergies: activePrefs.allergies || [],
-      exclusions: activePrefs.exclusions || [],
-      religiousEthical: activePrefs.religiousEthical || [],
-      calorieCeiling: activePrefs.calorieCeiling,
-      budgetLimit: activePrefs.budgetLimit
-    } : null;
-    const totalCost = (item: SavedRecipe) => {
-      const costStr = item.costPerPortion || item.price || '';
-      const match = costStr.match(/[\d.]+/);
-      const perPortion = match ? parseFloat(match[0]) : 0;
-      const servings = item.requestedServings || profile?.preferences?.servings || item.totalServings || 1;
-      return perPortion * servings;
-    };
-
-    const swaps: Array<{
-      scheduled: SavedRecipe;
-      replacement: SavedRecipe;
-      saving: number;
-    }> = [];
-
-    scheduled.forEach(current => {
-      const currentCost = totalCost(current);
-      if (currentCost <= 0) return;
-
-      unscheduledSaved.forEach(candidate => {
-        if (safetyPrefs && !passesHardConstraints(candidate, safetyPrefs)) return;
-        const candidateCost = totalCost(candidate);
-        const saving = currentCost - candidateCost;
-        if (candidateCost <= 0 || saving < 1) return;
-        swaps.push({ scheduled: current, replacement: candidate, saving });
-      });
+    return findCostSavingSwaps({
+      planner,
+      savedRecipes: activeSavedRecipes,
+      preferences: profile?.preferences,
+      servings: profile?.preferences?.servings || 1,
     });
-
-    return swaps
-      .sort((a, b) => b.saving - a.saving)
-      .slice(0, 5);
   }, [planner, activeSavedRecipes, profile?.preferences]);
   const bestCostSavingSwap = costSavingSwaps[0] || null;
   const additionalCostSavingSwaps = costSavingSwaps.slice(1);
@@ -343,6 +227,32 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     return false;
   };
 
+  const openScheduledNoteEditor = (recipe: SavedRecipe) => {
+    if (!recipe.id) return;
+    setEditingScheduledNoteId(recipe.id);
+    setScheduledNoteDraft(recipe.personalNote || '');
+  };
+
+  const handleSaveScheduledNote = async (recipe: SavedRecipe) => {
+    if (!recipe.id || isSavingScheduledNote) return;
+    if (checkReadOnly("Your trial has ended. Upgrade to edit your collection.")) return;
+    const cleanNote = scheduledNoteDraft.trim().slice(0, 1000);
+    setIsSavingScheduledNote(true);
+    try {
+      await updateRecipe(recipe.id, { personalNote: cleanNote || null });
+      if (viewingPlannerEntry?.id === recipe.id) {
+        setViewingPlannerEntry({ ...viewingPlannerEntry, personalNote: cleanNote || null });
+      }
+      showToast(cleanNote ? 'Note saved' : 'Note removed');
+      setEditingScheduledNoteId(null);
+    } catch (err: any) {
+      addLog(`UI ERROR: save scheduled note failed for ${recipe.id}: ${err?.message || err}`);
+      showToast('Could not save note');
+    } finally {
+      setIsSavingScheduledNote(false);
+    }
+  };
+
   const handlePlanWeek = async () => {
     if (checkReadOnly("Your trial has ended. Upgrade to plan your week.")) return;
     if (!user) {
@@ -353,118 +263,38 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     setPlanAlert(null);
     setIsPlanningWeek(true);
     try {
-      const servingsCount = planServings;
-      const budgetValue = Number(planBudget);
-      const perPortionBudget = Number.isFinite(budgetValue) && budgetValue > 0
-        ? Number((budgetValue / planDinnerCount / servingsCount).toFixed(2))
-        : undefined;
-      const shouldApplyLowCostBias = perPortionBudget !== undefined && perPortionBudget <= 2;
-      const proteinText = planProtein === 'mixed' ? 'mixed proteins' : planProtein;
-      const timeText = planTime === 'quick'
-        ? 'quick dinners'
-        : planTime === 'under30'
-          ? 'dinners under 30 minutes'
-          : 'varied dinners';
-      const weeklySaladPreference = profile?.preferences?.saladPreference === 'main-only' ? 'main-only' : 'all';
-      const homemadeTarget = Math.min(planHomemadeCount, planDinnerCount);
-      const readyMadeTarget = Math.max(planDinnerCount - homemadeTarget, 0);
-      const makeParams = (query: string, sourceMode: 'cook' | 'ready-made', count: number, excludedTitles: string[]) => cleanSearchParams(buildSearchParams(query, sourceMode, profile?.preferences || null, {
-        count,
-        servings: servingsCount,
-        saladPreference: weeklySaladPreference,
-        maxCostPerPortion: perPortionBudget,
-        maxTotalTime: planTime === 'under30' ? 30 : undefined,
-        isSimple: planTime === 'quick' ? true : undefined,
-        isLowCost: shouldApplyLowCostBias,
-        excludeTitles: excludedTitles
-      }));
-
       const { generateDinnerSuggestions } = await import('../../services/geminiService');
-      const homemadeItems: Recipe[] = [];
-      const readyMadeItems: ReadyMeal[] = [];
-      const addCandidates = <T extends Recipe | ReadyMeal>(items: T[], target: T[], targetCount: number) => {
-        for (const item of items) {
-          const titleKey = item.title.toLowerCase();
-          if (!seenTitles.has(titleKey) && target.length < targetCount) {
-            target.push(item);
-            seenTitles.add(titleKey);
-          }
-        }
-      };
-      const seenTitles = new Set<string>();
+      const result = await createWeeklyDinnerPlan({
+        settings: {
+          dinnerCount: planDinnerCount,
+          budget: planBudget,
+          servings: planServings,
+          protein: planProtein,
+          time: planTime,
+          homemadeCount: planHomemadeCount,
+        },
+        planner,
+        preferences: profile?.preferences,
+        generateDinnerSuggestions,
+        addLog,
+      });
 
-      try {
-        const query = `${homemadeTarget} cooked dinners for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}`;
-        const params = makeParams(query, 'cook', homemadeTarget, planner.map(item => item.title));
-        const result = await generateDinnerSuggestions(params, profile?.preferences || undefined);
-        addCandidates((result.recipes || []) as Recipe[], homemadeItems, homemadeTarget);
-      } catch (err: any) {
-        addLog(`UI WARN: weekly batch generation failed, trying focused searches: ${err?.message || err}`);
-      }
-
-      if (readyMadeTarget > 0) {
-        try {
-          const readyQuery = `${readyMadeTarget} UK supermarket ready-made dinner products for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}`;
-          const readyParams = makeParams(readyQuery, 'ready-made', readyMadeTarget, [...planner.map(item => item.title), ...homemadeItems.map(item => item.title)]);
-          const readyResult = await generateDinnerSuggestions(readyParams, profile?.preferences || undefined);
-          addCandidates((readyResult.readyMeals || []) as ReadyMeal[], readyMadeItems, readyMadeTarget);
-        } catch (err: any) {
-          addLog(`UI WARN: weekly ready-made generation failed: ${err?.message || err}`);
-        }
-      }
-
-      const baseExcludedTitles = [...planner.map(item => item.title), ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)];
-      const dietaryRule = profile?.preferences?.dietaryRule || 'none';
-      const fallbackProteins = (() => {
-        if (planProtein !== 'mixed') return Array(planDinnerCount).fill(planProtein);
-        if (dietaryRule === 'vegetarian') return ['vegetarian', 'vegetarian', 'vegetarian', 'vegetarian', 'vegetarian', 'vegetarian', 'vegetarian'];
-        if (dietaryRule === 'vegan') return ['vegan', 'vegan', 'vegan', 'vegan', 'vegan', 'vegan', 'vegan'];
-        return ['chicken', 'fish', 'vegetarian', 'pork', 'beef', 'pulses', 'turkey'];
-      })();
-
-      for (let i = homemadeItems.length; i < homemadeTarget; i += 1) {
-        const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
-        const fallbackQuery = `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} cooked ${fallbackProtein} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
-        const fallbackParams = makeParams(fallbackQuery, 'cook', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
-
-        try {
-          const fallbackResult = await generateDinnerSuggestions(fallbackParams, profile?.preferences || undefined);
-          addCandidates((fallbackResult.recipes || []) as Recipe[], homemadeItems, homemadeTarget);
-        } catch (err: any) {
-          addLog(`UI WARN: weekly fallback generation failed for ${fallbackProtein}: ${err?.message || err}`);
-        }
-      }
-
-      for (let i = readyMadeItems.length; i < readyMadeTarget; i += 1) {
-        const fallbackProtein = fallbackProteins[(homemadeTarget + i) % fallbackProteins.length];
-        const fallbackQuery = `${planTime === 'under30' ? 'under 30 minute' : planTime === 'quick' ? 'quick' : 'weekday'} UK supermarket ready-made ${fallbackProtein} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
-        const fallbackParams = makeParams(fallbackQuery, 'ready-made', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
-
-        try {
-          const fallbackResult = await generateDinnerSuggestions(fallbackParams, profile?.preferences || undefined);
-          addCandidates((fallbackResult.readyMeals || []) as ReadyMeal[], readyMadeItems, readyMadeTarget);
-        } catch (err: any) {
-          addLog(`UI WARN: weekly ready-made fallback generation failed for ${fallbackProtein}: ${err?.message || err}`);
-        }
-      }
-
-      const recipes = [...homemadeItems, ...readyMadeItems].slice(0, planDinnerCount);
-      if (recipes.length === 0) {
-        setPlanAlert("No weekly dinners found within that budget. Try increasing the weekly budget, reducing the number of dinners, or choosing a different protein.");
+      if (result.dinners.length === 0) {
+        setPlanAlert(result.alert);
         return;
       }
 
-      for (const recipe of recipes) {
+      for (const recipe of result.dinners) {
         await saveRecipe(recipe);
       }
 
-      if (recipes.length < planDinnerCount) {
-        setPlanAlert(`Only ${recipes.length} suitable ${recipes.length === 1 ? 'dinner was' : 'dinners were'} found. Try increasing the budget, reducing the number of dinners, or changing the protein.`);
-        showToast(`Added ${recipes.length} ${recipes.length === 1 ? 'dinner' : 'dinners'} to Saved.`);
+      if (result.alert) {
+        setPlanAlert(result.alert);
+        showToast(`Added ${result.dinners.length} ${result.dinners.length === 1 ? 'dinner' : 'dinners'} to Saved.`);
         return;
       }
 
-      showToast(`Added ${recipes.length} ${recipes.length === 1 ? 'dinner' : 'dinners'} to Saved.`);
+      showToast(`Added ${result.dinners.length} ${result.dinners.length === 1 ? 'dinner' : 'dinners'} to Saved.`);
       setPlanAlert(null);
       setShowPlanWeek(false);
     } catch (err: any) {
@@ -594,7 +424,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   ) : (
                     <ul className="space-y-0">
                       {viewingPlannerEntry.ingredients?.filter(ing => ing && ing.trim().length > 0).map((ing, i) => {
-                        const parsed = parseIngredient(ing);
+                        const parsed = parseIngredientLine(ing);
                         const itemKey = `${viewingPlannerEntry.id || viewingPlannerEntry.title}-${i}`;
                         const isChecked = !!checkedIngredients[itemKey];
                         return (
@@ -761,7 +591,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Time</span>
                       <select
                         value={planTime}
-                        onChange={(e) => setPlanTime(e.target.value as 'any' | 'quick' | 'under30')}
+                        onChange={(e) => setPlanTime(e.target.value as WeeklyPlanTime)}
                         className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
                       >
                         <option value="any">Any</option>
@@ -898,7 +728,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
                               placeholder="Search saved dinners..."
-                              className="w-full h-6 bg-white border border-gray-100 rounded pl-8 pr-8 text-xs font-medium outline-none focus:border-accent/40 transition-all"
+                              className="w-full h-6 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
                               <button 
@@ -916,16 +746,18 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             <div className="relative">
                               <button 
                                 onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-                                className={`text-[11px] font-semibold h-6 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none ${
+                                className={`text-[11px] font-semibold h-6 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 ${
                                   isFilterDropdownOpen || hasActiveSavedFilters
-                                    ? 'border-accent bg-accent/5 text-accent'
-                                    : 'border-gray-100 bg-white hover:bg-gray-50 text-gray-700'
+                                    ? 'border-accent bg-accent/10 text-accent shadow-sm'
+                                    : 'border-orange-200 bg-orange-50 text-orange-800 hover:border-orange-300 hover:bg-orange-100/70 hover:text-orange-900'
                                 }`}
                               >
                                 <Settings className="w-3.5 h-3.5" />
                                 <span>Filters</span>
                                 {hasActiveSavedFilters && (
-                                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                                  <span className="min-w-[14px] h-[14px] rounded-full bg-accent px-1 text-[9px] font-bold leading-[14px] text-white text-center">
+                                    {activeSavedFilterCount}
+                                  </span>
                                 )}
                                 <span className="text-gray-400 text-[10px] ml-0.5">▼</span>
                               </button>
@@ -950,8 +782,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     <div className="space-y-1">
                                       {[
                                         {id: 'under20', label: '⏱️ Under 20 min'},
-                                        {id: 'budget', label: '💰 Budget (<£5)'},
-                                        {id: 'healthy', label: '🥗 Healthy (<500kcal)'},
+                                        {id: 'vegetarian', label: '🥦 Vegetarian'},
+                                        {id: 'highProtein', label: '💪 High protein'},
                                         {id: 'batch', label: 'Batch-friendly'}
                                       ].map(pill => (
                                         <label key={pill.id} className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded cursor-pointer text-xs font-medium text-gray-700 select-none">
@@ -974,7 +806,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             {/* 2. Sort Dropdown */}
                             <div className="flex items-center gap-1 px-1.5 bg-white hover:bg-gray-50 rounded border border-gray-100 h-6 transition-colors">
                               <History className="w-3.5 h-3.5 text-gray-400" />
-                              <select value={savedSortBy} onChange={(e) => setSavedSortBy(e.target.value as any)} className="bg-transparent text-[11px] font-bold text-gray-500 outline-none cursor-pointer py-0.5 pr-0.5">
+                              <select value={savedSortBy} onChange={(e) => setSavedSortBy(e.target.value as SavedSortOption)} className="bg-transparent text-[11px] font-bold text-gray-500 outline-none cursor-pointer py-0.5 pr-0.5">
                                 <option value="newest">Newest Added</option>
                                 <option value="oldest">Oldest Added</option>
                                 <option value="name">Alphabetical (A-Z)</option>
@@ -1204,94 +1036,165 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(dayId => {
                       const entry = planner.find(e => e.scheduledDate === dayId);
                       const dayLabel = dayId.slice(0, 3).toUpperCase();
+                      const isEditingScheduledNote = !!entry?.id && editingScheduledNoteId === entry.id;
+                      const scheduledPersonalNote = (entry?.personalNote || '').trim();
                       return (
-                        <div key={dayId} className="relative py-2 px-0 sm:px-1.5 flex items-start gap-2 sm:gap-3 group min-h-[48px] transition-colors hover:bg-gray-50/50">
-                          <div className="w-12 shrink-0 flex items-start justify-start pt-[2px]">
-                            <span className="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
-                              {dayLabel}
-                            </span>
-                          </div>
-                          
-                          <div className="flex-grow min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-0">
-                            <div 
-                              className={`min-w-0 transition-opacity ${entry ? 'cursor-pointer hover:opacity-85' : ''}`}
-                              onClick={() => {
-                                if (entry) {
-                                  setViewingPlannerEntry(entry);
-                                }
-                              }}
-                            >
-                              {entry ? (
-                                <div className="space-y-0.5">
-                                  <h4 className="text-[13.5px] font-bold text-gray-900 truncate pr-4">{entry.title}</h4>
-                                  <div className="flex items-center gap-1.5 flex-wrap">
-                                    <span className="text-[10.5px] font-bold text-accent uppercase tracking-wider">{entry.cuisine || 'Dinner'}</span>
-                                    {entry.price && <span className="text-[10px] text-gray-400 font-medium">• {entry.price} pp</span>}
-                                    {entry.totalTime && <span className="text-[10px] text-gray-400 font-medium">• {entry.totalTime} mins</span>}
+                        <div key={dayId} className="relative py-2 px-0 sm:px-1.5 group min-h-[48px] transition-colors hover:bg-gray-50/50">
+                          <div className="flex items-start gap-2 sm:gap-3">
+                            <div className="w-12 shrink-0 flex items-start justify-start pt-[2px]">
+                              <span className="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
+                                {dayLabel}
+                              </span>
+                            </div>
+                            
+                            <div className="flex-grow min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-0">
+                              <div 
+                                className={`min-w-0 transition-opacity ${entry ? 'cursor-pointer hover:opacity-85' : ''}`}
+                                onClick={() => {
+                                  if (entry) {
+                                    setViewingPlannerEntry(entry);
+                                  }
+                                }}
+                              >
+                                {entry ? (
+                                  <div className="space-y-0.5">
+                                    <h4 className="text-[13.5px] font-bold text-gray-900 truncate pr-4">{entry.title}</h4>
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <span className="text-[10.5px] font-bold text-accent uppercase tracking-wider">{entry.cuisine || 'Dinner'}</span>
+                                      {entry.price && <span className="text-[10px] text-gray-400 font-medium">• {entry.price} pp</span>}
+                                      {entry.totalTime && <span className="text-[10px] text-gray-400 font-medium">• {entry.totalTime} mins</span>}
+                                      {scheduledPersonalNote && (
+                                        <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-orange-800">
+                                          <StickyNote size={11} /> Note
+                                        </span>
+                                      )}
+                                    </div>
                                   </div>
-                                </div>
-                              ) : (
-                                <div className="flex flex-col">
-                                  <span className="text-[13px] text-gray-400 font-medium">Nothing scheduled yet</span>
-                                  {targetPlannerDay === dayId && (
-                                    <p className="text-[11px] text-accent font-semibold mt-1 animate-in fade-in slide-in-from-top-1">Select a recipe below to schedule for {dayId}...</p>
-                                  )}
-                                </div>
-                              )}
-                            </div>
+                                ) : (
+                                  <div className="flex flex-col">
+                                    <span className="text-[13px] text-gray-400 font-medium">Nothing scheduled yet</span>
+                                    {targetPlannerDay === dayId && (
+                                      <p className="text-[11px] text-accent font-semibold mt-1 animate-in fade-in slide-in-from-top-1">Select a recipe below to schedule for {dayId}...</p>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
 
-                            <div className="flex items-center gap-2 shrink-0">
-                              {entry ? (
+                              <div className="flex items-center gap-2 shrink-0">
+                                {entry ? (
+                                  <div className="flex items-center gap-1.5">
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        openScheduledNoteEditor(entry);
+                                      }}
+                                      className={`p-1.5 rounded transition-colors ${
+                                        scheduledPersonalNote
+                                          ? 'bg-orange-50 text-orange-800 hover:bg-orange-100'
+                                          : 'bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-accent'
+                                      }`}
+                                      title={scheduledPersonalNote ? 'Edit personal note' : 'Add personal note'}
+                                    >
+                                      <StickyNote size={14} />
+                                    </button>
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePrintRecipe(entry);
+                                      }}
+                                      className="p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-accent rounded transition-colors"
+                                      title="Print"
+                                    >
+                                      <List size={14} />
+                                    </button>
+                                    <button 
+                                      onClick={async (e) => {
+                                        e.stopPropagation();
+                                        if (checkReadOnly("Your trial has ended. Upgrade to continue planning.")) return;
+                                        if (entry.id) {
+                                          try {
+                                            await unscheduleRecipe(entry.id);
+                                          } catch (err: any) {
+                                            addLog(`UI ERROR: unscheduleRecipe failed: ${err?.message || err}`);
+                                          }
+                                        }
+                                      }}
+                                      className="p-1.5 bg-gray-50 hover:bg-accent/5 text-gray-400 hover:text-accent rounded transition-colors"
+                                      title="Move to Saved"
+                                    >
+                                      <ArrowUpCircle size={14} />
+                                    </button>
+                                    <button 
+                                      onClick={async (e) => {
+                                        e.stopPropagation();
+                                        if (checkReadOnly("Your trial has ended. Upgrade to edit your collection.")) return;
+                                        if (entry.id) {
+                                          try {
+                                            await removeRecipe(entry.id);
+                                          } catch (err: any) {
+                                            addLog(`UI ERROR: removeRecipe failed: ${err?.message || err}`);
+                                          }
+                                        }
+                                      }}
+                                      className="p-1.5 bg-red-50 hover:bg-red-100 text-red-500 rounded transition-colors"
+                                      title="Delete"
+                                    >
+                                      <Trash size={14} />
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <span className="text-[11px] text-gray-300 font-medium uppercase tracking-wider">Open</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {entry && scheduledPersonalNote && !isEditingScheduledNote && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openScheduledNoteEditor(entry);
+                              }}
+                              className="ml-14 sm:ml-[3.75rem] mt-1.5 w-[calc(100%-3.5rem)] sm:w-[calc(100%-3.75rem)] text-left rounded bg-orange-50/45 px-2 py-1.5 text-[11.5px] leading-snug text-gray-600 hover:bg-orange-50 transition-colors cursor-pointer"
+                              title="Edit personal note"
+                            >
+                              <span className="font-semibold text-orange-800">Note:</span>{' '}
+                              <span className="line-clamp-2">{scheduledPersonalNote}</span>
+                            </button>
+                          )}
+
+                          {entry && isEditingScheduledNote && (
+                            <div className="ml-14 sm:ml-[3.75rem] mt-2 rounded border border-orange-100 bg-orange-50/35 p-2" onClick={(e) => e.stopPropagation()}>
+                              <textarea
+                                value={scheduledNoteDraft}
+                                onChange={(e) => setScheduledNoteDraft(e.target.value.slice(0, 1000))}
+                                placeholder="Personal note..."
+                                className="w-full min-h-[70px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40"
+                                maxLength={1000}
+                              />
+                              <div className="mt-1.5 flex items-center justify-between gap-2">
+                                <span className="text-[10px] font-medium text-gray-400">{scheduledNoteDraft.length}/1000</span>
                                 <div className="flex items-center gap-1.5">
-                                  <button 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handlePrintRecipe(entry);
+                                  <button
+                                    onClick={() => {
+                                      setScheduledNoteDraft(entry.personalNote || '');
+                                      setEditingScheduledNoteId(null);
                                     }}
-                                    className="p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-accent rounded transition-colors"
-                                    title="Print"
+                                    className="h-6 px-2 rounded border border-gray-100 bg-white text-[10.5px] font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-50 cursor-pointer"
                                   >
-                                    <List size={14} />
+                                    Cancel
                                   </button>
-                                  <button 
-                                    onClick={async (e) => {
-                                      e.stopPropagation();
-                                      if (checkReadOnly("Your trial has ended. Upgrade to continue planning.")) return;
-                                      if (entry.id) {
-                                        try {
-                                          await unscheduleRecipe(entry.id);
-                                        } catch (err: any) {
-                                          addLog(`UI ERROR: unscheduleRecipe failed: ${err?.message || err}`);
-                                        }
-                                      }
-                                    }}
-                                    className="p-1.5 bg-gray-50 hover:bg-accent/5 text-gray-400 hover:text-accent rounded transition-colors"
-                                    title="Move to Saved"
+                                  <button
+                                    onClick={() => handleSaveScheduledNote(entry)}
+                                    disabled={isSavingScheduledNote}
+                                    className="h-6 px-2 rounded bg-accent text-[10.5px] font-bold uppercase tracking-wider text-white hover:bg-accent-dark disabled:opacity-60 cursor-pointer"
                                   >
-                                    <ArrowUpCircle size={14} />
-                                  </button>
-                                  <button 
-                                    onClick={async (e) => {
-                                      e.stopPropagation();
-                                      if (checkReadOnly("Your trial has ended. Upgrade to edit your collection.")) return;
-                                      if (entry.id) {
-                                        try {
-                                          await removeRecipe(entry.id);
-                                        } catch (err: any) {
-                                          addLog(`UI ERROR: removeRecipe failed: ${err?.message || err}`);
-                                        }
-                                      }
-                                    }}
-                                    className="p-1.5 bg-red-50 hover:bg-red-100 text-red-500 rounded transition-colors"
-                                    title="Delete"
-                                  >
-                                    <Trash size={14} />
+                                    {isSavingScheduledNote ? 'Saving' : 'Save'}
                                   </button>
                                 </div>
-                              ) : (
-                                <span className="text-[11px] text-gray-300 font-medium uppercase tracking-wider">Open</span>
-                              )}
+                              </div>
                             </div>
+                          )}
 
                             {targetPlannerDay === dayId && (
                               <div className="absolute left-0 right-0 sm:left-auto sm:right-0 top-full mt-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-0 sm:min-w-[240px]">
@@ -1300,40 +1203,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   <button onClick={() => setTargetPlannerDay(null)}><CircleX size={12} /></button>
                                 </div>
                                 <div className="space-y-1 max-h-[200px] overflow-y-auto">
-                                  {savedRecipes
-                                    .filter(r => {
-                                      if (r.scheduledDate) return false;
-                                      const prefs = profile?.preferences;
-                                      if (!prefs) return true;
-                                      const safetyPrefs = {
-                                        dietaryRule: prefs.dietaryRule || 'none',
-                                        allergies: prefs.allergies || [],
-                                        exclusions: prefs.exclusions || [],
-                                        religiousEthical: prefs.religiousEthical || [],
-                                        calorieCeiling: prefs.calorieCeiling,
-                                        budgetLimit: prefs.budgetLimit
-                                      };
-                                      return passesHardConstraints(r, safetyPrefs);
-                                    })
-                                    .length === 0 ? (
+                                  {compliantUnscheduledSavedRecipes.length === 0 ? (
                                     <p className="text-[12px] text-gray-500 py-2">No compliant unscheduled recipes yet.</p>
                                   ) : (
-                                    savedRecipes
-                                      .filter(r => {
-                                        if (r.scheduledDate) return false;
-                                        const prefs = profile?.preferences;
-                                        if (!prefs) return true;
-                                        const safetyPrefs = {
-                                          dietaryRule: prefs.dietaryRule || 'none',
-                                          allergies: prefs.allergies || [],
-                                          exclusions: prefs.exclusions || [],
-                                          religiousEthical: prefs.religiousEthical || [],
-                                          calorieCeiling: prefs.calorieCeiling,
-                                          budgetLimit: prefs.budgetLimit
-                                        };
-                                        return passesHardConstraints(r, safetyPrefs);
-                                      })
-                                      .map(recipe => (
+                                    compliantUnscheduledSavedRecipes.map(recipe => (
                                       <button 
                                         key={recipe.id}
                                         onClick={() => {
@@ -1362,7 +1235,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                 </div>
                               </div>
                             )}
-                          </div>
                         </div>
                       );
                     })}

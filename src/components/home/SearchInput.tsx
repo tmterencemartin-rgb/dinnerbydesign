@@ -18,6 +18,7 @@ interface SearchInputProps {
   isLeftoverMode?: boolean;
   isLowCost?: boolean;
   isReadOnly?: boolean;
+  placeholderOverride?: string;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -34,11 +35,15 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onClear,
   isLeftoverMode = false,
   isLowCost = false,
-  isReadOnly = false
+  isReadOnly = false,
+  placeholderOverride
 }) => {
   const getSearchPlaceholder = (): string => {
     if (isListening) {
       return "Listening...";
+    }
+    if (placeholderOverride) {
+      return placeholderOverride;
     }
     if (isLowCost && isLeftoverMode) {
       return "Search low-cost recipes matching your ingredients";

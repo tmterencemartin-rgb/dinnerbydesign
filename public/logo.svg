@@ -1,33 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
-  <!-- Background Forest Green Circle -->
-  <circle cx="256" cy="256" r="240" fill="#0b1f17" />
-  
-  <!-- Outer Gold Ring -->
-  <circle cx="256" cy="256" r="215" fill="none" stroke="#D4AF37" stroke-width="6" opacity="0.85" />
-  
-  <!-- Elegant Inner Gold Ring -->
-  <circle cx="256" cy="256" r="200" fill="none" stroke="#E5C158" stroke-width="2" stroke-dasharray="8 8" opacity="0.7" />
-
-  <!-- Center Decorative Food Display / Bell / Plate Shadow -->
-  <path d="M 256 140 c -50 0 -90 40 -90 90 l 180 0 c 0 -50 -40 -90 -90 -90 z" fill="#D4AF37" opacity="0.25" />
-  
-  <!-- Minimalist Cloche / Food Cover (Dinner By Design Vibe) -->
-  <path d="M 146 250 a 110 110 0 0 1 220 0 Z" fill="none" stroke="#E5C158" stroke-width="8" stroke-linecap="round" />
-  <rect x="236" y="125" width="40" height="12" rx="6" fill="#E5C158" />
-  <line x1="256" y1="137" x2="256" y2="140" stroke="#E5C158" stroke-width="8" />
-  
-  <!-- Base Plate line of the cloche with soft gold glow -->
-  <path d="M 120 260 L 392 260" stroke="#D4AF37" stroke-width="8" stroke-linecap="round" />
-  <path d="M 140 272 L 372 272" stroke="#E5C158" stroke-width="4" stroke-linecap="round" opacity="0.5" stroke-dasharray="4 4" />
-
-  <!-- Elegant crossed Fork and Knife below -->
-  <g transform="translate(256, 350) scale(1.1)">
-    <!-- Fork left-tilted -->
-    <path d="M -30 -40 L -30 20 M -30 20 L -30 40 M -45 -40 L -45 -10 M -15 -40 L -15 -10" stroke="#E5C158" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(-25)" />
-    <!-- Knife right-tilted -->
-    <path d="M 30 -40 L 30 20 M 30 20 L 30 40 M 30 -40 C 45 -40 45 -15 30 0" stroke="#D4AF37" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(25)" />
-  </g>
-
-  <!-- Title Monogram letters in the middle -->
-  <text x="256" y="320" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="28" font-weight="bold" fill="#E5C158" text-anchor="middle" letter-spacing="4">D x D</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">DinnerByDesign push pin logo</title>
+  <desc id="desc">A glossy red push pin with a slim metallic stem.</desc>
+  <defs>
+    <radialGradient id="pinHeadGradient" cx="38%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ff4a4a"/>
+      <stop offset="48%" stop-color="#f20f1f"/>
+      <stop offset="82%" stop-color="#b91419"/>
+      <stop offset="100%" stop-color="#7e1516"/>
+    </radialGradient>
+    <linearGradient id="pinStemGradient" x1="236" x2="276" y1="188" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6e6b63"/>
+      <stop offset="22%" stop-color="#efece5"/>
+      <stop offset="50%" stop-color="#9f9b91"/>
+      <stop offset="78%" stop-color="#393731"/>
+      <stop offset="100%" stop-color="#d7d2c8"/>
+    </linearGradient>
+  </defs>
+  <path d="M247 193h18l10 246c1 15-8 27-19 27s-20-12-19-27l10-246Z" fill="url(#pinStemGradient)"/>
+  <path d="M247 193h18l2 45h-22l2-45Z" fill="#5f5a53" opacity="0.42"/>
+  <circle cx="256" cy="156" r="116" fill="#8f1517" opacity="0.28"/>
+  <circle cx="256" cy="144" r="112" fill="url(#pinHeadGradient)"/>
+  <ellipse cx="218" cy="118" rx="44" ry="56" fill="#ffffff" opacity="0.18"/>
+  <ellipse cx="305" cy="92" rx="33" ry="24" fill="#ffffff" opacity="0.46" transform="rotate(28 305 92)"/>
+  <path d="M151 172c18 51 63 84 115 84 55 0 101-36 117-90-23 34-66 56-116 56-49 0-91-20-116-50Z" fill="#5b1212" opacity="0.22"/>
 </svg>

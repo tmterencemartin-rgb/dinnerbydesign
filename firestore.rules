@@ -47,6 +47,7 @@ service cloud.firestore {
     //   - mode: string (required, 'cook' or 'ready-made')
     //   - savedAt: timestamp (required)
     //   - updatedAt: timestamp (optional)
+    //   - personalNote: string or null (optional)
     //   - userId: string (required, matches creator)
     //   - scheduledDate: string or null (optional, 'monday'..'sunday' or null)
     //   - mainProtein: string (optional)
@@ -210,6 +211,7 @@ service cloud.firestore {
              data.mode in ['cook', 'ready-made'] &&
              data.savedAt is timestamp &&
              data.userId == request.auth.uid &&
+             (!('personalNote' in data) || data.personalNote == null || (data.personalNote is string && data.personalNote.size() <= 1000)) &&
              (!('mainProtein' in data) || data.mainProtein == null || data.mainProtein is string) &&
              (!('mainIngredient' in data) || data.mainIngredient == null || data.mainIngredient is string) &&
              (!('mainIngredientCategory' in data) || data.mainIngredientCategory == null || data.mainIngredientCategory is string) &&

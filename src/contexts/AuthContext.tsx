@@ -31,7 +31,6 @@ import {
   where, 
   orderBy, 
   serverTimestamp, 
-  deleteDoc, 
   updateDoc,
   writeBatch
 } from 'firebase/firestore';
@@ -52,14 +51,36 @@ import {
   OperationType,
   AppView
 } from '../types';
-import { passesDietaryRule, passesHardConstraints } from '../lib/dietarySafety';
 import { normaliseUserPreferences, checkNeedsDietConfirmation } from '../lib/preferenceUtils';
-import { getRecipeKey, isSameRecipe, getSourceUrl, getConvenienceProfile } from '../lib/recipeUtils';
-import { checkSearchMatch } from '../lib/searchUtils';
 import { buildShoppingListData, SHOPPING_CATEGORIES, normalizeIngredientKey } from '../lib/shoppingUtils';
-import { normalizeIngredient, costItemSync } from '../services/groceryService';
 import { generateDinnerSuggestions, enrichRecipe } from '../services/geminiService';
 import { safeStorage } from '../lib/storage';
+import { prepareSavedRecipeData } from '../lib/savedRecipeData';
+import {
+  clearPlannerWeekRecipes,
+  getScheduledRecipeForDay,
+  isMissingPlannerRecipeError,
+  unschedulePlannerRecipe,
+  updatePlannerRecipe,
+} from '../lib/plannerWrites';
+import {
+  removeAllUnscheduledSavedRecipes,
+  removeRecipeDocument,
+  saveRecipeDocument,
+  updateRecipeDocument,
+} from '../lib/savedRecipeWrites';
+import {
+  addCustomShoppingItemDocument,
+  clearDerivedShoppingListDocuments,
+  removeShoppingItemDocument,
+  syncShoppingListDocuments,
+  updateShoppingItemDocument,
+} from '../lib/shoppingListWrites';
+import {
+  addPantryItemDocument,
+  removePantryItemDocument,
+  updatePantryStapleDocument,
+} from '../lib/pantryWrites';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -383,7 +404,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
           const enriched = await enrichRecipe(recipe.title, recipe.cuisine, 'cook');
           if (enriched && 'ingredients' in enriched && Array.isArray(enriched.ingredients) && enriched.ingredients.length > 0) {
-            const cleanData = prepareSavedRecipeData({ ...recipe, ...enriched } as Recipe, user.uid, recipe.scheduledDate || null);
+            const cleanData = prepareSavedRecipeData({ ...recipe, ...enriched } as Recipe, user.uid, recipe.scheduledDate || null, {
+              savedAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            });
             await updateDoc(doc(db, 'users', user.uid, 'savedRecipes', recipeId), {
               ...cleanData,
               updatedAt: serverTimestamp()
@@ -416,50 +440,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     const syncList = async () => {
       try {
-        const batch = writeBatch(db);
-        let hasChanges = false;
-        
-        const currentInDb = new Map(dbShoppingList.map(i => [i.id, i]));
-        const derivedIds = new Set(shoppingList.map(i => i.id));
-        
-        for (const dbItem of dbShoppingList) {
-          if (!dbItem.isCustom && !derivedIds.has(dbItem.id)) {
-            batch.delete(doc(db, 'users', user.uid, 'shoppingList', dbItem.id));
-            hasChanges = true;
-          }
-        }
-
-        for (const item of shoppingList) {
-          const existing = currentInDb.get(item.id);
-          const isNew = !existing;
-          
-          let isModified = false;
-          if (existing) {
-            isModified = (
-              existing.stateHash !== item.stateHash || 
-              existing.checked !== item.checked ||
-              existing.name !== item.name ||
-              existing.excludedByPantry !== item.excludedByPantry
-            );
-          }
-
-          if (isNew || isModified) {
-            const docRef = doc(db, 'users', user.uid, 'shoppingList', item.id);
-            const cleanItem = { ...item };
-            
-            if (!cleanItem.generatedAt) {
-              (cleanItem as any).generatedAt = serverTimestamp();
-            }
-            (cleanItem as any).updatedAt = serverTimestamp();
-            
-            batch.set(docRef, cleanItem, { merge: true });
-            hasChanges = true;
-          }
-        }
-
-        if (hasChanges) {
-          await batch.commit();
-        }
+        await syncShoppingListDocuments({
+          firestoreDb: db,
+          userId: user.uid,
+          dbItems: dbShoppingList,
+          derivedItems: shoppingList,
+        });
       } catch (err) {
         console.error("Failed to sync shopping list:", err);
       }
@@ -1033,82 +1019,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const prepareSavedRecipeData = (item: Recipe | ReadyMeal | SavedRecipe, userId: string, scheduledDate: string | null = null): any => {
-    const recipeId = getRecipeKey(item);
-    const data: any = {
-      recipeId,
-      title: item.title,
-      description: item.description || undefined,
-      cuisine: item.cuisine || undefined,
-      totalTime: item.totalTime || undefined,
-      calories: item.calories || undefined,
-      mode: ('mode' in item && item.mode) ? item.mode : ('retailer' in item ? 'ready-made' : 'cook'),
-      saladType: ('saladType' in item && item.saladType) ? item.saladType : undefined,
-      category: ('category' in item && item.category) ? item.category : undefined,
-      convenienceProfile: item.convenienceProfile || getConvenienceProfile(item),
-      savedAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      isArchived: false,
-      archivedAt: null,
-      userId,
-      scheduledDate,
-      requestedServings: (item as any).requestedServings || undefined,
-      totalServings: (item as any).totalServings || undefined,
-      mainProtein: item.mainProtein || undefined,
-      mainIngredient: item.mainIngredient || undefined,
-      mainIngredientCategory: item.mainIngredientCategory || undefined,
-      isNutritious: item.isNutritious,
-      nutritiousReason: item.nutritiousReason,
-      sourceUrl: getSourceUrl(item),
-      totalIngredientsCount: (item as any).totalIngredientsCount || undefined,
-      isVegetarian: ('isVegetarian' in item) ? item.isVegetarian : undefined,
-      isPescatarian: ('isPescatarian' in item) ? item.isPescatarian : undefined,
-      isVegan: ('isVegan' in item) ? item.isVegan : undefined,
-      dietFlagsVerified: ('dietFlagsVerified' in item) ? item.dietFlagsVerified : undefined,
-      isAirFryerFriendly: ('isAirFryerFriendly' in item) ? item.isAirFryerFriendly : undefined,
-      realityChecks: (item as any).realityChecks || undefined
-    };
-
-    if ('ingredients' in item) {
-      data.ingredients = item.ingredients;
-      data.instructions = item.instructions;
-      data.prepTime = item.prepTime || undefined;
-      data.cookTime = item.cookTime || undefined;
-      data.costPerPortion = item.costPerPortion || undefined;
-    }
-
-    if ('retailer' in item) {
-      data.retailer = item.retailer;
-      data.price = item.price;
-      data.servingSuggestion = item.servingSuggestion || undefined;
-      data.readyMadeKit = item.readyMadeKit || undefined;
-    }
-
-    const clean: any = {};
-    Object.keys(data).forEach(k => {
-      if (data[k] !== undefined) clean[k] = data[k];
-    });
-    return clean;
-  };
-
   const updatePlanner = async (scheduledDate: string, recipe: SavedRecipe | Recipe | ReadyMeal) => {
     if (!user) return;
     setError(null);
     try {
-      const batch = writeBatch(db);
-      const existingOnDay = savedRecipes.find(r => r.scheduledDate === scheduledDate);
-      if (existingOnDay?.id) {
-        batch.update(doc(db, 'users', user.uid, 'savedRecipes', existingOnDay.id), { scheduledDate: null, updatedAt: serverTimestamp() });
-      }
-
-      const existingInSaved = savedRecipes.find(r => isSameRecipe(r, recipe));
-      let finalId = existingInSaved?.id || doc(collection(db, 'users', user.uid, 'savedRecipes')).id;
-
-      const cleanData = prepareSavedRecipeData(recipe, user.uid, scheduledDate);
-      batch.set(doc(db, 'users', user.uid, 'savedRecipes', finalId), cleanData, { merge: true });
-      
-      await batch.commit();
-      return { id: finalId, wasUnscheduledId: existingOnDay?.id, isNew: !existingInSaved };
+      return await updatePlannerRecipe({
+        firestoreDb: db,
+        userId: user.uid,
+        savedRecipes,
+        scheduledDate,
+        recipe,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/savedRecipes`);
@@ -1120,22 +1041,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const saveRecipe = async (item: Recipe | ReadyMeal) => {
     if (!user) return;
-    const existing = savedRecipes.find(r => isSameRecipe(r, item));
-    if (existing) {
-      if (existing.isArchived && existing.id) {
-        await updateDoc(doc(db, 'users', user.uid, 'savedRecipes', existing.id), {
-          isArchived: false,
-          archivedAt: null,
-          updatedAt: serverTimestamp()
-        });
-      }
-      return existing.id;
-    }
-
     try {
-      const docRef = doc(collection(db, 'users', user.uid, 'savedRecipes'));
-      await setDoc(docRef, prepareSavedRecipeData(item, user.uid));
-      return docRef.id;
+      return await saveRecipeDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        savedRecipes,
+        item,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/savedRecipes`);
@@ -1148,9 +1060,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateRecipe = async (id: string, updates: Partial<SavedRecipe>) => {
     if (!user) return;
     try {
-      await updateDoc(doc(db, 'users', user.uid, 'savedRecipes', id), {
-        ...updates,
-        updatedAt: serverTimestamp()
+      await updateRecipeDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        recipeId: id,
+        updates,
       });
     } catch (err) {
       try {
@@ -1164,7 +1078,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const removeRecipe = async (id: string) => {
     if (!user) return;
     try {
-      await deleteDoc(doc(db, 'users', user.uid, 'savedRecipes', id));
+      await removeRecipeDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        recipeId: id,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.DELETE, `users/${user.uid}/savedRecipes/${id}`);
@@ -1177,9 +1095,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const unscheduleRecipe = async (id: string) => {
     if (!user || !id || id === 'unknown') return;
     try {
-      await updateDoc(doc(db, 'users', user.uid, 'savedRecipes', id), { scheduledDate: null, updatedAt: serverTimestamp() });
+      await unschedulePlannerRecipe({
+        firestoreDb: db,
+        userId: user.uid,
+        recipeId: id,
+      });
     } catch (err: any) {
-      if (err?.code === 'not-found' || err?.message?.includes('not-found') || err?.message?.includes('No document to update')) {
+      if (isMissingPlannerRecipeError(err)) {
         console.warn(`[unscheduleRecipe] Document ${id} not found or already unscheduled.`);
         return;
       }
@@ -1193,18 +1115,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const clearPlannerDay = async (date: string) => {
     if (!user) return;
-    const entry = savedRecipes.find(r => r.scheduledDate === date);
+    const entry = getScheduledRecipeForDay(savedRecipes, date);
     if (entry?.id) await unscheduleRecipe(entry.id);
   };
 
   const clearPlannerWeek = async () => {
     if (!user) return;
     try {
-      const batch = writeBatch(db);
-      planner.forEach(p => {
-        if (p.id) batch.update(doc(db, 'users', user.uid, 'savedRecipes', p.id), { scheduledDate: null, updatedAt: serverTimestamp() });
+      await clearPlannerWeekRecipes({
+        firestoreDb: db,
+        userId: user.uid,
+        planner,
       });
-      await batch.commit();
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/savedRecipes`);
@@ -1217,13 +1139,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const removeAllSavedRecipes = async () => {
     if (!user) return;
     try {
-      const batch = writeBatch(db);
-      const unscheduled = savedRecipes.filter(r => !r.scheduledDate);
-      unscheduled.forEach(r => {
-        if (r.id) batch.delete(doc(db, 'users', user.uid, 'savedRecipes', r.id));
+      const removedCount = await removeAllUnscheduledSavedRecipes({
+        firestoreDb: db,
+        userId: user.uid,
+        savedRecipes,
       });
-      await batch.commit();
-      addLog(`AUTH: Removed all unscheduled recipes (${unscheduled.length})`);
+      addLog(`AUTH: Removed all unscheduled recipes (${removedCount})`);
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.DELETE, `users/${user.uid}/savedRecipes`);
@@ -1236,9 +1157,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const generateShoppingList = async () => {
     if (!user) return;
     try {
-      const batch = writeBatch(db);
-      dbShoppingList.forEach(i => !i.isCustom && batch.delete(doc(db, 'users', user.uid, 'shoppingList', i.id)));
-      await batch.commit();
+      await clearDerivedShoppingListDocuments({
+        firestoreDb: db,
+        userId: user.uid,
+        dbItems: dbShoppingList,
+      });
       showToast("List synced successfully");
     } catch (err) {
       setError("Failed to sync shopping list");
@@ -1248,7 +1171,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const toggleShoppingItem = async (id: string, checked: boolean) => {
     if (!user) return;
     try {
-      await updateDoc(doc(db, 'users', user.uid, 'shoppingList', id), { checked });
+      await updateShoppingItemDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        itemId: id,
+        updates: { checked },
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/shoppingList/${id}`);
@@ -1261,7 +1189,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateShoppingItem = async (id: string, updates: Partial<ShoppingListItem>) => {
     if (!user) return;
     try {
-      await updateDoc(doc(db, 'users', user.uid, 'shoppingList', id), updates);
+      await updateShoppingItemDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        itemId: id,
+        updates,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/shoppingList/${id}`);
@@ -1274,23 +1207,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const addCustomShoppingItem = async (name: string, category: string = 'Other') => {
     if (!user) return;
     try {
-      const docRef = doc(collection(db, 'users', user.uid, 'shoppingList'));
-      const normalized = normalizeIngredient(name);
-      const item = costItemSync({
-        id: docRef.id,
-        name,
-        nameRaw: name,
-        category,
-        checked: false,
-        inStock: false,
-        isCustom: true,
+      await addCustomShoppingItemDocument({
+        firestoreDb: db,
         userId: user.uid,
-        ...normalized,
-        sourceRecipeIds: [],
-        sourceDays: [],
-        generatedAt: serverTimestamp()
-      } as any);
-      await setDoc(docRef, item);
+        name,
+        category,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/shoppingList`);
@@ -1303,7 +1225,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const removeShoppingItem = async (id: string) => {
     if (!user) return;
     try {
-      await deleteDoc(doc(db, 'users', user.uid, 'shoppingList', id));
+      await removeShoppingItemDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        itemId: id,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.DELETE, `users/${user.uid}/shoppingList/${id}`);
@@ -1316,8 +1242,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const addToPantry = async (name: string, category: string = 'Other', isStaple: boolean = false) => {
     if (!user) return;
     try {
-      const docRef = doc(collection(db, 'users', user.uid, 'pantry'));
-      await setDoc(docRef, { id: docRef.id, name, category, isStaple, userId: user.uid, lastUsed: serverTimestamp() });
+      await addPantryItemDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        name,
+        category,
+        isStaple,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/pantry`);
@@ -1330,7 +1261,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const removeFromPantry = async (id: string) => {
     if (!user) return;
     try {
-      await deleteDoc(doc(db, 'users', user.uid, 'pantry', id));
+      await removePantryItemDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        pantryItemId: id,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.DELETE, `users/${user.uid}/pantry/${id}`);
@@ -1343,7 +1278,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const togglePantryStaple = async (id: string, isStaple: boolean) => {
     if (!user) return;
     try {
-      await updateDoc(doc(db, 'users', user.uid, 'pantry', id), { isStaple });
+      await updatePantryStapleDocument({
+        firestoreDb: db,
+        userId: user.uid,
+        pantryItemId: id,
+        isStaple,
+      });
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/pantry/${id}`);
@@ -1536,15 +1476,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   <p>Your DinnerByDesign free trial ends on <strong>${formattedEnd}</strong>.</p>
 
-  <p>If you want to keep unlimited recipe search, saved recipes, scheduling tools, shopping lists and personalised settings active, you can subscribe from Account Settings.</p>
+  <p>Subscribe from Account Settings to keep:</p>
+
+  <ul style="margin: 0 0 22px; padding-left: 20px;">
+    <li>Recipe search</li>
+    <li>Saved recipes</li>
+    <li>Scheduling tools</li>
+    <li>Shopping lists</li>
+    <li>Personalised settings</li>
+  </ul>
 
   <div style="margin: 28px 0;">
     <a href="${currentAppUrl}/?view=settings" style="background-color: #111; color: #fff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Open Account Settings</a>
   </div>
 
-  <p style="font-size: 14px; color: #666;">No action is needed if you do not want to continue after the trial.</p>
-  <p style="margin-top: 24px; font-weight: 500; margin-bottom: 2px;">The DinnerByDesign team</p>
-  <p style="margin: 0; font-size: 13px; color: #666;"><a href="mailto:chef@dinnerbydesign.app" style="color: #666; text-decoration: underline;">chef@dinnerbydesign.app</a></p>
+  <p style="font-size: 14px; color: #666;">No action needed if you don't want to continue.</p>
 </div>
       `.trim();
 
@@ -1554,7 +1500,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             to: email,
-            subject: "Your DinnerByDesign free trial ends soon",
+            subject: `Your free trial ends ${formattedEnd}`,
             html: emailHtml,
             from: "DinnerByDesign <chef@dinnerbydesign.app>",
             type: "trial_ending",

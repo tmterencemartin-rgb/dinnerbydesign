@@ -53,7 +53,7 @@
   --color-land-accent: #3db88a;
   --color-land-accent-dim: #1f6b51;
 
-  /* Dinner by Design Premium Design Colors linked to variables above */
+  /* DinnerByDesign Premium Design Colors linked to variables above */
   --color-dbd-ink: var(--dbd-ink);
   --color-dbd-ink-2: var(--dbd-ink-2);
   --color-dbd-ink-3: var(--dbd-ink-3);

@@ -297,6 +297,7 @@ export interface SavedRecipe {
   updatedAt?: Timestamp | FieldValue | null;
   isArchived?: boolean;
   archivedAt?: Timestamp | FieldValue | null;
+  personalNote?: string | null;
   userId: string;
   retailer?: string;
   price?: string;

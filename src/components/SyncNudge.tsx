@@ -45,7 +45,7 @@ export const SyncNudge: React.FC<SyncNudgeProps> = ({ onNavigate, showLowCost = 
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <p className="text-[12px] text-gray-500 leading-tight">
-              Sign in if you want to save your preferences and recipes for future visits to the DinnerByDesign app
+              Sign in if you want to save your preferences and recipes for future visits to the Dinner by Design app
             </p>
           </div>
           <button

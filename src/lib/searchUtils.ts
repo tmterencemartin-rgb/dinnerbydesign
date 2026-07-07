@@ -796,6 +796,7 @@ export const checkSearchMatch = (item: Recipe | ReadyMeal | SavedRecipe, query: 
     normalizeForSearch(searchableItem.category || ''),
     normalizeForSearch(searchableItem.mode || ''),
     normalizeForSearch(searchableItem.saladType || ''),
+    normalizeForSearch(searchableItem.personalNote || ''),
     normalizeForSearch(convenienceProfile),
     ...batchTerms.map(term => normalizeForSearch(term)),
     'chefStyle' in item && item.chefStyle ? normalizeForSearch(item.chefStyle) : '',

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CircleX } from './ui/CircleX';
-import { Wind, CalendarPlus, Check, Archive } from 'lucide-react';
+import { Wind, CalendarPlus, Check, Archive, StickyNote } from 'lucide-react';
 import { SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { isSameRecipe, getConvenienceProfile } from '../lib/recipeUtils';
@@ -30,10 +30,18 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   const [isEnriching, setIsEnriching] = useState(false);
   const [enrichedData, setEnrichedData] = useState<Partial<SavedRecipe> | null>(null);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
+  const [isEditingNote, setIsEditingNote] = useState(false);
+  const [noteDraft, setNoteDraft] = useState(recipe.personalNote || '');
+  const [isSavingNote, setIsSavingNote] = useState(false);
 
   useEffect(() => {
     setCheckedIngredients({});
   }, [recipe.id, recipe.title]);
+
+  useEffect(() => {
+    setNoteDraft(recipe.personalNote || '');
+    setIsEditingNote(false);
+  }, [recipe.id, recipe.personalNote]);
 
   const parseIngredient = (ing: string) => {
     const cleanIng = ing.replace(/^[•\-\*\s\.\(\)]+/, '').trim();
@@ -90,6 +98,24 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   const [showCheck, setShowCheck] = useState(false);
   const weekIsFull = planner.filter(p => !!p.scheduledDate).length >= 7;
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  const personalNote = (recipe.personalNote || '').trim();
+  const noteButtonLabel = personalNote ? 'Note' : 'Add note';
+
+  const handleSaveNote = async () => {
+    if (!recipe.id || isSavingNote) return;
+    const cleanNote = noteDraft.trim().slice(0, 1000);
+    setIsSavingNote(true);
+    try {
+      await updateRecipe(recipe.id, { personalNote: cleanNote || null });
+      showToast(cleanNote ? 'Note saved' : 'Note removed');
+      setIsEditingNote(false);
+    } catch (err: any) {
+      addLog(`UI ERROR: save personal note failed for ${recipe.id}: ${err?.message || err}`);
+      showToast('Could not save note');
+    } finally {
+      setIsSavingNote(false);
+    }
+  };
 
   const handleDaySelect = async (day: string) => {
     if (day === scheduledDate) {
@@ -182,6 +208,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
               </span>
             )}
+            {personalNote && (
+              <span className="bg-orange-50 text-orange-800 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-1">
+                <StickyNote className="w-2.5 h-2.5" /> Note
+              </span>
+            )}
             {recipe.isAirFryerFriendly && (
               <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[10.5px] font-medium flex items-center gap-0.5">
                 <Wind className="w-2.5 h-2.5" /> Air Fryer
@@ -213,15 +244,26 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
 
         {/* Action Row */}
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100/60">
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrintRecipe(recipe);
-            }}
-            className="text-[10.5px] text-gray-400 hover:text-accent font-bold transition-colors cursor-pointer"
-          >
-            Print
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrintRecipe(recipe);
+              }}
+              className="text-[10.5px] text-gray-400 hover:text-accent font-bold transition-colors cursor-pointer"
+            >
+              Print
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsEditingNote(true);
+              }}
+              className={`text-[10.5px] font-bold transition-colors cursor-pointer ${personalNote ? 'text-orange-800 hover:text-accent' : 'text-gray-400 hover:text-accent'}`}
+            >
+              {noteButtonLabel}
+            </button>
+          </div>
 
           {scheduledDate ? (
             <span className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-0.5 rounded uppercase text-[9.5px] font-bold tracking-wider">
@@ -295,6 +337,53 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             </div>
           )}
         </div>
+
+        {personalNote && !isEditingNote && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEditingNote(true);
+            }}
+            className="mt-2 w-full text-left rounded bg-orange-50/45 px-2 py-1.5 text-[11.5px] leading-snug text-gray-600 hover:bg-orange-50 transition-colors cursor-pointer"
+            title="Edit personal note"
+          >
+            <span className="font-semibold text-orange-800">Note:</span>{' '}
+            <span className="line-clamp-2">{personalNote}</span>
+          </button>
+        )}
+
+        {isEditingNote && (
+          <div className="mt-2 rounded border border-orange-100 bg-orange-50/35 p-2" onClick={(e) => e.stopPropagation()}>
+            <textarea
+              value={noteDraft}
+              onChange={(e) => setNoteDraft(e.target.value.slice(0, 1000))}
+              placeholder="Personal note..."
+              className="w-full min-h-[74px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40"
+              maxLength={1000}
+            />
+            <div className="mt-1.5 flex items-center justify-between gap-2">
+              <span className="text-[10px] font-medium text-gray-400">{noteDraft.length}/1000</span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => {
+                    setNoteDraft(recipe.personalNote || '');
+                    setIsEditingNote(false);
+                  }}
+                  className="h-6 px-2 rounded border border-gray-100 bg-white text-[10.5px] font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveNote}
+                  disabled={isSavingNote}
+                  className="h-6 px-2 rounded bg-accent text-[10.5px] font-bold uppercase tracking-wider text-white hover:bg-accent-dark disabled:opacity-60 cursor-pointer"
+                >
+                  {isSavingNote ? 'Saving' : 'Save'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Toast Notification Container */}
         <AnimatePresence>
@@ -438,6 +527,15 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       </span>
                     );
                   }
+
+                  if (personalNote) {
+                    items.push(
+                      <span key="personal-note" className="inline-flex items-center gap-1 bg-orange-50 text-orange-800 text-[11px] px-1.5 py-0.5 rounded font-medium">
+                        <StickyNote className="w-3 h-3" />
+                        Note
+                      </span>
+                    );
+                  }
                   
                   return items.reduce<React.ReactNode[]>((acc, item, index) => {
                     if (index > 0) {
@@ -517,6 +615,24 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      setIsEditingNote(true);
+                    }}
+                    className={`inline-flex h-5 items-center gap-1 px-1.5 rounded border text-[10.5px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                      personalNote
+                        ? 'border-orange-100 bg-orange-50/70 text-orange-800 hover:bg-orange-50'
+                        : 'border-gray-100 text-gray-400 hover:bg-gray-50 hover:text-gray-700'
+                    }`}
+                    title={personalNote ? 'Edit personal note' : 'Add personal note'}
+                  >
+                    <StickyNote className="w-3 h-3" />
+                    <span>{noteButtonLabel}</span>
+                  </button>
+                )}
+
+                {isBacklog && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onRemove();
                     }}
                     className="inline-flex h-5 items-center gap-1 px-1.5 rounded border border-gray-100 text-[10.5px] font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
@@ -533,6 +649,22 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         {/* Right Side: Consolidated Action Buttons */}
         {!isBacklog && (
         <div className="flex items-center gap-1.5 shrink-0 pt-0 w-full sm:w-auto justify-end sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2">
+          {!isBacklog && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsEditingNote(true);
+              }}
+              className={`text-xs px-2.5 py-1 rounded border transition-colors cursor-pointer font-medium ${
+                personalNote
+                  ? 'border-orange-100 bg-orange-50/70 text-orange-800 hover:bg-orange-50'
+                  : 'border-gray-100 text-gray-500 hover:bg-gray-50'
+              }`}
+            >
+              {noteButtonLabel}
+            </button>
+          )}
+
           {!isBacklog && (
             <button 
               onClick={(e) => {
@@ -626,6 +758,53 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         </div>
         )}
       </div>
+
+      {personalNote && !isEditingNote && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsEditingNote(true);
+          }}
+          className="mt-1.5 w-full text-left rounded bg-orange-50/45 px-2 py-1.5 text-[11.5px] leading-snug text-gray-600 hover:bg-orange-50 transition-colors cursor-pointer"
+          title="Edit personal note"
+        >
+          <span className="font-semibold text-orange-800">Note:</span>{' '}
+          <span className="line-clamp-2">{personalNote}</span>
+        </button>
+      )}
+
+      {isEditingNote && (
+        <div className="mt-2 rounded border border-orange-100 bg-orange-50/35 p-2" onClick={(e) => e.stopPropagation()}>
+          <textarea
+            value={noteDraft}
+            onChange={(e) => setNoteDraft(e.target.value.slice(0, 1000))}
+            placeholder="Personal note..."
+            className="w-full min-h-[74px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40"
+            maxLength={1000}
+          />
+          <div className="mt-1.5 flex items-center justify-between gap-2">
+            <span className="text-[10px] font-medium text-gray-400">{noteDraft.length}/1000</span>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => {
+                  setNoteDraft(recipe.personalNote || '');
+                  setIsEditingNote(false);
+                }}
+                className="h-6 px-2 rounded border border-gray-100 bg-white text-[10.5px] font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveNote}
+                disabled={isSavingNote}
+                className="h-6 px-2 rounded bg-accent text-[10.5px] font-bold uppercase tracking-wider text-white hover:bg-accent-dark disabled:opacity-60 cursor-pointer"
+              >
+                {isSavingNote ? 'Saving' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <AnimatePresence>
         {isExpanded && (

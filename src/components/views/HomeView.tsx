@@ -105,6 +105,7 @@ const NOT_BORING_SUMMER_SALADS_QUERY =
   'unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal, under 30 minutes';
 const NOT_BORING_SUMMER_SALADS_RESULTS_COPY =
   'Three ways to prepare unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal and ready in under 30 minutes.';
+const NOT_BORING_SUMMER_SALADS_NEXT_PLACEHOLDER = 'Or maybe you fancy firing up the BBQ?';
 
 const isNotBoringSummerSaladsQuery = (query: string) =>
   [
@@ -294,6 +295,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   );
   const showNotBoringSummerSaladsResultsCopy =
     source === 'cook' && resultsCount === 3 && isNotBoringSummerSaladsQuery(resultsQuery);
+  const showNotBoringSummerSaladsPrompt =
+    source === 'cook' && (!resultsQuery.trim() || isNotBoringSummerSaladsQuery(resultsQuery));
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
@@ -375,6 +378,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const [selectedItem, setSelectedItem] = React.useState<any | null>(null);
   const [compareItems, setCompareItems] = React.useState<any[]>([]);
   const [showCompareModal, setShowCompareModal] = React.useState(false);
+  const [searchPlaceholderOverride, setSearchPlaceholderOverride] = React.useState<string | undefined>();
 
   const isSaved = (recipe: any) => savedRecipes.some(r => isSameRecipe(r, recipe));
   const isScheduled = (recipe: any) => savedRecipes.some(r => isSameRecipe(r, recipe) && !!r.scheduledDate);
@@ -450,7 +454,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const handleNotBoringSummerSalads = React.useCallback(() => {
     if (isReadOnly || isSearching) return;
 
-    setInput(NOT_BORING_SUMMER_SALADS_SEARCH_TITLE);
+    setSearchPlaceholderOverride(NOT_BORING_SUMMER_SALADS_NEXT_PLACEHOLDER);
     setShowFilters(false);
     setPreferencesError(null);
     handleGenerate(NOT_BORING_SUMMER_SALADS_QUERY, {
@@ -458,7 +462,18 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       maxTotalTime: 30,
       isSimple: true
     });
+    setInput('');
   }, [handleGenerate, isReadOnly, isSearching, setInput, setPreferencesError, setShowFilters]);
+
+  const handleClearSearchInput = React.useCallback(() => {
+    setSearchPlaceholderOverride(undefined);
+    clearResults();
+  }, [clearResults]);
+
+  const handleCloseAndNewSearch = React.useCallback(() => {
+    setSearchPlaceholderOverride(undefined);
+    handleNewSearch();
+  }, [handleNewSearch]);
 
   const getSavedPreferenceSuppressionKeys = React.useCallback(() => {
     const prefs = profile?.preferences;
@@ -596,12 +611,22 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   <SearchInput 
                     input={input}
                     setInput={setInput}
-                    onClear={clearResults}
+                    onClear={handleClearSearchInput}
                     isGenerating={isSearching}
                     handleGenerate={(q, p, pref) => {
                       console.log('[HomeView] handleGenerate triggered via input');
+                      const submittedQuery = (q !== undefined ? q : input).trim();
+                      const isNotBoringSaladSearch = source === 'cook' && isNotBoringSummerSaladsQuery(submittedQuery);
+                      setSearchPlaceholderOverride(
+                        isNotBoringSaladSearch
+                          ? NOT_BORING_SUMMER_SALADS_NEXT_PLACEHOLDER
+                          : undefined
+                      );
                       setShowFilters(false);
                       handleGenerate(q, p, pref);
+                      if (isNotBoringSaladSearch) {
+                        setInput('');
+                      }
                     }}
                     handleStopSearch={handleStopSearch}
                     isSpeechSupported={isSpeechSupported}
@@ -612,6 +637,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     isLeftoverMode={isLeftoverMode}
                     isLowCost={isLowCost}
                     isReadOnly={isReadOnly}
+                    placeholderOverride={searchPlaceholderOverride}
                   />
                 </div>
                 <Tooltip text="Open Preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
@@ -654,7 +680,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              {source === 'cook' && (
+              {showNotBoringSummerSaladsPrompt && (
                 <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
                   <div className="flex flex-col gap-2 border-t border-gray-100 pt-2 sm:flex-row sm:items-center sm:justify-between">
                     <button
@@ -725,7 +751,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             {(hasPerformedSearch || isSearching || (currentRecipes && currentRecipes.length > 0) || (currentReadyMeals && currentReadyMeals.length > 0)) && (
               <RecipeListActions 
                 onTryAgain={((source === 'cook' ? currentRecipes : currentReadyMeals) || isSearching || isAppending) ? handleLoadMore : undefined}
-                onNewSearch={((source === 'cook' ? currentRecipes : currentReadyMeals) || isSearching || isAppending) ? handleNewSearch : undefined}
+                onNewSearch={((source === 'cook' ? currentRecipes : currentReadyMeals) || isSearching || isAppending) ? handleCloseAndNewSearch : undefined}
                 isGenerating={isSearching || isAppending}
                 totalCount={(source === 'cook' ? currentRecipes?.length : currentReadyMeals?.length) || 0}
                 isSuppressed={isDietaryRuleSuppressed || suppressedPermanentKeys.length > 0}
@@ -1143,7 +1169,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   </button>
                 )}
                 <button 
-                  onClick={handleNewSearch}
+                  onClick={handleCloseAndNewSearch}
                   disabled={isGenerating || isAppending}
                   className="flex-1 min-w-0 px-2 py-2.5 sm:py-3 bg-white border border-gray-100 rounded text-[9px] sm:text-[10px] font-semibold text-gray-400 hover:text-gray-600 hover:border-gray-200 uppercase tracking-[0.14em] sm:tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm cursor-pointer whitespace-nowrap"
                 >

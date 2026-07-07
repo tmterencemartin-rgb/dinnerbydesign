@@ -27,7 +27,9 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center">
       <div className="w-full max-w-sm">
-        <LogoIcon className="w-12 h-12 mx-auto mb-6" />
+        <div className="w-14 h-14 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <LogoIcon className="w-11 h-11" />
+        </div>
         <h1 className="text-[20px] font-bold text-gray-900 tracking-tight mb-3">Authentication Error</h1>
         <p className="text-[14px] text-gray-600 mb-8 leading-relaxed">
           {isOperationNotAllowed 
@@ -87,7 +89,9 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
     <div className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-sm border border-gray-100 p-6 sm:p-7 rounded-xl shadow-sm">
         <div className="text-center mb-5">
-          <LogoIcon className="w-9 h-9 mx-auto mb-3" />
+          <div className="w-11 h-11 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <LogoIcon className="w-9 h-9" />
+          </div>
           <div className="mb-5">
             <h2 className="text-[18px] font-bold text-gray-900 flex items-center justify-center">
               Dinner<span className="text-accent mx-[1px]">By</span>Design

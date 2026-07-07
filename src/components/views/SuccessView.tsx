@@ -98,7 +98,7 @@ export const SuccessView: React.FC<SuccessViewProps> = ({ setView }) => {
               ? `Thanks for subscribing${session?.customer_details?.email ? ` (${session.customer_details.email})` : ''}. Your saved recipes, dinner schedules and trial preferences are now unlocked and stay available while your subscription is active.`
               : error
                 ? 'Stripe has received the payment, but we could not fetch the checkout details. Your account should update shortly once the secure Stripe confirmation arrives.'
-                : 'Stripe has received the payment. DinnerByDesign is waiting for the secure Stripe confirmation to update your account; this usually takes a few seconds.'}
+                : 'Stripe has received the payment. Dinner by Design is waiting for the secure Stripe confirmation to update your account; this usually takes a few seconds.'}
           </p>
           {!isSubscriptionConfirmed && (
             <p className="text-[12px] text-gray-400 leading-relaxed">

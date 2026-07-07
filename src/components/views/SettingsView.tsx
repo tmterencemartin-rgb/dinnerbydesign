@@ -1098,7 +1098,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                       </p>
                       <p className="text-[12px] text-gray-400 leading-normal font-semibold">
                         {accessStatus === 'paid'
-                          ? 'Thank you for supporting DinnerByDesign. You have unlimited bespoke searches, portion sizes, active plans and UK supermarket trackers synced across all devices.'
+                          ? 'Thank you for supporting Dinner by Design. You have unlimited bespoke searches, portion sizes, active plans and UK supermarket trackers synced across all devices.'
                           : `You have full access to all features. Your trial ends on ${trialEndFormatted}.`}
                       </p>
                     </div>
@@ -1110,7 +1110,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                             Subscribe before your trial ends
                           </p>
                           <p className="text-[12px] text-gray-400 leading-normal font-semibold">
-                            Choose a monthly or annual account now to keep DinnerByDesign active without interruption.
+                            Choose a monthly or annual account now to keep Dinner by Design active without interruption.
                           </p>
                         </div>
                         <StripeCheckoutButton className="w-full" />

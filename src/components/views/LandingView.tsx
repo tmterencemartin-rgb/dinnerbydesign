@@ -228,13 +228,13 @@ export const LandingView: React.FC = () => {
     <div className="bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
       
       {/* 1. STICKY PREMIUM NAVIGATION BAR */}
-      <nav id="top-nav" className="sticky top-0 z-[1000] bg-dbd-surface/90 backdrop-blur-md border-b border-dbd-rule/60 py-4.5 px-4 sm:px-6 md:px-8">
+      <nav id="top-nav" className="sticky top-0 z-[1000] bg-dbd-surface/90 backdrop-blur-md border-b border-dbd-rule/60 py-4.5 px-3 sm:px-6 md:px-8">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           
           {/* Logo Brand Group */}
           <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="w-9 h-9 bg-white border border-dbd-surface-3 rounded-xl flex items-center justify-center mr-3 hover:scale-105 transition-all">
-              <LogoIcon className="w-7 h-7" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white border border-dbd-surface-3 rounded-full flex items-center justify-center mr-2 hover:scale-105 transition-all">
+              <LogoIcon className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
             <div className="flex flex-col items-start text-left font-sans">
               <motion.div 
@@ -514,7 +514,7 @@ export const LandingView: React.FC = () => {
 
           <div className="md:col-span-7">
             <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed mb-8 max-w-prose select-none">
-              Set one or more of the 18 filters once, or adjust per search. Dinner by Design shortlists recipes that fit your diet, budget, cooking method and time.
+              Set one or more of the 18 filters once, or adjust per search. Dinner by Design pinpoints and shortlists recipes that fit your diet, budget, cooking method and time.
             </p>
             
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-8 text-[11.5px] sm:text-[13px] font-mono font-bold text-dbd-ink-3 uppercase tracking-wider select-none">
@@ -649,19 +649,19 @@ export const LandingView: React.FC = () => {
             <ul className="space-y-4 font-sans text-[13.5px] sm:text-[14px] text-dbd-ink-2 select-none">
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Saved across devices</strong>: recipes, preferences, scheduled dinners and shopping lists link to your account and restore after sign-in.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
                 <span><strong>Preference-led recipe search</strong>: filter by diet, allergies, budget, portions, time and ingredients to avoid.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Ingredient-based dinner ideas</strong>: search with what you already have in the fridge or cupboard.</span>
+                <span><strong>Start with what you have.</strong> Dinner by Design shortlists distinct ways to turn those ingredients into dinner, from quick classics to less obvious combinations.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
                 <span><strong>Fast, focused results</strong>: get tailored dinner ideas quickly, without scrolling through ads, back stories or clutter.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
+                <span><strong>Recipe comparison</strong>: compare cost, calories, time, source, servings and ingredients side by side.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -673,7 +673,7 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Recipe comparison</strong>: compare cost, calories, time, source, servings and ingredients side by side.</span>
+                <span><strong>Ready-made dinner options</strong>: find supermarket mains and easy add-ons when cooking from scratch is not the answer.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -786,7 +786,7 @@ export const LandingView: React.FC = () => {
             {[
               {
                 question: 'What is DinnerByDesign?',
-                answer: 'DinnerByDesign is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place.'
+                answer: 'Dinner by Design is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place.'
               },
               {
                 question: 'Can I search by ingredients I already have?',
@@ -798,7 +798,7 @@ export const LandingView: React.FC = () => {
               },
               {
                 question: 'Does it estimate shopping costs?',
-                answer: 'Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners.'
+                answer: 'Yes. Dinner by Design estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners.'
               }
             ].map((item) => (
               <div key={item.question} className="py-4">
