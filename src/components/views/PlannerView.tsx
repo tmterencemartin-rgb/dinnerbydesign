@@ -578,20 +578,20 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         onChange={(e) => setPlanProtein(e.target.value)}
                         className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
                       >
+                        <option value="beef">Beef</option>
+                        <option value="chicken">Chicken</option>
+                        <option value="eggs">Eggs</option>
+                        <option value="seafood">Fish & seafood</option>
+                        <option value="lamb">Lamb</option>
                         <option value="mixed">Mixed</option>
                         <option value="no-preference">No preference</option>
-                        <option value="chicken">Chicken</option>
-                        <option value="seafood">Fish & seafood</option>
-                        <option value="beef">Beef</option>
-                        <option value="pork">Pork</option>
-                        <option value="lamb">Lamb</option>
-                        <option value="turkey">Turkey</option>
                         <option value="pescatarian">Pescatarian</option>
+                        <option value="pork">Pork</option>
+                        <option value="pulses">Pulses</option>
+                        <option value="plant-based">Tofu / plant-based</option>
+                        <option value="turkey">Turkey</option>
                         <option value="vegetarian">Vegetarian</option>
                         <option value="vegan">Vegan</option>
-                        <option value="plant-based">Tofu / plant-based</option>
-                        <option value="pulses">Pulses</option>
-                        <option value="eggs">Eggs</option>
                       </select>
                     </label>
                     <label className="space-y-1">
