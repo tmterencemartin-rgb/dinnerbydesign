@@ -819,31 +819,31 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto p-3 sm:p-4">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dbd-accent"></div>
           </div>
         ) : (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="space-y-1.5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
               {[
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
                 { label: 'Paid access', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe / ${summaryStats.permanentAccess} permanent`, icon: CreditCard },
-                { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid or incomplete', icon: AlertTriangle },
+                { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid, incomplete or paused', icon: AlertTriangle },
                 { label: 'Usage', value: summaryStats.aiCalls || summaryStats.totalSearches, detail: `${summaryStats.succeededAiCalls} model calls succeeded`, icon: Activity }
               ].map(item => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className="bg-white border border-gray-100 rounded p-4">
-                    <div className="flex items-start justify-between gap-3">
+                  <div key={item.label} className="bg-white border border-gray-100 rounded p-3">
+                    <div className="flex items-start justify-between gap-2.5">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{item.label}</p>
-                        <p className="text-2xl font-bold text-gray-950 mt-1">{item.value}</p>
-                        <p className="text-[11px] font-medium text-gray-400 mt-1">{item.detail}</p>
+                        <p className="text-xl font-bold text-gray-950 mt-0.5">{item.value}</p>
+                        <p className="text-[11px] font-medium text-gray-400 mt-0.5">{item.detail}</p>
                       </div>
-                      <div className="w-8 h-8 rounded bg-gray-50 flex items-center justify-center">
-                        <Icon className="w-4 h-4 text-gray-500" />
+                      <div className="w-7 h-7 rounded bg-gray-50 flex items-center justify-center">
+                        <Icon className="w-3.5 h-3.5 text-gray-500" />
                       </div>
                     </div>
                   </div>
@@ -851,9 +851,9 @@ export const AdminDashboard: React.FC = () => {
               })}
             </div>
 
-            <div className="bg-white border border-gray-100 rounded p-4">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                <div className="space-y-2">
+            <div className="bg-white border border-gray-100 rounded p-3">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+                <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
                     <Activity className="w-4 h-4 text-gray-500" />
                     <h2 className="text-[13px] font-bold text-gray-950">Launch cost monitor</h2>
@@ -861,136 +861,140 @@ export const AdminDashboard: React.FC = () => {
                       Estimate
                     </span>
                   </div>
-                  <p className="text-[11.5px] text-gray-400 font-medium max-w-2xl">
+                  <p className="text-[11.5px] leading-snug text-gray-400 font-medium max-w-2xl">
                     Tracks server-side Gemini calls from the point this monitor was added. Token and cost figures are estimates based on prompt and response size.
                   </p>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 w-full lg:max-w-4xl">
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Gemini cost</p>
-                    <p className="text-lg font-bold text-gray-950 mt-1">{formatCurrency(summaryStats.estimatedAiCostGbp)}</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{formatCurrency(summaryStats.estimatedAiCostGbp)}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">{formatCurrency(summaryStats.estimatedAiCostUsd, 'USD')} est.</p>
                   </div>
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Model calls</p>
-                    <p className="text-lg font-bold text-gray-950 mt-1">{summaryStats.aiCalls}</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.aiCalls}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">{summaryStats.failedAiCalls} failed</p>
                   </div>
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Call mix</p>
-                    <p className="text-lg font-bold text-gray-950 mt-1">{summaryStats.recipeSearchCalls}/{summaryStats.readyMadeCalls}/{summaryStats.weeklyPlanCalls}</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.recipeSearchCalls}/{summaryStats.readyMadeCalls}/{summaryStats.weeklyPlanCalls}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">Recipe / ready-made / weekly</p>
                   </div>
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-3">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Net snapshot</p>
-                    <p className="text-lg font-bold text-gray-950 mt-1">{formatCurrency(summaryStats.estimatedNetAfterStripeAndAi)}</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{formatCurrency(summaryStats.estimatedNetAfterStripeAndAi)}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">After Stripe + Gemini est.</p>
                   </div>
                 </div>
               </div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-gray-500">
-                <div className="border-t border-gray-100 pt-2">
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-gray-500">
+                <div className="border-t border-gray-100 pt-1.5">
                   <span className="font-bold text-gray-700">Gross subscription value:</span> {formatCurrency(summaryStats.estimatedGrossRevenue)}
                 </div>
-                <div className="border-t border-gray-100 pt-2">
+                <div className="border-t border-gray-100 pt-1.5">
                   <span className="font-bold text-gray-700">Stripe fees estimate:</span> {formatCurrency(summaryStats.estimatedStripeFees)}
                 </div>
-                <div className="border-t border-gray-100 pt-2">
+                <div className="border-t border-gray-100 pt-1.5">
                   <span className="font-bold text-gray-700">Average Gemini time:</span> {summaryStats.averageLatencyMs ? `${(summaryStats.averageLatencyMs / 1000).toFixed(1)}s` : 'N/A'}
                 </div>
               </div>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded p-4">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-gray-500" />
-                    <h2 className="text-[13px] font-bold text-gray-950">Stripe webhook health</h2>
-                    {latestWebhookEvent ? (
+            {webhookEvents.length > 0 ? (
+              <div className="bg-white border border-gray-100 rounded p-2.5">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-gray-500" />
+                      <h2 className="text-[13px] font-bold text-gray-950">Stripe webhook health</h2>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${getWebhookStatusClass(latestWebhookEvent.status)}`}>
                         {latestWebhookEvent.status}
                       </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
-                        No events yet
-                      </span>
+                    </div>
+                    <p className="text-[11.5px] text-gray-400 font-medium">
+                      {latestWebhookEvent.type} · {formatDateTime(latestWebhookEvent.updatedAt || latestWebhookEvent.receivedAt || latestWebhookEvent.stripeCreatedAt)}
+                    </p>
+                    {latestWebhookEvent?.message && (
+                      <p className="text-[11.5px] text-gray-600 font-semibold">{latestWebhookEvent.message}</p>
+                    )}
+                    {latestWebhookEvent?.error && (
+                      <p className="text-[11.5px] text-red-600 font-semibold">{latestWebhookEvent.error}</p>
                     )}
                   </div>
-                  <p className="text-[11.5px] text-gray-400 font-medium">
-                    {latestWebhookEvent
-                      ? `${latestWebhookEvent.type} · ${formatDateTime(latestWebhookEvent.updatedAt || latestWebhookEvent.receivedAt || latestWebhookEvent.stripeCreatedAt)}`
-                      : 'No Stripe webhook health records have been received since this feature was added.'}
-                  </p>
-                  {latestWebhookEvent?.message && (
-                    <p className="text-[11.5px] text-gray-600 font-semibold">{latestWebhookEvent.message}</p>
-                  )}
-                  {latestWebhookEvent?.error && (
-                    <p className="text-[11.5px] text-red-600 font-semibold">{latestWebhookEvent.error}</p>
-                  )}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 min-w-0 lg:max-w-3xl">
-                  {webhookEvents.slice(0, 6).map(event => (
-                    <div key={event.eventId} className="border border-gray-100 rounded p-2.5 bg-gray-50/40 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10.5px] font-bold text-gray-800 truncate">{event.type}</span>
-                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${getWebhookStatusClass(event.status)}`}>
-                          {event.status}
-                        </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 min-w-0 lg:max-w-3xl">
+                    {webhookEvents.slice(0, 6).map(event => (
+                      <div key={event.eventId} className="border border-gray-100 rounded p-2.5 bg-gray-50/40 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[10.5px] font-bold text-gray-800 truncate">{event.type}</span>
+                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${getWebhookStatusClass(event.status)}`}>
+                            {event.status}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.eventId}</p>
+                        <p className="text-[10px] text-gray-400 font-medium mt-1">
+                          {formatDateTime(event.updatedAt || event.receivedAt || event.stripeCreatedAt)}
+                        </p>
                       </div>
-                      <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.eventId}</p>
-                      <p className="text-[10px] text-gray-400 font-medium mt-1">
-                        {formatDateTime(event.updatedAt || event.receivedAt || event.stripeCreatedAt)}
-                      </p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center gap-2 px-0.5 py-0.5">
+                <Activity className="w-3.5 h-3.5 text-gray-500" />
+                <h2 className="text-[13px] font-bold text-gray-950">Stripe webhook health</h2>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
+                  No events yet
+                </span>
+              </div>
+            )}
 
-            <div className="bg-white border border-gray-100 rounded p-4">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-gray-500" />
-                    <h2 className="text-[13px] font-bold text-gray-950">Email log</h2>
-                    {latestEmailEvent ? (
+            {emailEvents.length > 0 ? (
+              <div className="bg-white border border-gray-100 rounded p-2.5">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-gray-500" />
+                      <h2 className="text-[13px] font-bold text-gray-950">Email log</h2>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${getEmailStatusClass(latestEmailEvent.status)}`}>
                         {latestEmailEvent.status}
                       </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
-                        No emails yet
-                      </span>
+                    </div>
+                    <p className="text-[11.5px] text-gray-400 font-medium">
+                      {latestEmailEvent.type || latestEmailEvent.subject || 'Email'} · {formatDateTime(latestEmailEvent.createdAt)}
+                    </p>
+                    {latestEmailEvent?.errorMessage && (
+                      <p className="text-[11.5px] text-red-600 font-semibold">{latestEmailEvent.errorMessage}</p>
                     )}
                   </div>
-                  <p className="text-[11.5px] text-gray-400 font-medium">
-                    {latestEmailEvent
-                      ? `${latestEmailEvent.type || latestEmailEvent.subject || 'Email'} · ${formatDateTime(latestEmailEvent.createdAt)}`
-                      : 'Automated and user-requested email attempts will appear here once sent.'}
-                  </p>
-                  {latestEmailEvent?.errorMessage && (
-                    <p className="text-[11.5px] text-red-600 font-semibold">{latestEmailEvent.errorMessage}</p>
-                  )}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 min-w-0 lg:max-w-3xl">
-                  {emailEvents.slice(0, 6).map(event => (
-                    <div key={event.id} className="border border-gray-100 rounded p-2.5 bg-gray-50/40 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10.5px] font-bold text-gray-800 truncate">{event.type || event.subject || 'Email'}</span>
-                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${getEmailStatusClass(event.status)}`}>
-                          {event.status || 'unknown'}
-                        </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 min-w-0 lg:max-w-3xl">
+                    {emailEvents.slice(0, 6).map(event => (
+                      <div key={event.id} className="border border-gray-100 rounded p-2.5 bg-gray-50/40 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[10.5px] font-bold text-gray-800 truncate">{event.type || event.subject || 'Email'}</span>
+                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${getEmailStatusClass(event.status)}`}>
+                            {event.status || 'unknown'}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.to || 'No recipient'}</p>
+                        <p className="text-[10px] text-gray-400 font-medium mt-1 truncate">
+                          {event.subject || 'No subject'} · {formatDateTime(event.createdAt)}
+                        </p>
                       </div>
-                      <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.to || 'No recipient'}</p>
-                      <p className="text-[10px] text-gray-400 font-medium mt-1 truncate">
-                        {event.subject || 'No subject'} · {formatDateTime(event.createdAt)}
-                      </p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center gap-2 px-0.5 py-0.5">
+                <Activity className="w-3.5 h-3.5 text-gray-500" />
+                <h2 className="text-[13px] font-bold text-gray-950">Email log</h2>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
+                  No emails yet
+                </span>
+              </div>
+            )}
 
             <div className="border-y border-gray-100 bg-white">
               <div className="divide-y divide-gray-100">
