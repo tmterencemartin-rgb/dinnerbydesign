@@ -819,14 +819,14 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-3 sm:p-4">
+      <div className="max-w-7xl mx-auto p-2 sm:p-3">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dbd-accent"></div>
           </div>
         ) : (
-          <div className="space-y-1.5">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+          <div className="space-y-1">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
               {[
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
                 { label: 'Paid access', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe / ${summaryStats.permanentAccess} permanent`, icon: CreditCard },
@@ -835,8 +835,8 @@ export const AdminDashboard: React.FC = () => {
               ].map(item => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className="bg-white border border-gray-100 rounded p-3">
-                    <div className="flex items-start justify-between gap-2.5">
+                  <div key={item.label} className="bg-white border border-gray-100 rounded p-2.5">
+                    <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{item.label}</p>
                         <p className="text-xl font-bold text-gray-950 mt-0.5">{item.value}</p>
@@ -851,51 +851,51 @@ export const AdminDashboard: React.FC = () => {
               })}
             </div>
 
-            <div className="bg-white border border-gray-100 rounded p-3">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
-                <div className="space-y-1.5">
-                  <div className="flex items-center gap-2">
+            <div className="bg-white border border-gray-100 rounded p-2.5">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5">
                     <Activity className="w-4 h-4 text-gray-500" />
                     <h2 className="text-[13px] font-bold text-gray-950">Launch cost monitor</h2>
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
                       Estimate
                     </span>
                   </div>
-                  <p className="text-[11.5px] leading-snug text-gray-400 font-medium max-w-2xl">
+                  <p className="text-[11px] leading-tight text-gray-400 font-medium max-w-2xl">
                     Tracks server-side Gemini calls from the point this monitor was added. Token and cost figures are estimates based on prompt and response size.
                   </p>
                 </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 w-full lg:max-w-4xl">
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 w-full lg:max-w-4xl">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Gemini cost</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{formatCurrency(summaryStats.estimatedAiCostGbp)}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">{formatCurrency(summaryStats.estimatedAiCostUsd, 'USD')} est.</p>
                   </div>
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Model calls</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.aiCalls}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">{summaryStats.failedAiCalls} failed</p>
                   </div>
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Call mix</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.recipeSearchCalls}/{summaryStats.readyMadeCalls}/{summaryStats.weeklyPlanCalls}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">Recipe / ready-made / weekly</p>
                   </div>
-                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2.5">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Net snapshot</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{formatCurrency(summaryStats.estimatedNetAfterStripeAndAi)}</p>
                     <p className="text-[10.5px] text-gray-400 font-medium">After Stripe + Gemini est.</p>
                   </div>
                 </div>
               </div>
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-gray-500">
-                <div className="border-t border-gray-100 pt-1.5">
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[11px] text-gray-500">
+                <div className="border-t border-gray-100 pt-1">
                   <span className="font-bold text-gray-700">Gross subscription value:</span> {formatCurrency(summaryStats.estimatedGrossRevenue)}
                 </div>
-                <div className="border-t border-gray-100 pt-1.5">
+                <div className="border-t border-gray-100 pt-1">
                   <span className="font-bold text-gray-700">Stripe fees estimate:</span> {formatCurrency(summaryStats.estimatedStripeFees)}
                 </div>
-                <div className="border-t border-gray-100 pt-1.5">
+                <div className="border-t border-gray-100 pt-1">
                   <span className="font-bold text-gray-700">Average Gemini time:</span> {summaryStats.averageLatencyMs ? `${(summaryStats.averageLatencyMs / 1000).toFixed(1)}s` : 'N/A'}
                 </div>
               </div>
