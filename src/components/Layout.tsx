@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Search, Calendar, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { LogoIcon } from './icons/LogoIcon';
 import { useAuth } from '../contexts/AuthContext';
 import { Footer } from './Footer';
 import { Tooltip } from './ui/Tooltip';
@@ -20,18 +19,6 @@ const logoVariants = {
     transition: {
       staggerChildren: 0.15,
       delayChildren: 0.2
-    }
-  }
-};
-
-const wordVariants: any = {
-  hidden: { opacity: 0, y: 5 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.215, 0.61, 0.355, 1]
     }
   }
 };
@@ -58,20 +45,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
               }}
               aria-label="Logo - Back to landing page"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-dbd-surface-2 border border-dbd-rule/40 rounded-full flex items-center justify-center mr-2 group-hover:border-dbd-accent transition-all">
-                <LogoIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-105" />
-              </div>
               <div className="flex flex-col items-start text-left min-w-0">
-                <motion.div 
+                <motion.img
                   initial="hidden"
                   animate="visible"
                   variants={logoVariants}
-                  className="text-[17px] sm:text-[19px] font-display font-semibold text-dbd-ink tracking-tight leading-none whitespace-nowrap"
-                >
-                  <motion.span variants={wordVariants} className="inline-block">Dinner</motion.span>
-                  <motion.span variants={wordVariants} className="inline-block font-bold text-dbd-accent mx-[1px]">By</motion.span>
-                  <motion.span variants={wordVariants} className="inline-block">Design</motion.span>
-                </motion.div>
+                  src="/dbd-logo-with-pin.png"
+                  alt="DinnerByDesign"
+                  className="h-9 w-auto max-w-[215px] object-contain mix-blend-multiply transition-transform group-hover:scale-[1.02] sm:h-11 sm:max-w-[270px]"
+                />
                 <span className="text-[9px] font-medium text-dbd-ink-3 tracking-[0.05em] mt-1 opacity-80 text-left whitespace-nowrap hidden sm:block">Less searching. Better matches. Dinner, decided.</span>
               </div>
             </button>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { safeStorage } from '../../lib/storage';
-import { LogoIcon } from '../icons/LogoIcon';
 import { 
   Search as SearchIcon, 
   Calendar as CalendarIcon, 
@@ -22,18 +21,6 @@ const logoVariants = {
     transition: {
       staggerChildren: 0.1,
       delayChildren: 0.1
-    }
-  }
-};
-
-const wordVariants: any = {
-  hidden: { opacity: 0, y: 5 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.215, 0.61, 0.355, 1]
     }
   }
 };
@@ -233,20 +220,15 @@ export const LandingView: React.FC = () => {
           
           {/* Logo Brand Group */}
           <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white border border-dbd-surface-3 rounded-full flex items-center justify-center mr-2 hover:scale-105 transition-all">
-              <LogoIcon className="w-6 h-6 sm:w-7 sm:h-7" />
-            </div>
             <div className="flex flex-col items-start text-left font-sans">
-              <motion.div 
+              <motion.img
                 initial="hidden"
                 animate="visible"
                 variants={logoVariants}
-                className="text-[19px] font-bold text-dbd-ink tracking-tight leading-none"
-              >
-                <motion.span variants={wordVariants} className="inline-block">Dinner</motion.span>
-                <motion.span variants={wordVariants} className="inline-block text-dbd-accent mx-[1.5px]">By</motion.span>
-                <motion.span variants={wordVariants} className="inline-block">Design</motion.span>
-              </motion.div>
+                src="/dbd-logo-with-pin.png"
+                alt="DinnerByDesign"
+                className="h-9 w-auto max-w-[215px] object-contain mix-blend-multiply transition-transform hover:scale-[1.02] sm:h-11 sm:max-w-[270px]"
+              />
               <span className="text-[8.5px] font-medium text-dbd-ink-3 tracking-[0.01em] mt-1.5 block leading-none whitespace-nowrap">
                 Less searching. Better matches. Dinner, decided.
               </span>
