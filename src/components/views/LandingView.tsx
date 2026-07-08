@@ -227,7 +227,7 @@ export const LandingView: React.FC = () => {
                 variants={logoVariants}
                 src="/dbd-logo-with-pin.png"
                 alt="DinnerByDesign"
-                className="h-9 w-auto max-w-[215px] object-contain mix-blend-multiply transition-transform hover:scale-[1.02] sm:h-11 sm:max-w-[270px]"
+                className="h-[32px] w-auto max-w-[194px] object-contain mix-blend-multiply transition-transform hover:scale-[1.02] sm:h-[40px] sm:max-w-[243px]"
               />
               <span className="text-[8.5px] font-medium text-dbd-ink-3 tracking-[0.01em] mt-1.5 block leading-none whitespace-nowrap">
                 Less searching. Better matches. Dinner, decided.

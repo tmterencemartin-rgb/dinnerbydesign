@@ -52,7 +52,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
                   variants={logoVariants}
                   src="/dbd-logo-with-pin.png"
                   alt="DinnerByDesign"
-                  className="h-9 w-auto max-w-[215px] object-contain mix-blend-multiply transition-transform group-hover:scale-[1.02] sm:h-11 sm:max-w-[270px]"
+                  className="h-[32px] w-auto max-w-[194px] object-contain mix-blend-multiply transition-transform group-hover:scale-[1.02] sm:h-[40px] sm:max-w-[243px]"
                 />
                 <span className="text-[9px] font-medium text-dbd-ink-3 tracking-[0.05em] mt-1 opacity-80 text-left whitespace-nowrap hidden sm:block">Less searching. Better matches. Dinner, decided.</span>
               </div>
