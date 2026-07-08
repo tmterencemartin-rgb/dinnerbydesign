@@ -768,7 +768,7 @@ export const LandingView: React.FC = () => {
             {[
               {
                 question: 'What is DinnerByDesign?',
-                answer: 'Dinner by Design is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place.'
+                answer: 'DinnerByDesign is an ad-free UK dinner recipe finder. It helps you search, compare, save, schedule and shop for dinner ideas from one place.'
               },
               {
                 question: 'Can I search by ingredients I already have?',
@@ -780,7 +780,11 @@ export const LandingView: React.FC = () => {
               },
               {
                 question: 'Does it estimate shopping costs?',
-                answer: 'Yes. Dinner by Design estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners.'
+                answer: 'Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners.'
+              },
+              {
+                question: 'Is DinnerByDesign a video-based guided cooking app?',
+                answer: 'No. DinnerByDesign is a search, planning and shopping-list app for dinner ideas. It is not a video-based guided cooking lesson app.'
               }
             ].map((item) => (
               <div key={item.question} className="py-4">

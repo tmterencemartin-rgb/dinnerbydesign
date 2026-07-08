@@ -110,9 +110,10 @@ const AppContent = () => {
                 "@type": "WebApplication",
                 "name": "DinnerByDesign",
                 "url": "https://dinnerbydesign.app/",
-                "description": "Ad-free UK dinner finding with verified dinner ideas, ready-made supermarket options, preference-led search and costed shopping lists.",
+                "description": "DinnerByDesign is an ad-free UK dinner recipe finder for verified dinner ideas, ready-made supermarket options, preference-led search, scheduling and costed shopping lists.",
                 "applicationCategory": "FoodAndDrinkApplication",
                 "operatingSystem": "Web",
+                "alternateName": "DinnerByDesign app",
                 "brand": {
                   "@type": "Brand",
                   "name": "DinnerByDesign"
@@ -132,7 +133,7 @@ const AppContent = () => {
                     "name": "What is DinnerByDesign?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Dinner by Design is an ad-free UK dinner recipe app which enables you to search, compare, save, schedule and shop from one place."
+                      "text": "DinnerByDesign is an ad-free UK dinner recipe finder. It helps you search, compare, save, schedule and shop for dinner ideas from one place."
                     }
                   },
                   {
@@ -156,7 +157,15 @@ const AppContent = () => {
                     "name": "Does it estimate shopping costs?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Yes. Dinner by Design estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners."
+                      "text": "Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Is DinnerByDesign a video-based guided cooking app?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "No. DinnerByDesign is a search, planning and shopping-list app for dinner ideas. It is not a video-based guided cooking lesson app."
                     }
                   }
                 ]
