@@ -40,10 +40,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
   return (
     <div className="min-h-screen border border-dbd-rule/10 bg-gray-50 text-dbd-ink flex flex-col transition-colors duration-250 pb-[env(safe-area-inset-bottom)]">
       {/* Navigation */}
-      <nav className="border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1.25rem+env(safe-area-inset-top))] md:pt-7 lg:pt-9 pb-0 transition-colors duration-250">
+      <nav className="border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1rem+env(safe-area-inset-top))] sm:pt-[calc(1.125rem+env(safe-area-inset-top))] pb-0 transition-colors duration-250">
         <div className="max-w-6xl mx-auto px-3 md:px-3 lg:px-6">
           {/* Row 1: Brand & Utilities */}
-          <div className="flex justify-between items-center mb-2 md:mb-3 lg:mb-4">
+          <div className="flex min-h-[62px] justify-between items-center mb-3 sm:min-h-[78px]">
             <button 
               className="flex shrink-0 items-center cursor-pointer group focus:outline-none" 
               onClick={() => {
@@ -92,21 +92,21 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
           <div className="flex items-center justify-between">
             <button 
               onClick={() => setView('home')}
-              className={`flex-1 flex flex-col items-center py-1.5 md:py-2 lg:py-2.5 border-b-2 transition-all cursor-pointer ${view === 'home' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
+              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'home' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <Search className="w-4 h-4 mb-1 md:mb-1.5" />
               <span className="text-[10px] font-semibold uppercase tracking-widest">Search</span>
             </button>
             <button 
               onClick={() => setView('planner')}
-              className={`flex-1 flex flex-col items-center py-1.5 md:py-2 lg:py-2.5 border-b-2 transition-all cursor-pointer ${view === 'planner' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
+              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'planner' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <Calendar className="w-4 h-4 mb-1 md:mb-1.5" />
               <span className="text-[10px] font-semibold uppercase tracking-widest">Save & Schedule</span>
             </button>
             <button 
               onClick={() => setView('shopping')}
-              className={`flex-1 flex flex-col items-center py-1.5 md:py-2 lg:py-2.5 border-b-2 transition-all cursor-pointer ${view === 'shopping' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
+              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'shopping' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <ShoppingCart className="w-4 h-4 mb-1 md:mb-1.5" />
               <span className="text-[10px] font-semibold uppercase tracking-widest">Shop</span>
