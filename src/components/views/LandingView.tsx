@@ -15,15 +15,18 @@ import {
 } from 'lucide-react';
 
 const logoVariants = {
-  hidden: { opacity: 0, scale: 0.94, y: -3 },
+  hidden: { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
   visible: {
+    clipPath: 'inset(0 0% 0 0)',
     opacity: 1,
-    scale: 1,
-    y: 0,
     transition: {
-      type: 'spring',
-      stiffness: 140,
-      damping: 16
+      clipPath: {
+        duration: 0.75,
+        ease: [0.215, 0.61, 0.355, 1]
+      },
+      opacity: {
+        duration: 0.25
+      }
     }
   }
 };
