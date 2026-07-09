@@ -15,12 +15,15 @@ import {
 } from 'lucide-react';
 
 const logoVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0, scale: 0.94, y: -3 },
   visible: {
     opacity: 1,
+    scale: 1,
+    y: 0,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1
+      type: 'spring',
+      stiffness: 140,
+      damping: 16
     }
   }
 };
@@ -225,9 +228,11 @@ export const LandingView: React.FC = () => {
                 initial="hidden"
                 animate="visible"
                 variants={logoVariants}
+                whileHover={{ scale: 1.035, rotate: -0.3 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                 src="/dbd-logo-with-pin.png"
                 alt="DinnerByDesign"
-                className="h-[32px] w-auto max-w-[194px] object-contain mix-blend-multiply transition-transform hover:scale-[1.02] sm:h-[40px] sm:max-w-[243px]"
+                className="h-[49px] w-auto max-w-[297px] origin-left object-contain mix-blend-multiply sm:h-[61px] sm:max-w-[371px]"
               />
               <span className="text-[8.5px] font-medium text-dbd-ink-3 tracking-[0.01em] mt-1.5 block leading-none whitespace-nowrap">
                 Less searching. Better matches. Dinner, decided.

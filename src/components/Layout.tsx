@@ -13,12 +13,15 @@ interface LayoutProps {
 }
 
 const logoVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0, scale: 0.94, y: -3 },
   visible: {
     opacity: 1,
+    scale: 1,
+    y: 0,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2
+      type: 'spring',
+      stiffness: 140,
+      damping: 16
     }
   }
 };
@@ -50,9 +53,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
                   initial="hidden"
                   animate="visible"
                   variants={logoVariants}
+                  whileHover={{ scale: 1.035, rotate: -0.3 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                   src="/dbd-logo-with-pin.png"
                   alt="DinnerByDesign"
-                  className="h-[32px] w-auto max-w-[194px] object-contain mix-blend-multiply transition-transform group-hover:scale-[1.02] sm:h-[40px] sm:max-w-[243px]"
+                  className="h-[49px] w-auto max-w-[297px] origin-left object-contain mix-blend-multiply sm:h-[61px] sm:max-w-[371px]"
                 />
                 <span className="text-[9px] font-medium text-dbd-ink-3 tracking-[0.05em] mt-1 opacity-80 text-left whitespace-nowrap hidden sm:block">Less searching. Better matches. Dinner, decided.</span>
               </div>
