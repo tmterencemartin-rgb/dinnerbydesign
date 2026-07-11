@@ -87,12 +87,12 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
   
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-sm border border-gray-100 p-6 sm:p-7 rounded-xl shadow-sm">
-        <div className="text-center mb-5">
-          <div className="w-11 h-11 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+      <div className="w-full max-w-sm border border-gray-100 p-5 sm:p-6 rounded-xl shadow-sm">
+        <div className="text-center mb-4">
+          <div className="w-11 h-11 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
             <LogoIcon className="w-9 h-9" />
           </div>
-          <div className="mb-5">
+          <div className="mb-4">
             <h2 className="text-[18px] font-bold text-gray-900 flex items-center justify-center">
               Dinner<span className="text-accent mx-[1px]">By</span>Design
             </h2>

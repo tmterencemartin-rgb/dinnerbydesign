@@ -104,11 +104,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      <div className="space-y-2.5">
-        <label className="text-[13px] font-bold text-gray-900 block">
-          {isSignUp ? 'Create your account' : 'Sign in'}
-        </label>
+    <div className={`space-y-3 ${className}`}>
+      <div className={isSignUp ? '' : 'space-y-2'}>
+        {!isSignUp && (
+          <label className="text-[13px] font-bold text-gray-900 block">
+            Sign in
+          </label>
+        )}
         
         <form onSubmit={handleSubmit} className="space-y-1 relative">
           {error && (
@@ -179,7 +181,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             />
           </div>
           
-          <div className="pt-2.5 space-y-2">
+          <div className="pt-2 space-y-1.5">
             <button 
               type="submit" 
               disabled={loading} 
@@ -203,8 +205,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         </form>
       </div>
 
-      <div className="space-y-2.5">
-        <div className="relative flex py-0.5 items-center">
+      <div className="space-y-2">
+        <div className="relative flex items-center">
           <div className="flex-grow border-t border-gray-100"></div>
           <span className="flex-shrink mx-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">or</span>
           <div className="flex-grow border-t border-gray-100"></div>
@@ -251,7 +253,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         </button>
       </div>
 
-      <div className="pt-3 text-center border-t border-gray-50">
+      <div className="pt-2.5 text-center border-t border-gray-50">
         {isSignUp ? (
           <p className="text-[13px] text-gray-500 font-medium">
             Already have an account?{' '}

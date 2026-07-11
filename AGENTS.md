@@ -28,6 +28,7 @@ When testing this web application locally, you can connect to your local backend
 # Project Persistence & Communication
 
 - **Instruction Persistence**: All project-specific logic, architectural decisions, and custom rules MUST be recorded in `AGENTS.md`.
+- **Live Repo Location**: The live DinnerByDesign app repository for this project is `/Users/home/Desktop/DinnerByDesign/DinnerByDesign-app`.
 - **Serverless Compatibility**: The API routes and entry points are optimized to run seamlessly in read-only and ephemeral execution environments (e.g., serverless functions). Direct local file writes (such as to `api-errors.log`) are completely avoided, and all file path resolutions use absolute resolution with `path.resolve` to prevent execution path mismatch errors.
 - **Hiding Internals**: When communicating with the user, hide internal directory paths and engineering details. Focus on visual and functional outcomes.
 - **Evidence-Led Replies**: State whether acceptance tests were verified in the running app or implementation level. Avoid self-congratulatory language.
