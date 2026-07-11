@@ -35,6 +35,25 @@ interface PlannerViewProps {
   setView: (view: any) => void;
 }
 
+const PLAN_PROTEIN_OPTIONS = [
+  { value: 'beef', label: 'Beef' },
+  { value: 'chicken', label: 'Chicken' },
+  { value: 'eggs', label: 'Eggs' },
+  { value: 'seafood', label: 'Fish & seafood' },
+  { value: 'lamb', label: 'Lamb' },
+  { value: 'pescatarian', label: 'Pescatarian' },
+  { value: 'pork', label: 'Pork' },
+  { value: 'pulses', label: 'Pulses' },
+  { value: 'plant-based', label: 'Tofu / plant-based' },
+  { value: 'turkey', label: 'Turkey' },
+  { value: 'vegetarian', label: 'Vegetarian' },
+  { value: 'vegan', label: 'Vegan' },
+];
+
+const DEFAULT_PLAN_PROTEINS = ['chicken', 'seafood', 'vegetarian', 'beef', 'pork', 'turkey', 'pulses'];
+
+const getDefaultPlanProteins = (dinnerCount: number) => DEFAULT_PLAN_PROTEINS.slice(0, dinnerCount);
+
 export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const { 
     profile, 
@@ -121,7 +140,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planDinnerCount, setPlanDinnerCount] = useState<3 | 5 | 7>(5);
   const [planBudget, setPlanBudget] = useState('40');
   const [planServings, setPlanServings] = useState(profile?.preferences?.servings || 2);
-  const [planProtein, setPlanProtein] = useState('mixed');
+  const [planProteins, setPlanProteins] = useState<string[]>(() => getDefaultPlanProteins(5));
   const [planTime, setPlanTime] = useState<WeeklyPlanTime>('any');
   const [planHomemadeCount, setPlanHomemadeCount] = useState<number>(5);
   const [planAlert, setPlanAlert] = useState<string | null>(null);
@@ -133,11 +152,30 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
   useEffect(() => {
     setPlanAlert(null);
-  }, [planDinnerCount, planBudget, planServings, planProtein, planTime, planHomemadeCount]);
+  }, [planDinnerCount, planBudget, planServings, planProteins, planTime, planHomemadeCount]);
 
   useEffect(() => {
     setPlanHomemadeCount(prev => Math.min(prev, planDinnerCount));
+    setPlanProteins(prev => {
+      const selected = prev.filter(protein => PLAN_PROTEIN_OPTIONS.some(option => option.value === protein));
+      const withDefaults = [...selected];
+      for (const protein of getDefaultPlanProteins(planDinnerCount)) {
+        if (withDefaults.length >= planDinnerCount) break;
+        if (!withDefaults.includes(protein)) withDefaults.push(protein);
+      }
+      return withDefaults.slice(0, planDinnerCount);
+    });
   }, [planDinnerCount]);
+
+  const togglePlanProtein = (protein: string) => {
+    setPlanProteins(prev => {
+      if (prev.includes(protein)) {
+        return prev.length === 1 ? prev : prev.filter(item => item !== protein);
+      }
+      if (prev.length >= planDinnerCount) return prev;
+      return [...prev, protein];
+    });
+  };
 
   useEffect(() => {
     setHasExhaustedSaved(false);
@@ -270,7 +308,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
           dinnerCount: planDinnerCount,
           budget: planBudget,
           servings: planServings,
-          protein: planProtein,
+          protein: planProteins,
           time: planTime,
           homemadeCount: planHomemadeCount,
         },
@@ -532,7 +570,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
               {showPlanWeek && (
                 <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Dinners</span>
                       <select
@@ -573,29 +611,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </div>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Protein</span>
-                      <select
-                        value={planProtein}
-                        onChange={(e) => setPlanProtein(e.target.value)}
-                        className="w-full h-10 bg-gray-50 border border-gray-100 rounded px-3 text-[12px] font-semibold text-gray-700 outline-none"
-                      >
-                        <option value="beef">Beef</option>
-                        <option value="chicken">Chicken</option>
-                        <option value="eggs">Eggs</option>
-                        <option value="seafood">Fish & seafood</option>
-                        <option value="lamb">Lamb</option>
-                        <option value="mixed">Mixed</option>
-                        <option value="no-preference">No preference</option>
-                        <option value="pescatarian">Pescatarian</option>
-                        <option value="pork">Pork</option>
-                        <option value="pulses">Pulses</option>
-                        <option value="plant-based">Tofu / plant-based</option>
-                        <option value="turkey">Turkey</option>
-                        <option value="vegetarian">Vegetarian</option>
-                        <option value="vegan">Vegan</option>
-                      </select>
-                    </label>
-                    <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Time</span>
                       <select
                         value={planTime}
@@ -622,6 +637,41 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         ))}
                       </select>
                     </label>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Proteins</span>
+                      <span className="text-[10px] font-semibold text-gray-400">
+                        Choose up to {planDinnerCount}; {planProteins.length} selected
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5">
+                      {PLAN_PROTEIN_OPTIONS.map(option => {
+                        const isSelected = planProteins.includes(option.value);
+                        const isDisabled = !isSelected && planProteins.length >= planDinnerCount;
+                        return (
+                          <label
+                            key={option.value}
+                            className={`h-9 rounded border px-2 text-[11px] font-bold flex items-center justify-center text-center transition-colors ${
+                              isSelected
+                                ? 'border-gray-900 bg-gray-900 text-white'
+                                : isDisabled
+                                  ? 'border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed'
+                                  : 'border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-300 cursor-pointer'
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              disabled={isDisabled}
+                              onChange={() => togglePlanProtein(option.value)}
+                              className="sr-only"
+                            />
+                            {option.label}
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <p className="text-[11px] text-gray-400 font-medium leading-relaxed">

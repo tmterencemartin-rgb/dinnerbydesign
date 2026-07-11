@@ -239,7 +239,7 @@ describe('plannerUtils', () => {
       planner: [],
       preferences,
       generateDinnerSuggestions: async params => {
-        capturedQuery = params.query;
+        if (!capturedQuery) capturedQuery = params.query;
         capturedMaxTime = params.maxTotalTime;
         return {
           recipes: [
@@ -299,6 +299,53 @@ describe('plannerUtils', () => {
     expect(capturedQuery).toContain('any suitable protein');
     expect(capturedQuery).toContain('dinners under 45 minutes');
     expect(capturedMaxTime).toBe(45);
+  });
+
+  it('passes multiple selected proteins into weekly planning params', async () => {
+    let capturedQuery = '';
+
+    const result = await createWeeklyDinnerPlan({
+      settings: {
+        dinnerCount: 5,
+        budget: '45',
+        servings: 2,
+        protein: ['chicken', 'seafood', 'vegetarian', 'beef', 'pulses'],
+        time: 'any',
+        homemadeCount: 5,
+      },
+      planner: [],
+      preferences,
+      generateDinnerSuggestions: async params => {
+        if (!capturedQuery) capturedQuery = params.query;
+        return {
+          recipes: [
+            {
+              title: 'Varied Dinner',
+              description: 'weekly dinner',
+              ingredients: [],
+              instructions: [],
+              cuisine: 'Dinner',
+              totalServings: 2,
+              totalTime: 35,
+              saladType: 'none',
+              isVegetarian: false,
+              isPescatarian: false,
+              isVegan: false,
+              dietFlagsVerified: true,
+            },
+          ],
+        };
+      },
+      addLog: () => {},
+    });
+
+    expect(result.dinners.map(item => item.title)).toEqual(['Varied Dinner']);
+    expect(capturedQuery).toContain('varied proteins across the week');
+    expect(capturedQuery).toContain('chicken');
+    expect(capturedQuery).toContain('fish and seafood');
+    expect(capturedQuery).toContain('vegetarian');
+    expect(capturedQuery).toContain('beef');
+    expect(capturedQuery).toContain('pulses');
   });
 
   it('falls back to focused weekly searches and returns a shortage alert', async () => {

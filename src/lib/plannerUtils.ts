@@ -25,7 +25,7 @@ export interface WeeklyPlanSettings {
   dinnerCount: 3 | 5 | 7;
   budget: string;
   servings: number;
-  protein: string;
+  protein: string | string[];
   time: WeeklyPlanTime;
   homemadeCount: number;
 }
@@ -239,12 +239,20 @@ const addUniqueCandidates = <T extends Recipe | ReadyMeal>(
   }
 };
 
-const getFallbackProteins = (
-  requestedProtein: string,
+const normalizeRequestedProteins = (
+  requestedProtein: string | string[],
   dinnerCount: number,
   preferences?: UserPreferences | null
 ) => {
-  if (requestedProtein !== 'mixed' && requestedProtein !== 'no-preference') return Array(dinnerCount).fill(requestedProtein);
+  const proteinList = Array.isArray(requestedProtein)
+    ? requestedProtein.filter(Boolean)
+    : requestedProtein ? [requestedProtein] : [];
+
+  if (proteinList.includes('no-preference')) return ['no-preference'];
+
+  if (proteinList.length > 0 && !proteinList.includes('mixed') && !proteinList.includes('no-preference')) {
+    return proteinList.slice(0, dinnerCount);
+  }
   if (preferences?.dietaryRule === 'vegetarian') return Array(dinnerCount).fill('vegetarian');
   if (preferences?.dietaryRule === 'vegan') return Array(dinnerCount).fill('vegan');
   return ['chicken', 'fish and seafood', 'vegetarian', 'pork', 'beef', 'pulses', 'turkey', 'lamb', 'eggs', 'tofu'];
@@ -257,6 +265,14 @@ const getProteinText = (protein: string) => {
   if (protein === 'pescatarian') return 'pescatarian proteins';
   if (protein === 'plant-based') return 'tofu and plant-based protein';
   return protein;
+};
+
+const getProteinsText = (proteins: string[]) => {
+  if (proteins.includes('no-preference')) return 'any suitable protein';
+  const cleanProteins = proteins.map(getProteinText).filter(Boolean);
+  if (cleanProteins.length === 0) return 'varied proteins';
+  if (cleanProteins.length === 1) return cleanProteins[0];
+  return `varied proteins across the week: ${cleanProteins.join(', ')}`;
 };
 
 const getTimeText = (time: WeeklyPlanTime) => {
@@ -298,7 +314,8 @@ export const createWeeklyDinnerPlan = async ({
     ? Number((budgetValue / settings.dinnerCount / servingsCount).toFixed(2))
     : undefined;
   const shouldApplyLowCostBias = perPortionBudget !== undefined && perPortionBudget <= 2;
-  const proteinText = getProteinText(settings.protein);
+  const requestedProteins = normalizeRequestedProteins(settings.protein, settings.dinnerCount, preferences);
+  const proteinText = getProteinsText(requestedProteins);
   const timeText = getTimeText(settings.time);
   const weeklySaladPreference = preferences?.saladPreference === 'main-only' ? 'main-only' : 'all';
   const homemadeTarget = Math.min(settings.homemadeCount, settings.dinnerCount);
@@ -348,12 +365,12 @@ export const createWeeklyDinnerPlan = async ({
   }
 
   const baseExcludedTitles = [...existingPlannerTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)];
-  const fallbackProteins = getFallbackProteins(settings.protein, settings.dinnerCount, preferences);
+  const fallbackProteins = requestedProteins;
   const fallbackTimeText = getFallbackTimeText(settings.time);
 
   for (let i = homemadeItems.length; i < homemadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
-    const fallbackQuery = `${fallbackTimeText} cooked ${fallbackProtein} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
+    const fallbackQuery = `${fallbackTimeText} cooked ${getProteinText(fallbackProtein)} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
     const fallbackParams = makeParams(fallbackQuery, 'cook', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
     try {
@@ -366,7 +383,7 @@ export const createWeeklyDinnerPlan = async ({
 
   for (let i = readyMadeItems.length; i < readyMadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[(homemadeTarget + i) % fallbackProteins.length];
-    const fallbackQuery = `${fallbackTimeText} UK supermarket ready-made ${fallbackProtein} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
+    const fallbackQuery = `${fallbackTimeText} UK supermarket ready-made ${getProteinText(fallbackProtein)} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
     const fallbackParams = makeParams(fallbackQuery, 'ready-made', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
     try {
