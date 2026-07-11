@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LogoIcon } from './icons/LogoIcon';
 import { useAuth } from '../contexts/AuthContext';
 import { safeStorage } from '../lib/storage';
 
@@ -27,9 +26,11 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center">
       <div className="w-full max-w-sm">
-        <div className="w-14 h-14 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <LogoIcon className="w-11 h-11" />
-        </div>
+        <img
+          src="/dbd-logo-with-pin.png"
+          alt="DinnerByDesign"
+          className="h-[49px] w-auto max-w-[297px] object-contain mix-blend-multiply mx-auto mb-6"
+        />
         <h1 className="text-[20px] font-bold text-gray-900 tracking-tight mb-3">Authentication Error</h1>
         <p className="text-[14px] text-gray-600 mb-8 leading-relaxed">
           {isOperationNotAllowed 
@@ -89,15 +90,12 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
     <div className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-sm border border-gray-100 p-5 sm:p-6 rounded-xl shadow-sm">
         <div className="text-center mb-4">
-          <div className="w-11 h-11 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-            <LogoIcon className="w-9 h-9" />
-          </div>
-          <div className="mb-4">
-            <h2 className="text-[18px] font-bold text-gray-900 flex items-center justify-center">
-              Dinner<span className="text-accent mx-[1px]">By</span>Design
-            </h2>
-            <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mt-1">Less searching. Better matches. Dinner, decided.</p>
-          </div>
+          <img
+            src="/dbd-logo-with-pin.png"
+            alt="DinnerByDesign"
+            className="h-[49px] w-auto max-w-[297px] object-contain mix-blend-multiply mx-auto mb-2"
+          />
+          <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mb-4">Less searching. Better matches. Dinner, decided.</p>
           
           <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">
             {isSignUp ? 'Start your 7-day free trial.' : 'Sign in to DinnerByDesign'}
