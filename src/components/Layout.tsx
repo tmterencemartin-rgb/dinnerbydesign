@@ -30,7 +30,7 @@ const logoVariants = {
 };
 
 export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSearch }) => {
-  const { user } = useAuth();
+  const { user, goToSignIn } = useAuth();
 
   // Revert any leftover dark mode class on the body/html element completely
   useEffect(() => {
@@ -69,7 +69,13 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
             <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
               <Tooltip text={user && !user.isAnonymous ? "View your account and preferences" : "Sign in and save your preferences and recipes for future visits"} position="bottom" align="right">
                 <button 
-                  onClick={() => setView('settings')}
+                  onClick={() => {
+                    if (user && !user.isAnonymous) {
+                      setView('settings');
+                    } else {
+                      goToSignIn();
+                    }
+                  }}
                   className={`text-[11px] sm:text-[12px] font-bold px-1.5 sm:px-2 py-1 transition-all whitespace-nowrap flex items-center gap-1.5 sm:gap-2 ${view === 'settings' ? 'text-dbd-accent font-semibold' : 'text-dbd-accent hover:opacity-70'}`}
                 >
                   {user && !user.isAnonymous && (

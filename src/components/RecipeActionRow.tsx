@@ -27,13 +27,11 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
   planner 
 }) => {
   const [isEmailing, setIsEmailing] = useState(false);
-  const { user, handlePrintRecipe, showToast, setView } = useAuth();
+  const { user, handlePrintRecipe, showToast, goToSignIn } = useAuth();
 
   const handleSaveAndSchedule = () => {
     if (!user || user.isAnonymous) {
-      showToast("Sign in to save recipes to your saved list!", "Sign In", () => {
-        setView('settings');
-      });
+      showToast("Sign in to save recipes to your saved list!", "Sign In", goToSignIn);
       return;
     }
 

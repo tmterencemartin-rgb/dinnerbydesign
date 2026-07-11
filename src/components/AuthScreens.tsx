@@ -98,7 +98,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
           <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mb-4">Less searching. Better matches. Dinner, decided.</p>
           
           <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">
-            {isSignUp ? 'Start your 7-day free trial.' : 'Sign in to DinnerByDesign'}
+            {isSignUp ? 'Start your 7-day full-access trial.' : 'Sign in to DinnerByDesign'}
           </h1>
           <p className="text-[13px] text-gray-500 mt-1.5 leading-snug">
             {isSignUp 

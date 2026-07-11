@@ -210,6 +210,11 @@ interface HomeViewProps {
   searchStartTime?: number | null;
   filterCount?: number;
   isPreciseSearch?: boolean;
+  guestSearchLimit?: number;
+  guestSearchCount?: number;
+  guestSearchesRemaining?: number;
+  isGuestPreview?: boolean;
+  isGuestSearchLimitReached?: boolean;
 }
 
 
@@ -220,6 +225,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     removeRecipe,
     updatePlanner,
     showToast,
+    goToSignIn,
     user,
     profile,
     updateProfile,
@@ -276,7 +282,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     enriching = false,
     searchStartTime = null,
     filterCount = 0,
-    isPreciseSearch = false
+    isPreciseSearch = false,
+    guestSearchLimit = 3,
+    guestSearchCount = 0,
+    guestSearchesRemaining = 3,
+    isGuestPreview = false,
+    isGuestSearchLimitReached = false
   } = props;
 
   const isSearching = status === 'searching';
@@ -410,9 +421,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       return;
     }
     if (!user || user.isAnonymous) {
-      showToast("Sign in to save recipes to your personal cookbook!", "Sign In", () => {
-        setView('settings');
-      });
+      showToast("Sign in to save recipes to your personal cookbook!", "Sign In", goToSignIn);
       return;
     }
     const existing = savedRecipes.find(r => isSameRecipe(r, recipe));
@@ -434,6 +443,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const handlePlannerUpdate = async (dayId: string, recipe: any) => {
     if (isReadOnly) {
       showToast("Your trial has ended. Upgrade to continue planning.", "Upgrade", () => setView('settings'));
+      return;
+    }
+    if (!user || user.isAnonymous) {
+      showToast("Create an account to schedule dinners and build your shopping list.", "Create account", goToSignIn);
       return;
     }
     try {
@@ -589,6 +602,18 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
         
         <div className="flex flex-col">
           <div className="w-full max-w-4xl mx-auto space-y-4 my-2">
+            {isGuestPreview && (
+              <div className={`rounded border px-3 py-2 text-center text-[12px] font-medium ${
+                isGuestSearchLimitReached 
+                  ? 'border-dbd-accent/20 bg-dbd-accent/5 text-dbd-accent' 
+                  : 'border-gray-100 bg-white text-gray-500'
+              }`}>
+                {isGuestSearchLimitReached
+                  ? 'You have used your 3 free searches. Create an account to start your 7-day full-access trial.'
+                  : `${guestSearchesRemaining} free ${guestSearchesRemaining === 1 ? 'search' : 'searches'} remaining. Create an account to save, plan and shop.`}
+              </div>
+            )}
+
             {/* Row 1: Segmented Controls */}
             <div className="flex items-center justify-center pb-1">
               <SearchHeader 
@@ -636,7 +661,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     inputRef={searchInputRef}
                     isLeftoverMode={isLeftoverMode}
                     isLowCost={isLowCost}
-                    isReadOnly={isReadOnly}
+                    isReadOnly={isReadOnly || isGuestSearchLimitReached}
+                    readOnlyPlaceholder={isGuestSearchLimitReached ? "Create an account to search again" : undefined}
                     placeholderOverride={searchPlaceholderOverride}
                   />
                 </div>

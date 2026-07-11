@@ -5,10 +5,12 @@ import { AppView } from '../types';
 import { safeStorage } from '../lib/storage';
 
 export const StatusBanner = ({ setView }: { setView: (v: AppView, highlight?: string) => void }) => {
-  const { accessStatus, trialDaysLeft, profile } = useAuth();
+  const { user, accessStatus, trialDaysLeft, profile } = useAuth();
   const [isDismissed, setIsDismissed] = React.useState(() => {
     return safeStorage.getItem('dbd_status_banner_dismissed') === 'true';
   });
+
+  if (!user || user.isAnonymous) return null;
 
   // Robust checks to ensure the status banner is hidden for active premium subscribers
   const isPaid = 
@@ -71,4 +73,3 @@ export const StatusBanner = ({ setView }: { setView: (v: AppView, highlight?: st
     </div>
   );
 };
-

@@ -48,6 +48,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     addLog,
     handlePrintRecipe,
     showToast,
+    goToSignIn,
     updateRecipe,
     user,
     accessStatus,
@@ -255,8 +256,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
   const handlePlanWeek = async () => {
     if (checkReadOnly("Your trial has ended. Upgrade to plan your week.")) return;
-    if (!user) {
-      showToast("Sign in to create a weekly plan.", "Sign In", () => setView('settings'));
+    if (!user || user.isAnonymous) {
+      showToast("Sign in to create a weekly plan.", "Sign In", goToSignIn);
       return;
     }
 

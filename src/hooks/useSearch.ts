@@ -29,6 +29,8 @@ import { handleFirestoreError } from '../firebase';
 const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v1';
 const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
+const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
+const GUEST_SEARCH_LIMIT = 3;
 
 type SearchCacheEntry = {
   createdAt: number;
@@ -110,6 +112,7 @@ export function useSearch() {
     isAuthReady, 
     loading,
     showToast,
+    setView,
     addToSearchHistory,
     savePreferences
   } = useAuth();
@@ -129,6 +132,11 @@ export function useSearch() {
   const [searchError, setLocalError] = useState<string | null>(null);
   const [enriching, setEnriching] = useState(false);
   const [searchStartTime, setSearchStartTime] = useState<number | null>(null);
+  const [guestSearchCount, setGuestSearchCount] = useState(() => {
+    const raw = safeStorage.getItem(GUEST_SEARCH_COUNT_KEY);
+    const parsed = raw ? parseInt(raw, 10) : 0;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  });
   
   const [cuisines, setCuisines] = useState<string[]>([]);
   const [dietTypes, setDietTypes] = useState<string[]>([]);
@@ -555,6 +563,14 @@ export function useSearch() {
   const handleGenerate = useCallback(async (queryOverride?: string, paramOverrides: Partial<SearchParams> = {}, preferencesOverride?: UserPreferences | null, options?: GenerateOptions) => {
     try {
       const searchQuery = (queryOverride !== undefined ? queryOverride : input).trim();
+      const isGuestPreview = !user || user.isAnonymous;
+      const shouldCountGuestSearch = isGuestPreview && !options?.skipHistory;
+
+      if (isGuestPreview && guestSearchCount >= GUEST_SEARCH_LIMIT) {
+        showToast("You've used your 3 free searches. Create an account to start your 7-day full-access trial.", "Create account", () => setView('signin'));
+        return;
+      }
+
       const isAuthorised = !!user;
       const basePrefs = (preferencesOverride !== undefined && (preferencesOverride !== null || !isAuthorised)) ? preferencesOverride : (isAuthorised ? (profile?.preferences || null) : null);
       const activePrefs = options?.suppressDietaryRule && basePrefs
@@ -617,6 +633,12 @@ export function useSearch() {
         return;
       }
 
+      if (shouldCountGuestSearch) {
+        const nextGuestCount = Math.min(GUEST_SEARCH_LIMIT, guestSearchCount + 1);
+        setGuestSearchCount(nextGuestCount);
+        safeStorage.setItem(GUEST_SEARCH_COUNT_KEY, String(nextGuestCount));
+      }
+
       // Add to search history if it's a real query and not from auto-search
       if (searchQuery && searchQuery.length > 2 && !options?.skipHistory) {
         addToSearchHistory(searchQuery, source);
@@ -637,7 +659,7 @@ export function useSearch() {
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
     saladPreference, allergies, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, highOmega3, highProtein, servings, preferredSourceIds, dismissedTitles, 
-    source, profile?.preferences, addToSearchHistory, performSearch, setError, setIsGenerating
+    source, profile?.preferences, addToSearchHistory, performSearch, setError, setIsGenerating, user, guestSearchCount, showToast, setView
   ]);
 
 
@@ -650,6 +672,7 @@ export function useSearch() {
   // Automatic debounced search on input change
   useEffect(() => {
     if (!input || input.trim().length < 3) return;
+    if (!user || user.isAnonymous) return;
     
     const timer = setTimeout(() => {
       // Don't auto-search if a search is already in progress with the same query
@@ -660,7 +683,7 @@ export function useSearch() {
     }, 500); // 500ms debounce for typing
 
     return () => clearTimeout(timer);
-  }, [input, lastQuery]);
+  }, [input, lastQuery, user]);
 
   // Keep track of the last filter values to detect actual filter changes
   const lastFiltersRef = useRef({
@@ -1323,6 +1346,11 @@ export function useSearch() {
     searchStartTime,
     filterCount,
     isPreciseSearch,
+    guestSearchLimit: GUEST_SEARCH_LIMIT,
+    guestSearchCount,
+    guestSearchesRemaining: Math.max(0, GUEST_SEARCH_LIMIT - guestSearchCount),
+    isGuestPreview: !user || user.isAnonymous,
+    isGuestSearchLimitReached: (!user || user.isAnonymous) && guestSearchCount >= GUEST_SEARCH_LIMIT,
     currentRecipes,
     currentReadyMeals,
     searchContradiction,

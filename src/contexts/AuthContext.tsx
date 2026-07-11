@@ -139,6 +139,7 @@ interface AuthContextType {
   updateUserPassword: (currentPassword: string, newPassword: string) => Promise<void>;
   view: AppView;
   setView: (view: AppView, highlight?: string | null) => void;
+  goToSignIn: () => void;
   highlight: string | null;
   clearHighlight: () => void;
   addToSearchHistory: (query: string, mode: DinnerSource) => Promise<void>;
@@ -339,6 +340,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const [location, setLocation] = useLocation();
+  const [viewNavigationTick, setViewNavigationTick] = useState(0);
 
   const [highlight, setHighlightInternal] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
@@ -367,17 +369,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';
-  }, [location]);
+  }, [location, viewNavigationTick]);
 
   const setView = (newView: AppView, newHighlight: string | null = null) => {
     if (newHighlight) setHighlightInternal(newHighlight);
     
     if (typeof window !== 'undefined') {
-      const path = newView === 'home' ? '/' : newView === 'landing' ? '/' : newView === 'success' ? '/success' : `/${newView}`;
-      if (location !== path) {
+      const path = newView === 'home' ? '/?view=home' : newView === 'landing' ? '/?view=landing' : newView === 'success' ? '/success' : `/${newView}`;
+      const currentPath = `${window.location.pathname}${window.location.search}`;
+      if (location !== path || currentPath !== path) {
         setLocation(path);
+        setViewNavigationTick(tick => tick + 1);
       }
     }
+  };
+
+  const goToSignIn = () => {
+    safeStorage.setItem('dbd_has_started', 'true');
+    setHighlightInternal(null);
+    setLocation('/signin?mode=signin');
   };
 
   const clearHighlight = () => setHighlightInternal(null);
@@ -1851,7 +1861,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast, showToast, setToast, handlePrintRecipe,  
       accessStatus, trialDaysLeft, trialTimeRemaining, isAdmin,
       signInWithGoogle, signOut,
-      signUpWithEmail, signInWithEmail, sendPasswordReset, reauthenticateUser, updateUserPassword, view, setView, highlight, clearHighlight, addToSearchHistory,
+      signUpWithEmail, signInWithEmail, sendPasswordReset, reauthenticateUser, updateUserPassword, view, setView, goToSignIn, highlight, clearHighlight, addToSearchHistory,
       unitSystem, setUnitSystem
     }}>
       {children}

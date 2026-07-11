@@ -18,6 +18,7 @@ interface SearchInputProps {
   isLeftoverMode?: boolean;
   isLowCost?: boolean;
   isReadOnly?: boolean;
+  readOnlyPlaceholder?: string;
   placeholderOverride?: string;
 }
 
@@ -36,6 +37,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   isLeftoverMode = false,
   isLowCost = false,
   isReadOnly = false,
+  readOnlyPlaceholder,
   placeholderOverride
 }) => {
   const getSearchPlaceholder = (): string => {
@@ -101,7 +103,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={isReadOnly}
-          placeholder={isReadOnly ? "Upgrade to search again" : getSearchPlaceholder()}
+          placeholder={isReadOnly ? (readOnlyPlaceholder || "Upgrade to search again") : getSearchPlaceholder()}
           className={`flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
         />
 

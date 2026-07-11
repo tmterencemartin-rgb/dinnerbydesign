@@ -32,8 +32,8 @@ const logoVariants = {
 };
 
 export const LandingView: React.FC = () => {
-  const { setView, user, accessStatus } = useAuth();
-  const hasAccess = accessStatus === 'paid' || accessStatus === 'trial';
+  const { setView, goToSignIn, user, accessStatus } = useAuth();
+  const hasAccess = !!user && !user.isAnonymous && (accessStatus === 'paid' || accessStatus === 'trial');
 
   // Scroll tracking & responsive menus
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -157,19 +157,13 @@ export const LandingView: React.FC = () => {
     if (initialSearchQuery) {
       safeStorage.session.setItem('dbd_initial_search_query', initialSearchQuery);
     }
-    
-    // Redirect guests to signin to satisfy "all visitors required to sign in"
-    if (!user || user.isAnonymous) {
-      setView('signin');
-    } else {
-      setView('home');
-    }
+
+    setView('home');
   };
 
   const handleSignIn = () => {
-    safeStorage.setItem('dbd_has_started', 'true');
     if (!user || user.isAnonymous) {
-      setView('signin');
+      goToSignIn();
     } else {
       setView('settings');
     }
@@ -332,7 +326,7 @@ export const LandingView: React.FC = () => {
             onClick={() => handleStart()}
             className="w-full sm:w-auto bg-dbd-accent hover:bg-dbd-accent-mid text-white font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-8 py-4 rounded-sm transition-all cursor-pointer shadow-md"
           >
-            Start free for 7 days
+            Try 3 searches free
           </button>
           <button 
             onClick={() => scrollToSection('interactive-sandbox')}
@@ -623,7 +617,7 @@ export const LandingView: React.FC = () => {
             It's all about you.
           </span>
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink">
-            Try DinnerByDesign free for 7 days.
+            Create an account for a 7-day full-access trial.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
             Search once. Compare recipes. Save favourites. Build a shopping list. Know the likely cost.
