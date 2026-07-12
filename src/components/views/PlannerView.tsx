@@ -18,6 +18,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { SavedRecipe } from '../../types';
 import { RetailerCtaLink } from '../RetailerCtaLink';
 import { SavedRecipeItem } from '../SavedRecipeItem';
+import { PreferenceDropdown } from '../ui/PreferenceDropdown';
 import { buildSupermarketPlanSummary } from '../../lib/shoppingUtils';
 import {
   ConvenienceFilter,
@@ -53,6 +54,14 @@ const PLAN_PROTEIN_OPTIONS = [
 const DEFAULT_PLAN_PROTEINS = ['chicken', 'seafood', 'vegetarian', 'beef', 'pork', 'turkey', 'pulses'];
 
 const getDefaultPlanProteins = (dinnerCount: number) => DEFAULT_PLAN_PROTEINS.slice(0, dinnerCount);
+
+const getPlanProteinLabel = (value: string) => (
+  PLAN_PROTEIN_OPTIONS.find(option => option.value === value)?.label || value
+);
+
+const getPlanProteinValue = (label: string) => (
+  PLAN_PROTEIN_OPTIONS.find(option => option.label === label)?.value || label
+);
 
 export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const { 
@@ -167,14 +176,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     });
   }, [planDinnerCount]);
 
-  const togglePlanProtein = (protein: string) => {
-    setPlanProteins(prev => {
-      if (prev.includes(protein)) {
-        return prev.length === 1 ? prev : prev.filter(item => item !== protein);
-      }
-      if (prev.length >= planDinnerCount) return prev;
-      return [...prev, protein];
-    });
+  const selectedPlanProteinLabels = planProteins.map(getPlanProteinLabel);
+
+  const handlePlanProteinSelect = (labels: string[]) => {
+    if (labels.length === 0) return;
+    setPlanProteins(labels.map(getPlanProteinValue).slice(0, planDinnerCount));
   };
 
   useEffect(() => {
@@ -570,7 +576,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
               {showPlanWeek && (
                 <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
                     <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Dinners</span>
                       <select
@@ -610,6 +616,18 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         />
                       </div>
                     </label>
+                    <PreferenceDropdown
+                      label="Proteins"
+                      options={PLAN_PROTEIN_OPTIONS.map(option => option.label)}
+                      selected={selectedPlanProteinLabels}
+                      onSelect={handlePlanProteinSelect}
+                      isMulti
+                      placeholder="Choose proteins"
+                      maxSelected={planDinnerCount}
+                      hint={`${planProteins.length}/${planDinnerCount}`}
+                      compact
+                      hideSelectedSummary
+                    />
                     <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Time</span>
                       <select
@@ -637,41 +655,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         ))}
                       </select>
                     </label>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Proteins</span>
-                      <span className="text-[10px] font-semibold text-gray-400">
-                        Choose up to {planDinnerCount}; {planProteins.length} selected
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5">
-                      {PLAN_PROTEIN_OPTIONS.map(option => {
-                        const isSelected = planProteins.includes(option.value);
-                        const isDisabled = !isSelected && planProteins.length >= planDinnerCount;
-                        return (
-                          <label
-                            key={option.value}
-                            className={`h-9 rounded border px-2 text-[11px] font-bold flex items-center justify-center text-center transition-colors ${
-                              isSelected
-                                ? 'border-gray-900 bg-gray-900 text-white'
-                                : isDisabled
-                                  ? 'border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed'
-                                  : 'border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-300 cursor-pointer'
-                            }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              disabled={isDisabled}
-                              onChange={() => togglePlanProtein(option.value)}
-                              className="sr-only"
-                            />
-                            {option.label}
-                          </label>
-                        );
-                      })}
-                    </div>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <p className="text-[11px] text-gray-400 font-medium leading-relaxed">

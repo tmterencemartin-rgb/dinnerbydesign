@@ -8,6 +8,10 @@ interface PreferenceDropdownProps {
   onSelect: (val: any) => void;
   isMulti?: boolean;
   placeholder?: string;
+  maxSelected?: number;
+  hint?: string;
+  compact?: boolean;
+  hideSelectedSummary?: boolean;
 }
 
 export const PreferenceDropdown = ({ 
@@ -16,7 +20,11 @@ export const PreferenceDropdown = ({
   selected, 
   onSelect, 
   isMulti = false,
-  placeholder = "Select..."
+  placeholder = "Select...",
+  maxSelected,
+  hint,
+  compact = false,
+  hideSelectedSummary = false
 }: PreferenceDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   
@@ -28,6 +36,7 @@ export const PreferenceDropdown = ({
   const handleToggle = (opt: string) => {
     if (isMulti) {
       const current = (selected as string[]) || [];
+      if (!isSelected(opt) && maxSelected && current.length >= maxSelected) return;
       const next = isSelected(opt) ? current.filter(o => o !== opt) : [...current, opt];
       onSelect(next);
     } else {
@@ -46,14 +55,17 @@ export const PreferenceDropdown = ({
 
   return (
     <div className="space-y-2">
-      <label className="block text-[12px] text-gray-500 font-normal">{label}</label>
+      <div className="flex items-center justify-between gap-2">
+        <label className={compact ? "block text-[10px] font-bold uppercase tracking-widest text-gray-400" : "block text-[12px] text-gray-500 font-normal"}>{label}</label>
+        {hint && <span className="text-[10px] font-semibold text-gray-400 whitespace-nowrap">{hint}</span>}
+      </div>
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between px-4 py-2.5 bg-white border border-gray-100 text-[13px] text-gray-700 hover:bg-gray-50 transition-all"
+          className={`w-full flex items-center justify-between bg-white border border-gray-100 text-gray-700 hover:bg-gray-50 transition-all ${compact ? 'h-10 px-3 text-[12px] font-semibold' : 'px-4 py-2.5 text-[13px]'}`}
         >
-          <span className={((isMulti ? (selected as string[])?.length : selected) ? 'text-gray-900' : 'text-gray-500')}>
+          <span className={`truncate ${((isMulti ? (selected as string[])?.length : selected) ? 'text-gray-900' : 'text-gray-500')}`}>
             {getDisplayValue()}
           </span>
           {isOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
@@ -65,12 +77,14 @@ export const PreferenceDropdown = ({
             <div className="absolute z-20 left-0 right-0 mt-1 bg-white border border-gray-100 shadow-lg max-h-60 overflow-y-auto">
               {options.map((opt) => {
                 const active = isSelected(opt);
+                const disabled = isMulti && !active && !!maxSelected && ((selected as string[])?.length || 0) >= maxSelected;
                 return (
                   <button
                     key={opt}
                     type="button"
                     onClick={() => handleToggle(opt)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 text-[13px] hover:bg-gray-50 transition-colors group text-left"
+                    disabled={disabled}
+                    className={`w-full flex items-center justify-between px-4 py-2.5 text-[13px] transition-colors group text-left ${disabled ? 'cursor-not-allowed opacity-35' : 'hover:bg-gray-50'}`}
                   >
                     <span className={active ? 'text-gray-900 font-medium' : 'text-gray-600'}>{opt}</span>
                     <div className={`w-4 h-4 border flex items-center justify-center transition-all ${
@@ -85,7 +99,7 @@ export const PreferenceDropdown = ({
           </>
         )}
       </div>
-      {isMulti && (selected as string[])?.length > 0 && !isOpen && (
+      {isMulti && !hideSelectedSummary && (selected as string[])?.length > 0 && !isOpen && (
         <p className="text-[12px] text-gray-500 px-1 leading-relaxed">
           {(selected as string[]).join(', ')}
         </p>
