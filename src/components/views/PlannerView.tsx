@@ -15,7 +15,7 @@ import {
   StickyNote
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { SavedRecipe } from '../../types';
+import { DietaryRule, SavedRecipe, UserPreferences } from '../../types';
 import { RetailerCtaLink } from '../RetailerCtaLink';
 import { SavedRecipeItem } from '../SavedRecipeItem';
 import { PreferenceDropdown } from '../ui/PreferenceDropdown';
@@ -53,7 +53,65 @@ const PLAN_PROTEIN_OPTIONS = [
 
 const DEFAULT_PLAN_PROTEINS = ['chicken', 'seafood', 'vegetarian', 'beef', 'pork', 'turkey', 'pulses'];
 
-const getDefaultPlanProteins = (dinnerCount: number) => DEFAULT_PLAN_PROTEINS.slice(0, dinnerCount);
+const PLAN_PROTEIN_VALUES_BY_DIETARY_RULE: Record<DietaryRule, string[]> = {
+  none: PLAN_PROTEIN_OPTIONS.map(option => option.value),
+  keto: PLAN_PROTEIN_OPTIONS.map(option => option.value),
+  paleo: PLAN_PROTEIN_OPTIONS.map(option => option.value),
+  'gluten-free': PLAN_PROTEIN_OPTIONS.map(option => option.value),
+  pescatarian: ['eggs', 'seafood', 'pescatarian', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
+  vegetarian: ['eggs', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
+  vegan: ['pulses', 'plant-based', 'vegan'],
+};
+
+const PLAN_PROTEIN_EXCLUSION_TERMS: Record<string, string[]> = {
+  beef: ['beef'],
+  chicken: ['chicken'],
+  eggs: ['egg', 'eggs'],
+  seafood: ['fish', 'seafood', 'shellfish', 'crustacean', 'crustaceans', 'mollusc', 'molluscs', 'prawn', 'shrimp', 'crab', 'lobster'],
+  lamb: ['lamb'],
+  pork: ['pork', 'bacon', 'ham', 'gammon'],
+  turkey: ['turkey'],
+  pulses: ['pulse', 'pulses', 'lentil', 'lentils', 'chickpea', 'chickpeas'],
+  'plant-based': ['tofu', 'soy', 'soya', 'soybean', 'soybeans'],
+};
+
+const getAllowedPlanProteinOptions = (preferences?: UserPreferences | null) => {
+  const dietaryRule = preferences?.dietaryRule || 'none';
+  const allowedValues = new Set(PLAN_PROTEIN_VALUES_BY_DIETARY_RULE[dietaryRule] || PLAN_PROTEIN_VALUES_BY_DIETARY_RULE.none);
+  const preferenceText = [
+    ...(preferences?.allergies || []),
+    ...(preferences?.exclusions || []),
+    ...(preferences?.religiousEthical || []),
+  ].join(' ').toLowerCase();
+
+  if (preferenceText.includes('halal') || preferenceText.includes('kosher') || preferenceText.includes('no pork')) {
+    allowedValues.delete('pork');
+  }
+  if (preferenceText.includes('kosher')) {
+    allowedValues.delete('seafood');
+    allowedValues.delete('pescatarian');
+  }
+  if (preferenceText.includes('meat')) {
+    ['beef', 'chicken', 'lamb', 'pork', 'turkey'].forEach(value => allowedValues.delete(value));
+  }
+
+  Object.entries(PLAN_PROTEIN_EXCLUSION_TERMS).forEach(([protein, terms]) => {
+    if (terms.some(term => preferenceText.includes(term))) {
+      allowedValues.delete(protein);
+      if (protein === 'seafood') allowedValues.delete('pescatarian');
+    }
+  });
+
+  const options = PLAN_PROTEIN_OPTIONS.filter(option => allowedValues.has(option.value));
+  return options.length > 0 ? options : PLAN_PROTEIN_OPTIONS.filter(option => option.value === 'vegan');
+};
+
+const getDefaultPlanProteins = (dinnerCount: number, options = PLAN_PROTEIN_OPTIONS) => {
+  const allowedValues = new Set(options.map(option => option.value));
+  const defaults = DEFAULT_PLAN_PROTEINS.filter(protein => allowedValues.has(protein));
+  const remaining = options.map(option => option.value).filter(protein => !defaults.includes(protein));
+  return [...defaults, ...remaining].slice(0, dinnerCount);
+};
 
 const getPlanProteinLabel = (value: string) => (
   PLAN_PROTEIN_OPTIONS.find(option => option.value === value)?.label || value
@@ -84,6 +142,15 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   } = useAuth();
 
   const isReadOnly = accessStatus === 'read_only';
+  const allowedPlanProteinOptions = React.useMemo(
+    () => getAllowedPlanProteinOptions(profile?.preferences),
+    [
+      profile?.preferences?.dietaryRule,
+      profile?.preferences?.allergies?.join('|'),
+      profile?.preferences?.exclusions?.join('|'),
+      profile?.preferences?.religiousEthical?.join('|'),
+    ]
+  );
 
   const [viewingPlannerEntry, setViewingPlannerEntry] = useState<SavedRecipe | null>(null);
   const [isEnriching, setIsEnriching] = useState(false);
@@ -149,7 +216,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planDinnerCount, setPlanDinnerCount] = useState<3 | 5 | 7>(5);
   const [planBudget, setPlanBudget] = useState('40');
   const [planServings, setPlanServings] = useState(profile?.preferences?.servings || 2);
-  const [planProteins, setPlanProteins] = useState<string[]>(() => getDefaultPlanProteins(5));
+  const [planProteins, setPlanProteins] = useState<string[]>(() => getDefaultPlanProteins(5, allowedPlanProteinOptions));
   const [planTime, setPlanTime] = useState<WeeklyPlanTime>('any');
   const [planHomemadeCount, setPlanHomemadeCount] = useState<number>(5);
   const [planAlert, setPlanAlert] = useState<string | null>(null);
@@ -166,21 +233,23 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   useEffect(() => {
     setPlanHomemadeCount(prev => Math.min(prev, planDinnerCount));
     setPlanProteins(prev => {
-      const selected = prev.filter(protein => PLAN_PROTEIN_OPTIONS.some(option => option.value === protein));
+      const allowedValues = new Set(allowedPlanProteinOptions.map(option => option.value));
+      const selected = prev.filter(protein => allowedValues.has(protein));
       const withDefaults = [...selected];
-      for (const protein of getDefaultPlanProteins(planDinnerCount)) {
+      for (const protein of getDefaultPlanProteins(planDinnerCount, allowedPlanProteinOptions)) {
         if (withDefaults.length >= planDinnerCount) break;
         if (!withDefaults.includes(protein)) withDefaults.push(protein);
       }
       return withDefaults.slice(0, planDinnerCount);
     });
-  }, [planDinnerCount]);
+  }, [allowedPlanProteinOptions, planDinnerCount]);
 
   const selectedPlanProteinLabels = planProteins.map(getPlanProteinLabel);
+  const maxPlanProteinChoices = Math.min(planDinnerCount, allowedPlanProteinOptions.length);
 
   const handlePlanProteinSelect = (labels: string[]) => {
     if (labels.length === 0) return;
-    setPlanProteins(labels.map(getPlanProteinValue).slice(0, planDinnerCount));
+    setPlanProteins(labels.map(getPlanProteinValue).slice(0, maxPlanProteinChoices));
   };
 
   useEffect(() => {
@@ -618,13 +687,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </label>
                     <PreferenceDropdown
                       label="Proteins"
-                      options={PLAN_PROTEIN_OPTIONS.map(option => option.label)}
+                      options={allowedPlanProteinOptions.map(option => option.label)}
                       selected={selectedPlanProteinLabels}
                       onSelect={handlePlanProteinSelect}
                       isMulti
                       placeholder="Choose proteins"
-                      maxSelected={planDinnerCount}
-                      hint={`${planProteins.length}/${planDinnerCount}`}
+                      maxSelected={maxPlanProteinChoices}
+                      hint={`${planProteins.length}/${maxPlanProteinChoices}`}
                       compact
                       hideSelectedSummary
                     />

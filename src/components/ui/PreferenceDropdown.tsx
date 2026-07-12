@@ -54,7 +54,7 @@ export const PreferenceDropdown = ({
   };
 
   return (
-    <div className="space-y-2">
+    <div className={`space-y-2 relative ${isOpen ? 'z-50' : 'z-0'}`}>
       <div className="flex items-center justify-between gap-2">
         <label className={compact ? "block text-[10px] font-bold uppercase tracking-widest text-gray-400" : "block text-[12px] text-gray-500 font-normal"}>{label}</label>
         {hint && <span className="text-[10px] font-semibold text-gray-400 whitespace-nowrap">{hint}</span>}
@@ -73,8 +73,8 @@ export const PreferenceDropdown = ({
 
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-            <div className="absolute z-20 left-0 right-0 mt-1 bg-white border border-gray-100 shadow-lg max-h-60 overflow-y-auto">
+            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+            <div className={`absolute z-50 left-0 right-0 mt-1 bg-white border border-gray-100 shadow-lg overflow-y-auto ${compact ? 'max-h-44' : 'max-h-60'}`}>
               {options.map((opt) => {
                 const active = isSelected(opt);
                 const disabled = isMulti && !active && !!maxSelected && ((selected as string[])?.length || 0) >= maxSelected;
@@ -84,7 +84,7 @@ export const PreferenceDropdown = ({
                     type="button"
                     onClick={() => handleToggle(opt)}
                     disabled={disabled}
-                    className={`w-full flex items-center justify-between px-4 py-2.5 text-[13px] transition-colors group text-left ${disabled ? 'cursor-not-allowed opacity-35' : 'hover:bg-gray-50'}`}
+                    className={`w-full flex items-center justify-between px-4 text-[13px] transition-colors group text-left ${compact ? 'py-2' : 'py-2.5'} ${disabled ? 'cursor-not-allowed opacity-35' : 'hover:bg-gray-50'}`}
                   >
                     <span className={active ? 'text-gray-900 font-medium' : 'text-gray-600'}>{opt}</span>
                     <div className={`w-4 h-4 border flex items-center justify-center transition-all ${

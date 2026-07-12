@@ -1,5 +1,9 @@
 # Project Roadmap & Technical Debt
 
+## Terminology Rule
+
+Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+
 ## High Priority (Pre-Deployment)
 - [ ] **Create Composite Index**: In the Firebase Console, create a composite index for the `suggestions` collection.
   - **Collection**: `suggestions`

@@ -1,5 +1,9 @@
 # Ingredient Interpretation Rules
 
+## Terminology Rule
+
+Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+
 When the user lists ingredients (for example: 'red peppers, rice' or 'tomatoes'), interpret this as a list of separate ingredients.
 
 - Split on commas and the word 'and'.

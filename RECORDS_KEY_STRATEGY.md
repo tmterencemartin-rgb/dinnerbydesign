@@ -1,5 +1,9 @@
 # React Key Strategy Documentation
 
+## Terminology Rule
+
+Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+
 This document serves as the canonical record for React key strategies used across dynamic lists in `App.tsx` to prevent duplicate-key warnings and ensure component stability.
 
 ## Guiding Principles & Hierarchy

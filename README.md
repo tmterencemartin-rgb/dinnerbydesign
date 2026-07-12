@@ -1,5 +1,9 @@
 # DinnerByDesign
 
+## Terminology Rule
+
+Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+
 DinnerByDesign is a UK-focused dinner planning app for recipe search, saved dinners, weekly scheduling, ready-made supermarket options, and generated shopping lists.
 
 Recent app areas covered by the local documentation include preference-led search, transactional email automation, weekly planner controls, Firestore persistence helpers, and release checks.

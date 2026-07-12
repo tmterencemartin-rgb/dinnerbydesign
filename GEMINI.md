@@ -1,5 +1,9 @@
 # Canonical Implementation Brief: Rules & Preferences (Rationalized v1)
 
+## Terminology Rule
+
+Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+
 This document is the single source of truth for all dietary, lifestyle, and kitchen preferences. It supersedes all previous instructions.
 
 ## 1. Taxonomy & Data Schema (UserPreferences)

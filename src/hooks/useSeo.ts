@@ -27,7 +27,7 @@ export function useSeo({ title, description, jsonLd, canonicalPath = '/', noInde
     if (description) {
       metaDescription.setAttribute('content', description);
     } else {
-      metaDescription.setAttribute('content', 'Ad-free UK dinner recipe search: dinner ideas from trusted UK sources, ready-made supermarket options, preference-led search and costed shopping lists.');
+      metaDescription.setAttribute('content', 'Ad-free UK dinner recipes. Search by budget, get multiple options per search, plus costed shopping lists.');
     }
 
     let canonical = document.querySelector('link[rel="canonical"]');

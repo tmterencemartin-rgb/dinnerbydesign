@@ -1,5 +1,9 @@
 # DinnerByDesign Release Checklist
 
+## Terminology Rule
+
+Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+
 Use this before sharing the app publicly, after changing environment variables, or after a major deploy.
 
 ## Production URL

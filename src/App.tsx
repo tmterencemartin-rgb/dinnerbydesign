@@ -101,7 +101,7 @@ const AppContent = () => {
       default:
         return {
           title: 'DinnerByDesign | Ad-free UK Dinner Recipe Finder & Costed Shopping Lists',
-          description: 'Ad-free UK dinner recipe search: dinner ideas from trusted UK sources, ready-made supermarket options, preference-led search and costed shopping lists.',
+          description: 'Ad-free UK dinner recipes. Search by budget, get multiple options per search, plus costed shopping lists.',
           canonicalPath: '/',
           jsonLd: {
             "@context": "https://schema.org",
