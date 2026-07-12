@@ -631,7 +631,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 <div>
                   <h3 className="text-[13.5px] font-bold text-gray-950">Plan my week</h3>
                   <p className="text-[11.5px] text-gray-400 font-medium leading-relaxed">
-                    Create several dinners at once, with budget, protein and time preferences.
+                    Create several dinners at once, with budget, protein and time preferences. Available proteins follow your personalised search preferences.
                   </p>
                 </div>
                 <button
