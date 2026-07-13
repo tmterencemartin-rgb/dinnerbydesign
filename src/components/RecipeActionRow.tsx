@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiUrl } from '../lib/api';
+import { safeStorage } from '../lib/storage';
 import { InlineDayPicker } from './ui/InlineDayPicker';
 import { enrichRecipe } from '../services/geminiService';
 
@@ -11,7 +12,7 @@ interface RecipeActionRowProps {
   recipe: Recipe | ReadyMeal | SavedRecipe;
   isSaved: boolean;
   scheduledDate: string | null | undefined;
-  onSave: () => void;
+  onSave: () => void | Promise<void>;
   onRemove: () => void;
   onDaySelect: (day: string) => void;
   planner: SavedRecipe[];
@@ -27,19 +28,20 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
   planner 
 }) => {
   const [isEmailing, setIsEmailing] = useState(false);
-  const { user, handlePrintRecipe, showToast, goToSignIn } = useAuth();
+  const { user, handlePrintRecipe, showToast, goToSignIn, setView } = useAuth();
 
-  const handleSaveAndSchedule = () => {
+  const handleSaveAndSchedule = async () => {
     if (!user || user.isAnonymous) {
       showToast("Sign in to save recipes to your saved list!", "Sign In", goToSignIn);
       return;
     }
 
     if (!isSaved) {
-      onSave();
+      await onSave();
     }
     
     window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
+    safeStorage.session.setItem('dbd_planner_target', 'saved-recipes');
     setView('planner');
   };
 
