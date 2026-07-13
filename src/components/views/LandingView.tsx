@@ -316,7 +316,7 @@ export const LandingView: React.FC = () => {
           Find what to cook, what to buy <br /> and what it might cost.
         </h1>
         <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
-          An ad-free, UK-focused recipe-finding app. Try 3 real searches without an account, then create one when you want to save, schedule and shop from your results.
+          An ad-free, UK-focused recipe-finding app. Try three real searches without an account, then create one when you want to save, schedule and shop from your results.
         </p>
 
         {/* Action button grouping */}
