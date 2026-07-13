@@ -307,7 +307,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const showNotBoringSummerSaladsResultsCopy =
     source === 'cook' && resultsCount === 3 && isNotBoringSummerSaladsQuery(resultsQuery);
   const showNotBoringSummerSaladsPrompt =
-    source === 'cook' && (!resultsQuery.trim() || isNotBoringSummerSaladsQuery(resultsQuery));
+    source === 'cook' && resultsCount === 0 && (!resultsQuery.trim() || isNotBoringSummerSaladsQuery(resultsQuery));
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
