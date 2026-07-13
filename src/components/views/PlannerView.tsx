@@ -20,6 +20,7 @@ import { RetailerCtaLink } from '../RetailerCtaLink';
 import { SavedRecipeItem } from '../SavedRecipeItem';
 import { PreferenceDropdown } from '../ui/PreferenceDropdown';
 import { buildSupermarketPlanSummary } from '../../lib/shoppingUtils';
+import { safeStorage } from '../../lib/storage';
 import {
   ConvenienceFilter,
   SavedSortOption,
@@ -221,6 +222,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planHomemadeCount, setPlanHomemadeCount] = useState<number>(5);
   const [planAlert, setPlanAlert] = useState<string | null>(null);
   const [isPlanningWeek, setIsPlanningWeek] = useState(false);
+
+  useEffect(() => {
+    const target = safeStorage.session.getItem('dbd_planner_target');
+    if (target !== 'saved-recipes') return;
+
+    safeStorage.session.removeItem('dbd_planner_target');
+    window.setTimeout(() => {
+      document.getElementById('saved-recipes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
+  }, []);
 
   useEffect(() => {
     setPlanServings(profile?.preferences?.servings || 2);
@@ -763,7 +774,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               <div className="px-1 sm:px-3.5 py-3 sm:py-5 space-y-5">
                 
                 {/* SECTION 1: SAVED (BACKLOG) */}
-                <div className="space-y-1.5 relative z-20">
+                <div id="saved-recipes-section" className="space-y-1.5 relative z-20 scroll-mt-[150px]">
                   {/* SAVED HEADER ROW */}
                   <div className="flex items-center justify-between border-b border-gray-100 pb-1">
                     <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1">Saved</h3>

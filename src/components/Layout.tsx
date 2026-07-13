@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { Footer } from './Footer';
 import { Tooltip } from './ui/Tooltip';
+import { safeStorage } from '../lib/storage';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -31,6 +32,16 @@ const logoVariants = {
 
 export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSearch }) => {
   const { user, goToSignIn } = useAuth();
+
+  const goToSavedRecipes = useCallback(() => {
+    if (view === 'planner') {
+      document.getElementById('saved-recipes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    safeStorage.session.setItem('dbd_planner_target', 'saved-recipes');
+    setView('planner');
+  }, [setView, view]);
 
   // Revert any leftover dark mode class on the body/html element completely
   useEffect(() => {
@@ -104,7 +115,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
               <span className="text-[10px] font-semibold uppercase tracking-widest">Search</span>
             </button>
             <button 
-              onClick={() => setView('planner')}
+              onClick={goToSavedRecipes}
               className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'planner' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <Calendar className="w-4 h-4 mb-1 md:mb-1.5" />
