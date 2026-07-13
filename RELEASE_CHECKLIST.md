@@ -16,7 +16,7 @@ Use this before sharing the app publicly, after changing environment variables, 
 ## Vercel
 
 - [ ] Project is connected to:
-  `https://github.com/tmterencemartin-rgb/dinnerbydesignv2`
+  `https://github.com/tmterencemartin-rgb/dinnerbydesign`
 - [ ] Latest deployment is successful.
 - [ ] Production environment variables are set:
   - [ ] `GEMINI_API_KEY`

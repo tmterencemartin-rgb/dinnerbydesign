@@ -162,7 +162,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         <div className="space-y-2">
           {/* Header row: Cuisine / Retailer + Delete Button */}
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-extrabold text-gray-400 tracking-wider">
+            <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">
               {recipe.mode === 'ready-made' && recipe.retailer ? recipe.retailer : recipe.cuisine}
             </span>
             <button 

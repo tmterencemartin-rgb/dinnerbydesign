@@ -643,7 +643,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             onClick={() => setActiveTab('profile')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
               activeTab === 'profile' 
-                ? 'text-gray-950 font-extrabold' 
+                ? 'text-gray-950 font-bold' 
                 : 'text-gray-400/80 hover:text-gray-600 font-bold'
             }`}
           >
@@ -659,7 +659,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             onClick={() => setActiveTab('subscription')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
               activeTab === 'subscription' 
-                ? 'text-gray-950 font-extrabold' 
+                ? 'text-gray-950 font-bold' 
                 : 'text-gray-400/80 hover:text-gray-600 font-bold'
             }`}
           >
@@ -675,7 +675,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             onClick={() => setActiveTab('security')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
               activeTab === 'security' 
-                ? 'text-gray-950 font-extrabold' 
+                ? 'text-gray-950 font-bold' 
                 : 'text-gray-400/80 hover:text-gray-600 font-bold'
             }`}
           >
@@ -691,7 +691,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             onClick={() => setActiveTab('support')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
               activeTab === 'support' 
-                ? 'text-gray-950 font-extrabold' 
+                ? 'text-gray-950 font-bold' 
                 : 'text-gray-400/80 hover:text-gray-600 font-bold'
             }`}
           >
@@ -707,7 +707,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             onClick={() => setActiveTab('privacy')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
               activeTab === 'privacy' 
-                ? 'text-gray-950 font-extrabold' 
+                ? 'text-gray-950 font-bold' 
                 : 'text-gray-400/80 hover:text-gray-600 font-bold'
             }`}
           >
@@ -724,7 +724,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               onClick={() => setActiveTab('developer')}
               className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
                 activeTab === 'developer' 
-                  ? 'text-gray-950 font-extrabold' 
+                  ? 'text-gray-950 font-bold' 
                   : 'text-gray-400/80 hover:text-gray-600 font-bold'
               }`}
             >

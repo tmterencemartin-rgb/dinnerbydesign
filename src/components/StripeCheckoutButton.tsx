@@ -135,10 +135,10 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
 
         <div className="space-y-1">
           <div className="min-h-[38px] flex flex-col justify-start">
-            <p className="text-[9.5px] text-gray-400 font-medium font-ibm-plex-mono leading-tight">
+            <p className="text-[9.5px] text-gray-400 font-semibold font-ibm-plex-mono leading-tight">
               {plan === 'monthly' ? 'Billed monthly. Cancel anytime.' : 'Billed annually in advance (£30.00). Cancel anytime.'}
             </p>
-            <p className="text-[9.5px] text-gray-400 font-medium font-ibm-plex-mono leading-tight">
+            <p className="text-[9.5px] text-gray-400 font-semibold font-ibm-plex-mono leading-tight">
               No credit card required for the free trial.
             </p>
           </div>

@@ -181,15 +181,14 @@ export function useSearch() {
 
   // Check for initial search query from LandingView sandbox
   useEffect(() => {
-    if (isAuthReady && !loading && user && !user.isAnonymous) {
+    if (isAuthReady && !loading) {
       const initialQuery = safeStorage.session.getItem('dbd_initial_search_query');
       if (initialQuery) {
         setInput(initialQuery);
         safeStorage.session.removeItem('dbd_initial_search_query');
-        // Optionally trigger handleGenerate here if we want auto-search on entry
       }
     }
-  }, [isAuthReady, loading, user]);
+  }, [isAuthReady, loading]);
 
   const searchIdRef = useRef(0);
   const searchStartTimeRef = useRef<number | null>(null);

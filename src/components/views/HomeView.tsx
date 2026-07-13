@@ -603,14 +603,29 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
         <div className="flex flex-col">
           <div className="w-full max-w-4xl mx-auto space-y-4 my-2">
             {isGuestPreview && (
-              <div className={`rounded border px-3 py-2 text-center text-[12px] font-medium ${
+              <div className={`rounded border px-3 py-2 text-[12px] font-medium ${
                 isGuestSearchLimitReached 
                   ? 'border-dbd-accent/20 bg-dbd-accent/5 text-dbd-accent' 
                   : 'border-gray-100 bg-white text-gray-500'
               }`}>
-                {isGuestSearchLimitReached
-                  ? 'You have used your 3 free searches. Create an account to start your 7-day full-access trial.'
-                  : `${guestSearchesRemaining} free ${guestSearchesRemaining === 1 ? 'search' : 'searches'} remaining. Create an account to save, plan and shop.`}
+                <div className="flex flex-col items-center justify-between gap-2 text-center sm:flex-row sm:text-left">
+                  <span>
+                    {isGuestSearchLimitReached
+                      ? 'You have used your 3 free searches. Create an account to start your 7-day full-access trial.'
+                      : `${guestSearchesRemaining} free ${guestSearchesRemaining === 1 ? 'search' : 'searches'} remaining. No account needed yet.`}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={goToSignIn}
+                    className={`shrink-0 rounded px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                      isGuestSearchLimitReached
+                        ? 'bg-dbd-accent text-white hover:bg-dbd-accent-mid'
+                        : 'bg-gray-900 text-white hover:bg-black'
+                    }`}
+                  >
+                    {isGuestSearchLimitReached ? 'Create account' : 'Keep results'}
+                  </button>
+                </div>
               </div>
             )}
 

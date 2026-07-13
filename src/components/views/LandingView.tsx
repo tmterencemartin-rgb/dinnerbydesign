@@ -278,7 +278,7 @@ export const LandingView: React.FC = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-0 w-full bg-dbd-surface border-b border-dbd-rule shadow-xl py-6 px-6 flex flex-col gap-4 font-ibm-plex-mono text-[13px] md:hidden"
+              className="absolute top-full left-0 w-full bg-dbd-surface border-b border-dbd-rule shadow-xl py-6 px-6 flex flex-col gap-4 font-ibm-plex-mono font-semibold text-[13px] md:hidden"
             >
               <button 
                 onClick={() => scrollToSection('why-different')} 
@@ -315,8 +315,8 @@ export const LandingView: React.FC = () => {
         <h1 className="text-3xl sm:text-4xl font-bold text-dbd-ink font-sans leading-[1.15] tracking-tight mb-6 max-w-4xl mx-auto">
           Find what to cook, what to buy <br /> and what it might cost.
         </h1>
-        <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-light mb-10">
-          An ad-free, UK-focused recipe-finding app. Stop wondering what to cook. Find verified and pragmatic dinner ideas that fit your tastes, budgets and ingredients in twenty seconds or less.
+        <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
+          An ad-free, UK-focused recipe-finding app. Try 3 real searches without an account, then create one when you want to save, schedule and shop from your results.
         </p>
 
         {/* Action button grouping */}
@@ -335,6 +335,9 @@ export const LandingView: React.FC = () => {
             Try a search <ArrowDownIcon className="w-4 h-4 animate-bounce" />
           </button>
         </div>
+        <p className="mt-4 text-[12px] font-medium text-dbd-ink-3">
+          Try before you sign up.
+        </p>
       </section>
 
       {/* 3. INTERACTIVE BROWSER PREVIEW SANDBOX */}
@@ -366,20 +369,20 @@ export const LandingView: React.FC = () => {
             <div className="p-4 sm:p-8 bg-[#FAF8F5] text-left">
               
               {/* Recipe Source Toggle (HOMEMADE / READY-MADE) */}
-              <div className="flex justify-center mb-6 max-w-sm sm:max-w-md mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono">
+              <div className="flex justify-center mb-6 max-w-sm sm:max-w-md mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono font-semibold">
                 <button 
                   onClick={() => selectSandboxSource('cook')}
                   className={`flex-1 py-2 px-3 text-center cursor-pointer transition-all ${sandboxSource === 'cook' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                 >
                   <span className="block text-[12px] leading-tight uppercase font-bold tracking-wider">Homemade</span>
-                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-normal mt-0.5 lowercase">recipes to cook</span>
+                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5 lowercase">recipes to cook</span>
                 </button>
                 <button 
                   onClick={() => selectSandboxSource('ready-made')}
                   className={`flex-1 py-2 px-3 text-center cursor-pointer transition-all ${sandboxSource === 'ready-made' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                 >
                   <span className="block text-[12px] leading-tight uppercase font-bold tracking-wider">Ready-Made</span>
-                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-normal mt-0.5 lowercase">supermarket options</span>
+                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5 lowercase">supermarket options</span>
                 </button>
               </div>
 
@@ -477,7 +480,7 @@ export const LandingView: React.FC = () => {
             <h2>No backstories.</h2>
             <h2>No tracking, clutter, clickbait or questionnaires.</h2>
           </div>
-          <p className="text-[14px] sm:text-[17px] text-dbd-ink-2 max-w-2xl leading-relaxed mx-auto font-sans font-light">
+          <p className="text-[14px] sm:text-[17px] text-dbd-ink-2 max-w-2xl leading-relaxed mx-auto font-sans font-normal">
             Just recipes.
           </p>
         </div>
@@ -560,7 +563,7 @@ export const LandingView: React.FC = () => {
                     Search
                   </h4>
                 </div>
-                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light">
+                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
                   One set of ingredients returns verified, costed recipes or ready-made supermarket options.
                 </p>
               </div>
@@ -579,7 +582,7 @@ export const LandingView: React.FC = () => {
                     Save & Schedule
                   </h4>
                 </div>
-                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light">
+                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
                   Pin recipes and drop them onto the week.
                 </p>
               </div>
@@ -598,7 +601,7 @@ export const LandingView: React.FC = () => {
                     Shop
                   </h4>
                 </div>
-                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-light">
+                <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
                   Build one deduplicated, costed shopping list.
                 </p>
               </div>
@@ -617,10 +620,10 @@ export const LandingView: React.FC = () => {
             It's all about you.
           </span>
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink">
-            Create an account for a 7-day full-access trial.
+            Create an account when DinnerByDesign earns it.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
-            Search once. Compare recipes. Save favourites. Build a shopping list. Know the likely cost.
+            Your first 3 searches are free without an account. Sign up to keep searching, save favourites, plan dinners and build shopping lists.
           </p>
         </div>
 
@@ -700,10 +703,10 @@ export const LandingView: React.FC = () => {
               </div>
 
               <div className="mb-3 min-h-[42px] flex flex-col justify-start">
-                <p className="text-[11.5px] font-medium text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
+                <p className="text-[11.5px] font-semibold text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
                   {billingPeriod === 'monthly' ? 'Billed monthly. Cancel anytime.' : 'Billed annually in advance (£30.00). Cancel anytime.'}
                 </p>
-                <p className="text-[11.5px] font-medium text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
+                <p className="text-[11.5px] font-semibold text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
                   No credit card required for the free trial.
                 </p>
               </div>
@@ -725,7 +728,7 @@ export const LandingView: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubscribeSubmit} className="space-y-1.5 font-ibm-plex-mono text-[12px]">
+                <form onSubmit={handleSubscribeSubmit} className="space-y-1.5 font-ibm-plex-mono font-semibold text-[12px]">
                   <div className="relative">
                     <label htmlFor="trial-email-input" className="sr-only">Email address for free trial registration</label>
                     <input 
