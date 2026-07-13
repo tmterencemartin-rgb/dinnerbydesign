@@ -33,6 +33,8 @@ describe('useSearch Hook Lifecycle', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    window.localStorage.clear();
+    window.sessionStorage.clear();
     (useAuth as any).mockReturnValue({
       profile: { preferences: {} },
       addLog: mockAddLog,

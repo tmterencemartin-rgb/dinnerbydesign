@@ -32,6 +32,19 @@ const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
 const GUEST_SEARCH_LIMIT = 3;
 
+const hasMeaningfulBudgetContradiction = (contradiction: any): contradiction is {
+  ingredient: string;
+  budgetLimit: string;
+  reason: string;
+} => {
+  if (!contradiction || typeof contradiction !== 'object') return false;
+
+  const fields = [contradiction.ingredient, contradiction.budgetLimit, contradiction.reason]
+    .map(value => String(value ?? '').trim());
+
+  return fields.every(value => value.length > 0 && value.toLowerCase() !== 'none');
+};
+
 type SearchCacheEntry = {
   createdAt: number;
   recipes: Recipe[];
@@ -272,7 +285,7 @@ export function useSearch() {
         return;
       }
 
-      if (contradiction) {
+      if (hasMeaningfulBudgetContradiction(contradiction)) {
         addLog(`SEARCH: Gemini detected budget contradiction for ${contradiction.ingredient}`);
         setSearchContradiction({
           type: 'hard',
@@ -287,6 +300,8 @@ export function useSearch() {
           setCurrentReadyMeals([]);
         }
         return;
+      } else if (contradiction) {
+        addLog('SEARCH: Ignoring incomplete budget contradiction from Gemini.');
       }
 
       if (alternatives && alternatives.length > 0) {
