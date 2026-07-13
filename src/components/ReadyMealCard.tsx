@@ -14,14 +14,14 @@ import { RecipeRealityChecks } from './RecipeRealityChecks';
 
 interface ReadyMealCardProps {
   meal: ReadyMeal;
-  onSave?: (m: ReadyMeal) => void;
+  onSave?: (m: ReadyMeal) => void | Promise<void>;
   onMoreLikeThis?: (m: ReadyMeal) => void;
   isSaved: boolean;
   isScheduled?: boolean;
   targetDay?: string | null;
   onPlannerAdd?: () => void;
   onPlannerUpdate?: (dayId: string) => void;
-  onToggleSaved?: () => void;
+  onToggleSaved?: () => void | Promise<void>;
   query?: string;
   requestedServings?: number;
   initiallyExpanded?: boolean;
@@ -412,9 +412,9 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     scheduledDate={scheduledDate}
                     onSave={() => {
                       if (onSave) {
-                        onSave({ ...meal, requestedServings });
+                        return onSave({ ...meal, requestedServings });
                       } else if (onToggleSaved) {
-                        onToggleSaved();
+                        return onToggleSaved();
                       }
                     }}
                     onRemove={() => {
