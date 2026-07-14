@@ -73,7 +73,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
                   alt="DinnerByDesign"
                   className="h-[49px] w-auto max-w-[297px] origin-left object-contain mix-blend-multiply sm:h-[61px] sm:max-w-[371px]"
                 />
-                <span className="text-[9px] font-medium text-dbd-ink-3 tracking-[0.05em] mt-1 opacity-80 text-left whitespace-nowrap hidden sm:block">Less searching. Better matches. Dinner, decided.</span>
+                <span className="ml-[42px] hidden whitespace-nowrap text-left text-[9px] font-medium tracking-[0.05em] text-dbd-ink-3 opacity-80 sm:mt-1 sm:block sm:ml-[52px]">Less searching. Better matches. Dinner, decided.</span>
               </div>
             </button>
             
