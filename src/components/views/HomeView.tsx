@@ -786,6 +786,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               startTime={searchStartTime}
               activeCriteria={activeCriteria}
               query={input}
+              hasVisibleResults={resultsCount > 0}
               ingredientIntent={ingredientIntent}
             />
 

@@ -10,6 +10,7 @@ interface SearchStatusRowProps {
   startTime: number | null;
   activeCriteria: any[];
   query?: string;
+  hasVisibleResults?: boolean;
   ingredientIntent?: {
     isIngredientLed: boolean;
     ingredients: string[];
@@ -24,6 +25,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
   startTime,
   activeCriteria,
   query,
+  hasVisibleResults = false,
   ingredientIntent
 }) => {
   const [elapsed, setElapsed] = useState(0);
@@ -39,7 +41,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
     }
   }, [status, startTime]);
 
-  if (status === 'idle' || (status === 'complete' && !enriching)) return null;
+  if (status === 'idle' || hasVisibleResults || (status === 'complete' && !enriching)) return null;
 
   const isLowPerf = elapsed > 5;
   const showEnriching = enriching && (status === 'partial' || status === 'complete');

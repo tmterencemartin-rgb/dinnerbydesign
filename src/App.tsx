@@ -18,6 +18,7 @@ import { TermsView } from './components/views/TermsView';
 import { AdminDashboard } from './components/views/AdminDashboard';
 import { LandingView } from './components/views/LandingView';
 import { SuccessView } from './components/views/SuccessView';
+import { SearchPageDesignConcept } from './components/views/SearchPageDesignConcept';
 import { Toast } from './components/ui/Toast';
 import { InstallPrompt } from './components/InstallPrompt';
 import { BookmarkPrompt } from './components/BookmarkPrompt';
@@ -180,6 +181,7 @@ const AppContent = () => {
 
   const [showFilters, setShowFilters] = useState(false);
   const [showInlineSuccess, setShowInlineSuccess] = useState(false);
+  const isSearchDesignPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('design') === 'search-page';
 
   const setView = (v: AppView, highlightOrFilters?: string | boolean | null) => {
     if (typeof highlightOrFilters === 'string') {
@@ -236,6 +238,19 @@ const AppContent = () => {
   // Handle high-latency profile sync to prevent flash of unstyled/empty content
   if (user && !user.isAnonymous && !profile && isAuthReady) {
     return <AuthSyncing />;
+  }
+
+  if (isSearchDesignPreview) {
+    return (
+      <Layout view="home" setView={setView} onNewSearch={() => {}}>
+        <SearchPageDesignConcept
+          onBack={() => {
+            window.history.pushState({}, '', '/?view=home');
+            setView('home');
+          }}
+        />
+      </Layout>
+    );
   }
 
   if (view === 'landing') {
