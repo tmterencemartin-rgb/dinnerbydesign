@@ -214,7 +214,7 @@ export const LandingView: React.FC = () => {
     : (mockReadyMadeData[sandboxQuery] || mockReadyMadeData['Chicken Fricassee']);
 
   return (
-    <div className="bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
+    <div className="native-scroll-root bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
       
       {/* 1. STICKY PREMIUM NAVIGATION BAR */}
       <nav id="top-nav" className="sticky top-0 z-[1000] bg-dbd-surface/90 backdrop-blur-md border-b border-dbd-rule/60 py-4.5 px-3 sm:px-6 md:px-8">
