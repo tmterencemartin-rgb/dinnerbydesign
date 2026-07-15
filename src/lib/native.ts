@@ -31,6 +31,8 @@ const isExternalHttpUrl = (url: string) => {
 const getNativeScrollRoot = () =>
   document.querySelector<HTMLElement>('.native-scroll-root');
 
+const NATIVE_SCROLL_MULTIPLIER = 4;
+
 const shouldIgnoreManualScroll = (target: EventTarget | null) => {
   if (!(target instanceof Element)) return false;
   return Boolean(target.closest('input, textarea, select, [contenteditable="true"]'));
@@ -38,6 +40,26 @@ const shouldIgnoreManualScroll = (target: EventTarget | null) => {
 
 const installNativeScrollBridge = () => {
   let lastTouchY: number | null = null;
+
+  const scrollNativePage = (deltaY: number) => {
+    const scrollRoot = getNativeScrollRoot();
+    const movement = deltaY * NATIVE_SCROLL_MULTIPLIER;
+
+    if (scrollRoot && scrollRoot.scrollHeight > scrollRoot.clientHeight) {
+      const maxScrollTop = scrollRoot.scrollHeight - scrollRoot.clientHeight;
+      scrollRoot.scrollTop = Math.max(0, Math.min(maxScrollTop, scrollRoot.scrollTop + movement));
+      return true;
+    }
+
+    const documentScroller = document.scrollingElement || document.documentElement;
+    if (documentScroller.scrollHeight > documentScroller.clientHeight) {
+      const maxScrollTop = documentScroller.scrollHeight - documentScroller.clientHeight;
+      documentScroller.scrollTop = Math.max(0, Math.min(maxScrollTop, documentScroller.scrollTop + movement));
+      return true;
+    }
+
+    return false;
+  };
 
   document.addEventListener('touchstart', (event) => {
     if (event.touches.length !== 1 || shouldIgnoreManualScroll(event.target)) {
@@ -49,17 +71,15 @@ const installNativeScrollBridge = () => {
   }, { passive: true });
 
   document.addEventListener('touchmove', (event) => {
-    const scrollRoot = getNativeScrollRoot();
-    if (!scrollRoot || lastTouchY === null || event.touches.length !== 1 || shouldIgnoreManualScroll(event.target)) return;
+    if (lastTouchY === null || event.touches.length !== 1 || shouldIgnoreManualScroll(event.target)) return;
 
     const nextTouchY = event.touches[0].clientY;
     const deltaY = lastTouchY - nextTouchY;
     lastTouchY = nextTouchY;
 
-    if (scrollRoot.scrollHeight <= scrollRoot.clientHeight) return;
-
-    scrollRoot.scrollTop += deltaY;
-    event.preventDefault();
+    if (scrollNativePage(deltaY)) {
+      event.preventDefault();
+    }
   }, { passive: false });
 
   document.addEventListener('touchend', () => {
@@ -67,11 +87,11 @@ const installNativeScrollBridge = () => {
   }, { passive: true });
 
   document.addEventListener('wheel', (event) => {
-    const scrollRoot = getNativeScrollRoot();
-    if (!scrollRoot || shouldIgnoreManualScroll(event.target) || scrollRoot.scrollHeight <= scrollRoot.clientHeight) return;
+    if (shouldIgnoreManualScroll(event.target)) return;
 
-    scrollRoot.scrollTop += event.deltaY;
-    event.preventDefault();
+    if (scrollNativePage(event.deltaY)) {
+      event.preventDefault();
+    }
   }, { passive: false });
 };
 
