@@ -150,6 +150,12 @@ export function useSearch() {
     const parsed = raw ? parseInt(raw, 10) : 0;
     return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
   });
+
+  const resetGuestSearchCount = useCallback(() => {
+    safeStorage.removeItem(GUEST_SEARCH_COUNT_KEY);
+    setGuestSearchCount(0);
+    showToast("Native test searches reset.");
+  }, [showToast]);
   
   const [cuisines, setCuisines] = useState<string[]>([]);
   const [dietTypes, setDietTypes] = useState<string[]>([]);
@@ -1363,6 +1369,7 @@ export function useSearch() {
     guestSearchLimit: GUEST_SEARCH_LIMIT,
     guestSearchCount,
     guestSearchesRemaining: Math.max(0, GUEST_SEARCH_LIMIT - guestSearchCount),
+    resetGuestSearchCount,
     isGuestPreview: !user || user.isAnonymous,
     isGuestSearchLimitReached: (!user || user.isAnonymous) && guestSearchCount >= GUEST_SEARCH_LIMIT,
     currentRecipes,

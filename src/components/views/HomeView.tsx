@@ -37,6 +37,7 @@ import { RecipeCompareModal } from '../RecipeCompareModal';
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
+import { isNativeApp } from '../../lib/platform';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -213,6 +214,7 @@ interface HomeViewProps {
   guestSearchLimit?: number;
   guestSearchCount?: number;
   guestSearchesRemaining?: number;
+  resetGuestSearchCount?: () => void;
   isGuestPreview?: boolean;
   isGuestSearchLimitReached?: boolean;
 }
@@ -286,10 +288,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     guestSearchLimit = 3,
     guestSearchCount = 0,
     guestSearchesRemaining = 3,
+    resetGuestSearchCount,
     isGuestPreview = false,
     isGuestSearchLimitReached = false
   } = props;
 
+  const isNative = isNativeApp();
   const isSearching = status === 'searching';
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
   const resultsQuery = lastQuery || input;
@@ -625,6 +629,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   >
                     {isGuestSearchLimitReached ? 'Create account' : 'Keep results'}
                   </button>
+                  {isNative && isGuestSearchLimitReached && resetGuestSearchCount && (
+                    <button
+                      type="button"
+                      onClick={resetGuestSearchCount}
+                      className="shrink-0 rounded border border-dbd-accent/30 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-dbd-accent transition-colors hover:bg-dbd-accent/5"
+                    >
+                      Reset test searches
+                    </button>
+                  )}
                 </div>
               </div>
             )}
