@@ -28,10 +28,58 @@ const isExternalHttpUrl = (url: string) => {
   }
 };
 
+const getNativeScrollRoot = () =>
+  document.querySelector<HTMLElement>('.native-scroll-root');
+
+const shouldIgnoreManualScroll = (target: EventTarget | null) => {
+  if (!(target instanceof Element)) return false;
+  return Boolean(target.closest('input, textarea, select, [contenteditable="true"]'));
+};
+
+const installNativeScrollBridge = () => {
+  let lastTouchY: number | null = null;
+
+  document.addEventListener('touchstart', (event) => {
+    if (event.touches.length !== 1 || shouldIgnoreManualScroll(event.target)) {
+      lastTouchY = null;
+      return;
+    }
+
+    lastTouchY = event.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (event) => {
+    const scrollRoot = getNativeScrollRoot();
+    if (!scrollRoot || lastTouchY === null || event.touches.length !== 1 || shouldIgnoreManualScroll(event.target)) return;
+
+    const nextTouchY = event.touches[0].clientY;
+    const deltaY = lastTouchY - nextTouchY;
+    lastTouchY = nextTouchY;
+
+    if (scrollRoot.scrollHeight <= scrollRoot.clientHeight) return;
+
+    scrollRoot.scrollTop += deltaY;
+    event.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchend', () => {
+    lastTouchY = null;
+  }, { passive: true });
+
+  document.addEventListener('wheel', (event) => {
+    const scrollRoot = getNativeScrollRoot();
+    if (!scrollRoot || shouldIgnoreManualScroll(event.target) || scrollRoot.scrollHeight <= scrollRoot.clientHeight) return;
+
+    scrollRoot.scrollTop += event.deltaY;
+    event.preventDefault();
+  }, { passive: false });
+};
+
 export const configureNativeApp = async () => {
   if (!isNativeApp()) return;
 
   document.documentElement.classList.add('native-app');
+  installNativeScrollBridge();
 
   try {
     await StatusBar.setStyle({ style: Style.Light });
