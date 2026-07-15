@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { isNativeApp } from '../lib/platform';
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -216,6 +217,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           type="button"
           onClick={async () => {
             setError(null);
+            if (isNativeApp()) {
+              setError("Google sign-in is not available in this iOS test build yet. Please use email and password.");
+              return;
+            }
             setLoading(true);
             try {
               const success = await signInWithGoogle();

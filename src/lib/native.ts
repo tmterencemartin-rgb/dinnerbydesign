@@ -1,10 +1,10 @@
-import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
 import { Keyboard, KeyboardResize } from '@capacitor/keyboard';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { isNativeApp } from './platform';
 
-export const isNativeApp = () => Capacitor.isNativePlatform();
+export { isNativeApp } from './platform';
 
 export const openExternalUrl = async (url: string) => {
   if (!url) return;
