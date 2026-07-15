@@ -417,6 +417,8 @@ const sanitizeRealityChecks = (checks: any): any[] => {
     .slice(0, 3);
 };
 
+const SEARCH_MODEL = 'gemini-3.1-flash-lite';
+
 async function fetchProxySuggestions(searchParams: SearchParams, preferences?: UserPreferences, signal?: AbortSignal): Promise<any> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
@@ -835,10 +837,9 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     };
 
     const aiConfig = getApiConfig();
-    console.log(`[GeminiService] Calling model gemini-3.5-flash (Mode: ${aiConfig.mode}) with prompt length: ${prompt.length}...`);
+    console.log(`[GeminiService] Calling model ${SEARCH_MODEL} (Mode: ${aiConfig.mode}) with prompt length: ${prompt.length}...`);
     
-    // Using gemini-3.5-flash as the primary recommended model for text/JSON tasks
-    const response = await callGeminiWithRetry("gemini-3.5-flash", prompt, config);
+    const response = await callGeminiWithRetry(SEARCH_MODEL, prompt, config);
 
     const text = response.text;
     const geminiDuration = Date.now() - start;
@@ -885,7 +886,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
         repaired: false,
         timings: { geminiCall: geminiDuration, totalRoundTrip: Date.now() - start },
         usage: {
-          model: "gemini-3.5-flash",
+          model: SEARCH_MODEL,
           inputChars: finalSystemInstruction.length + prompt.length,
           outputChars: text.length,
           inputTokensEstimate: estimateTokensFromText(finalSystemInstruction + prompt),
