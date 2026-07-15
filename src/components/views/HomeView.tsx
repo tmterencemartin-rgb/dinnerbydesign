@@ -37,7 +37,7 @@ import { RecipeCompareModal } from '../RecipeCompareModal';
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
-import { isNativeApp } from '../../lib/platform';
+import { isNativeApp, isNativeTestBuild } from '../../lib/platform';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -294,6 +294,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   } = props;
 
   const isNative = isNativeApp();
+  const isNativeTest = isNativeTestBuild();
   const isSearching = status === 'searching';
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
   const resultsQuery = lastQuery || input;
@@ -629,7 +630,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   >
                     {isGuestSearchLimitReached ? 'Create account' : 'Keep results'}
                   </button>
-                  {isNative && isGuestSearchLimitReached && resetGuestSearchCount && (
+                  {isNativeTest && isGuestSearchLimitReached && resetGuestSearchCount && (
                     <button
                       type="button"
                       onClick={resetGuestSearchCount}

@@ -14,6 +14,8 @@ import {
   Sparkles as SparklesIcon
 } from 'lucide-react';
 
+const LOGO_EASE: [number, number, number, number] = [0.215, 0.61, 0.355, 1];
+
 const logoVariants = {
   hidden: { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
   visible: {
@@ -22,7 +24,7 @@ const logoVariants = {
     transition: {
       clipPath: {
         duration: 0.75,
-        ease: [0.215, 0.61, 0.355, 1]
+        ease: LOGO_EASE
       },
       opacity: {
         duration: 0.25

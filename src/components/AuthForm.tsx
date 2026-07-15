@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { isNativeApp } from '../lib/platform';
+import { isNativeApp, isNativeTestBuild } from '../lib/platform';
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -46,6 +46,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
   const isSignUp = mode === 'signup';
   const isNative = isNativeApp();
+  const isNativeTest = isNativeTestBuild();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -232,7 +233,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
       {isNative ? (
         <p className="text-[11px] text-gray-400 font-medium text-center leading-snug">
-          Google sign-in will be added to the native app later. Please use email and password for this test build.
+          {isNativeTest
+            ? 'Google sign-in will be added to the native app later. Please use email and password for this test build.'
+            : 'Google sign-in is not available in the native app yet. Please use email and password.'}
         </p>
       ) : (
         <div className="space-y-2">

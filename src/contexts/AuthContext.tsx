@@ -36,7 +36,7 @@ import {
 } from 'firebase/firestore';
 import { db, auth, handleFirestoreError } from '../firebase';
 import { getApiUrl } from '../lib/api';
-import { isNativeApp } from '../lib/platform';
+import { isNativeApp, isNativeTestBuild } from '../lib/platform';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { 
   UserProfile, 
@@ -525,7 +525,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
 
     if (isNativeApp()) {
-      setError("Google sign-in is not available in this iOS test build yet. Please use email and password.");
+      setError(isNativeTestBuild()
+        ? "Google sign-in is not available in this iOS test build yet. Please use email and password."
+        : "Google sign-in is not available in the native app yet. Please use email and password."
+      );
       isAuthInProgress.current = false;
       return false;
     }
