@@ -11,6 +11,26 @@ interface AuthFormProps {
   className?: string;
 }
 
+const AUTH_TIMEOUT_MS = 15000;
+
+const withAuthTimeout = async <T,>(operation: Promise<T>, isNative: boolean): Promise<T> => {
+  if (!isNative) return operation;
+
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<T>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error("Sign-in is taking too long. Please check the simulator connection and try again."));
+        }, AUTH_TIMEOUT_MS);
+      })
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+};
+
 export const AuthForm: React.FC<AuthFormProps> = ({ 
   onSuccess, 
   mode = 'signup',
@@ -60,10 +80,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           throw new Error("All fields are required");
         }
         const fullPhone = `${countryCode}${phone.trim().replace(/^\+/, '')}`;
-        await signUpWithEmail(cleanEmail, password, firstName.trim(), lastName.trim(), fullPhone);
+        await withAuthTimeout(
+          signUpWithEmail(cleanEmail, password, firstName.trim(), lastName.trim(), fullPhone),
+          isNative
+        );
       } else {
         if (!cleanEmail || !password) throw new Error("Email and password are required");
-        await signInWithEmail(cleanEmail, password);
+        await withAuthTimeout(signInWithEmail(cleanEmail, password), isNative);
       }
       onSuccess?.();
     } catch (err: any) {
