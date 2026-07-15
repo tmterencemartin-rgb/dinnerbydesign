@@ -49,7 +49,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
   }, []);
 
   return (
-    <div className="min-h-screen border border-dbd-rule/10 bg-gray-50 text-dbd-ink flex flex-col transition-colors duration-250 pb-[env(safe-area-inset-bottom)]">
+    <div className="native-scroll-root min-h-screen border border-dbd-rule/10 bg-gray-50 text-dbd-ink flex flex-col transition-colors duration-250 pb-[env(safe-area-inset-bottom)]">
       {/* Navigation */}
       <nav className="border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1rem+env(safe-area-inset-top))] sm:pt-[calc(1.125rem+env(safe-area-inset-top))] pb-0 transition-colors duration-250">
         <div className="max-w-6xl mx-auto px-3 md:px-3 lg:px-6">
