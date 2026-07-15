@@ -1,11 +1,32 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import {
+  browserLocalPersistence,
+  getAuth,
+  indexedDBLocalPersistence,
+  initializeAuth,
+  signInAnonymously,
+  onAuthStateChanged,
+  User as FirebaseUser
+} from 'firebase/auth';
 import { initializeFirestore, memoryLocalCache, doc, getDoc, setDoc, collection, addDoc, query, where, orderBy, onSnapshot, getDocFromServer, limit, Timestamp, FieldValue } from 'firebase/firestore';
 
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const isNativeRuntime = () => {
+  const capacitor = (globalThis as any).Capacitor;
+  return Boolean(capacitor?.isNativePlatform?.());
+};
+
+export const auth = (() => {
+  try {
+    return initializeAuth(app, {
+      persistence: isNativeRuntime() ? browserLocalPersistence : indexedDBLocalPersistence
+    });
+  } catch {
+    return getAuth(app);
+  }
+})();
 
 // Standard Firestore initialization with single tab manager to prevent iframe lease locking conflicts
 // Initialize Firestore with settings for better connectivity in restricted environments
