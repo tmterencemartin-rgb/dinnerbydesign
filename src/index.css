@@ -83,8 +83,11 @@
   html.native-app,
   html.native-app body {
     background: var(--dbd-surface);
+    width: 100%;
+    max-width: 100vw;
     height: 100%;
     overflow: hidden;
+    overflow-x: hidden;
   }
 
   html.native-app body {
@@ -94,13 +97,19 @@
   }
 
   html.native-app #root {
+    width: 100%;
+    max-width: 100vw;
     height: 100%;
     overflow: hidden;
+    overflow-x: hidden;
   }
 
   html.native-app .native-scroll-root {
+    width: 100%;
+    max-width: 100vw;
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
   }

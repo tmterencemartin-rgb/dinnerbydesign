@@ -603,8 +603,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     >
         {/* Search Section */}
       <div className="w-full flex flex-col relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full bg-gray-50 -z-10" />
-        
         <div className="flex flex-col">
           <div className="w-full max-w-4xl mx-auto space-y-4 my-2">
             {isGuestPreview && (
