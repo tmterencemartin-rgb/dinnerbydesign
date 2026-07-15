@@ -4,7 +4,6 @@ const config: CapacitorConfig = {
   appId: 'app.dinnerbydesign.mobile',
   appName: 'DinnerByDesign',
   webDir: 'dist',
-  bundledWebRuntime: false,
   server: {
     androidScheme: 'https'
   },

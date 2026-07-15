@@ -8,3 +8,4 @@ api/*.map
 .env*
 !.env.example
 .vercel
+*.xcuserstate
