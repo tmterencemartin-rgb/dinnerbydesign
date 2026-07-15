@@ -38,27 +38,50 @@ const shouldIgnoreManualScroll = (target: EventTarget | null) => {
   return Boolean(target.closest('input, textarea, select, [contenteditable="true"]'));
 };
 
+const canScrollElement = (element: HTMLElement) =>
+  element.scrollHeight > element.clientHeight;
+
+const findScrollableAncestor = (target: EventTarget | null) => {
+  if (!(target instanceof Element)) return null;
+
+  let current: Element | null = target;
+  while (current && current !== document.body && current !== document.documentElement) {
+    if (current instanceof HTMLElement && canScrollElement(current)) {
+      return current;
+    }
+    current = current.parentElement;
+  }
+
+  return null;
+};
+
 const installNativeScrollBridge = () => {
   let lastTouchY: number | null = null;
 
-  const scrollNativePage = (deltaY: number) => {
-    const scrollRoot = getNativeScrollRoot();
+  const scrollElement = (element: Element, deltaY: number) => {
+    if (!(element instanceof HTMLElement) || !canScrollElement(element)) return false;
+
     const movement = deltaY * NATIVE_SCROLL_MULTIPLIER;
+    const maxScrollTop = element.scrollHeight - element.clientHeight;
+    const nextScrollTop = Math.max(0, Math.min(maxScrollTop, element.scrollTop + movement));
 
-    if (scrollRoot && scrollRoot.scrollHeight > scrollRoot.clientHeight) {
-      const maxScrollTop = scrollRoot.scrollHeight - scrollRoot.clientHeight;
-      scrollRoot.scrollTop = Math.max(0, Math.min(maxScrollTop, scrollRoot.scrollTop + movement));
-      return true;
-    }
-
-    const documentScroller = document.scrollingElement || document.documentElement;
-    if (documentScroller.scrollHeight > documentScroller.clientHeight) {
-      const maxScrollTop = documentScroller.scrollHeight - documentScroller.clientHeight;
-      documentScroller.scrollTop = Math.max(0, Math.min(maxScrollTop, documentScroller.scrollTop + movement));
+    if (nextScrollTop !== element.scrollTop) {
+      element.scrollTop = nextScrollTop;
       return true;
     }
 
     return false;
+  };
+
+  const scrollNativePage = (target: EventTarget | null, deltaY: number) => {
+    const localScrollRoot = findScrollableAncestor(target);
+    if (localScrollRoot && scrollElement(localScrollRoot, deltaY)) return true;
+
+    const scrollRoot = getNativeScrollRoot();
+    if (scrollRoot && scrollElement(scrollRoot, deltaY)) return true;
+
+    const documentScroller = document.scrollingElement || document.documentElement;
+    return scrollElement(documentScroller, deltaY);
   };
 
   document.addEventListener('touchstart', (event) => {
@@ -77,7 +100,7 @@ const installNativeScrollBridge = () => {
     const deltaY = lastTouchY - nextTouchY;
     lastTouchY = nextTouchY;
 
-    if (scrollNativePage(deltaY)) {
+    if (scrollNativePage(event.target, deltaY)) {
       event.preventDefault();
     }
   }, { passive: false });
@@ -89,7 +112,7 @@ const installNativeScrollBridge = () => {
   document.addEventListener('wheel', (event) => {
     if (shouldIgnoreManualScroll(event.target)) return;
 
-    if (scrollNativePage(event.deltaY)) {
+    if (scrollNativePage(event.target, event.deltaY)) {
       event.preventDefault();
     }
   }, { passive: false });
