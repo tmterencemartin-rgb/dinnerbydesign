@@ -34,4 +34,5 @@ Then choose a simulator or connected iPhone in Xcode.
 
 - The regular web build and deployment are unchanged.
 - Re-run `npm run native:sync:ios` after web app changes that should be bundled into the iOS app.
+- The native shell configures iOS status bar styling, keyboard resize behaviour, splash-screen hiding, and opens external links through Capacitor Browser.
 - App Store/TestFlight work still needs bundle signing, icons, splash assets, screenshots, and Apple account configuration.

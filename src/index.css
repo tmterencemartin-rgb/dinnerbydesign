@@ -79,6 +79,24 @@
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
   }
+
+  html.native-app,
+  html.native-app body {
+    background: var(--dbd-surface);
+  }
+
+  html.native-app body {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  html.native-app input,
+  html.native-app textarea,
+  html.native-app [contenteditable="true"] {
+    user-select: text;
+    -webkit-user-select: text;
+  }
 }
 
 @layer utilities {

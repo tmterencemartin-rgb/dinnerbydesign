@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 
 import { useAuth } from '../contexts/AuthContext';
 import { getApiUrl } from '../lib/api';
+import { isNativeApp, openExternalUrl } from '../lib/native';
 
 let stripePromise: Promise<any> | null = null;
 
@@ -58,6 +59,11 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
       const { id, url } = await response.json();
 
       if (url) {
+        if (isNativeApp()) {
+          await openExternalUrl(url);
+          return;
+        }
+
         try {
           const isFramed = window.top && window.top !== window;
           if (isFramed) {

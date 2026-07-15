@@ -3,6 +3,9 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { configureNativeApp, isNativeApp } from './lib/native';
+
+configureNativeApp();
 
 // Add global error handlers to help debug "Script error" issues
 window.addEventListener('error', (event) => {
@@ -41,8 +44,8 @@ window.addEventListener('unhandledrejection', (event) => {
   console.error('[Unhandled Rejection]', reason);
 });
 
-// Register Service Worker for PWA
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+// Register Service Worker for PWA. Native builds use Capacitor's shell instead.
+if (import.meta.env.PROD && !isNativeApp() && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(err => {
       console.log('SW registration failed: ', err);
