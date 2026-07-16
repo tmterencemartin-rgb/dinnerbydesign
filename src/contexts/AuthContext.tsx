@@ -365,7 +365,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/planner') return 'planner';
     if (location === '/shopping') return 'shopping';
     if (location === '/success') return 'success';
-    if (location === '/signin') return 'signin';
+    if (location === '/signin' || location.startsWith('/signin?')) return 'signin';
     if (location === '/admin') return 'admin';
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
@@ -388,7 +388,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const goToSignIn = () => {
     safeStorage.setItem('dbd_has_started', 'true');
     setHighlightInternal(null);
+    window.dispatchEvent(new CustomEvent('dbd-sign-in-requested'));
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/signin?mode=signin');
+    }
     setLocation('/signin?mode=signin');
+    setViewNavigationTick(tick => tick + 1);
   };
 
   const clearHighlight = () => setHighlightInternal(null);

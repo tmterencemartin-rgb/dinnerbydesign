@@ -94,7 +94,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white sticky top-0 z-20">
+        <div className="recipe-detail-header flex items-center justify-between px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] border-b border-gray-100 bg-white sticky top-0 z-20">
           <button 
             onClick={onClose}
             className="p-2 -ml-2 text-gray-500 hover:text-gray-900 transition-colors flex items-center gap-1.5 focus:outline-none"

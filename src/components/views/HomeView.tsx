@@ -394,6 +394,16 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const [selectedItem, setSelectedItem] = React.useState<any | null>(null);
   const [compareItems, setCompareItems] = React.useState<any[]>([]);
   const [showCompareModal, setShowCompareModal] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleSignInRequested = () => {
+      setSelectedItem(null);
+      setShowCompareModal(false);
+    };
+
+    window.addEventListener('dbd-sign-in-requested', handleSignInRequested);
+    return () => window.removeEventListener('dbd-sign-in-requested', handleSignInRequested);
+  }, []);
   const [searchPlaceholderOverride, setSearchPlaceholderOverride] = React.useState<string | undefined>();
 
   const isSaved = (recipe: any) => savedRecipes.some(r => isSameRecipe(r, recipe));
@@ -426,7 +436,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       return;
     }
     if (!user || user.isAnonymous) {
-      showToast("Sign in to save recipes to your personal cookbook!", "Sign In", goToSignIn);
+      goToSignIn();
       return;
     }
     const existing = savedRecipes.find(r => isSameRecipe(r, recipe));
@@ -451,7 +461,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       return;
     }
     if (!user || user.isAnonymous) {
-      showToast("Create an account to schedule dinners and build your shopping list.", "Create account", goToSignIn);
+      goToSignIn();
       return;
     }
     try {

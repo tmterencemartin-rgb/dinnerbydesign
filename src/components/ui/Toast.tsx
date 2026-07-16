@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 interface ToastProps {
@@ -10,6 +10,17 @@ interface ToastProps {
 }
 
 export const Toast: React.FC<ToastProps> = ({ message, actionLabel, onAction, onClose }) => {
+  const actionHandledRef = useRef(false);
+
+  const handleAction = (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (actionHandledRef.current) return;
+    actionHandledRef.current = true;
+    onAction?.();
+    onClose();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -25,10 +36,10 @@ export const Toast: React.FC<ToastProps> = ({ message, actionLabel, onAction, on
         <div className="flex items-center gap-2">
           {actionLabel && onAction && (
             <button
-              onClick={() => {
-                onAction();
-                onClose();
-              }}
+              type="button"
+              onTouchEnd={handleAction}
+              onPointerUp={handleAction}
+              onClick={handleAction}
               className="bg-white text-gray-900 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-100 transition-colors whitespace-nowrap"
             >
               {actionLabel}

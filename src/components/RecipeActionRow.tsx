@@ -32,7 +32,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
 
   const handleSaveAndSchedule = async () => {
     if (!user || user.isAnonymous) {
-      showToast("Sign in to save recipes to your saved list!", "Sign In", goToSignIn);
+      goToSignIn();
       return;
     }
 

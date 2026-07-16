@@ -122,6 +122,10 @@
     user-select: text;
     -webkit-user-select: text;
   }
+
+  html.native-app .recipe-detail-header {
+    padding-top: max(3rem, calc(0.75rem + env(safe-area-inset-top)));
+  }
 }
 
 @layer utilities {

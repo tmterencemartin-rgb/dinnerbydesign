@@ -21,6 +21,11 @@ export const Tooltip = ({
   maxWidth = "max-w-[240px]"
 }: TooltipProps) => {
   const [show, setShow] = useState(false);
+  const canShowHoverTooltip = () => {
+    if (typeof window === 'undefined') return true;
+    if (document.documentElement.classList.contains('native-app')) return false;
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  };
 
   const getAlignClasses = () => {
     switch (align) {
@@ -41,9 +46,9 @@ export const Tooltip = ({
   return (
     <div 
       className={`${className} overflow-visible`} 
-      onMouseEnter={() => setShow(true)} 
+      onMouseEnter={() => canShowHoverTooltip() && setShow(true)} 
       onMouseLeave={() => setShow(false)}
-      onTouchStart={() => setShow(true)}
+      onTouchStart={() => setShow(false)}
     >
       {children}
       <AnimatePresence>
