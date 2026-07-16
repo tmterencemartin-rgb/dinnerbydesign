@@ -132,12 +132,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   return (
     <div className={`space-y-3 ${className}`}>
       <div className={isSignUp ? '' : 'space-y-2'}>
-        {!isSignUp && (
-          <label className="text-[13px] font-bold text-gray-900 block">
-            Sign in
-          </label>
-        )}
-        
         <form onSubmit={handleSubmit} className="space-y-1 relative">
           {error && (
             <p className={`text-[12px] font-bold leading-tight mb-3 ${error.includes('sent') ? 'text-emerald-600' : 'text-red-500'}`}>
