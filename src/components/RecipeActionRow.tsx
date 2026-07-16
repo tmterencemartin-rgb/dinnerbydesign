@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Printer, CalendarCheck, Calendar, Mail, Loader2 } from 'lucide-react';
+import { Printer, Check, CalendarCheck, Calendar, Mail, Loader2 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
@@ -42,8 +42,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
       return;
     }
     
-    window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
-    setIsChoosingDay(true);
+    showToast(scheduledDate ? 'Recipe is already scheduled.' : 'Recipe is saved.');
   };
 
   const handleDaySelect = async (day: string) => {
@@ -191,8 +190,14 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
               : 'bg-white text-gray-700 border-gray-100 hover:bg-gray-50'
           }`}
         >
-          <Calendar className="hidden sm:block w-3.5 h-3.5" />
-          <span>{!isSaved ? 'Save' : scheduledDate ? 'Reschedule' : 'Schedule'}</span>
+          {!isSaved ? (
+            <Calendar className="hidden sm:block w-3.5 h-3.5" />
+          ) : scheduledDate ? (
+            <CalendarCheck className="hidden sm:block w-3.5 h-3.5" />
+          ) : (
+            <Check className="hidden sm:block w-3.5 h-3.5" />
+          )}
+          <span>{!isSaved ? 'Save' : scheduledDate ? 'Scheduled' : 'Saved'}</span>
         </button>
         
         <button 
