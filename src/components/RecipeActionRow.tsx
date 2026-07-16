@@ -38,6 +38,8 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
 
     if (!isSaved) {
       await onSave();
+      window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
+      return;
     }
     
     window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
@@ -190,7 +192,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
           }`}
         >
           <Calendar className="hidden sm:block w-3.5 h-3.5" />
-          <span>Save & Schedule</span>
+          <span>{!isSaved ? 'Save' : scheduledDate ? 'Reschedule' : 'Schedule'}</span>
         </button>
         
         <button 
