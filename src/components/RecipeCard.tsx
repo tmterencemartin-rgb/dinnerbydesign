@@ -325,7 +325,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`bg-white rounded-none px-0 py-2 sm:rounded sm:p-5 relative group/card overflow-visible transition-all duration-200 ${
+      className={`bg-white rounded p-3 sm:p-5 relative group/card overflow-visible transition-all duration-200 ${
         isModal
           ? 'border-0 shadow-none'
           : 'border-b border-gray-100 shadow-none sm:border sm:shadow-[0_1px_4px_rgba(0,0,0,0.025)]'
