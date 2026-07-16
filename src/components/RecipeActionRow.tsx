@@ -4,7 +4,6 @@ import { AnimatePresence } from 'framer-motion';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiUrl } from '../lib/api';
-import { safeStorage } from '../lib/storage';
 import { InlineDayPicker } from './ui/InlineDayPicker';
 import { enrichRecipe } from '../services/geminiService';
 
@@ -28,7 +27,8 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
   planner 
 }) => {
   const [isEmailing, setIsEmailing] = useState(false);
-  const { user, handlePrintRecipe, showToast, goToSignIn, setView } = useAuth();
+  const [isChoosingDay, setIsChoosingDay] = useState(false);
+  const { user, handlePrintRecipe, showToast, goToSignIn } = useAuth();
 
   const handleSaveAndSchedule = async () => {
     if (!user || user.isAnonymous) {
@@ -41,8 +41,12 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
     }
     
     window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
-    safeStorage.session.setItem('dbd_planner_target', 'saved-recipes');
-    setView('planner');
+    setIsChoosingDay(true);
+  };
+
+  const handleDaySelect = async (day: string) => {
+    await Promise.resolve(onDaySelect(day));
+    setIsChoosingDay(false);
   };
 
   const handleEmailRecipe = async () => {
@@ -206,6 +210,16 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
           <span>Print</span>
         </button>
       </div>
+      <AnimatePresence>
+        {isChoosingDay && (
+          <InlineDayPicker
+            onSelect={handleDaySelect}
+            onClose={() => setIsChoosingDay(false)}
+            planner={planner}
+            currentDay={scheduledDate}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
