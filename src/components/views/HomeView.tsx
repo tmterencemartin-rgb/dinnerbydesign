@@ -745,12 +745,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
               {showNotBoringSummerSaladsPrompt && (
                 <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
-                  <div className="flex flex-col gap-2 border-t border-gray-100 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="border-t border-gray-100 pt-2">
                     <button
                       type="button"
                       onClick={handleNotBoringSummerSalads}
                       disabled={isReadOnly || isSearching}
-                      className="text-left disabled:cursor-not-allowed disabled:opacity-50"
+                      className="block text-left disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <span className="block text-[12px] font-normal leading-snug text-dbd-accent">
                         {NOT_BORING_SUMMER_SALADS_SEARCH_TITLE}
@@ -758,14 +758,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       <span className="mt-0.5 block text-[11.5px] font-normal leading-relaxed text-gray-500">
                         Fresh, substantial salads with interesting flavour combinations.
                       </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleNotBoringSummerSalads}
-                      disabled={isReadOnly || isSearching}
-                      className="self-start text-[11px] font-normal text-gray-500 hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300 sm:self-auto"
-                    >
-                      Find options
                     </button>
                   </div>
                 </div>

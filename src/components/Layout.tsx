@@ -73,7 +73,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
                   transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                   src="/dbd-logo-with-pin.png"
                   alt="DinnerByDesign"
-                  className="app-header-logo h-[49px] w-auto max-w-[297px] origin-left object-contain mix-blend-multiply sm:h-[61px] sm:max-w-[371px]"
+                  className="app-header-logo h-[37px] w-auto max-w-[223px] origin-left object-contain mix-blend-multiply sm:h-[46px] sm:max-w-[278px]"
                 />
                 <span className="ml-[42px] hidden whitespace-nowrap text-left text-[9px] font-medium tracking-[0.05em] text-dbd-ink-3 opacity-80 sm:mt-1 sm:block sm:ml-[52px]">Less searching. Better matches. Dinner, decided.</span>
               </div>
