@@ -630,7 +630,9 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   >
                     {/* Responsive side-by-side view for expanded recipe */}
                     <div className="w-full pt-2 sm:pt-5 mt-0 sm:mt-1 border-t border-gray-100">
-                      <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-x-6 lg:gap-x-12 gap-y-2 sm:gap-y-3 items-start">
+                      <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-x-6 lg:gap-x-12 gap-y-3 items-start">
+                      {/* Left column: Ingredients */}
+                      <div className="w-full h-fit pb-2 md:pb-0 flex flex-col gap-1.5 sm:gap-2.5">
                         <div className="flex items-center justify-between gap-3">
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                             Ingredients
@@ -660,11 +662,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                             </button>
                           </div>
                         </div>
-
-                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider md:self-center">Preparation</h4>
-                      
-                      {/* Left column: Ingredients */}
-                      <div className="w-full h-fit pb-2 md:pb-0 flex flex-col gap-1.5 sm:gap-2.5">
                         {isEnriching && !currentIngredients.length ? (
                           <div className="flex items-center gap-1.5 py-1 text-[11px] text-gray-400">
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -684,6 +681,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
                       {/* Right column: Instructions & Match Reason */}
                        <div className="w-full flex flex-col gap-2 sm:gap-3">
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Preparation</h4>
                         <div>
                           {(recipe as any).totalServings && (
                             <p className="text-[11px] text-gray-500 mb-1">Makes {(recipe as any).totalServings} adult portions</p>
