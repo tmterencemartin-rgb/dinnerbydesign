@@ -127,6 +127,11 @@
     padding-top: 1rem;
   }
 
+  html.native-app .app-header-logo {
+    height: 2.5rem;
+    max-width: 15rem;
+  }
+
   html.native-app .recipe-detail-header {
     padding-top: max(3rem, calc(0.75rem + env(safe-area-inset-top)));
   }
