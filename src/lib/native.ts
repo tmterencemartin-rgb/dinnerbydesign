@@ -28,10 +28,19 @@ const isExternalHttpUrl = (url: string) => {
   }
 };
 
+const lockNativeViewportScale = () => {
+  const viewport = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
+  viewport?.setAttribute(
+    'content',
+    'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover'
+  );
+};
+
 export const configureNativeApp = async () => {
   if (!isNativeApp()) return;
 
   document.documentElement.classList.add('native-app');
+  lockNativeViewportScale();
 
   try {
     await StatusBar.setStyle({ style: Style.Light });

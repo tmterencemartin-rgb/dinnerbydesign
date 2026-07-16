@@ -115,8 +115,10 @@
   }
 
   html.native-app input,
+  html.native-app select,
   html.native-app textarea,
   html.native-app [contenteditable="true"] {
+    font-size: 16px;
     user-select: text;
     -webkit-user-select: text;
   }
