@@ -29,11 +29,13 @@ import {
   ConvenienceFilter,
   SavedSortOption,
   WeeklyPlanTime,
+  WeeklyPlanCostSummary,
   createWeeklyDinnerPlan,
   filterAndSortSavedRecipes,
   findCostSavingSwaps,
   getCompliantUnscheduledRecipes,
   parseIngredientLine,
+  summariseWeeklyPlanCosts,
 } from '../../lib/plannerUtils';
 import { calculateActiveIngredientsCost } from '../../services/groceryService';
 
@@ -227,6 +229,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planMinimiseCost, setPlanMinimiseCost] = useState(true);
   const [planReuseIngredients, setPlanReuseIngredients] = useState(true);
   const [planPresetNotice, setPlanPresetNotice] = useState<string | null>(null);
+  const [builtWeekCost, setBuiltWeekCost] = useState<WeeklyPlanCostSummary | null>(null);
   const [planAlert, setPlanAlert] = useState<string | null>(null);
   const [isPlanningWeek, setIsPlanningWeek] = useState(false);
   const hasLoadedAffordabilityPreset = useRef(false);
@@ -418,6 +421,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     }
 
     setPlanAlert(null);
+    setBuiltWeekCost(null);
     setIsPlanningWeek(true);
     try {
       const { generateDinnerSuggestions } = await import('../../services/geminiService');
@@ -446,6 +450,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
       for (const recipe of result.dinners) {
         await saveRecipe(recipe);
       }
+
+      setBuiltWeekCost(summariseWeeklyPlanCosts(result.dinners, planServings, planBudget));
 
       if (result.alert) {
         setPlanAlert(result.alert);
@@ -900,6 +906,45 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       )}
                     </div>
                   </div>
+
+                  {builtWeekCost && (
+                    <div className="rounded border border-gray-100 bg-gray-50/70 px-3 py-3 sm:px-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Estimated week</p>
+                          <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                            <span className="text-[22px] font-bold tracking-tight text-gray-950">£{builtWeekCost.estimatedTotal.toFixed(2)}</span>
+                            <span className="text-[11px] font-medium text-gray-500">
+                              {builtWeekCost.dinnerCount} {builtWeekCost.dinnerCount === 1 ? 'dinner' : 'dinners'} for {builtWeekCost.servings}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-[11px] text-gray-500">
+                            About £{builtWeekCost.estimatedPerPortion.toFixed(2)} per portion
+                            {builtWeekCost.budgetVariance !== null && (
+                              <span className={builtWeekCost.budgetVariance >= 0 ? ' text-emerald-700 font-semibold' : ' text-amber-700 font-semibold'}>
+                                {' '}· £{Math.abs(builtWeekCost.budgetVariance).toFixed(2)} {builtWeekCost.budgetVariance >= 0 ? 'within' : 'above'} your £{builtWeekCost.budgetTarget?.toFixed(2)} target
+                              </span>
+                            )}
+                          </p>
+                          {builtWeekCost.pricedDinnerCount < builtWeekCost.dinnerCount && (
+                            <p className="mt-1 text-[10.5px] font-medium text-amber-700">
+                              Based on {builtWeekCost.pricedDinnerCount} of {builtWeekCost.dinnerCount} dinners; remaining costs are not yet available.
+                            </p>
+                          )}
+                          <p className="mt-1 text-[10.5px] leading-relaxed text-gray-400">
+                            The shopping-list estimate may change after pack sizes, shared ingredients and items you already have are considered.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setBuiltWeekCost(null)}
+                          className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-gray-700"
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {activeSavedRecipes.length === 0 ? (
                     <div className="w-full py-6 px-4 text-center max-w-md mx-auto bg-white/50">

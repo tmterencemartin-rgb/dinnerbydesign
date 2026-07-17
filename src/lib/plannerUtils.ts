@@ -46,6 +46,65 @@ export interface WeeklyPlanResult {
   selectionSummary?: string;
 }
 
+export interface WeeklyPlanCostSummary {
+  dinnerCount: number;
+  pricedDinnerCount: number;
+  servings: number;
+  estimatedTotal: number;
+  estimatedPerPortion: number;
+  budgetTarget: number | null;
+  budgetVariance: number | null;
+}
+
+const parseCurrencyValue = (value?: string | number | null) => {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  if (!value) return 0;
+  const match = String(value).replace(/,/g, '').match(/[\d.]+/);
+  return match ? Number(match[0]) || 0 : 0;
+};
+
+export const summariseWeeklyPlanCosts = (
+  dinners: Array<Recipe | ReadyMeal>,
+  servings: number,
+  budget: string | number,
+): WeeklyPlanCostSummary | null => {
+  const safeServings = Math.max(1, servings || 1);
+  let pricedDinnerCount = 0;
+  let estimatedTotal = 0;
+
+  dinners.forEach((dinner) => {
+    let perPortion = parseCurrencyValue(dinner.costPerPortion);
+    if (perPortion <= 0 && 'retailer' in dinner) {
+      perPortion = parseCurrencyValue(dinner.price);
+      if (perPortion <= 0 && dinner.totalPrice && dinner.totalServings) {
+        perPortion = parseCurrencyValue(dinner.totalPrice) / dinner.totalServings;
+      }
+    }
+    if (perPortion <= 0 && 'totalRecipeCost' in dinner && dinner.totalRecipeCost && dinner.totalServings) {
+      perPortion = dinner.totalRecipeCost / dinner.totalServings;
+    }
+    if (perPortion <= 0) return;
+    pricedDinnerCount += 1;
+    estimatedTotal += perPortion * safeServings;
+  });
+
+  if (pricedDinnerCount === 0) return null;
+
+  const budgetValue = typeof budget === 'number' ? budget : Number(budget);
+  const budgetTarget = Number.isFinite(budgetValue) && budgetValue > 0 ? budgetValue : null;
+  const roundedTotal = Number(estimatedTotal.toFixed(2));
+
+  return {
+    dinnerCount: dinners.length,
+    pricedDinnerCount,
+    servings: safeServings,
+    estimatedTotal: roundedTotal,
+    estimatedPerPortion: Number((roundedTotal / (pricedDinnerCount * safeServings)).toFixed(2)),
+    budgetTarget,
+    budgetVariance: budgetTarget === null ? null : Number((budgetTarget - roundedTotal).toFixed(2)),
+  };
+};
+
 export const parseIngredientLine = (ingredient: string) => {
   const cleanIngredient = ingredient.replace(/^[•\-\*\s\.\(\)]+/, '').trim();
   const match = cleanIngredient.match(/^([\d\/\.\s\-½⅓¼¾]+(?:(?:oz|g|kg|ml|l|tbsp|tsp|cups?|slices?|pcs|pieces?|cans?|pots?|cloves?|stalks?|tins?|bunches?|sprigs?)\b)?)?(.*)$/i);

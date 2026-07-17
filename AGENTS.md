@@ -82,4 +82,5 @@ When testing this web application locally, you can connect to your local backend
 - **Cost presentation**: Public cost claims must be labelled as estimates, show the price-check date, explain assumptions, and distinguish the coordinated basket from buying dinners separately.
 - **Affordability pilot boundary**: `AFFORDABILITY_PLANNER_PILOT` in `src/config/features.ts` gates the public budget-plan route and its planner handoff. Set it to `false` for an immediate product-level rollback without deleting the implementation.
 - **Shared planner path**: Public budget-plan handoffs prefill the existing `Plan my week` controls; they must not introduce a separate recipe-selection engine.
+- **Built-week cost feedback**: After weekly dinners are generated, show their combined estimated dinner cost, per-portion cost, budget variance, and pricing coverage above Saved. Keep this explicitly distinct from the later shopping-list estimate based on scheduled dinners, pack sizes, shared ingredients, and pantry items.
 - **Rollback checkpoint**: Local branch `backup/pre-affordability-planner-20260717` points to the repository state before this pilot was introduced.

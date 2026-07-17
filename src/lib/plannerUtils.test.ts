@@ -5,6 +5,7 @@ import {
   filterAndSortSavedRecipes,
   findCostSavingSwaps,
   parseIngredientLine,
+  summariseWeeklyPlanCosts,
 } from './plannerUtils';
 
 const baseRecipe = (overrides: Partial<SavedRecipe>): SavedRecipe => ({
@@ -44,6 +45,65 @@ const preferences: UserPreferences = {
 };
 
 describe('plannerUtils', () => {
+  it('summarises a generated week against its budget without inventing missing costs', () => {
+    const summary = summariseWeeklyPlanCosts([
+      {
+        title: 'Budget pasta',
+        description: '',
+        ingredients: [],
+        instructions: [],
+        cuisine: 'Italian',
+        costPerPortion: '£1.25',
+        totalServings: 4,
+        totalTime: 20,
+        saladType: 'none',
+        isVegetarian: true,
+        isPescatarian: true,
+        isVegan: false,
+        dietFlagsVerified: true,
+      },
+      {
+        title: 'Chicken traybake',
+        description: '',
+        ingredients: [],
+        instructions: [],
+        cuisine: 'British',
+        costPerPortion: '£1.75',
+        totalServings: 4,
+        totalTime: 35,
+        saladType: 'none',
+        isVegetarian: false,
+        isPescatarian: false,
+        isVegan: false,
+        dietFlagsVerified: true,
+      },
+      {
+        title: 'Cost pending',
+        description: '',
+        ingredients: [],
+        instructions: [],
+        cuisine: 'Dinner',
+        totalServings: 4,
+        totalTime: 30,
+        saladType: 'none',
+        isVegetarian: true,
+        isPescatarian: true,
+        isVegan: true,
+        dietFlagsVerified: true,
+      },
+    ], 4, '20');
+
+    expect(summary).toEqual({
+      dinnerCount: 3,
+      pricedDinnerCount: 2,
+      servings: 4,
+      estimatedTotal: 12,
+      estimatedPerPortion: 1.5,
+      budgetTarget: 20,
+      budgetVariance: 8,
+    });
+  });
+
   it('parses ingredient quantity and name for the planner detail view', () => {
     expect(parseIngredientLine('- 250g potatoes')).toEqual({
       qtyUnit: '250g',
