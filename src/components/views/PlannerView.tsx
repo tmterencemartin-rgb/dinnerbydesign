@@ -771,15 +771,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
             {/* Unified Save & Schedule Panel */}
             <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
-              <div className="px-1 sm:px-3.5 py-3 sm:py-5 space-y-5">
+              <div className="px-1 sm:px-3.5 py-3 sm:py-5 space-y-6">
                 
                 {/* SECTION 1: SAVED (BACKLOG) */}
-                <div id="saved-recipes-section" className="space-y-1.5 relative z-20 scroll-mt-[150px]">
+                <div id="saved-recipes-section" className="space-y-2.5 relative z-20 scroll-mt-[150px]">
                   {/* SAVED HEADER ROW */}
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-1">
-                    <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1">Saved</h3>
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                    <div className="flex items-baseline gap-2 pl-1">
+                      <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Saved</h3>
+                      <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
+                    </div>
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} items</span>
                       {user && !user.isAnonymous && activeSavedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
                           {showDeleteAllSavedConfirm ? (
@@ -840,8 +842,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   ) : (
                     <div>
                       {/* Search and Organize Controls - Integrated Header */}
-                      <div className="bg-gray-50/40 border-b border-gray-100 px-1.5 py-0.5 sm:px-2">
-                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
+                      <div className="border-b border-gray-100 px-1.5 pb-2 sm:px-2">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
                           {/* Left: Search Bar */}
                           <div className="relative w-full sm:max-w-[340px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
@@ -850,7 +852,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
                               placeholder="Search saved dinners..."
-                              className="w-full h-6 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40 transition-all"
+                              className="w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[11.5px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
                               <button 
@@ -863,12 +865,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           </div>
 
                           {/* Right: Unified Controls */}
-                          <div className="flex items-center gap-1 self-start sm:self-auto h-6 relative">
+                          <div className="flex items-center gap-1.5 self-start sm:self-auto h-8 relative">
                             {/* 1. Filters Dropdown */}
                             <div className="relative">
                               <button 
                                 onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-                                className={`text-[11px] font-semibold h-6 px-1.5 rounded border transition-all flex items-center gap-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 ${
+                                className={`text-[11px] font-semibold h-8 px-2 rounded border transition-all flex items-center gap-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 ${
                                   isFilterDropdownOpen || hasActiveSavedFilters
                                     ? 'border-accent bg-accent/10 text-accent shadow-sm'
                                     : 'border-orange-200 bg-orange-50 text-orange-800 hover:border-orange-300 hover:bg-orange-100/70 hover:text-orange-900'
@@ -929,7 +931,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             </div>
 
                             {/* 2. Sort Dropdown */}
-                            <div className="flex items-center gap-1 px-1.5 bg-white hover:bg-gray-50 rounded border border-gray-100 h-6 transition-colors">
+                            <div className="flex items-center gap-1 px-2 bg-white hover:bg-gray-50 rounded border border-gray-100 h-8 transition-colors">
                               <History className="w-3.5 h-3.5 text-gray-400" />
                               <select value={savedSortBy} onChange={(e) => setSavedSortBy(e.target.value as SavedSortOption)} className="bg-transparent text-[11px] font-bold text-gray-500 outline-none cursor-pointer py-0.5 pr-0.5">
                                 <option value="newest">Newest Added</option>
@@ -1015,11 +1017,20 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 </div>
 
                 {/* SECTION 2: SCHEDULED (WEEKLY PLAN) */}
-                <div className="space-y-6 relative z-10">
+                <div className="space-y-4 relative z-10">
                   {/* SCHEDULED HEADER ROW */}
-                  <div className="flex flex-col gap-2 border-b border-gray-100 pb-2">
+                  <div className="flex flex-col gap-2 border-t border-gray-100 pt-4">
                     <div className="flex items-center justify-between gap-3">
-                      <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest pl-1">Scheduled</h3>
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 pl-1">
+                        <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Scheduled</h3>
+                        <span className="text-[12px] text-gray-400 font-medium">
+                          {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
+                        </span>
+                        <span className="text-[12px] text-gray-300">•</span>
+                        <span className="text-[12px] text-gray-400 font-medium">
+                          {Math.min(planner.length, 7)}/7 days filled
+                        </span>
+                      </div>
                       {planner.length > 0 && (
                         <div className="flex items-center justify-end gap-2 min-w-0">
                           {showClearWeekConfirm ? (
@@ -1058,17 +1069,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-4 pl-1">
-                      <span className="text-[12px] text-gray-400 font-medium whitespace-nowrap">
-                        {Math.min(planner.length, 7)}/7 days filled
-                      </span>
-                      <span className="text-[12px] text-gray-400 font-medium whitespace-nowrap">
-                        {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
-                      </span>
-                    </div>
                     {planner.length > 0 && (
-                      <div className="pl-1 pt-1">
-                        <div className={`flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between ${
+                      <div className="pl-1">
+                        <div className={`flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between border-b border-gray-100 pb-3 ${
                           bestCostSavingSwap ? 'text-emerald-900' : 'text-gray-600'
                         }`}>
                           <div className="min-w-0">
@@ -1129,10 +1132,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               </>
                             ) : (
                               <p className="mt-1 text-[12px] text-gray-600 leading-relaxed">
-                                Quietly watches your scheduled dinners for lower-cost alternatives in your Saved recipe list. Suggests swapping in a saved dinner when one fits your preferences and costs at least £1 less.
                                 {activeUnscheduledSavedCount > 0
-                                  ? ' Nothing cheaper found right now.'
-                                  : ' Save more dinners to give it options to compare.'}
+                                  ? 'No cheaper saved swap found right now.'
+                                  : 'Save more dinners to give the swap checker options.'}
                               </p>
                             )}
                           </div>

@@ -535,21 +535,24 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   }, []);
                 })()}
 
-                {isBacklog && (
+              </div>
+
+              {isBacklog && (
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
                   <span className="relative inline-flex">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setIsChoosingDay(!isChoosingDay);
                       }}
-                      className={`inline-flex h-5 items-center gap-1 px-1.5 rounded border text-[10.5px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                      className={`inline-flex h-7 items-center gap-1.5 px-2.5 rounded border text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         scheduledDate || showCheck
-                          ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700 font-semibold'
-                          : 'border-accent/25 bg-accent/10 text-accent font-semibold hover:bg-accent hover:border-accent hover:text-white'
+                          ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700'
+                          : 'border-accent/25 bg-accent/10 text-accent hover:bg-accent hover:border-accent hover:text-white'
                       }`}
                       title="Schedule"
                     >
-                      {!scheduledDate && !showCheck && <CalendarPlus className="w-3 h-3" />}
+                      {!scheduledDate && !showCheck && <CalendarPlus className="w-3.5 h-3.5" />}
                       <span>{scheduledDate ? 'Scheduled' : showCheck ? 'Scheduled' : 'Schedule'}</span>
                     </button>
 
@@ -597,39 +600,35 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       </div>
                     )}
                   </span>
-                )}
 
-                {isBacklog && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsEditingNote(true);
                     }}
-                    className={`inline-flex h-5 items-center gap-1 px-1.5 rounded border text-[10.5px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    className={`inline-flex h-7 items-center gap-1.5 px-2.5 rounded border text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                       personalNote
                         ? 'border-orange-100 bg-orange-50/70 text-orange-800 hover:bg-orange-50'
                         : 'border-gray-100 text-gray-400 hover:bg-gray-50 hover:text-gray-700'
                     }`}
                     title={personalNote ? 'Edit personal note' : 'Add personal note'}
                   >
-                    <StickyNote className="w-3 h-3" />
+                    <StickyNote className="w-3.5 h-3.5" />
                     <span>{noteButtonLabel}</span>
                   </button>
-                )}
 
-                {isBacklog && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onRemove();
                     }}
-                    className="inline-flex h-5 items-center gap-1 px-1.5 rounded border border-gray-100 text-[10.5px] font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
+                    className="inline-flex h-7 items-center gap-1.5 px-2.5 rounded border border-gray-100 text-[11px] font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
                     title="Archive"
                   >
                     <span>Archive</span>
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
