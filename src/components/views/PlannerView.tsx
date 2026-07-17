@@ -932,7 +932,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             </p>
                           )}
                           <p className="mt-1 text-[10.5px] leading-relaxed text-gray-400">
-                            The shopping-list estimate may change after pack sizes, shared ingredients and items you already have are considered.
+                            Schedule one or more of these saved dinners to generate your shopping list. Its estimate may change after pack sizes, shared ingredients and items you already have are considered.
                           </p>
                         </div>
                         <button
