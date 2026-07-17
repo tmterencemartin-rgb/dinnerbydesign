@@ -675,16 +675,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
                   <h3 className="text-[13.5px] font-bold text-gray-950">Plan my week</h3>
-                  <p className="text-[11.5px] text-gray-400 font-medium leading-relaxed">
-                    Create several dinners at once, with budget, protein and time preferences. Available proteins follow your personalised search preferences.
+                  <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
+                    Build a personalised week of dinners around your budget, household and available time. We’ll follow your preferences and reuse ingredients where possible to help reduce shopping costs and waste.
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowPlanWeek(prev => !prev)}
-                  className="h-9 px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0"
+                  className="h-9 self-start px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0 sm:self-auto"
                 >
-                  {showPlanWeek ? 'Close' : 'Create weekly dinners'}
+                  {showPlanWeek ? 'Close' : 'Build my week'}
                 </button>
               </div>
 
@@ -730,18 +730,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         />
                       </div>
                     </label>
-                    <PreferenceDropdown
-                      label="Proteins"
-                      options={allowedPlanProteinOptions.map(option => option.label)}
-                      selected={selectedPlanProteinLabels}
-                      onSelect={handlePlanProteinSelect}
-                      isMulti
-                      placeholder="Choose proteins"
-                      maxSelected={maxPlanProteinChoices}
-                      hint={`${planProteins.length}/${maxPlanProteinChoices}`}
-                      compact
-                      hideSelectedSummary
-                    />
+                    <div className="space-y-1">
+                      <PreferenceDropdown
+                        label="Proteins"
+                        options={allowedPlanProteinOptions.map(option => option.label)}
+                        selected={selectedPlanProteinLabels}
+                        onSelect={handlePlanProteinSelect}
+                        isMulti
+                        placeholder="Choose proteins"
+                        maxSelected={maxPlanProteinChoices}
+                        hint={`${planProteins.length}/${maxPlanProteinChoices}`}
+                        compact
+                        hideSelectedSummary
+                      />
+                      <p className="text-[9.5px] leading-snug text-gray-400">Available proteins reflect your personalised search preferences.</p>
+                    </div>
                     <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Time</span>
                       <select
