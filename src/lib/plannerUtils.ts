@@ -130,13 +130,11 @@ export const filterAndSortSavedRecipes = ({
   convenienceFilter: ConvenienceFilter;
   sortBy: SavedSortOption;
 }) => {
-  const safetyPrefs = buildSafetyPrefs(preferences);
   const query = searchQuery.trim();
 
   const processed = recipes
     .filter(recipe => {
       if (recipe.scheduledDate) return false;
-      if (safetyPrefs && !passesHardConstraints(recipe, safetyPrefs)) return false;
 
       if (query && !checkSearchMatch(recipe, query)) return false;
 

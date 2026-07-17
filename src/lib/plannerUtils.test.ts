@@ -99,6 +99,36 @@ describe('plannerUtils', () => {
     expect(result.map(recipe => recipe.title)).toEqual(['Quick Lentil Pasta']);
   });
 
+  it('keeps saved dinners visible even when they conflict with current preferences', () => {
+    const result = filterAndSortSavedRecipes({
+      recipes: [
+        baseRecipe({
+          title: 'Chicken Traybake',
+          description: 'saved before preferences changed',
+          mainProtein: 'chicken',
+          ingredients: ['chicken', 'potatoes'],
+          dietFlagsVerified: true,
+          isVegetarian: false,
+        }),
+      ],
+      preferences: {
+        ...preferences,
+        dietaryRule: 'vegetarian',
+      },
+      searchQuery: '',
+      quickPills: {
+        under20: false,
+        vegetarian: false,
+        highProtein: false,
+        batch: false,
+      },
+      convenienceFilter: 'all',
+      sortBy: 'newest',
+    });
+
+    expect(result.map(recipe => recipe.title)).toEqual(['Chicken Traybake']);
+  });
+
   it('finds lower-cost unscheduled saved dinners that can replace scheduled dinners', () => {
     const planner = [
       baseRecipe({
