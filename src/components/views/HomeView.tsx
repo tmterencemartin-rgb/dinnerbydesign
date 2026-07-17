@@ -448,6 +448,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
         await saveRecipe(recipe);
         window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
         showToast("Recipe saved!");
+        setSelectedItem(null);
+        setView('planner');
       }
     } catch (err: any) {
       addLog?.(`UI ERROR: toggle saved recipe failed: ${err?.message || err}`);
