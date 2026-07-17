@@ -1065,14 +1065,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const saveRecipe = async (item: Recipe | ReadyMeal) => {
-    if (!user) return;
+    if (!user) throw new Error('No signed-in user is available for saving recipes.');
     try {
+      addLog(`SAVE_RECIPE_START: ${item.title}`);
       const savedId = await saveRecipeDocument({
         firestoreDb: db,
         userId: user.uid,
         savedRecipes,
         item,
       });
+      if (!savedId) {
+        throw new Error('Save completed without a saved recipe id.');
+      }
       if (savedId) {
         setSavedRecipes(prev => {
           const existing = prev.find(recipe => recipe.id === savedId);
@@ -1095,13 +1099,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return [optimisticSaved, ...prev];
         });
       }
+      addLog(`SAVE_RECIPE_SUCCESS: ${item.title} (${savedId})`);
       return savedId;
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      addLog(`SAVE_RECIPE_ERROR: ${item.title}: ${message}`);
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/savedRecipes`);
       } catch (jsonErr: any) {
         setError(jsonErr.message);
       }
+      throw err;
     }
   };
 

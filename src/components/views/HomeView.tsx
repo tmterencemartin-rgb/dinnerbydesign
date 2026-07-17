@@ -445,7 +445,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
         await removeRecipe(existing.id!);
         showToast("Recipe removed from saved");
       } else {
-        await saveRecipe(recipe);
+        addLog?.(`UI ACTION: save recipe requested: ${recipe?.title || 'Untitled recipe'}`);
+        const savedId = await saveRecipe(recipe);
+        if (!savedId) throw new Error('Save did not return a saved recipe id.');
         window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
         showToast("Recipe saved!");
         setSelectedItem(null);
