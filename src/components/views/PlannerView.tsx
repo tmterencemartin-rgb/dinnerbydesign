@@ -666,7 +666,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 <p className="text-[12px] text-gray-400 font-medium text-center max-w-md">
                   {(!user || user.isAnonymous) 
                     ? "Keep track of your weekly dinners and browse your temporary collection below."
-                    : "Schedule your dinners, browse your saved collection, and build your shopping list for the week ahead."}
+                    : "Keep dinner organised: choose what to cook and when, then bring the ingredients together in one shopping list."}
                 </p>
               </div>
             </div>
