@@ -1067,12 +1067,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const saveRecipe = async (item: Recipe | ReadyMeal) => {
     if (!user) return;
     try {
-      return await saveRecipeDocument({
+      const savedId = await saveRecipeDocument({
         firestoreDb: db,
         userId: user.uid,
         savedRecipes,
         item,
       });
+      if (savedId) {
+        setSavedRecipes(prev => {
+          const existing = prev.find(recipe => recipe.id === savedId);
+          if (existing) {
+            return prev.map(recipe => (
+              recipe.id === savedId
+                ? { ...recipe, isArchived: false, archivedAt: null }
+                : recipe
+            ));
+          }
+
+          const optimisticSaved = {
+            id: savedId,
+            ...prepareSavedRecipeData(item, user.uid, null, {
+              savedAt: new Date(),
+              updatedAt: new Date(),
+            }),
+          } as SavedRecipe;
+
+          return [optimisticSaved, ...prev];
+        });
+      }
+      return savedId;
     } catch (err) {
       try {
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/savedRecipes`);
