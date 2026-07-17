@@ -238,7 +238,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         </div>
 
         {/* Action Row */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100/60">
+        <div className="flex flex-col gap-2 mt-4 pt-3 border-t border-gray-100/60">
           <div className="flex items-center gap-2">
             <button 
               onClick={(e) => {
@@ -261,11 +261,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           </div>
 
           {scheduledDate ? (
-            <span className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-0.5 rounded uppercase text-[9.5px] font-bold tracking-wider">
+            <span className="self-start bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-0.5 rounded uppercase text-[9.5px] font-bold tracking-wider">
               {scheduledDate.slice(0, 3)}
             </span>
           ) : (
-            <div className="relative">
+            <div className="relative self-start">
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
@@ -432,7 +432,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 {(() => {
                   const items: React.ReactNode[] = [];
                   
-                  if (recipe.mode === 'ready-made' && recipe.retailer) {
+                  if (isBacklog && recipe.mode === 'ready-made' && recipe.retailer) {
                     items.push(
                       <span key="retailer" className="uppercase font-semibold tracking-tight text-gray-500">
                         {recipe.retailer}
@@ -440,7 +440,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     );
                   }
                   
-                  if (shouldShowCuisineLabel) {
+                  if (isBacklog && shouldShowCuisineLabel) {
                     items.push(
                       <span key="cuisine" className="capitalize">
                         {recipe.cuisine}
@@ -448,7 +448,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     );
                   }
                   
-                  if (recipe.mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search')) {
+                  if (isBacklog && recipe.mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search')) {
                     items.push(
                       <span key="source" className="text-gray-500 font-bold uppercase tracking-wider text-[10px]">
                         {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
@@ -488,19 +488,21 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     );
                   }
 
-                  const cp = recipe.convenienceProfile || getConvenienceProfile(recipe);
-                  if (cp === 'scratch') {
-                    items.push(
-                      <span key="convenience-profile" className="bg-gray-50 text-gray-700 text-[11px] px-1.5 py-0.5 rounded font-medium">
-                        Homemade
-                      </span>
-                    );
-                  } else {
-                    items.push(
-                      <span key="convenience-profile" className="bg-gray-50 text-gray-600 text-[11px] px-1.5 py-0.5 rounded font-medium">
-                        Ready-made
-                      </span>
-                    );
+                  if (isBacklog) {
+                    const cp = recipe.convenienceProfile || getConvenienceProfile(recipe);
+                    if (cp === 'scratch') {
+                      items.push(
+                        <span key="convenience-profile" className="bg-gray-50 text-gray-700 text-[11px] px-1.5 py-0.5 rounded font-medium">
+                          Homemade
+                        </span>
+                      );
+                    } else {
+                      items.push(
+                        <span key="convenience-profile" className="bg-gray-50 text-gray-600 text-[11px] px-1.5 py-0.5 rounded font-medium">
+                          Ready-made
+                        </span>
+                      );
+                    }
                   }
  
                   const currentDiet = profile?.preferences?.dietaryRule || 'none';
