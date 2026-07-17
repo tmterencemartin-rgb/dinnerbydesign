@@ -1144,6 +1144,14 @@ export function createApp() {
                   },
                   {
                     "@type": "Question",
+                    "name": "Can DinnerByDesign plan dinners to a weekly budget?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes. Choose your number of dinners, household size and weekly budget. DinnerByDesign prioritises suitable lower-cost options and ingredient reuse, then shows the combined estimated dinner cost against your target. Schedule your chosen dinners to generate the shopping list."
+                    }
+                  },
+                  {
+                    "@type": "Question",
                     "name": "Is DinnerByDesign a video-based guided cooking app?",
                     "acceptedAnswer": {
                       "@type": "Answer",

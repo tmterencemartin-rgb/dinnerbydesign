@@ -318,7 +318,7 @@ export const LandingView: React.FC = () => {
           Find what to cook, what to buy <br /> and what it might cost.
         </h1>
         <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
-          An ad-free, UK-focused recipe-finding app. Try three real searches without an account, then create one when you want to save, schedule and shop from your results.
+          An ad-free, UK-focused dinner app for finding recipes, planning around your budget and building costed shopping lists. Try three real searches without an account, then create one when you want to save, schedule and plan your week.
         </p>
 
         {/* Action button grouping */}
@@ -585,7 +585,7 @@ export const LandingView: React.FC = () => {
                   </h4>
                 </div>
                 <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-                  Pin recipes and drop them onto the week.
+                  Build several dinners around your weekly budget and preferences, with ingredient reuse prioritised where possible.
                 </p>
               </div>
             </div>
@@ -604,7 +604,7 @@ export const LandingView: React.FC = () => {
                   </h4>
                 </div>
                 <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-                  Build one deduplicated, costed shopping list.
+                  Schedule your chosen dinners to generate one consolidated, estimated-cost shopping list.
                 </p>
               </div>
             </div>
@@ -655,6 +655,10 @@ export const LandingView: React.FC = () => {
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
                 <span><strong>Cost and nutrition per portion</strong>: see estimated cost-per-portion, calorie information and nutritional breakdowns.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
+                <span><strong>Budget-aware weekly planning</strong>: set a weekly target, build several personalised dinners and see their combined estimated cost before scheduling.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -788,6 +792,10 @@ export const LandingView: React.FC = () => {
               {
                 question: 'Does it estimate shopping costs?',
                 answer: 'Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners.'
+              },
+              {
+                question: 'Can DinnerByDesign plan dinners to a weekly budget?',
+                answer: 'Yes. Choose your number of dinners, household size and weekly budget. DinnerByDesign prioritises suitable lower-cost options and ingredient reuse, then shows the combined estimated dinner cost against your target. Schedule your chosen dinners to generate the shopping list.'
               },
               {
                 question: 'Is DinnerByDesign a video-based guided cooking app?',
