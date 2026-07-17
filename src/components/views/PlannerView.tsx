@@ -684,7 +684,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   onClick={() => setShowPlanWeek(prev => !prev)}
                   className="h-9 self-start px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0 sm:self-auto"
                 >
-                  {showPlanWeek ? 'Close' : 'Build my week'}
+                  {showPlanWeek ? 'Close' : 'Set up my week'}
                 </button>
               </div>
 
@@ -825,7 +825,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       className="h-10 px-4 rounded bg-dbd-accent text-white text-[11px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
                     >
                       {isPlanningWeek && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                      Create plan
+                      Build my week
                     </button>
                   </div>
                   {isPlanningWeek && (
