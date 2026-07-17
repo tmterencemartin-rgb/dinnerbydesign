@@ -554,7 +554,6 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       }`}
                       title="Schedule"
                     >
-                      {!scheduledDate && !showCheck && <CalendarPlus className="w-3.5 h-3.5" />}
                       <span>{scheduledDate ? 'Scheduled' : showCheck ? 'Scheduled' : 'Schedule'}</span>
                     </button>
 
@@ -615,7 +614,6 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     }`}
                     title={personalNote ? 'Edit personal note' : 'Add personal note'}
                   >
-                    <StickyNote className="w-3.5 h-3.5" />
                     <span>{noteButtonLabel}</span>
                   </button>
 
