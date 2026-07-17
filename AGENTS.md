@@ -74,3 +74,12 @@ When testing this web application locally, you can connect to your local backend
 - **Time options**: Weekly planner time supports Any, Quick, Under 30 mins, and Under 45 mins. Under-30 and under-45 selections set hard `maxTotalTime` limits in weekly-plan search params.
 - **Saved dinner quick filters**: The saved-list quick filters are Under 20 min, Vegetarian, High protein, and Batch-friendly. Cost remains a sort option through `Lowest cost first`, not a duplicate quick filter.
 - **Compact saved rows**: Do not show `Main salad` / `Side salad` in compact saved or planner rows. Salad type can remain visible in richer search-result/detail contexts where it helps comparison.
+
+# Programmatic SEO Experience Prototype
+
+- **Preview route**: The isolated budget-family public-page concept is available with `?design=budget-family` and is intentionally kept outside the standard signed-in navigation.
+- **Experience boundary**: Public SEO pages should demonstrate costs, ingredient reuse and the route into personalisation without adding SEO copy or category clutter to protected app views.
+- **Cost presentation**: Public cost claims must be labelled as estimates, show the price-check date, explain assumptions, and distinguish the coordinated basket from buying dinners separately.
+- **Affordability pilot boundary**: `AFFORDABILITY_PLANNER_PILOT` in `src/config/features.ts` gates the public budget-plan route and its planner handoff. Set it to `false` for an immediate product-level rollback without deleting the implementation.
+- **Shared planner path**: Public budget-plan handoffs prefill the existing `Plan my week` controls; they must not introduce a separate recipe-selection engine.
+- **Rollback checkpoint**: Local branch `backup/pre-affordability-planner-20260717` points to the repository state before this pilot was introduced.

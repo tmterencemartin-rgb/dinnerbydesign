@@ -28,6 +28,8 @@ export interface WeeklyPlanSettings {
   protein: string | string[];
   time: WeeklyPlanTime;
   homemadeCount: number;
+  minimiseCost?: boolean;
+  reuseIngredients?: boolean;
 }
 
 export type GenerateDinnerSuggestions = (
@@ -41,6 +43,7 @@ export type GenerateDinnerSuggestions = (
 export interface WeeklyPlanResult {
   dinners: Array<Recipe | ReadyMeal>;
   alert: string | null;
+  selectionSummary?: string;
 }
 
 export const parseIngredientLine = (ingredient: string) => {
@@ -312,6 +315,8 @@ export const createWeeklyDinnerPlan = async ({
     ? Number((budgetValue / settings.dinnerCount / servingsCount).toFixed(2))
     : undefined;
   const shouldApplyLowCostBias = perPortionBudget !== undefined && perPortionBudget <= 2;
+  const shouldMinimiseCost = settings.minimiseCost === true;
+  const shouldReuseIngredients = settings.reuseIngredients === true;
   const requestedProteins = normalizeRequestedProteins(settings.protein, settings.dinnerCount, preferences);
   const proteinText = getProteinsText(requestedProteins);
   const timeText = getTimeText(settings.time);
@@ -319,6 +324,15 @@ export const createWeeklyDinnerPlan = async ({
   const homemadeTarget = Math.min(settings.homemadeCount, settings.dinnerCount);
   const readyMadeTarget = Math.max(settings.dinnerCount - homemadeTarget, 0);
   const existingPlannerTitles = planner.map(item => item.title);
+  const optimisationText = [
+    shouldMinimiseCost ? 'prioritise the lowest credible full-shop cost' : '',
+    shouldReuseIngredients ? 'reuse core ingredients and opened packs across the dinners, with practical leftovers' : '',
+  ].filter(Boolean).join('; ');
+  const optimisationClause = optimisationText ? `; ${optimisationText}` : '';
+  const selectionSummary = [
+    shouldMinimiseCost ? 'lower shopping cost' : '',
+    shouldReuseIngredients ? 'ingredient reuse' : '',
+  ].filter(Boolean).join(' and ');
 
   const makeParams = (
     query: string,
@@ -332,7 +346,7 @@ export const createWeeklyDinnerPlan = async ({
     maxCostPerPortion: perPortionBudget,
     maxTotalTime: getMaxTotalTime(settings.time),
     isSimple: settings.time === 'quick' ? true : undefined,
-    isLowCost: shouldApplyLowCostBias,
+    isLowCost: shouldApplyLowCostBias || shouldMinimiseCost,
     excludeTitles: excludedTitles,
   }));
 
@@ -342,7 +356,7 @@ export const createWeeklyDinnerPlan = async ({
 
   if (homemadeTarget > 0) {
     try {
-      const query = `${homemadeTarget} cooked dinners for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}`;
+      const query = `${homemadeTarget} cooked dinners for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
       const params = makeParams(query, 'cook', homemadeTarget, existingPlannerTitles);
       const result = await generateDinnerSuggestions(params, preferences || undefined);
       addUniqueCandidates(result.recipes || [], homemadeItems, homemadeTarget, seenTitles);
@@ -353,7 +367,7 @@ export const createWeeklyDinnerPlan = async ({
 
   if (readyMadeTarget > 0) {
     try {
-      const readyQuery = `${readyMadeTarget} UK supermarket ready-made dinner products for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}`;
+      const readyQuery = `${readyMadeTarget} UK supermarket ready-made dinner products for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
       const readyParams = makeParams(readyQuery, 'ready-made', readyMadeTarget, [...existingPlannerTitles, ...homemadeItems.map(item => item.title)]);
       const readyResult = await generateDinnerSuggestions(readyParams, preferences || undefined);
       addUniqueCandidates(readyResult.readyMeals || [], readyMadeItems, readyMadeTarget, seenTitles);
@@ -368,7 +382,7 @@ export const createWeeklyDinnerPlan = async ({
 
   for (let i = homemadeItems.length; i < homemadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
-    const fallbackQuery = `${fallbackTimeText} cooked ${getProteinText(fallbackProtein)} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
+    const fallbackQuery = `${fallbackTimeText} cooked ${getProteinText(fallbackProtein)} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
     const fallbackParams = makeParams(fallbackQuery, 'cook', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
     try {
@@ -381,7 +395,7 @@ export const createWeeklyDinnerPlan = async ({
 
   for (let i = readyMadeItems.length; i < readyMadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[(homemadeTarget + i) % fallbackProteins.length];
-    const fallbackQuery = `${fallbackTimeText} UK supermarket ready-made ${getProteinText(fallbackProtein)} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}`;
+    const fallbackQuery = `${fallbackTimeText} UK supermarket ready-made ${getProteinText(fallbackProtein)} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
     const fallbackParams = makeParams(fallbackQuery, 'ready-made', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
     try {
@@ -407,5 +421,9 @@ export const createWeeklyDinnerPlan = async ({
     };
   }
 
-  return { dinners, alert: null };
+  return {
+    dinners,
+    alert: null,
+    selectionSummary: selectionSummary ? `Selected for ${selectionSummary}, while respecting your saved preferences.` : undefined,
+  };
 };

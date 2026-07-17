@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { serverTimestamp } from 'firebase/firestore';
 import { 
@@ -21,6 +21,10 @@ import { SavedRecipeItem } from '../SavedRecipeItem';
 import { PreferenceDropdown } from '../ui/PreferenceDropdown';
 import { buildSupermarketPlanSummary } from '../../lib/shoppingUtils';
 import { safeStorage } from '../../lib/storage';
+import {
+  AFFORDABILITY_PLANNER_PILOT,
+  AFFORDABILITY_PLANNER_PRESET_KEY,
+} from '../../config/features';
 import {
   ConvenienceFilter,
   SavedSortOption,
@@ -220,8 +224,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planProteins, setPlanProteins] = useState<string[]>(() => getDefaultPlanProteins(5, allowedPlanProteinOptions));
   const [planTime, setPlanTime] = useState<WeeklyPlanTime>('any');
   const [planHomemadeCount, setPlanHomemadeCount] = useState<number>(5);
+  const [planMinimiseCost, setPlanMinimiseCost] = useState(true);
+  const [planReuseIngredients, setPlanReuseIngredients] = useState(true);
+  const [planPresetNotice, setPlanPresetNotice] = useState<string | null>(null);
   const [planAlert, setPlanAlert] = useState<string | null>(null);
   const [isPlanningWeek, setIsPlanningWeek] = useState(false);
+  const hasLoadedAffordabilityPreset = useRef(false);
 
   useEffect(() => {
     const target = safeStorage.session.getItem('dbd_planner_target');
@@ -234,12 +242,36 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   }, []);
 
   useEffect(() => {
+    if (!AFFORDABILITY_PLANNER_PILOT) return;
+    const preset = safeStorage.session.getItem(AFFORDABILITY_PLANNER_PRESET_KEY);
+    if (!preset) return;
+
+    safeStorage.session.removeItem(AFFORDABILITY_PLANNER_PRESET_KEY);
+    try {
+      const parsed = JSON.parse(preset);
+      hasLoadedAffordabilityPreset.current = true;
+      if ([3, 5, 7].includes(parsed.dinnerCount)) setPlanDinnerCount(parsed.dinnerCount);
+      if (typeof parsed.budget === 'string') setPlanBudget(parsed.budget);
+      if (Number.isFinite(parsed.servings)) setPlanServings(Math.min(6, Math.max(1, parsed.servings)));
+      setPlanMinimiseCost(parsed.minimiseCost !== false);
+      setPlanReuseIngredients(parsed.reuseIngredients !== false);
+      setPlanHomemadeCount(parsed.dinnerCount || 5);
+      setShowPlanWeek(true);
+      setPlanPresetNotice('Budget-family settings are ready. Review them, then create your personalised dinners.');
+    } catch {
+      setPlanPresetNotice('The budget plan could not be loaded. You can still create it using the controls below.');
+      setShowPlanWeek(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hasLoadedAffordabilityPreset.current) return;
     setPlanServings(profile?.preferences?.servings || 2);
   }, [profile?.preferences?.servings]);
 
   useEffect(() => {
     setPlanAlert(null);
-  }, [planDinnerCount, planBudget, planServings, planProteins, planTime, planHomemadeCount]);
+  }, [planDinnerCount, planBudget, planServings, planProteins, planTime, planHomemadeCount, planMinimiseCost, planReuseIngredients]);
 
   useEffect(() => {
     setPlanHomemadeCount(prev => Math.min(prev, planDinnerCount));
@@ -397,6 +429,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
           protein: planProteins,
           time: planTime,
           homemadeCount: planHomemadeCount,
+          minimiseCost: AFFORDABILITY_PLANNER_PILOT && planMinimiseCost,
+          reuseIngredients: AFFORDABILITY_PLANNER_PILOT && planReuseIngredients,
         },
         planner,
         preferences: profile?.preferences,
@@ -419,7 +453,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
         return;
       }
 
-      showToast(`Added ${result.dinners.length} ${result.dinners.length === 1 ? 'dinner' : 'dinners'} to Saved.`);
+      showToast(`Added ${result.dinners.length} ${result.dinners.length === 1 ? 'dinner' : 'dinners'} to Saved${result.selectionSummary ? ' with your cost and reuse priorities applied' : ''}.`);
       setPlanAlert(null);
       setShowPlanWeek(false);
     } catch (err: any) {
@@ -736,12 +770,50 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </select>
                     </label>
                   </div>
+                  {AFFORDABILITY_PLANNER_PILOT && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <label className="flex items-start gap-2.5 rounded border border-gray-100 bg-gray-50/70 px-3 py-2.5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={planMinimiseCost}
+                          onChange={(e) => setPlanMinimiseCost(e.target.checked)}
+                          className="mt-0.5 h-4 w-4 accent-dbd-accent"
+                        />
+                        <span>
+                          <span className="block text-[11px] font-bold text-gray-700">Minimise shopping cost</span>
+                          <span className="block mt-0.5 text-[10.5px] leading-relaxed text-gray-400">Prioritise lower-cost dinners within your weekly budget.</span>
+                        </span>
+                      </label>
+                      <label className="flex items-start gap-2.5 rounded border border-gray-100 bg-gray-50/70 px-3 py-2.5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={planReuseIngredients}
+                          onChange={(e) => setPlanReuseIngredients(e.target.checked)}
+                          className="mt-0.5 h-4 w-4 accent-dbd-accent"
+                        />
+                        <span>
+                          <span className="block text-[11px] font-bold text-gray-700">Reuse ingredients</span>
+                          <span className="block mt-0.5 text-[10.5px] leading-relaxed text-gray-400">Prefer dinners that share packs and create practical leftovers.</span>
+                        </span>
+                      </label>
+                    </div>
+                  )}
+                  {planPresetNotice && (
+                    <div className="text-[11px] text-gray-600 leading-relaxed bg-gray-50 border border-gray-100 px-3 py-2 flex items-start justify-between gap-3">
+                      <span>{planPresetNotice}</span>
+                      <button type="button" onClick={() => setPlanPresetNotice(null)} className="shrink-0 font-bold text-gray-400 hover:text-gray-700">Dismiss</button>
+                    </div>
+                  )}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <p className="text-[11px] text-gray-400 font-medium leading-relaxed">
                       {Number(planBudget) > 0
                         ? `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}: about £${(Number(planBudget) / planDinnerCount).toFixed(2)} per dinner, or £${(Number(planBudget) / planDinnerCount / planServings).toFixed(2)} per person.`
                         : `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}.`}
-                      {' '}Includes {planHomemadeCount} homemade {planHomemadeCount === 1 ? 'dinner' : 'dinners'} and {planDinnerCount - planHomemadeCount} ready-made {planDinnerCount - planHomemadeCount === 1 ? 'dinner' : 'dinners'}. Results are added to Saved so you can schedule them yourself.
+                      {' '}Includes {planHomemadeCount} homemade {planHomemadeCount === 1 ? 'dinner' : 'dinners'} and {planDinnerCount - planHomemadeCount} ready-made {planDinnerCount - planHomemadeCount === 1 ? 'dinner' : 'dinners'}.
+                      {AFFORDABILITY_PLANNER_PILOT && (planMinimiseCost || planReuseIngredients)
+                        ? ` Selection also prioritises ${[planMinimiseCost ? 'lower shopping cost' : '', planReuseIngredients ? 'ingredient reuse' : ''].filter(Boolean).join(' and ')}.`
+                        : ''}
+                      {' '}Results are added to Saved so you can schedule them yourself.
                     </p>
                     <button
                       type="button"

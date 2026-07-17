@@ -253,6 +253,52 @@ describe('plannerUtils', () => {
     expect(generatedQueries[1]).toContain('1 UK supermarket ready-made dinner products');
   });
 
+  it('applies the affordability pilot priorities to weekly generation', async () => {
+    let capturedQuery = '';
+    let capturedLowCost = false;
+
+    const result = await createWeeklyDinnerPlan({
+      settings: {
+        dinnerCount: 3,
+        budget: '24',
+        servings: 4,
+        protein: 'mixed',
+        time: 'any',
+        homemadeCount: 3,
+        minimiseCost: true,
+        reuseIngredients: true,
+      },
+      planner: [],
+      preferences,
+      generateDinnerSuggestions: async params => {
+        capturedQuery = params.query;
+        capturedLowCost = params.isLowCost === true;
+        return {
+          recipes: ['One', 'Two', 'Three'].map((title) => ({
+            title,
+            description: 'Affordable dinner',
+            ingredients: ['onion', 'carrot'],
+            instructions: ['Cook'],
+            cuisine: 'British',
+            totalServings: 4,
+            totalTime: 30,
+            saladType: 'none' as const,
+            isVegetarian: true,
+            isPescatarian: true,
+            isVegan: true,
+            dietFlagsVerified: true,
+          })),
+        };
+      },
+      addLog: () => {},
+    });
+
+    expect(capturedLowCost).toBe(true);
+    expect(capturedQuery).toContain('lowest credible full-shop cost');
+    expect(capturedQuery).toContain('reuse core ingredients and opened packs');
+    expect(result.selectionSummary).toContain('lower shopping cost and ingredient reuse');
+  });
+
   it('passes no-preference protein and under 45 minute timing into weekly planning params', async () => {
     let capturedQuery = '';
     let capturedMaxTime: number | undefined;

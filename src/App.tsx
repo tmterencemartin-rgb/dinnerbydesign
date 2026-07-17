@@ -19,10 +19,17 @@ import { AdminDashboard } from './components/views/AdminDashboard';
 import { LandingView } from './components/views/LandingView';
 import { SuccessView } from './components/views/SuccessView';
 import { SearchPageDesignConcept } from './components/views/SearchPageDesignConcept';
+import { BudgetFamilySeoConcept } from './components/views/BudgetFamilySeoConcept';
 import { Toast } from './components/ui/Toast';
 import { InstallPrompt } from './components/InstallPrompt';
 import { BookmarkPrompt } from './components/BookmarkPrompt';
 import { AppView } from './types';
+import { safeStorage } from './lib/storage';
+import {
+  AFFORDABILITY_PLANNER_PENDING_KEY,
+  AFFORDABILITY_PLANNER_PILOT,
+  AFFORDABILITY_PLANNER_PRESET_KEY,
+} from './config/features';
 
 import { StatusBanner } from './components/StatusBanner';
 
@@ -182,6 +189,7 @@ const AppContent = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showInlineSuccess, setShowInlineSuccess] = useState(false);
   const isSearchDesignPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('design') === 'search-page';
+  const isBudgetFamilySeoPreview = AFFORDABILITY_PLANNER_PILOT && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('design') === 'budget-family';
 
   const setView = (v: AppView, highlightOrFilters?: string | boolean | null) => {
     if (typeof highlightOrFilters === 'string') {
@@ -214,6 +222,13 @@ const AppContent = () => {
       setView('home');
     }
   }, [isGuest, view]);
+
+  React.useEffect(() => {
+    if (!AFFORDABILITY_PLANNER_PILOT || isGuest) return;
+    if (safeStorage.session.getItem(AFFORDABILITY_PLANNER_PENDING_KEY) !== 'true') return;
+    safeStorage.session.removeItem(AFFORDABILITY_PLANNER_PENDING_KEY);
+    setView('planner');
+  }, [isGuest]);
 
   // Check the active auth state upon return from subscription purchase,
   // and if a valid user session exists, route them straight to the success view.
@@ -250,6 +265,32 @@ const AppContent = () => {
           }}
         />
       </Layout>
+    );
+  }
+
+  if (isBudgetFamilySeoPreview) {
+    return (
+      <BudgetFamilySeoConcept
+        onBack={() => {
+          window.history.pushState({}, '', '/?view=landing');
+          setView('landing');
+        }}
+        onUsePlan={() => {
+          safeStorage.session.setItem(AFFORDABILITY_PLANNER_PRESET_KEY, JSON.stringify({
+            dinnerCount: 5,
+            budget: '30',
+            servings: 4,
+            minimiseCost: true,
+            reuseIngredients: true,
+          }));
+          if (isGuest) {
+            safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+            setView('signin');
+            return;
+          }
+          setView('planner');
+        }}
+      />
     );
   }
 
