@@ -397,7 +397,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clearHighlight = () => setHighlightInternal(null);
-  const planner = React.useMemo(() => savedRecipes.filter(r => !!r.scheduledDate), [savedRecipes]);
+  const planner = React.useMemo(() => savedRecipes.filter(r => !r.isArchived && !!r.scheduledDate), [savedRecipes]);
 
   const healingRef = useRef<Set<string>>(new Set());
 

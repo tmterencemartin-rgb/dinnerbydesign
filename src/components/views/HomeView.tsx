@@ -406,8 +406,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   }, []);
   const [searchPlaceholderOverride, setSearchPlaceholderOverride] = React.useState<string | undefined>();
 
-  const isSaved = (recipe: any) => savedRecipes.some(r => isSameRecipe(r, recipe));
-  const isScheduled = (recipe: any) => savedRecipes.some(r => isSameRecipe(r, recipe) && !!r.scheduledDate);
+  const isSaved = (recipe: any) => savedRecipes.some(r => !r.isArchived && isSameRecipe(r, recipe));
+  const isScheduled = (recipe: any) => savedRecipes.some(r => !r.isArchived && isSameRecipe(r, recipe) && !!r.scheduledDate);
 
   const isCompareSelected = (item: any) => compareItems.some(compareItem => isSameRecipe(compareItem, item));
 
@@ -439,7 +439,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       goToSignIn();
       return;
     }
-    const existing = savedRecipes.find(r => isSameRecipe(r, recipe));
+    const existing = savedRecipes.find(r => !r.isArchived && isSameRecipe(r, recipe));
     try {
       if (existing) {
         await removeRecipe(existing.id!);
