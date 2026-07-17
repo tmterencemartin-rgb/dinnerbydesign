@@ -545,10 +545,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       className={`inline-flex h-5 items-center gap-1 px-1.5 rounded border text-[10.5px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                         scheduledDate || showCheck
                           ? 'bg-emerald-50/60 border-emerald-100 text-emerald-700 font-semibold'
-                          : 'border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                          : 'border-accent/25 bg-accent/10 text-accent font-semibold hover:bg-accent hover:border-accent hover:text-white'
                       }`}
                       title="Schedule"
                     >
+                      {!scheduledDate && !showCheck && <CalendarPlus className="w-3 h-3" />}
                       <span>{scheduledDate ? 'Scheduled' : showCheck ? 'Scheduled' : 'Schedule'}</span>
                     </button>
 
