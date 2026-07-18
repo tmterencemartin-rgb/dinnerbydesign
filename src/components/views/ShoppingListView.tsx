@@ -500,7 +500,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
             </div>
           </div>
         ) : (
-          <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-4">
+          <div className="space-y-6 max-w-6xl mx-auto">
             {categories.length === 0 && pantryGotItItems.length > 0 && (
                <div className="py-6 text-center space-y-3 px-4 sm:px-6 bg-emerald-50/20 rounded max-w-lg mx-auto">
                   <div className="bg-white border border-gray-100 w-10 h-10 rounded flex items-center justify-center mx-auto mb-2">

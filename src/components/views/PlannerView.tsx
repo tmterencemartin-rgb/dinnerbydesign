@@ -852,7 +852,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
             {/* Unified Save & Schedule Panel */}
             <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
-              <div className="px-1 sm:px-3.5 py-3 sm:py-5 space-y-6">
+              <div className="py-3 sm:py-5 space-y-6">
                 
                 {/* SECTION 1: SAVED (BACKLOG) */}
                 <div id="saved-recipes-section" className="space-y-2.5 relative z-20 scroll-mt-[150px]">
