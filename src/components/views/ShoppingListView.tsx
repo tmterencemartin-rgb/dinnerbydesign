@@ -352,7 +352,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         </div>
         
         <div className="flex flex-col items-center pb-2 pt-0 space-y-2">
-          <h2 className="text-[20px] font-bold text-gray-900">Shop</h2>
+          <h2 className="text-[20px] font-bold text-gray-900">Shopping list</h2>
           {hasVisibleShoppingItems && (
             <div className="flex flex-col items-center gap-2 text-gray-400">
               <div className="flex flex-wrap items-center justify-center gap-4">
@@ -370,17 +370,14 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                           key={totalEstimatedCost}
                           className="text-[12px] font-bold text-accent"
                         >
-                          Est. £{totalEstimatedCost.toFixed(2)} {numberOfNights > 0 ? `for ${numberOfNights} ${numberOfNights === 1 ? 'dinner' : 'dinners'}` : ''}
+                          Estimated shopping-list cost: £{totalEstimatedCost.toFixed(2)} {numberOfNights > 0 ? `for ${numberOfNights} ${numberOfNights === 1 ? 'dinner' : 'dinners'}` : ''}
                         </motion.p>
                         <Tooltip
                           text={
                             <div className="text-left space-y-1.5 p-0.5 leading-normal font-sans">
                               <p className="font-bold text-[12px] text-white border-b border-white/10 pb-1 mb-1">How is this calculated?</p>
                               <p className="text-gray-300 text-[11px] font-medium leading-relaxed">
-                                This estimate reflects the <strong>exact pro-rata cost of the precise ingredient weights</strong> used in your planned dinners (e.g., exactly 100g of lobster meat) and assumes you have basic cupboard staples like oil and seasoning.
-                              </p>
-                              <p className="text-gray-300 text-[11px] font-medium leading-relaxed">
-                                Because supermarkets sell items in fixed pack sizes, your actual receipt total at the checkout will be higher than this baseline minimum.
+                                This is a <strong>pro-rata estimate based on the ingredient quantities</strong> used in your planned dinners and assumes you have basic cupboard staples such as oil and seasoning.
                               </p>
                             </div>
                           }
@@ -456,7 +453,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                 </div>
               </div>
               <p className="text-[11px] font-medium text-gray-500 text-center leading-relaxed w-full max-w-2xl mx-auto">
-                <span className="font-semibold text-gray-700">Please note:</span> our figures are baseline minimums based on exact pro-rata ingredient proportions. As supermarkets sell in full packs (e.g. chicken breasts are sold in packs of two  or 500g of minced beef), expect your actual checkout total to be higher.
+                <span className="font-semibold text-gray-700">Expected checkout total:</span> supermarkets sell ingredients in full packs—for example, chicken breasts in packs of two or minced beef in 500g packs—so your actual checkout total is likely to be higher.
               </p>
             </div>
           )}

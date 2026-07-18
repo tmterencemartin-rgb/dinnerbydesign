@@ -707,7 +707,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     placeholderOverride={searchPlaceholderOverride}
                   />
                 </div>
-                <Tooltip text="Open Preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
+                <Tooltip text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
                   <button
                     type="button"
                     onClick={() => {
@@ -741,8 +741,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     className="text-left text-[11.5px] text-gray-400 hover:text-gray-700 leading-relaxed font-semibold transition-colors"
                   >
                     {hasNearbyRetailers
-                      ? `Prioritising nearby retailers: ${supermarkets.slice(0, 3).join(', ')}${supermarkets.length > 3 ? '...' : ''}. Change this in Preferences.`
-                      : 'Want more useful Ready-made results? Add nearby retailers in Preferences.'}
+                      ? `Prioritising nearby retailers: ${supermarkets.slice(0, 3).join(', ')}${supermarkets.length > 3 ? '...' : ''}. Change this in search preferences.`
+                      : 'Want more useful Ready-made results? Add nearby retailers in search preferences.'}
                   </button>
                 </div>
               )}
@@ -1213,7 +1213,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   <p className="text-[13px] font-bold text-gray-900 leading-tight">No more matching dinners found</p>
                 </div>
                 <p className="text-[12px] text-gray-500 leading-relaxed pl-6">
-                  Try broadening your search term or loosening some of your permanent preferences in Settings.
+                  Try broadening your search term or loosening some of your search preferences.
                 </p>
               </div>
             )}             {((currentRecipes?.length || 0) + (currentReadyMeals?.length || 0) > 0) && (

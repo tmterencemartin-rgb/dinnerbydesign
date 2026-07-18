@@ -62,7 +62,7 @@ export const SearchOnboardingHelper: React.FC<SearchOnboardingHelperProps> = ({ 
               ))}
             </div>
             <p className="text-[12.5px] text-dbd-ink-3 font-medium leading-relaxed pt-0.5">
-              Use Preferences for diet, budget, portions and ingredients to avoid.
+              Use search preferences for diet, budget, portions and ingredients to avoid.
             </p>
           </div>
         </div>

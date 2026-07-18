@@ -95,7 +95,7 @@ export const BudgetFamilySeoConcept: React.FC<BudgetFamilySeoConceptProps> = ({ 
           </div>
           <div className="flex min-h-[46px] flex-1 flex-col items-center justify-center border-b-2 border-transparent py-2 text-dbd-ink-3">
             <ShoppingCart className="mb-1 h-4 w-4" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest">Shop</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest">Shopping</span>
           </div>
         </div>
       </header>

@@ -600,7 +600,7 @@ export const LandingView: React.FC = () => {
                 <div className="flex items-center gap-2 mb-1 sm:mb-3">
                   <span className="hidden text-[11px] font-mono text-dbd-accent-mid font-bold sm:inline">03</span>
                   <h4 className="text-[14px] sm:text-[15px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-ink">
-                    Shop
+                    Shopping
                   </h4>
                 </div>
                 <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-normal">

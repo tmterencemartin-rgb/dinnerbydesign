@@ -690,7 +690,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   onClick={() => setShowPlanWeek(prev => !prev)}
                   className="h-9 self-start px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0 sm:self-auto"
                 >
-                  {showPlanWeek ? 'Close' : 'Set up my week'}
+                  {showPlanWeek ? 'Close' : 'Plan my week'}
                 </button>
               </div>
 
@@ -911,7 +911,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     <div className="rounded border border-gray-100 bg-gray-50/70 px-3 py-3 sm:px-4">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Estimated week</p>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Estimated dinner cost</p>
                           <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
                             <span className="text-[22px] font-bold tracking-tight text-gray-950">£{builtWeekCost.estimatedTotal.toFixed(2)}</span>
                             <span className="text-[11px] font-medium text-gray-500">
@@ -1351,6 +1351,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                       }}
                                       className="p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-accent rounded transition-colors"
                                       title="Print"
+                                      aria-label={`Print ${entry.title}`}
                                     >
                                       <List size={14} />
                                     </button>
@@ -1367,7 +1368,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         }
                                       }}
                                       className="p-1.5 bg-gray-50 hover:bg-accent/5 text-gray-400 hover:text-accent rounded transition-colors"
-                                      title="Move to Saved"
+                                      title="Remove from schedule"
+                                      aria-label={`Remove ${entry.title} from schedule`}
                                     >
                                       <ArrowUpCircle size={14} />
                                     </button>
@@ -1375,6 +1377,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                       onClick={async (e) => {
                                         e.stopPropagation();
                                         if (checkReadOnly("Your trial has ended. Upgrade to edit your collection.")) return;
+                                        if (!window.confirm(`Permanently delete ${entry.title}? This cannot be undone.`)) return;
                                         if (entry.id) {
                                           try {
                                             await removeRecipe(entry.id);
@@ -1384,7 +1387,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         }
                                       }}
                                       className="p-1.5 bg-red-50 hover:bg-red-100 text-red-500 rounded transition-colors"
-                                      title="Delete"
+                                      title="Delete permanently"
+                                      aria-label={`Permanently delete ${entry.title}`}
                                     >
                                       <Trash size={14} />
                                     </button>
@@ -1499,8 +1503,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           </p>
                           <p className="mt-1 text-[12px] text-gray-500 leading-relaxed">
                             {activeShoppingListTotal > 0
-                              ? `Your Shopping List currently estimates about £${activeShoppingListTotal.toFixed(2)} for this plan.`
-                              : 'Build the Shopping List to see what this week is likely to cost.'}
+                              ? `Your estimated shopping-list cost is about £${activeShoppingListTotal.toFixed(2)} for this plan.`
+                              : 'Build the shopping list to see what this week is likely to cost.'}
                           </p>
                           <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
                             Saved dinners are not included until you schedule them. Prices are based on {supermarketLabel} where available and may vary by pack size and retailer.

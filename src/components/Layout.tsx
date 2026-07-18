@@ -33,9 +33,17 @@ const logoVariants = {
 };
 
 export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSearch }) => {
-  const { user, goToSignIn } = useAuth();
+  const { user, goToSignIn, showToast } = useAuth();
+
+  const requireAccount = useCallback((message: string) => {
+    if (user && !user.isAnonymous) return false;
+    showToast(message, 'Sign In', goToSignIn);
+    return true;
+  }, [goToSignIn, showToast, user]);
 
   const goToSavedRecipes = useCallback(() => {
+    if (requireAccount('Sign in to save and schedule dinners.')) return;
+
     if (view === 'planner') {
       document.getElementById('saved-recipes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
@@ -43,7 +51,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
 
     safeStorage.session.setItem('dbd_planner_target', 'saved-recipes');
     setView('planner');
-  }, [setView, view]);
+  }, [requireAccount, setView, view]);
+
+  const goToShopping = useCallback(() => {
+    if (requireAccount('Sign in to create and manage your shopping list.')) return;
+    setView('shopping');
+  }, [requireAccount, setView]);
 
   // Revert any leftover dark mode class on the body/html element completely
   useEffect(() => {
@@ -124,11 +137,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
               <span className="text-[10px] font-semibold uppercase tracking-widest">Save & Schedule</span>
             </button>
             <button 
-              onClick={() => setView('shopping')}
+              onClick={goToShopping}
               className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'shopping' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <ShoppingCart className="w-4 h-4 mb-1 md:mb-1.5" />
-              <span className="text-[10px] font-semibold uppercase tracking-widest">Shop</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest">Shopping</span>
             </button>
           </div>
         </div>
