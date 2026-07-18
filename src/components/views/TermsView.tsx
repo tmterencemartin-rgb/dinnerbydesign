@@ -2,76 +2,44 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 
-interface TermsViewProps {
-  setView: (view: any) => void;
-}
+interface TermsViewProps { setView: (view: any) => void; }
+
+const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <section className="space-y-3 border-t border-gray-100 pt-6">
+    <h2 className="text-[18px] font-bold text-gray-900">{title}</h2>
+    <div className="space-y-3 text-[14px] leading-relaxed text-gray-600">{children}</div>
+  </section>
+);
 
 export const TermsView: React.FC<TermsViewProps> = ({ setView }) => {
   const { user } = useAuth();
   const isGuest = !user || user.isAnonymous;
-  const backTarget = isGuest ? 'landing' : 'settings';
-  const backLabel = isGuest ? '← Back to Landing' : '← Back to Settings';
-
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -25 }}
-      className="max-w-2xl mx-auto px-4 py-12 pb-20"
-    >
-      <button 
-        id="back-to-settings-btn-terms"
-        onClick={() => {
-          setView(backTarget); 
-        }}
-        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 transition-colors mb-6 bg-transparent border-none p-1.5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded"
-      >
-        <span>{backLabel}</span>
+    <motion.main initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="mx-auto max-w-2xl px-4 py-12 pb-20 select-text">
+      <button type="button" onClick={() => setView(isGuest ? 'landing' : 'settings')} className="mb-6 rounded p-1.5 text-[12px] font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent">
+        ← {isGuest ? 'Back to DinnerByDesign' : 'Back to Settings'}
       </button>
-
-      <div className="prose prose-sm max-w-none">
-        <h1 className="text-[24px] font-bold text-gray-900 mb-6">Terms of Service</h1>
-        <div className="space-y-6 text-[14px] text-gray-600 leading-relaxed">
-          <section className="space-y-3">
-            <h2 className="text-[18px] font-bold text-gray-900">1. Acceptance of Terms</h2>
-            <p>
-              By using DinnerByDesign, you agree to these terms. If you do not agree, please do not use the service.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-[18px] font-bold text-gray-900">2. Nature of Service</h2>
-            <p>
-              This application provides generated dinner recipe suggestions. While we strive for accuracy, users should always verify details, especially ingredient safety and cooking times, before preparation.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-[18px] font-bold text-gray-900">3. User Responsibility</h2>
-            <p>
-              You are responsible for maintaining the privacy of your session and for all activities that occur under your user ID.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-[18px] font-bold text-gray-900">4. Modifications</h2>
-            <p>
-              We reserve the right to modify or terminate the service at any time without prior notice.
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-[18px] font-bold text-gray-900">5. Independent Application & Attribution</h2>
-            <p>
-              DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, or food brand mentioned on this platform. Chef names are used solely as descriptive search filters to help users find recipes in a particular culinary style. All recipes are sourced from their respective websites and full attribution is provided. DinnerByDesign claims no ownership of third-party recipe content.
-            </p>
-          </section>
-
-          <div className="pt-8 border-t border-gray-100">
-            <p className="text-[12px] font-mono text-gray-400">Last updated: May 2026</p>
-          </div>
-        </div>
+      <header className="space-y-3">
+        <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Service and subscription terms</p>
+        <h1 className="text-[24px] font-bold leading-9 text-gray-950">Terms of Service</h1>
+        <p className="text-[14px] leading-relaxed text-gray-600">These terms explain the service, free trial, paid subscriptions, cancellation and the responsibilities that apply when using DinnerByDesign.</p>
+        <p className="text-[11.5px] text-gray-400">Last updated: 18 July 2026</p>
+      </header>
+      <div className="mt-8 space-y-6">
+        <Section title="1. About these terms"><p>By creating an account, buying a subscription or using DinnerByDesign, you agree to these terms. If you do not agree, do not use the service. DinnerByDesign can be contacted at <a className="font-semibold text-dbd-accent hover:underline" href="mailto:chef@dinnerbydesign.app">chef@dinnerbydesign.app</a>.</p></Section>
+        <Section title="2. Nature of the service"><p>DinnerByDesign provides dinner search, generated suggestions, saved dinners, weekly planning, shopping lists and planning estimates. Information may be generated or assembled automatically and can be incomplete or wrong.</p><p>It is not medical, dietetic, food-safety or financial advice. Check ingredients, allergens, product labels, cooking guidance, availability, prices and external source instructions before relying on a result.</p></Section>
+        <Section title="3. Free access and the seven-day trial"><p>A guest can make up to three searches before creating an account. A newly created account receives seven days of full app access. The account trial starts when the account is created and ends at the time shown in Settings.</p><p><strong className="text-gray-900">The free account trial does not automatically become a paid subscription and no payment method is required to start it.</strong> If no subscription is purchased, the account becomes read-only when the trial ends. Existing information remains viewable, but actions such as new searches, saving and planning may be restricted.</p></Section>
+        <Section title="4. Paid subscriptions"><p>Users can actively purchase a monthly subscription for £2.99 or an annual subscription for £30.00 through Stripe Checkout. The exact price and billing interval are shown before payment and confirmed by Stripe.</p><p>The paid subscription begins when checkout is completed. It renews automatically at the selected interval until cancelled. Stripe processes card details, payments, receipts and invoices; DinnerByDesign does not store complete card details on its servers.</p><p>Any promotional or permanent access may have different payment and renewal arrangements. Those arrangements will be explained when access is granted.</p></Section>
+        <Section title="5. Cancellation and continued access"><p>A paid subscription can be managed or cancelled through Settings → Subscription → Manage Billing &amp; Subscription. This opens Stripe’s secure customer portal. Support is available by email if the portal cannot be accessed.</p><p>Cancellation normally stops the next renewal. Unless Stripe or applicable law states otherwise, paid access continues until the end of the current paid billing period and no early-cancellation fee is charged. Cancelling a subscription does not automatically delete the account or its saved data.</p></Section>
+        <Section title="6. Cooling-off rights and refunds"><p>Nothing in these terms limits rights provided by UK consumer law. Depending on the circumstances, consumers may have statutory cancellation, refund or remedy rights for online services or digital content.</p><p>Refund requests should be sent promptly to <a className="font-semibold text-dbd-accent hover:underline" href="mailto:chef@dinnerbydesign.app">chef@dinnerbydesign.app</a> with the account email and payment date. Each request will be considered against the service supplied, Stripe’s payment record and applicable law. Stripe may take additional time to return an approved refund to the original payment method.</p></Section>
+        <Section title="7. Failed payments and account access"><p>If a renewal payment fails, Stripe may retry it and request updated payment details. DinnerByDesign currently provides a five-day payment grace period for eligible past-due subscriptions. If payment is not restored, the account may become read-only.</p><p>Restoring payment can reactivate paid access after Stripe confirms the subscription status. DinnerByDesign is not responsible for delays caused by banks, card networks or payment-provider processing.</p></Section>
+        <Section title="8. Price and service changes"><p>Prices, plans and included features may change. Changes will not alter a completed payment retrospectively. Where a change affects a future renewal, reasonable advance information will be provided where required so the user can decide whether to continue.</p><p>Features may be changed, suspended or withdrawn to maintain security, comply with law, respond to third-party changes or improve the service. We will avoid materially reducing a paid service without reasonable notice where practicable.</p></Section>
+        <Section title="9. External content and independence"><p>DinnerByDesign is independent and is not endorsed by chefs, publishers, supermarkets, manufacturers or brands mentioned in the app unless clearly stated. External content remains the responsibility and property of its publisher.</p><p>A link or attribution does not mean that an external party approved DinnerByDesign’s generated summary. Follow the current external page when exact source instructions or product information matter.</p></Section>
+        <Section title="10. Acceptable use and accounts"><p>Keep account credentials secure and provide accurate account and payment information. Do not misuse the service, interfere with its operation, attempt unauthorised access, evade usage limits, scrape it at scale or use it unlawfully.</p><p>Access may be restricted or terminated where reasonably necessary for security, abuse prevention, non-payment or serious breach of these terms.</p></Section>
+        <Section title="11. Availability and liability"><p>The service depends on hosting, authentication, database, AI, email, payment and third-party content providers. Continuous or error-free availability is not guaranteed. Users should retain any information they cannot afford to lose.</p><p>Nothing excludes liability that cannot lawfully be excluded, including liability for fraud or personal injury caused by negligence. Subject to those rights, DinnerByDesign is not responsible for losses caused by reasonable reliance on an unverified recipe, estimate, product listing or external website.</p></Section>
+        <Section title="12. Account deletion and ending the service"><p>Subscription cancellation and account deletion are separate. Account deletion can be requested through the account controls and may require recent authentication. Some payment, security or operational records may be retained where legally required or reasonably necessary.</p><p>If DinnerByDesign is discontinued, reasonable notice will be provided where practicable. Any rights relating to prepaid access will be handled under applicable consumer law.</p></Section>
+        <Section title="13. Changes, governing law and contact"><p>These terms may be updated when the service, law or commercial arrangements change. Material changes will be communicated where appropriate. Continued use after the effective date means the updated terms apply, without affecting rights that arose earlier.</p><p>These terms are governed by the laws applicable in England and Wales, without removing any mandatory consumer protection available where the user lives. Questions can be sent to <a className="font-semibold text-dbd-accent hover:underline" href="mailto:chef@dinnerbydesign.app">chef@dinnerbydesign.app</a>.</p></Section>
       </div>
-    </motion.div>
+    </motion.main>
   );
 };

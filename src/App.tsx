@@ -79,14 +79,14 @@ const AppContent = () => {
         };
       case 'privacy':
         return {
-          title: 'Privacy & Cookies — DinnerByDesign',
-          description: 'Read how DinnerByDesign handles account data, saved dinners, essential browser storage, cookies and privacy.',
+          title: 'Privacy, Cookies & AI Data — DinnerByDesign',
+          description: 'Read how DinnerByDesign handles account data, AI processing, service providers, retention, cookies and UK data-protection rights.',
           canonicalPath: '/privacy'
         };
       case 'terms':
         return {
           title: 'Terms of Service — DinnerByDesign',
-          description: 'Review the terms of service, trial rules, and subscription details for DinnerByDesign.',
+          description: 'Review DinnerByDesign service terms, free-trial rules, subscription prices, renewals, cancellation, refunds and account access.',
           canonicalPath: '/terms'
         };
       case 'pricing-methodology':

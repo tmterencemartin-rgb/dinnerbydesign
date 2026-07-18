@@ -70,6 +70,11 @@ export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) =
       <p>Dinner suggestions and concise descriptions may be generated to match the user’s search, household, dietary rules, budget, cooking time and other preferences. When fuller information is requested, the app may generate an original ingredient list, method and practical summary for the suggested dinner.</p>
       <p>Generated wording is not a verbatim reproduction of an external recipe. Users should treat it as a practical suggestion that still requires normal judgement and safety checks.</p>
     </Section>
+    <Section title="Where AI and automation are used">
+      <p>Automated AI services help interpret searches, create candidate dinners, expand ingredient lists and methods, describe why a result may suit the user, and build candidate weekly plans. Structured software then applies required fields, dietary checks, exclusions and other consistency rules.</p>
+      <p>Results are not routinely reviewed by a person before display. Automation can produce a plausible but incorrect recipe detail, source, product name, price, retailer or explanation. Important information must therefore be checked against the current source, product label or retailer listing.</p>
+      <p>These systems support dinner planning; they do not make decisions with legal or similarly significant effects about users.</p>
+    </Section>
     <Section title="External sources and attribution">
       <p>Where an identifiable recipe source is available, DinnerByDesign displays or links to the relevant publisher or source domain. External recipes remain the property of their publishers.</p>
       <p>A source link does not mean the publisher created, approved or endorsed DinnerByDesign’s generated summary. When exact source instructions matter, follow the publisher’s current page.</p>
@@ -77,6 +82,11 @@ export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) =
     <Section title="How search results are selected">
       <p>Search terms establish the user’s immediate intent. Active dietary rules, allergies and exclusions act as hard constraints. Other settings—such as cuisine, time, budget, cooking method, preferred sources, nearby retailers and nutrition priorities—help narrow or rank suitable options.</p>
       <p>Some preferences are priorities rather than guarantees. The app may return the closest suitable alternatives when the request and the available constraints cannot all be satisfied.</p>
+    </Section>
+    <Section title="Commercial relationships and ranking independence">
+      <p>DinnerByDesign does not currently accept payment from chefs, publishers, supermarkets or manufacturers to place a result higher. Results are not ranked according to advertising spend, commission or sponsorship.</p>
+      <p>External recipe and retailer links are not currently presented as affiliate links. If a future link can generate commission, or if content is sponsored or paid for, that relationship will be clearly labelled close to the relevant result.</p>
+      <p>User-selected preferred sources and retailers can influence relevance and ranking because the user has asked for that preference. This is different from commercial promotion and does not guarantee that the preferred source will appear when another result is materially more suitable.</p>
     </Section>
     <Section title="How Plan My Week selects dinners">
       <p>Weekly planning considers the requested number of dinners, household size, weekly budget, available time, protein choices and saved search preferences. When selected, it also prioritises lower estimated costs and ingredients that can be reused across more than one dinner.</p>
@@ -89,6 +99,10 @@ export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) =
     <Section title="Verification and limitations">
       <p>DinnerByDesign applies structured checks for dietary conflicts, required fields and retailer restrictions, but it does not manually test every recipe or continuously verify every external page and supermarket listing.</p>
       <p>Report information that appears inaccurate, unavailable, unsafe or incorrectly attributed so it can be reviewed.</p>
+    </Section>
+    <Section title="What ad-free means">
+      <p>“Ad-free” means the core app does not display third-party banner advertising, behavioural adverts or paid placements disguised as ordinary dinner results. References to products, supermarkets and publishers are part of the search and planning function.</p>
+      <p>If the commercial model changes, paid promotion will not be represented as an independent recommendation and this methodology will be updated.</p>
     </Section>
   </MethodologyShell>
 );

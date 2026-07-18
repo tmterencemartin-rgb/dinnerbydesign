@@ -1044,14 +1044,14 @@ export function createApp() {
 
         const pathName = req.path;
         if (pathName === "/privacy") {
-          title = "Privacy & Cookies — DinnerByDesign";
-          description = "Read how DinnerByDesign handles account data, saved dinners, essential browser storage, cookies and privacy.";
+          title = "Privacy, Cookies & AI Data — DinnerByDesign";
+          description = "Read how DinnerByDesign handles account data, AI processing, service providers, retention, cookies and UK data-protection rights.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/privacy";
         } else if (pathName === "/terms") {
           title = "Terms of Service — DinnerByDesign";
-          description = "Review terms of use, trials, and premium account rules for the DinnerByDesign service.";
+          description = "Review DinnerByDesign service terms, free-trial rules, subscription prices, renewals, cancellation, refunds and account access.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/terms";
