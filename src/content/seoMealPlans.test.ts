@@ -9,6 +9,11 @@ describe('SEO meal-plan publishing data', () => {
     expect(plan.dinners.reduce((sum, dinner) => sum + dinner.estimatedCost, 0)).toBeCloseTo(plan.estimatedIngredientCost);
     expect(plan.expectedCheckoutCost).toBeLessThanOrEqual(plan.budgetTarget);
     expect(plan.reviewedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(plan.editorialOwner).toBeTruthy();
+    expect(plan.introduction.join(' ').length).toBeGreaterThan(600);
+    expect(plan.shoppingStrategy).toHaveLength(4);
+    expect(plan.budgetPrinciples).toHaveLength(4);
+    expect(plan.flexibleScenarios).toHaveLength(4);
   });
 
   it('uses the same canonical path in structured publishing data', () => {

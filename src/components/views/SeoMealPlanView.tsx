@@ -20,8 +20,13 @@ export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise 
         <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Affordable weekly dinner plan</p>
         <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{plan.title}</h1>
         <p className="mt-4 max-w-2xl text-[15px] leading-7 text-dbd-ink-3">{plan.description}</p>
-        <p className="mt-3 text-xs text-dbd-ink-3">Published and price basis reviewed 18 July 2026.</p>
+        <p className="mt-3 text-xs text-dbd-ink-3">By {plan.editorialOwner} · Published and price basis reviewed 18 July 2026.</p>
       </header>
+
+      <section className="mt-8 border-y border-dbd-rule/50 py-6">
+        <h2 className="text-xl font-bold">A practical £40 week, not five separate shopping lists</h2>
+        <div className="mt-4 space-y-4 text-[15px] leading-7 text-dbd-ink-3">{plan.introduction.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
+      </section>
 
       <section className="mt-8 grid gap-3 sm:grid-cols-3" aria-label="Plan summary">
         <div className="rounded border border-dbd-rule/60 bg-white p-4"><p className="text-[10px] font-bold uppercase tracking-wider text-dbd-ink-3">Dinner target</p><p className="mt-1 text-2xl font-bold">{money(plan.budgetTarget)}</p><p className="mt-1 text-xs text-dbd-ink-3">Five dinners for two</p></div>
@@ -42,9 +47,15 @@ export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise 
         </div>
       </section>
 
+      <section className="mt-10"><h2 className="text-xl font-bold">The shopping strategy behind the week</h2><div className="mt-4 space-y-4 text-[15px] leading-7 text-dbd-ink-3">{plan.shoppingStrategy.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></section>
+
+      <section className="mt-10"><h2 className="text-xl font-bold">How we kept the plan under £40</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{plan.budgetPrinciples.map(item => <div key={item.title} className="rounded border border-dbd-rule/60 bg-white p-4"><h3 className="text-sm font-bold">{item.title}</h3><p className="mt-1 text-xs leading-5 text-dbd-ink-3">{item.explanation}</p></div>)}</div></section>
+
       <section className="mt-10"><h2 className="text-xl font-bold">How ingredients are reused</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{plan.sharedIngredients.map(item => <div key={item.ingredient} className="rounded border border-dbd-rule/60 bg-white p-4"><h3 className="text-sm font-bold">{item.ingredient}</h3><p className="mt-1 text-xs leading-5 text-dbd-ink-3">{item.uses}</p></div>)}</div></section>
 
       <section className="mt-10"><h2 className="text-xl font-bold">Practical substitutions</h2><div className="mt-4 space-y-3">{plan.substitutions.map(item => <div key={item.swap} className="rounded border border-dbd-rule/60 bg-white p-4"><h3 className="text-sm font-bold">{item.swap}</h3><p className="mt-1 text-xs leading-5 text-dbd-ink-3">{item.effect}</p></div>)}</div></section>
+
+      <section className="mt-10"><h2 className="text-xl font-bold">Make the plan work in different circumstances</h2><div className="mt-4 space-y-5">{plan.flexibleScenarios.map(item => <div key={item.question}><h3 className="text-sm font-bold">{item.question}</h3><p className="mt-1 text-sm leading-6 text-dbd-ink-3">{item.answer}</p></div>)}</div></section>
 
       <section className="mt-10 rounded border border-dbd-rule/60 bg-white p-5"><h2 className="text-xl font-bold">How this plan was selected</h2><div className="mt-3 space-y-3 text-sm leading-6 text-dbd-ink-3"><p>The plan balances five different dinners with a mixture of chicken, pulses and eggs. Ingredients are deliberately repeated so that opened packs can be used again rather than becoming five disconnected shopping lists.</p><p>It is not guaranteed to be the mathematically cheapest possible basket. The expected checkout estimate rounds consolidated ingredients to representative full packs and excludes common cupboard quantities such as salt, pepper and cooking oil.</p><p><a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">Read the ingredient-pricing methodology</a> or <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">see how dinners are selected</a>.</p></div></section>
 

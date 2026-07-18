@@ -163431,7 +163431,13 @@ var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
   priceBasisDate: "2026-07-18",
   publishedAt: "2026-07-18",
   reviewedAt: "2026-07-18",
+  editorialOwner: "DinnerByDesign editorial team",
   status: "published",
+  introduction: [
+    "Planning five different dinners can easily create five disconnected shopping lists. This week is designed differently: useful ingredients are deliberately carried from one dinner into another, while chicken, pulses and eggs provide variety without requiring five separate main-protein purchases.",
+    "The \xA340 target refers to the expected checkout cost of representative complete packs for two people. The lower ingredient figure shows the estimated value actually used across the ten portions. Keeping both figures visible makes it easier to distinguish the food consumed from the cash likely to be needed at the supermarket.",
+    "This is a practical starting point rather than a fixed prescription. Brands, pack sizes, retailer, location and ingredients already at home will change the total. The substitutions below show how to adapt the week without losing its underlying cost-control structure."
+  ],
   dinners: [
     { day: "Monday", title: "Paprika chicken and pepper traybake", description: "Chicken, peppers, onions and potatoes roasted together with paprika.", totalTimeMinutes: 40, estimatedCost: 6.4, sharedIngredientNote: "Keep half the chicken, one pepper and some cooked potatoes for later dinners." },
     { day: "Tuesday", title: "Tomato and lentil pasta", description: "A simple red-lentil tomato sauce with pasta and a little cheddar.", totalTimeMinutes: 30, estimatedCost: 3.75, sharedIngredientNote: "Uses the same onions, garlic, tomatoes and cheddar needed later in the week." },
@@ -163451,6 +163457,24 @@ var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
     { swap: "Replace chicken with an extra tin of chickpeas and 250g mushrooms.", effect: "Creates a vegetarian week and should reduce the reference estimate." },
     { swap: "Use frozen spinach and mixed peppers.", effect: "Can reduce waste and may cost less than buying several fresh packs." },
     { swap: "Use brown rice or wholewheat pasta already at home.", effect: "Keeps the plan structure while avoiding an unnecessary new pack." }
+  ],
+  shoppingStrategy: [
+    "Buy one main chicken pack and divide it between Monday\u2019s traybake and Wednesday\u2019s fried rice. Cook and reserve Wednesday\u2019s portion promptly rather than treating it as an accidental leftover.",
+    "Use one bag each of potatoes, onions and carrots across several dinners. These ingredients are inexpensive, flexible and less likely to leave an unusable remainder than several specialist side dishes.",
+    "Open tins and longer-life packs later in the week. Lentils, beans, chickpeas, pasta and rice provide budget resilience if a fresh ingredient becomes unavailable or needs replacing.",
+    "Cheddar and yoghurt are supporting ingredients rather than the centre of a dinner. Small quantities add flavour across several nights without requiring a separate topping or sauce for each dish."
+  ],
+  budgetPrinciples: [
+    { title: "One chicken purchase, two dinners", explanation: "Chicken is used twice, reducing the need to buy another higher-cost main protein for Wednesday." },
+    { title: "Three pulse-led dinners", explanation: "Lentils, beans and chickpeas keep the week varied while protecting the overall target." },
+    { title: "Repeated vegetables with different roles", explanation: "Peppers, carrots, onions, potatoes and tomatoes appear in different combinations rather than as identical leftovers." },
+    { title: "No promotional price dependency", explanation: "The plan does not require a loyalty-card offer, multibuy or temporary reduction to remain below its stated reference target." }
+  ],
+  flexibleScenarios: [
+    { question: "If you already have rice, pasta or spices", answer: "Mark those items as already in stock when personalising the plan. The expected checkout estimate should fall because no new pack is required." },
+    { question: "If you are cooking for three or four", answer: "Increase the household size in Plan My Week. Quantities will scale, but complete-pack rounding means the total will not always rise in a perfectly straight line." },
+    { question: "If you shop at a different supermarket", answer: "Keep the dinner structure and compare equivalent standard packs. Treat \xA337.90 as the reference-basket estimate rather than a promise from a particular retailer." },
+    { question: "If you want a vegetarian week", answer: "Replace the chicken with chickpeas and mushrooms and apply the vegetarian rule before generating alternatives." }
   ]
 };
 var FIVE_DINNERS_FOR_TWO_UNDER_40_PATH = "/dinner-plans/5-dinners-for-2-under-40";
@@ -163477,7 +163501,11 @@ function renderFiveDinnersForTwoInitialHtml() {
   const dinners = plan.dinners.map((dinner) => `<article><p>${escapeHtml2(dinner.day)}</p><h3>${escapeHtml2(dinner.title)}</h3><p>${escapeHtml2(dinner.description)}</p><p>About ${dinner.totalTimeMinutes} minutes \xB7 ${formatMoney(dinner.estimatedCost)}</p><p>${escapeHtml2(dinner.sharedIngredientNote)}</p></article>`).join("");
   const shared = plan.sharedIngredients.map((item) => `<li><strong>${escapeHtml2(item.ingredient)}:</strong> ${escapeHtml2(item.uses)}</li>`).join("");
   const substitutions = plan.substitutions.map((item) => `<li><strong>${escapeHtml2(item.swap)}</strong> ${escapeHtml2(item.effect)}</li>`).join("");
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml2(plan.title)}</h1><p>${escapeHtml2(plan.description)}</p><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p><p>These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation.</p></section><section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a> or <a href="/recipe-methodology">see how dinners are selected</a>.</p></section><section><h2>Questions about this \xA340 plan</h2><h3>Does the \xA340 target include full supermarket packs?</h3><p>Yes. The expected checkout figure uses representative complete packs.</p><h3>Will my actual checkout be exactly \xA337.90?</h3><p>No. Retailer, availability, substitutions, promotions and ingredients already at home will change it.</p></section><p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+  const introduction = plan.introduction.map((paragraph) => `<p>${escapeHtml2(paragraph)}</p>`).join("");
+  const strategy = plan.shoppingStrategy.map((paragraph) => `<p>${escapeHtml2(paragraph)}</p>`).join("");
+  const principles = plan.budgetPrinciples.map((item) => `<li><strong>${escapeHtml2(item.title)}:</strong> ${escapeHtml2(item.explanation)}</li>`).join("");
+  const scenarios = plan.flexibleScenarios.map((item) => `<h3>${escapeHtml2(item.question)}</h3><p>${escapeHtml2(item.answer)}</p>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml2(plan.title)}</h1><p>${escapeHtml2(plan.description)}</p><p>By ${escapeHtml2(plan.editorialOwner)} \xB7 Reviewed 18 July 2026</p><section><h2>A practical \xA340 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p><p>These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation.</p></section><section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under \xA340</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a> or <a href="/recipe-methodology">see how dinners are selected</a>.</p></section><section><h2>Questions about this \xA340 plan</h2><h3>Does the \xA340 target include full supermarket packs?</h3><p>Yes. The expected checkout figure uses representative complete packs.</p><h3>Will my actual checkout be exactly \xA337.90?</h3><p>No. Retailer, availability, substitutions, promotions and ingredients already at home will change it.</p></section><p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
 }
 
 // src/api-server.ts
