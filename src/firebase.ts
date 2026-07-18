@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import {
+  browserPopupRedirectResolver,
   browserLocalPersistence,
   getAuth,
   indexedDBLocalPersistence,
@@ -20,8 +21,10 @@ const isNativeRuntime = () => {
 
 export const auth = (() => {
   try {
+    const isNative = isNativeRuntime();
     return initializeAuth(app, {
-      persistence: isNativeRuntime() ? browserLocalPersistence : indexedDBLocalPersistence
+      persistence: isNative ? browserLocalPersistence : indexedDBLocalPersistence,
+      ...(isNative ? {} : { popupRedirectResolver: browserPopupRedirectResolver })
     });
   } catch {
     return getAuth(app);

@@ -7,6 +7,7 @@ import { ArrowLeft, Search, Download, ExternalLink, CreditCard, Trash2, Users, A
 import { motion } from 'framer-motion';
 import { getApiUrl } from '../../lib/api';
 import { IngredientPriceCatalogueAdmin } from '../admin/IngredientPriceCatalogueAdmin';
+import { PUBLISHED_ARTICLES } from '../../content/publicArticles';
 
 type AdminStatusFilter = AccessStatus | 'all' | 'permanent_access' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
 
@@ -828,6 +829,32 @@ export const AdminDashboard: React.FC = () => {
         ) : (
           <div className="space-y-1">
             <IngredientPriceCatalogueAdmin />
+            <section className="rounded border border-gray-100 bg-white p-2.5" aria-labelledby="published-articles-heading">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h2 id="published-articles-heading" className="text-[13px] font-bold text-gray-950">Published articles</h2>
+                  <p className="mt-0.5 text-[11px] font-medium text-gray-400">Open every public editorial page from one place.</p>
+                </div>
+                <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{PUBLISHED_ARTICLES.length} live</span>
+              </div>
+              <div className="mt-2 grid gap-1.5 md:grid-cols-2">
+                {PUBLISHED_ARTICLES.map(article => (
+                  <a
+                    key={article.path}
+                    href={article.path}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group flex min-h-14 items-center justify-between gap-3 rounded border border-gray-100 bg-gray-50/60 px-3 py-2 transition-colors hover:border-dbd-accent/30 hover:bg-white"
+                  >
+                    <span className="min-w-0">
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">{article.category}</span>
+                      <span className="mt-0.5 block text-xs font-bold leading-4 text-gray-800 group-hover:text-dbd-accent">{article.title}</span>
+                    </span>
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0 text-gray-400 group-hover:text-dbd-accent" aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </section>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
               {[
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },

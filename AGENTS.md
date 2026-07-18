@@ -56,6 +56,8 @@ When testing this web application locally, you can connect to your local backend
 
 # Authentication & Password Recovery Fallbacks
 
+- **Google sign-in on web**: Web authentication must initialise Firebase with `browserPopupRedirectResolver`. Keep `127.0.0.1`, `localhost`, and the live DinnerByDesign domains in Firebase Authentication's authorised-domain list so the same Google sign-in flow works in local and production testing.
+
 - **Password Reset Deliverability**:
   - Because Cloud Run dynamic staging and preview domains change frequently and are not whitelisted in the Firebase Console's Authorized Domains list by default, the app is configured to fall back gracefully.
   - If a password reset attempt using custom `actionCodeSettings` (which provides a continue URL redirection to the app) fails for *any reason*, the system automatically catches the exception and prints a warnings diagnostic. 
@@ -91,3 +93,13 @@ When testing this web application locally, you can connect to your local backend
 - **Shared planner path**: Public budget-plan handoffs prefill the existing `Plan my week` controls; they must not introduce a separate recipe-selection engine.
 - **Built-week cost feedback**: After weekly dinners are generated, show their combined estimated dinner cost, per-portion cost, budget variance, and pricing coverage above Saved. Keep this explicitly distinct from the later shopping-list estimate based on scheduled dinners, pack sizes, shared ingredients, and pantry items.
 - **Rollback checkpoint**: Local branch `backup/pre-affordability-planner-20260717` points to the repository state before this pilot was introduced.
+
+# Public Guide Publishing Workflow
+
+- **Single publishing source**: Every public guide and dinner-plan page must be represented in the structured publishing data used by the build. Do not maintain a second disconnected list of published URLs.
+- **Automatic sitemap inclusion**: A page with published status must be added to the generated sitemap as part of the production build. Draft, retired, protected and `noindex` pages must not be included.
+- **Build failure on omissions**: The production build or its tests must fail when a published public page is missing from the generated sitemap, has no canonical URL, or cannot produce its expected static HTML entry point.
+- **Post-deployment verification**: After publishing a new guide, verify that the live page returns HTTP 200, its canonical URL is correct, its structured data is present, and the live sitemap contains the URL.
+- **Search Console sitemap policy**: Keep one canonical sitemap URL submitted in Google Search Console. Do not resubmit it after every guide; Google periodically retrieves changes from the existing submission.
+- **Priority indexing**: Use URL Inspection and request indexing only for important, time-sensitive or cornerstone pages. Manual indexing is an optional publishing acceleration step, not a requirement for every new guide, and it does not guarantee inclusion in search results.
+- **Internal linking**: Each new guide must have at least one relevant link from another public page and should link onwards to the most appropriate dinner plan, methodology page or `Plan my week` route.
