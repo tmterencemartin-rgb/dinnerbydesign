@@ -45,6 +45,10 @@
       "destination": "/googleadd2ba831c07f99d.html"
     },
     {
+      "source": "/dinner-plans/5-dinners-for-2-under-40",
+      "destination": "/api/server.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

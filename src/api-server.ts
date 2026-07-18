@@ -7,6 +7,7 @@ import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getApps, initializeApp } from "firebase-admin/app";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
+import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
 // Safe dynamic lazy loading of firebase-applet-config.json to support serverless / ephemeral environments
 let firebaseConfigCache: any = null;
 function getFirebaseConfig() {
@@ -1041,9 +1042,18 @@ export function createApp() {
         let canonicalPath = "/";
         let noIndex = false;
         let schema: any = null;
+        let initialBody: string | null = null;
 
         const pathName = req.path;
-        if (pathName === "/privacy") {
+        if (pathName === FIVE_DINNERS_FOR_TWO_UNDER_40_PATH) {
+          title = "5 Affordable Dinners for Two Under £40 | DinnerByDesign";
+          description = "Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.";
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = FIVE_DINNERS_FOR_TWO_UNDER_40_PATH;
+          schema = getFiveDinnersForTwoJsonLd();
+          initialBody = renderFiveDinnersForTwoInitialHtml();
+        } else if (pathName === "/privacy") {
           title = "Privacy, Cookies & AI Data — DinnerByDesign";
           description = "Read how DinnerByDesign handles account data, AI processing, service providers, retention, cookies and UK data-protection rights.";
           shareTitle = title;
@@ -1225,7 +1235,12 @@ export function createApp() {
         // Insert schema if present
         if (schema) {
           const schemaString = `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(schema)}</script>`;
+          html = html.replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '');
           html = html.replace("</head>", `${schemaString}\n</head>`);
+        }
+
+        if (initialBody) {
+          html = html.replace('<div id="root"></div>', initialBody);
         }
 
         res.setHeader("Content-Type", "text/html");

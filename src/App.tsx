@@ -26,6 +26,8 @@ import { LandingView } from './components/views/LandingView';
 import { SuccessView } from './components/views/SuccessView';
 import { SearchPageDesignConcept } from './components/views/SearchPageDesignConcept';
 import { BudgetFamilySeoConcept } from './components/views/BudgetFamilySeoConcept';
+import { SeoMealPlanView } from './components/views/SeoMealPlanView';
+import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
 import { Toast } from './components/ui/Toast';
 import { InstallPrompt } from './components/InstallPrompt';
 import { BookmarkPrompt } from './components/BookmarkPrompt';
@@ -133,6 +135,13 @@ const AppContent = () => {
           description: 'DinnerByDesign Administration and Management.',
           canonicalPath: '/admin',
           noIndex: true
+        };
+      case 'meal-plan-five-for-two-under-40':
+        return {
+          title: '5 Affordable Dinners for Two Under £40 | DinnerByDesign',
+          description: 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.',
+          canonicalPath: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
+          jsonLd: getFiveDinnersForTwoJsonLd()
         };
       case 'home':
       case 'landing':
@@ -246,7 +255,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -359,6 +368,18 @@ const AppContent = () => {
 
   if (view === 'nutrition-methodology') {
     return <NutritionMethodologyView setView={setView} />;
+  }
+
+  if (view === 'meal-plan-five-for-two-under-40') {
+    return <SeoMealPlanView onPersonalise={() => {
+      safeStorage.session.setItem(AFFORDABILITY_PLANNER_PRESET_KEY, JSON.stringify({ dinnerCount: 5, budget: '40', servings: 2, minimiseCost: true, reuseIngredients: true }));
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
   }
 
   if (view === 'success') {

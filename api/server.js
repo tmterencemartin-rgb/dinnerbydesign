@@ -18808,8 +18808,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml2;
-    function escapeHtml2(string) {
+    module2.exports = escapeHtml3;
+    function escapeHtml3(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -18940,13 +18940,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message) {
-      var body = escapeHtml2(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml3(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -22784,7 +22784,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -22837,7 +22837,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml2(msg));
+      var doc = createHtmlDocument("Error", escapeHtml3(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -22937,7 +22937,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml3(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23341,7 +23341,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23680,7 +23680,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml2(address);
+          var u = escapeHtml3(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -23808,7 +23808,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -23894,7 +23894,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml3(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -163417,6 +163417,69 @@ async function sendEmail({
   }
 }
 
+// src/content/seoMealPlans.ts
+var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
+  slug: "5-dinners-for-2-under-40",
+  title: "5 affordable dinners for two under \xA340",
+  shortTitle: "Five dinners for two under \xA340",
+  description: "A five-night UK dinner plan for two, designed around a \xA340 target with shared ingredients, practical substitutions and transparent reference-price estimates.",
+  householdSize: 2,
+  dinnerCount: 5,
+  budgetTarget: 40,
+  estimatedIngredientCost: 25.35,
+  expectedCheckoutCost: 37.9,
+  priceBasisDate: "2026-07-18",
+  publishedAt: "2026-07-18",
+  reviewedAt: "2026-07-18",
+  status: "published",
+  dinners: [
+    { day: "Monday", title: "Paprika chicken and pepper traybake", description: "Chicken, peppers, onions and potatoes roasted together with paprika.", totalTimeMinutes: 40, estimatedCost: 6.4, sharedIngredientNote: "Keep half the chicken, one pepper and some cooked potatoes for later dinners." },
+    { day: "Tuesday", title: "Tomato and lentil pasta", description: "A simple red-lentil tomato sauce with pasta and a little cheddar.", totalTimeMinutes: 30, estimatedCost: 3.75, sharedIngredientNote: "Uses the same onions, garlic, tomatoes and cheddar needed later in the week." },
+    { day: "Wednesday", title: "Chicken and vegetable fried rice", description: "Monday\u2019s reserved chicken with rice, pepper, carrot and egg.", totalTimeMinutes: 20, estimatedCost: 4.8, sharedIngredientNote: "Turns reserved chicken and vegetables into a quick midweek dinner." },
+    { day: "Thursday", title: "Loaded bean and potato bowls", description: "Crisp potatoes topped with tomato beans, cheddar and yoghurt.", totalTimeMinutes: 35, estimatedCost: 4.2, sharedIngredientNote: "Finishes the potatoes, tomatoes and cheddar without requiring another main protein." },
+    { day: "Friday", title: "Carrot, chickpea and spinach curry", description: "A tomato-based chickpea curry served with the remaining rice and yoghurt.", totalTimeMinutes: 30, estimatedCost: 6.2, sharedIngredientNote: "Uses the remaining carrots, spinach, tomatoes, rice and yoghurt." }
+  ],
+  sharedIngredients: [
+    { ingredient: "Onions and garlic", uses: "The traybake, pasta sauce and curry." },
+    { ingredient: "Peppers and carrots", uses: "The traybake, fried rice and curry." },
+    { ingredient: "Potatoes", uses: "Monday\u2019s traybake and Thursday\u2019s loaded bowls." },
+    { ingredient: "Rice", uses: "Wednesday\u2019s fried rice and Friday\u2019s curry." },
+    { ingredient: "Tomatoes", uses: "The pasta sauce, loaded beans and curry." },
+    { ingredient: "Cheddar and yoghurt", uses: "Small amounts across Tuesday, Thursday and Friday." }
+  ],
+  substitutions: [
+    { swap: "Replace chicken with an extra tin of chickpeas and 250g mushrooms.", effect: "Creates a vegetarian week and should reduce the reference estimate." },
+    { swap: "Use frozen spinach and mixed peppers.", effect: "Can reduce waste and may cost less than buying several fresh packs." },
+    { swap: "Use brown rice or wholewheat pasta already at home.", effect: "Keeps the plan structure while avoiding an unnecessary new pack." }
+  ]
+};
+var FIVE_DINNERS_FOR_TWO_UNDER_40_PATH = "/dinner-plans/5-dinners-for-2-under-40";
+function getFiveDinnersForTwoJsonLd() {
+  const url = `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "CollectionPage", "@id": `${url}#page`, url, name: FIVE_DINNERS_FOR_TWO_UNDER_40.title, description: FIVE_DINNERS_FOR_TWO_UNDER_40.description, datePublished: FIVE_DINNERS_FOR_TWO_UNDER_40.publishedAt, dateModified: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt, isPartOf: { "@type": "WebSite", name: "DinnerByDesign", url: "https://dinnerbydesign.app/" }, mainEntity: { "@id": `${url}#plan` } },
+      { "@type": "ItemList", "@id": `${url}#plan`, name: FIVE_DINNERS_FOR_TWO_UNDER_40.shortTitle, numberOfItems: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.length, itemListElement: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.map((dinner, index) => ({ "@type": "ListItem", position: index + 1, name: dinner.title })) },
+      { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "DinnerByDesign", item: "https://dinnerbydesign.app/" }, { "@type": "ListItem", position: 2, name: "Affordable dinner plans", item: url }] },
+      { "@type": "FAQPage", mainEntity: [
+        { "@type": "Question", name: "Does the \xA340 target include full supermarket packs?", acceptedAnswer: { "@type": "Answer", text: "Yes. The expected checkout figure uses representative complete packs; the lower ingredient figure shows only the value used by these dinners." } },
+        { "@type": "Question", name: "Can I make the plan vegetarian?", acceptedAnswer: { "@type": "Answer", text: "Yes. Replace the chicken with chickpeas and mushrooms, then apply vegetarian preferences when personalising the plan." } },
+        { "@type": "Question", name: "Will my actual checkout be exactly \xA337.90?", acceptedAnswer: { "@type": "Answer", text: "No. Retailer, location, availability, substitutions, promotions and ingredients already at home will change it." } }
+      ] }
+    ]
+  };
+}
+var escapeHtml2 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var formatMoney = (value) => `\xA3${value.toFixed(2)}`;
+function renderFiveDinnersForTwoInitialHtml() {
+  const plan = FIVE_DINNERS_FOR_TWO_UNDER_40;
+  const dinners = plan.dinners.map((dinner) => `<article><p>${escapeHtml2(dinner.day)}</p><h3>${escapeHtml2(dinner.title)}</h3><p>${escapeHtml2(dinner.description)}</p><p>About ${dinner.totalTimeMinutes} minutes \xB7 ${formatMoney(dinner.estimatedCost)}</p><p>${escapeHtml2(dinner.sharedIngredientNote)}</p></article>`).join("");
+  const shared = plan.sharedIngredients.map((item) => `<li><strong>${escapeHtml2(item.ingredient)}:</strong> ${escapeHtml2(item.uses)}</li>`).join("");
+  const substitutions = plan.substitutions.map((item) => `<li><strong>${escapeHtml2(item.swap)}</strong> ${escapeHtml2(item.effect)}</li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml2(plan.title)}</h1><p>${escapeHtml2(plan.description)}</p><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p><p>These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation.</p></section><section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a> or <a href="/recipe-methodology">see how dinners are selected</a>.</p></section><section><h2>Questions about this \xA340 plan</h2><h3>Does the \xA340 target include full supermarket packs?</h3><p>Yes. The expected checkout figure uses representative complete packs.</p><h3>Will my actual checkout be exactly \xA337.90?</h3><p>No. Retailer, availability, substitutions, promotions and ingredients already at home will change it.</p></section><p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+}
+
 // src/api-server.ts
 var import_meta2 = {};
 var firebaseConfigCache = null;
@@ -164280,8 +164343,17 @@ function createApp() {
         let canonicalPath = "/";
         let noIndex = false;
         let schema = null;
+        let initialBody = null;
         const pathName = req.path;
-        if (pathName === "/privacy") {
+        if (pathName === FIVE_DINNERS_FOR_TWO_UNDER_40_PATH) {
+          title = "5 Affordable Dinners for Two Under \xA340 | DinnerByDesign";
+          description = "Five affordable UK dinners for two under a \xA340 target, with shared ingredients, full-pack checkout estimates and practical substitutions.";
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = FIVE_DINNERS_FOR_TWO_UNDER_40_PATH;
+          schema = getFiveDinnersForTwoJsonLd();
+          initialBody = renderFiveDinnersForTwoInitialHtml();
+        } else if (pathName === "/privacy") {
           title = "Privacy, Cookies & AI Data \u2014 DinnerByDesign";
           description = "Read how DinnerByDesign handles account data, AI processing, service providers, retention, cookies and UK data-protection rights.";
           shareTitle = title;
@@ -164449,8 +164521,12 @@ function createApp() {
         html = html.replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${canonicalUrl}" />`).replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${shareTitle}" />`).replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${shareDescription}" />`).replace(/<meta property="og:image" content=".*?"\s*\/?>/, `<meta property="og:image" content="${shareImage}" />`).replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${shareTitle}" />`).replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${shareDescription}" />`).replace(/<meta name="twitter:image" content=".*?"\s*\/?>/, `<meta name="twitter:image" content="${shareImage}" />`);
         if (schema) {
           const schemaString = `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(schema)}</script>`;
+          html = html.replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, "");
           html = html.replace("</head>", `${schemaString}
 </head>`);
+        }
+        if (initialBody) {
+          html = html.replace('<div id="root"></div>', initialBody);
         }
         res.setHeader("Content-Type", "text/html");
         res.status(200).send(html);
