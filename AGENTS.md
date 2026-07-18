@@ -94,6 +94,13 @@ When testing this web application locally, you can connect to your local backend
 - **Built-week cost feedback**: After weekly dinners are generated, show their combined estimated dinner cost, per-portion cost, budget variance, and pricing coverage above Saved. Keep this explicitly distinct from the later shopping-list estimate based on scheduled dinners, pack sizes, shared ingredients, and pantry items.
 - **Rollback checkpoint**: Local branch `backup/pre-affordability-planner-20260717` points to the repository state before this pilot was introduced.
 
+# Ingredient Price Refresh Workflow
+
+- **No unlicensed retailer extraction**: Do not scrape or automate collection from retailer websites unless written permission or an appropriately licensed feed explicitly permits it.
+- **Licensed feed gate**: Scheduled price refresh requires `CRON_SECRET`, `INGREDIENT_PRICE_FEED_URL`, `INGREDIENT_PRICE_FEED_ALLOWED_ORIGIN`, and `INGREDIENT_PRICE_FEED_PERMISSION_CONFIRMED=true`. An optional bearer token is supplied through `INGREDIENT_PRICE_FEED_TOKEN`.
+- **Review boundary**: Unchanged active prices may have their verification date refreshed automatically. New products and changed product, pack or price data are staged in `pendingPriceRefresh` and must be approved by an administrator before affecting customer estimates.
+- **Safe fallback**: If no licensed feed is configured or a refresh fails, the existing verified catalogue and built-in UK reference prices remain in use.
+
 # Public Guide Publishing Workflow
 
 - **Single publishing source**: Every public guide and dinner-plan page must be represented in the structured publishing data used by the build. Do not maintain a second disconnected list of published URLs.

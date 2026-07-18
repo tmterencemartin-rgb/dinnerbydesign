@@ -8,6 +8,11 @@ import { getApps, initializeApp } from "firebase-admin/app";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
+import {
+  catalogueEntryMatchesFeedItem,
+  ingredientPriceDocumentId,
+  parseLicensedIngredientPriceFeed,
+} from "../src/lib/ingredientPriceRefresh";
 // Safe dynamic lazy loading of firebase-applet-config.json to support serverless / ephemeral environments
 let firebaseConfigCache: any = null;
 function getFirebaseConfig() {
@@ -991,6 +996,141 @@ export function createApp() {
 
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok" });
+  });
+
+  app.get("/api/ingredient-prices/refresh", async (req, res) => {
+    const cronSecret = process.env.CRON_SECRET;
+    const suppliedAuthorization = req.get("authorization") || "";
+    if (!cronSecret) {
+      return res.json({ ok: true, status: "disabled", reason: "Ingredient-price refresh is not configured." });
+    }
+    if (suppliedAuthorization !== `Bearer ${cronSecret}`) {
+      return res.status(401).json({ ok: false, error: "Not authorised." });
+    }
+
+    const feedUrl = process.env.INGREDIENT_PRICE_FEED_URL;
+    const allowedOrigin = process.env.INGREDIENT_PRICE_FEED_ALLOWED_ORIGIN;
+    const permissionConfirmed = process.env.INGREDIENT_PRICE_FEED_PERMISSION_CONFIRMED === "true";
+    if (!feedUrl || !allowedOrigin || !permissionConfirmed) {
+      return res.json({
+        ok: true,
+        status: "disabled",
+        reason: "A licensed ingredient-price feed has not been fully configured.",
+      });
+    }
+
+    let parsedFeedUrl: URL;
+    let parsedAllowedOrigin: URL;
+    try {
+      parsedFeedUrl = new URL(feedUrl);
+      parsedAllowedOrigin = new URL(allowedOrigin);
+      if (parsedFeedUrl.protocol !== "https:" || parsedAllowedOrigin.protocol !== "https:" || parsedFeedUrl.origin !== parsedAllowedOrigin.origin) {
+        throw new Error("Feed URL and allowed origin must use the same HTTPS origin.");
+      }
+    } catch (error: any) {
+      return res.status(503).json({ ok: false, error: error.message || "The licensed feed configuration is invalid." });
+    }
+
+    const runStartedAt = new Date().toISOString();
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15_000);
+      let response: Response;
+      try {
+        response = await fetch(parsedFeedUrl, {
+          signal: controller.signal,
+          headers: process.env.INGREDIENT_PRICE_FEED_TOKEN
+            ? { Authorization: `Bearer ${process.env.INGREDIENT_PRICE_FEED_TOKEN}` }
+            : undefined,
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
+      if (!response.ok) throw new Error(`Licensed price feed returned HTTP ${response.status}.`);
+
+      const items = parseLicensedIngredientPriceFeed(await response.json());
+      const db = getDb();
+      const documentRefs = items.map(item => db.collection("ingredientPriceCatalogue").doc(ingredientPriceDocumentId(item.ingredientKey)));
+      const currentSnapshots = documentRefs.length ? await db.getAll(...documentRefs) : [];
+      const batch = db.batch();
+      let reviewCount = 0;
+      let currentCount = 0;
+
+      items.forEach((item, index) => {
+        const reference = documentRefs[index];
+        const snapshot = currentSnapshots[index];
+        const current = snapshot?.exists ? snapshot.data() : undefined;
+        const receivedAt = FieldValue.serverTimestamp();
+        const isPublishedAndUnchanged = current?.active === true &&
+          current?.verificationStatus === "verified" &&
+          catalogueEntryMatchesFeedItem(current, item);
+
+        if (isPublishedAndUnchanged) {
+          currentCount += 1;
+          batch.set(reference, {
+            aliases: item.aliases,
+            verifiedAt: item.observedAt,
+            catalogueVersion: item.observedAt.slice(0, 10),
+            sourceType: "retailer-verified",
+            refreshStatus: "current",
+            lastRefreshAttemptAt: receivedAt,
+            pendingPriceRefresh: FieldValue.delete(),
+          }, { merge: true });
+          return;
+        }
+
+        reviewCount += 1;
+        const baseDocument = current ? {} : {
+          ingredientKey: item.ingredientKey,
+          aliases: item.aliases,
+          productLabel: item.productLabel,
+          retailer: item.retailer,
+          packPrice: item.packPrice,
+          packQuantity: item.packQuantity,
+          packUnit: item.packUnit,
+          sourceUrl: item.sourceUrl,
+          verifiedAt: "",
+          verificationStatus: "draft",
+          active: false,
+          sourceType: "retailer-verified",
+          catalogueVersion: "draft",
+        };
+        batch.set(reference, {
+          ...baseDocument,
+          refreshStatus: "review",
+          lastRefreshAttemptAt: receivedAt,
+          pendingPriceRefresh: {
+            ...item,
+            receivedAt,
+          },
+        }, { merge: true });
+      });
+
+      await batch.commit();
+      await db.collection("ingredientPriceRefreshRuns").add({
+        status: "completed",
+        itemCount: items.length,
+        reviewCount,
+        currentCount,
+        startedAt: runStartedAt,
+        completedAt: FieldValue.serverTimestamp(),
+        feedOrigin: parsedFeedUrl.origin,
+      });
+      return res.json({ ok: true, itemCount: items.length, reviewCount, currentCount });
+    } catch (error: any) {
+      logApiError("INGREDIENT_PRICE_REFRESH", error);
+      try {
+        await getDb().collection("ingredientPriceRefreshRuns").add({
+          status: "failed",
+          startedAt: runStartedAt,
+          completedAt: FieldValue.serverTimestamp(),
+          errorMessage: String(error?.message || error).slice(0, 500),
+        });
+      } catch (logError) {
+        console.error("[IngredientPriceRefresh] Failed to record refresh failure:", logError);
+      }
+      return res.status(502).json({ ok: false, error: "The licensed ingredient-price feed could not be refreshed." });
+    }
   });
 
   app.post("/api/generate-rationales", async (req, res) => {

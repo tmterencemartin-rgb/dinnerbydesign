@@ -163508,6 +163508,79 @@ function renderFiveDinnersForTwoInitialHtml() {
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml2(plan.title)}</h1><p>${escapeHtml2(plan.description)}</p><p>By ${escapeHtml2(plan.editorialOwner)} \xB7 Reviewed 18 July 2026</p><section><h2>A practical \xA340 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p><p>These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation.</p></section><section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under \xA340</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026">understand the wider UK food-cost picture</a>.</p></section><section><h2>Questions about this \xA340 plan</h2><h3>Does the \xA340 target include full supermarket packs?</h3><p>Yes. The expected checkout figure uses representative complete packs.</p><h3>Will my actual checkout be exactly \xA337.90?</h3><p>No. Retailer, availability, substitutions, promotions and ingredients already at home will change it.</p></section><p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
 }
 
+// src/lib/ingredientPriceRefresh.ts
+var ALLOWED_UNITS = /* @__PURE__ */ new Set(["g", "kg", "ml", "l", "each"]);
+var MAX_FEED_ITEMS = 400;
+function requireText(value, field, maxLength) {
+  if (typeof value !== "string" || !value.trim() || value.trim().length > maxLength) {
+    throw new Error(`${field} must be a non-empty string of at most ${maxLength} characters.`);
+  }
+  return value.trim();
+}
+function requirePositiveNumber(value, field, maximum) {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0 || value > maximum) {
+    throw new Error(`${field} must be a positive number no greater than ${maximum}.`);
+  }
+  return value;
+}
+function requireHttpsUrl(value, field) {
+  const text = requireText(value, field, 2e3);
+  let url;
+  try {
+    url = new URL(text);
+  } catch {
+    throw new Error(`${field} must be a valid URL.`);
+  }
+  if (url.protocol !== "https:") throw new Error(`${field} must use HTTPS.`);
+  return url.toString();
+}
+function normaliseObservedAt(value) {
+  const text = requireText(value, "observedAt", 50);
+  const timestamp = Date.parse(text);
+  if (!Number.isFinite(timestamp)) throw new Error("observedAt must be a valid date or timestamp.");
+  if (timestamp > Date.now() + 864e5) throw new Error("observedAt cannot be in the future.");
+  return new Date(timestamp).toISOString();
+}
+function parseLicensedIngredientPriceFeed(payload) {
+  const rawItems = Array.isArray(payload) ? payload : payload && typeof payload === "object" && Array.isArray(payload.items) ? payload.items : null;
+  if (!rawItems) throw new Error("The licensed price feed must be an array or an object containing an items array.");
+  if (rawItems.length > MAX_FEED_ITEMS) throw new Error(`The licensed price feed cannot contain more than ${MAX_FEED_ITEMS} items.`);
+  const seen = /* @__PURE__ */ new Set();
+  return rawItems.map((rawItem, index) => {
+    if (!rawItem || typeof rawItem !== "object") throw new Error(`Item ${index + 1} must be an object.`);
+    const item = rawItem;
+    const ingredientKey = requireText(item.ingredientKey, `Item ${index + 1} ingredientKey`, 100).toLowerCase();
+    if (!/^[a-z0-9][a-z0-9 '&-]*$/.test(ingredientKey)) throw new Error(`Item ${index + 1} has an invalid ingredientKey.`);
+    if (seen.has(ingredientKey)) throw new Error(`The feed contains duplicate ingredientKey: ${ingredientKey}.`);
+    seen.add(ingredientKey);
+    const aliases = item.aliases === void 0 ? [] : item.aliases;
+    if (!Array.isArray(aliases) || aliases.length > 30 || aliases.some((alias) => typeof alias !== "string")) {
+      throw new Error(`Item ${index + 1} aliases must be an array of at most 30 strings.`);
+    }
+    const packUnit = requireText(item.packUnit, `Item ${index + 1} packUnit`, 10);
+    if (!ALLOWED_UNITS.has(packUnit)) throw new Error(`Item ${index + 1} has an unsupported packUnit.`);
+    return {
+      ingredientKey,
+      aliases: aliases.map((alias) => alias.trim().toLowerCase()).filter(Boolean),
+      productLabel: requireText(item.productLabel, `Item ${index + 1} productLabel`, 200),
+      retailer: requireText(item.retailer, `Item ${index + 1} retailer`, 100),
+      packPrice: requirePositiveNumber(item.packPrice, `Item ${index + 1} packPrice`, 1e3),
+      packQuantity: requirePositiveNumber(item.packQuantity, `Item ${index + 1} packQuantity`, 1e5),
+      packUnit,
+      sourceUrl: requireHttpsUrl(item.sourceUrl, `Item ${index + 1} sourceUrl`),
+      observedAt: normaliseObservedAt(item.observedAt),
+      feedId: typeof item.feedId === "string" && item.feedId.trim() ? item.feedId.trim().slice(0, 200) : void 0
+    };
+  });
+}
+function catalogueEntryMatchesFeedItem(current, incoming) {
+  if (!current) return false;
+  return current.productLabel === incoming.productLabel && current.retailer === incoming.retailer && current.packPrice === incoming.packPrice && current.packQuantity === incoming.packQuantity && current.packUnit === incoming.packUnit && current.sourceUrl === incoming.sourceUrl;
+}
+function ingredientPriceDocumentId(ingredientKey) {
+  return ingredientKey.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 // src/api-server.ts
 var import_meta2 = {};
 var firebaseConfigCache = null;
@@ -164326,6 +164399,128 @@ function createApp() {
   });
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok" });
+  });
+  app.get("/api/ingredient-prices/refresh", async (req, res) => {
+    const cronSecret = process.env.CRON_SECRET;
+    const suppliedAuthorization = req.get("authorization") || "";
+    if (!cronSecret) {
+      return res.json({ ok: true, status: "disabled", reason: "Ingredient-price refresh is not configured." });
+    }
+    if (suppliedAuthorization !== `Bearer ${cronSecret}`) {
+      return res.status(401).json({ ok: false, error: "Not authorised." });
+    }
+    const feedUrl = process.env.INGREDIENT_PRICE_FEED_URL;
+    const allowedOrigin = process.env.INGREDIENT_PRICE_FEED_ALLOWED_ORIGIN;
+    const permissionConfirmed = process.env.INGREDIENT_PRICE_FEED_PERMISSION_CONFIRMED === "true";
+    if (!feedUrl || !allowedOrigin || !permissionConfirmed) {
+      return res.json({
+        ok: true,
+        status: "disabled",
+        reason: "A licensed ingredient-price feed has not been fully configured."
+      });
+    }
+    let parsedFeedUrl;
+    let parsedAllowedOrigin;
+    try {
+      parsedFeedUrl = new URL(feedUrl);
+      parsedAllowedOrigin = new URL(allowedOrigin);
+      if (parsedFeedUrl.protocol !== "https:" || parsedAllowedOrigin.protocol !== "https:" || parsedFeedUrl.origin !== parsedAllowedOrigin.origin) {
+        throw new Error("Feed URL and allowed origin must use the same HTTPS origin.");
+      }
+    } catch (error) {
+      return res.status(503).json({ ok: false, error: error.message || "The licensed feed configuration is invalid." });
+    }
+    const runStartedAt = (/* @__PURE__ */ new Date()).toISOString();
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15e3);
+      let response;
+      try {
+        response = await fetch(parsedFeedUrl, {
+          signal: controller.signal,
+          headers: process.env.INGREDIENT_PRICE_FEED_TOKEN ? { Authorization: `Bearer ${process.env.INGREDIENT_PRICE_FEED_TOKEN}` } : void 0
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
+      if (!response.ok) throw new Error(`Licensed price feed returned HTTP ${response.status}.`);
+      const items = parseLicensedIngredientPriceFeed(await response.json());
+      const db = getDb();
+      const documentRefs = items.map((item) => db.collection("ingredientPriceCatalogue").doc(ingredientPriceDocumentId(item.ingredientKey)));
+      const currentSnapshots = documentRefs.length ? await db.getAll(...documentRefs) : [];
+      const batch = db.batch();
+      let reviewCount = 0;
+      let currentCount = 0;
+      items.forEach((item, index) => {
+        const reference = documentRefs[index];
+        const snapshot = currentSnapshots[index];
+        const current = snapshot?.exists ? snapshot.data() : void 0;
+        const receivedAt = FieldValue.serverTimestamp();
+        const isPublishedAndUnchanged = current?.active === true && current?.verificationStatus === "verified" && catalogueEntryMatchesFeedItem(current, item);
+        if (isPublishedAndUnchanged) {
+          currentCount += 1;
+          batch.set(reference, {
+            aliases: item.aliases,
+            verifiedAt: item.observedAt,
+            catalogueVersion: item.observedAt.slice(0, 10),
+            sourceType: "retailer-verified",
+            refreshStatus: "current",
+            lastRefreshAttemptAt: receivedAt,
+            pendingPriceRefresh: FieldValue.delete()
+          }, { merge: true });
+          return;
+        }
+        reviewCount += 1;
+        const baseDocument = current ? {} : {
+          ingredientKey: item.ingredientKey,
+          aliases: item.aliases,
+          productLabel: item.productLabel,
+          retailer: item.retailer,
+          packPrice: item.packPrice,
+          packQuantity: item.packQuantity,
+          packUnit: item.packUnit,
+          sourceUrl: item.sourceUrl,
+          verifiedAt: "",
+          verificationStatus: "draft",
+          active: false,
+          sourceType: "retailer-verified",
+          catalogueVersion: "draft"
+        };
+        batch.set(reference, {
+          ...baseDocument,
+          refreshStatus: "review",
+          lastRefreshAttemptAt: receivedAt,
+          pendingPriceRefresh: {
+            ...item,
+            receivedAt
+          }
+        }, { merge: true });
+      });
+      await batch.commit();
+      await db.collection("ingredientPriceRefreshRuns").add({
+        status: "completed",
+        itemCount: items.length,
+        reviewCount,
+        currentCount,
+        startedAt: runStartedAt,
+        completedAt: FieldValue.serverTimestamp(),
+        feedOrigin: parsedFeedUrl.origin
+      });
+      return res.json({ ok: true, itemCount: items.length, reviewCount, currentCount });
+    } catch (error) {
+      logApiError("INGREDIENT_PRICE_REFRESH", error);
+      try {
+        await getDb().collection("ingredientPriceRefreshRuns").add({
+          status: "failed",
+          startedAt: runStartedAt,
+          completedAt: FieldValue.serverTimestamp(),
+          errorMessage: String(error?.message || error).slice(0, 500)
+        });
+      } catch (logError) {
+        console.error("[IngredientPriceRefresh] Failed to record refresh failure:", logError);
+      }
+      return res.status(502).json({ ok: false, error: "The licensed ingredient-price feed could not be refreshed." });
+    }
   });
   app.post("/api/generate-rationales", async (req, res) => {
     console.log(`[API] Received request for /api/generate-rationales`);
