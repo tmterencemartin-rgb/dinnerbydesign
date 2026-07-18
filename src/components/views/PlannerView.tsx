@@ -682,7 +682,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 <div>
                   <h3 className="text-[13.5px] font-bold text-gray-950">Make your food budget go further</h3>
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
-                    Build a personalised week of dinners around your household, budget and available time. We’ll prioritise suitable dinners and reuse ingredients across the week to help reduce shopping costs and food waste.
+                    We build a week of dinners around your household, budget and available time. Suitable dinners are prioritised, with ingredients reused across the week to cut shopping costs and food waste.
                   </p>
                 </div>
                 <button
