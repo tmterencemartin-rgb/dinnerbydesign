@@ -1,5 +1,12 @@
 # Ingredient Interpretation Rules
 
+## Brand Naming and Wordmark
+
+- Write the product name as `DinnerByDesign` in all prose, headings, metadata, emails, accessible labels, legal copy, and possessive constructions such as `DinnerByDesign's`.
+- Do not use `Dinner By Design` or `Dinner by Design` as the product name.
+- Use the approved `/dbd-logo-with-pin.png` asset when displaying the visual wordmark; do not recreate the wordmark with styled text.
+- Keep domains and email addresses lowercase, such as `dinnerbydesign.app` and `chef@dinnerbydesign.app`.
+
 ## Terminology Rule
 
 Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.

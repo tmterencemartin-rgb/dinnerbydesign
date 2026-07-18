@@ -503,7 +503,7 @@ export const LandingView: React.FC = () => {
 
           <div className="md:col-span-7">
             <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed mb-8 max-w-prose select-none">
-              Set one or more of the 18 filters once, or adjust per search. Dinner by Design pinpoints and shortlists recipes that fit your diet, budget, cooking method and time.
+              Set one or more of the 18 filters once, or adjust per search. DinnerByDesign pinpoints and shortlists recipes that fit your diet, budget, cooking method and time.
             </p>
             
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-8 text-[11.5px] sm:text-[13px] font-mono font-bold text-dbd-ink-3 uppercase tracking-wider select-none">
@@ -642,7 +642,7 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Start with what you have.</strong> Dinner by Design shortlists distinct ways to turn those ingredients into dinner, from quick classics to less obvious combinations.</span>
+                <span><strong>Start with what you have.</strong> DinnerByDesign shortlists distinct ways to turn those ingredients into dinner, from quick classics to less obvious combinations.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
