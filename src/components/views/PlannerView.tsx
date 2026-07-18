@@ -814,7 +814,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </div>
                   )}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <p className="text-[11px] text-gray-400 font-medium leading-relaxed">
+                    <p className="min-w-0 text-[11px] text-gray-400 font-medium leading-relaxed">
                       {Number(planBudget) > 0
                         ? `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}: about £${(Number(planBudget) / planDinnerCount).toFixed(2)} per dinner, or £${(Number(planBudget) / planDinnerCount / planServings).toFixed(2)} per person.`
                         : `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}.`}
@@ -828,7 +828,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       type="button"
                       onClick={handlePlanWeek}
                       disabled={isPlanningWeek}
-                      className="h-10 px-4 rounded bg-dbd-accent text-white text-[11px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
+                      className="min-h-10 shrink-0 whitespace-nowrap px-4 py-2 rounded bg-dbd-accent text-white text-[11px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
                     >
                       {isPlanningWeek && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                       Build my week
