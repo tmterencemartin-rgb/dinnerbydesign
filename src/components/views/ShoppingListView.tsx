@@ -456,7 +456,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                 </div>
               </div>
               <p className="text-[11px] font-medium text-gray-500 text-center leading-relaxed w-full max-w-2xl mx-auto">
-                <span className="font-semibold text-gray-700">Please note:</span> our figures are baseline minimums based on exact pro-rata ingredient proportions. As supermarkets sell in full packs (e.g. whole packs of bacon or 500g of minced beef), expect your actual checkout total to be higher.
+                <span className="font-semibold text-gray-700">Please note:</span> our figures are baseline minimums based on exact pro-rata ingredient proportions. As supermarkets sell in full packs (e.g. chicken breasts are sold in packs of two  or 500g of minced beef), expect your actual checkout total to be higher.
               </p>
             </div>
           )}
