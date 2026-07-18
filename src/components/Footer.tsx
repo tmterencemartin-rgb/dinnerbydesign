@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface FooterProps {
-  setView: (view: 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-methodology' | 'privacy' | 'terms') => void;
+  setView: (view: 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-methodology' | 'food-safety' | 'recipe-methodology' | 'nutrition-methodology' | 'privacy' | 'terms') => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
@@ -38,6 +38,15 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             className="text-gray-500 hover:text-gray-900 text-[13px] transition-colors whitespace-nowrap cursor-pointer"
           >
             How prices are calculated
+          </a>
+          <a href="/food-safety" onClick={(e) => { e.preventDefault(); setView('food-safety'); }} className="text-gray-500 hover:text-gray-900 text-[13px] transition-colors whitespace-nowrap cursor-pointer">
+            Food safety
+          </a>
+          <a href="/recipe-methodology" onClick={(e) => { e.preventDefault(); setView('recipe-methodology'); }} className="text-gray-500 hover:text-gray-900 text-[13px] transition-colors whitespace-nowrap cursor-pointer">
+            Recipe information
+          </a>
+          <a href="/nutrition-methodology" onClick={(e) => { e.preventDefault(); setView('nutrition-methodology'); }} className="text-gray-500 hover:text-gray-900 text-[13px] transition-colors whitespace-nowrap cursor-pointer">
+            Nutrition estimates
           </a>
           <a 
             href="/privacy"

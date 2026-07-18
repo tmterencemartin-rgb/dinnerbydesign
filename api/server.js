@@ -164299,6 +164299,24 @@ function createApp() {
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/pricing-methodology";
+        } else if (pathName === "/food-safety") {
+          title = "Dietary, Allergy & Cooking Safety \u2014 DinnerByDesign";
+          description = "Understand how DinnerByDesign applies dietary rules and allergy filters, and why labels and safe cooking guidance must still be checked.";
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = "/food-safety";
+        } else if (pathName === "/recipe-methodology") {
+          title = "Recipe & Recommendation Methodology \u2014 DinnerByDesign";
+          description = "Learn how DinnerByDesign creates, attributes, checks and selects recipe and ready-made dinner information.";
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = "/recipe-methodology";
+        } else if (pathName === "/nutrition-methodology") {
+          title = "Nutrition Estimate Methodology \u2014 DinnerByDesign";
+          description = "Learn how DinnerByDesign nutrition and calorie estimates are produced and why actual values may vary.";
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = "/nutrition-methodology";
         } else if (pathName === "/planner") {
           title = "Your Dinner Planner \u2014 DinnerByDesign";
           description = "Your weekly bespoke dinner schedule and preparation planner.";

@@ -355,7 +355,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
     const viewParam = params?.get('view') as AppView | null;
 
-    if (viewParam && ['home', 'settings', 'planner', 'shopping', 'pricing-methodology', 'privacy', 'terms', 'admin', 'success', 'signin', 'landing'].includes(viewParam)) {
+    if (viewParam && ['home', 'settings', 'planner', 'shopping', 'pricing-methodology', 'food-safety', 'recipe-methodology', 'nutrition-methodology', 'privacy', 'terms', 'admin', 'success', 'signin', 'landing'].includes(viewParam)) {
       return viewParam;
     }
 
@@ -365,6 +365,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/planner') return 'planner';
     if (location === '/shopping') return 'shopping';
     if (location === '/pricing-methodology') return 'pricing-methodology';
+    if (location === '/food-safety') return 'food-safety';
+    if (location === '/recipe-methodology') return 'recipe-methodology';
+    if (location === '/nutrition-methodology') return 'nutrition-methodology';
     if (location === '/success') return 'success';
     if (location === '/signin' || location.startsWith('/signin?')) return 'signin';
     if (location === '/admin') return 'admin';

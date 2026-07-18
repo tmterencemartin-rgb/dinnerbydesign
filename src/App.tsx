@@ -16,6 +16,11 @@ import { ShoppingListView } from './components/views/ShoppingListView';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsView } from './components/views/TermsView';
 import { PricingMethodologyView } from './components/views/PricingMethodologyView';
+import {
+  FoodSafetyMethodologyView,
+  NutritionMethodologyView,
+  RecipeMethodologyView,
+} from './components/views/TransparencyMethodologyViews';
 import { AdminDashboard } from './components/views/AdminDashboard';
 import { LandingView } from './components/views/LandingView';
 import { SuccessView } from './components/views/SuccessView';
@@ -89,6 +94,24 @@ const AppContent = () => {
           title: 'Ingredient Pricing Methodology — DinnerByDesign',
           description: 'Learn how DinnerByDesign calculates estimated ingredient costs, full-pack checkout costs, catalogue coverage and price fallbacks.',
           canonicalPath: '/pricing-methodology'
+        };
+      case 'food-safety':
+        return {
+          title: 'Dietary, Allergy & Cooking Safety — DinnerByDesign',
+          description: 'Understand how DinnerByDesign applies dietary rules and allergy filters, and why labels and safe cooking guidance must still be checked.',
+          canonicalPath: '/food-safety'
+        };
+      case 'recipe-methodology':
+        return {
+          title: 'Recipe & Recommendation Methodology — DinnerByDesign',
+          description: 'Learn how DinnerByDesign creates, attributes, checks and selects recipe and ready-made dinner information.',
+          canonicalPath: '/recipe-methodology'
+        };
+      case 'nutrition-methodology':
+        return {
+          title: 'Nutrition Estimate Methodology — DinnerByDesign',
+          description: 'Learn how DinnerByDesign nutrition and calorie estimates are produced and why actual values may vary.',
+          canonicalPath: '/nutrition-methodology'
         };
       case 'success':
         return {
@@ -223,7 +246,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -324,6 +347,18 @@ const AppContent = () => {
 
   if (view === 'pricing-methodology') {
     return <PricingMethodologyView setView={setView} />;
+  }
+
+  if (view === 'food-safety') {
+    return <FoodSafetyMethodologyView setView={setView} />;
+  }
+
+  if (view === 'recipe-methodology') {
+    return <RecipeMethodologyView setView={setView} />;
+  }
+
+  if (view === 'nutrition-methodology') {
+    return <NutritionMethodologyView setView={setView} />;
   }
 
   if (view === 'success') {

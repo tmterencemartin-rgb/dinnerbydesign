@@ -638,7 +638,7 @@ export const LandingView: React.FC = () => {
             <ul className="space-y-4 font-sans text-[13.5px] sm:text-[14px] text-dbd-ink-2 select-none">
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Preference-led recipe search</strong>: filter by diet, allergies, budget, portions, time and ingredients to avoid.</span>
+                <span><strong>Preference-led recipe search</strong>: filter by diet, allergies, budget, portions, time and ingredients to avoid. <button type="button" onClick={() => setView('food-safety')} className="font-semibold text-dbd-accent hover:underline">Read our safety guidance.</button></span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -654,7 +654,7 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Cost and nutrition per portion</strong>: see estimated cost-per-portion, calorie information and nutritional breakdowns.</span>
+                <span><strong>Cost and nutrition per portion</strong>: see estimated cost-per-portion, calorie information and nutritional breakdowns. <button type="button" onClick={() => setView('nutrition-methodology')} className="font-semibold text-dbd-accent hover:underline">How nutrition is estimated.</button></span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -666,7 +666,7 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Ready-made dinner options</strong>: find supermarket mains and easy add-ons when cooking from scratch is not the answer.</span>
+                <span><strong>Ready-made dinner options</strong>: find supermarket mains and easy add-ons when cooking from scratch is not the answer. <button type="button" onClick={() => setView('recipe-methodology')} className="font-semibold text-dbd-accent hover:underline">How dinner information is created.</button></span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -856,6 +856,9 @@ export const LandingView: React.FC = () => {
             >
               Pricing methodology
             </button>
+            <button onClick={() => setView('food-safety')} className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Food safety</button>
+            <button onClick={() => setView('recipe-methodology')} className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Recipe information</button>
+            <button onClick={() => setView('nutrition-methodology')} className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Nutrition estimates</button>
             <button 
               onClick={() => setView('privacy')} 
               className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"

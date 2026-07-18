@@ -422,6 +422,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </span>
                     )}
                   </div>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-[9.5px] font-semibold text-dbd-accent">
+                    <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Recipe information</a>
+                    <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Nutrition estimates</a>
+                    <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="hover:underline">Food safety</a>
+                  </div>
                 </div>
 
                 {/* Dynamic Card Badges */}

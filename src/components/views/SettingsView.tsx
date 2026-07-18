@@ -1022,6 +1022,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                       </div>
                     </div>
                   </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-gray-100 pt-3 text-[11px] font-semibold text-dbd-accent">
+                    <button type="button" onClick={() => setView('food-safety')} className="hover:underline">Dietary and allergy safety</button>
+                    <button type="button" onClick={() => setView('nutrition-methodology')} className="hover:underline">How nutrition is estimated</button>
+                    <button type="button" onClick={() => setView('recipe-methodology')} className="hover:underline">How results are selected</button>
+                  </div>
                 </div>
               </div>
             )}
