@@ -680,9 +680,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
             <div className={`bg-white rounded border border-gray-100 px-4 sm:px-5 py-4 relative ${showPlanWeek ? 'z-40' : 'z-0'}`}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
-                  <h3 className="text-[13.5px] font-bold text-gray-950">Plan my week</h3>
+                  <h3 className="text-[13.5px] font-bold text-gray-950">Make your food budget go further</h3>
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
-                    Build a personalised week of dinners around your budget, household and available time. We’ll follow your preferences and reuse ingredients where possible to help reduce shopping costs and waste.
+                    Build a personalised week of dinners around your household, budget and available time. We’ll prioritise suitable dinners and reuse ingredients across the week to help reduce shopping costs and food waste.
                   </p>
                 </div>
                 <button
