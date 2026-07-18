@@ -373,6 +373,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/signin' || location.startsWith('/signin?')) return 'signin';
     if (location === '/admin') return 'admin';
     if (location === '/dinner-plans/5-dinners-for-2-under-40') return 'meal-plan-five-for-two-under-40';
+    if (location === '/food-costs/uk-food-costs-2026') return 'food-costs-uk-2026';
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';

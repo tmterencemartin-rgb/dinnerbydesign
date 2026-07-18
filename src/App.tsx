@@ -28,6 +28,8 @@ import { SearchPageDesignConcept } from './components/views/SearchPageDesignConc
 import { BudgetFamilySeoConcept } from './components/views/BudgetFamilySeoConcept';
 import { SeoMealPlanView } from './components/views/SeoMealPlanView';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
+import { FoodCostGuideView } from './components/views/FoodCostGuideView';
+import { UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH, getUkFoodCosts2026JsonLd } from './content/seoFoodCostGuides';
 import { Toast } from './components/ui/Toast';
 import { InstallPrompt } from './components/InstallPrompt';
 import { BookmarkPrompt } from './components/BookmarkPrompt';
@@ -143,6 +145,13 @@ const AppContent = () => {
           canonicalPath: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
           jsonLd: getFiveDinnersForTwoJsonLd()
         };
+      case 'food-costs-uk-2026':
+        return {
+          title: `${UK_FOOD_COSTS_2026.title} | DinnerByDesign`,
+          description: UK_FOOD_COSTS_2026.description,
+          canonicalPath: UK_FOOD_COSTS_2026_PATH,
+          jsonLd: getUkFoodCosts2026JsonLd()
+        };
       case 'home':
       case 'landing':
       default:
@@ -255,7 +264,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -373,6 +382,17 @@ const AppContent = () => {
   if (view === 'meal-plan-five-for-two-under-40') {
     return <SeoMealPlanView onPersonalise={() => {
       safeStorage.session.setItem(AFFORDABILITY_PLANNER_PRESET_KEY, JSON.stringify({ dinnerCount: 5, budget: '40', servings: 2, minimiseCost: true, reuseIngredients: true }));
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'food-costs-uk-2026') {
+    return <FoodCostGuideView onPlanWeek={() => {
       if (isGuest) {
         safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
         setView('signin');
