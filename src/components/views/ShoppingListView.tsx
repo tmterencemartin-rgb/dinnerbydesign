@@ -465,7 +465,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                 </div>
               </div>
               <p className="text-[11px] font-medium text-gray-500 text-center leading-relaxed w-full max-w-2xl mx-auto">
-                <span className="font-semibold text-gray-700">Price basis:</span> {shoppingCostSummary.referenceMatchCount} of {shoppingCostSummary.pricedItemCount} priced items matched to {INGREDIENT_PRICE_CATALOGUE_META.label.toLowerCase()}; {shoppingCostSummary.fallbackMatchCount} use category estimates. Catalogue version {catalogueVersion}. Actual retailer prices and available pack sizes may vary.
+                <span className="font-semibold text-gray-700">Price basis:</span> {shoppingCostSummary.verifiedMatchCount} verified retailer matches, {shoppingCostSummary.referenceMatchCount} reference matches and {shoppingCostSummary.fallbackMatchCount} category estimates. Reference catalogue version {catalogueVersion}. Actual retailer prices and available pack sizes may vary.
               </p>
               <details className="w-full max-w-2xl rounded border border-gray-100 bg-white px-3 py-2 text-left">
                 <summary className="cursor-pointer text-[11px] font-bold text-dbd-accent">How we calculate prices</summary>

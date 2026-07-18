@@ -307,6 +307,23 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /ingredientPriceCatalogue/{entryId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin() &&
+        request.resource.data.ingredientKey is string &&
+        request.resource.data.productLabel is string &&
+        request.resource.data.aliases is list && request.resource.data.aliases.size() <= 30 &&
+        request.resource.data.packPrice is number && request.resource.data.packPrice > 0 &&
+        request.resource.data.packQuantity is number && request.resource.data.packQuantity > 0 &&
+        request.resource.data.packUnit in ['g', 'kg', 'ml', 'l', 'each'] &&
+        request.resource.data.verificationStatus in ['draft', 'verified'] &&
+        (request.resource.data.verificationStatus == 'draft' ||
+          (request.resource.data.sourceUrl is string && request.resource.data.sourceUrl.size() > 0 &&
+           request.resource.data.verifiedAt is string && request.resource.data.verifiedAt.size() > 0)) &&
+        request.resource.data.active is bool;
+      allow delete: if isAdmin();
+    }
+
     // Default deny
     match /{path=**} {
       allow read, write: if false;

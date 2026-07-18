@@ -28,12 +28,13 @@ export interface ShoppingCostSummary {
   checkoutTotal: number;
   totalItemCount: number;
   pricedItemCount: number;
+  verifiedMatchCount: number;
   referenceMatchCount: number;
   fallbackMatchCount: number;
   excludedStapleCount: number;
 }
 
-type CatalogueUnit = 'g' | 'kg' | 'ml' | 'l' | 'each';
+export type CatalogueUnit = 'g' | 'kg' | 'ml' | 'l' | 'each';
 
 export interface IngredientPriceCatalogueEntry {
   ingredientKey: string;
@@ -44,9 +45,26 @@ export interface IngredientPriceCatalogueEntry {
   packUnit: CatalogueUnit;
   retailer: string;
   catalogueVersion: string;
-  sourceType: typeof INGREDIENT_PRICE_CATALOGUE_META.sourceType;
+  sourceType: typeof INGREDIENT_PRICE_CATALOGUE_META.sourceType | 'retailer-verified';
   sourceUrl?: string;
   verifiedAt?: string;
+}
+
+export interface RuntimeIngredientPriceCatalogueEntry extends IngredientPriceCatalogueEntry {
+  active: boolean;
+  verificationStatus: 'draft' | 'verified';
+}
+
+let runtimePriceCatalogue: Record<string, RuntimeIngredientPriceCatalogueEntry> = {};
+
+export function setRuntimeIngredientPriceCatalogue(entries: RuntimeIngredientPriceCatalogueEntry[]) {
+  runtimePriceCatalogue = Object.fromEntries(entries
+    .filter(entry => entry.active && entry.verificationStatus === 'verified' && entry.sourceUrl && entry.verifiedAt)
+    .map(entry => [entry.ingredientKey.trim().toLowerCase(), entry]));
+}
+
+export function clearRuntimeIngredientPriceCatalogue() {
+  runtimePriceCatalogue = {};
 }
 
 /**
@@ -338,17 +356,17 @@ export function costItemSync(item: ShoppingListItem): ShoppingListItem {
     }, flags: [...new Set([...(item.flags || []), 'excluded_staple'])] };
   }
 
-  // Find best match in our static pricing table
-  const basisKey = Object.keys(INGREDIENT_PRICE_CATALOGUE).find(k =>
-    ingredientKey.toLowerCase().includes(k) || k.includes(ingredientKey.toLowerCase())
-  );
-  const catalogueEntry = basisKey ? INGREDIENT_PRICE_CATALOGUE[basisKey] : null;
+  const matchesEntry = (entry: IngredientPriceCatalogueEntry) => [entry.ingredientKey, ...entry.aliases]
+    .some(alias => ingredientKey.toLowerCase().includes(alias.toLowerCase()) || alias.toLowerCase().includes(ingredientKey.toLowerCase()));
+  const runtimeEntry = Object.values(runtimePriceCatalogue).find(matchesEntry);
+  const catalogueEntry = runtimeEntry || Object.values(INGREDIENT_PRICE_CATALOGUE).find(matchesEntry) || null;
   let basis = catalogueEntry ? {
     price: catalogueEntry.packPrice,
     unit: catalogueEntry.packUnit,
     quantity: catalogueEntry.packQuantity,
   } : null;
   const usedReferencePrice = !!basis;
+  const usedVerifiedPrice = !!runtimeEntry;
 
   if (!basis) {
     const catLower = (item.category || '').toLowerCase().trim();
@@ -541,8 +559,8 @@ export function costItemSync(item: ShoppingListItem): ShoppingListItem {
       costingMethod: "estimated"
     },
     flags: [...new Set([
-      ...(item.flags || []).filter(flag => flag !== 'reference_price_match' && flag !== 'category_price_fallback'),
-      usedReferencePrice ? 'reference_price_match' : 'category_price_fallback'
+      ...(item.flags || []).filter(flag => !['verified_price_match', 'reference_price_match', 'category_price_fallback'].includes(flag)),
+      usedVerifiedPrice ? 'verified_price_match' : usedReferencePrice ? 'reference_price_match' : 'category_price_fallback'
     ])]
   };
 }
@@ -602,6 +620,7 @@ export function calculateShoppingCostSummary(items: ShoppingListItem[]): Shoppin
     summary.proportionalTotal += recipeCost;
     summary.checkoutTotal += basketCost;
     if (recipeCost > 0 || basketCost > 0) summary.pricedItemCount += 1;
+    if (flags.includes('verified_price_match')) summary.verifiedMatchCount += 1;
     if (flags.includes('reference_price_match')) summary.referenceMatchCount += 1;
     if (flags.includes('category_price_fallback')) summary.fallbackMatchCount += 1;
     if (excludedAsStaple) summary.excludedStapleCount += 1;
@@ -611,6 +630,7 @@ export function calculateShoppingCostSummary(items: ShoppingListItem[]): Shoppin
     checkoutTotal: 0,
     totalItemCount: 0,
     pricedItemCount: 0,
+    verifiedMatchCount: 0,
     referenceMatchCount: 0,
     fallbackMatchCount: 0,
     excludedStapleCount: 0,

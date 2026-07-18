@@ -1,11 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { ShoppingListItem } from '../types';
 import {
   calculateShoppingCostSummary,
   costItemSync,
   INGREDIENT_PRICE_CATALOGUE,
   INGREDIENT_PRICE_CATALOGUE_META,
+  clearRuntimeIngredientPriceCatalogue,
+  setRuntimeIngredientPriceCatalogue,
 } from './groceryService';
+
+afterEach(clearRuntimeIngredientPriceCatalogue);
 
 const makeItem = (name: string, category: string): ShoppingListItem => ({
   id: name,
@@ -50,8 +54,22 @@ describe('ingredient price catalogue', () => {
     expect(summary.checkoutTotal).toBeCloseTo(3.8);
     expect(summary.pricedItemCount).toBe(2);
     expect(summary.referenceMatchCount).toBe(1);
+    expect(summary.verifiedMatchCount).toBe(0);
     expect(summary.fallbackMatchCount).toBe(1);
     expect(summary.excludedStapleCount).toBe(1);
     expect(INGREDIENT_PRICE_CATALOGUE_META.sourceType).toBe('curated-reference');
+  });
+
+  it('uses a verified active retailer entry ahead of the reference catalogue', () => {
+    setRuntimeIngredientPriceCatalogue([{
+      ingredientKey: 'chicken', aliases: ['chicken breast'], productLabel: 'Tesco chicken breast fillets',
+      packPrice: 4, packQuantity: 500, packUnit: 'g', retailer: 'Tesco', catalogueVersion: '2026-07-18',
+      sourceType: 'retailer-verified', sourceUrl: 'https://www.tesco.com/example', verifiedAt: '2026-07-18T12:00:00Z',
+      verificationStatus: 'verified', active: true,
+    }]);
+    const chicken = costItemSync(makeItem('250g chicken breast', 'Meat & fish'));
+    expect(chicken.costing?.recipeCost).toBe(2);
+    expect(chicken.costing?.basketCost).toBe(4);
+    expect(chicken.flags).toContain('verified_price_match');
   });
 });

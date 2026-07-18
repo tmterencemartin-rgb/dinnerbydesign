@@ -6,6 +6,7 @@ import { UserProfile, AccessStatus } from '../../types';
 import { ArrowLeft, Search, Download, ExternalLink, CreditCard, Trash2, Users, AlertTriangle, Activity, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getApiUrl } from '../../lib/api';
+import { IngredientPriceCatalogueAdmin } from '../admin/IngredientPriceCatalogueAdmin';
 
 type AdminStatusFilter = AccessStatus | 'all' | 'permanent_access' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
 
@@ -763,7 +764,7 @@ export const AdminDashboard: React.FC = () => {
               <ArrowLeft className="w-5 h-5 text-gray-500" />
             </button>
             <div className="min-w-0">
-              <h1 className="text-xl font-bold text-gray-900 tracking-tight leading-tight">Subscription Dashboard</h1>
+              <h1 className="text-xl font-bold text-gray-900 tracking-tight leading-tight">Admin dashboard</h1>
             </div>
           </div>
           
@@ -826,6 +827,7 @@ export const AdminDashboard: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-1">
+            <IngredientPriceCatalogueAdmin />
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
               {[
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },

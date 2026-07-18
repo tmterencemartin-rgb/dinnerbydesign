@@ -1,0 +1,79 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { collection, deleteDoc, doc, getDocs, serverTimestamp, setDoc, Timestamp } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { CatalogueUnit, RuntimeIngredientPriceCatalogueEntry } from '../../services/groceryService';
+
+type CatalogueRecord = RuntimeIngredientPriceCatalogueEntry & { id: string; updatedAt?: Timestamp };
+
+const emptyDraft = {
+  ingredientKey: '', aliases: '', productLabel: '', retailer: 'Tesco', packPrice: '', packQuantity: '',
+  packUnit: 'g' as CatalogueUnit, sourceUrl: '', verifiedAt: '', verificationStatus: 'draft' as 'draft' | 'verified', active: false,
+};
+
+export const IngredientPriceCatalogueAdmin: React.FC = () => {
+  const [entries, setEntries] = useState<CatalogueRecord[]>([]);
+  const [draft, setDraft] = useState(emptyDraft);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const load = async () => {
+    const snapshot = await getDocs(collection(db, 'ingredientPriceCatalogue'));
+    setEntries(snapshot.docs.map(item => ({ id: item.id, ...item.data() } as CatalogueRecord)).sort((a, b) => a.ingredientKey.localeCompare(b.ingredientKey)));
+  };
+  useEffect(() => { void load(); }, []);
+
+  const staleCount = useMemo(() => entries.filter(entry => {
+    if (entry.verificationStatus !== 'verified' || !entry.verifiedAt) return false;
+    return Date.now() - new Date(entry.verifiedAt).getTime() > 14 * 86400000;
+  }).length, [entries]);
+
+  const edit = (entry: CatalogueRecord) => {
+    setEditingId(entry.id);
+    setDraft({
+      ingredientKey: entry.ingredientKey, aliases: entry.aliases.join(', '), productLabel: entry.productLabel,
+      retailer: entry.retailer, packPrice: String(entry.packPrice), packQuantity: String(entry.packQuantity), packUnit: entry.packUnit,
+      sourceUrl: entry.sourceUrl || '', verifiedAt: entry.verifiedAt?.slice(0, 10) || '', verificationStatus: entry.verificationStatus, active: entry.active,
+    });
+  };
+
+  const save = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const ingredientKey = draft.ingredientKey.trim().toLowerCase();
+    if (!ingredientKey || !draft.productLabel.trim() || Number(draft.packPrice) <= 0 || Number(draft.packQuantity) <= 0) return;
+    if (draft.verificationStatus === 'verified' && (!draft.sourceUrl.trim() || !draft.verifiedAt)) return;
+    setBusy(true);
+    const id = editingId || ingredientKey.replace(/[^a-z0-9]+/g, '-');
+    await setDoc(doc(db, 'ingredientPriceCatalogue', id), {
+      ingredientKey,
+      aliases: draft.aliases.split(',').map(value => value.trim().toLowerCase()).filter(Boolean),
+      productLabel: draft.productLabel.trim(), retailer: draft.retailer.trim(), packPrice: Number(draft.packPrice),
+      packQuantity: Number(draft.packQuantity), packUnit: draft.packUnit, sourceUrl: draft.sourceUrl.trim(),
+      verifiedAt: draft.verifiedAt ? new Date(`${draft.verifiedAt}T12:00:00Z`).toISOString() : '',
+      verificationStatus: draft.verificationStatus, active: draft.active && draft.verificationStatus === 'verified',
+      sourceType: 'retailer-verified', catalogueVersion: draft.verifiedAt || 'draft', updatedAt: serverTimestamp(),
+    });
+    setDraft(emptyDraft); setEditingId(null); await load(); setBusy(false);
+  };
+
+  return <section className="rounded border border-gray-200 bg-white p-3">
+    <div className="flex flex-wrap items-start justify-between gap-2">
+      <div><h2 className="text-sm font-bold text-gray-950">Ingredient price catalogue</h2><p className="mt-0.5 text-xs text-gray-500">Only active, verified entries with a source and verification date affect customer estimates.</p></div>
+      <div className="text-xs font-semibold text-gray-600">{entries.length} entries · {entries.filter(e => e.active).length} active · {staleCount} stale</div>
+    </div>
+    <form onSubmit={save} className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-6">
+      <input required placeholder="Ingredient key" value={draft.ingredientKey} onChange={e => setDraft({...draft, ingredientKey:e.target.value})} className="rounded border p-2 text-xs" />
+      <input required placeholder="Retail product" value={draft.productLabel} onChange={e => setDraft({...draft, productLabel:e.target.value})} className="col-span-2 rounded border p-2 text-xs" />
+      <input placeholder="Aliases, comma separated" value={draft.aliases} onChange={e => setDraft({...draft, aliases:e.target.value})} className="col-span-2 rounded border p-2 text-xs" />
+      <input placeholder="Retailer" value={draft.retailer} onChange={e => setDraft({...draft, retailer:e.target.value})} className="rounded border p-2 text-xs" />
+      <input required type="number" min="0.01" step="0.01" placeholder="Pack price £" value={draft.packPrice} onChange={e => setDraft({...draft, packPrice:e.target.value})} className="rounded border p-2 text-xs" />
+      <input required type="number" min="0.01" step="0.01" placeholder="Pack quantity" value={draft.packQuantity} onChange={e => setDraft({...draft, packQuantity:e.target.value})} className="rounded border p-2 text-xs" />
+      <select value={draft.packUnit} onChange={e => setDraft({...draft, packUnit:e.target.value as CatalogueUnit})} className="rounded border p-2 text-xs">{['g','kg','ml','l','each'].map(unit=><option key={unit}>{unit}</option>)}</select>
+      <input type="date" value={draft.verifiedAt} onChange={e => setDraft({...draft, verifiedAt:e.target.value})} className="rounded border p-2 text-xs" />
+      <select value={draft.verificationStatus} onChange={e => setDraft({...draft, verificationStatus:e.target.value as 'draft'|'verified'})} className="rounded border p-2 text-xs"><option value="draft">Draft</option><option value="verified">Verified</option></select>
+      <label className="flex items-center gap-2 rounded border px-2 text-xs"><input type="checkbox" checked={draft.active} onChange={e => setDraft({...draft, active:e.target.checked})}/>Active</label>
+      <input type="url" placeholder="Retailer source URL" value={draft.sourceUrl} onChange={e => setDraft({...draft, sourceUrl:e.target.value})} className="col-span-2 rounded border p-2 text-xs lg:col-span-5" />
+      <button disabled={busy} className="rounded bg-gray-950 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{editingId ? 'Update entry' : 'Add entry'}</button>
+    </form>
+    <div className="mt-3 overflow-x-auto"><table className="w-full text-left text-xs"><thead className="border-y text-gray-500"><tr><th className="p-2">Ingredient</th><th>Product and pack</th><th>Status</th><th>Verified</th><th></th></tr></thead><tbody>{entries.map(entry => <tr key={entry.id} className="border-b"><td className="p-2 font-semibold">{entry.ingredientKey}</td><td>{entry.productLabel} · £{entry.packPrice.toFixed(2)} / {entry.packQuantity}{entry.packUnit}<div className="text-gray-400">{entry.retailer}</div></td><td>{entry.verificationStatus}{entry.active ? ' · active' : ''}</td><td>{entry.verifiedAt?.slice(0,10) || 'Not verified'}</td><td className="whitespace-nowrap text-right"><button type="button" onClick={()=>edit(entry)} className="p-2 font-semibold">Edit</button><button type="button" onClick={async()=>{if(window.confirm(`Delete ${entry.ingredientKey}?`)){await deleteDoc(doc(db,'ingredientPriceCatalogue',entry.id)); await load();}}} className="p-2 font-semibold text-red-600">Delete</button></td></tr>)}</tbody></table></div>
+  </section>;
+};

@@ -57,6 +57,7 @@ import { buildShoppingListData, SHOPPING_CATEGORIES, normalizeIngredientKey } fr
 import { generateDinnerSuggestions, enrichRecipe } from '../services/geminiService';
 import { safeStorage } from '../lib/storage';
 import { prepareSavedRecipeData } from '../lib/savedRecipeData';
+import { clearRuntimeIngredientPriceCatalogue, RuntimeIngredientPriceCatalogueEntry, setRuntimeIngredientPriceCatalogue } from '../services/groceryService';
 import {
   clearPlannerWeekRecipes,
   getScheduledRecipeForDay,
@@ -865,7 +866,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user, isAuthReady]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      clearRuntimeIngredientPriceCatalogue();
+      return;
+    }
+
+    const unsubPrices = onSnapshot(
+      collection(db, 'ingredientPriceCatalogue'),
+      (snapshot) => setRuntimeIngredientPriceCatalogue(snapshot.docs.map(snapshotDoc => {
+        const data = snapshotDoc.data();
+        const verifiedAt = data.verifiedAt instanceof Timestamp ? data.verifiedAt.toDate().toISOString() : data.verifiedAt;
+        return { ...data, ingredientKey: data.ingredientKey || snapshotDoc.id, verifiedAt } as RuntimeIngredientPriceCatalogueEntry;
+      })),
+      () => clearRuntimeIngredientPriceCatalogue()
+    );
 
     const unsubRecipes = onSnapshot(
       query(collection(db, 'users', user.uid, 'savedRecipes'), orderBy('savedAt', 'desc')),
@@ -984,6 +998,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       unsubPantry();
       unsubProfile();
       unsubPrefs();
+      unsubPrices();
+      clearRuntimeIngredientPriceCatalogue();
     };
   }, [user]);
 
