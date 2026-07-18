@@ -46,7 +46,7 @@
     },
     {
       "source": "/dinner-plans/5-dinners-for-2-under-40",
-      "destination": "/api/server.js"
+      "destination": "/dinner-plans/5-dinners-for-2-under-40/index.html"
     },
     {
       "source": "/(.*)",
