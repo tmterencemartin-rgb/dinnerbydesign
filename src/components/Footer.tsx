@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface FooterProps {
-  setView: (view: 'home' | 'settings' | 'planner' | 'shopping' | 'privacy' | 'terms') => void;
+  setView: (view: 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-methodology' | 'privacy' | 'terms') => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
@@ -28,7 +28,17 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </div>
         
-        <div className="flex items-center space-x-6 shrink-0">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 shrink-0">
+          <a
+            href="/pricing-methodology"
+            onClick={(e) => {
+              e.preventDefault();
+              setView('pricing-methodology');
+            }}
+            className="text-gray-500 hover:text-gray-900 text-[13px] transition-colors whitespace-nowrap cursor-pointer"
+          >
+            How prices are calculated
+          </a>
           <a 
             href="/privacy"
             onClick={(e) => {

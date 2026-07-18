@@ -934,6 +934,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           <p className="mt-1 text-[10.5px] leading-relaxed text-gray-400">
                             Schedule one or more of these saved dinners to generate your shopping list. The cost estimate of £{builtWeekCost.estimatedTotal.toFixed(2)} may change after pack sizes, shared ingredients and items you already have are taken into account.
                           </p>
+                          <button
+                            type="button"
+                            onClick={() => setView('pricing-methodology')}
+                            className="mt-1 text-[10.5px] font-bold text-dbd-accent hover:underline"
+                          >
+                            How pricing works
+                          </button>
                         </div>
                         <button
                           type="button"

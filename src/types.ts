@@ -1,6 +1,6 @@
 import { Timestamp, FieldValue } from 'firebase/firestore';
 
-export type AppView = 'home' | 'settings' | 'planner' | 'shopping' | 'privacy' | 'terms' | 'landing' | 'signin' | 'admin' | 'success';
+export type AppView = 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-methodology' | 'privacy' | 'terms' | 'landing' | 'signin' | 'admin' | 'success';
 
 export type DinnerSource = 'cook' | 'ready-made';
 export type SaladPreference = 'all' | 'main-only' | 'side-only' | 'none';

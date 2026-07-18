@@ -658,7 +658,7 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Budget-aware weekly planning</strong>: set a weekly target, build several personalised dinners and see their combined estimated cost before scheduling.</span>
+                <span><strong>Budget-aware weekly planning</strong>: set a weekly target, build several personalised dinners and see their combined estimated cost before scheduling. <button type="button" onClick={() => setView('pricing-methodology')} className="font-semibold text-dbd-accent hover:underline">See how prices are calculated.</button></span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -849,7 +849,13 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Privacy & Terms views trigger bar */}
-          <div className="pt-4 border-t border-dbd-rule/40 max-w-xs mx-auto flex items-center justify-center gap-6 font-ibm-plex-mono text-[11px] font-semibold text-dbd-ink-3">
+          <div className="pt-4 border-t border-dbd-rule/40 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-ibm-plex-mono text-[11px] font-semibold text-dbd-ink-3">
+            <button
+              onClick={() => setView('pricing-methodology')}
+              className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"
+            >
+              Pricing methodology
+            </button>
             <button 
               onClick={() => setView('privacy')} 
               className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"

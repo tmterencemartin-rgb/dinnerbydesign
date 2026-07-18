@@ -20,7 +20,11 @@ import { CircleX } from '../ui/CircleX';
 import { normalizeIngredientKey } from '../../lib/shoppingUtils';
 import { convertIngredient } from '../../lib/measurementUtils';
 import { Tooltip } from '../ui/Tooltip';
-import { costItemSync, calculateActiveIngredientsCost } from '../../services/groceryService';
+import {
+  costItemSync,
+  calculateShoppingCostSummary,
+  INGREDIENT_PRICE_CATALOGUE_META,
+} from '../../services/groceryService';
 
 interface ShoppingListViewProps {
   setView: (view: any) => void;
@@ -259,12 +263,17 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
   const editingItems = activeItems;
   const pantryItems = activeItems.filter(it => it.excludedByPantry);
 
-  const [totalEstimatedCost, setTotalEstimatedCost] = useState<number>(() => calculateActiveIngredientsCost(activeItems.filter(it => !it.inStock && !it.checked)));
-
-  useEffect(() => {
-    const total = calculateActiveIngredientsCost(activeItems.filter(it => !it.inStock && !it.checked));
-    setTotalEstimatedCost(total);
-  }, [activeItems]);
+  const shoppingCostSummary = React.useMemo(
+    () => calculateShoppingCostSummary(activeItems.filter(it => !it.inStock && !it.checked && !it.excludedByPantry)),
+    [activeItems]
+  );
+  const totalEstimatedCost = shoppingCostSummary.proportionalTotal;
+  const expectedCheckoutCost = shoppingCostSummary.checkoutTotal;
+  const catalogueVersion = new Date(`${INGREDIENT_PRICE_CATALOGUE_META.version}T12:00:00Z`).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 
   const handleDeleteItem = async (item: ShoppingListItem) => {
     if (checkReadOnly("Your trial has ended. Upgrade to change your list.")) return;
@@ -370,14 +379,17 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                           key={totalEstimatedCost}
                           className="text-[12px] font-bold text-accent"
                         >
-                          Estimated shopping-list cost: £{totalEstimatedCost.toFixed(2)} {numberOfNights > 0 ? `for ${numberOfNights} ${numberOfNights === 1 ? 'dinner' : 'dinners'}` : ''}
+                          Estimated ingredients: £{totalEstimatedCost.toFixed(2)} {numberOfNights > 0 ? `for ${numberOfNights} ${numberOfNights === 1 ? 'dinner' : 'dinners'}` : ''}
                         </motion.p>
                         <Tooltip
                           text={
                             <div className="text-left space-y-1.5 p-0.5 leading-normal font-sans">
                               <p className="font-bold text-[12px] text-white border-b border-white/10 pb-1 mb-1">How is this calculated?</p>
                               <p className="text-gray-300 text-[11px] font-medium leading-relaxed">
-                                This is a <strong>pro-rata estimate based on the ingredient quantities</strong> used in your planned dinners and assumes you have basic cupboard staples such as oil and seasoning.
+                                <strong>Estimated ingredients</strong> is the proportional value of the quantities used. <strong>Expected checkout</strong> rounds each consolidated ingredient up to the full packs required.
+                              </p>
+                              <p className="text-gray-300 text-[11px] font-medium leading-relaxed">
+                                Prices use the reference catalogue where an ingredient matches, with category estimates used as a fallback. Items marked in stock are excluded.
                               </p>
                             </div>
                           }
@@ -396,7 +408,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                         </Tooltip>
                       </div>
                       <p className="text-[9.5px] text-gray-400 font-medium">
-                        Excludes items ticked as already in stock
+                        Expected checkout: £{expectedCheckoutCost.toFixed(2)} · excludes items already in stock
                       </p>
                     </div>
                   </div>
@@ -453,8 +465,18 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                 </div>
               </div>
               <p className="text-[11px] font-medium text-gray-500 text-center leading-relaxed w-full max-w-2xl mx-auto">
-                <span className="font-semibold text-gray-700">Expected checkout total:</span> supermarkets sell ingredients in full packs—for example, chicken breasts in packs of two or minced beef in 500g packs—so your actual checkout total is likely to be higher.
+                <span className="font-semibold text-gray-700">Price basis:</span> {shoppingCostSummary.referenceMatchCount} of {shoppingCostSummary.pricedItemCount} priced items matched to {INGREDIENT_PRICE_CATALOGUE_META.label.toLowerCase()}; {shoppingCostSummary.fallbackMatchCount} use category estimates. Catalogue version {catalogueVersion}. Actual retailer prices and available pack sizes may vary.
               </p>
+              <details className="w-full max-w-2xl rounded border border-gray-100 bg-white px-3 py-2 text-left">
+                <summary className="cursor-pointer text-[11px] font-bold text-dbd-accent">How we calculate prices</summary>
+                <div className="mt-2 space-y-2 text-[11px] leading-relaxed text-gray-500">
+                  <p>Estimated ingredients shows the proportional value used by your dinners. Expected checkout rounds each consolidated ingredient up to the complete packs required.</p>
+                  <p>Ingredients shared across scheduled dinners are combined first. Items marked as already in stock are excluded. Catalogue matches use typical UK reference prices; unmatched items use clearly reported category estimates.</p>
+                  <button type="button" onClick={() => setView('pricing-methodology')} className="font-bold text-dbd-accent hover:underline">
+                    View the full ingredient pricing methodology
+                  </button>
+                </div>
+              </details>
             </div>
           )}
         </div>

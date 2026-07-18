@@ -15,6 +15,7 @@ import { PlannerView } from './components/views/PlannerView';
 import { ShoppingListView } from './components/views/ShoppingListView';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsView } from './components/views/TermsView';
+import { PricingMethodologyView } from './components/views/PricingMethodologyView';
 import { AdminDashboard } from './components/views/AdminDashboard';
 import { LandingView } from './components/views/LandingView';
 import { SuccessView } from './components/views/SuccessView';
@@ -82,6 +83,12 @@ const AppContent = () => {
           title: 'Terms of Service — DinnerByDesign',
           description: 'Review the terms of service, trial rules, and subscription details for DinnerByDesign.',
           canonicalPath: '/terms'
+        };
+      case 'pricing-methodology':
+        return {
+          title: 'Ingredient Pricing Methodology — DinnerByDesign',
+          description: 'Learn how DinnerByDesign calculates estimated ingredient costs, full-pack checkout costs, catalogue coverage and price fallbacks.',
+          canonicalPath: '/pricing-methodology'
         };
       case 'success':
         return {
@@ -216,7 +223,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -313,6 +320,10 @@ const AppContent = () => {
 
   if (view === 'terms') {
     return <TermsView setView={setView} />;
+  }
+
+  if (view === 'pricing-methodology') {
+    return <PricingMethodologyView setView={setView} />;
   }
 
   if (view === 'success') {

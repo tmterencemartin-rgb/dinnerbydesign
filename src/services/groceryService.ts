@@ -16,11 +16,44 @@ export interface GroceryProduct {
   matchConfidence: number;
 }
 
+export const INGREDIENT_PRICE_CATALOGUE_META = {
+  label: 'Typical UK reference prices',
+  version: '2026-07-18',
+  retailer: 'UK supermarket reference basket',
+  sourceType: 'curated-reference' as const,
+};
+
+export interface ShoppingCostSummary {
+  proportionalTotal: number;
+  checkoutTotal: number;
+  totalItemCount: number;
+  pricedItemCount: number;
+  referenceMatchCount: number;
+  fallbackMatchCount: number;
+  excludedStapleCount: number;
+}
+
+type CatalogueUnit = 'g' | 'kg' | 'ml' | 'l' | 'each';
+
+export interface IngredientPriceCatalogueEntry {
+  ingredientKey: string;
+  aliases: string[];
+  productLabel: string;
+  packPrice: number;
+  packQuantity: number;
+  packUnit: CatalogueUnit;
+  retailer: string;
+  catalogueVersion: string;
+  sourceType: typeof INGREDIENT_PRICE_CATALOGUE_META.sourceType;
+  sourceUrl?: string;
+  verifiedAt?: string;
+}
+
 /**
  * Static price basis for estimated costs.
  * These reflect typical UK supermarket prices per standard unit.
  */
-const UNIT_PRICE_BASIS: Record<string, { price: number; unit: "g" | "kg" | "ml" | "l" | "each"; quantity: number }> = {
+const REFERENCE_PRICE_VALUES: Record<string, { price: number; unit: CatalogueUnit; quantity: number }> = {
   'chicken': { price: 3.00, unit: 'g', quantity: 400 },
   'beef': { price: 5.00, unit: 'g', quantity: 500 },
   'pork': { price: 4.00, unit: 'g', quantity: 500 },
@@ -83,6 +116,20 @@ const UNIT_PRICE_BASIS: Record<string, { price: number; unit: "g" | "kg" | "ml" 
   'passata': { price: 0.60, unit: 'g', quantity: 500 },
   'pesto': { price: 1.10, unit: 'g', quantity: 190 },
 };
+
+export const INGREDIENT_PRICE_CATALOGUE: Record<string, IngredientPriceCatalogueEntry> = Object.fromEntries(
+  Object.entries(REFERENCE_PRICE_VALUES).map(([ingredientKey, basis]) => [ingredientKey, {
+    ingredientKey,
+    aliases: [ingredientKey],
+    productLabel: `${ingredientKey} reference pack`,
+    packPrice: basis.price,
+    packQuantity: basis.quantity,
+    packUnit: basis.unit,
+    retailer: INGREDIENT_PRICE_CATALOGUE_META.retailer,
+    catalogueVersion: INGREDIENT_PRICE_CATALOGUE_META.version,
+    sourceType: INGREDIENT_PRICE_CATALOGUE_META.sourceType,
+  }])
+);
 
 /**
  * Typical metric weight (in grams) or volume (in ml) for a single piece ("each") of an ingredient.
@@ -288,14 +335,20 @@ export function costItemSync(item: ShoppingListItem): ShoppingListItem {
       packsRequired: 0,
       basketCost: 0,
       costingMethod: "estimated"
-    }};
+    }, flags: [...new Set([...(item.flags || []), 'excluded_staple'])] };
   }
 
   // Find best match in our static pricing table
-  const basisKey = Object.keys(UNIT_PRICE_BASIS).find(k => 
+  const basisKey = Object.keys(INGREDIENT_PRICE_CATALOGUE).find(k =>
     ingredientKey.toLowerCase().includes(k) || k.includes(ingredientKey.toLowerCase())
   );
-  let basis = basisKey ? UNIT_PRICE_BASIS[basisKey] : null;
+  const catalogueEntry = basisKey ? INGREDIENT_PRICE_CATALOGUE[basisKey] : null;
+  let basis = catalogueEntry ? {
+    price: catalogueEntry.packPrice,
+    unit: catalogueEntry.packUnit,
+    quantity: catalogueEntry.packQuantity,
+  } : null;
+  const usedReferencePrice = !!basis;
 
   if (!basis) {
     const catLower = (item.category || '').toLowerCase().trim();
@@ -486,7 +539,11 @@ export function costItemSync(item: ShoppingListItem): ShoppingListItem {
       packsRequired: Math.ceil(qtyBase / basisBase),
       basketCost: Math.ceil(qtyBase / basisBase) * basis.price,
       costingMethod: "estimated"
-    }
+    },
+    flags: [...new Set([
+      ...(item.flags || []).filter(flag => flag !== 'reference_price_match' && flag !== 'category_price_fallback'),
+      usedReferencePrice ? 'reference_price_match' : 'category_price_fallback'
+    ])]
   };
 }
 
@@ -529,4 +586,33 @@ export function calculateActiveIngredientsCost(items: ShoppingListItem[]): numbe
   return items.reduce((sum, item) => sum + (costItemSync(item).costing?.recipeCost || 0), 0);
 }
 
+/**
+ * Returns the two user-facing cost views for active shopping-list items:
+ * the proportional value used by the dinners and the full packs needed at checkout.
+ */
+export function calculateShoppingCostSummary(items: ShoppingListItem[]): ShoppingCostSummary {
+  return items.reduce<ShoppingCostSummary>((summary, item) => {
+    const costed = costItemSync(item);
+    const flags = costed.flags || [];
+    const recipeCost = costed.costing?.recipeCost || 0;
+    const basketCost = costed.costing?.basketCost || 0;
+    const excludedAsStaple = flags.includes('excluded_staple');
 
+    summary.totalItemCount += 1;
+    summary.proportionalTotal += recipeCost;
+    summary.checkoutTotal += basketCost;
+    if (recipeCost > 0 || basketCost > 0) summary.pricedItemCount += 1;
+    if (flags.includes('reference_price_match')) summary.referenceMatchCount += 1;
+    if (flags.includes('category_price_fallback')) summary.fallbackMatchCount += 1;
+    if (excludedAsStaple) summary.excludedStapleCount += 1;
+    return summary;
+  }, {
+    proportionalTotal: 0,
+    checkoutTotal: 0,
+    totalItemCount: 0,
+    pricedItemCount: 0,
+    referenceMatchCount: 0,
+    fallbackMatchCount: 0,
+    excludedStapleCount: 0,
+  });
+}

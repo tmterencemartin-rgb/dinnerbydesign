@@ -164293,6 +164293,12 @@ function createApp() {
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/terms";
+        } else if (pathName === "/pricing-methodology") {
+          title = "Ingredient Pricing Methodology \u2014 DinnerByDesign";
+          description = "Learn how DinnerByDesign calculates estimated ingredient costs, full-pack checkout costs, catalogue coverage and price fallbacks.";
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = "/pricing-methodology";
         } else if (pathName === "/planner") {
           title = "Your Dinner Planner \u2014 DinnerByDesign";
           description = "Your weekly bespoke dinner schedule and preparation planner.";
