@@ -10,8 +10,8 @@ interface PricingMethodologyViewProps {
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <section className="space-y-3 border-t border-gray-100 pt-6">
-    <h2 className="text-[17px] font-bold text-gray-900">{title}</h2>
-    <div className="space-y-3 text-[13.5px] leading-relaxed text-gray-600">{children}</div>
+    <h2 className="text-[18px] font-bold text-gray-900">{title}</h2>
+    <div className="space-y-3 text-[14px] leading-relaxed text-gray-600">{children}</div>
   </section>
 );
 
@@ -29,7 +29,7 @@ export const PricingMethodologyView: React.FC<PricingMethodologyViewProps> = ({ 
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
-      className="mx-auto max-w-3xl px-4 py-10 pb-20 select-text"
+      className="mx-auto max-w-2xl px-4 py-12 pb-20 select-text"
     >
       <button
         type="button"
@@ -41,8 +41,8 @@ export const PricingMethodologyView: React.FC<PricingMethodologyViewProps> = ({ 
 
       <header className="space-y-3">
         <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Pricing transparency</p>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-950 sm:text-3xl">How DinnerByDesign calculates ingredient prices</h1>
-        <p className="text-[15px] leading-relaxed text-gray-600">
+        <h1 className="text-[24px] font-bold leading-9 text-gray-950">How DinnerByDesign calculates ingredient prices</h1>
+        <p className="text-[14px] leading-relaxed text-gray-600">
           DinnerByDesign provides cost estimates to help compare dinners, plan against a weekly budget and understand what a chosen week may cost at the supermarket. These figures are planning tools—not quotations, guarantees of availability or promises of the exact amount a retailer will charge.
         </p>
         <p className="text-[11.5px] text-gray-400">Reference catalogue version: {catalogueVersion}</p>
@@ -110,7 +110,7 @@ export const PricingMethodologyView: React.FC<PricingMethodologyViewProps> = ({ 
         </Section>
       </div>
 
-      <div className="mt-10 border-t border-gray-100 pt-6 text-[12.5px] leading-relaxed text-gray-500">
+      <div className="mt-10 border-t border-gray-100 pt-6 text-[14px] leading-relaxed text-gray-500">
         Questions about the methodology can be sent to{' '}
         <a href="mailto:chef@dinnerbydesign.app" className="font-semibold text-dbd-accent hover:underline">chef@dinnerbydesign.app</a>.
       </div>
