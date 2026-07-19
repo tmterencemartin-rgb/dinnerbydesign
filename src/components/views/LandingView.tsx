@@ -851,6 +851,7 @@ export const LandingView: React.FC = () => {
           {/* Privacy & Terms views trigger bar */}
           <div className="pt-4 border-t border-dbd-rule/40 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-ibm-plex-mono text-[11px] font-semibold text-dbd-ink-3">
             <a href="/dinner-plans/5-dinners-for-2-under-40" className="hover:text-dbd-accent hover:underline">Affordable dinner plan</a>
+            <a href="/food-costs/uk-food-costs-2026" className="hover:text-dbd-accent hover:underline">UK food-cost guide</a>
             <button
               onClick={() => setView('pricing-methodology')}
               className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"

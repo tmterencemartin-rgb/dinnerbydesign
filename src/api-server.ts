@@ -8,6 +8,7 @@ import { getApps, initializeApp } from "firebase-admin/app";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
+import { isUnknownPublicArticlePath } from "../src/content/publicArticles";
 import {
   catalogueEntryMatchesFeedItem,
   ingredientPriceDocumentId,
@@ -1158,6 +1159,15 @@ export function createApp() {
     }
   });
 
+  app.use((req, res, next) => {
+    if ((req.method !== 'GET' && req.method !== 'HEAD') || !isUnknownPublicArticlePath(req.path)) {
+      return next();
+    }
+
+    const requestedPath = req.path.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+    res.status(404).type('html').send(`<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><title>Page not found — DinnerByDesign</title></head><body><main><p><a href="/">DinnerByDesign</a></p><h1>Page not found</h1><p>There is no published guide or dinner plan at ${requestedPath}.</p><p><a href="/dinner-plans/5-dinners-for-2-under-40">View the affordable dinner plan</a> or <a href="/food-costs/uk-food-costs-2026">read the UK food-cost guide</a>.</p></main></body></html>`);
+  });
+
   const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
 
   if (isProd) {
@@ -1380,7 +1390,7 @@ export function createApp() {
         }
 
         if (initialBody) {
-          html = html.replace('<div id="root"></div>', initialBody);
+          html = html.replace(/<div id="root">[\s\S]*?<\/div>/, initialBody);
         }
 
         res.setHeader("Content-Type", "text/html");

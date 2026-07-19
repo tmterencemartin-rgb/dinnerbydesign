@@ -163432,6 +163432,15 @@ var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
   publishedAt: "2026-07-18",
   reviewedAt: "2026-07-18",
   editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Dinner plan",
+  primarySearchIntent: "Affordable weekly dinners for two within a \xA340 supermarket checkout target",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-19",
+  costMethodology: "Representative UK standard packs, with checkout cost and the estimated value used shown separately.",
+  editorialNotes: "Review pack prices, availability assumptions, substitutions and all stated totals before republishing.",
+  minimumDinnerCount: 5,
+  eligibilityRules: ["Exactly five distinct dinners", "Expected checkout cost no higher than \xA340", "At least three ingredients reused across the week", "No promotional price required"],
+  internalLinks: ["/pricing-methodology", "/recipe-methodology", "/food-costs/uk-food-costs-2026"],
   status: "published",
   introduction: [
     "Planning five different dinners can easily create five disconnected shopping lists. This week is designed differently: useful ingredients are deliberately carried from one dinner into another, while chicken, pulses and eggs provide variety without requiring five separate main-protein purchases.",
@@ -163475,6 +163484,51 @@ var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
     { question: "If you are cooking for three or four", answer: "Increase the household size in Plan My Week. Quantities will scale, but complete-pack rounding means the total will not always rise in a perfectly straight line." },
     { question: "If you shop at a different supermarket", answer: "Keep the dinner structure and compare equivalent standard packs. Treat \xA337.90 as the reference-basket estimate rather than a promise from a particular retailer." },
     { question: "If you want a vegetarian week", answer: "Replace the chicken with chickpeas and mushrooms and apply the vegetarian rule before generating alternatives." }
+  ],
+  shoppingList: [
+    { category: "Protein", ingredient: "Chicken breast", quantityRequired: "800g", referencePack: "2 \xD7 400g packs", checkoutCost: 6, usedValue: 6, usedIn: "Monday and Wednesday" },
+    { category: "Produce", ingredient: "Peppers", quantityRequired: "2", referencePack: "3-pack", checkoutCost: 1.5, usedValue: 1, usedIn: "Monday and Wednesday" },
+    { category: "Produce", ingredient: "Onions", quantityRequired: "600g", referencePack: "1kg bag", checkoutCost: 1, usedValue: 0.6, usedIn: "Monday, Tuesday, Thursday and Friday" },
+    { category: "Produce", ingredient: "Potatoes", quantityRequired: "1.5kg", referencePack: "2.5kg bag", checkoutCost: 1.5, usedValue: 0.9, usedIn: "Monday and Thursday" },
+    { category: "Produce", ingredient: "Carrots", quantityRequired: "600g", referencePack: "1kg bag", checkoutCost: 0.6, usedValue: 0.36, usedIn: "Wednesday and Friday" },
+    { category: "Cupboard", ingredient: "Pasta", quantityRequired: "300g", referencePack: "500g pack", checkoutCost: 0.75, usedValue: 0.45, usedIn: "Tuesday" },
+    { category: "Cupboard", ingredient: "Red lentils", quantityRequired: "250g", referencePack: "500g pack", checkoutCost: 1, usedValue: 0.5, usedIn: "Tuesday" },
+    { category: "Cupboard", ingredient: "Chopped tomatoes", quantityRequired: "3 \xD7 400g tins", referencePack: "3 \xD7 400g tins", checkoutCost: 1.5, usedValue: 1.5, usedIn: "Tuesday, Thursday and Friday" },
+    { category: "Chilled", ingredient: "Cheddar", quantityRequired: "300g", referencePack: "400g pack", checkoutCost: 2.5, usedValue: 1.88, usedIn: "Tuesday and Thursday" },
+    { category: "Cupboard", ingredient: "Rice", quantityRequired: "400g", referencePack: "1kg pack", checkoutCost: 1.5, usedValue: 0.6, usedIn: "Wednesday and Friday" },
+    { category: "Chilled", ingredient: "Eggs", quantityRequired: "4", referencePack: "12-pack", checkoutCost: 2.5, usedValue: 0.83, usedIn: "Wednesday" },
+    { category: "Cupboard", ingredient: "Beans", quantityRequired: "2 \xD7 400g tins", referencePack: "2 \xD7 400g tins", checkoutCost: 1, usedValue: 1, usedIn: "Thursday" },
+    { category: "Chilled", ingredient: "Natural yoghurt", quantityRequired: "500g", referencePack: "500g pot", checkoutCost: 1.5, usedValue: 1.5, usedIn: "Thursday and Friday" },
+    { category: "Cupboard", ingredient: "Chickpeas", quantityRequired: "2 \xD7 400g tins", referencePack: "2 \xD7 400g tins", checkoutCost: 1, usedValue: 1, usedIn: "Friday" },
+    { category: "Freezer", ingredient: "Spinach", quantityRequired: "300g", referencePack: "2 \xD7 250g packs", checkoutCost: 3.4, usedValue: 2.04, usedIn: "Friday" },
+    { category: "Produce", ingredient: "Garlic", quantityRequired: "1 bulb", referencePack: "3-bulb pack", checkoutCost: 0.75, usedValue: 0.25, usedIn: "Tuesday and Friday" },
+    { category: "Cupboard", ingredient: "Curry powder", quantityRequired: "20g", referencePack: "80g jar", checkoutCost: 1, usedValue: 0.25, usedIn: "Friday" },
+    { category: "Cupboard", ingredient: "Paprika", quantityRequired: "About 25g", referencePack: "40g jar", checkoutCost: 1, usedValue: 0.62, usedIn: "Monday and Thursday" },
+    { category: "Cupboard", ingredient: "Soy sauce", quantityRequired: "30ml", referencePack: "150ml bottle", checkoutCost: 1, usedValue: 0.2, usedIn: "Wednesday" },
+    { category: "Freezer", ingredient: "Frozen peas", quantityRequired: "300g", referencePack: "500g bag", checkoutCost: 1.2, usedValue: 0.72, usedIn: "Wednesday" },
+    { category: "Freezer", ingredient: "Frozen mixed vegetables", quantityRequired: "500g", referencePack: "1kg bag", checkoutCost: 1.5, usedValue: 0.75, usedIn: "Wednesday and Friday" },
+    { category: "Produce", ingredient: "Salad leaves", quantityRequired: "200g", referencePack: "200g bag", checkoutCost: 1.2, usedValue: 1.2, usedIn: "Thursday" },
+    { category: "Cupboard", ingredient: "Vegetable stock", quantityRequired: "2 cubes", referencePack: "10-cube pack", checkoutCost: 1, usedValue: 0.2, usedIn: "Tuesday and Friday" },
+    { category: "Produce", ingredient: "Lemons", quantityRequired: "1", referencePack: "2-pack", checkoutCost: 0.6, usedValue: 0.3, usedIn: "Monday and Friday" },
+    { category: "Cupboard", ingredient: "Tomato pur\xE9e", quantityRequired: "100g", referencePack: "200g tube", checkoutCost: 0.7, usedValue: 0.35, usedIn: "Tuesday and Friday" },
+    { category: "Produce", ingredient: "Spring onions", quantityRequired: "Half a bunch", referencePack: "1 bunch", checkoutCost: 0.7, usedValue: 0.35, usedIn: "Wednesday" }
+  ],
+  preparationAdvice: [
+    "Before cooking on Monday, divide the chicken between Monday and Wednesday so the second portion is clearly reserved.",
+    "Chop the onions, carrots and peppers needed across the week in one session, keeping each dinner\u2019s quantity separate.",
+    "Measure the rice, pasta and lentils before cooking so the remaining dry ingredients stay available for another week."
+  ],
+  leftoverGuidance: [
+    "The reference basket leaves useful dry goods, spices, eggs and some vegetables after these five dinners; these remain part of the checkout cost but not the value used.",
+    "Cool reserved cooked ingredients promptly, refrigerate them, and follow current food-safety guidance when reheating.",
+    "If plans change, prioritise fresh salad leaves, yoghurt and opened produce; unopened cupboard and frozen ingredients can support a later dinner."
+  ],
+  faqs: [
+    { question: "Does the \xA340 target include full supermarket packs?", answer: "Yes. The expected checkout figure uses representative complete packs; the lower ingredient figure shows only the estimated value used by these dinners." },
+    { question: "Can I make the plan vegetarian?", answer: "Yes. Replace the chicken with chickpeas and mushrooms, then apply vegetarian preferences when personalising the plan." },
+    { question: "Will my actual checkout be exactly \xA337.90?", answer: "No. Retailer, location, availability, substitutions, promotions and ingredients already at home will change it." },
+    { question: "Are cupboard basics included?", answer: "Every priced item used in the calculation is shown in the shopping list. Salt, pepper and cooking oil are treated as cupboard basics and are not included in the \xA337.90 reference basket." },
+    { question: "Can I scale this plan for a larger household?", answer: "Yes. Increase the household size when personalising the plan. Complete-pack rounding means the checkout estimate may not increase in a perfectly straight line." }
   ]
 };
 var FIVE_DINNERS_FOR_TWO_UNDER_40_PATH = "/dinner-plans/5-dinners-for-2-under-40";
@@ -163486,11 +163540,7 @@ function getFiveDinnersForTwoJsonLd() {
       { "@type": "CollectionPage", "@id": `${url}#page`, url, name: FIVE_DINNERS_FOR_TWO_UNDER_40.title, description: FIVE_DINNERS_FOR_TWO_UNDER_40.description, datePublished: FIVE_DINNERS_FOR_TWO_UNDER_40.publishedAt, dateModified: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt, isPartOf: { "@type": "WebSite", name: "DinnerByDesign", url: "https://dinnerbydesign.app/" }, mainEntity: { "@id": `${url}#plan` } },
       { "@type": "ItemList", "@id": `${url}#plan`, name: FIVE_DINNERS_FOR_TWO_UNDER_40.shortTitle, numberOfItems: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.length, itemListElement: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.map((dinner, index) => ({ "@type": "ListItem", position: index + 1, name: dinner.title })) },
       { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "DinnerByDesign", item: "https://dinnerbydesign.app/" }, { "@type": "ListItem", position: 2, name: "Affordable dinner plans", item: url }] },
-      { "@type": "FAQPage", mainEntity: [
-        { "@type": "Question", name: "Does the \xA340 target include full supermarket packs?", acceptedAnswer: { "@type": "Answer", text: "Yes. The expected checkout figure uses representative complete packs; the lower ingredient figure shows only the value used by these dinners." } },
-        { "@type": "Question", name: "Can I make the plan vegetarian?", acceptedAnswer: { "@type": "Answer", text: "Yes. Replace the chicken with chickpeas and mushrooms, then apply vegetarian preferences when personalising the plan." } },
-        { "@type": "Question", name: "Will my actual checkout be exactly \xA337.90?", acceptedAnswer: { "@type": "Answer", text: "No. Retailer, location, availability, substitutions, promotions and ingredients already at home will change it." } }
-      ] }
+      { "@type": "FAQPage", mainEntity: FIVE_DINNERS_FOR_TWO_UNDER_40.faqs.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) }
     ]
   };
 }
@@ -163505,7 +163555,71 @@ function renderFiveDinnersForTwoInitialHtml() {
   const strategy = plan.shoppingStrategy.map((paragraph) => `<p>${escapeHtml2(paragraph)}</p>`).join("");
   const principles = plan.budgetPrinciples.map((item) => `<li><strong>${escapeHtml2(item.title)}:</strong> ${escapeHtml2(item.explanation)}</li>`).join("");
   const scenarios = plan.flexibleScenarios.map((item) => `<h3>${escapeHtml2(item.question)}</h3><p>${escapeHtml2(item.answer)}</p>`).join("");
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml2(plan.title)}</h1><p>${escapeHtml2(plan.description)}</p><p>By ${escapeHtml2(plan.editorialOwner)} \xB7 Reviewed 18 July 2026</p><section><h2>A practical \xA340 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p><p>These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation.</p></section><section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under \xA340</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026">understand the wider UK food-cost picture</a>.</p></section><section><h2>Questions about this \xA340 plan</h2><h3>Does the \xA340 target include full supermarket packs?</h3><p>Yes. The expected checkout figure uses representative complete packs.</p><h3>Will my actual checkout be exactly \xA337.90?</h3><p>No. Retailer, availability, substitutions, promotions and ingredients already at home will change it.</p></section><p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+  const shoppingList = ["Protein", "Produce", "Chilled", "Cupboard", "Freezer"].map((category) => `<section><h3>${category}</h3><ul>${plan.shoppingList.filter((item) => item.category === category).map((item) => `<li><strong>${escapeHtml2(item.ingredient)}</strong>: ${escapeHtml2(item.quantityRequired)} required; ${escapeHtml2(item.referencePack)} at ${formatMoney(item.checkoutCost)}; about ${formatMoney(item.usedValue)} used. Used in ${escapeHtml2(item.usedIn)}.</li>`).join("")}</ul></section>`).join("");
+  const preparation = plan.preparationAdvice.map((item) => `<li>${escapeHtml2(item)}</li>`).join("");
+  const leftovers = plan.leftoverGuidance.map((item) => `<li>${escapeHtml2(item)}</li>`).join("");
+  const faqs = plan.faqs.map((item) => `<h3>${escapeHtml2(item.question)}</h3><p>${escapeHtml2(item.answer)}</p>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml2(plan.title)}</h1><p>${escapeHtml2(plan.description)}</p><p>By ${escapeHtml2(plan.editorialOwner)} \xB7 Published 18 July 2026 \xB7 Content reviewed 19 July 2026 \xB7 Prices checked 18 July 2026</p><section><h2>A practical \xA340 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}, about ${formatMoney(plan.estimatedIngredientCost / 10)} per portion.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p><p>These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation.</p></section><section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>Complete shopping list and cost calculation</h2><p>The checkout column represents complete reference packs. The value-used column apportions only the quantity used across these ten portions. Adding the listed packs gives ${formatMoney(plan.expectedCheckoutCost)}; adding the value used gives ${formatMoney(plan.estimatedIngredientCost)}.</p>${shoppingList}</section><section><h2>Preparation and leftovers</h2><h3>Prepare once, use again</h3><ul>${preparation}</ul><h3>What remains after the week</h3><ul>${leftovers}</ul></section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under \xA340</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026">understand the wider UK food-cost picture</a>.</p></section><section><h2>Questions about this \xA340 plan</h2>${faqs}</section><p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+}
+
+// src/content/seoFoodCostGuides.ts
+var UK_FOOD_COSTS_2026_PATH = "/food-costs/uk-food-costs-2026";
+var UK_FOOD_COSTS_2026 = {
+  title: "Why UK food costs are rising in 2026 \u2014 and what it means for your shopping",
+  description: "A clear guide to UK food price inflation in 2026, what national figures mean for household shopping, and how planning dinners can help control costs and waste.",
+  publishedAt: "2026-07-18",
+  reviewedAt: "2026-07-19",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Understand current UK food-price changes and practical household budgeting implications",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-19",
+  editorialNotes: "Recheck official releases, forecast dates and all numerical claims before changing the review date.",
+  internalLinks: ["/dinner-plans/5-dinners-for-2-under-40", "/pricing-methodology"],
+  sources: [
+    { label: "ONS, Consumer price inflation, UK: May 2026", url: "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/may2026" },
+    { label: "British Retail Consortium, Summer discounting keeps shop price inflation stable", url: "https://brc.org.uk/news-and-events/news/corporate-affairs/2026/ungated/summer-discounting-keeps-shop-price-inflation-stable/" },
+    { label: "Which?, Food price inflation tracker", url: "https://www.which.co.uk/reviews/supermarkets/article/food-price-inflation-tracker-aU2oV0A46tu3" },
+    { label: "Food Foundation, Food Prices Tracker: June 2026", url: "https://foodfoundation.org.uk/news/food-prices-tracker-june-2026" },
+    { label: "Food and Drink Federation, 2026 food inflation forecast", url: "https://www.fdf.org.uk/wales/fdf/news-media/press-releases/2026/fdf-revises-food-inflation-forecast-to-at-least-9-by-the-end-of-2026/" },
+    { label: "IGD, June 2026 food inflation forecast", url: "https://www.igd.com/articles/igd-releases-new-food-inflation-forecast/73470" }
+  ]
+};
+
+// src/content/publicArticles.ts
+var PUBLIC_ARTICLES = [
+  {
+    title: UK_FOOD_COSTS_2026.title,
+    path: UK_FOOD_COSTS_2026_PATH,
+    category: "Food cost guide",
+    pageFamily: UK_FOOD_COSTS_2026.pageFamily,
+    primarySearchIntent: UK_FOOD_COSTS_2026.primarySearchIntent,
+    indexingStatus: UK_FOOD_COSTS_2026.indexingStatus,
+    publishedAt: UK_FOOD_COSTS_2026.publishedAt,
+    reviewedAt: UK_FOOD_COSTS_2026.reviewedAt,
+    contentReviewedAt: UK_FOOD_COSTS_2026.contentReviewedAt,
+    internalLinks: UK_FOOD_COSTS_2026.internalLinks,
+    status: "published"
+  },
+  {
+    title: FIVE_DINNERS_FOR_TWO_UNDER_40.title,
+    path: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
+    category: "Dinner plan",
+    pageFamily: FIVE_DINNERS_FOR_TWO_UNDER_40.pageFamily,
+    primarySearchIntent: FIVE_DINNERS_FOR_TWO_UNDER_40.primarySearchIntent,
+    indexingStatus: FIVE_DINNERS_FOR_TWO_UNDER_40.indexingStatus,
+    publishedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.publishedAt,
+    reviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt,
+    contentReviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.contentReviewedAt,
+    internalLinks: FIVE_DINNERS_FOR_TWO_UNDER_40.internalLinks,
+    status: FIVE_DINNERS_FOR_TWO_UNDER_40.status
+  }
+];
+var PUBLISHED_ARTICLES = PUBLIC_ARTICLES.filter((article) => article.status === "published");
+function isUnknownPublicArticlePath(pathName) {
+  const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, "") : pathName;
+  const belongsToPublicFamily = normalisedPath.startsWith("/dinner-plans/") || normalisedPath.startsWith("/food-costs/");
+  return belongsToPublicFamily && !PUBLIC_ARTICLES.some((article) => article.path === normalisedPath && article.status === "published");
 }
 
 // src/lib/ingredientPriceRefresh.ts
@@ -164546,6 +164660,13 @@ function createApp() {
       });
     }
   });
+  app.use((req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD" || !isUnknownPublicArticlePath(req.path)) {
+      return next();
+    }
+    const requestedPath = req.path.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+    res.status(404).type("html").send(`<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><title>Page not found \u2014 DinnerByDesign</title></head><body><main><p><a href="/">DinnerByDesign</a></p><h1>Page not found</h1><p>There is no published guide or dinner plan at ${requestedPath}.</p><p><a href="/dinner-plans/5-dinners-for-2-under-40">View the affordable dinner plan</a> or <a href="/food-costs/uk-food-costs-2026">read the UK food-cost guide</a>.</p></main></body></html>`);
+  });
   const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
   if (isProd) {
     const distPath = import_path.default.resolve(process.cwd(), "dist");
@@ -164749,7 +164870,7 @@ function createApp() {
 </head>`);
         }
         if (initialBody) {
-          html = html.replace('<div id="root"></div>', initialBody);
+          html = html.replace(/<div id="root">[\s\S]*?<\/div>/, initialBody);
         }
         res.setHeader("Content-Type", "text/html");
         res.status(200).send(html);

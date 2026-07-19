@@ -4,6 +4,7 @@ import { FIVE_DINNERS_FOR_TWO_UNDER_40 as plan } from '../../content/seoMealPlan
 
 interface SeoMealPlanViewProps { onPersonalise: () => void; }
 const money = (value: number) => `£${value.toFixed(2)}`;
+const shoppingCategories = ['Protein', 'Produce', 'Chilled', 'Cupboard', 'Freezer'] as const;
 
 export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise }) => (
   <div className="min-h-screen bg-[#faf9f7] text-dbd-ink">
@@ -20,7 +21,7 @@ export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise 
         <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Affordable weekly dinner plan</p>
         <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{plan.title}</h1>
         <p className="mt-4 max-w-2xl text-[15px] leading-7 text-dbd-ink-3">{plan.description}</p>
-        <p className="mt-3 text-xs text-dbd-ink-3">By {plan.editorialOwner} · Published and price basis reviewed 18 July 2026.</p>
+        <p className="mt-3 text-xs text-dbd-ink-3">By {plan.editorialOwner} · Published 18 July 2026 · Content reviewed 19 July 2026 · Prices checked 18 July 2026.</p>
       </header>
 
       <section className="mt-8 border-y border-dbd-rule/50 py-6">
@@ -47,6 +48,27 @@ export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise 
         </div>
       </section>
 
+      <section className="mt-10">
+        <h2 className="text-xl font-bold">Complete shopping list and cost calculation</h2>
+        <p className="mt-3 text-sm leading-6 text-dbd-ink-3">The checkout cost represents complete reference packs. Value used apportions only the quantities used across ten portions. Together, the listed packs total {money(plan.expectedCheckoutCost)} and the quantities used total {money(plan.estimatedIngredientCost)}.</p>
+        <div className="mt-5 space-y-5">
+          {shoppingCategories.map(category => <div key={category}>
+            <h3 className="text-sm font-bold">{category}</h3>
+            <div className="mt-2 overflow-x-auto rounded border border-dbd-rule/60 bg-white">
+              <table className="w-full min-w-[620px] border-collapse text-left text-xs">
+                <thead className="bg-dbd-surface text-dbd-ink-3"><tr><th className="p-3 font-bold">Ingredient</th><th className="p-3 font-bold">Required</th><th className="p-3 font-bold">Reference pack</th><th className="p-3 text-right font-bold">Checkout</th><th className="p-3 text-right font-bold">Used</th></tr></thead>
+                <tbody>{plan.shoppingList.filter(item => item.category === category).map(item => <tr key={item.ingredient} className="border-t border-dbd-rule/40"><td className="p-3"><strong>{item.ingredient}</strong><span className="mt-0.5 block text-[11px] text-dbd-ink-3">{item.usedIn}</span></td><td className="p-3">{item.quantityRequired}</td><td className="p-3">{item.referencePack}</td><td className="p-3 text-right font-semibold">{money(item.checkoutCost)}</td><td className="p-3 text-right">{money(item.usedValue)}</td></tr>)}</tbody>
+              </table>
+            </div>
+          </div>)}
+        </div>
+      </section>
+
+      <section className="mt-10 grid gap-5 sm:grid-cols-2">
+        <div><h2 className="text-xl font-bold">Prepare once, use again</h2><ul className="mt-4 space-y-3 text-sm leading-6 text-dbd-ink-3">{plan.preparationAdvice.map(item => <li key={item} className="flex gap-3"><span aria-hidden="true" className="text-dbd-accent">—</span><span>{item}</span></li>)}</ul></div>
+        <div><h2 className="text-xl font-bold">What remains after the week</h2><ul className="mt-4 space-y-3 text-sm leading-6 text-dbd-ink-3">{plan.leftoverGuidance.map(item => <li key={item} className="flex gap-3"><span aria-hidden="true" className="text-dbd-accent">—</span><span>{item}</span></li>)}</ul></div>
+      </section>
+
       <section className="mt-10"><h2 className="text-xl font-bold">The shopping strategy behind the week</h2><div className="mt-4 space-y-4 text-[15px] leading-7 text-dbd-ink-3">{plan.shoppingStrategy.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></section>
 
       <section className="mt-10"><h2 className="text-xl font-bold">How we kept the plan under £40</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{plan.budgetPrinciples.map(item => <div key={item.title} className="rounded border border-dbd-rule/60 bg-white p-4"><h3 className="text-sm font-bold">{item.title}</h3><p className="mt-1 text-xs leading-5 text-dbd-ink-3">{item.explanation}</p></div>)}</div></section>
@@ -59,7 +81,7 @@ export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise 
 
       <section className="mt-10 rounded border border-dbd-rule/60 bg-white p-5"><h2 className="text-xl font-bold">How this plan was selected</h2><div className="mt-3 space-y-3 text-sm leading-6 text-dbd-ink-3"><p>The plan balances five different dinners with a mixture of chicken, pulses and eggs. Ingredients are deliberately repeated so that opened packs can be used again rather than becoming five disconnected shopping lists.</p><p>It is not guaranteed to be the mathematically cheapest possible basket. The expected checkout estimate rounds consolidated ingredients to representative full packs and excludes common cupboard quantities such as salt, pepper and cooking oil.</p><p><a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026" className="font-semibold text-dbd-accent hover:underline">understand the wider UK food-cost picture</a>.</p></div></section>
 
-      <section className="mt-10"><h2 className="text-xl font-bold">Questions about this £40 plan</h2><div className="mt-4 space-y-3 text-sm leading-6 text-dbd-ink-3"><div><h3 className="font-bold text-dbd-ink">Does the £40 target include full supermarket packs?</h3><p>Yes. The expected checkout figure uses representative complete packs; the lower ingredient figure shows only the value used by these dinners.</p></div><div><h3 className="font-bold text-dbd-ink">Can I make the plan vegetarian?</h3><p>Yes. Replace the chicken with chickpeas and mushrooms, then apply vegetarian preferences when personalising the plan.</p></div><div><h3 className="font-bold text-dbd-ink">Will my actual checkout be exactly £37.90?</h3><p>No. Retailer, location, availability, substitutions, promotions and ingredients already at home will change it.</p></div></div></section>
+      <section className="mt-10"><h2 className="text-xl font-bold">Questions about this £40 plan</h2><div className="mt-4 space-y-4 text-sm leading-6 text-dbd-ink-3">{plan.faqs.map(item => <div key={item.question}><h3 className="font-bold text-dbd-ink">{item.question}</h3><p>{item.answer}</p></div>)}</div></section>
 
       <section className="mt-10 rounded bg-dbd-ink p-6 text-white sm:flex sm:items-center sm:justify-between sm:gap-6"><div><h2 className="text-xl font-bold">Make this week fit your household</h2><p className="mt-2 text-sm leading-6 text-white/70">Apply dietary rules, change the budget, replace dinners and generate one consolidated shopping list.</p></div><button type="button" onClick={onPersonalise} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded bg-white px-5 text-sm font-bold text-dbd-ink sm:mt-0 sm:w-auto">Personalise this plan <ArrowRight size={16} /></button></section>
     </main>

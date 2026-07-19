@@ -25,14 +25,14 @@ export const FoodCostGuideView: React.FC<FoodCostGuideViewProps> = ({ onPlanWeek
           <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Food cost guide</p>
           <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{guide.title}</h1>
           <p className="mt-4 max-w-2xl text-[15px] leading-7 text-dbd-ink-3">{guide.description}</p>
-          <p className="mt-3 text-xs text-dbd-ink-3">By {guide.editorialOwner} · Last reviewed 18 July 2026. Figures change monthly.</p>
+          <p className="mt-3 text-xs text-dbd-ink-3">By {guide.editorialOwner} · Published 18 July 2026 · Last reviewed 19 July 2026. Figures change monthly.</p>
         </header>
 
         <section className="mt-8 border-y border-dbd-rule/50 py-6">
           <h2 className="text-xl font-bold">What is happening</h2>
           <div className="mt-4 space-y-4 text-[15px] leading-7 text-dbd-ink-3">
             <p>UK food price inflation eased through the first half of 2026. The most recent confirmed figure from the ONS is 2.2 per cent for the 12 months to May 2026, down from 3.7 per cent in April. <SourceLink href={guide.sources[0].url}>ONS</SourceLink></p>
-            <p>Two faster trackers gave an early reading for June. The BRC recorded 2.4 per cent, while Which? recorded 2.6 per cent. Their baskets and collection methods differ from the ONS, so the figures should not be treated as directly interchangeable.</p>
+            <p>Two faster trackers gave an early reading for June. The <SourceLink href={guide.sources[1].url}>BRC</SourceLink> recorded 2.4 per cent, while <SourceLink href={guide.sources[2].url}>Which?</SourceLink> recorded 2.6 per cent. Their baskets and collection methods differ from the ONS, so the figures should not be treated as directly interchangeable.</p>
             <p>The ONS is the official reference point used here. The next confirmed figure was due on 22 July 2026 when this guide was reviewed.</p>
           </div>
         </section>
@@ -41,7 +41,7 @@ export const FoodCostGuideView: React.FC<FoodCostGuideViewProps> = ({ onPlanWeek
           <h2 className="text-xl font-bold">What it could mean for your shopping</h2>
           <div className="mt-4 space-y-4 text-[15px] leading-7 text-dbd-ink-3">
             <p>National figures describe an average across the country and many kinds of shopping. They provide useful context, but they cannot predict what one household will spend. That depends on the dinners cooked, the ingredients bought and where the shopping is done.</p>
-            <p>For context, the Food Foundation's tracked weekly shopping basket cost £53.51 to £60.24 in June 2026, up 30.6 to 38.4 per cent since April 2022. <SourceLink href={guide.sources[1].url}>Food Foundation</SourceLink></p>
+            <p>For context, the Food Foundation's tracked weekly shopping basket cost £53.51 to £60.24 in June 2026, up 30.6 to 38.4 per cent since April 2022. <SourceLink href={guide.sources[3].url}>Food Foundation</SourceLink></p>
             <p>DinnerByDesign works differently. Its estimates are built from the specific dinners, quantities and ingredient prices in a plan, not from a national average.</p>
           </div>
         </section>
@@ -72,8 +72,8 @@ export const FoodCostGuideView: React.FC<FoodCostGuideViewProps> = ({ onPlanWeek
         <section className="mt-10 rounded border border-[#ead8c4] bg-[#fff6eb] p-5">
           <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b4c1f]">Forecasts are not measured outcomes</p>
           <div className="mt-3 space-y-3 text-sm leading-6 text-dbd-ink-3">
-            <p>The Food and Drink Federation forecast food inflation of over 9 per cent by the end of 2026. The Institute of Grocery Distribution's baseline scenario projected an average of 3.8 per cent across 2026, with a higher-impact scenario around 6.4 per cent.</p>
-            <p>These projections are uncertain and should not be read as recorded price changes.</p>
+            <p>The <SourceLink href={guide.sources[4].url}>Food and Drink Federation</SourceLink> forecast food inflation of at least 9 per cent by the end of 2026. <SourceLink href={guide.sources[5].url}>IGD's June forecast</SourceLink> projected a peak of 5.5 per cent and an average of 3.7 to 4.7 per cent across 2026.</p>
+            <p>The forecasts differ because their assumptions, timing and scenarios differ. They are uncertain projections and should not be read as recorded price changes.</p>
           </div>
         </section>
 

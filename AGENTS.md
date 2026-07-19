@@ -94,6 +94,16 @@ When testing this web application locally, you can connect to your local backend
 - **Built-week cost feedback**: After weekly dinners are generated, show their combined estimated dinner cost, per-portion cost, budget variance, and pricing coverage above Saved. Keep this explicitly distinct from the later shopping-list estimate based on scheduled dinners, pack sizes, shared ingredients, and pantry items.
 - **Rollback checkpoint**: Local branch `backup/pre-affordability-planner-20260717` points to the repository state before this pilot was introduced.
 
+# Public Programmatic SEO Publishing Controls
+
+- **Publishing standard**: Every public programmatic topic, record, template and release must comply with `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`. Treat it as the operational version-controlled companion to the strategy document.
+- **Cost transparency**: A published budget dinner plan must show both complete-pack checkout cost and apportioned value used. Its visible shopping list must reconcile exactly to both stated totals.
+- **Evidence quality**: Food-cost guides should cite primary publishers wherever available and record publication date, content review date, editorial owner, search intent, index status and internal links.
+- **Initial HTML parity**: Core copy, cost calculations, source links and every visible FAQ must also appear in the generated initial HTML and associated structured data where applicable.
+- **Page-family integrity**: Unknown paths below `/dinner-plans/` and `/food-costs/` must return HTTP 404 with `noindex, nofollow`; they must never fall through to the landing page with HTTP 200.
+- **Discovery**: Every published public article must be linked from another crawlable public page and registered in `src/content/publicArticles.ts` before release.
+- **Library trigger**: Do not add a public library link yet. When `PUBLISHED_ARTICLES` reaches 12 entries, create `/guides`, replace the growing set of individual landing-footer article links with one restrained `Guides` link, and keep the library out of protected primary navigation unless explicitly requested. The registry test must enforce this reminder.
+
 # Ingredient Price Refresh Workflow
 
 - **No unlicensed retailer extraction**: Do not scrape or automate collection from retailer websites unless written permission or an appropriately licensed feed explicitly permits it.

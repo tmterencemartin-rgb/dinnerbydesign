@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FIVE_DINNERS_FOR_TWO_UNDER_40 as plan, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './seoMealPlans';
+import { FIVE_DINNERS_FOR_TWO_UNDER_40 as plan, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from './seoMealPlans';
 
 describe('SEO meal-plan publishing data', () => {
   it('publishes a stable five-dinner plan within its stated checkout target', () => {
@@ -14,6 +14,11 @@ describe('SEO meal-plan publishing data', () => {
     expect(plan.shoppingStrategy).toHaveLength(4);
     expect(plan.budgetPrinciples).toHaveLength(4);
     expect(plan.flexibleScenarios).toHaveLength(4);
+    expect(plan.shoppingList.reduce((sum, item) => sum + item.checkoutCost, 0)).toBeCloseTo(plan.expectedCheckoutCost);
+    expect(plan.shoppingList.reduce((sum, item) => sum + item.usedValue, 0)).toBeCloseTo(plan.estimatedIngredientCost);
+    expect(plan.faqs.length).toBeGreaterThanOrEqual(4);
+    expect(plan.indexingStatus).toBe('index');
+    expect(plan.primarySearchIntent).toBeTruthy();
   });
 
   it('uses the same canonical path in structured publishing data', () => {
@@ -23,5 +28,13 @@ describe('SEO meal-plan publishing data', () => {
       '@type': 'CollectionPage',
       url: `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`,
     });
+  });
+
+  it('puts the auditable calculation and every FAQ in initial HTML', () => {
+    const html = renderFiveDinnersForTwoInitialHtml();
+    expect(html).toContain('Complete shopping list and cost calculation');
+    expect(html).toContain('about £2.54 per portion');
+    expect(html).toContain('Prices checked 18 July 2026');
+    plan.faqs.forEach(item => expect(html).toContain(item.question));
   });
 });
