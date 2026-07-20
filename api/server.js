@@ -163706,9 +163706,55 @@ var COOKING_FOR_ONE_GUIDE = {
     { question: "How can DinnerByDesign help me plan for one person?", answer: "Use the search and planning tools to find dinners that share ingredients and build a short sequence rather than a full week, so nothing sits unused." }
   ]
 };
+var OFFAL_BUDGET_GUIDE_PATH = "/food-costs/cooking-with-offal-on-a-budget";
+var OFFAL_BUDGET_GUIDE = {
+  title: "Cooking with offal on a budget: what to buy and how to use it",
+  seoTitle: "Cooking with offal on a budget | DinnerByDesign",
+  description: "A practical UK guide to buying and cooking liver, kidney and heart, with current price comparisons, flavour ideas and essential safety guidance.",
+  publishedAt: "2026-07-20",
+  reviewedAt: "2026-07-20",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Learn whether offal can reduce dinner costs and how to buy and cook liver, kidney and heart safely",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-20",
+  editorialNotes: "Recheck retailer prices and the cited FSA and NHS guidance before changing the review date.",
+  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/pricing-methodology", "/food-safety", "/recipe-methodology"],
+  disclosures: ["price_comparison", "source_timing", "storage_and_cooking", "allergen_and_product", "serving_assumption"],
+  sources: [
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food?ContensisTextOnly=true" },
+    { label: "NHS: Vitamin A", url: "https://www.nhs.uk/conditions/vitamins-and-minerals/vitamin-a/" },
+    { label: "NHS: Foods to avoid in pregnancy", url: "https://www.nhs.uk/pregnancy/keeping-well/foods-to-avoid/" },
+    { label: "Tesco: Lamb liver, heart and kidney", url: "https://www.tesco.com/shop/en-GB/browse/fresh-food/fresh-meat-and-poultry/fresh-lamb/lamb-liver" },
+    { label: "Tesco: Lamb mince", url: "https://www.tesco.com/shop/en-GB/products/261941310" }
+  ],
+  faqs: [
+    { question: "Is offal difficult to cook?", answer: "Liver often cooks quickly, while kidney can suit quick or slow cooking depending on the type and preparation. Heart can be cooked slowly or sliced thinly and cooked quickly. Follow a recipe written for the specific offal." },
+    { question: "Can I substitute offal for ordinary meat in a recipe?", answer: "Not directly in most cases. Offal has different flavour, texture and cooking requirements, so use a recipe designed for the ingredient." },
+    { question: "Is liver safe to eat pink?", answer: "No. The Food Standards Agency advises cooking liver and other offal thoroughly until steaming hot throughout." },
+    { question: "How often can I eat liver?", answer: "The NHS advises against eating liver or liver products more than once a week. Liver and liver products should be avoided during pregnancy." },
+    { question: "Where can I buy heart, tongue or tripe?", answer: "Availability is less consistent than liver or kidney. A local butcher may be able to source and prepare them, so check before travelling." },
+    { question: "Is offal always the cheapest option?", answer: "No. It is often less expensive per kilogram than familiar cuts, but current price, pack size, edible yield and the total cost of the dinner all matter." },
+    { question: "Can DinnerByDesign help me find offal options?", answer: "Yes. Search directly for liver, kidney, heart or other offal. You can also turn on Include offal in suggestions in Recipe preferences, or choose Offal in Plan my week for a single plan. Product availability and suitability vary." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: OFFAL_BUDGET_GUIDE.title,
+    path: OFFAL_BUDGET_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: OFFAL_BUDGET_GUIDE.pageFamily,
+    primarySearchIntent: OFFAL_BUDGET_GUIDE.primarySearchIntent,
+    indexingStatus: OFFAL_BUDGET_GUIDE.indexingStatus,
+    publishedAt: OFFAL_BUDGET_GUIDE.publishedAt,
+    reviewedAt: OFFAL_BUDGET_GUIDE.reviewedAt,
+    contentReviewedAt: OFFAL_BUDGET_GUIDE.contentReviewedAt,
+    internalLinks: OFFAL_BUDGET_GUIDE.internalLinks,
+    disclosures: OFFAL_BUDGET_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: COOKING_FOR_ONE_GUIDE.title,
     path: COOKING_FOR_ONE_PATH,

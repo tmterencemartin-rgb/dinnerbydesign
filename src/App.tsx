@@ -32,6 +32,7 @@ import { FoodCostGuideView } from './components/views/FoodCostGuideView';
 import { LowerCostCutsGuideView } from './components/views/LowerCostCutsGuideView';
 import { LowCostCookingTechniquesGuideView } from './components/views/LowCostCookingTechniquesGuideView';
 import { CookingForOneGuideView } from './components/views/CookingForOneGuideView';
+import { OffalBudgetGuideView } from './components/views/OffalBudgetGuideView';
 import {
   COOKING_FOR_ONE_GUIDE,
   COOKING_FOR_ONE_PATH,
@@ -39,11 +40,14 @@ import {
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
   LOW_COST_COOKING_TECHNIQUES_PATH,
+  OFFAL_BUDGET_GUIDE,
+  OFFAL_BUDGET_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
+  getOffalBudgetGuideJsonLd,
   getUkFoodCosts2026JsonLd,
 } from './content/seoFoodCostGuides';
 import { Toast } from './components/ui/Toast';
@@ -189,6 +193,13 @@ const AppContent = () => {
           canonicalPath: COOKING_FOR_ONE_PATH,
           jsonLd: getCookingForOneJsonLd()
         };
+      case 'food-costs-offal-budget':
+        return {
+          title: OFFAL_BUDGET_GUIDE.seoTitle,
+          description: OFFAL_BUDGET_GUIDE.description,
+          canonicalPath: OFFAL_BUDGET_GUIDE_PATH,
+          jsonLd: getOffalBudgetGuideJsonLd()
+        };
       case 'home':
       case 'landing':
       default:
@@ -301,7 +312,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -463,6 +474,17 @@ const AppContent = () => {
 
   if (view === 'food-costs-cooking-for-one') {
     return <CookingForOneGuideView onPlanDinners={() => {
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'food-costs-offal-budget') {
+    return <OffalBudgetGuideView onFindDinners={() => {
       if (isGuest) {
         safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
         setView('signin');

@@ -13,15 +13,19 @@ import {
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
   LOW_COST_COOKING_TECHNIQUES_PATH,
+  OFFAL_BUDGET_GUIDE,
+  OFFAL_BUDGET_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
+  getOffalBudgetGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
+  renderOffalBudgetGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from '../src/content/seoFoodCostGuides';
 
@@ -150,3 +154,24 @@ const cookingForOneOutputDir = path.join(distRoot, COOKING_FOR_ONE_PATH.slice(1)
 await fs.mkdir(cookingForOneOutputDir, { recursive: true });
 await fs.writeFile(path.join(cookingForOneOutputDir, 'index.html'), cookingForOneHtml, 'utf8');
 console.log(`Generated ${COOKING_FOR_ONE_PATH}/index.html`);
+
+const offalCanonicalUrl = `https://dinnerbydesign.app${OFFAL_BUDGET_GUIDE_PATH}`;
+let offalHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${OFFAL_BUDGET_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${OFFAL_BUDGET_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${offalCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${offalCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${OFFAL_BUDGET_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${OFFAL_BUDGET_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${OFFAL_BUDGET_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${OFFAL_BUDGET_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderOffalBudgetGuideInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getOffalBudgetGuideJsonLd())}</script>\n</head>`);
+
+if (!offalHtml.includes(`<h1>${OFFAL_BUDGET_GUIDE.title}</h1>`) || !offalHtml.includes(`href="${offalCanonicalUrl}"`)) throw new Error('Offal guide generation failed its content or canonical check.');
+const offalOutputDir = path.join(distRoot, OFFAL_BUDGET_GUIDE_PATH.slice(1));
+await fs.mkdir(offalOutputDir, { recursive: true });
+await fs.writeFile(path.join(offalOutputDir, 'index.html'), offalHtml, 'utf8');
+console.log(`Generated ${OFFAL_BUDGET_GUIDE_PATH}/index.html`);

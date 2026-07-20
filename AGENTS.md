@@ -101,6 +101,7 @@ When testing this web application locally, you can connect to your local backend
 - **Disclosure matching**: Apply only the controlled disclosures relevant to the page's actual claims. Technique-led pages without numerical price claims do not need price-estimate or price-comparison disclosures.
 - **Public library threshold**: Keep individual guide links in the restrained footer until 12 programmatic pages are published. At page 12, create the public guide library and add its footer link before publication.
 - **Low-cost techniques guide**: `/food-costs/low-cost-cooking-techniques` is the fourth published programmatic page. It uses allergen, storage and source-timing disclosures, gives high-level examples rather than complete recipes, and cites clean public sources without internal editorial notes.
+- **Offal budget guide**: `/food-costs/cooking-with-offal-on-a-budget` is the sixth published programmatic page. Keep its dated retailer comparison qualified by pack cost, edible yield and finished-dinner cost; retain the controlled allergen, serving, storage, safety and source-timing disclosures; and recheck NHS, Food Standards Agency and retailer sources whenever its review date changes.
 
 # Public Programmatic SEO Publishing Controls
 

@@ -117,6 +117,37 @@ export const COOKING_FOR_ONE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const OFFAL_PRICE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'How to read this price snapshot',
+    body: 'The figures compare listed shelf prices per kilogram checked 20 July 2026. They do not compare complete-pack checkout cost, edible yield or the total cost of a finished dinner. Prices, ranges and availability change.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Price and guidance review',
+    body: 'Retailer prices and official guidance were checked on 20 July 2026. Follow the cited retailer, Food Standards Agency and NHS links for current information.',
+  },
+];
+
+export const OFFAL_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking safety',
+    body: 'Cook liver, kidney and other offal thoroughly until steaming hot throughout. Follow product storage instructions, use-by dates and current Food Standards Agency guidance.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Worcestershire sauce commonly contains fish, mustard is an allergen, ale usually contains gluten, and sherry may contain sulphites. Stock and prepared sauces vary by product, so check every label.',
+  },
+  {
+    key: 'serving_assumption',
+    title: 'Serving assumption',
+    body: 'Quantities are not fixed in this guide. Adjust them to your appetite and to the dinner you are building around them.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -146,6 +177,15 @@ export const LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooter
 export const COOKING_FOR_ONE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'This guide offers practical planning ideas rather than fixed quantities. Product suitability, storage instructions and allergens vary, so check labels and follow current food-safety guidance.',
   links: [
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const OFFAL_BUDGET_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'Offal prices, ranges, availability and product information vary. Check current shelf prices and labels, and follow current NHS and Food Standards Agency guidance.',
+  links: [
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],

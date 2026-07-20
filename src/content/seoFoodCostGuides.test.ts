@@ -6,15 +6,19 @@ import {
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
   LOW_COST_COOKING_TECHNIQUES_PATH,
+  OFFAL_BUDGET_GUIDE,
+  OFFAL_BUDGET_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
+  getOffalBudgetGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
+  renderOffalBudgetGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from './seoFoodCostGuides';
 
@@ -120,6 +124,24 @@ describe('food-cost guide publishing data', () => {
     const jsonLd = getCookingForOneJsonLd();
     expect(jsonLd['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${COOKING_FOR_ONE_PATH}` }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+    ]));
+  });
+
+  it('publishes the offal guide with qualified prices, safety guidance and structured data', () => {
+    expect(OFFAL_BUDGET_GUIDE_PATH).toBe('/food-costs/cooking-with-offal-on-a-budget');
+    expect(OFFAL_BUDGET_GUIDE.indexingStatus).toBe('index');
+    expect(OFFAL_BUDGET_GUIDE.disclosures).toEqual(['price_comparison', 'source_timing', 'storage_and_cooking', 'allergen_and_product', 'serving_assumption']);
+    expect(OFFAL_BUDGET_GUIDE.sources).toHaveLength(5);
+    const html = renderOffalBudgetGuideInitialHtml();
+    expect(html).toContain(`<h1>${OFFAL_BUDGET_GUIDE.title}</h1>`);
+    expect(html).toContain('How to read this price snapshot');
+    expect(html).toContain('complete-pack checkout cost');
+    expect(html).toContain('Find offal dinners and products');
+    expect(html).toContain('/pricing-methodology');
+    expect(getOffalBudgetGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
+      expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${OFFAL_BUDGET_GUIDE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
       expect.objectContaining({ '@type': 'BreadcrumbList' }),
     ]));

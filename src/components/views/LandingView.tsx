@@ -855,6 +855,7 @@ export const LandingView: React.FC = () => {
             <a href="/food-costs/cooking-for-four-with-lower-cost-cuts" className="hover:text-dbd-accent hover:underline">Comparing meat cuts for four</a>
             <a href="/food-costs/low-cost-cooking-techniques" className="hover:text-dbd-accent hover:underline">Low-cost cooking techniques</a>
             <a href="/food-costs/cooking-for-one-without-waste" className="hover:text-dbd-accent hover:underline">Cooking for one</a>
+            <a href="/food-costs/cooking-with-offal-on-a-budget" className="hover:text-dbd-accent hover:underline">Cooking with offal</a>
             <button
               onClick={() => setView('pricing-methodology')}
               className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"
