@@ -163738,9 +163738,50 @@ var OFFAL_BUDGET_GUIDE = {
     { question: "Can DinnerByDesign help me find offal options?", answer: "Yes. Search directly for liver, kidney, heart or other offal. You can also turn on Include offal in suggestions in Recipe preferences, or choose Offal in Plan my week for a single plan. Product availability and suitability vary." }
   ]
 };
+var PORTION_PLANNING_GUIDE_PATH = "/food-costs/portion-planning-and-food-waste";
+var PORTION_PLANNING_GUIDE = {
+  title: "How portion planning can help reduce food costs and waste",
+  seoTitle: "Can Portion Planning Reduce Food Costs? | DinnerByDesign",
+  description: "Learn how realistic portions, planned leftovers and better use of supermarket pack sizes can help reduce food spending and waste.",
+  publishedAt: "2026-07-20",
+  reviewedAt: "2026-07-20",
+  contentReviewedAt: "2026-07-20",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Understand how portion planning, planned leftovers and pack-size awareness can reduce food spending and waste",
+  indexingStatus: "index",
+  editorialNotes: "The 300g and 500g example is illustrative arithmetic, not a retailer or product claim. Recheck FSA guidance before changing the review date.",
+  internalLinks: ["/food-costs/cooking-for-one-without-waste", "/food-costs/low-cost-cooking-techniques", "/pricing-methodology", "/food-safety"],
+  disclosures: ["serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food?ContensisTextOnly=true" }
+  ],
+  faqs: [
+    { question: "Does cooking smaller portions always reduce the checkout cost?", answer: "No. Many ingredients are sold in fixed pack sizes, so cooking less does not necessarily mean buying less. The value depends on what happens to the unused part of the pack, not just how much you serve." },
+    { question: "Should I halve a recipe written for four?", answer: "It can work well if your household is smaller and you do not want leftovers. Cooking the full recipe and planning the extra portions is equally reasonable and can make better use of a fixed pack size." },
+    { question: "When is cooking extra more economical?", answer: "When there is a specific plan for the extra before you start cooking \u2014 another dinner, a lunch or the freezer. Extra that is cooked without a plan and thrown away is not a saving." },
+    { question: "Which ingredients are most useful to portion before cooking?", answer: "More expensive ingredients such as meat, fish and cheese are worth particular attention because changing their quantity usually makes the greatest difference to the cost of a dinner." },
+    { question: "How does DinnerByDesign calculate cost per portion?", answer: "Cost per portion reflects the value of the ingredients used in a dinner at the number of servings you set. It does not necessarily match your checkout total because complete packs usually have to be bought." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: PORTION_PLANNING_GUIDE.title,
+    path: PORTION_PLANNING_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: PORTION_PLANNING_GUIDE.pageFamily,
+    primarySearchIntent: PORTION_PLANNING_GUIDE.primarySearchIntent,
+    indexingStatus: PORTION_PLANNING_GUIDE.indexingStatus,
+    publishedAt: PORTION_PLANNING_GUIDE.publishedAt,
+    reviewedAt: PORTION_PLANNING_GUIDE.reviewedAt,
+    contentReviewedAt: PORTION_PLANNING_GUIDE.contentReviewedAt,
+    internalLinks: PORTION_PLANNING_GUIDE.internalLinks,
+    disclosures: PORTION_PLANNING_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: OFFAL_BUDGET_GUIDE.title,
     path: OFFAL_BUDGET_GUIDE_PATH,

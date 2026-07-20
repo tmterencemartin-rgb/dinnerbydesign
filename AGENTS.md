@@ -102,6 +102,7 @@ When testing this web application locally, you can connect to your local backend
 - **Public library threshold**: Keep individual guide links in the restrained footer until 12 programmatic pages are published. At page 12, create the public guide library and add its footer link before publication.
 - **Low-cost techniques guide**: `/food-costs/low-cost-cooking-techniques` is the fourth published programmatic page. It uses allergen, storage and source-timing disclosures, gives high-level examples rather than complete recipes, and cites clean public sources without internal editorial notes.
 - **Offal budget guide**: `/food-costs/cooking-with-offal-on-a-budget` is the sixth published programmatic page. Keep its dated retailer comparison qualified by pack cost, edible yield and finished-dinner cost; retain the controlled allergen, serving, storage, safety and source-timing disclosures; and recheck NHS, Food Standards Agency and retailer sources whenever its review date changes.
+- **Portion-planning guide**: `/food-costs/portion-planning-and-food-waste` is the seventh published programmatic page. Treat portion planning as pack and ingredient-use planning rather than restriction, keep its 300g/500g example explicitly illustrative, and retain controlled serving, storage, product and source-timing disclosures.
 
 # Public Programmatic SEO Publishing Controls
 

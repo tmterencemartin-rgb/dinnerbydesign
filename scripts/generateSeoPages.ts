@@ -15,17 +15,21 @@ import {
   LOW_COST_COOKING_TECHNIQUES_PATH,
   OFFAL_BUDGET_GUIDE,
   OFFAL_BUDGET_GUIDE_PATH,
+  PORTION_PLANNING_GUIDE,
+  PORTION_PLANNING_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
   getOffalBudgetGuideJsonLd,
+  getPortionPlanningGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
   renderOffalBudgetGuideInitialHtml,
+  renderPortionPlanningGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from '../src/content/seoFoodCostGuides';
 
@@ -175,3 +179,23 @@ const offalOutputDir = path.join(distRoot, OFFAL_BUDGET_GUIDE_PATH.slice(1));
 await fs.mkdir(offalOutputDir, { recursive: true });
 await fs.writeFile(path.join(offalOutputDir, 'index.html'), offalHtml, 'utf8');
 console.log(`Generated ${OFFAL_BUDGET_GUIDE_PATH}/index.html`);
+
+const portionCanonicalUrl = `https://dinnerbydesign.app${PORTION_PLANNING_GUIDE_PATH}`;
+let portionHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${PORTION_PLANNING_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${PORTION_PLANNING_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${portionCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${portionCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${PORTION_PLANNING_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${PORTION_PLANNING_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${PORTION_PLANNING_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${PORTION_PLANNING_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderPortionPlanningGuideInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getPortionPlanningGuideJsonLd())}</script>\n</head>`);
+if (!portionHtml.includes(`<h1>${PORTION_PLANNING_GUIDE.title}</h1>`) || !portionHtml.includes(`href="${portionCanonicalUrl}"`)) throw new Error('Portion-planning guide generation failed its content or canonical check.');
+const portionOutputDir = path.join(distRoot, PORTION_PLANNING_GUIDE_PATH.slice(1));
+await fs.mkdir(portionOutputDir, { recursive: true });
+await fs.writeFile(path.join(portionOutputDir, 'index.html'), portionHtml, 'utf8');
+console.log(`Generated ${PORTION_PLANNING_GUIDE_PATH}/index.html`);

@@ -148,6 +148,29 @@ export const OFFAL_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const PORTION_PLANNING_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'serving_assumption',
+    title: 'Serving assumption',
+    body: 'Portion sizes in this guide are illustrative. Adjust quantities to suit your household, appetite and what else is being served.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking safety',
+    body: 'Freeze suitable surplus promptly and follow product labels. When reheating leftovers, reheat them only once and until steaming hot throughout. Follow current Food Standards Agency guidance.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Ingredients and allergens vary between packaged products, including curry pastes, harissa, sauces and cheese. Check individual labels.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food-safety guidance was reviewed on 20 July 2026. Follow the cited Food Standards Agency links for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -184,6 +207,15 @@ export const COOKING_FOR_ONE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy
 
 export const OFFAL_BUDGET_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Offal prices, ranges, availability and product information vary. Check current shelf prices and labels, and follow current NHS and Food Standards Agency guidance.',
+  links: [
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const PORTION_PLANNING_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide explains a planning technique rather than prescribing fixed portions. Pack sizes, appetites, product information and storage instructions vary.',
   links: [
     { href: '/pricing-methodology', label: 'Pricing methodology' },
     { href: '/food-safety', label: 'Storage and cooking safety' },

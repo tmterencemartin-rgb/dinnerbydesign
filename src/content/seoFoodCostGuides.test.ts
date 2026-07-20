@@ -8,17 +8,21 @@ import {
   LOW_COST_COOKING_TECHNIQUES_PATH,
   OFFAL_BUDGET_GUIDE,
   OFFAL_BUDGET_GUIDE_PATH,
+  PORTION_PLANNING_GUIDE,
+  PORTION_PLANNING_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
   getOffalBudgetGuideJsonLd,
+  getPortionPlanningGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
   renderOffalBudgetGuideInitialHtml,
+  renderPortionPlanningGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from './seoFoodCostGuides';
 
@@ -142,6 +146,24 @@ describe('food-cost guide publishing data', () => {
     expect(html).toContain('/pricing-methodology');
     expect(getOffalBudgetGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${OFFAL_BUDGET_GUIDE_PATH}` }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+    ]));
+  });
+
+  it('publishes the portion-planning guide with controlled disclosures and structured data', () => {
+    expect(PORTION_PLANNING_GUIDE_PATH).toBe('/food-costs/portion-planning-and-food-waste');
+    expect(PORTION_PLANNING_GUIDE.indexingStatus).toBe('index');
+    expect(PORTION_PLANNING_GUIDE.disclosures).toEqual(['serving_assumption', 'storage_and_cooking', 'allergen_and_product', 'source_timing']);
+    expect(PORTION_PLANNING_GUIDE.sources).toHaveLength(2);
+    const html = renderPortionPlanningGuideInitialHtml();
+    expect(html).toContain(`<h1>${PORTION_PLANNING_GUIDE.title}</h1>`);
+    expect(html).toContain('Portion planning, not portion control');
+    expect(html).toContain('Serving assumption');
+    expect(html).toContain('Making portion planning work');
+    expect(html).toContain('/pricing-methodology');
+    expect(getPortionPlanningGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
+      expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${PORTION_PLANNING_GUIDE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
       expect.objectContaining({ '@type': 'BreadcrumbList' }),
     ]));
