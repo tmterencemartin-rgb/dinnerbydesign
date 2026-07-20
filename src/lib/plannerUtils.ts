@@ -322,6 +322,7 @@ const normalizeRequestedProteins = (
 const getProteinText = (protein: string) => {
   if (protein === 'mixed') return 'mixed proteins';
   if (protein === 'no-preference') return 'any suitable protein';
+  if (protein === 'offal') return 'offal such as liver, kidney or heart';
   if (protein === 'seafood') return 'fish and seafood';
   if (protein === 'pescatarian') return 'pescatarian proteins';
   if (protein === 'plant-based') return 'tofu and plant-based protein';
@@ -378,13 +379,17 @@ export const createWeeklyDinnerPlan = async ({
   const shouldMinimiseCost = settings.minimiseCost === true;
   const shouldReuseIngredients = settings.reuseIngredients === true;
   const requestedProteins = normalizeRequestedProteins(settings.protein, settings.dinnerCount, preferences);
+  const includeOffalForPlan = requestedProteins.includes('offal') || preferences?.includeOffal === true;
   const proteinText = getProteinsText(requestedProteins);
   const timeText = getTimeText(settings.time);
   const weeklySaladPreference = preferences?.saladPreference === 'main-only' ? 'main-only' : 'all';
   const homemadeTarget = Math.min(settings.homemadeCount, settings.dinnerCount);
   const readyMadeTarget = Math.max(settings.dinnerCount - homemadeTarget, 0);
   const existingPlannerTitles = planner.map(item => item.title);
-  const safetyPrefs = buildSafetyPrefs(preferences);
+  const baseSafetyPrefs = buildSafetyPrefs(preferences);
+  const safetyPrefs = baseSafetyPrefs
+    ? { ...baseSafetyPrefs, includeOffal: includeOffalForPlan }
+    : null;
   const optimisationText = [
     shouldMinimiseCost ? 'prioritise the lowest credible full-shop cost' : '',
     shouldReuseIngredients ? 'reuse core ingredients and opened packs across the dinners, with practical leftovers' : '',
@@ -408,6 +413,7 @@ export const createWeeklyDinnerPlan = async ({
     maxTotalTime: getMaxTotalTime(settings.time),
     isSimple: settings.time === 'quick' ? true : undefined,
     isLowCost: shouldApplyLowCostBias || shouldMinimiseCost,
+    includeOffal: includeOffalForPlan,
     excludeTitles: excludedTitles,
   }));
 

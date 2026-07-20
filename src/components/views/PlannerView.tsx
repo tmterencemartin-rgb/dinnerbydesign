@@ -49,6 +49,7 @@ const PLAN_PROTEIN_OPTIONS = [
   { value: 'eggs', label: 'Eggs' },
   { value: 'seafood', label: 'Fish & seafood' },
   { value: 'lamb', label: 'Lamb' },
+  { value: 'offal', label: 'Offal' },
   { value: 'pescatarian', label: 'Pescatarian' },
   { value: 'pork', label: 'Pork' },
   { value: 'pulses', label: 'Pulses' },
@@ -76,6 +77,7 @@ const PLAN_PROTEIN_EXCLUSION_TERMS: Record<string, string[]> = {
   eggs: ['egg', 'eggs'],
   seafood: ['fish', 'seafood', 'shellfish', 'crustacean', 'crustaceans', 'mollusc', 'molluscs', 'prawn', 'shrimp', 'crab', 'lobster'],
   lamb: ['lamb'],
+  offal: ['offal', 'liver', 'tripe', 'sweetbread', 'black pudding', 'blood sausage'],
   pork: ['pork', 'bacon', 'ham', 'gammon'],
   turkey: ['turkey'],
   pulses: ['pulse', 'pulses', 'lentil', 'lentils', 'chickpea', 'chickpeas'],
@@ -749,7 +751,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         compact
                         hideSelectedSummary
                       />
-                      <p className="text-[9.5px] leading-snug text-gray-400">Available proteins reflect your personalised search preferences.</p>
+                      <p className="text-[9.5px] leading-snug text-gray-400">
+                        Available proteins reflect your personalised search preferences. Choosing Offal permits it for this plan only.
+                      </p>
                     </div>
                     <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Time</span>

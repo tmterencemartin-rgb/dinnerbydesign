@@ -484,6 +484,49 @@ describe('plannerUtils', () => {
     expect(capturedQuery).toContain('pulses');
   });
 
+  it('allows offal for a selected weekly plan without changing the saved default', async () => {
+    let capturedIncludeOffal: boolean | undefined;
+
+    const result = await createWeeklyDinnerPlan({
+      settings: {
+        dinnerCount: 3,
+        budget: '24',
+        servings: 2,
+        protein: ['offal', 'chicken', 'pulses'],
+        time: 'any',
+        homemadeCount: 3,
+      },
+      planner: [],
+      preferences: { ...preferences, includeOffal: false },
+      generateDinnerSuggestions: async params => {
+        capturedIncludeOffal = params.includeOffal;
+        return {
+          recipes: [
+            {
+              title: 'Liver and onions',
+              description: 'A savoury dinner',
+              ingredients: ['Lamb liver', 'Onions'],
+              instructions: [],
+              cuisine: 'British',
+              totalServings: 2,
+              totalTime: 30,
+              saladType: 'none',
+              isVegetarian: false,
+              isPescatarian: false,
+              isVegan: false,
+              dietFlagsVerified: true,
+            },
+          ],
+        };
+      },
+      addLog: () => {},
+    });
+
+    expect(capturedIncludeOffal).toBe(true);
+    expect(result.dinners.map(item => item.title)).toEqual(['Liver and onions']);
+    expect(preferences.includeOffal).toBeUndefined();
+  });
+
   it('falls back to focused weekly searches and returns a shortage alert', async () => {
     const warnings: string[] = [];
     let calls = 0;

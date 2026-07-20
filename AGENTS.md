@@ -80,7 +80,7 @@ When testing this web application locally, you can connect to your local backend
 
 # Weekly Planner Controls
 
-- **Protein options**: The weekly planner protein dropdown is alphabetised and includes Beef, Chicken, Eggs, Fish & seafood, Lamb, Mixed, No preference, Pescatarian, Pork, Pulses, Tofu / plant-based, Turkey, Vegetarian, and Vegan.
+- **Protein options**: The weekly planner protein dropdown is alphabetised and includes Beef, Chicken, Eggs, Fish & seafood, Lamb, Mixed, No preference, Offal, Pescatarian, Pork, Pulses, Tofu / plant-based, Turkey, Vegetarian, and Vegan.
 - **Time options**: Weekly planner time supports Any, Quick, Under 30 mins, and Under 45 mins. Under-30 and under-45 selections set hard `maxTotalTime` limits in weekly-plan search params.
 - **Saved dinner quick filters**: The saved-list quick filters are Under 20 min, Vegetarian, High protein, and Batch-friendly. Cost remains a sort option through `Lowest cost first`, not a duplicate quick filter.
 - **Compact saved rows**: Do not show `Main salad` / `Side salad` in compact saved or planner rows. Salad type can remain visible in richer search-result/detail contexts where it helps comparison.
@@ -125,6 +125,7 @@ When testing this web application locally, you can connect to your local backend
 - **Default exclusion**: `UserPreferences.includeOffal` defaults to `false`. Ordinary recipe searches, ready-made searches and `Plan my week` must exclude offal unless the user opts in.
 - **Single control**: Use one `Include offal in suggestions` setting rather than separate controls for liver, kidney, heart or other types.
 - **Explicit-search override**: A direct search for offal, liver, kidney, heart or another recognised offal term may temporarily include matching results without changing the saved preference. Show a discreet explanation when this happens.
+- **Weekly-plan override**: Keep `Offal` visible as an explicit protein choice when compatible with the user's other restrictions. Selecting it permits offal for that weekly plan only and must not change the saved preference.
 - **Deterministic enforcement**: Apply the preference both in generation instructions and in the application safety filter. Recognised offal includes liver, kidney, animal heart, tongue, tripe, sweetbreads, liver pate and blood-based products such as black pudding.
 - **Existing protections**: Dietary, allergy and religious or ethical restrictions continue to apply when offal is included.
 
