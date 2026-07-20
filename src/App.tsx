@@ -30,12 +30,16 @@ import { SeoMealPlanView } from './components/views/SeoMealPlanView';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
 import { FoodCostGuideView } from './components/views/FoodCostGuideView';
 import { LowerCostCutsGuideView } from './components/views/LowerCostCutsGuideView';
+import { LowCostCookingTechniquesGuideView } from './components/views/LowCostCookingTechniquesGuideView';
 import {
   LOWER_COST_CUTS_GUIDE,
   LOWER_COST_CUTS_PATH,
+  LOW_COST_COOKING_TECHNIQUES_GUIDE,
+  LOW_COST_COOKING_TECHNIQUES_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getLowerCostCutsJsonLd,
+  getLowCostCookingTechniquesJsonLd,
   getUkFoodCosts2026JsonLd,
 } from './content/seoFoodCostGuides';
 import { Toast } from './components/ui/Toast';
@@ -166,6 +170,13 @@ const AppContent = () => {
           description: LOWER_COST_CUTS_GUIDE.description,
           canonicalPath: LOWER_COST_CUTS_PATH,
           jsonLd: getLowerCostCutsJsonLd()
+        };
+      case 'food-costs-low-cost-cooking-techniques':
+        return {
+          title: LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle,
+          description: LOW_COST_COOKING_TECHNIQUES_GUIDE.description,
+          canonicalPath: LOW_COST_COOKING_TECHNIQUES_PATH,
+          jsonLd: getLowCostCookingTechniquesJsonLd()
         };
       case 'home':
       case 'landing':
@@ -419,6 +430,17 @@ const AppContent = () => {
 
   if (view === 'food-costs-lower-cost-cuts') {
     return <LowerCostCutsGuideView onFindDinners={() => {
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'food-costs-low-cost-cooking-techniques') {
+    return <LowCostCookingTechniquesGuideView onFindDinners={() => {
       if (isGuest) {
         safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
         setView('signin');

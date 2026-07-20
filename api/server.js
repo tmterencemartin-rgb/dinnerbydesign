@@ -163645,9 +163645,52 @@ var LOWER_COST_CUTS_GUIDE = {
     { question: "How is cost compared between two cuts?", answer: "Compare price per kilogram of usable weight on the same date, including any additional ingredients the method requires." }
   ]
 };
+var LOW_COST_COOKING_TECHNIQUES_PATH = "/food-costs/low-cost-cooking-techniques";
+var LOW_COST_COOKING_TECHNIQUES_GUIDE = {
+  title: "Three low-cost cooking techniques for making ingredients go further",
+  seoTitle: "3 low-cost cooking techniques | DinnerByDesign",
+  description: "Three low-cost cooking techniques for making ingredients go further, with practical UK substitutions, reuse guidance and food-safety notes.",
+  publishedAt: "2026-07-20",
+  reviewedAt: "2026-07-20",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Find practical low-cost cooking techniques for making affordable ingredients go further in UK households",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-20",
+  editorialNotes: "Keep examples at technique level rather than turning them into complete recipes. Recheck the cited food-safety guidance before changing the review date.",
+  internalLinks: ["/food-costs/uk-food-costs-2026", "/food-costs/cooking-for-four-with-lower-cost-cuts", "/food-safety", "/recipe-methodology"],
+  disclosures: ["allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    { label: "UNESCO: Koshary, daily-life dish and associated practices", url: "https://ich.unesco.org/en/RL/koshary-daily-life-dish-and-practices-associated-with-it-02278" },
+    { label: "Visit Tuscany: Ribollita recipe", url: "https://www.visittuscany.com/en/recipes/reboiled-soup-a.k.a.-ribollita-recipe/" },
+    { label: "Food Standards Agency: Best-before and use-by dates", url: "https://www.food.gov.uk/safety-hygiene/best-before-and-use-by-dates" }
+  ],
+  faqs: [
+    { question: "Can I use this technique without fish sauce?", answer: "Yes. Soy sauce can provide savoury flavour, although it tastes different and usually contains gluten. Tamari may be suitable when a gluten-free option is needed, but always check the label." },
+    { question: "Is koshary usually vegetarian?", answer: "The combination described here contains no meat or animal-derived ingredients. Check any ready-made sauces and toppings because products vary." },
+    { question: "Does bread need to be stale for ribollita?", answer: "Dry bread works well because it absorbs liquid and thickens the soup. Use bread only while it remains safe to eat, and discard it if there is any visible mould." },
+    { question: "Do I need specialist ingredients?", answer: "No. The examples can be built from ingredients widely available in UK supermarkets, with the substitutions shown where useful." },
+    { question: "Which staple ingredients are easiest to reuse across a week?", answer: "Rice, pasta, bread, beans, lentils, tinned tomatoes and versatile vegetables can each contribute to several different dinners." },
+    { question: "How can I plan a week around these techniques?", answer: "Choose dinners that share a staple ingredient or sauce, use concentrated flavourings in small quantities, and schedule ingredients that need using soon earlier in the week." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: LOW_COST_COOKING_TECHNIQUES_GUIDE.title,
+    path: LOW_COST_COOKING_TECHNIQUES_PATH,
+    category: "Food cost guide",
+    pageFamily: LOW_COST_COOKING_TECHNIQUES_GUIDE.pageFamily,
+    primarySearchIntent: LOW_COST_COOKING_TECHNIQUES_GUIDE.primarySearchIntent,
+    indexingStatus: LOW_COST_COOKING_TECHNIQUES_GUIDE.indexingStatus,
+    publishedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.publishedAt,
+    reviewedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.reviewedAt,
+    contentReviewedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.contentReviewedAt,
+    internalLinks: LOW_COST_COOKING_TECHNIQUES_GUIDE.internalLinks,
+    disclosures: LOW_COST_COOKING_TECHNIQUES_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: LOWER_COST_CUTS_GUIDE.title,
     path: LOWER_COST_CUTS_PATH,

@@ -2,11 +2,15 @@ import { describe, expect, it } from 'vitest';
 import {
   LOWER_COST_CUTS_GUIDE,
   LOWER_COST_CUTS_PATH,
+  LOW_COST_COOKING_TECHNIQUES_GUIDE,
+  LOW_COST_COOKING_TECHNIQUES_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getLowerCostCutsJsonLd,
+  getLowCostCookingTechniquesJsonLd,
   getUkFoodCosts2026JsonLd,
   renderLowerCostCutsInitialHtml,
+  renderLowCostCookingTechniquesInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from './seoFoodCostGuides';
 
@@ -62,6 +66,33 @@ describe('food-cost guide publishing data', () => {
     const jsonLd = getLowerCostCutsJsonLd();
     expect(jsonLd['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${LOWER_COST_CUTS_PATH}` }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+    ]));
+  });
+
+  it('publishes the low-cost cooking techniques guide with sources, disclosures and structured data', () => {
+    expect(LOW_COST_COOKING_TECHNIQUES_PATH).toBe('/food-costs/low-cost-cooking-techniques');
+    expect(LOW_COST_COOKING_TECHNIQUES_GUIDE.indexingStatus).toBe('index');
+    expect(LOW_COST_COOKING_TECHNIQUES_GUIDE.disclosures).toEqual(['allergen_and_product', 'storage_and_cooking', 'source_timing']);
+    expect(LOW_COST_COOKING_TECHNIQUES_GUIDE.disclosures).not.toContain('price_estimate');
+    expect(LOW_COST_COOKING_TECHNIQUES_GUIDE.sources).toHaveLength(3);
+
+    const html = renderLowCostCookingTechniquesInitialHtml();
+    expect(html).toContain(`<h1>${LOW_COST_COOKING_TECHNIQUES_GUIDE.title}</h1>`);
+    expect(html).toContain('Representative dinner: koshary');
+    expect(html).toContain('Representative dinner: ribollita');
+    expect(html).toContain('Ingredients and allergens');
+    expect(html).toContain('Storage and safety');
+    expect(html).toContain('Frequently asked questions');
+    expect(html).toContain('/food-costs/cooking-for-four-with-lower-cost-cuts');
+    expect(html).toContain('/food-safety');
+    expect(html).toContain('About this guide');
+    expect(html).not.toContain('[EDITOR:');
+
+    const jsonLd = getLowCostCookingTechniquesJsonLd();
+    expect(jsonLd['@graph']).toEqual(expect.arrayContaining([
+      expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${LOW_COST_COOKING_TECHNIQUES_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
       expect.objectContaining({ '@type': 'BreadcrumbList' }),
     ]));

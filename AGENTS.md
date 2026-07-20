@@ -94,6 +94,13 @@ When testing this web application locally, you can connect to your local backend
 - **Built-week cost feedback**: After weekly dinners are generated, show their combined estimated dinner cost, per-portion cost, budget variance, and pricing coverage above Saved. Keep this explicitly distinct from the later shopping-list estimate based on scheduled dinners, pack sizes, shared ingredients, and pantry items.
 - **Rollback checkpoint**: Local branch `backup/pre-affordability-planner-20260717` points to the repository state before this pilot was introduced.
 
+# Programmatic Guide Publishing
+
+- **Published guide registry**: Every public programmatic page must be registered in `src/content/publicArticles.ts`, included in `public/sitemap.xml`, linked from crawler-visible HTML, generated as static HTML by `scripts/generateSeoPages.ts`, and supplied with appropriate Article, FAQ and breadcrumb structured data.
+- **Disclosure matching**: Apply only the controlled disclosures relevant to the page's actual claims. Technique-led pages without numerical price claims do not need price-estimate or price-comparison disclosures.
+- **Public library threshold**: Keep individual guide links in the restrained footer until 12 programmatic pages are published. At page 12, create the public guide library and add its footer link before publication.
+- **Low-cost techniques guide**: `/food-costs/low-cost-cooking-techniques` is the fourth published programmatic page. It uses allergen, storage and source-timing disclosures, gives high-level examples rather than complete recipes, and cites clean public sources without internal editorial notes.
+
 # Public Programmatic SEO Publishing Controls
 
 - **Publishing standard**: Every public programmatic topic, record, template and release must comply with `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`. Treat it as the operational version-controlled companion to the strategy document.

@@ -73,6 +73,27 @@ export const LOWER_COST_CUTS_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = 
   },
 ];
 
+export const LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Ingredients and suitability vary by product. Check every label, especially fish sauce, soy sauce, tamari, pasta, bread, stock cubes, sauces and toppings.',
+  },
+];
+
+export const LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and safety',
+    body: 'Use bread and vegetables only while safe to eat. Never use mouldy bread. Follow product storage instructions and current Food Standards Agency guidance.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food-safety guidance was reviewed on 20 July 2026. Follow the cited Food Standards Agency link for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -83,6 +104,15 @@ export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = 
 
 export const LOWER_COST_CUTS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Pack prices, availability and product information vary. The calculation shown is illustrative and should be applied using current pack information and your household’s usual serving sizes.',
+  links: [
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'Ingredient availability and product information can vary. The examples illustrate planning techniques rather than complete recipes. Check product labels and follow current storage and cooking guidance.',
   links: [
     { href: '/pricing-methodology', label: 'Pricing methodology' },
     { href: '/food-safety', label: 'Storage and cooking safety' },

@@ -9,11 +9,15 @@ import {
 import {
   LOWER_COST_CUTS_GUIDE,
   LOWER_COST_CUTS_PATH,
+  LOW_COST_COOKING_TECHNIQUES_GUIDE,
+  LOW_COST_COOKING_TECHNIQUES_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getLowerCostCutsJsonLd,
+  getLowCostCookingTechniquesJsonLd,
   getUkFoodCosts2026JsonLd,
   renderLowerCostCutsInitialHtml,
+  renderLowCostCookingTechniquesInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from '../src/content/seoFoodCostGuides';
 
@@ -94,3 +98,27 @@ const cutsOutputDir = path.join(distRoot, LOWER_COST_CUTS_PATH.slice(1));
 await fs.mkdir(cutsOutputDir, { recursive: true });
 await fs.writeFile(path.join(cutsOutputDir, 'index.html'), cutsHtml, 'utf8');
 console.log(`Generated ${LOWER_COST_CUTS_PATH}/index.html`);
+
+const techniquesCanonicalUrl = `https://dinnerbydesign.app${LOW_COST_COOKING_TECHNIQUES_PATH}`;
+let techniquesHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${techniquesCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${techniquesCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderLowCostCookingTechniquesInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowCostCookingTechniquesJsonLd())}</script>\n</head>`);
+
+if (!techniquesHtml.includes(`<h1>${LOW_COST_COOKING_TECHNIQUES_GUIDE.title}</h1>`) || !techniquesHtml.includes(`href="${techniquesCanonicalUrl}"`)) {
+  throw new Error('Low-cost-cooking-techniques guide generation failed its content or canonical check.');
+}
+
+const techniquesOutputDir = path.join(distRoot, LOW_COST_COOKING_TECHNIQUES_PATH.slice(1));
+await fs.mkdir(techniquesOutputDir, { recursive: true });
+await fs.writeFile(path.join(techniquesOutputDir, 'index.html'), techniquesHtml, 'utf8');
+console.log(`Generated ${LOW_COST_COOKING_TECHNIQUES_PATH}/index.html`);

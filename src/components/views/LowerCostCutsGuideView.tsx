@@ -131,7 +131,7 @@ export const LowerCostCutsGuideView: React.FC<LowerCostCutsGuideViewProps> = ({ 
 
         <section className="mt-10 rounded border border-dbd-rule/60 bg-white p-5">
           <h2 className="text-xl font-bold">Related guidance</h2>
-          <p className="mt-3 text-sm leading-6 text-dbd-ink-3"><a href="/food-costs/uk-food-costs-2026" className="font-semibold text-dbd-accent hover:underline">Understand the wider UK food-cost picture</a>, <a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read the pricing methodology</a> or <a href="/food-safety" className="font-semibold text-dbd-accent hover:underline">review storage and cooking safety</a>.</p>
+          <p className="mt-3 text-sm leading-6 text-dbd-ink-3"><a href="/food-costs/uk-food-costs-2026" className="font-semibold text-dbd-accent hover:underline">Understand the wider UK food-cost picture</a>, <a href="/food-costs/low-cost-cooking-techniques" className="font-semibold text-dbd-accent hover:underline">explore low-cost cooking techniques</a>, <a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read the pricing methodology</a> or <a href="/food-safety" className="font-semibold text-dbd-accent hover:underline">review storage and cooking safety</a>.</p>
         </section>
       </article>
 

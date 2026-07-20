@@ -3,6 +3,9 @@ import {
   LOWER_COST_CUTS_COMPARISON_DISCLOSURES,
   LOWER_COST_CUTS_DISCLOSURE_FOOTER,
   LOWER_COST_CUTS_SAFETY_DISCLOSURES,
+  LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER,
+  LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES,
+  LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES,
   UK_FOOD_COST_CONTEXT_DISCLOSURES,
   renderProgrammaticDisclosureFooterInitialHtml,
   renderProgrammaticDisclosuresInitialHtml,
@@ -152,4 +155,83 @@ export function renderLowerCostCutsInitialHtml() {
   const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
 
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 19 July 2026 · Last reviewed 19 July 2026</p><article><section><p>Examples in this guide are based on four standard servings. The amount required may vary with age, appetite and the dishes served alongside. This guide sets out a method for checking whether a cut represents good value at the price on the shelf, rather than a fixed list of cheaper cuts. Price, yield, cooking time and additional ingredients all affect the result, so the method should be applied with the current price each time.</p></section>${comparisonDisclosures}<section><h2>What makes a cut better value?</h2><p>Value depends on price per kilogram, usable yield after bone, skin and fat are removed, and cooking time relative to the result. A cut with a low shelf price can cost more per serving once loss during preparation and cooking is accounted for. A full comparison also considers additional ingredients and whether the cut can be used across more than one dinner.</p></section><section><h2>Price per kilogram versus usable quantity</h2><p>Price per kilogram reflects the cost of the whole cut as sold, not the cost of what reaches the plate. Bone-in and skin-on cuts lose weight during trimming and cooking. Two cuts at the same shelf price can differ in cost per serving once usable quantity is calculated.</p><ul><li>Divide pack price by the estimated number of servings for an estimated cost per serving, or divide pack price by usable weight in grams and multiply by the grams required per serving.</li><li>Compare cuts on the same date, since prices vary by retailer and by week.</li><li>Include the cost of any stock, marinade or additional ingredients the method requires.</li></ul><p><strong>Illustrative calculation:</strong> if a pack costs £6.00 and provides four servings, the calculated cost is £1.50 per serving. Use the current pack price and the number of servings it provides for your household.</p></section><section><h2>Bone, fat, cooking loss and serving size</h2><p>Bone-in cuts and cuts with a higher fat content return less edible weight than boneless, trimmed cuts of the same starting weight. Cooking loss varies by cut, preparation and technique, so calculations should use a documented yield assumption rather than a universal percentage.</p></section><section><h2>Cooking-time and energy-cost considerations</h2><p>Cuts suited to long, slow cooking, such as shin and shoulder, typically need a low oven temperature over several hours or a slow cooker. Thighs and drumsticks generally need less time. Energy cost depends on appliance, temperature, duration and tariff, so a lower purchase price will not always mean a lower overall cost.</p></section><section><h2>Cuts to run the method on</h2><p>The cuts below are worth applying the method to using the price and pack size in front of you. None is presented here as cheaper; the result depends on the current price and the servings a pack yields.</p><ul><li><strong>Chicken thighs:</strong> bone-in or boneless, skin-on or skinless. Suited to roasting, braising and grilling.</li><li><strong>Chicken drumsticks:</strong> a bone-in cut worth comparing with breast and thighs on price per usable serving. Suited to roasting, braising and barbecuing.</li><li><strong>Pork shoulder:</strong> higher fat content. Suited to slow roasting or braising. A joint may supply more than one dinner.</li><li><strong>Beef shin:</strong> connective tissue breaks down during slow cooking. Suited to stews and braises.</li><li><strong>Braising steak:</strong> suited to slow, moist cooking. It becomes tough if cooked quickly at high heat.</li><li><strong>Turkey thigh:</strong> bone-in or boneless. Suited to roasting and braising. Availability varies by retailer and season.</li></ul></section><section><h2>Which cooking methods suit each cut?</h2><ul><li><strong>Roasting:</strong> chicken thighs, drumsticks, turkey thigh and pork shoulder.</li><li><strong>Braising:</strong> pork shoulder, beef shin and braising steak.</li><li><strong>Slow cooking:</strong> beef shin, braising steak and pork shoulder.</li><li><strong>Grilling or barbecuing:</strong> chicken thighs and drumsticks.</li></ul><p>Matching the method to the cut affects the result and cooking time, which in turn affects energy cost.</p></section><section><h2>Using one pack or joint across more than one dinner</h2><p>A larger joint or pack can supply servings for more than one dinner. Options include cooking a full joint and dividing the cooked meat, freezing raw portions in the quantity required for one dinner, or using cooked meat in a different recipe.</p><p>Label raw or cooked portions with the date before freezing. If a pack contains enough chicken thighs for eight of your household's usual servings, divide it into two four-serving portions. Use one for a traybake and freeze the other for a curry or braise, following the pack's storage instructions.</p></section><section><h2>Storage and food-safety guidance</h2>${safetyDisclosures}<ul><li>Keep the fridge at 5°C or below, and follow the product's storage instructions and use-by date.</li><li>Cook poultry thoroughly. Using a clean temperature probe, the centre should reach 70°C for two minutes, or 75°C for 30 seconds.</li><li>Cool leftovers and refrigerate or freeze them within two hours of cooking.</li><li>Eat refrigerated leftovers within 48 hours, or freeze them.</li><li>Defrost in the fridge, or use a microwave immediately before cooking.</li><li>Reheat only once, until steaming hot throughout.</li><li>Freeze before the use-by date and follow the pack instructions. Once fully defrosted, use within 24 hours.</li></ul></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/uk-food-costs-2026">Understand the wider UK food-cost picture</a>, <a href="/pricing-methodology">read the pricing methodology</a> or <a href="/food-safety">review storage and cooking safety</a>.</p></section></article>${disclosureFooter}<p><a href="/signin">Find lower-cost dinners for four</a></p></main></div>`;
+}
+
+export const LOW_COST_COOKING_TECHNIQUES_PATH = '/food-costs/low-cost-cooking-techniques';
+
+export const LOW_COST_COOKING_TECHNIQUES_GUIDE = {
+  title: 'Three low-cost cooking techniques for making ingredients go further',
+  seoTitle: '3 low-cost cooking techniques | DinnerByDesign',
+  description: 'Three low-cost cooking techniques for making ingredients go further, with practical UK substitutions, reuse guidance and food-safety notes.',
+  publishedAt: '2026-07-20',
+  reviewedAt: '2026-07-20',
+  editorialOwner: 'DinnerByDesign editorial team',
+  pageFamily: 'Food cost guide',
+  primarySearchIntent: 'Find practical low-cost cooking techniques for making affordable ingredients go further in UK households',
+  indexingStatus: 'index' as const,
+  contentReviewedAt: '2026-07-20',
+  editorialNotes: 'Keep examples at technique level rather than turning them into complete recipes. Recheck the cited food-safety guidance before changing the review date.',
+  internalLinks: ['/food-costs/uk-food-costs-2026', '/food-costs/cooking-for-four-with-lower-cost-cuts', '/food-safety', '/recipe-methodology'],
+  disclosures: ['allergen_and_product', 'storage_and_cooking', 'source_timing'] satisfies ProgrammaticDisclosureKey[],
+  sources: [
+    { label: 'UNESCO: Koshary, daily-life dish and associated practices', url: 'https://ich.unesco.org/en/RL/koshary-daily-life-dish-and-practices-associated-with-it-02278' },
+    { label: 'Visit Tuscany: Ribollita recipe', url: 'https://www.visittuscany.com/en/recipes/reboiled-soup-a.k.a.-ribollita-recipe/' },
+    { label: 'Food Standards Agency: Best-before and use-by dates', url: 'https://www.food.gov.uk/safety-hygiene/best-before-and-use-by-dates' },
+  ] satisfies FoodCostGuideSource[],
+  faqs: [
+    { question: 'Can I use this technique without fish sauce?', answer: 'Yes. Soy sauce can provide savoury flavour, although it tastes different and usually contains gluten. Tamari may be suitable when a gluten-free option is needed, but always check the label.' },
+    { question: 'Is koshary usually vegetarian?', answer: 'The combination described here contains no meat or animal-derived ingredients. Check any ready-made sauces and toppings because products vary.' },
+    { question: 'Does bread need to be stale for ribollita?', answer: 'Dry bread works well because it absorbs liquid and thickens the soup. Use bread only while it remains safe to eat, and discard it if there is any visible mould.' },
+    { question: 'Do I need specialist ingredients?', answer: 'No. The examples can be built from ingredients widely available in UK supermarkets, with the substitutions shown where useful.' },
+    { question: 'Which staple ingredients are easiest to reuse across a week?', answer: 'Rice, pasta, bread, beans, lentils, tinned tomatoes and versatile vegetables can each contribute to several different dinners.' },
+    { question: 'How can I plan a week around these techniques?', answer: 'Choose dinners that share a staple ingredient or sauce, use concentrated flavourings in small quantities, and schedule ingredients that need using soon earlier in the week.' },
+  ],
+};
+
+export function getLowCostCookingTechniquesJsonLd() {
+  const guide = LOW_COST_COOKING_TECHNIQUES_GUIDE;
+  const url = `https://dinnerbydesign.app${LOW_COST_COOKING_TECHNIQUES_PATH}`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${url}#article`,
+        headline: guide.title,
+        description: guide.description,
+        datePublished: guide.publishedAt,
+        dateModified: guide.reviewedAt,
+        author: { '@type': 'Organization', name: guide.editorialOwner },
+        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
+        mainEntityOfPage: url,
+        citation: guide.sources.map(source => source.url),
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: guide.faqs.map(faq => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+        })),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
+          { '@type': 'ListItem', position: 2, name: 'Food cost guides', item: url },
+        ],
+      },
+    ],
+  };
+}
+
+export function renderLowCostCookingTechniquesInitialHtml() {
+  const guide = LOW_COST_COOKING_TECHNIQUES_GUIDE;
+  const productDisclosures = renderProgrammaticDisclosuresInitialHtml(LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES);
+  const safetyDisclosures = renderProgrammaticDisclosuresInitialHtml(LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES);
+  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml(LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER);
+  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
+  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
+
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>Traditional dishes can demonstrate practical ways to build dinners from a small set of affordable, versatile ingredients. This guide explains three techniques, with an example dinner for each and practical notes for using ingredients available in UK supermarkets.</p><p>The examples below illustrate individual cooking principles. They are not intended to rank whole national cuisines by cost, and no claim is made about which culinary traditions are cheapest overall.</p></section><section><h2>1. Building a dinner around a staple ingredient</h2><p>Rice, pasta and bread can form a substantial base for several dinners, with beans, vegetables and flavourings added in smaller quantities.</p><h3>Representative dinner: koshary</h3><p>Koshary is an Egyptian dish combining pasta, rice, lentils and chickpeas, layered with a spiced tomato sauce and fried onions. The version described here contains no meat or animal-derived ingredients, but individual sauces and toppings should still be checked.</p><h3>UK supermarket ingredients</h3><ul><li>Rice</li><li>Small pasta shapes, such as macaroni</li><li>Brown or green lentils, dried or tinned</li><li>Tinned chickpeas, or cooked dried chickpeas when time allows</li><li>Tinned tomatoes, onions, garlic and cumin</li></ul><p><strong>Substitution:</strong> use tinned lentils in place of dried lentils to reduce preparation time, noting that the texture may differ.</p><p><strong>Reusing ingredients:</strong> a larger batch of lentils or tomato sauce can be cooked once and used across two or three dinners during the week.</p><p><strong>Why it works:</strong> several filling staple ingredients are combined with one strongly flavoured sauce, rather than relying on a large portion of meat.</p><p><strong>Allergen note:</strong> contains gluten in the pasta. Check individual product labels, including any ready-made crispy onions or sauces.</p></section><section><h2>2. Using a concentrated flavouring in small quantities</h2><p>Rather than relying on a large quantity of meat, some dishes use a small amount of a concentrated, salty or savoury ingredient to flavour a larger quantity of grain or noodles.</p><h3>Example dinner: vegetable rice noodles with fish sauce</h3><p>This is a simple UK-adapted dinner illustrating the technique rather than a named traditional dish. A small quantity of fish sauce can add savoury depth to rice noodles and vegetables.</p><h3>UK supermarket ingredients</h3><ul><li>Rice noodles</li><li>Fish sauce</li><li>Spring onions and garlic</li><li>Vegetables such as pak choi or spring greens</li></ul><p><strong>Substitutions:</strong> use soy sauce as a fish-free alternative, noting that the flavour differs. Tamari may be an option where gluten needs to be avoided, subject to the product label.</p><p><strong>Why it can offer practical value:</strong> fish sauce is used in small quantities, so one bottle can contribute to several dinners. This does not mean it is inexpensive to buy; the practical value comes from using a little at a time.</p><p><strong>Why it works:</strong> adding a concentrated savoury ingredient gradually allows a small amount to flavour noodles and vegetables.</p></section>${productDisclosures}<section><h2>3. Reusing bread or vegetables across further dinners</h2><p>Some dishes make purposeful use of bread that has become dry or vegetables that remain safe to eat but need using soon.</p><h3>Representative dinner: ribollita</h3><p>Ribollita is a Tuscan soup made by combining stale bread with cannellini beans, cabbage or cavolo nero, and other vegetables.</p><h3>UK supermarket ingredients</h3><ul><li>Dry or stale bread that remains safe to eat; never bread with visible mould</li><li>Tinned cannellini beans</li><li>Cabbage or other vegetables that remain safe to eat but need using soon</li><li>Olive oil and garlic</li></ul><p><strong>Substitutions:</strong> use butter beans or haricot beans in place of cannellini beans. Use a cooking oil already in the cupboard rather than buying a separate oil.</p><p><strong>Reusing ingredients:</strong> safe, usable bread and vegetables already in the household can contribute to a further dinner before they are wasted.</p><p><strong>Food-safety note:</strong> bread becoming dry or hard is a quality change rather than a safety risk. Visible mould is a safety risk, so discard mouldy bread.</p><p><strong>Allergen note:</strong> bread usually contains gluten. Check any stock cubes and other packaged ingredients.</p><p><strong>Why it works:</strong> bread thickens a bean and vegetable soup while using an ingredient that might otherwise be discarded.</p></section>${safetyDisclosures}<section><h2>Applying the three techniques together</h2><ul><li>Choose a versatile staple as the base for more than one dinner.</li><li>Use a concentrated flavouring sparingly to add depth.</li><li>Plan a further dinner around safe, usable bread or vegetables that need using soon.</li></ul><p>DinnerByDesign's Low Cost filter can help identify suitable dinners, while Plan My Week can organise choices around your household and ingredients.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/uk-food-costs-2026">Understand the wider UK food-cost picture</a>, <a href="/food-costs/cooking-for-four-with-lower-cost-cuts">compare meat cuts when cooking for four</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${disclosureFooter}<section><h2>Make your ingredients go further</h2><p>Use the Low Cost filter and Plan My Week to find suitable dinners for your household.</p><p><a href="/signin">Find low-cost dinners</a></p></section></main></div>`;
 }

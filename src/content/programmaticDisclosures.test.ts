@@ -4,6 +4,9 @@ import {
   LOWER_COST_CUTS_COMPARISON_DISCLOSURES,
   LOWER_COST_CUTS_DISCLOSURE_FOOTER,
   LOWER_COST_CUTS_SAFETY_DISCLOSURES,
+  LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER,
+  LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES,
+  LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES,
   PROGRAMMATIC_DISCLOSURE_FOOTER,
   PROGRAMMATIC_DISCLOSURE_KEYS,
   UK_FOOD_COST_CONTEXT_DISCLOSURES,
@@ -14,7 +17,7 @@ import {
 describe('programmatic disclosure publishing copy', () => {
   it('keeps every disclosure on the controlled key list', () => {
     const allowed = new Set(PROGRAMMATIC_DISCLOSURE_KEYS);
-    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
+    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES, ...LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES, ...LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
   });
 
   it('renders important qualifications and methodology links in initial HTML', () => {
@@ -31,5 +34,13 @@ describe('programmatic disclosure publishing copy', () => {
     expect(html).toContain('illustrative rather than a market-price estimate');
     expect(LOWER_COST_CUTS_COMPARISON_DISCLOSURES.map(item => item.key)).not.toContain('price_estimate');
     expect(footerHtml).toContain('/food-safety');
+  });
+
+  it('qualifies allergens and food safety without implying a price comparison', () => {
+    const footerHtml = renderProgrammaticDisclosureFooterInitialHtml(LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER);
+    expect(LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES.map(item => item.key)).toEqual(['allergen_and_product']);
+    expect(LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES.map(item => item.key)).toEqual(['storage_and_cooking', 'source_timing']);
+    expect(footerHtml).toContain('/food-safety');
+    expect(footerHtml).toContain('/recipe-methodology');
   });
 });
