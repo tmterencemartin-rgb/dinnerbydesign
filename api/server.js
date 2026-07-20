@@ -163765,9 +163765,54 @@ var PORTION_PLANNING_GUIDE = {
     { question: "How does DinnerByDesign calculate cost per portion?", answer: "Cost per portion reflects the value of the ingredients used in a dinner at the number of servings you set. It does not necessarily match your checkout total because complete packs usually have to be bought." }
   ]
 };
+var MEDITERRANEAN_AFFORDABLE_COOKING_PATH = "/food-costs/mediterranean-inspired-affordable-cooking";
+var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
+  title: "Mediterranean-inspired ways to make affordable ingredients taste good",
+  seoTitle: "Mediterranean-inspired budget cooking | DinnerByDesign",
+  description: "How techniques from Greek, Italian, Lebanese and Spanish cooking can help you make satisfying, affordable dinners, with practical UK-supermarket substitutions.",
+  publishedAt: "2026-07-20",
+  reviewedAt: "2026-07-20",
+  contentReviewedAt: "2026-07-20",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Use Mediterranean-inspired cooking techniques to make affordable ingredients appetising and reuse them across several dinners",
+  indexingStatus: "index",
+  editorialNotes: "Keep the traditions distinct, retain the softened Spanish framing, and recheck the cultural, FSA and allergen sources before changing the review date.",
+  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/food-costs/portion-planning-and-food-waste", "/food-safety", "/recipe-methodology"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Visit Greece: Greek pulses to quicken your pulse", url: "https://www.visitgreece.gr/experiences/gastronomy/traditional-products/greek-pulses-to-quicken-your-pulse/" },
+    { label: "Turismo Roma: Chickpeas and Roman-style pasta with chickpeas", url: "https://www.turismoroma.it/en/page/chickpeas-and-roman-style-pasta-chickpeas" },
+    { label: "Lebanese University-affiliated research: Lebanese food exchange system including moujadara", url: "https://www.researchgate.net/publication/348394395_Development_of_a_Lebanese_food_exchange_system_based_on_frequently_consumed_Eastern_Mediterranean_traditional_dishes_and_Arabic_sweets" },
+    { label: "La Tienda: Lentil and Chorizo Stew \u2014 preparation reference only", url: "https://www.tienda.com/recipes/lentil-and-chorizo-stew" },
+    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
+    { label: "Food Standards Agency: Allergen guidance for food businesses", url: "https://www.food.gov.uk/business-guidance/allergen-guidance-for-food-businesses" }
+  ],
+  faqs: [
+    { question: "Is Mediterranean cooking always cheaper?", answer: "No. Good olive oil, fresh fish, nuts and speciality cheese can be some of the pricier items in a UK shop. The value here comes from specific techniques, not from the region's cooking being inexpensive overall." },
+    { question: "Do I need extra virgin olive oil, or can I use something else?", answer: "A more everyday cooking oil works for the cooking itself, although the dish will lose some of olive oil's characteristic flavour. If you want that flavour, a small amount used to finish the dish goes further than using it throughout." },
+    { question: "Can I make these dinners vegetarian or vegan?", answer: "Fasolada and the mujadara version described here contain no meat. Pasta e ceci can be prepared without anchovy where the chosen recipe allows. For a meat-free Spanish-inspired lentil stew, omit the chorizo and build the smoky flavour with paprika, recognising that this is an adaptation rather than traditional lentejas con chorizo." },
+    { question: "What is the easiest way to start if I have not cooked much with lentils or chickpeas before?", answer: "Tinned lentils and chickpeas are the simplest way in. They are already cooked and only need heating through, so a dish such as pasta e ceci or mujadara is a reasonable first attempt." },
+    { question: "How can I avoid the more expensive ingredients pushing up the price?", answer: "Use them in small quantities as flavouring \u2014 a little chorizo, a modest amount of good olive oil as a finishing touch, or cheese grated rather than sliced \u2014 rather than as the bulk of the dinner." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.title,
+    path: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
+    category: "Food cost guide",
+    pageFamily: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.pageFamily,
+    primarySearchIntent: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.primarySearchIntent,
+    indexingStatus: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.indexingStatus,
+    publishedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.publishedAt,
+    reviewedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.reviewedAt,
+    contentReviewedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.contentReviewedAt,
+    internalLinks: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.internalLinks,
+    disclosures: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: PORTION_PLANNING_GUIDE.title,
     path: PORTION_PLANNING_GUIDE_PATH,

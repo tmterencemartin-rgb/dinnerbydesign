@@ -171,6 +171,30 @@ export const PORTION_PLANNING_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const MEDITERRANEAN_STORAGE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Cool cooked rice quickly, ideally within an hour, refrigerate it for no more than one day before reheating, and reheat it only once. If it will not be used that quickly, freeze planned portions promptly.',
+  },
+];
+
+export const MEDITERRANEAN_PRODUCT_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'allergen_and_product',
+    title: 'Allergens and product labels',
+    body: 'Pasta and bulgur wheat contain gluten; anchovies contain fish; feta, Parmesan, Pecorino and yogurt contain milk. Almonds are a regulated nut allergen. Pine nuts can also cause allergic reactions, although they are not one of the UK\'s 14 regulated allergens. Chorizo, wine and packaged products vary, so check every label.',
+  },
+];
+
+export const MEDITERRANEAN_SOURCE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Cultural references, food-safety guidance and allergen guidance were reviewed on 20 July 2026. Follow the cited sources for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -218,6 +242,14 @@ export const PORTION_PLANNING_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCop
   body: 'This guide explains a planning technique rather than prescribing fixed portions. Pack sizes, appetites, product information and storage instructions vary.',
   links: [
     { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const MEDITERRANEAN_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide draws practical techniques from several distinct culinary traditions. Ingredient availability, product information and allergens vary, so check labels and follow current storage and cooking guidance.',
+  links: [
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],

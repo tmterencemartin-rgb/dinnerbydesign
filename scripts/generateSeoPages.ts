@@ -13,6 +13,8 @@ import {
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
   LOW_COST_COOKING_TECHNIQUES_PATH,
+  MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE,
+  MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
   OFFAL_BUDGET_GUIDE,
   OFFAL_BUDGET_GUIDE_PATH,
   PORTION_PLANNING_GUIDE,
@@ -22,12 +24,14 @@ import {
   getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
+  getMediterraneanAffordableCookingJsonLd,
   getOffalBudgetGuideJsonLd,
   getPortionPlanningGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
+  renderMediterraneanAffordableCookingInitialHtml,
   renderOffalBudgetGuideInitialHtml,
   renderPortionPlanningGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
@@ -199,3 +203,23 @@ const portionOutputDir = path.join(distRoot, PORTION_PLANNING_GUIDE_PATH.slice(1
 await fs.mkdir(portionOutputDir, { recursive: true });
 await fs.writeFile(path.join(portionOutputDir, 'index.html'), portionHtml, 'utf8');
 console.log(`Generated ${PORTION_PLANNING_GUIDE_PATH}/index.html`);
+
+const mediterraneanCanonicalUrl = `https://dinnerbydesign.app${MEDITERRANEAN_AFFORDABLE_COOKING_PATH}`;
+let mediterraneanHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${mediterraneanCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${mediterraneanCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderMediterraneanAffordableCookingInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getMediterraneanAffordableCookingJsonLd())}</script>\n</head>`);
+if (!mediterraneanHtml.includes(`<h1>${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.title}</h1>`) || !mediterraneanHtml.includes(`href="${mediterraneanCanonicalUrl}"`)) throw new Error('Mediterranean-inspired guide generation failed its content or canonical check.');
+const mediterraneanOutputDir = path.join(distRoot, MEDITERRANEAN_AFFORDABLE_COOKING_PATH.slice(1));
+await fs.mkdir(mediterraneanOutputDir, { recursive: true });
+await fs.writeFile(path.join(mediterraneanOutputDir, 'index.html'), mediterraneanHtml, 'utf8');
+console.log(`Generated ${MEDITERRANEAN_AFFORDABLE_COOKING_PATH}/index.html`);

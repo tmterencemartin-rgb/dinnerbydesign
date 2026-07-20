@@ -103,6 +103,7 @@ When testing this web application locally, you can connect to your local backend
 - **Low-cost techniques guide**: `/food-costs/low-cost-cooking-techniques` is the fourth published programmatic page. It uses allergen, storage and source-timing disclosures, gives high-level examples rather than complete recipes, and cites clean public sources without internal editorial notes.
 - **Offal budget guide**: `/food-costs/cooking-with-offal-on-a-budget` is the sixth published programmatic page. Keep its dated retailer comparison qualified by pack cost, edible yield and finished-dinner cost; retain the controlled allergen, serving, storage, safety and source-timing disclosures; and recheck NHS, Food Standards Agency and retailer sources whenever its review date changes.
 - **Portion-planning guide**: `/food-costs/portion-planning-and-food-waste` is the seventh published programmatic page. Treat portion planning as pack and ingredient-use planning rather than restriction, keep its 300g/500g example explicitly illustrative, and retain controlled serving, storage, product and source-timing disclosures.
+- **Mediterranean-inspired cooking guide**: `/food-costs/mediterranean-inspired-affordable-cooking` is the eighth published programmatic page. Keep Mediterranean culinary traditions distinct, describe the value as technique-led rather than calling a cuisine cheap, retain the rice-storage, allergen and source-timing disclosures, and keep the Spanish preparation source transparently qualified.
 
 # Public Programmatic SEO Publishing Controls
 

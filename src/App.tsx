@@ -34,6 +34,7 @@ import { LowCostCookingTechniquesGuideView } from './components/views/LowCostCoo
 import { CookingForOneGuideView } from './components/views/CookingForOneGuideView';
 import { OffalBudgetGuideView } from './components/views/OffalBudgetGuideView';
 import { PortionPlanningGuideView } from './components/views/PortionPlanningGuideView';
+import { MediterraneanAffordableCookingGuideView } from './components/views/MediterraneanAffordableCookingGuideView';
 import {
   COOKING_FOR_ONE_GUIDE,
   COOKING_FOR_ONE_PATH,
@@ -41,6 +42,8 @@ import {
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
   LOW_COST_COOKING_TECHNIQUES_PATH,
+  MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE,
+  MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
   OFFAL_BUDGET_GUIDE,
   OFFAL_BUDGET_GUIDE_PATH,
   PORTION_PLANNING_GUIDE,
@@ -50,6 +53,7 @@ import {
   getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
+  getMediterraneanAffordableCookingJsonLd,
   getOffalBudgetGuideJsonLd,
   getPortionPlanningGuideJsonLd,
   getUkFoodCosts2026JsonLd,
@@ -211,6 +215,13 @@ const AppContent = () => {
           canonicalPath: PORTION_PLANNING_GUIDE_PATH,
           jsonLd: getPortionPlanningGuideJsonLd()
         };
+      case 'food-costs-mediterranean-affordable-cooking':
+        return {
+          title: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.seoTitle,
+          description: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description,
+          canonicalPath: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
+          jsonLd: getMediterraneanAffordableCookingJsonLd()
+        };
       case 'home':
       case 'landing':
       default:
@@ -323,7 +334,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -507,6 +518,17 @@ const AppContent = () => {
 
   if (view === 'food-costs-portion-planning') {
     return <PortionPlanningGuideView onPlanWeek={() => {
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'food-costs-mediterranean-affordable-cooking') {
+    return <MediterraneanAffordableCookingGuideView onPlanWeek={() => {
       if (isGuest) {
         safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
         setView('signin');
