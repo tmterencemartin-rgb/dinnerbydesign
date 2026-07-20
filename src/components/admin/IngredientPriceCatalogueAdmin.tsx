@@ -110,9 +110,9 @@ export const IngredientPriceCatalogueAdmin: React.FC = () => {
     }
   };
 
-  return <section className="rounded border border-gray-200 bg-white p-3">
+  return <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5">
     <div className="flex flex-wrap items-start justify-between gap-2">
-      <div><h2 className="text-sm font-bold text-gray-950">Ingredient price catalogue</h2><p className="mt-0.5 text-xs text-gray-500">Only active, verified entries with a source and verification date affect customer estimates. Licensed-feed changes require approval.</p></div>
+      <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Pricing data</p><h2 className="mt-1 text-base font-bold text-gray-950">Ingredient price catalogue</h2><p className="mt-1 text-xs text-gray-500">Only active, verified entries with a source and verification date affect customer estimates. Licensed-feed changes require approval.</p></div>
       <div className="text-xs font-semibold text-gray-600">{entries.length} entries · {entries.filter(e => e.active).length} active · {reviewCount} to review · {staleCount} stale</div>
     </div>
     <form onSubmit={save} className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-6">

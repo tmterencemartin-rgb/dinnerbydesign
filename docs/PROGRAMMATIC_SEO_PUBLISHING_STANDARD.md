@@ -50,6 +50,8 @@ The commercial message must remain measured. Demonstrate savings and waste reduc
 
 Public content should address UK households choosing regular evening dinners, including families, couples, busy households, people managing dietary requirements and people seeking to reduce shopping costs or food waste.
 
+Write for ordinary people making real supermarket and kitchen decisions. Assume the reader wants straightforward help, not an economics report, academic paper or catalogue of statistics.
+
 A page should resolve a recognisable combination of constraints, such as:
 
 - Budget or cost per portion.
@@ -62,6 +64,24 @@ A page should resolve a recognisable combination of constraints, such as:
 - Cooking compared with a ready-made option.
 
 Combine only two or three dimensions when they create a genuinely distinct need. Do not publish every possible filter permutation.
+
+## Voice, readability and appetite appeal
+
+Programmatic pages must feel lively, useful and enjoyable to read. They should help readers imagine appealing dinners they would genuinely want to cook, while giving them practical ways to control supermarket spending and use ingredients well.
+
+- Lead with the reader's situation, question or opportunity rather than background data.
+- Use warm, direct UK English, short paragraphs, descriptive headings and concrete examples.
+- Explain what a fact means in the supermarket, cupboard or kitchen instead of presenting a succession of figures.
+- Avoid percentages in public article copy. Express the practical implication in plain language and link to the supporting source where evidence is required.
+- Keep statistics selective. A figure must help the reader make a decision; otherwise remove it.
+- Show that cooking to a budget can still produce colourful, satisfying and appetising dinners with varied flavours and textures.
+- Use different culinary traditions as inspiration where appropriate. Highlight accessible techniques, seasonings and ingredient combinations that work with inexpensive UK supermarket ingredients.
+- Treat every culinary tradition accurately and respectfully. Do not describe a whole national cuisine as cheap, reduce it to a stereotype or imply that one adapted example represents an entire tradition.
+- Be honest about substitutions and adaptations. State when an example is UK-adapted and explain how a substitution may change flavour or texture.
+- Prefer practical language such as `use this across two dinners`, `add freshness with lemon` or `cook once and reuse` over abstract claims about optimisation.
+- Keep methodology, evidence notes and qualifications proportionate. They must protect accuracy without overwhelming the main narrative.
+
+Dry, statistical or defensive copy should be rewritten before publication, even when it is technically accurate.
 
 ## Approved page families and URL patterns
 
@@ -132,6 +152,7 @@ Every collection or dinner-plan page must include:
 - Relevant time, cost, dietary and cooking-method comparisons.
 - An explanation of how entries were selected.
 - Advice specific to the collection.
+- A clear sense of flavour, texture, variety or enjoyment where relevant.
 - Substitutions and waste-reduction guidance.
 - Four to six genuinely useful questions and answers.
 - Selective links to related hubs, collections, plans, recipes and methodology pages.
@@ -295,6 +316,7 @@ Do not increase production merely because page generation is technically easy.
 2. Confirm demand, distinctiveness, inventory and rights.
 3. Create the controlled content record with every required field.
 4. Draft the useful structured content, select applicable disclosure keys and verify claims, prices and sources.
+   Write the reader-facing narrative first: make it practical, appetising and easy to follow, then add only the evidence and qualifications required to support it.
 5. Register the page in `src/content/publicArticles.ts`.
 6. Add selective internal links from and to existing public pages.
 7. Generate the static initial HTML, metadata, canonical and structured data.
@@ -309,6 +331,8 @@ Do not increase production merely because page generation is technically easy.
 Do not publish unless all applicable answers are yes:
 
 - Does the page serve a distinct and recognisable customer need?
+- Is it lively, readable and useful to an ordinary shopper rather than dry or statistics-led?
+- Does it show that budget-conscious cooking can still offer appealing flavours, textures and variety?
 - Does it meet its minimum qualifying-content threshold?
 - Is the content materially different from adjacent pages?
 - Are all cost figures transparent, current and internally reconciled?

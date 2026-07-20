@@ -53,6 +53,7 @@ When testing this web application locally, you can connect to your local backend
 
 - **Access Strategy**: Admin access is currently enforced via a verified-email allow-list in `AuthContext.tsx` and duplicated in `firestore.rules` for database security. 
 - **Future Considerations**: This mechanism is sufficient for initial launch but should be migrated to Firebase Custom Claims if the number of administrative users grows or if more granular role-based access control is required.
+- **Dashboard hierarchy**: Keep the admin dashboard divided into clearly labelled, visually separate panels for pricing data, editorial content, account overview, service health, and the user register. Summary metrics must never appear as though they belong to Published Articles.
 
 # Authentication & Password Recovery Fallbacks
 
@@ -104,6 +105,7 @@ When testing this web application locally, you can connect to your local backend
 # Public Programmatic SEO Publishing Controls
 
 - **Publishing standard**: Every public programmatic topic, record, template and release must comply with `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`. Treat it as the operational version-controlled companion to the strategy document.
+- **Editorial voice**: Programmatic articles must be lively, practical and reader-friendly, not dry or statistics-led. Avoid percentages in public article copy, foreground supermarket and waste-reduction usefulness, and show that budget-conscious cooking can still offer appetising flavours, textures and variety. Culinary traditions may inspire accessible ideas but must be represented accurately, respectfully and without describing a whole cuisine as cheap.
 - **Cost transparency**: A published budget dinner plan must show both complete-pack checkout cost and apportioned value used. Its visible shopping list must reconcile exactly to both stated totals.
 - **Evidence quality**: Food-cost guides should cite primary publishers wherever available and record publication date, content review date, editorial owner, search intent, index status and internal links.
 - **Initial HTML parity**: Core copy, cost calculations, source links and every visible FAQ must also appear in the generated initial HTML and associated structured data where applicable.

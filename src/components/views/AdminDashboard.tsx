@@ -751,7 +751,7 @@ export const AdminDashboard: React.FC = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-white"
+      className="min-h-screen bg-gray-50/70"
     >
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-4 sm:px-6">
@@ -821,30 +821,31 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-2 sm:p-3">
+      <div className="max-w-7xl mx-auto px-3 py-5 sm:px-5 sm:py-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dbd-accent"></div>
           </div>
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-6">
             <IngredientPriceCatalogueAdmin />
-            <section className="rounded border border-gray-100 bg-white p-2.5" aria-labelledby="published-articles-heading">
+            <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="published-articles-heading">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h2 id="published-articles-heading" className="text-[13px] font-bold text-gray-950">Published articles</h2>
-                  <p className="mt-0.5 text-[11px] font-medium text-gray-400">Open every public editorial page from one place.</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Editorial content</p>
+                  <h2 id="published-articles-heading" className="mt-1 text-base font-bold text-gray-950">Published articles</h2>
+                  <p className="mt-1 text-xs font-medium text-gray-500">Open every public editorial page from one place.</p>
                 </div>
                 <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{PUBLISHED_ARTICLES.length} live</span>
               </div>
-              <div className="mt-2 grid gap-1.5 md:grid-cols-2">
+              <div className="mt-4 grid gap-2 md:grid-cols-2">
                 {PUBLISHED_ARTICLES.map(article => (
                   <a
                     key={article.path}
                     href={article.path}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex min-h-14 items-center justify-between gap-3 rounded border border-gray-100 bg-gray-50/60 px-3 py-2 transition-colors hover:border-dbd-accent/30 hover:bg-white"
+                    className="group flex min-h-14 items-center justify-between gap-3 rounded border border-gray-200 bg-gray-50/60 px-3 py-2.5 transition-colors hover:border-dbd-accent/30 hover:bg-white"
                   >
                     <span className="min-w-0">
                       <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">{article.category}</span>
@@ -855,7 +856,14 @@ export const AdminDashboard: React.FC = () => {
                 ))}
               </div>
             </section>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
+
+            <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="account-overview-heading">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Accounts</p>
+                <h2 id="account-overview-heading" className="mt-1 text-base font-bold text-gray-950">Account overview</h2>
+                <p className="mt-1 text-xs font-medium text-gray-500">Access, payment and usage totals across all registered users.</p>
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
               {[
                 { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
                 { label: 'Paid access', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe / ${summaryStats.permanentAccess} permanent`, icon: CreditCard },
@@ -864,7 +872,7 @@ export const AdminDashboard: React.FC = () => {
               ].map(item => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className="bg-white border border-gray-100 rounded p-2.5">
+                  <div key={item.label} className="rounded border border-gray-200 bg-gray-50/60 p-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{item.label}</p>
@@ -878,9 +886,17 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                 );
               })}
-            </div>
+              </div>
+            </section>
 
-            <div className="bg-white border border-gray-100 rounded p-2.5">
+            <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="operations-heading">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Service health</p>
+                <h2 id="operations-heading" className="mt-1 text-base font-bold text-gray-950">Operations and delivery</h2>
+                <p className="mt-1 text-xs font-medium text-gray-500">Monitor AI costs, Stripe events and customer email delivery.</p>
+              </div>
+              <div className="mt-4 space-y-3">
+            <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2">
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
@@ -931,7 +947,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {webhookEvents.length > 0 ? (
-              <div className="bg-white border border-gray-100 rounded p-2.5">
+              <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2">
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
@@ -970,7 +986,7 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2 px-0.5 py-0.5">
+              <div className="flex items-center gap-2 rounded border border-gray-200 bg-gray-50/40 p-3">
                 <Activity className="w-3.5 h-3.5 text-gray-500" />
                 <h2 className="text-[13px] font-bold text-gray-950">Stripe webhook health</h2>
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
@@ -980,7 +996,7 @@ export const AdminDashboard: React.FC = () => {
             )}
 
             {emailEvents.length > 0 ? (
-              <div className="bg-white border border-gray-100 rounded p-2.5">
+              <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2">
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
@@ -1016,7 +1032,7 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2 px-0.5 py-0.5">
+              <div className="flex items-center gap-2 rounded border border-gray-200 bg-gray-50/40 p-3">
                 <Activity className="w-3.5 h-3.5 text-gray-500" />
                 <h2 className="text-[13px] font-bold text-gray-950">Email log</h2>
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-gray-100 text-gray-500">
@@ -1025,7 +1041,19 @@ export const AdminDashboard: React.FC = () => {
               </div>
             )}
 
-            <div className="border-y border-gray-100 bg-white">
+              </div>
+            </section>
+
+            <section className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xs" aria-labelledby="user-accounts-heading">
+              <div className="flex flex-col gap-2 border-b border-gray-200 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">User register</p>
+                  <h2 id="user-accounts-heading" className="mt-1 text-base font-bold text-gray-950">User accounts</h2>
+                  <p className="mt-1 text-xs font-medium text-gray-500">Review access, activity, subscriptions and private admin notes.</p>
+                </div>
+                <p className="text-xs font-semibold text-gray-500">{filteredUsers.length} of {users.length} users shown</p>
+              </div>
+              <div className="bg-white">
               <div className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => {
                   const subscription = user.subscription;
@@ -1182,6 +1210,7 @@ export const AdminDashboard: React.FC = () => {
                 )}
               </div>
             </div>
+            </section>
           </div>
         )}
       </div>
