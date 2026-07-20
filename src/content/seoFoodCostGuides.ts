@@ -1,5 +1,7 @@
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
+  COOKING_FOR_ONE_DISCLOSURES,
+  COOKING_FOR_ONE_DISCLOSURE_FOOTER,
   LOWER_COST_CUTS_COMPARISON_DISCLOSURES,
   LOWER_COST_CUTS_DISCLOSURE_FOOTER,
   LOWER_COST_CUTS_SAFETY_DISCLOSURES,
@@ -234,4 +236,80 @@ export function renderLowCostCookingTechniquesInitialHtml() {
   const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
 
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>Traditional dishes can demonstrate practical ways to build dinners from a small set of affordable, versatile ingredients. This guide explains three techniques, with an example dinner for each and practical notes for using ingredients available in UK supermarkets.</p><p>The examples below illustrate individual cooking principles. They are not intended to rank whole national cuisines by cost, and no claim is made about which culinary traditions are cheapest overall.</p></section><section><h2>1. Building a dinner around a staple ingredient</h2><p>Rice, pasta and bread can form a substantial base for several dinners, with beans, vegetables and flavourings added in smaller quantities.</p><h3>Representative dinner: koshary</h3><p>Koshary is an Egyptian dish combining pasta, rice, lentils and chickpeas, layered with a spiced tomato sauce and fried onions. The version described here contains no meat or animal-derived ingredients, but individual sauces and toppings should still be checked.</p><h3>UK supermarket ingredients</h3><ul><li>Rice</li><li>Small pasta shapes, such as macaroni</li><li>Brown or green lentils, dried or tinned</li><li>Tinned chickpeas, or cooked dried chickpeas when time allows</li><li>Tinned tomatoes, onions, garlic and cumin</li></ul><p><strong>Substitution:</strong> use tinned lentils in place of dried lentils to reduce preparation time, noting that the texture may differ.</p><p><strong>Reusing ingredients:</strong> a larger batch of lentils or tomato sauce can be cooked once and used across two or three dinners during the week.</p><p><strong>Why it works:</strong> several filling staple ingredients are combined with one strongly flavoured sauce, rather than relying on a large portion of meat.</p><p><strong>Allergen note:</strong> contains gluten in the pasta. Check individual product labels, including any ready-made crispy onions or sauces.</p></section><section><h2>2. Using a concentrated flavouring in small quantities</h2><p>Rather than relying on a large quantity of meat, some dishes use a small amount of a concentrated, salty or savoury ingredient to flavour a larger quantity of grain or noodles.</p><h3>Example dinner: vegetable rice noodles with fish sauce</h3><p>This is a simple UK-adapted dinner illustrating the technique rather than a named traditional dish. A small quantity of fish sauce can add savoury depth to rice noodles and vegetables.</p><h3>UK supermarket ingredients</h3><ul><li>Rice noodles</li><li>Fish sauce</li><li>Spring onions and garlic</li><li>Vegetables such as pak choi or spring greens</li></ul><p><strong>Substitutions:</strong> use soy sauce as a fish-free alternative, noting that the flavour differs. Tamari may be an option where gluten needs to be avoided, subject to the product label.</p><p><strong>Why it can offer practical value:</strong> fish sauce is used in small quantities, so one bottle can contribute to several dinners. This does not mean it is inexpensive to buy; the practical value comes from using a little at a time.</p><p><strong>Why it works:</strong> adding a concentrated savoury ingredient gradually allows a small amount to flavour noodles and vegetables.</p></section>${productDisclosures}<section><h2>3. Reusing bread or vegetables across further dinners</h2><p>Some dishes make purposeful use of bread that has become dry or vegetables that remain safe to eat but need using soon.</p><h3>Representative dinner: ribollita</h3><p>Ribollita is a Tuscan soup made by combining stale bread with cannellini beans, cabbage or cavolo nero, and other vegetables.</p><h3>UK supermarket ingredients</h3><ul><li>Dry or stale bread that remains safe to eat; never bread with visible mould</li><li>Tinned cannellini beans</li><li>Cabbage or other vegetables that remain safe to eat but need using soon</li><li>Olive oil and garlic</li></ul><p><strong>Substitutions:</strong> use butter beans or haricot beans in place of cannellini beans. Use a cooking oil already in the cupboard rather than buying a separate oil.</p><p><strong>Reusing ingredients:</strong> safe, usable bread and vegetables already in the household can contribute to a further dinner before they are wasted.</p><p><strong>Food-safety note:</strong> bread becoming dry or hard is a quality change rather than a safety risk. Visible mould is a safety risk, so discard mouldy bread.</p><p><strong>Allergen note:</strong> bread usually contains gluten. Check any stock cubes and other packaged ingredients.</p><p><strong>Why it works:</strong> bread thickens a bean and vegetable soup while using an ingredient that might otherwise be discarded.</p></section>${safetyDisclosures}<section><h2>Applying the three techniques together</h2><ul><li>Choose a versatile staple as the base for more than one dinner.</li><li>Use a concentrated flavouring sparingly to add depth.</li><li>Plan a further dinner around safe, usable bread or vegetables that need using soon.</li></ul><p>DinnerByDesign's Low Cost filter can help identify suitable dinners, while Plan My Week can organise choices around your household and ingredients.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/uk-food-costs-2026">Understand the wider UK food-cost picture</a>, <a href="/food-costs/cooking-for-four-with-lower-cost-cuts">compare meat cuts when cooking for four</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${disclosureFooter}<section><h2>Make your ingredients go further</h2><p>Use the Low Cost filter and Plan My Week to find suitable dinners for your household.</p><p><a href="/signin">Find low-cost dinners</a></p></section></main></div>`;
+}
+
+export const COOKING_FOR_ONE_PATH = '/food-costs/cooking-for-one-without-waste';
+
+export const COOKING_FOR_ONE_GUIDE = {
+  title: 'Cooking for one without overspending or wasting ingredients',
+  seoTitle: 'Cooking for one without overspending or waste | DinnerByDesign',
+  description: 'Practical ways to plan varied dinners for one, reuse ingredients, choose suitable pack sizes and reduce avoidable food waste.',
+  publishedAt: '2026-07-20',
+  reviewedAt: '2026-07-20',
+  editorialOwner: 'DinnerByDesign editorial team',
+  pageFamily: 'Food cost guide',
+  primarySearchIntent: 'Plan varied dinners for one while managing ingredient spending and reducing avoidable food waste',
+  indexingStatus: 'index' as const,
+  contentReviewedAt: '2026-07-20',
+  editorialNotes: 'Keep advice practical and flexible. Recheck the cited food-safety guidance before changing the review date.',
+  internalLinks: ['/food-costs/low-cost-cooking-techniques', '/food-safety', '/recipe-methodology'],
+  disclosures: ['allergen_and_product', 'serving_assumption', 'storage_and_cooking', 'source_timing'] satisfies ProgrammaticDisclosureKey[],
+  sources: [
+    { label: 'Food Standards Agency: How to chill, freeze and defrost food safely', url: 'https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely' },
+  ] satisfies FoodCostGuideSource[],
+  faqs: [
+    { question: 'How can I avoid wasting ingredients when recipes serve more than one?', answer: 'Choose dinners that share core ingredients, buy loose where you can, and freeze or repurpose the extra portion of anything a recipe makes rather than letting it sit unused.' },
+    { question: "Is batch cooking worthwhile when I'm cooking only for myself?", answer: 'Yes. The value comes from cooking a component once, such as a grain, sauce or tray of roasted vegetables, and finishing it differently each time rather than eating one identical dinner repeatedly.' },
+    { question: 'How do I stop several dinners tasting the same?', answer: 'Change the finish, not the base. A different spice blend, sauce, or crunchy or fresh element added at the end can change the character of a dinner.' },
+    { question: 'Which ingredients are easiest to reuse across different dinners?', answer: 'Grains, beans and lentils, tinned tomatoes, onions and roasted vegetables all take well to different flavour directions. Storage depends on the specific product and dish, so check suitability before freezing or keeping anything for later.' },
+    { question: 'Should I buy smaller packs or divide larger packs?', answer: 'Either can work. Smaller or loose quantities can reduce surplus; larger packs can still work if the contents are suitable for freezing and you divide them promptly.' },
+    { question: 'How can DinnerByDesign help me plan for one person?', answer: 'Use the search and planning tools to find dinners that share ingredients and build a short sequence rather than a full week, so nothing sits unused.' },
+  ],
+};
+
+export function getCookingForOneJsonLd() {
+  const guide = COOKING_FOR_ONE_GUIDE;
+  const url = `https://dinnerbydesign.app${COOKING_FOR_ONE_PATH}`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${url}#article`,
+        headline: guide.title,
+        description: guide.description,
+        datePublished: guide.publishedAt,
+        dateModified: guide.reviewedAt,
+        author: { '@type': 'Organization', name: guide.editorialOwner },
+        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
+        mainEntityOfPage: url,
+        citation: guide.sources.map(source => source.url),
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: guide.faqs.map(faq => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+        })),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
+          { '@type': 'ListItem', position: 2, name: 'Food cost guides', item: url },
+        ],
+      },
+    ],
+  };
+}
+
+export function renderCookingForOneInitialHtml() {
+  const guide = COOKING_FOR_ONE_GUIDE;
+  const disclosures = renderProgrammaticDisclosuresInitialHtml(COOKING_FOR_ONE_DISCLOSURES);
+  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml(COOKING_FOR_ONE_DISCLOSURE_FOOTER);
+  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
+  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
+
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>Half a bag of spinach going soft in the drawer. A bunch of coriander bought for one recipe, most of it left over. A pack of chicken thighs sized for four, when you only wanted two. Cooking for one often means working around packaging built for someone else&#039;s household, and it&#039;s easy to end up either throwing food away or eating the same dinner three nights running.</p><p>Neither has to be the trade-off. With a little planning, the same handful of ingredients can move in several different directions across a few days — a different spice, a different texture, a different feel — without extra shopping trips or a freezer full of identical containers.</p></section><section><h2>Plan a short sequence, not a rigid week</h2><p>Rather than mapping out a full week, choose three or four dinners at a time that share two or three core ingredients — a vegetable, a grain, a tin of something. A short sequence like this is easier to stick to than a rigid plan, and it leaves room to swap a dinner in or out if your week changes. It also means less produce sitting forgotten at the back of the fridge, because everything you&#039;ve bought already has somewhere to go.</p></section><section><h2>Buy ingredients that can do more than one job</h2><p>When you&#039;re choosing what to buy, look for ingredients that can cross into more than one style of dinner. A tray of vegetables for roasting, a tin of chickpeas and a pot of a grain such as couscous or bulgur wheat can each be cooked once and then taken in different directions with whatever you add afterwards. The versatility comes from the flavourings you finish with, not from buying something different for every dinner.</p></section><section><h2>Cook once, then change direction</h2><p>There&#039;s a difference between eating the same dinner three times and cooking one component once to use three ways. A tray of roasted vegetables, a pot of cooked grain, a pan of softened onion and garlic, or a simple tomato base can each be finished in a different direction — stirred through lemon and yogurt one night, folded into a spiced stew the next, tossed with ginger and soy after that. The cooking happens once; the dinner changes each time.</p></section><section><h2>Right-size fresh ingredients, and freeze early</h2><p>Where your supermarket sells fruit and vegetables loose, buying only the amount you&#039;ll use avoids the choice between a fixed pack and a fridge drawer of leftovers. For fresh meat, fish or vegetables you won&#039;t get through in a day or two, freezing them while they&#039;re still fresh protects both quality and your food budget more than leaving the decision until the last moment.</p><p>Divide food into individual portions and label them clearly before freezing, rather than freezing one large block — it&#039;s much easier to take out exactly what you need.</p></section>${disclosures}<section><h2>Build a flexible cupboard</h2><p>A small set of tinned, dried and frozen staples makes it much easier to put a dinner together without a shop: rice, pasta, lentils, chickpeas, tinned tomatoes, eggs and a bag of frozen vegetables between them cover a wide range of dinners on their own. What stops them feeling repetitive is what you add at the end — a spoonful of a spiced paste, a squeeze of lemon, a scattering of toasted seeds, a spoonful of yogurt or a chilli-flecked oil. The base stays simple; the finish is where the dinner changes character.</p></section><section><h2>Reduce effort without reducing variety</h2><p>Preparing aromatics — chopped onion, garlic, ginger — in one go, and keeping a base sauce or stock ready in the fridge or freezer, cuts down on the small repeated tasks that can make cooking for one feel like more effort than it should. A short rotation of dinners you know well is worth keeping too, not as a limit, but as a dependable starting point to build from when you feel like trying something new.</p></section><section><h2>A three-dinner example</h2><p>Roast a tray of onions, peppers and courgettes, and warm through a tin of chickpeas alongside a pot of a cooked grain such as couscous or bulgur wheat. From there:</p><ul><li>Take a portion in a North African-inspired direction: a spiced paste, a squeeze of lemon and a spoonful of yogurt or a plant-based alternative on top.</li><li>Take another towards a tomato and smoked paprika stew, finished with a slice of toasted bread for crunch.</li><li>Use what&#039;s left in a ginger, garlic and soy-inspired bowl, with something crisp and fresh — sliced spring onion or a handful of beansprouts — added at the end.</li></ul><p>Same roasting tray, same tin of chickpeas, same pot of grain — three distinctly different dinners. This sequence is an illustration of the technique rather than a claim about how any particular dish is traditionally made, and it&#039;s a starting point rather than a complete recipe with fixed quantities.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/low-cost-cooking-techniques">Explore low-cost cooking techniques</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${disclosureFooter}<section><h2>Make your ingredients work harder</h2><p>Use DinnerByDesign to find suitable dinners, save your choices and plan around ingredients you want to use well.</p><p><a href="/signin">Plan dinners for one</a></p></section></main></div>`;
 }

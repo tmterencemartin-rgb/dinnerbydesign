@@ -1,4 +1,4 @@
-import { LOWER_COST_CUTS_GUIDE, LOWER_COST_CUTS_PATH, LOW_COST_COOKING_TECHNIQUES_GUIDE, LOW_COST_COOKING_TECHNIQUES_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
+import { COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, LOWER_COST_CUTS_GUIDE, LOWER_COST_CUTS_PATH, LOW_COST_COOKING_TECHNIQUES_GUIDE, LOW_COST_COOKING_TECHNIQUES_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
@@ -18,6 +18,20 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: COOKING_FOR_ONE_GUIDE.title,
+    path: COOKING_FOR_ONE_PATH,
+    category: 'Food cost guide',
+    pageFamily: COOKING_FOR_ONE_GUIDE.pageFamily,
+    primarySearchIntent: COOKING_FOR_ONE_GUIDE.primarySearchIntent,
+    indexingStatus: COOKING_FOR_ONE_GUIDE.indexingStatus,
+    publishedAt: COOKING_FOR_ONE_GUIDE.publishedAt,
+    reviewedAt: COOKING_FOR_ONE_GUIDE.reviewedAt,
+    contentReviewedAt: COOKING_FOR_ONE_GUIDE.contentReviewedAt,
+    internalLinks: COOKING_FOR_ONE_GUIDE.internalLinks,
+    disclosures: COOKING_FOR_ONE_GUIDE.disclosures,
+    status: 'published',
+  },
   {
     title: LOW_COST_COOKING_TECHNIQUES_GUIDE.title,
     path: LOW_COST_COOKING_TECHNIQUES_PATH,

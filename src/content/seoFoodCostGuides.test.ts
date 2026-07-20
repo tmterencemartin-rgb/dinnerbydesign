@@ -1,14 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
+  COOKING_FOR_ONE_GUIDE,
+  COOKING_FOR_ONE_PATH,
   LOWER_COST_CUTS_GUIDE,
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
   LOW_COST_COOKING_TECHNIQUES_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
+  getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
   getUkFoodCosts2026JsonLd,
+  renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
   renderUkFoodCosts2026InitialHtml,
@@ -93,6 +97,29 @@ describe('food-cost guide publishing data', () => {
     const jsonLd = getLowCostCookingTechniquesJsonLd();
     expect(jsonLd['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${LOW_COST_COOKING_TECHNIQUES_PATH}` }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+    ]));
+  });
+
+  it('publishes the cooking-for-one guide with practical disclosures and structured data', () => {
+    expect(COOKING_FOR_ONE_PATH).toBe('/food-costs/cooking-for-one-without-waste');
+    expect(COOKING_FOR_ONE_GUIDE.indexingStatus).toBe('index');
+    expect(COOKING_FOR_ONE_GUIDE.disclosures).toEqual(['allergen_and_product', 'serving_assumption', 'storage_and_cooking', 'source_timing']);
+    expect(COOKING_FOR_ONE_GUIDE.sources).toHaveLength(1);
+
+    const html = renderCookingForOneInitialHtml();
+    expect(html).toContain(`<h1>${COOKING_FOR_ONE_GUIDE.title}</h1>`);
+    expect(html).toContain('Plan a short sequence, not a rigid week');
+    expect(html).toContain('A three-dinner example');
+    expect(html).toContain('Frequently asked questions');
+    expect(html).toContain('/food-costs/low-cost-cooking-techniques');
+    expect(html).toContain('/food-safety');
+    expect(html).toContain('About this guide');
+
+    const jsonLd = getCookingForOneJsonLd();
+    expect(jsonLd['@graph']).toEqual(expect.arrayContaining([
+      expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${COOKING_FOR_ONE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
       expect.objectContaining({ '@type': 'BreadcrumbList' }),
     ]));

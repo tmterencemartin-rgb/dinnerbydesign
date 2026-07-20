@@ -7,15 +7,19 @@ import {
   renderFiveDinnersForTwoInitialHtml,
 } from '../src/content/seoMealPlans';
 import {
+  COOKING_FOR_ONE_GUIDE,
+  COOKING_FOR_ONE_PATH,
   LOWER_COST_CUTS_GUIDE,
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
   LOW_COST_COOKING_TECHNIQUES_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
+  getCookingForOneJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
   getUkFoodCosts2026JsonLd,
+  renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
   renderUkFoodCosts2026InitialHtml,
@@ -122,3 +126,27 @@ const techniquesOutputDir = path.join(distRoot, LOW_COST_COOKING_TECHNIQUES_PATH
 await fs.mkdir(techniquesOutputDir, { recursive: true });
 await fs.writeFile(path.join(techniquesOutputDir, 'index.html'), techniquesHtml, 'utf8');
 console.log(`Generated ${LOW_COST_COOKING_TECHNIQUES_PATH}/index.html`);
+
+const cookingForOneCanonicalUrl = `https://dinnerbydesign.app${COOKING_FOR_ONE_PATH}`;
+let cookingForOneHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${COOKING_FOR_ONE_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${COOKING_FOR_ONE_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${cookingForOneCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${cookingForOneCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${COOKING_FOR_ONE_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${COOKING_FOR_ONE_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${COOKING_FOR_ONE_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${COOKING_FOR_ONE_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderCookingForOneInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCookingForOneJsonLd())}</script>\n</head>`);
+
+if (!cookingForOneHtml.includes(`<h1>${COOKING_FOR_ONE_GUIDE.title}</h1>`) || !cookingForOneHtml.includes(`href="${cookingForOneCanonicalUrl}"`)) {
+  throw new Error('Cooking-for-one guide generation failed its content or canonical check.');
+}
+
+const cookingForOneOutputDir = path.join(distRoot, COOKING_FOR_ONE_PATH.slice(1));
+await fs.mkdir(cookingForOneOutputDir, { recursive: true });
+await fs.writeFile(path.join(cookingForOneOutputDir, 'index.html'), cookingForOneHtml, 'utf8');
+console.log(`Generated ${COOKING_FOR_ONE_PATH}/index.html`);

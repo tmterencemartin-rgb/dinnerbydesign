@@ -94,6 +94,29 @@ export const LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[
   },
 ];
 
+export const COOKING_FOR_ONE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Pastes, sauces and stock products vary by brand and can contain gluten, dairy, nuts or other allergens. Check every product label before use.',
+  },
+  {
+    key: 'serving_assumption',
+    title: 'Serving assumption',
+    body: 'Appetite and portion needs vary from person to person. Adjust quantities to suit you.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and safety',
+    body: 'Freeze suitable food before its use-by date and follow the label. Cool cooked food before freezing. Defrost in the fridge and use within 24 hours once fully defrosted.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food-safety guidance was reviewed on 20 July 2026. Follow the linked Food Standards Agency guidance for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -115,6 +138,14 @@ export const LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooter
   body: 'Ingredient availability and product information can vary. The examples illustrate planning techniques rather than complete recipes. Check product labels and follow current storage and cooking guidance.',
   links: [
     { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const COOKING_FOR_ONE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide offers practical planning ideas rather than fixed quantities. Product suitability, storage instructions and allergens vary, so check labels and follow current food-safety guidance.',
+  links: [
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],
