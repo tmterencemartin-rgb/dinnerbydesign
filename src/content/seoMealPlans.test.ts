@@ -19,6 +19,7 @@ describe('SEO meal-plan publishing data', () => {
     expect(plan.faqs.length).toBeGreaterThanOrEqual(4);
     expect(plan.indexingStatus).toBe('index');
     expect(plan.primarySearchIntent).toBeTruthy();
+    expect(plan.disclosures).toEqual(expect.arrayContaining(['price_estimate', 'serving_assumption']));
   });
 
   it('uses the same canonical path in structured publishing data', () => {
@@ -35,6 +36,9 @@ describe('SEO meal-plan publishing data', () => {
     expect(html).toContain('Complete shopping list and cost calculation');
     expect(html).toContain('about £2.54 per portion');
     expect(html).toContain('Prices checked 18 July 2026');
+    expect(html).toContain('About these estimates');
+    expect(html).toContain('Cooking energy is excluded');
+    expect(html).toContain('About this guide');
     plan.faqs.forEach(item => expect(html).toContain(item.question));
   });
 });

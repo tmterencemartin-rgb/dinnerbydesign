@@ -374,6 +374,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/admin') return 'admin';
     if (location === '/dinner-plans/5-dinners-for-2-under-40') return 'meal-plan-five-for-two-under-40';
     if (location === '/food-costs/uk-food-costs-2026') return 'food-costs-uk-2026';
+    if (location === '/food-costs/cooking-for-four-with-lower-cost-cuts') return 'food-costs-lower-cost-cuts';
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';

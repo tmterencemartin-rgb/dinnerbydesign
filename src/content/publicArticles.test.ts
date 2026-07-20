@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { PUBLIC_LIBRARY_LAUNCH_THRESHOLD, PUBLIC_LIBRARY_PATH, PUBLISHED_ARTICLES, PUBLIC_ARTICLES, isUnknownPublicArticlePath } from './publicArticles';
 
 describe('public article registry', () => {
@@ -9,6 +10,7 @@ describe('public article registry', () => {
     expect(PUBLISHED_ARTICLES.every(article => article.title && article.reviewedAt)).toBe(true);
     expect(PUBLISHED_ARTICLES.every(article => article.primarySearchIntent && article.publishedAt && article.contentReviewedAt)).toBe(true);
     expect(PUBLISHED_ARTICLES.every(article => article.indexingStatus === 'index' && article.internalLinks.length > 0)).toBe(true);
+    expect(PUBLISHED_ARTICLES.every(article => article.disclosures.length > 0)).toBe(true);
   });
 
   it('excludes non-published entries from the admin list', () => {
@@ -21,7 +23,13 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/not-a-real-guide')).toBe(true);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40')).toBe(false);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40/')).toBe(false);
+    expect(isUnknownPublicArticlePath('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe(false);
     expect(isUnknownPublicArticlePath('/pricing-methodology')).toBe(false);
+  });
+
+  it('includes every published article in the canonical sitemap', () => {
+    const sitemap = readFileSync('public/sitemap.xml', 'utf8');
+    PUBLISHED_ARTICLES.forEach(article => expect(sitemap).toContain(`<loc>https://dinnerbydesign.app${article.path}</loc>`));
   });
 
   it('requires the public library when the twelfth page is published', () => {

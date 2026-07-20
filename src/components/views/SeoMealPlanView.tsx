@@ -1,6 +1,8 @@
 import React from 'react';
 import { ArrowRight, Check, Clock3 } from 'lucide-react';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40 as plan } from '../../content/seoMealPlans';
+import { FIVE_DINNERS_PRICE_DISCLOSURES } from '../../content/programmaticDisclosures';
+import { ProgrammaticDisclosureFooter, ProgrammaticDisclosureList } from '../ProgrammaticDisclosures';
 
 interface SeoMealPlanViewProps { onPersonalise: () => void; }
 const money = (value: number) => `£${value.toFixed(2)}`;
@@ -35,7 +37,7 @@ export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise 
         <div className="rounded border border-dbd-rule/60 bg-white p-4"><p className="text-[10px] font-bold uppercase tracking-wider text-dbd-ink-3">Expected checkout</p><p className="mt-1 text-2xl font-bold">{money(plan.expectedCheckoutCost)}</p><p className="mt-1 text-xs text-dbd-ink-3">Full reference packs required</p></div>
       </section>
 
-      <p className="mt-3 text-xs leading-5 text-dbd-ink-3">These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation. Prices, brands, pack sizes and what you already own will change the checkout total.</p>
+      <ProgrammaticDisclosureList items={FIVE_DINNERS_PRICE_DISCLOSURES} className="mt-4" />
 
       <section className="mt-10">
         <h2 className="text-xl font-bold">The five-night dinner plan</h2>
@@ -82,6 +84,8 @@ export const SeoMealPlanView: React.FC<SeoMealPlanViewProps> = ({ onPersonalise 
       <section className="mt-10 rounded border border-dbd-rule/60 bg-white p-5"><h2 className="text-xl font-bold">How this plan was selected</h2><div className="mt-3 space-y-3 text-sm leading-6 text-dbd-ink-3"><p>The plan balances five different dinners with a mixture of chicken, pulses and eggs. Ingredients are deliberately repeated so that opened packs can be used again rather than becoming five disconnected shopping lists.</p><p>It is not guaranteed to be the mathematically cheapest possible basket. The expected checkout estimate rounds consolidated ingredients to representative full packs and excludes common cupboard quantities such as salt, pepper and cooking oil.</p><p><a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026" className="font-semibold text-dbd-accent hover:underline">understand the wider UK food-cost picture</a>.</p></div></section>
 
       <section className="mt-10"><h2 className="text-xl font-bold">Questions about this £40 plan</h2><div className="mt-4 space-y-4 text-sm leading-6 text-dbd-ink-3">{plan.faqs.map(item => <div key={item.question}><h3 className="font-bold text-dbd-ink">{item.question}</h3><p>{item.answer}</p></div>)}</div></section>
+
+      <ProgrammaticDisclosureFooter className="mt-10" />
 
       <section className="mt-10 rounded bg-dbd-ink p-6 text-white sm:flex sm:items-center sm:justify-between sm:gap-6"><div><h2 className="text-xl font-bold">Make this week fit your household</h2><p className="mt-2 text-sm leading-6 text-white/70">Apply dietary rules, change the budget, replace dinners and generate one consolidated shopping list.</p></div><button type="button" onClick={onPersonalise} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded bg-white px-5 text-sm font-bold text-dbd-ink sm:mt-0 sm:w-auto">Personalise this plan <ArrowRight size={16} /></button></section>
     </main>

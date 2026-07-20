@@ -18808,8 +18808,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml3;
-    function escapeHtml3(string) {
+    module2.exports = escapeHtml4;
+    function escapeHtml4(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -18940,13 +18940,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml3 = require_escape_html();
+    var escapeHtml4 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message) {
-      var body = escapeHtml3(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml4(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -22784,7 +22784,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml3 = require_escape_html();
+    var escapeHtml4 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -22837,7 +22837,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml3(msg));
+      var doc = createHtmlDocument("Error", escapeHtml4(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -22937,7 +22937,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml3(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml4(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23341,7 +23341,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml3 = require_escape_html();
+    var escapeHtml4 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23680,7 +23680,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml3(address);
+          var u = escapeHtml4(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -23808,7 +23808,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml3 = require_escape_html();
+    var escapeHtml4 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -23894,7 +23894,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml3(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml4(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -163417,6 +163417,35 @@ async function sendEmail({
   }
 }
 
+// src/content/programmaticDisclosures.ts
+var FIVE_DINNERS_PRICE_DISCLOSURES = [
+  {
+    key: "price_estimate",
+    title: "About these estimates",
+    body: "Costs cover ten portions and use representative UK reference packs with prices checked 18 July 2026. Retailer prices, pack sizes, promotions, availability and ingredients already at home vary. The expected checkout uses complete packs; the ingredient total uses the estimated quantities consumed. Cooking energy is excluded."
+  },
+  {
+    key: "serving_assumption",
+    title: "Serving assumption",
+    body: "This plan provides five dinners for two people. Appetite, portion size and any additional sides may change the quantity required."
+  }
+];
+var PROGRAMMATIC_DISCLOSURE_FOOTER = {
+  body: "Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.",
+  links: [
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var escapeHtml2 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+function renderProgrammaticDisclosuresInitialHtml(items) {
+  return `<aside aria-label="Important information">${items.map((item) => `<section><h2>${escapeHtml2(item.title)}</h2><p>${escapeHtml2(item.body)}</p></section>`).join("")}</aside>`;
+}
+function renderProgrammaticDisclosureFooterInitialHtml(copy = PROGRAMMATIC_DISCLOSURE_FOOTER) {
+  const links = copy.links.map((link) => `<a href="${escapeHtml2(link.href)}">${escapeHtml2(link.label)}</a>`).join(" \xB7 ");
+  return `<aside aria-label="About this guide"><h2>About this guide</h2><p>${escapeHtml2(copy.body)}</p><p>${links}</p></aside>`;
+}
+
 // src/content/seoMealPlans.ts
 var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
   slug: "5-dinners-for-2-under-40",
@@ -163441,6 +163470,7 @@ var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
   minimumDinnerCount: 5,
   eligibilityRules: ["Exactly five distinct dinners", "Expected checkout cost no higher than \xA340", "At least three ingredients reused across the week", "No promotional price required"],
   internalLinks: ["/pricing-methodology", "/recipe-methodology", "/food-costs/uk-food-costs-2026"],
+  disclosures: ["price_estimate", "serving_assumption", "allergen_and_product"],
   status: "published",
   introduction: [
     "Planning five different dinners can easily create five disconnected shopping lists. This week is designed differently: useful ingredients are deliberately carried from one dinner into another, while chicken, pulses and eggs provide variety without requiring five separate main-protein purchases.",
@@ -163544,22 +163574,24 @@ function getFiveDinnersForTwoJsonLd() {
     ]
   };
 }
-var escapeHtml2 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var escapeHtml3 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
 var formatMoney = (value) => `\xA3${value.toFixed(2)}`;
 function renderFiveDinnersForTwoInitialHtml() {
   const plan = FIVE_DINNERS_FOR_TWO_UNDER_40;
-  const dinners = plan.dinners.map((dinner) => `<article><p>${escapeHtml2(dinner.day)}</p><h3>${escapeHtml2(dinner.title)}</h3><p>${escapeHtml2(dinner.description)}</p><p>About ${dinner.totalTimeMinutes} minutes \xB7 ${formatMoney(dinner.estimatedCost)}</p><p>${escapeHtml2(dinner.sharedIngredientNote)}</p></article>`).join("");
-  const shared = plan.sharedIngredients.map((item) => `<li><strong>${escapeHtml2(item.ingredient)}:</strong> ${escapeHtml2(item.uses)}</li>`).join("");
-  const substitutions = plan.substitutions.map((item) => `<li><strong>${escapeHtml2(item.swap)}</strong> ${escapeHtml2(item.effect)}</li>`).join("");
-  const introduction = plan.introduction.map((paragraph) => `<p>${escapeHtml2(paragraph)}</p>`).join("");
-  const strategy = plan.shoppingStrategy.map((paragraph) => `<p>${escapeHtml2(paragraph)}</p>`).join("");
-  const principles = plan.budgetPrinciples.map((item) => `<li><strong>${escapeHtml2(item.title)}:</strong> ${escapeHtml2(item.explanation)}</li>`).join("");
-  const scenarios = plan.flexibleScenarios.map((item) => `<h3>${escapeHtml2(item.question)}</h3><p>${escapeHtml2(item.answer)}</p>`).join("");
-  const shoppingList = ["Protein", "Produce", "Chilled", "Cupboard", "Freezer"].map((category) => `<section><h3>${category}</h3><ul>${plan.shoppingList.filter((item) => item.category === category).map((item) => `<li><strong>${escapeHtml2(item.ingredient)}</strong>: ${escapeHtml2(item.quantityRequired)} required; ${escapeHtml2(item.referencePack)} at ${formatMoney(item.checkoutCost)}; about ${formatMoney(item.usedValue)} used. Used in ${escapeHtml2(item.usedIn)}.</li>`).join("")}</ul></section>`).join("");
-  const preparation = plan.preparationAdvice.map((item) => `<li>${escapeHtml2(item)}</li>`).join("");
-  const leftovers = plan.leftoverGuidance.map((item) => `<li>${escapeHtml2(item)}</li>`).join("");
-  const faqs = plan.faqs.map((item) => `<h3>${escapeHtml2(item.question)}</h3><p>${escapeHtml2(item.answer)}</p>`).join("");
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml2(plan.title)}</h1><p>${escapeHtml2(plan.description)}</p><p>By ${escapeHtml2(plan.editorialOwner)} \xB7 Published 18 July 2026 \xB7 Content reviewed 19 July 2026 \xB7 Prices checked 18 July 2026</p><section><h2>A practical \xA340 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}, about ${formatMoney(plan.estimatedIngredientCost / 10)} per portion.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p><p>These are planning estimates based on the DinnerByDesign UK reference-price catalogue, not a retailer quotation.</p></section><section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>Complete shopping list and cost calculation</h2><p>The checkout column represents complete reference packs. The value-used column apportions only the quantity used across these ten portions. Adding the listed packs gives ${formatMoney(plan.expectedCheckoutCost)}; adding the value used gives ${formatMoney(plan.estimatedIngredientCost)}.</p>${shoppingList}</section><section><h2>Preparation and leftovers</h2><h3>Prepare once, use again</h3><ul>${preparation}</ul><h3>What remains after the week</h3><ul>${leftovers}</ul></section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under \xA340</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026">understand the wider UK food-cost picture</a>.</p></section><section><h2>Questions about this \xA340 plan</h2>${faqs}</section><p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+  const disclosures = renderProgrammaticDisclosuresInitialHtml(FIVE_DINNERS_PRICE_DISCLOSURES);
+  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml();
+  const dinners = plan.dinners.map((dinner) => `<article><p>${escapeHtml3(dinner.day)}</p><h3>${escapeHtml3(dinner.title)}</h3><p>${escapeHtml3(dinner.description)}</p><p>About ${dinner.totalTimeMinutes} minutes \xB7 ${formatMoney(dinner.estimatedCost)}</p><p>${escapeHtml3(dinner.sharedIngredientNote)}</p></article>`).join("");
+  const shared = plan.sharedIngredients.map((item) => `<li><strong>${escapeHtml3(item.ingredient)}:</strong> ${escapeHtml3(item.uses)}</li>`).join("");
+  const substitutions = plan.substitutions.map((item) => `<li><strong>${escapeHtml3(item.swap)}</strong> ${escapeHtml3(item.effect)}</li>`).join("");
+  const introduction = plan.introduction.map((paragraph) => `<p>${escapeHtml3(paragraph)}</p>`).join("");
+  const strategy = plan.shoppingStrategy.map((paragraph) => `<p>${escapeHtml3(paragraph)}</p>`).join("");
+  const principles = plan.budgetPrinciples.map((item) => `<li><strong>${escapeHtml3(item.title)}:</strong> ${escapeHtml3(item.explanation)}</li>`).join("");
+  const scenarios = plan.flexibleScenarios.map((item) => `<h3>${escapeHtml3(item.question)}</h3><p>${escapeHtml3(item.answer)}</p>`).join("");
+  const shoppingList = ["Protein", "Produce", "Chilled", "Cupboard", "Freezer"].map((category) => `<section><h3>${category}</h3><ul>${plan.shoppingList.filter((item) => item.category === category).map((item) => `<li><strong>${escapeHtml3(item.ingredient)}</strong>: ${escapeHtml3(item.quantityRequired)} required; ${escapeHtml3(item.referencePack)} at ${formatMoney(item.checkoutCost)}; about ${formatMoney(item.usedValue)} used. Used in ${escapeHtml3(item.usedIn)}.</li>`).join("")}</ul></section>`).join("");
+  const preparation = plan.preparationAdvice.map((item) => `<li>${escapeHtml3(item)}</li>`).join("");
+  const leftovers = plan.leftoverGuidance.map((item) => `<li>${escapeHtml3(item)}</li>`).join("");
+  const faqs = plan.faqs.map((item) => `<h3>${escapeHtml3(item.question)}</h3><p>${escapeHtml3(item.answer)}</p>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml3(plan.title)}</h1><p>${escapeHtml3(plan.description)}</p><p>By ${escapeHtml3(plan.editorialOwner)} \xB7 Published 18 July 2026 \xB7 Content reviewed 19 July 2026 \xB7 Prices checked 18 July 2026</p><section><h2>A practical \xA340 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}, about ${formatMoney(plan.estimatedIngredientCost / 10)} per portion.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p></section>${disclosures}<section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>Complete shopping list and cost calculation</h2><p>The checkout column represents complete reference packs. The value-used column apportions only the quantity used across these ten portions. Adding the listed packs gives ${formatMoney(plan.expectedCheckoutCost)}; adding the value used gives ${formatMoney(plan.estimatedIngredientCost)}.</p>${shoppingList}</section><section><h2>Preparation and leftovers</h2><h3>Prepare once, use again</h3><ul>${preparation}</ul><h3>What remains after the week</h3><ul>${leftovers}</ul></section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under \xA340</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026">understand the wider UK food-cost picture</a>.</p></section><section><h2>Questions about this \xA340 plan</h2>${faqs}</section>${disclosureFooter}<p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
 }
 
 // src/content/seoFoodCostGuides.ts
@@ -163576,6 +163608,7 @@ var UK_FOOD_COSTS_2026 = {
   contentReviewedAt: "2026-07-19",
   editorialNotes: "Recheck official releases, forecast dates and all numerical claims before changing the review date.",
   internalLinks: ["/dinner-plans/5-dinners-for-2-under-40", "/pricing-methodology"],
+  disclosures: ["source_timing", "price_comparison"],
   sources: [
     { label: "ONS, Consumer price inflation, UK: May 2026", url: "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/may2026" },
     { label: "British Retail Consortium, Summer discounting keeps shop price inflation stable", url: "https://brc.org.uk/news-and-events/news/corporate-affairs/2026/ungated/summer-discounting-keeps-shop-price-inflation-stable/" },
@@ -163585,9 +163618,50 @@ var UK_FOOD_COSTS_2026 = {
     { label: "IGD, June 2026 food inflation forecast", url: "https://www.igd.com/articles/igd-releases-new-food-inflation-forecast/73470" }
   ]
 };
+var LOWER_COST_CUTS_PATH = "/food-costs/cooking-for-four-with-lower-cost-cuts";
+var LOWER_COST_CUTS_GUIDE = {
+  title: "How to compare meat cuts when cooking for four",
+  seoTitle: "Lower-cost family dinners: comparing meat cuts | DinnerByDesign",
+  description: "How to compare meat cuts for four servings using pack price, usable yield, cooking method and storage considerations.",
+  publishedAt: "2026-07-19",
+  reviewedAt: "2026-07-19",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Compare meat cuts for four servings using current pack price, usable yield and suitable cooking methods",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-19",
+  editorialNotes: "The \xA36 calculation is illustrative arithmetic, not a market-price estimate. Review FSA guidance and AHDB links before changing the content review date.",
+  internalLinks: ["/food-costs/uk-food-costs-2026", "/pricing-methodology", "/food-safety", "/recipe-methodology"],
+  disclosures: ["price_comparison", "serving_assumption", "source_timing", "storage_and_cooking"],
+  sources: [
+    { label: "Food Standards Agency: cooking guidance", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" },
+    { label: "Food Standards Agency: chilling and leftover guidance", url: "https://www.food.gov.uk/research/food-and-you-2/food-and-you-2-wave-9-key-findings?print=1" },
+    { label: "AHDB Meat Purchasing Guide", url: "https://ahdb.org.uk/mpg" }
+  ],
+  faqs: [
+    { question: "Are lower-cost cuts lower quality?", answer: "A lower price does not by itself indicate lower quality or safety. Price can reflect demand, the characteristics of the cut, preparation and retailer pricing. Nutritional composition varies by cut and product, so compare the label where this matters." },
+    { question: "Do lower-cost cuts always take longer to cook?", answer: "Cuts with more connective tissue, such as shin, shoulder and braising steak, generally need longer, slower cooking. Cuts with less connective tissue, such as thighs and drumsticks, generally cook more quickly." },
+    { question: "Can one cut be substituted for another in a recipe?", answer: "Only where the cooking method matches. A cut suited to slow braising will not produce the same result if substituted into a quick-roast recipe, and the reverse also applies." },
+    { question: "How is cost compared between two cuts?", answer: "Compare price per kilogram of usable weight on the same date, including any additional ingredients the method requires." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: LOWER_COST_CUTS_GUIDE.title,
+    path: LOWER_COST_CUTS_PATH,
+    category: "Food cost guide",
+    pageFamily: LOWER_COST_CUTS_GUIDE.pageFamily,
+    primarySearchIntent: LOWER_COST_CUTS_GUIDE.primarySearchIntent,
+    indexingStatus: LOWER_COST_CUTS_GUIDE.indexingStatus,
+    publishedAt: LOWER_COST_CUTS_GUIDE.publishedAt,
+    reviewedAt: LOWER_COST_CUTS_GUIDE.reviewedAt,
+    contentReviewedAt: LOWER_COST_CUTS_GUIDE.contentReviewedAt,
+    internalLinks: LOWER_COST_CUTS_GUIDE.internalLinks,
+    disclosures: LOWER_COST_CUTS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: UK_FOOD_COSTS_2026.title,
     path: UK_FOOD_COSTS_2026_PATH,
@@ -163599,6 +163673,7 @@ var PUBLIC_ARTICLES = [
     reviewedAt: UK_FOOD_COSTS_2026.reviewedAt,
     contentReviewedAt: UK_FOOD_COSTS_2026.contentReviewedAt,
     internalLinks: UK_FOOD_COSTS_2026.internalLinks,
+    disclosures: UK_FOOD_COSTS_2026.disclosures,
     status: "published"
   },
   {
@@ -163612,6 +163687,7 @@ var PUBLIC_ARTICLES = [
     reviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt,
     contentReviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.contentReviewedAt,
     internalLinks: FIVE_DINNERS_FOR_TWO_UNDER_40.internalLinks,
+    disclosures: FIVE_DINNERS_FOR_TWO_UNDER_40.disclosures,
     status: FIVE_DINNERS_FOR_TWO_UNDER_40.status
   }
 ];

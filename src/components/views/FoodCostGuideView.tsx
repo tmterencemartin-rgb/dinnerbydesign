@@ -1,6 +1,8 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { UK_FOOD_COSTS_2026 as guide } from '../../content/seoFoodCostGuides';
+import { UK_FOOD_COST_CONTEXT_DISCLOSURES } from '../../content/programmaticDisclosures';
+import { ProgrammaticDisclosureFooter, ProgrammaticDisclosureList } from '../ProgrammaticDisclosures';
 
 interface FoodCostGuideViewProps { onPlanWeek: () => void; }
 
@@ -46,6 +48,8 @@ export const FoodCostGuideView: React.FC<FoodCostGuideViewProps> = ({ onPlanWeek
           </div>
         </section>
 
+        <ProgrammaticDisclosureList items={UK_FOOD_COST_CONTEXT_DISCLOSURES} className="mt-6" />
+
         <section className="mt-10">
           <h2 className="text-xl font-bold">Why planning can make a difference</h2>
           <ul className="mt-4 space-y-3 text-[15px] leading-7 text-dbd-ink-3">
@@ -56,7 +60,7 @@ export const FoodCostGuideView: React.FC<FoodCostGuideViewProps> = ({ onPlanWeek
         <section className="mt-10 rounded border border-dbd-rule/60 bg-white p-5">
           <h2 className="text-xl font-bold">Ways DinnerByDesign can help</h2>
           <p className="mt-3 text-sm leading-6 text-dbd-ink-3">DinnerByDesign's Low Cost filter surfaces suitable dinner ideas using lower-cost ingredients. Schedule one or more saved dinners and DinnerByDesign generates a costed shopping list, so you can review the estimate before you shop.</p>
-          <p className="mt-3 text-sm leading-6"><a href="/dinner-plans/5-dinners-for-2-under-40" className="font-semibold text-dbd-accent hover:underline">Explore five dinners for two under £40</a><span className="text-dbd-ink-3"> or </span><a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read how ingredient prices are calculated</a>.</p>
+          <p className="mt-3 text-sm leading-6"><a href="/dinner-plans/5-dinners-for-2-under-40" className="font-semibold text-dbd-accent hover:underline">Explore five dinners for two under £40</a>, <a href="/food-costs/cooking-for-four-with-lower-cost-cuts" className="font-semibold text-dbd-accent hover:underline">compare meat cuts when cooking for four</a><span className="text-dbd-ink-3"> or </span><a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read how ingredient prices are calculated</a>.</p>
         </section>
 
         <section className="mt-10">
@@ -79,10 +83,12 @@ export const FoodCostGuideView: React.FC<FoodCostGuideViewProps> = ({ onPlanWeek
 
         <section className="mt-10 border-t border-dbd-rule/50 pt-8">
           <h2 className="text-xl font-bold">Sources and methodology</h2>
-          <p className="mt-3 text-sm leading-6 text-dbd-ink-3">The trackers use different baskets, weightings and collection dates. Source figures were checked when this guide was reviewed; follow the links for subsequent releases.</p>
+          <p className="mt-3 text-sm leading-6 text-dbd-ink-3">Source figures were checked when this guide was reviewed; follow the links for subsequent releases.</p>
           <ul className="mt-4 space-y-3 text-sm leading-6">{guide.sources.map(source => <li key={source.url}><SourceLink href={source.url}>{source.label}</SourceLink></li>)}</ul>
         </section>
       </article>
+
+      <ProgrammaticDisclosureFooter className="mt-10" />
 
       <section className="mt-10 rounded bg-dbd-ink p-6 text-white sm:flex sm:items-center sm:justify-between sm:gap-6">
         <div><h2 className="text-xl font-bold">Make your food budget go further</h2><p className="mt-2 text-sm leading-6 text-white/70">Build a week around your household, budget and available time.</p></div>

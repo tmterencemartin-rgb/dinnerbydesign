@@ -1,5 +1,6 @@
-import { UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
+import { LOWER_COST_CUTS_GUIDE, LOWER_COST_CUTS_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
+import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
   title: string;
@@ -12,10 +13,25 @@ export interface PublicArticleLink {
   reviewedAt: string;
   contentReviewedAt: string;
   internalLinks: string[];
+  disclosures: ProgrammaticDisclosureKey[];
   status: 'published' | 'draft' | 'retired';
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: LOWER_COST_CUTS_GUIDE.title,
+    path: LOWER_COST_CUTS_PATH,
+    category: 'Food cost guide',
+    pageFamily: LOWER_COST_CUTS_GUIDE.pageFamily,
+    primarySearchIntent: LOWER_COST_CUTS_GUIDE.primarySearchIntent,
+    indexingStatus: LOWER_COST_CUTS_GUIDE.indexingStatus,
+    publishedAt: LOWER_COST_CUTS_GUIDE.publishedAt,
+    reviewedAt: LOWER_COST_CUTS_GUIDE.reviewedAt,
+    contentReviewedAt: LOWER_COST_CUTS_GUIDE.contentReviewedAt,
+    internalLinks: LOWER_COST_CUTS_GUIDE.internalLinks,
+    disclosures: LOWER_COST_CUTS_GUIDE.disclosures,
+    status: 'published',
+  },
   {
     title: UK_FOOD_COSTS_2026.title,
     path: UK_FOOD_COSTS_2026_PATH,
@@ -27,6 +43,7 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     reviewedAt: UK_FOOD_COSTS_2026.reviewedAt,
     contentReviewedAt: UK_FOOD_COSTS_2026.contentReviewedAt,
     internalLinks: UK_FOOD_COSTS_2026.internalLinks,
+    disclosures: UK_FOOD_COSTS_2026.disclosures,
     status: 'published',
   },
   {
@@ -40,6 +57,7 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     reviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt,
     contentReviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.contentReviewedAt,
     internalLinks: FIVE_DINNERS_FOR_TWO_UNDER_40.internalLinks,
+    disclosures: FIVE_DINNERS_FOR_TWO_UNDER_40.disclosures,
     status: FIVE_DINNERS_FOR_TWO_UNDER_40.status,
   },
 ];

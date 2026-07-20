@@ -7,9 +7,13 @@ import {
   renderFiveDinnersForTwoInitialHtml,
 } from '../src/content/seoMealPlans';
 import {
+  LOWER_COST_CUTS_GUIDE,
+  LOWER_COST_CUTS_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
+  getLowerCostCutsJsonLd,
   getUkFoodCosts2026JsonLd,
+  renderLowerCostCutsInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from '../src/content/seoFoodCostGuides';
 
@@ -66,3 +70,27 @@ const guideOutputDir = path.join(distRoot, UK_FOOD_COSTS_2026_PATH.slice(1));
 await fs.mkdir(guideOutputDir, { recursive: true });
 await fs.writeFile(path.join(guideOutputDir, 'index.html'), guideHtml, 'utf8');
 console.log(`Generated ${UK_FOOD_COSTS_2026_PATH}/index.html`);
+
+const cutsCanonicalUrl = `https://dinnerbydesign.app${LOWER_COST_CUTS_PATH}`;
+let cutsHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${LOWER_COST_CUTS_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${LOWER_COST_CUTS_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${cutsCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${cutsCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${LOWER_COST_CUTS_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${LOWER_COST_CUTS_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOWER_COST_CUTS_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOWER_COST_CUTS_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderLowerCostCutsInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowerCostCutsJsonLd())}</script>\n</head>`);
+
+if (!cutsHtml.includes(`<h1>${LOWER_COST_CUTS_GUIDE.title}</h1>`) || !cutsHtml.includes(`href="${cutsCanonicalUrl}"`)) {
+  throw new Error('Lower-cost-cuts guide generation failed its content or canonical check.');
+}
+
+const cutsOutputDir = path.join(distRoot, LOWER_COST_CUTS_PATH.slice(1));
+await fs.mkdir(cutsOutputDir, { recursive: true });
+await fs.writeFile(path.join(cutsOutputDir, 'index.html'), cutsHtml, 'utf8');
+console.log(`Generated ${LOWER_COST_CUTS_PATH}/index.html`);

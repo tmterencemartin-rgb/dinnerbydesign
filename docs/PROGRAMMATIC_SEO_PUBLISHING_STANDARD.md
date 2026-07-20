@@ -153,7 +153,34 @@ Every financial claim must:
 - Avoid invented discounts and dependency on temporary promotions.
 - Use a range when the evidence does not support a precise figure.
 
+A clearly labelled round-figure calculation that exists only to demonstrate arithmetic is not a market-price claim. It does not require a retailer source or price-check date when the page states that the figures are illustrative, does not present them as observed prices and tells the reader to substitute current pack information. Any real product, retailer, basket, saving or `under £X` figure remains subject to the full pricing requirements above.
+
 Visible line items must reconcile exactly to every stated total. Cost-sensitive plans and `under £X` collections require a monthly price check. Material price or availability changes must be addressed promptly.
+
+## Disclosure framework
+
+Use concise, specific disclosures rather than one defensive legal paragraph. A qualification must sit beside the claim it explains; a footer note must not be used to repair a misleading headline, price or comparison.
+
+Each controlled page record must declare every applicable disclosure key:
+
+- `price_estimate`: required when a page shows a calculated ingredient, portion, dinner, plan or checkout cost.
+- `price_comparison`: required when a page compares retailers, products, baskets, cuts, recorded outcomes or forecasts.
+- `serving_assumption`: required when cost or quantity depends on household size or portion count.
+- `source_timing`: required when evidence changes over time, including prices, inflation, availability and forecasts.
+- `storage_and_cooking`: required when the page gives storage, freezing, defrosting, cooking or reheating guidance.
+- `allergen_and_product`: required when ingredients, packaged products or dietary suitability are presented.
+- `affiliate_or_commercial`: required before any paid placement, affiliate link or other commercial relationship is introduced.
+
+Placement rules:
+
+- Show cost and comparison qualifications immediately below the relevant figures or comparison.
+- Show serving assumptions beside the quantities or totals they affect.
+- Show storage and product information within the relevant guidance, not only at the bottom of the page.
+- Keep the shared `About this guide` footer on every programmatic page, with links to the pricing methodology and relevant selection methodology.
+- Keep important exclusions visible. Do not hide them only in an accordion, tooltip, terms page or footer.
+- Use reader-facing labels such as `About these estimates`, `How to read these figures`, `Serving assumption` and `Storage and safety` rather than repeating `Disclaimer`.
+
+The controlled wording and initial-HTML renderer live in `src/content/programmaticDisclosures.ts`; the client component lives in `src/components/ProgrammaticDisclosures.tsx`. Page-specific disclosures must use that shared system so crawler-visible HTML and the rendered interface remain consistent.
 
 ## Evidence, rights and editorial verification
 
@@ -178,6 +205,7 @@ Every controlled page record must include:
 - Publication status and indexing status.
 - Publication, content-review and price-review dates as applicable.
 - Internal-link relationships.
+- Applicable disclosure keys and their placement.
 - Source and rights information where applicable.
 
 Published pages must be registered in `src/content/publicArticles.ts`. Draft and retired records must never appear in the published article list or sitemap.
@@ -266,7 +294,7 @@ Do not increase production merely because page generation is technically easy.
 1. Define the customer need, page family and primary search intent.
 2. Confirm demand, distinctiveness, inventory and rights.
 3. Create the controlled content record with every required field.
-4. Draft the useful structured content and verify claims, prices and sources.
+4. Draft the useful structured content, select applicable disclosure keys and verify claims, prices and sources.
 5. Register the page in `src/content/publicArticles.ts`.
 6. Add selective internal links from and to existing public pages.
 7. Generate the static initial HTML, metadata, canonical and structured data.
@@ -284,6 +312,7 @@ Do not publish unless all applicable answers are yes:
 - Does it meet its minimum qualifying-content threshold?
 - Is the content materially different from adjacent pages?
 - Are all cost figures transparent, current and internally reconciled?
+- Are every applicable disclosure and material qualification visible beside the claim it explains?
 - Are primary claims and sources verified?
 - Are rights and attribution acceptable?
 - Is core content present in the initial HTML?
