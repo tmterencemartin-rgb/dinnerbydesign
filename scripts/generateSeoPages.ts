@@ -19,6 +19,8 @@ import {
   OFFAL_BUDGET_GUIDE_PATH,
   PORTION_PLANNING_GUIDE,
   PORTION_PLANNING_GUIDE_PATH,
+  SUMMER_STEWS_GUIDE,
+  SUMMER_STEWS_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
@@ -27,6 +29,7 @@ import {
   getMediterraneanAffordableCookingJsonLd,
   getOffalBudgetGuideJsonLd,
   getPortionPlanningGuideJsonLd,
+  getSummerStewsGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
@@ -34,6 +37,7 @@ import {
   renderMediterraneanAffordableCookingInitialHtml,
   renderOffalBudgetGuideInitialHtml,
   renderPortionPlanningGuideInitialHtml,
+  renderSummerStewsGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from '../src/content/seoFoodCostGuides';
 
@@ -223,3 +227,23 @@ const mediterraneanOutputDir = path.join(distRoot, MEDITERRANEAN_AFFORDABLE_COOK
 await fs.mkdir(mediterraneanOutputDir, { recursive: true });
 await fs.writeFile(path.join(mediterraneanOutputDir, 'index.html'), mediterraneanHtml, 'utf8');
 console.log(`Generated ${MEDITERRANEAN_AFFORDABLE_COOKING_PATH}/index.html`);
+
+const summerStewsCanonicalUrl = `https://dinnerbydesign.app${SUMMER_STEWS_GUIDE_PATH}`;
+let summerStewsHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${SUMMER_STEWS_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${SUMMER_STEWS_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${summerStewsCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${summerStewsCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${SUMMER_STEWS_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${SUMMER_STEWS_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${SUMMER_STEWS_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${SUMMER_STEWS_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderSummerStewsGuideInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getSummerStewsGuideJsonLd())}</script>\n</head>`);
+if (!summerStewsHtml.includes(`<h1>${SUMMER_STEWS_GUIDE.title}</h1>`) || !summerStewsHtml.includes(`href="${summerStewsCanonicalUrl}"`)) throw new Error('Summer-stews guide generation failed its content or canonical check.');
+const summerStewsOutputDir = path.join(distRoot, SUMMER_STEWS_GUIDE_PATH.slice(1));
+await fs.mkdir(summerStewsOutputDir, { recursive: true });
+await fs.writeFile(path.join(summerStewsOutputDir, 'index.html'), summerStewsHtml, 'utf8');
+console.log(`Generated ${SUMMER_STEWS_GUIDE_PATH}/index.html`);

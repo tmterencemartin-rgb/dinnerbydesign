@@ -10,6 +10,8 @@ import {
   OFFAL_BUDGET_GUIDE_PATH,
   PORTION_PLANNING_GUIDE,
   PORTION_PLANNING_GUIDE_PATH,
+  SUMMER_STEWS_GUIDE,
+  SUMMER_STEWS_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
@@ -17,12 +19,14 @@ import {
   getLowCostCookingTechniquesJsonLd,
   getOffalBudgetGuideJsonLd,
   getPortionPlanningGuideJsonLd,
+  getSummerStewsGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
   renderOffalBudgetGuideInitialHtml,
   renderPortionPlanningGuideInitialHtml,
+  renderSummerStewsGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from './seoFoodCostGuides';
 
@@ -164,6 +168,30 @@ describe('food-cost guide publishing data', () => {
     expect(html).toContain('/pricing-methodology');
     expect(getPortionPlanningGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${PORTION_PLANNING_GUIDE_PATH}` }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+    ]));
+  });
+
+  it('publishes the summer-stews guide with flexible dinner ideas and safety disclosures', () => {
+    expect(SUMMER_STEWS_GUIDE_PATH).toBe('/food-costs/summer-stews-seasonal-vegetables');
+    expect(SUMMER_STEWS_GUIDE.indexingStatus).toBe('index');
+    expect(SUMMER_STEWS_GUIDE.disclosures).toEqual(['storage_and_cooking', 'allergen_and_product', 'source_timing']);
+    expect(SUMMER_STEWS_GUIDE.disclosures).not.toContain('price_estimate');
+    expect(SUMMER_STEWS_GUIDE.sources).toHaveLength(1);
+
+    const html = renderSummerStewsGuideInitialHtml();
+    expect(html).toContain(`<h1>${SUMMER_STEWS_GUIDE.title}</h1>`);
+    expect(html).toContain('Three flexible dinner ideas');
+    expect(html).toContain('Cook the chicken thoroughly');
+    expect(html).toContain('Ingredients and allergens');
+    expect(html).toContain('Frequently asked questions');
+    expect(html).toContain('/food-costs/low-cost-cooking-techniques');
+    expect(html).toContain('/food-safety');
+    expect(html).toContain('About this guide');
+
+    expect(getSummerStewsGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
+      expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${SUMMER_STEWS_GUIDE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
       expect.objectContaining({ '@type': 'BreadcrumbList' }),
     ]));

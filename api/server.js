@@ -163796,9 +163796,49 @@ var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
     { question: "How can I avoid the more expensive ingredients pushing up the price?", answer: "Use them in small quantities as flavouring \u2014 a little chorizo, a modest amount of good olive oil as a finishing touch, or cheese grated rather than sliced \u2014 rather than as the bulk of the dinner." }
   ]
 };
+var SUMMER_STEWS_GUIDE_PATH = "/food-costs/summer-stews-seasonal-vegetables";
+var SUMMER_STEWS_GUIDE = {
+  title: "Summer stews: making vegetables go further",
+  seoTitle: "Affordable summer stews and vegetable ideas | DinnerByDesign",
+  description: "A practical guide to building lighter, appetising stews around whichever vegetables are available, affordable or already in the fridge.",
+  publishedAt: "2026-07-20",
+  reviewedAt: "2026-07-20",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Use flexible summer stews to make good-value vegetables and shared ingredients go further",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-20",
+  editorialNotes: "Review the cited Food Standards Agency guidance before changing the content review date. The dinner examples are flexible ideas rather than named traditional dishes.",
+  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/food-costs/portion-planning-and-food-waste", "/food-safety", "/recipe-methodology"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Do vegetables cost less in summer?", answer: "Not automatically \u2014 prices and availability vary by vegetable, retailer and time of year. The value in this approach comes from flexibility and reuse, not from a guaranteed seasonal saving." },
+    { question: "Can I use frozen or tinned vegetables instead of fresh?", answer: "Frozen vegetables can work well, but follow the pack instructions and cook them thoroughly. They may need to be added earlier than their fresh equivalents. Tinned tomatoes provide a convenient base for all three examples." },
+    { question: "Do I need to add vegetables in stages, or can I add everything at once?", answer: "Staging keeps more texture and colour in the finished dish, but it is not essential. Adding everything together and cooking it down is a reasonable alternative if that is the result you prefer." },
+    { question: "How long can I keep a cooked stew before eating it?", answer: "Refrigerate it within two hours of cooking, and eat it within 48 hours or freeze it. Reheat only once, until it is steaming hot throughout." },
+    { question: "What if I do not have the exact vegetables listed in a recipe?", answer: "These dinners are built to accept substitution \u2014 use whichever similar vegetables are good value or already need using and remain safe to eat, adjusting cooking time for firmer or softer ingredients as needed." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: SUMMER_STEWS_GUIDE.title,
+    path: SUMMER_STEWS_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: SUMMER_STEWS_GUIDE.pageFamily,
+    primarySearchIntent: SUMMER_STEWS_GUIDE.primarySearchIntent,
+    indexingStatus: SUMMER_STEWS_GUIDE.indexingStatus,
+    publishedAt: SUMMER_STEWS_GUIDE.publishedAt,
+    reviewedAt: SUMMER_STEWS_GUIDE.reviewedAt,
+    contentReviewedAt: SUMMER_STEWS_GUIDE.contentReviewedAt,
+    internalLinks: SUMMER_STEWS_GUIDE.internalLinks,
+    disclosures: SUMMER_STEWS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.title,
     path: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,

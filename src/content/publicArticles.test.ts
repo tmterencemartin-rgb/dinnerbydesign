@@ -26,6 +26,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/low-cost-cooking-techniques')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-for-one-without-waste')).toBe(false);
+    expect(isUnknownPublicArticlePath('/food-costs/summer-stews-seasonal-vegetables')).toBe(false);
     expect(isUnknownPublicArticlePath('/pricing-methodology')).toBe(false);
   });
 

@@ -35,6 +35,7 @@ import { CookingForOneGuideView } from './components/views/CookingForOneGuideVie
 import { OffalBudgetGuideView } from './components/views/OffalBudgetGuideView';
 import { PortionPlanningGuideView } from './components/views/PortionPlanningGuideView';
 import { MediterraneanAffordableCookingGuideView } from './components/views/MediterraneanAffordableCookingGuideView';
+import { SummerStewsGuideView } from './components/views/SummerStewsGuideView';
 import {
   COOKING_FOR_ONE_GUIDE,
   COOKING_FOR_ONE_PATH,
@@ -48,6 +49,8 @@ import {
   OFFAL_BUDGET_GUIDE_PATH,
   PORTION_PLANNING_GUIDE,
   PORTION_PLANNING_GUIDE_PATH,
+  SUMMER_STEWS_GUIDE,
+  SUMMER_STEWS_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
@@ -56,6 +59,7 @@ import {
   getMediterraneanAffordableCookingJsonLd,
   getOffalBudgetGuideJsonLd,
   getPortionPlanningGuideJsonLd,
+  getSummerStewsGuideJsonLd,
   getUkFoodCosts2026JsonLd,
 } from './content/seoFoodCostGuides';
 import { Toast } from './components/ui/Toast';
@@ -222,6 +226,13 @@ const AppContent = () => {
           canonicalPath: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
           jsonLd: getMediterraneanAffordableCookingJsonLd()
         };
+      case 'food-costs-summer-stews':
+        return {
+          title: SUMMER_STEWS_GUIDE.seoTitle,
+          description: SUMMER_STEWS_GUIDE.description,
+          canonicalPath: SUMMER_STEWS_GUIDE_PATH,
+          jsonLd: getSummerStewsGuideJsonLd()
+        };
       case 'home':
       case 'landing':
       default:
@@ -334,7 +345,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -529,6 +540,17 @@ const AppContent = () => {
 
   if (view === 'food-costs-mediterranean-affordable-cooking') {
     return <MediterraneanAffordableCookingGuideView onPlanWeek={() => {
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'food-costs-summer-stews') {
+    return <SummerStewsGuideView onPlanWeek={() => {
       if (isGuest) {
         safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
         setView('signin');

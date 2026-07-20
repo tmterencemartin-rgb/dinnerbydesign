@@ -380,6 +380,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/food-costs/cooking-with-offal-on-a-budget') return 'food-costs-offal-budget';
     if (location === '/food-costs/portion-planning-and-food-waste') return 'food-costs-portion-planning';
     if (location === '/food-costs/mediterranean-inspired-affordable-cooking') return 'food-costs-mediterranean-affordable-cooking';
+    if (location === '/food-costs/summer-stews-seasonal-vegetables') return 'food-costs-summer-stews';
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';

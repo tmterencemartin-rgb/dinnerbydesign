@@ -195,6 +195,24 @@ export const MEDITERRANEAN_SOURCE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const SUMMER_STEWS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Follow current Food Standards Agency guidance on cooling, refrigerating and reheating cooked dishes. Cook chicken thoroughly until steaming hot throughout, with no pink meat remaining.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Bread usually contains gluten. Stock, broth and other packaged ingredients vary by product and may contain allergens, so check every label.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food-safety guidance was reviewed on 20 July 2026. Follow the cited Food Standards Agency guidance for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -249,6 +267,14 @@ export const PORTION_PLANNING_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCop
 
 export const MEDITERRANEAN_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'This guide draws practical techniques from several distinct culinary traditions. Ingredient availability, product information and allergens vary, so check labels and follow current storage and cooking guidance.',
+  links: [
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const SUMMER_STEWS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide offers flexible dinner ideas rather than fixed recipes. Ingredient availability, product information, allergens and storage instructions vary, so check labels and follow current food-safety guidance.',
   links: [
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
