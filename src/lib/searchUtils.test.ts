@@ -26,7 +26,8 @@ describe('searchUtils', () => {
       preferredMode: 'cook',
       customCuisines: [],
       preferredSupermarkets: ['Tesco'],
-      preferredSourceIds: []
+      preferredSourceIds: [],
+      includeOffal: false
     };
 
     it('merges user input and preferences correctly', () => {
@@ -62,6 +63,22 @@ describe('searchUtils', () => {
     it('does not mark dish-name searches as ingredient-led', () => {
       const params = buildSearchParams('chicken curry', 'cook', mockPreferences);
       expect(params.ingredientIntent).toBeUndefined();
+    });
+
+    it('excludes offal by default and preserves an opt-in preference', () => {
+      expect(buildSearchParams('pasta', 'cook', mockPreferences).includeOffal).toBe(false);
+      expect(buildSearchParams('pasta', 'cook', { ...mockPreferences, includeOffal: true }).includeOffal).toBe(true);
+    });
+
+    it('temporarily includes offal for an explicit search without changing other preferences', () => {
+      const params = buildSearchParams('liver recipes', 'cook', mockPreferences);
+      expect(params.includeOffal).toBe(true);
+      expect(mockPreferences.includeOffal).toBe(false);
+      expect(params.dietaryRule).toBe('vegan');
+    });
+
+    it('does not treat artichoke hearts as an offal search', () => {
+      expect(buildSearchParams('pasta with artichoke hearts', 'cook', mockPreferences).includeOffal).toBe(false);
     });
 
     it('does not merge preferences for similarity searches', () => {

@@ -157757,6 +157757,7 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const activeServings = searchParams.servings || preferences?.servings || 2;
   const activeSupermarkets = isReadyMade ? searchParams.supermarkets || preferences?.preferredSupermarkets || [] : [];
   const activePreferredSourceIds = searchParams.preferredSourceIds || [];
+  const activeIncludeOffal = searchParams.includeOffal !== void 0 ? searchParams.includeOffal : preferences?.includeOffal === true;
   const activePreferredSourceNames = activePreferredSourceIds.length > 0 ? PREFERRED_SOURCES.filter((s2) => activePreferredSourceIds.includes(s2.id)).map((s2) => s2.label) : [];
   if (targetCuisines && targetCuisines.length > 0) appliedFilters.push(...targetCuisines);
   else if (legacyCuisine) appliedFilters.push(legacyCuisine);
@@ -157817,6 +157818,9 @@ INGREDIENT-LED SEARCH ACTIVE:
 - Minimise extra shopping. Avoid recipes that need many additional fresh or expensive ingredients.
 - If a recipe needs extra ingredients, keep them essential and ordinary UK supermarket items.
 - In the description or matchReason, briefly explain how the listed ingredients are used.` : "";
+  const offalLogic = activeIncludeOffal ? "" : `
+OFFAL EXCLUSION (HARD):
+- Do not return recipes or ready-made products containing liver, kidney, heart, tongue, tripe, sweetbreads, blood sausage, black pudding or other offal.`;
   try {
     const modelClient = getAI();
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
@@ -157858,7 +157862,8 @@ HARD CONSTRAINTS:
 11. Preferred Supermarkets: ${activeSupermarkets.length > 0 ? activeSupermarkets.join(", ") : "Any"}
 12. High Omega-3 Prioritisation: ${activeHighOmega3 ? "Active (focus on oily fish, walnuts, chia, flaxseed)" : "No"}
 13. High Protein Prioritisation: ${activeHighProtein ? "Active (focus on lean meats, fish, pulses, eggs)" : "No"}
-${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}
+14. Offal: ${activeIncludeOffal ? "Allowed" : "Excluded"}
+${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}
 `;
     const rejectionPolicy = `Return { "items": [] } if:
 - The query "${query}" strictly violates any HARD DIETARY, RELIGIOUS, or ALLERGY constraint.

@@ -1034,7 +1034,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const docRef = doc(db, `users/${user.uid}/profile/preferences`);
       const allowedFields = [
         'dietaryRule', 'saladPreference', 'allergies', 'nutritiousChoice',
-        'isSimple', 'isLowCost', 'highOmega3', 'highProtein', 'servings', 'calorieCeiling', 'budgetLimit',
+        'isSimple', 'isLowCost', 'highOmega3', 'highProtein', 'includeOffal', 'servings', 'calorieCeiling', 'budgetLimit',
         'exclusions', 'cuisinePreferences', 'religiousEthical',
         'cookingMethods', 'cookingFats', 'readyToEatUnderMins', 'preferredMode',
         'customCuisines', 'preferredSupermarkets', 'preferredSourceIds'

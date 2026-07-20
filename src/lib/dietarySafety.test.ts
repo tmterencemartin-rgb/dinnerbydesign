@@ -88,6 +88,28 @@ describe('Portion and Hard Constraints Safety Layer', () => {
       const expensive = { ...baseRecipe, costPerPortion: '£6.00' };
       expect(passesHardConstraints(expensive, prefs)).toBe(false);
     });
+
+    it('blocks offal unless it has been included', () => {
+      const liverRecipe = {
+        ...baseRecipe,
+        title: 'Liver and onions',
+        ingredients: ['Lamb liver', 'Onion']
+      };
+
+      const unrestrictedPrefs = { ...prefs, dietaryRule: 'none' as const };
+      expect(passesHardConstraints(liverRecipe, unrestrictedPrefs)).toBe(false);
+      expect(passesHardConstraints(liverRecipe, { ...unrestrictedPrefs, includeOffal: true })).toBe(true);
+    });
+
+    it('does not mistake artichoke hearts for offal', () => {
+      const artichokeRecipe = {
+        ...baseRecipe,
+        title: 'Artichoke hearts pasta',
+        ingredients: ['Pasta', 'Artichoke hearts', 'Tomato']
+      };
+
+      expect(passesHardConstraints(artichokeRecipe, prefs)).toBe(true);
+    });
   });
 });
 

@@ -575,6 +575,9 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   const activeServings = searchParams.servings || preferences?.servings || 2;
   const activeSupermarkets = isReadyMade ? (searchParams.supermarkets || preferences?.preferredSupermarkets || []) : [];
   const activePreferredSourceIds = searchParams.preferredSourceIds || [];
+  const activeIncludeOffal = searchParams.includeOffal !== undefined
+    ? searchParams.includeOffal
+    : preferences?.includeOffal === true;
   const activePreferredSourceNames = activePreferredSourceIds.length > 0
     ? PREFERRED_SOURCES.filter(s => activePreferredSourceIds.includes(s.id)).map(s => s.label)
     : [];
@@ -654,6 +657,11 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - In the description or matchReason, briefly explain how the listed ingredients are used.`
     : '';
 
+  const offalLogic = activeIncludeOffal
+    ? ''
+    : `\nOFFAL EXCLUSION (HARD):
+- Do not return recipes or ready-made products containing liver, kidney, heart, tongue, tripe, sweetbreads, blood sausage, black pudding or other offal.`;
+
   try {
     const modelClient = getAI();
     
@@ -700,7 +708,8 @@ HARD CONSTRAINTS:
 11. Preferred Supermarkets: ${activeSupermarkets.length > 0 ? activeSupermarkets.join(', ') : 'Any'}
 12. High Omega-3 Prioritisation: ${activeHighOmega3 ? 'Active (focus on oily fish, walnuts, chia, flaxseed)' : 'No'}
 13. High Protein Prioritisation: ${activeHighProtein ? 'Active (focus on lean meats, fish, pulses, eggs)' : 'No'}
-${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}
+14. Offal: ${activeIncludeOffal ? 'Allowed' : 'Excluded'}
+${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}
 `;
 
     const rejectionPolicy = `Return { "items": [] } if:

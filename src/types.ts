@@ -139,6 +139,7 @@ export interface UserPreferences {
   isLowCost: boolean;           // 6. Low-cost recipes (tick box)
   highOmega3: boolean;          // 18. Omega-3 rich (tick box)
   highProtein: boolean;         // 19. High Protein (tick box)
+  includeOffal?: boolean;       // Include offal in ordinary suggestions; defaults to false
   servings: number;             // 7. Portion/Servings count
   calorieCeiling: number | null; // 8. Max calories per adult portion
   budgetLimit: number | null;   // 9. Max cost per adult portion
@@ -253,6 +254,7 @@ export interface SearchParams {
   preferredSourceIds?: string[];
   highOmega3?: boolean;
   highProtein?: boolean;
+  includeOffal?: boolean;
   servings?: number;
   similarityContext?: {
     title: string;

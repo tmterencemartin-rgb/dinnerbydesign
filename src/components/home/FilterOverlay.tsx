@@ -32,6 +32,8 @@ interface FilterOverlayProps {
   setHighOmega3: (val: boolean) => void;
   highProtein: boolean;
   setHighProtein: (val: boolean) => void;
+  includeOffal: boolean;
+  setIncludeOffal: (val: boolean) => void;
   isSimple: boolean;
   setIsSimple: (val: boolean) => void;
   isLowCost: boolean;
@@ -77,6 +79,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     nutritiousChoice, setNutritiousChoice,
     highOmega3, setHighOmega3,
     highProtein, setHighProtein,
+    includeOffal, setIncludeOffal,
     isSimple, setIsSimple,
     isLowCost, setIsLowCost,
     supermarkets, setSupermarkets,
@@ -105,6 +108,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
   const [localNutritiousChoice, setLocalNutritiousChoice] = React.useState(nutritiousChoice);
   const [localHighOmega3, setLocalHighOmega3] = React.useState(highOmega3);
   const [localHighProtein, setLocalHighProtein] = React.useState(highProtein);
+  const [localIncludeOffal, setLocalIncludeOffal] = React.useState(includeOffal);
   const [localIsSimple, setLocalIsSimple] = React.useState(isSimple);
   const [localIsLowCost, setLocalIsLowCost] = React.useState(isLowCost);
   const [localSupermarkets, setLocalSupermarkets] = React.useState<string[]>(supermarkets);
@@ -147,6 +151,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     setNutritiousChoice(localNutritiousChoice);
     setHighOmega3(localHighOmega3);
     setHighProtein(localHighProtein);
+    setIncludeOffal(localIncludeOffal);
     setIsSimple(localIsSimple);
     setIsLowCost(localIsLowCost);
     setSupermarkets(localSupermarkets);
@@ -197,6 +202,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
       isLowCost: localIsLowCost,
       highOmega3: localHighOmega3,
       highProtein: localHighProtein,
+      includeOffal: localIncludeOffal,
       servings: parseInt(localServings) || 2,
       calorieCeiling: localMaxCalories ? parseInt(localMaxCalories) : null,
       budgetLimit: localMaxCostPerPortion ? parseFloat(localMaxCostPerPortion) : null,
@@ -229,6 +235,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     setLocalNutritiousChoice(false);
     setLocalHighOmega3(false);
     setLocalHighProtein(false);
+    setLocalIncludeOffal(false);
     setLocalIsSimple(false);
     setLocalIsLowCost(false);
     setLocalSupermarkets([]);
@@ -268,7 +275,8 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     (localIsSimple ? 1 : 0) +
     (localIsLowCost ? 1 : 0) +
     (localHighOmega3 ? 1 : 0) +
-    (localHighProtein ? 1 : 0);
+    (localHighProtein ? 1 : 0) +
+    (localIncludeOffal ? 1 : 0);
 
   return (
     <motion.div 
@@ -362,7 +370,8 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                                   (localSaladPreference !== 'all' ? 1 : 0) + 
                                   localAllergies.length + 
                                   localReligiousEthical.length + 
-                                  localExcludeIngredients.length;
+                                  localExcludeIngredients.length +
+                                  (localIncludeOffal ? 1 : 0);
                     return cnt > 0 ? (
                       <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
                     ) : null;
@@ -410,6 +419,20 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     </div>
                   </div>
+
+                  {/* Safety Note */}
+                  <label className="flex cursor-pointer items-start justify-between gap-4 rounded border border-gray-200 bg-gray-50/70 p-3">
+                    <span className="min-w-0">
+                      <span className="block text-[12px] font-bold text-gray-800">Include offal in suggestions</span>
+                      <span className="mt-1 block text-[10.5px] leading-relaxed text-gray-500">Allows liver, kidney, heart and other offal to appear in ordinary searches and weekly plans.</span>
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={localIncludeOffal}
+                      onChange={(event) => setLocalIncludeOffal(event.target.checked)}
+                      className="mt-0.5 h-4 w-4 shrink-0 accent-dbd-accent"
+                    />
+                  </label>
 
                   {/* Safety Note */}
                   <div className="bg-amber-50/40 border-l-2 border-amber-400 px-3 py-2.5 rounded-sm flex items-start gap-2.5">

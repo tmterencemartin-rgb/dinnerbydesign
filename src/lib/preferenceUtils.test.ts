@@ -49,6 +49,12 @@ describe('preferenceUtils', () => {
       expect(normalised.dietaryRule).toBe('none');
       expect(normalised.cuisinePreferences).toEqual([]);
       expect(normalised.calorieCeiling).toBe(null);
+      expect(normalised.includeOffal).toBe(false);
+    });
+
+    it('preserves an explicit offal preference', () => {
+      expect(normaliseUserPreferences({ includeOffal: true }).includeOffal).toBe(true);
+      expect(normaliseUserPreferences({ includeOffal: false }).includeOffal).toBe(false);
     });
 
     it('preserves existing correct fields', () => {

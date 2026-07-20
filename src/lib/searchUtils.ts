@@ -1,6 +1,7 @@
 import { SearchParams, UserPreferences, DinnerSource, Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { PREFERRED_SOURCES } from '../data/preferredSources';
 import { detectIngredientIntent } from './ingredientParser';
+import { queryExplicitlyRequestsOffal } from './offalPreference';
 
 /**
  * Builds search parameters by combining user input, active filters, and persistent preferences.
@@ -34,6 +35,15 @@ export const buildSearchParams = (
 
   // 2. Persistent Preferences (only if not a similarity search)
   if (!params.similarityContext) {
+    // An explicit offal search temporarily overrides the saved default exclusion.
+    if (queryExplicitlyRequestsOffal(query)) {
+      params.includeOffal = true;
+    } else if (overrides.includeOffal !== undefined) {
+      params.includeOffal = overrides.includeOffal;
+    } else {
+      params.includeOffal = preferences?.includeOffal === true;
+    }
+
     // Dietary Rule
     const persistentDietRule = preferences?.dietaryRule || 'none';
     const temporaryDietRule = overrides.dietaryRule || 'none';
@@ -577,7 +587,8 @@ export const buildActiveCriteria = (
     { key: 'nutritiousChoice', label: 'Wholesome recipes' },
     { key: 'highOmega3', label: 'High Omega-3' },
     { key: 'isLowCost', label: 'Low cost recipes' },
-    { key: 'highProtein', label: 'High Protein' }
+    { key: 'highProtein', label: 'High Protein' },
+    { key: 'includeOffal', label: 'Offal included' }
   ] as const;
 
   const activeFlagsByLabel = new Set<string>();

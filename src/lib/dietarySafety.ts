@@ -1,4 +1,5 @@
 import { Recipe, SavedRecipe, ReadyMeal, DietaryRule, SaladPreference } from '../types';
+import { itemContainsOffal } from './offalPreference';
 
 /**
  * DETERMINISTIC DIETARY SAFETY GATE
@@ -141,10 +142,14 @@ export function passesHardConstraints(
     calorieCeiling: number | null;
     budgetLimit: number | null;
     supermarkets?: string[];
+    includeOffal?: boolean;
   }
 ): boolean {
   // 1. Dietary Rule
   if (!passesDietaryRule(recipe, preferences.dietaryRule)) return false;
+
+  // Offal is excluded from ordinary suggestions unless the saved preference or an explicit search allows it.
+  if (preferences.includeOffal !== true && itemContainsOffal(recipe)) return false;
 
   // 3. Salad Preference (HARD)
   const saladPreference = preferences.saladPreference || 'all';

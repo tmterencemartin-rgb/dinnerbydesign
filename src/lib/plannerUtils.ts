@@ -127,6 +127,7 @@ export const buildSafetyPrefs = (preferences?: UserPreferences | null) => {
     religiousEthical: preferences.religiousEthical || [],
     calorieCeiling: preferences.calorieCeiling,
     budgetLimit: preferences.budgetLimit,
+    includeOffal: preferences.includeOffal === true,
   };
 };
 
@@ -383,6 +384,7 @@ export const createWeeklyDinnerPlan = async ({
   const homemadeTarget = Math.min(settings.homemadeCount, settings.dinnerCount);
   const readyMadeTarget = Math.max(settings.dinnerCount - homemadeTarget, 0);
   const existingPlannerTitles = planner.map(item => item.title);
+  const safetyPrefs = buildSafetyPrefs(preferences);
   const optimisationText = [
     shouldMinimiseCost ? 'prioritise the lowest credible full-shop cost' : '',
     shouldReuseIngredients ? 'reuse core ingredients and opened packs across the dinners, with practical leftovers' : '',
@@ -412,13 +414,17 @@ export const createWeeklyDinnerPlan = async ({
   const homemadeItems: Recipe[] = [];
   const readyMadeItems: ReadyMeal[] = [];
   const seenTitles = new Set<string>();
+  const addEligibleCandidates = <T extends Recipe | ReadyMeal>(items: T[], target: T[], targetCount: number) => {
+    const eligible = safetyPrefs ? items.filter(item => passesHardConstraints(item, safetyPrefs)) : items;
+    addUniqueCandidates(eligible, target, targetCount, seenTitles);
+  };
 
   if (homemadeTarget > 0) {
     try {
       const query = `${homemadeTarget} cooked dinners for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
       const params = makeParams(query, 'cook', homemadeTarget, existingPlannerTitles);
       const result = await generateDinnerSuggestions(params, preferences || undefined);
-      addUniqueCandidates(result.recipes || [], homemadeItems, homemadeTarget, seenTitles);
+      addEligibleCandidates(result.recipes || [], homemadeItems, homemadeTarget);
     } catch (err: any) {
       addLog(`UI WARN: weekly batch generation failed, trying focused searches: ${err?.message || err}`);
     }
@@ -429,7 +435,7 @@ export const createWeeklyDinnerPlan = async ({
       const readyQuery = `${readyMadeTarget} UK supermarket ready-made dinner products for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
       const readyParams = makeParams(readyQuery, 'ready-made', readyMadeTarget, [...existingPlannerTitles, ...homemadeItems.map(item => item.title)]);
       const readyResult = await generateDinnerSuggestions(readyParams, preferences || undefined);
-      addUniqueCandidates(readyResult.readyMeals || [], readyMadeItems, readyMadeTarget, seenTitles);
+      addEligibleCandidates(readyResult.readyMeals || [], readyMadeItems, readyMadeTarget);
     } catch (err: any) {
       addLog(`UI WARN: weekly ready-made generation failed: ${err?.message || err}`);
     }
@@ -446,7 +452,7 @@ export const createWeeklyDinnerPlan = async ({
 
     try {
       const fallbackResult = await generateDinnerSuggestions(fallbackParams, preferences || undefined);
-      addUniqueCandidates(fallbackResult.recipes || [], homemadeItems, homemadeTarget, seenTitles);
+      addEligibleCandidates(fallbackResult.recipes || [], homemadeItems, homemadeTarget);
     } catch (err: any) {
       addLog(`UI WARN: weekly fallback generation failed for ${fallbackProtein}: ${err?.message || err}`);
     }
@@ -459,7 +465,7 @@ export const createWeeklyDinnerPlan = async ({
 
     try {
       const fallbackResult = await generateDinnerSuggestions(fallbackParams, preferences || undefined);
-      addUniqueCandidates(fallbackResult.readyMeals || [], readyMadeItems, readyMadeTarget, seenTitles);
+      addEligibleCandidates(fallbackResult.readyMeals || [], readyMadeItems, readyMadeTarget);
     } catch (err: any) {
       addLog(`UI WARN: weekly ready-made fallback generation failed for ${fallbackProtein}: ${err?.message || err}`);
     }

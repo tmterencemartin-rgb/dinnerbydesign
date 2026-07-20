@@ -120,6 +120,14 @@ When testing this web application locally, you can connect to your local backend
 - **Review boundary**: Unchanged active prices may have their verification date refreshed automatically. New products and changed product, pack or price data are staged in `pendingPriceRefresh` and must be approved by an administrator before affecting customer estimates.
 - **Safe fallback**: If no licensed feed is configured or a refresh fails, the existing verified catalogue and built-in UK reference prices remain in use.
 
+# Offal Preference
+
+- **Default exclusion**: `UserPreferences.includeOffal` defaults to `false`. Ordinary recipe searches, ready-made searches and `Plan my week` must exclude offal unless the user opts in.
+- **Single control**: Use one `Include offal in suggestions` setting rather than separate controls for liver, kidney, heart or other types.
+- **Explicit-search override**: A direct search for offal, liver, kidney, heart or another recognised offal term may temporarily include matching results without changing the saved preference. Show a discreet explanation when this happens.
+- **Deterministic enforcement**: Apply the preference both in generation instructions and in the application safety filter. Recognised offal includes liver, kidney, animal heart, tongue, tripe, sweetbreads, liver pate and blood-based products such as black pudding.
+- **Existing protections**: Dietary, allergy and religious or ethical restrictions continue to apply when offal is included.
+
 # Public Guide Publishing Workflow
 
 - **Single publishing source**: Every public guide and dinner-plan page must be represented in the structured publishing data used by the build. Do not maintain a second disconnected list of published URLs.

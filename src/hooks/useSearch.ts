@@ -180,6 +180,7 @@ export function useSearch() {
   const [nutritiousChoice, setNutritiousChoice] = useState(false);
   const [highOmega3, setHighOmega3] = useState(false);
   const [highProtein, setHighProtein] = useState(false);
+  const [includeOffal, setIncludeOffal] = useState(false);
   const [isSimple, setIsSimple] = useState(false);
   const [isLowCost, setIsLowCost] = useState(false);
   const [isLeftoverMode, setIsLeftoverMode] = useState(false);
@@ -340,7 +341,8 @@ export function useSearch() {
           excludeIngredients: params.excludeIngredients || [],
           calorieCeiling: params.maxCalories !== undefined && params.maxCalories !== null ? params.maxCalories : (activePrefs?.calorieCeiling || null),
           budgetLimit: params.maxCostPerPortion || params.maxPricePerPerson || activePrefs?.budgetLimit || null,
-          supermarkets: params.supermarkets || []
+          supermarkets: params.supermarkets || [],
+          includeOffal: params.includeOffal === true
         };
 
         const recipesWithFinalIds = accumulatedRecipes
@@ -631,6 +633,7 @@ export function useSearch() {
         nutritiousChoice,
         highOmega3,
         highProtein,
+        includeOffal,
         servings: (servings && !isNaN(parseInt(servings))) ? parseInt(servings) : undefined,
         preferredSourceIds,
         excludeTitles: dismissedTitles.length > 0 ? dismissedTitles : undefined,
@@ -678,7 +681,7 @@ export function useSearch() {
     input, cuisines, dietTypes, exclusions, religiousEthical, styleWellness, 
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
-    saladPreference, allergies, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, highOmega3, highProtein, servings, preferredSourceIds, dismissedTitles, 
+    saladPreference, allergies, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, highOmega3, highProtein, includeOffal, servings, preferredSourceIds, dismissedTitles,
     source, profile?.preferences, addToSearchHistory, performSearch, setError, setIsGenerating, user, guestSearchCount, showToast, setView
   ]);
 
@@ -729,6 +732,7 @@ export function useSearch() {
     isLeftoverMode,
     supermarkets,
     preferredSourceIds,
+    includeOffal,
     servings
   });
 
@@ -757,6 +761,7 @@ export function useSearch() {
       isLeftoverMode,
       supermarkets,
       preferredSourceIds,
+      includeOffal,
       servings
     };
 
@@ -790,6 +795,7 @@ export function useSearch() {
       isLeftoverMode !== lastFiltersRef.current.isLeftoverMode ||
       hasArrayChanged(supermarkets, lastFiltersRef.current.supermarkets) ||
       hasArrayChanged(preferredSourceIds, lastFiltersRef.current.preferredSourceIds) ||
+      includeOffal !== lastFiltersRef.current.includeOffal ||
       servings !== lastFiltersRef.current.servings;
 
     // Update ref to the latest filters
@@ -823,6 +829,7 @@ export function useSearch() {
     isLowCost,
     isLeftoverMode,
     supermarkets,
+    includeOffal,
     servings
   ]);
 
@@ -861,6 +868,7 @@ export function useSearch() {
         isLowCost,
         isLeftoverMode,
         nutritiousChoice,
+        includeOffal,
         servings: (servings && !isNaN(parseInt(servings))) ? parseInt(servings) : undefined,
         excludeTitles: newDismissed,
         count: MORE_CHOICES_RESULTS
@@ -878,7 +886,7 @@ export function useSearch() {
     cuisines, dietTypes, exclusions, religiousEthical, styleWellness, 
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
-    saladPreference, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, servings, input, lastQuery, 
+    saladPreference, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, includeOffal, servings, input, lastQuery,
     source, profile?.preferences, performSearch
   ]);
 
@@ -929,6 +937,7 @@ export function useSearch() {
     setNutritiousChoice(profile?.preferences?.nutritiousChoice || false);
     setHighOmega3(profile?.preferences?.highOmega3 || false);
     setHighProtein(profile?.preferences?.highProtein || false);
+    setIncludeOffal(profile?.preferences?.includeOffal === true);
     setAllergies(profile?.preferences?.allergies || []);
     setPreferredSourceIds(profile?.preferences?.preferredSourceIds || []);
     setIsDietaryRuleSuppressed(false);
@@ -968,6 +977,7 @@ export function useSearch() {
     profile?.preferences?.servings,
     profile?.preferences?.nutritiousChoice,
     profile?.preferences?.highOmega3,
+    profile?.preferences?.includeOffal,
     profile?.preferences?.dietaryRule,
     profile?.preferences?.cuisinePreferences,
     profile?.preferences?.cookingMethods,
@@ -1027,6 +1037,7 @@ export function useSearch() {
         setNutritiousChoice(currentPreferences.nutritiousChoice || false);
         setHighOmega3(currentPreferences.highOmega3 || false);
         setHighProtein(currentPreferences.highProtein || false);
+        setIncludeOffal(currentPreferences.includeOffal === true);
         setServings(currentPreferences.servings?.toString() || '2');
         setSupermarkets(currentPreferences.preferredSupermarkets || []);
         setDietaryRule(currentPreferences.dietaryRule || 'none');
@@ -1181,6 +1192,7 @@ export function useSearch() {
       nutritiousChoice,
       highOmega3,
       highProtein,
+      includeOffal,
       allergies,
       preferredSourceIds,
       servings: servings ? parseInt(servings) : undefined
@@ -1212,6 +1224,7 @@ export function useSearch() {
     profile?.preferences?.nutritiousChoice,
     profile?.preferences?.highOmega3,
     profile?.preferences?.highProtein,
+    profile?.preferences?.includeOffal,
     profile?.preferences?.readyToEatUnderMins,
     profile?.preferences?.calorieCeiling,
     profile?.preferences?.budgetLimit,
@@ -1248,6 +1261,7 @@ export function useSearch() {
     nutritiousChoice,
     highOmega3,
     highProtein,
+    includeOffal,
     allergies,
     preferredSourceIds,
     servings
@@ -1341,6 +1355,7 @@ export function useSearch() {
       case 'nutritiousChoice': setNutritiousChoice(false); break;
       case 'highOmega3': setHighOmega3(false); break;
       case 'highProtein': setHighProtein(false); break;
+      case 'includeOffal': setIncludeOffal(false); break;
     }
     
     // We no longer manually clear queries and results on chip removal; the reactive search useEffect triggers on the filter state changes.
@@ -1350,7 +1365,7 @@ export function useSearch() {
     setCuisines, setCookingMethods, setSupermarkets, setDietTypes, setAllergies, setExclusions, 
     setReligiousEthical, setStyleWellness, setExcludeIngredients, setOmitIngredients, 
     setMaxCalories, setMaxTotalTime, setMaxCostPerPortion, setMaxPricePerPerson, 
-    setMaxHeatingTime, setServings, setSaladPreference, setIsSimple, setIsLowCost, setNutritiousChoice, setHighOmega3, setHighProtein,
+    setMaxHeatingTime, setServings, setSaladPreference, setIsSimple, setIsLowCost, setNutritiousChoice, setHighOmega3, setHighProtein, setIncludeOffal,
     setIsDietaryRuleSuppressed, setSuppressedPermanentKeys
   ]);
 
@@ -1403,6 +1418,7 @@ export function useSearch() {
     nutritiousChoice, setNutritiousChoice,
     highOmega3, setHighOmega3,
     highProtein, setHighProtein,
+    includeOffal, setIncludeOffal,
     isSimple, setIsSimple,
     isLowCost, setIsLowCost,
     isLeftoverMode, setIsLeftoverMode,

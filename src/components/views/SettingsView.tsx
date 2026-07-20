@@ -889,6 +889,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                           </span>
                         </div>
 
+                        <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
+                          <span className="text-gray-500 font-medium">Offal suggestions</span>
+                          <span className="font-bold text-gray-800 text-right">
+                            {displayedPreferences.includeOffal ? 'Included' : 'Excluded'}
+                          </span>
+                        </div>
+
                         {displayedPreferences.allergies && displayedPreferences.allergies.length > 0 && (
                           <div className="space-y-1">
                             <span className="text-gray-500 font-medium text-[13px] block">Allergies / Safe Eating</span>

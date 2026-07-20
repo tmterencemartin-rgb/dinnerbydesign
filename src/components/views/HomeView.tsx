@@ -38,6 +38,7 @@ import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 import { isNativeApp, isNativeTestBuild } from '../../lib/platform';
+import { queryExplicitlyRequestsOffal } from '../../lib/offalPreference';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -174,6 +175,8 @@ interface HomeViewProps {
   setHighOmega3: (val: boolean) => void;
   highProtein: boolean;
   setHighProtein: (val: boolean) => void;
+  includeOffal: boolean;
+  setIncludeOffal: (val: boolean) => void;
   isSimple: boolean;
   setIsSimple: (val: boolean) => void;
   isLowCost: boolean;
@@ -256,6 +259,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     nutritiousChoice, setNutritiousChoice,
     highOmega3, setHighOmega3,
     highProtein, setHighProtein,
+    includeOffal, setIncludeOffal,
     isSimple, setIsSimple,
     isLowCost, setIsLowCost,
     isLeftoverMode, setIsLeftoverMode,
@@ -808,6 +812,14 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               ingredientIntent={ingredientIntent}
             />
 
+            {(hasPerformedSearch || isSearching) &&
+              queryExplicitlyRequestsOffal(input || lastQuery) &&
+              !includeOffal && (
+                <p className="px-1 text-[11.5px] font-medium leading-relaxed text-gray-500">
+                  Showing offal for this search. Your saved preference remains unchanged.
+                </p>
+              )}
+
             {(hasPerformedSearch || isSearching || (currentRecipes && currentRecipes.length > 0) || (currentReadyMeals && currentReadyMeals.length > 0)) && (
               <RecipeListActions 
                 onTryAgain={((source === 'cook' ? currentRecipes : currentReadyMeals) || isSearching || isAppending) ? handleLoadMore : undefined}
@@ -953,6 +965,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               setHighOmega3={setHighOmega3}
               highProtein={highProtein}
               setHighProtein={setHighProtein}
+              includeOffal={includeOffal}
+              setIncludeOffal={setIncludeOffal}
               isSimple={isSimple}
               setIsSimple={setIsSimple}
               isLowCost={isLowCost}
