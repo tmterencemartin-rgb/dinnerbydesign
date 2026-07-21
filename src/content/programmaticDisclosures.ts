@@ -226,6 +226,24 @@ export const FRESH_OR_FROZEN_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const BATCH_COOKING_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Standard pasta, tortillas and flatbreads commonly contain wheat. Products and alternative versions vary, so check labels for allergens and dietary suitability.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Follow current Food Standards Agency guidance on cooling, refrigerating, freezing and reheating cooked food, including the specific guidance on cooked rice.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited sources for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -296,6 +314,14 @@ export const SUMMER_STEWS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = 
 
 export const FRESH_OR_FROZEN_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'This guide describes general tendencies rather than fixed rules. Product preparation, storage instructions and suitability for uncooked use vary, so check the packet.',
+  links: [
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const BATCH_COOKING_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'Batch-cooking results vary with ingredients, portion sizes, available storage and how every portion is used. Check product labels and follow current food-safety guidance.',
   links: [
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },

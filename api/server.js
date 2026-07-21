@@ -163751,7 +163751,7 @@ var PORTION_PLANNING_GUIDE = {
   primarySearchIntent: "Understand how portion planning, planned leftovers and pack-size awareness can reduce food spending and waste",
   indexingStatus: "index",
   editorialNotes: "The 300g and 500g example is illustrative arithmetic, not a retailer or product claim. Recheck FSA guidance before changing the review date.",
-  internalLinks: ["/food-costs/cooking-for-one-without-waste", "/food-costs/low-cost-cooking-techniques", "/pricing-methodology", "/food-safety"],
+  internalLinks: ["/food-costs/cooking-for-one-without-waste", "/food-costs/low-cost-cooking-techniques", "/food-costs/batch-cooking-on-a-budget", "/pricing-methodology", "/food-safety"],
   disclosures: ["serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
   sources: [
     { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
@@ -163849,9 +163849,50 @@ var FRESH_OR_FROZEN_GUIDE = {
     { question: "What should I choose if I am unsure?", answer: "Choose fresh when appearance, crispness or uncooked texture matters. Choose frozen when longer storage and taking out only what you need are more useful, while checking that the product suits your intended dish." }
   ]
 };
+var BATCH_COOKING_GUIDE_PATH = "/food-costs/batch-cooking-on-a-budget";
+var BATCH_COOKING_GUIDE = {
+  title: "Batch cooking on a budget: when it saves money and when it doesn't",
+  seoTitle: "Batch cooking on a budget: when it saves money | DinnerByDesign",
+  description: "Batch cooking can make ingredients go further, but only when portions are planned, stored safely and actually eaten. Here's when it works.",
+  publishedAt: "2026-07-21",
+  reviewedAt: "2026-07-21",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Understand when batch cooking can reduce shopping costs and how to plan, vary and store portions safely",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-21",
+  editorialNotes: "Food Standards Agency guidance was reviewed on 20 July 2026. No retailer prices, numerical savings or energy-consumption claims are included.",
+  internalLinks: ["/food-costs/portion-planning-and-food-waste", "/food-costs/low-cost-cooking-techniques", "/food-safety", "/recipe-methodology"],
+  disclosures: ["allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" },
+    { label: "Food Standards Agency: Home food fact checker", url: "https://www.gov.uk/government/publications/home-food-fact-checker/home-food-fact-checker" }
+  ],
+  faqs: [
+    { question: "Is batch cooking always cheaper?", answer: "No. It only saves money when the portions are suitable, actually get eaten and are stored properly. A large batch cooked without a plan for every portion can cost more than cooking smaller amounts more often." },
+    { question: "What can I batch cook without a large freezer?", answer: "Dishes you will finish within a couple of days work well with fridge storage alone, such as a bean stew or lentil base. If freezer space is limited, cook smaller batches more often." },
+    { question: "Which dishes do not batch cook well?", answer: "Anything intended to be served freshly assembled, such as a salad, or a dish that relies on a just-cooked crisp texture tends to lose what makes it work once stored and reheated." },
+    { question: "How do I prevent batch-cooked dinners becoming repetitive?", answer: "Batch-cook a base rather than a finished dish, then finish it differently each time with another grain, spice, vegetable or side." },
+    { question: "How should cooked portions be labelled and stored?", answer: "Label each portion with the dish and date. Refrigerate what you will eat within 48 hours and freeze the rest promptly. Cooked rice should be refrigerated for no more than a day before reheating, or frozen sooner." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: BATCH_COOKING_GUIDE.title,
+    path: BATCH_COOKING_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: BATCH_COOKING_GUIDE.pageFamily,
+    primarySearchIntent: BATCH_COOKING_GUIDE.primarySearchIntent,
+    indexingStatus: BATCH_COOKING_GUIDE.indexingStatus,
+    publishedAt: BATCH_COOKING_GUIDE.publishedAt,
+    reviewedAt: BATCH_COOKING_GUIDE.reviewedAt,
+    contentReviewedAt: BATCH_COOKING_GUIDE.contentReviewedAt,
+    internalLinks: BATCH_COOKING_GUIDE.internalLinks,
+    disclosures: BATCH_COOKING_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: FRESH_OR_FROZEN_GUIDE.title,
     path: FRESH_OR_FROZEN_GUIDE_PATH,

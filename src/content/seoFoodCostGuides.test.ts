@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BATCH_COOKING_GUIDE,
+  BATCH_COOKING_GUIDE_PATH,
   COOKING_FOR_ONE_GUIDE,
   COOKING_FOR_ONE_PATH,
   FRESH_OR_FROZEN_GUIDE,
@@ -16,6 +18,7 @@ import {
   SUMMER_STEWS_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
+  getBatchCookingGuideJsonLd,
   getCookingForOneJsonLd,
   getFreshOrFrozenGuideJsonLd,
   getLowerCostCutsJsonLd,
@@ -32,6 +35,7 @@ import {
   renderPortionPlanningGuideInitialHtml,
   renderSummerStewsGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
+  renderBatchCookingGuideInitialHtml,
 } from './seoFoodCostGuides';
 
 describe('food-cost guide publishing data', () => {
@@ -214,6 +218,28 @@ describe('food-cost guide publishing data', () => {
     expect(html).toContain('About this guide');
     expect(getFreshOrFrozenGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${FRESH_OR_FROZEN_GUIDE_PATH}` }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+    ]));
+  });
+
+  it('publishes the batch-cooking guide with practical disclosures and structured data', () => {
+    expect(BATCH_COOKING_GUIDE_PATH).toBe('/food-costs/batch-cooking-on-a-budget');
+    expect(BATCH_COOKING_GUIDE.indexingStatus).toBe('index');
+    expect(BATCH_COOKING_GUIDE.disclosures).toEqual(['allergen_and_product', 'storage_and_cooking', 'source_timing']);
+    expect(BATCH_COOKING_GUIDE.sources).toHaveLength(2);
+
+    const html = renderBatchCookingGuideInitialHtml();
+    expect(html).toContain(`<h1>${BATCH_COOKING_GUIDE.title.replace("'", '&#039;')}</h1>`);
+    expect(html).toContain('Where the economies come from');
+    expect(html).toContain('Cooked rice needs particular care');
+    expect(html).toContain('Ingredients and allergens');
+    expect(html).toContain('Frequently asked questions');
+    expect(html).toContain('/food-costs/portion-planning-and-food-waste');
+    expect(html).toContain('About this guide');
+
+    expect(getBatchCookingGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
+      expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${BATCH_COOKING_GUIDE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
       expect.objectContaining({ '@type': 'BreadcrumbList' }),
     ]));
