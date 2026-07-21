@@ -827,7 +827,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dbd-accent"></div>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6">
             <IngredientPriceCatalogueAdmin />
             <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="published-articles-heading">
               <div className="flex items-center justify-between gap-3">
@@ -889,7 +889,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </section>
 
-            <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="operations-heading">
+            <section className="order-2 rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="operations-heading">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Service health</p>
                 <h2 id="operations-heading" className="mt-1 text-base font-bold text-gray-950">Operations and delivery</h2>
@@ -1044,7 +1044,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </section>
 
-            <section className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xs" aria-labelledby="user-accounts-heading">
+            <section className="order-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xs" aria-labelledby="user-accounts-heading">
               <div className="flex flex-col gap-2 border-b border-gray-200 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">User register</p>
