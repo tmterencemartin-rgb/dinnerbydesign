@@ -267,6 +267,24 @@ export const GROCERY_COST_OPTIONS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const GROCERY_COST_PREDICTION_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'How to read cost estimates',
+    body: 'Prices and availability vary by retailer, location, product and date. Estimates are not guaranteed checkout totals, and complete-pack cost may exceed the value of the ingredients used. Promotional and loyalty prices may also have eligibility conditions.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage note',
+    body: 'Follow current Food Standards Agency guidance when chilling, freezing, defrosting or reheating food.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited source for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -353,6 +371,15 @@ export const BATCH_COOKING_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy =
 
 export const GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'These are practical starting points rather than guaranteed savings. Grocery costs, pack sizes, ingredient needs and storage options vary by household.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+  ],
+};
+
+export const GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'Grocery estimates can improve visibility and control, but products, prices, pack sizes, substitutions and ingredients already at home vary by household and shop.',
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },

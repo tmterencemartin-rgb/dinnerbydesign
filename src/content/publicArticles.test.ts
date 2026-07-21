@@ -30,6 +30,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/fresh-or-frozen')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/batch-cooking-on-a-budget')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/ways-to-reduce-grocery-costs')).toBe(false);
+    expect(isUnknownPublicArticlePath('/food-costs/why-grocery-costs-are-hard-to-predict')).toBe(false);
     expect(isUnknownPublicArticlePath('/pricing-methodology')).toBe(false);
   });
 

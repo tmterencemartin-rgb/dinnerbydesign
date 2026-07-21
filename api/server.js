@@ -163920,8 +163920,65 @@ var GROCERY_COST_OPTIONS_GUIDE = {
   ]
 };
 
+// src/content/groceryCostPredictionGuide.ts
+var GROCERY_COST_PREDICTION_GUIDE_PATH = "/food-costs/why-grocery-costs-are-hard-to-predict";
+var GROCERY_COST_PREDICTION_GUIDE = {
+  title: "Why is it so difficult to budget accurately for food?",
+  seoTitle: "Why grocery costs are so difficult to predict accurately | DinnerByDesign",
+  description: "Why an exact grocery total is so hard to predict, and how transparent estimates and better planning can still give you more control.",
+  publishedAt: "2026-07-21",
+  reviewedAt: "2026-07-21",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Understand why grocery costs are difficult to predict and how practical budgeting can still provide greater control",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-21",
+  editorialNotes: "Transparency guide about household budgeting uncertainty. Keep the distinction between ingredient value, complete-pack cost and additional shopping cost aligned with the pricing methodology.",
+  internalLinks: [
+    "/pricing-methodology",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/food-costs/uk-food-costs-2026",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/fresh-or-frozen",
+    "/dinner-plans/5-dinners-for-2-under-40",
+    "/guides"
+  ],
+  disclosures: ["price_comparison", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
+      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
+    }
+  ],
+  faqs: [
+    { question: "Why is my supermarket total higher than the combined recipe costs?", answer: "Usually because you are paying for complete packs, not just the quantities each recipe uses, and because prices, promotions or availability may have shifted since the estimate was made." },
+    { question: "Can I predict my grocery spending exactly?", answer: "Not reliably. Too many details \u2014 stock, pack sizes, promotions and substitutions \u2014 are unknown when you plan. You can get a realistic estimate, not a guaranteed figure." },
+    { question: "What is the difference between ingredient value and complete-pack cost?", answer: "Ingredient value is what the quantity used in a dinner is roughly worth. Complete-pack cost is what you actually pay for the pack it came from, which is often more." },
+    { question: "Should cupboard ingredients be treated as free?", answer: "Not quite. They do not add to this week\u2019s shop, but they will need replacing eventually, so they still carry a longer-term cost." },
+    { question: "Why do supermarket substitutions affect a weekly budget?", answer: "A substitution \u2014 a different brand, a larger pack, fresh instead of frozen \u2014 can change both what you pay now and what is left over for later in the week." },
+    { question: "How much flexibility should I leave in a food budget?", answer: "Enough to absorb an ordinary change of plan \u2014 a postponed dinner, an extra guest or a rushed evening \u2014 without the whole week\u2019s budget falling apart." },
+    { question: "Are grocery cost estimates still useful?", answer: "Yes. They help you compare dinners, spot expensive ingredients and coordinate a week, even though they cannot guarantee the final total." },
+    { question: "How does DinnerByDesign help households manage spending?", answer: "By showing ingredient value and complete-pack cost separately, accounting for servings and shared ingredients, and being clear that every figure is an estimate rather than a guarantee." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: GROCERY_COST_PREDICTION_GUIDE.title,
+    path: GROCERY_COST_PREDICTION_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: GROCERY_COST_PREDICTION_GUIDE.pageFamily,
+    primarySearchIntent: GROCERY_COST_PREDICTION_GUIDE.primarySearchIntent,
+    indexingStatus: GROCERY_COST_PREDICTION_GUIDE.indexingStatus,
+    publishedAt: GROCERY_COST_PREDICTION_GUIDE.publishedAt,
+    reviewedAt: GROCERY_COST_PREDICTION_GUIDE.reviewedAt,
+    contentReviewedAt: GROCERY_COST_PREDICTION_GUIDE.contentReviewedAt,
+    internalLinks: GROCERY_COST_PREDICTION_GUIDE.internalLinks,
+    disclosures: GROCERY_COST_PREDICTION_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: GROCERY_COST_OPTIONS_GUIDE.title,
     path: GROCERY_COST_OPTIONS_GUIDE_PATH,

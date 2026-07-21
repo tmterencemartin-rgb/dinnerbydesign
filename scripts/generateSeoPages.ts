@@ -55,6 +55,12 @@ import {
   renderGroceryCostOptionsGuideInitialHtml,
 } from '../src/content/groceryCostOptionsGuide';
 import {
+  GROCERY_COST_PREDICTION_GUIDE,
+  GROCERY_COST_PREDICTION_GUIDE_PATH,
+  getGroceryCostPredictionGuideJsonLd,
+  renderGroceryCostPredictionGuideInitialHtml,
+} from '../src/content/groceryCostPredictionGuide';
+import {
   PUBLIC_GUIDE_LIBRARY,
   getPublicGuideLibraryJsonLd,
   renderPublicGuideLibraryInitialHtml,
@@ -327,6 +333,26 @@ const groceryCostOptionsOutputDir = path.join(distRoot, GROCERY_COST_OPTIONS_GUI
 await fs.mkdir(groceryCostOptionsOutputDir, { recursive: true });
 await fs.writeFile(path.join(groceryCostOptionsOutputDir, 'index.html'), groceryCostOptionsHtml, 'utf8');
 console.log(`Generated ${GROCERY_COST_OPTIONS_GUIDE_PATH}/index.html`);
+
+const groceryCostPredictionCanonicalUrl = `https://dinnerbydesign.app${GROCERY_COST_PREDICTION_GUIDE_PATH}`;
+let groceryCostPredictionHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${GROCERY_COST_PREDICTION_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${GROCERY_COST_PREDICTION_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${groceryCostPredictionCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${groceryCostPredictionCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${GROCERY_COST_PREDICTION_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${GROCERY_COST_PREDICTION_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${GROCERY_COST_PREDICTION_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${GROCERY_COST_PREDICTION_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderGroceryCostPredictionGuideInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getGroceryCostPredictionGuideJsonLd())}</script>\n</head>`);
+if (!groceryCostPredictionHtml.includes(`<h1>${GROCERY_COST_PREDICTION_GUIDE.title}</h1>`) || !groceryCostPredictionHtml.includes(`href="${groceryCostPredictionCanonicalUrl}"`)) throw new Error('Grocery-cost prediction guide generation failed its content or canonical check.');
+const groceryCostPredictionOutputDir = path.join(distRoot, GROCERY_COST_PREDICTION_GUIDE_PATH.slice(1));
+await fs.mkdir(groceryCostPredictionOutputDir, { recursive: true });
+await fs.writeFile(path.join(groceryCostPredictionOutputDir, 'index.html'), groceryCostPredictionHtml, 'utf8');
+console.log(`Generated ${GROCERY_COST_PREDICTION_GUIDE_PATH}/index.html`);
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
 const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;

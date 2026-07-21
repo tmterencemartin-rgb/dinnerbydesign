@@ -116,6 +116,7 @@ When testing this web application locally, you can connect to your local backend
 - **Discovery**: Every published public article must be linked from another crawlable public page and registered in `src/content/publicArticles.ts` before release.
 - **Public guide library**: Page 12 launches the indexable `/guides` library. Keep one restrained `Guides` link in public and app footers, generate its static CollectionPage, ItemList and breadcrumb data from `PUBLISHED_ARTICLES`, and keep it out of protected primary navigation unless explicitly requested.
 - **Grocery-cost options cornerstone**: `/food-costs/ways-to-reduce-grocery-costs` is the twelfth published programmatic page. It links readers to all earlier guides, distinguishes pack cost from ingredient value, and retains the controlled comparison, allergen/product, food-safety and source-timing qualifications beside the claims they explain.
+- **Grocery-cost prediction guide**: `/food-costs/why-grocery-costs-are-hard-to-predict` is the thirteenth published programmatic page. Keep its consumer-facing distinction between ingredient value, complete-pack cost and additional shopping cost aligned with the pricing methodology; retain its cost-estimate, storage and source-review qualifications, and do not present an estimate as a guaranteed checkout total.
 
 # Ingredient Price Refresh Workflow
 
