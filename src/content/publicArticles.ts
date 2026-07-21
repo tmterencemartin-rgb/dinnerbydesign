@@ -1,5 +1,6 @@
 import { BATCH_COOKING_GUIDE, BATCH_COOKING_GUIDE_PATH, COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, LOWER_COST_CUTS_GUIDE, LOWER_COST_CUTS_PATH, LOW_COST_COOKING_TECHNIQUES_GUIDE, LOW_COST_COOKING_TECHNIQUES_PATH, MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
+import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH } from './groceryCostOptionsGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -18,6 +19,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: GROCERY_COST_OPTIONS_GUIDE.title, path: GROCERY_COST_OPTIONS_GUIDE_PATH, category: 'Food cost guide',
+    pageFamily: GROCERY_COST_OPTIONS_GUIDE.pageFamily, primarySearchIntent: GROCERY_COST_OPTIONS_GUIDE.primarySearchIntent,
+    indexingStatus: GROCERY_COST_OPTIONS_GUIDE.indexingStatus, publishedAt: GROCERY_COST_OPTIONS_GUIDE.publishedAt,
+    reviewedAt: GROCERY_COST_OPTIONS_GUIDE.reviewedAt, contentReviewedAt: GROCERY_COST_OPTIONS_GUIDE.contentReviewedAt,
+    internalLinks: GROCERY_COST_OPTIONS_GUIDE.internalLinks, disclosures: GROCERY_COST_OPTIONS_GUIDE.disclosures, status: 'published',
+  },
   {
     title: BATCH_COOKING_GUIDE.title, path: BATCH_COOKING_GUIDE_PATH, category: 'Food cost guide',
     pageFamily: BATCH_COOKING_GUIDE.pageFamily, primarySearchIntent: BATCH_COOKING_GUIDE.primarySearchIntent,
@@ -142,7 +150,7 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
 export const PUBLISHED_ARTICLES = PUBLIC_ARTICLES.filter(article => article.status === 'published');
 
 export const PUBLIC_LIBRARY_LAUNCH_THRESHOLD = 12;
-export const PUBLIC_LIBRARY_PATH: string | null = null;
+export const PUBLIC_LIBRARY_PATH: string | null = '/guides';
 
 export function isUnknownPublicArticlePath(pathName: string) {
   const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, '') : pathName;

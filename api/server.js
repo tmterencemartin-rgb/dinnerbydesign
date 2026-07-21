@@ -163877,8 +163877,65 @@ var BATCH_COOKING_GUIDE = {
   ]
 };
 
+// src/content/groceryCostOptionsGuide.ts
+var GROCERY_COST_OPTIONS_GUIDE_PATH = "/food-costs/ways-to-reduce-grocery-costs";
+var GROCERY_COST_OPTIONS_GUIDE = {
+  title: "12 practical ways to reduce and manage your grocery costs",
+  seoTitle: "12 ways to manage grocery costs | DinnerByDesign",
+  description: "Explore 12 practical ways to manage grocery costs, use ingredients more effectively and reduce avoidable food waste.",
+  publishedAt: "2026-07-21",
+  reviewedAt: "2026-07-21",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Find practical ways to manage grocery spending, use ingredients effectively and reduce avoidable food waste",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-21",
+  editorialNotes: "Cornerstone guide linking the first 11 public pages. Keep its methods aligned with the detailed guides and recheck Food Standards Agency sources whenever the review date changes.",
+  internalLinks: [
+    "/guides",
+    "/food-costs/uk-food-costs-2026",
+    "/dinner-plans/5-dinners-for-2-under-40",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/cooking-for-one-without-waste",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/low-cost-cooking-techniques",
+    "/food-costs/mediterranean-inspired-affordable-cooking",
+    "/food-costs/cooking-for-four-with-lower-cost-cuts",
+    "/food-costs/cooking-with-offal-on-a-budget",
+    "/food-costs/fresh-or-frozen",
+    "/food-costs/summer-stews-seasonal-vegetables"
+  ],
+  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" },
+    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely" }
+  ],
+  faqs: [
+    { question: "What is the best way to start reducing grocery costs?", answer: "Start with whichever problem affects you most \u2014 waste, expensive ingredients, lack of time or unpredictable spending \u2014 and use the comparison table to find the matching technique, rather than trying to change everything at once." },
+    { question: "Does cooking from scratch always cost less?", answer: "Not necessarily. It often helps, but the saving depends on using the ingredients you buy, choosing suitable quantities and not letting complete packs go to waste. Cooking from scratch with a lot of leftover, unused ingredients can cost more than a simpler shop." },
+    { question: "How can I reduce waste when supermarkets sell complete packs?", answer: "Plan dinners that share ingredients, so a partly used pack has a second destination already in mind, and keep a few flexible fallback dinners ready for anything left over that does not fit a specific plan." },
+    { question: "Is batch cooking always economical?", answer: "No. It only helps when every portion has a purpose. A large batch cooked without a plan for the extra can end up wasted rather than saving anything." },
+    { question: "Are frozen ingredients always cheaper than fresh?", answer: "No. Prices vary by product, retailer and season. Frozen ingredients can help reduce waste because you use only what you need, but that is a different benefit from being guaranteed cheaper." },
+    { question: "How can DinnerByDesign help manage grocery spending?", answer: "You can build a week of dinners around your household, budget and available time, then generate a shopping list from the dinners you have scheduled \u2014 bringing planning, portioning and pack awareness together in one place." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: GROCERY_COST_OPTIONS_GUIDE.title,
+    path: GROCERY_COST_OPTIONS_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: GROCERY_COST_OPTIONS_GUIDE.pageFamily,
+    primarySearchIntent: GROCERY_COST_OPTIONS_GUIDE.primarySearchIntent,
+    indexingStatus: GROCERY_COST_OPTIONS_GUIDE.indexingStatus,
+    publishedAt: GROCERY_COST_OPTIONS_GUIDE.publishedAt,
+    reviewedAt: GROCERY_COST_OPTIONS_GUIDE.reviewedAt,
+    contentReviewedAt: GROCERY_COST_OPTIONS_GUIDE.contentReviewedAt,
+    internalLinks: GROCERY_COST_OPTIONS_GUIDE.internalLinks,
+    disclosures: GROCERY_COST_OPTIONS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: BATCH_COOKING_GUIDE.title,
     path: BATCH_COOKING_GUIDE_PATH,

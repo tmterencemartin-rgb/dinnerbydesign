@@ -48,6 +48,18 @@ import {
   renderUkFoodCosts2026InitialHtml,
   renderBatchCookingGuideInitialHtml,
 } from '../src/content/seoFoodCostGuides';
+import {
+  GROCERY_COST_OPTIONS_GUIDE,
+  GROCERY_COST_OPTIONS_GUIDE_PATH,
+  getGroceryCostOptionsGuideJsonLd,
+  renderGroceryCostOptionsGuideInitialHtml,
+} from '../src/content/groceryCostOptionsGuide';
+import {
+  PUBLIC_GUIDE_LIBRARY,
+  getPublicGuideLibraryJsonLd,
+  renderPublicGuideLibraryInitialHtml,
+} from '../src/content/publicGuideLibrary';
+import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 
 const distRoot = path.resolve(process.cwd(), 'dist');
 const sourceHtml = await fs.readFile(path.join(distRoot, 'index.html'), 'utf8');
@@ -295,3 +307,44 @@ const batchCookingOutputDir = path.join(distRoot, BATCH_COOKING_GUIDE_PATH.slice
 await fs.mkdir(batchCookingOutputDir, { recursive: true });
 await fs.writeFile(path.join(batchCookingOutputDir, 'index.html'), batchCookingHtml, 'utf8');
 console.log(`Generated ${BATCH_COOKING_GUIDE_PATH}/index.html`);
+
+const groceryCostOptionsCanonicalUrl = `https://dinnerbydesign.app${GROCERY_COST_OPTIONS_GUIDE_PATH}`;
+let groceryCostOptionsHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${GROCERY_COST_OPTIONS_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${GROCERY_COST_OPTIONS_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${groceryCostOptionsCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${groceryCostOptionsCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${GROCERY_COST_OPTIONS_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${GROCERY_COST_OPTIONS_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${GROCERY_COST_OPTIONS_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${GROCERY_COST_OPTIONS_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderGroceryCostOptionsGuideInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getGroceryCostOptionsGuideJsonLd())}</script>\n</head>`);
+if (!groceryCostOptionsHtml.includes(`<h1>${GROCERY_COST_OPTIONS_GUIDE.title}</h1>`) || !groceryCostOptionsHtml.includes(`href="${groceryCostOptionsCanonicalUrl}"`)) throw new Error('Grocery-cost options guide generation failed its content or canonical check.');
+const groceryCostOptionsOutputDir = path.join(distRoot, GROCERY_COST_OPTIONS_GUIDE_PATH.slice(1));
+await fs.mkdir(groceryCostOptionsOutputDir, { recursive: true });
+await fs.writeFile(path.join(groceryCostOptionsOutputDir, 'index.html'), groceryCostOptionsHtml, 'utf8');
+console.log(`Generated ${GROCERY_COST_OPTIONS_GUIDE_PATH}/index.html`);
+
+if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
+const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;
+let publicGuideLibraryHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${PUBLIC_GUIDE_LIBRARY.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${PUBLIC_GUIDE_LIBRARY.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${publicGuideLibraryCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${publicGuideLibraryCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${PUBLIC_GUIDE_LIBRARY.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${PUBLIC_GUIDE_LIBRARY.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${PUBLIC_GUIDE_LIBRARY.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${PUBLIC_GUIDE_LIBRARY.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderPublicGuideLibraryInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getPublicGuideLibraryJsonLd())}</script>\n</head>`);
+if (!publicGuideLibraryHtml.includes(`<h1>${PUBLIC_GUIDE_LIBRARY.title}</h1>`) || !publicGuideLibraryHtml.includes(`href="${publicGuideLibraryCanonicalUrl}"`)) throw new Error('Public guide library generation failed its content or canonical check.');
+const publicGuideLibraryOutputDir = path.join(distRoot, PUBLIC_LIBRARY_PATH.slice(1));
+await fs.mkdir(publicGuideLibraryOutputDir, { recursive: true });
+await fs.writeFile(path.join(publicGuideLibraryOutputDir, 'index.html'), publicGuideLibraryHtml, 'utf8');
+console.log(`Generated ${PUBLIC_LIBRARY_PATH}/index.html`);

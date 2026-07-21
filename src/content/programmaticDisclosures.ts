@@ -244,6 +244,29 @@ export const BATCH_COOKING_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const GROCERY_COST_OPTIONS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'A note on cost',
+    body: 'Grocery costs vary with household needs, products, retailers, pack sizes and location. These techniques can improve planning and ingredient use, but none of them guarantees a specific saving.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and product labels',
+    body: 'Check product labels for allergens, storage instructions and suitability.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Food safety',
+    body: 'Follow current Food Standards Agency guidance when cooling, storing, freezing or reheating food.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited sources for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -325,6 +348,15 @@ export const BATCH_COOKING_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy =
   links: [
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'These are practical starting points rather than guaranteed savings. Grocery costs, pack sizes, ingredient needs and storage options vary by household.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
   ],
 };
 

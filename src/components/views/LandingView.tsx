@@ -850,14 +850,7 @@ export const LandingView: React.FC = () => {
 
           {/* Privacy & Terms views trigger bar */}
           <div className="pt-4 border-t border-dbd-rule/40 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-ibm-plex-mono text-[11px] font-semibold text-dbd-ink-3">
-            <a href="/dinner-plans/5-dinners-for-2-under-40" className="hover:text-dbd-accent hover:underline">Affordable dinner plan</a>
-            <a href="/food-costs/uk-food-costs-2026" className="hover:text-dbd-accent hover:underline">UK food-cost guide</a>
-            <a href="/food-costs/cooking-for-four-with-lower-cost-cuts" className="hover:text-dbd-accent hover:underline">Comparing meat cuts for four</a>
-            <a href="/food-costs/low-cost-cooking-techniques" className="hover:text-dbd-accent hover:underline">Low-cost cooking techniques</a>
-            <a href="/food-costs/cooking-for-one-without-waste" className="hover:text-dbd-accent hover:underline">Cooking for one</a>
-            <a href="/food-costs/cooking-with-offal-on-a-budget" className="hover:text-dbd-accent hover:underline">Cooking with offal</a>
-            <a href="/food-costs/portion-planning-and-food-waste" className="hover:text-dbd-accent hover:underline">Portion planning</a>
-            <a href="/food-costs/mediterranean-inspired-affordable-cooking" className="hover:text-dbd-accent hover:underline">Mediterranean-inspired cooking</a>
+            <a href="/guides" className="hover:text-dbd-accent hover:underline">Guides</a>
             <button
               onClick={() => setView('pricing-methodology')}
               className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"

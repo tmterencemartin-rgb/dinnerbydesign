@@ -38,6 +38,11 @@ import { MediterraneanAffordableCookingGuideView } from './components/views/Medi
 import { SummerStewsGuideView } from './components/views/SummerStewsGuideView';
 import { FreshOrFrozenGuideView } from './components/views/FreshOrFrozenGuideView';
 import { BatchCookingGuideView } from './components/views/BatchCookingGuideView';
+import { GroceryCostOptionsGuideView } from './components/views/GroceryCostOptionsGuideView';
+import { GuidesLibraryView } from './components/views/GuidesLibraryView';
+import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH, getGroceryCostOptionsGuideJsonLd } from './content/groceryCostOptionsGuide';
+import { PUBLIC_GUIDE_LIBRARY, getPublicGuideLibraryJsonLd } from './content/publicGuideLibrary';
+import { PUBLIC_LIBRARY_PATH } from './content/publicArticles';
 import {
   BATCH_COOKING_GUIDE,
   BATCH_COOKING_GUIDE_PATH,
@@ -255,6 +260,20 @@ const AppContent = () => {
           canonicalPath: BATCH_COOKING_GUIDE_PATH,
           jsonLd: getBatchCookingGuideJsonLd()
         };
+      case 'food-costs-grocery-cost-options':
+        return {
+          title: GROCERY_COST_OPTIONS_GUIDE.seoTitle,
+          description: GROCERY_COST_OPTIONS_GUIDE.description,
+          canonicalPath: GROCERY_COST_OPTIONS_GUIDE_PATH,
+          jsonLd: getGroceryCostOptionsGuideJsonLd()
+        };
+      case 'guides':
+        return {
+          title: PUBLIC_GUIDE_LIBRARY.seoTitle,
+          description: PUBLIC_GUIDE_LIBRARY.description,
+          canonicalPath: PUBLIC_LIBRARY_PATH || '/guides',
+          jsonLd: getPublicGuideLibraryJsonLd()
+        };
       case 'home':
       case 'landing':
       default:
@@ -367,7 +386,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -595,6 +614,28 @@ const AppContent = () => {
 
   if (view === 'food-costs-batch-cooking') {
     return <BatchCookingGuideView onPlanWeek={() => {
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'food-costs-grocery-cost-options') {
+    return <GroceryCostOptionsGuideView onPlanWeek={() => {
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'guides') {
+    return <GuidesLibraryView onPlanWeek={() => {
       if (isGuest) {
         safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
         setView('signin');

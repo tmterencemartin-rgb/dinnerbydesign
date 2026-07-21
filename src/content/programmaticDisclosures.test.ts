@@ -5,6 +5,8 @@ import {
   FIVE_DINNERS_PRICE_DISCLOSURES,
   FRESH_OR_FROZEN_DISCLOSURE_FOOTER,
   FRESH_OR_FROZEN_DISCLOSURES,
+  GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER,
+  GROCERY_COST_OPTIONS_DISCLOSURES,
   LOWER_COST_CUTS_COMPARISON_DISCLOSURES,
   LOWER_COST_CUTS_DISCLOSURE_FOOTER,
   LOWER_COST_CUTS_SAFETY_DISCLOSURES,
@@ -23,7 +25,7 @@ import {
 describe('programmatic disclosure publishing copy', () => {
   it('keeps every disclosure on the controlled key list', () => {
     const allowed = new Set(PROGRAMMATIC_DISCLOSURE_KEYS);
-    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES, ...LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES, ...LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES, ...SUMMER_STEWS_DISCLOSURES, ...FRESH_OR_FROZEN_DISCLOSURES, ...BATCH_COOKING_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
+    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES, ...LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES, ...LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES, ...SUMMER_STEWS_DISCLOSURES, ...FRESH_OR_FROZEN_DISCLOSURES, ...BATCH_COOKING_DISCLOSURES, ...GROCERY_COST_OPTIONS_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
   });
 
   it('renders important qualifications and methodology links in initial HTML', () => {
@@ -69,5 +71,13 @@ describe('programmatic disclosure publishing copy', () => {
     const footerHtml = renderProgrammaticDisclosureFooterInitialHtml(BATCH_COOKING_DISCLOSURE_FOOTER);
     expect(footerHtml).toContain('/food-safety');
     expect(footerHtml).toContain('/recipe-methodology');
+  });
+
+  it('publishes the grocery-cost cornerstone qualifications beside its claims', () => {
+    expect(GROCERY_COST_OPTIONS_DISCLOSURES.map(item => item.key)).toEqual(['price_comparison', 'allergen_and_product', 'storage_and_cooking', 'source_timing']);
+    const footerHtml = renderProgrammaticDisclosureFooterInitialHtml(GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER);
+    expect(footerHtml).toContain('/guides');
+    expect(footerHtml).toContain('/pricing-methodology');
+    expect(footerHtml).toContain('/food-safety');
   });
 });

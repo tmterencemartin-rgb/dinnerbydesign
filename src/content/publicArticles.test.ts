@@ -29,6 +29,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/summer-stews-seasonal-vegetables')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/fresh-or-frozen')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/batch-cooking-on-a-budget')).toBe(false);
+    expect(isUnknownPublicArticlePath('/food-costs/ways-to-reduce-grocery-costs')).toBe(false);
     expect(isUnknownPublicArticlePath('/pricing-methodology')).toBe(false);
   });
 
@@ -43,5 +44,11 @@ describe('public article registry', () => {
     } else {
       expect(PUBLIC_LIBRARY_PATH).toBeNull();
     }
+  });
+
+  it('includes the launched public library in the canonical sitemap', () => {
+    const sitemap = readFileSync('public/sitemap.xml', 'utf8');
+    expect(PUBLIC_LIBRARY_PATH).toBe('/guides');
+    expect(sitemap).toContain('<loc>https://dinnerbydesign.app/guides</loc>');
   });
 });
