@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { serverTimestamp } from 'firebase/firestore';
 import { 
   ChevronLeft, 
@@ -149,6 +149,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     accessStatus,
     shoppingList
   } = useAuth();
+  const shouldReduceMotion = useReducedMotion();
 
   const isReadOnly = accessStatus === 'read_only';
   const allowedPlanProteinOptions = React.useMemo(
@@ -838,12 +839,33 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       Build my week
                     </button>
                   </div>
-                  {isPlanningWeek && (
-                    <div className="text-[11px] text-gray-500 leading-relaxed bg-gray-50/70 border border-gray-100 px-3 py-2">
-                      <span className="font-semibold text-gray-700">Creating your weekly dinners...</span>{' '}
-                      This takes a moment because we're building several suitable options at once.
-                    </div>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {isPlanningWeek && (
+                      <motion.div
+                        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                        transition={{ duration: shouldReduceMotion ? 0.01 : 0.18, ease: 'easeOut' }}
+                        className="overflow-hidden text-[11px] text-gray-500 leading-relaxed bg-gray-50/70 border border-gray-100"
+                        role="status"
+                        aria-live="polite"
+                      >
+                        {!shouldReduceMotion && (
+                          <div className="h-px overflow-hidden bg-gray-100" aria-hidden="true">
+                            <motion.div
+                              className="h-full w-1/3 bg-dbd-accent/70"
+                              animate={{ x: ['-110%', '310%'] }}
+                              transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                            />
+                          </div>
+                        )}
+                        <div className="px-3 py-2">
+                          <span className="font-semibold text-gray-700">Creating your weekly dinners...</span>{' '}
+                          This takes a moment because we're building several suitable options at once.
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   {planAlert && !isPlanningWeek && (
                     <div className="text-[11px] text-amber-900 leading-relaxed bg-amber-50 border border-amber-100 px-3 py-2">
                       {planAlert}
@@ -911,8 +933,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </div>
                   </div>
 
+                  <AnimatePresence initial={false}>
                   {builtWeekCost && (
-                    <div className="rounded border border-gray-100 bg-gray-50/70 px-3 py-3 sm:px-4">
+                    <motion.div
+                      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                      transition={{ duration: shouldReduceMotion ? 0.01 : 0.22, ease: 'easeOut' }}
+                      className="rounded border border-gray-100 bg-gray-50/70 px-3 py-3 sm:px-4"
+                      role="status"
+                      aria-live="polite"
+                    >
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Estimated dinner cost</p>
@@ -954,8 +985,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           Dismiss
                         </button>
                       </div>
-                    </div>
+                    </motion.div>
                   )}
+                  </AnimatePresence>
 
                   {activeSavedRecipes.length === 0 ? (
                     <div className="w-full py-6 px-4 text-center max-w-md mx-auto bg-white/50">
@@ -1094,17 +1126,27 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   return (
                                     <>
                                       <div className="divide-y divide-gray-50 w-full">
-                                        {displayed.map(recipe => (
-                                          <SavedRecipeItem 
-                                            key={recipe.id} 
-                                            recipe={recipe} 
-                                            layoutMode="list"
-                                            isBacklog={true}
-                                            onRemove={() => handleDeleteSavedRecipe(recipe)}
-                                            onPlannerAdd={() => setViewingPlannerEntry(null)}
-                                            onViewDetail={setViewingPlannerEntry}
-                                          />
-                                        ))}
+                                        <AnimatePresence initial={false}>
+                                          {displayed.map(recipe => (
+                                            <motion.div
+                                              key={recipe.id}
+                                              layout="position"
+                                              initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+                                              animate={{ opacity: 1, y: 0 }}
+                                              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -8 }}
+                                              transition={{ duration: shouldReduceMotion ? 0.01 : 0.18, ease: 'easeOut' }}
+                                            >
+                                              <SavedRecipeItem
+                                                recipe={recipe}
+                                                layoutMode="list"
+                                                isBacklog={true}
+                                                onRemove={() => handleDeleteSavedRecipe(recipe)}
+                                                onPlannerAdd={() => setViewingPlannerEntry(null)}
+                                                onViewDetail={setViewingPlannerEntry}
+                                              />
+                                            </motion.div>
+                                          ))}
+                                        </AnimatePresence>
                                       </div>
 
                                       {isFiltering && processed.length > 0 && (

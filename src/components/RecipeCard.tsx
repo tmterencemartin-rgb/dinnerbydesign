@@ -293,7 +293,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
     
     if (result) {
-      showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous dinner moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
+      showToast(replacedRecipe ? `Replaced ${dayLabel}. Shopping list updated; previous dinner moved to saved.` : `Added to ${dayLabel}. Shopping list updated.`, "Undo", () => {
         if (replacedRecipe) {
           updatePlanner(day, replacedRecipe).catch(err => {
             addLog(`UI ERROR: Undo restore failed: ${err.message || String(err)}`);

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { CircleX } from './ui/CircleX';
 import { Wind, CalendarPlus, Check, Archive, StickyNote } from 'lucide-react';
 import { SavedRecipe } from '../types';
@@ -25,6 +25,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   onViewDetail,
   isBacklog = false,
 }) => {
+  const shouldReduceMotion = useReducedMotion();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isChoosingDay, setIsChoosingDay] = useState(false);
   const [isEnriching, setIsEnriching] = useState(false);
@@ -130,7 +131,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
     });
     const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
     if (result) {
-      showToast(replacedRecipe ? `Replaced ${dayLabel}. Previous recipe moved to saved.` : `Added to ${dayLabel}`, "Undo", () => {
+      showToast(replacedRecipe ? `Replaced ${dayLabel}. Shopping list updated; previous recipe moved to saved.` : `Added to ${dayLabel}. Shopping list updated.`, "Undo", () => {
         if (replacedRecipe) {
           updatePlanner(day, replacedRecipe).catch(err => {
             addLog(`UI ERROR: Undo restore failed (SavedRecipeItem): ${err?.message || err}`);
@@ -273,7 +274,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 }}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                   showCheck
-                    ? 'bg-emerald-500 text-white scale-105'
+                    ? 'bg-emerald-500 text-white scale-105 motion-reduce:scale-100'
                     : 'border border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800'
                 }`}
                 title="Schedule"
@@ -412,11 +413,16 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         {/* Left Side: Scheduled Badge + Recipe Heading & Sub-stats */}
         <div className="flex items-start gap-2.5 flex-grow min-w-0">
           {scheduledDate && !isBacklog && (
-            <div className="w-12 shrink-0 flex items-center justify-start pt-0.5 animate-in fade-in zoom-in duration-150">
+            <motion.div
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: shouldReduceMotion ? 0.01 : 0.16, ease: 'easeOut' }}
+              className="w-12 shrink-0 flex items-center justify-start pt-0.5 motion-reduce:transform-none"
+            >
               <span className="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded uppercase text-[10px] font-semibold tracking-wider block">
                 {scheduledDate.slice(0, 3)}
               </span>
-            </div>
+            </motion.div>
           )}
 
           <div 

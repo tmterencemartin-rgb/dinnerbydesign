@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 interface ToastProps {
@@ -11,6 +11,7 @@ interface ToastProps {
 
 export const Toast: React.FC<ToastProps> = ({ message, actionLabel, onAction, onClose }) => {
   const actionHandledRef = useRef(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleAction = (event: React.SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -23,10 +24,13 @@ export const Toast: React.FC<ToastProps> = ({ message, actionLabel, onAction, on
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 20, scale: 0.95 }}
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
+      transition={{ duration: shouldReduceMotion ? 0.01 : 0.18, ease: 'easeOut' }}
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-2rem)] max-w-md"
+      role="status"
+      aria-live="polite"
     >
       <div className="bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center justify-between gap-4 border border-white/10 backdrop-blur-sm">
         <div className="flex-1 text-sm font-medium leading-tight">

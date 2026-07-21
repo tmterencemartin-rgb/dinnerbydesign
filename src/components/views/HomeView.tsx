@@ -475,7 +475,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     try {
       await updatePlanner(dayId, recipe);
       window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
-      showToast(`Scheduled for ${dayId}`);
+      showToast(`Scheduled for ${dayId}. Shopping list updated.`);
       setView('planner');
     } catch (err: any) {
       addLog?.(`UI ERROR: updatePlanner failed: ${err?.message || err}`);
