@@ -69,6 +69,14 @@ import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 
 const distRoot = path.resolve(process.cwd(), 'dist');
 const sourceHtml = await fs.readFile(path.join(distRoot, 'index.html'), 'utf8');
+const hideInitialSeoContentWhenJavaScriptRuns = (initialHtml: string) => {
+  const rootStart = '<div id="root">';
+  if (!initialHtml.startsWith(rootStart) || !initialHtml.endsWith('</div>')) {
+    throw new Error('Initial SEO content must have a single root container.');
+  }
+
+  return `${rootStart}<div class="app-initial-fallback">${initialHtml.slice(rootStart.length, -6)}</div></div>`;
+};
 const canonicalUrl = `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`;
 const title = '5 Affordable Dinners for Two Under £40 | DinnerByDesign';
 const description = 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.';
@@ -84,7 +92,7 @@ let html = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${title}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderFiveDinnersForTwoInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderFiveDinnersForTwoInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getFiveDinnersForTwoJsonLd())}</script>\n</head>`);
 
 if (!html.includes(`<h1>${FIVE_DINNERS_FOR_TWO_UNDER_40.title}</h1>`) || !html.includes(`href="${canonicalUrl}"`)) {
@@ -109,7 +117,7 @@ let guideHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${guideTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${UK_FOOD_COSTS_2026.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderUkFoodCosts2026InitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderUkFoodCosts2026InitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getUkFoodCosts2026JsonLd())}</script>\n</head>`);
 
 if (!guideHtml.includes(`<h1>${UK_FOOD_COSTS_2026.title}</h1>`) || !guideHtml.includes(`href="${guideCanonicalUrl}"`)) {
@@ -133,7 +141,7 @@ let cutsHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOWER_COST_CUTS_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOWER_COST_CUTS_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderLowerCostCutsInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderLowerCostCutsInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowerCostCutsJsonLd())}</script>\n</head>`);
 
 if (!cutsHtml.includes(`<h1>${LOWER_COST_CUTS_GUIDE.title}</h1>`) || !cutsHtml.includes(`href="${cutsCanonicalUrl}"`)) {
@@ -157,7 +165,7 @@ let techniquesHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderLowCostCookingTechniquesInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderLowCostCookingTechniquesInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowCostCookingTechniquesJsonLd())}</script>\n</head>`);
 
 if (!techniquesHtml.includes(`<h1>${LOW_COST_COOKING_TECHNIQUES_GUIDE.title}</h1>`) || !techniquesHtml.includes(`href="${techniquesCanonicalUrl}"`)) {
@@ -181,7 +189,7 @@ let cookingForOneHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${COOKING_FOR_ONE_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${COOKING_FOR_ONE_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderCookingForOneInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderCookingForOneInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCookingForOneJsonLd())}</script>\n</head>`);
 
 if (!cookingForOneHtml.includes(`<h1>${COOKING_FOR_ONE_GUIDE.title}</h1>`) || !cookingForOneHtml.includes(`href="${cookingForOneCanonicalUrl}"`)) {
@@ -205,7 +213,7 @@ let offalHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${OFFAL_BUDGET_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${OFFAL_BUDGET_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderOffalBudgetGuideInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderOffalBudgetGuideInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getOffalBudgetGuideJsonLd())}</script>\n</head>`);
 
 if (!offalHtml.includes(`<h1>${OFFAL_BUDGET_GUIDE.title}</h1>`) || !offalHtml.includes(`href="${offalCanonicalUrl}"`)) throw new Error('Offal guide generation failed its content or canonical check.');
@@ -226,7 +234,7 @@ let portionHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${PORTION_PLANNING_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${PORTION_PLANNING_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderPortionPlanningGuideInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderPortionPlanningGuideInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getPortionPlanningGuideJsonLd())}</script>\n</head>`);
 if (!portionHtml.includes(`<h1>${PORTION_PLANNING_GUIDE.title}</h1>`) || !portionHtml.includes(`href="${portionCanonicalUrl}"`)) throw new Error('Portion-planning guide generation failed its content or canonical check.');
 const portionOutputDir = path.join(distRoot, PORTION_PLANNING_GUIDE_PATH.slice(1));
@@ -246,7 +254,7 @@ let mediterraneanHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderMediterraneanAffordableCookingInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderMediterraneanAffordableCookingInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getMediterraneanAffordableCookingJsonLd())}</script>\n</head>`);
 if (!mediterraneanHtml.includes(`<h1>${MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.title}</h1>`) || !mediterraneanHtml.includes(`href="${mediterraneanCanonicalUrl}"`)) throw new Error('Mediterranean-inspired guide generation failed its content or canonical check.');
 const mediterraneanOutputDir = path.join(distRoot, MEDITERRANEAN_AFFORDABLE_COOKING_PATH.slice(1));
@@ -266,7 +274,7 @@ let summerStewsHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${SUMMER_STEWS_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${SUMMER_STEWS_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderSummerStewsGuideInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderSummerStewsGuideInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getSummerStewsGuideJsonLd())}</script>\n</head>`);
 if (!summerStewsHtml.includes(`<h1>${SUMMER_STEWS_GUIDE.title}</h1>`) || !summerStewsHtml.includes(`href="${summerStewsCanonicalUrl}"`)) throw new Error('Summer-stews guide generation failed its content or canonical check.');
 const summerStewsOutputDir = path.join(distRoot, SUMMER_STEWS_GUIDE_PATH.slice(1));
@@ -286,7 +294,7 @@ let freshOrFrozenHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${FRESH_OR_FROZEN_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${FRESH_OR_FROZEN_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderFreshOrFrozenGuideInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderFreshOrFrozenGuideInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getFreshOrFrozenGuideJsonLd())}</script>\n</head>`);
 if (!freshOrFrozenHtml.includes(`<h1>${FRESH_OR_FROZEN_GUIDE.title}</h1>`) || !freshOrFrozenHtml.includes(`href="${freshOrFrozenCanonicalUrl}"`)) throw new Error('Fresh-or-frozen guide generation failed its content or canonical check.');
 const freshOrFrozenOutputDir = path.join(distRoot, FRESH_OR_FROZEN_GUIDE_PATH.slice(1));
@@ -306,7 +314,7 @@ let batchCookingHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${BATCH_COOKING_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${BATCH_COOKING_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderBatchCookingGuideInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderBatchCookingGuideInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getBatchCookingGuideJsonLd())}</script>\n</head>`);
 if (!batchCookingHtml.includes(`<h1>${BATCH_COOKING_GUIDE.title.replace("'", '&#039;')}</h1>`) || !batchCookingHtml.includes(`href="${batchCookingCanonicalUrl}"`)) throw new Error('Batch-cooking guide generation failed its content or canonical check.');
 const batchCookingOutputDir = path.join(distRoot, BATCH_COOKING_GUIDE_PATH.slice(1));
@@ -326,7 +334,7 @@ let groceryCostOptionsHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${GROCERY_COST_OPTIONS_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${GROCERY_COST_OPTIONS_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderGroceryCostOptionsGuideInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderGroceryCostOptionsGuideInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getGroceryCostOptionsGuideJsonLd())}</script>\n</head>`);
 if (!groceryCostOptionsHtml.includes(`<h1>${GROCERY_COST_OPTIONS_GUIDE.title}</h1>`) || !groceryCostOptionsHtml.includes(`href="${groceryCostOptionsCanonicalUrl}"`)) throw new Error('Grocery-cost options guide generation failed its content or canonical check.');
 const groceryCostOptionsOutputDir = path.join(distRoot, GROCERY_COST_OPTIONS_GUIDE_PATH.slice(1));
@@ -346,7 +354,7 @@ let groceryCostPredictionHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${GROCERY_COST_PREDICTION_GUIDE.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${GROCERY_COST_PREDICTION_GUIDE.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderGroceryCostPredictionGuideInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderGroceryCostPredictionGuideInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getGroceryCostPredictionGuideJsonLd())}</script>\n</head>`);
 if (!groceryCostPredictionHtml.includes(`<h1>${GROCERY_COST_PREDICTION_GUIDE.title}</h1>`) || !groceryCostPredictionHtml.includes(`href="${groceryCostPredictionCanonicalUrl}"`)) throw new Error('Grocery-cost prediction guide generation failed its content or canonical check.');
 const groceryCostPredictionOutputDir = path.join(distRoot, GROCERY_COST_PREDICTION_GUIDE_PATH.slice(1));
@@ -367,7 +375,7 @@ let publicGuideLibraryHtml = sourceHtml
   .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${PUBLIC_GUIDE_LIBRARY.seoTitle}" />`)
   .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${PUBLIC_GUIDE_LIBRARY.description}" />`)
   .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, renderPublicGuideLibraryInitialHtml())
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderPublicGuideLibraryInitialHtml()))
   .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getPublicGuideLibraryJsonLd())}</script>\n</head>`);
 if (!publicGuideLibraryHtml.includes(`<h1>${PUBLIC_GUIDE_LIBRARY.title}</h1>`) || !publicGuideLibraryHtml.includes(`href="${publicGuideLibraryCanonicalUrl}"`)) throw new Error('Public guide library generation failed its content or canonical check.');
 const publicGuideLibraryOutputDir = path.join(distRoot, PUBLIC_LIBRARY_PATH.slice(1));
