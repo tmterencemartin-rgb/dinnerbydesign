@@ -1,0 +1,52 @@
+import React from 'react';
+import { ArrowRight } from 'lucide-react';
+import { FRESH_OR_FROZEN_GUIDE as guide } from '../../content/seoFoodCostGuides';
+import { FRESH_OR_FROZEN_DISCLOSURE_FOOTER, FRESH_OR_FROZEN_DISCLOSURES } from '../../content/programmaticDisclosures';
+import { ProgrammaticDisclosureFooter, ProgrammaticDisclosureList } from '../ProgrammaticDisclosures';
+
+const Section: React.FC<{ title: string; children: React.ReactNode; className?: string }> = ({ title, children, className = '' }) => (
+  <section className={`mt-10 ${className}`}><h2 className="text-xl font-bold">{title}</h2><div className="mt-4 space-y-4 text-[15px] leading-7 text-dbd-ink-3">{children}</div></section>
+);
+const List: React.FC<{ children: React.ReactNode }> = ({ children }) => <ul className="space-y-3">{children}</ul>;
+const Item: React.FC<{ children: React.ReactNode }> = ({ children }) => <li className="flex gap-3"><span aria-hidden="true" className="text-dbd-accent">—</span><span>{children}</span></li>;
+const SourceLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => <a href={href} target="_blank" rel="noreferrer" className="font-semibold text-dbd-accent hover:underline">{children}</a>;
+const InternalLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => <a href={href} className="font-semibold text-dbd-accent hover:underline">{children}</a>;
+
+const comparisonRows = [
+  ['Best for', 'Raw or appearance-led uses, depending on the product', 'Cooked dishes where a softer texture is suitable'],
+  ['Texture', 'Often firmer when recently bought and stored well', 'Product-dependent; may soften or release moisture'],
+  ['Storage', 'Varies by product; check its condition and date', 'Generally longer; follow the date and storage instructions'],
+  ['Preparation', 'May need washing, trimming or chopping', 'Often prepared and portioned, but check the packet'],
+  ['Waste', 'Useful when the whole amount will be eaten in time', 'Useful when you want to remove smaller amounts and keep the rest frozen'],
+  ['Nutrition', 'Both fresh and frozen fruit and vegetables count towards 5 A Day; exact content varies', 'Neither format is universally more nutritious'],
+];
+
+export const FreshOrFrozenGuideView: React.FC<{ onPlanWeek: () => void }> = ({ onPlanWeek }) => (
+  <div className="min-h-screen bg-[#faf9f7] text-dbd-ink">
+    <header className="border-b border-dbd-rule/50 bg-dbd-surface"><div className="mx-auto flex min-h-[82px] max-w-5xl items-center justify-between px-4 sm:min-h-[96px]"><a href="/" aria-label="DinnerByDesign home"><img src="/dbd-logo-with-pin.png" alt="DinnerByDesign" className="h-[38px] w-auto max-w-[230px] object-contain mix-blend-multiply sm:h-[44px]" /></a><a href="/signin?mode=signin" className="text-xs font-bold text-dbd-accent hover:underline">Sign in</a></div></header>
+    <main className="mx-auto max-w-3xl px-4 py-8 pb-20 sm:py-12">
+      <nav aria-label="Breadcrumb" className="text-xs text-dbd-ink-3"><a href="/" className="hover:underline">DinnerByDesign</a><span className="px-2">/</span><span>Food cost guides</span></nav>
+      <article>
+        <header className="mt-7"><p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Food cost guide</p><h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{guide.title}</h1><p className="mt-4 max-w-2xl text-[15px] leading-7 text-dbd-ink-3">{guide.description}</p><p className="mt-3 text-xs text-dbd-ink-3">By {guide.editorialOwner} · Published 21 July 2026 · Last reviewed 21 July 2026</p></header>
+        <section className="mt-8 space-y-4 border-y border-dbd-rule/50 py-6 text-[15px] leading-7 text-dbd-ink-3"><p>Fresh fruit and vegetables can be ideal when texture, appearance or immediate use matters. Frozen versions offer a longer storage window and are often washed, trimmed and portioned before freezing. Some can be cooked straight from frozen; others need to be handled according to the packet.</p><p>Neither format is automatically better or cheaper. The useful question is which one suits what you are cooking, how soon you will use it and how much is likely to be left over.</p></section>
+        <Section title="Quick answer"><p>Choose fresh when crispness, appearance or uncooked texture is central to the dish. Choose frozen when longer storage, convenience and using only the amount needed matter more. The best choice varies by product and cooking method.</p></Section>
+        <Section title="Key differences"><div className="overflow-x-auto rounded border border-dbd-rule/60"><table className="min-w-[640px] w-full border-collapse text-left text-sm"><thead className="bg-dbd-surface"><tr><th className="p-3 font-bold">Factor</th><th className="p-3 font-bold">Fresh</th><th className="p-3 font-bold">Frozen</th></tr></thead><tbody>{comparisonRows.map(([factor, fresh, frozen]) => <tr key={factor} className="border-t border-dbd-rule/60 align-top"><th scope="row" className="p-3 font-bold text-dbd-ink">{factor}</th><td className="p-3">{fresh}</td><td className="p-3">{frozen}</td></tr>)}</tbody></table></div></Section>
+        <Section title="Does freezing affect quality?"><p>It can. Freezing changes the structure of some fruit and vegetables, so they may be softer after defrosting or release more moisture during cooking. That may matter in a salad or a dish where a crisp finish is important, but much less in a soup, stew, sauce, pie filling or blended dish.</p><p>The effect is product-specific. Frozen peas can retain a useful colour and sweetness in cooked dishes, while frozen spinach is particularly convenient where it will be stirred into a sauce, curry or stew. Frozen berries may soften as they thaw but can still work well in compote, baking or porridge when prepared according to the packet.</p></Section>
+        <Section title="Is frozen produce as nutritious as fresh?"><p>Both fresh and frozen fruit and vegetables count towards your 5 A Day. Exact nutrient content varies with the product, variety, storage and cooking, so neither format should be described as universally more nutritious.</p></Section>
+        <Section title="Which is more convenient?"><p>Frozen produce is often washed, trimmed, chopped or portioned before sale. That can shorten preparation and lets you remove only what you need. Fresh produce can be more convenient when it will be eaten uncooked or needs no defrosting, and when its appearance or crispness matters.</p><p>If only part of a frozen pack is used, return the remainder to the freezer promptly, reseal it and follow the packet&apos;s storage instructions.</p></Section>
+        <Section title="Which can create less waste?"><p>Frozen produce can reduce unused leftovers because a smaller quantity can be taken from the pack while the rest stays frozen. Fresh can be equally sensible when you know the whole amount will be used while it is still suitable to eat. Buying more than you need undermines either choice.</p></Section>
+        <Section title="Best cooking uses"><List><Item><strong>Salads and presentation-led dishes:</strong> fresh is usually the more suitable starting point.</Item><Item><strong>Soups, stews, curries and pies:</strong> either can work; adjust timing and liquid for the product.</Item><Item><strong>Roasting and stir-frying:</strong> product-dependent, because some frozen vegetables release more moisture.</Item><Item><strong>Baking, compotes and porridge:</strong> frozen fruit can work well when prepared according to the packet.</Item></List></Section>
+        <Section title="When to choose fresh"><List><Item>You plan to use it soon.</Item><Item>Texture, crispness or appearance is important.</Item><Item>The ingredient will be served uncooked and is suitable for that use.</Item><Item>You know the amount bought will be used.</Item></List></Section>
+        <Section title="When to choose frozen"><List><Item>You want a longer storage window.</Item><Item>You need only a small amount at a time.</Item><Item>Prepared or portioned ingredients make the dish easier.</Item><Item>The ingredient will be cooked into a dish where a softer texture is suitable.</Item></List></Section>
+        <Section title="Verdict"><p>Neither format is universally better. Choose according to how soon the ingredient will be used, how it will be cooked and whether convenience, texture or reducing waste matters most for that dinner.</p></Section>
+        <ProgrammaticDisclosureList items={FRESH_OR_FROZEN_DISCLOSURES} className="mt-6" />
+        <Section title="Frequently asked questions">{guide.faqs.map(faq => <section key={faq.question}><h3 className="font-bold text-dbd-ink">{faq.question}</h3><p className="mt-2">{faq.answer}</p></section>)}</Section>
+        <Section title="How DinnerByDesign can help"><p>Search DinnerByDesign by ingredient, then use Plan my week to place fresh and frozen options where they make most sense across the week.</p></Section>
+        <Section title="Sources and further reading" className="border-t border-dbd-rule/50 pt-8"><ul className="space-y-3 text-sm leading-6">{guide.sources.map(source => <li key={source.url}><SourceLink href={source.url}>{source.label}</SourceLink></li>)}</ul></Section>
+        <Section title="Related guidance"><p><InternalLink href="/food-costs/portion-planning-and-food-waste">Plan portions and reduce food waste</InternalLink>, <InternalLink href="/food-costs/summer-stews-seasonal-vegetables">make vegetables go further in summer stews</InternalLink>, <InternalLink href="/food-safety">review food-safety guidance</InternalLink> or <InternalLink href="/recipe-methodology">read how dinners are selected</InternalLink>.</p></Section>
+      </article>
+      <ProgrammaticDisclosureFooter copy={FRESH_OR_FROZEN_DISCLOSURE_FOOTER} className="mt-10" />
+      <section className="mt-10 rounded bg-dbd-ink p-6 text-white sm:flex sm:items-center sm:justify-between sm:gap-6"><div><h2 className="text-xl font-bold">Choose ingredients that suit your week</h2><p className="mt-2 text-sm leading-6 text-white/70">Search by what you have and plan flexible dinners.</p></div><button type="button" onClick={onPlanWeek} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded bg-white px-5 text-sm font-bold text-dbd-ink sm:mt-0 sm:w-auto">Plan my week <ArrowRight size={16} /></button></section>
+    </main>
+  </div>
+);

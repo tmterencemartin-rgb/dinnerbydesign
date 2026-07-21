@@ -381,6 +381,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/food-costs/portion-planning-and-food-waste') return 'food-costs-portion-planning';
     if (location === '/food-costs/mediterranean-inspired-affordable-cooking') return 'food-costs-mediterranean-affordable-cooking';
     if (location === '/food-costs/summer-stews-seasonal-vegetables') return 'food-costs-summer-stews';
+    if (location === '/food-costs/fresh-or-frozen') return 'food-costs-fresh-or-frozen';
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';

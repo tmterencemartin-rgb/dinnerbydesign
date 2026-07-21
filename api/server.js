@@ -163778,7 +163778,7 @@ var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
   primarySearchIntent: "Use Mediterranean-inspired cooking techniques to make affordable ingredients appetising and reuse them across several dinners",
   indexingStatus: "index",
   editorialNotes: "Keep the traditions distinct, retain the softened Spanish framing, and recheck the cultural, FSA and allergen sources before changing the review date.",
-  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/food-costs/portion-planning-and-food-waste", "/food-safety", "/recipe-methodology"],
+  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/food-costs/portion-planning-and-food-waste", "/food-costs/fresh-or-frozen", "/food-safety", "/recipe-methodology"],
   disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
   sources: [
     { label: "Visit Greece: Greek pulses to quicken your pulse", url: "https://www.visitgreece.gr/experiences/gastronomy/traditional-products/greek-pulses-to-quicken-your-pulse/" },
@@ -163822,9 +163822,50 @@ var SUMMER_STEWS_GUIDE = {
     { question: "What if I do not have the exact vegetables listed in a recipe?", answer: "These dinners are built to accept substitution \u2014 use whichever similar vegetables are good value or already need using and remain safe to eat, adjusting cooking time for firmer or softer ingredients as needed." }
   ]
 };
+var FRESH_OR_FROZEN_GUIDE_PATH = "/food-costs/fresh-or-frozen";
+var FRESH_OR_FROZEN_GUIDE = {
+  title: "Fresh or frozen: which is better for the way you cook?",
+  seoTitle: "Fresh or frozen: which is better for the way you cook? | DinnerByDesign",
+  description: "How fresh and frozen fruit and vegetables generally differ, and how to choose between them depending on what and how you are cooking.",
+  publishedAt: "2026-07-21",
+  reviewedAt: "2026-07-21",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Choose between fresh and frozen fruit and vegetables based on use, storage, texture and waste",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-21",
+  editorialNotes: "NHS and Food Standards Agency guidance was reviewed on 20 July 2026. Product-specific pages need their own source and suitability checks.",
+  internalLinks: ["/food-costs/portion-planning-and-food-waste", "/food-costs/summer-stews-seasonal-vegetables", "/food-safety", "/recipe-methodology"],
+  disclosures: ["storage_and_cooking", "source_timing"],
+  sources: [
+    { label: "NHS: 5 A Day \u2014 what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Can I mix fresh and frozen ingredients in the same dish?", answer: "Yes. Add each ingredient at the stage that suits its cooking time and follow the packet instructions for frozen products." },
+    { question: "Can cooked dishes made with frozen ingredients be stored?", answer: "Follow the storage and reheating guidance for the finished dish, as well as any instructions on the ingredient packet." },
+    { question: "Why do packet instructions matter?", answer: "Preparation, defrosting, cooking and storage requirements vary between products. The packet gives the instructions for the particular product you bought." },
+    { question: "Is fresh or frozen always the cheapest option?", answer: "No. Prices, pack sizes and the amount you will actually use vary. Compare the current pack price with how much is likely to be eaten rather than assuming one format always costs less." },
+    { question: "What should I choose if I am unsure?", answer: "Choose fresh when appearance, crispness or uncooked texture matters. Choose frozen when longer storage and taking out only what you need are more useful, while checking that the product suits your intended dish." }
+  ]
+};
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: FRESH_OR_FROZEN_GUIDE.title,
+    path: FRESH_OR_FROZEN_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: FRESH_OR_FROZEN_GUIDE.pageFamily,
+    primarySearchIntent: FRESH_OR_FROZEN_GUIDE.primarySearchIntent,
+    indexingStatus: FRESH_OR_FROZEN_GUIDE.indexingStatus,
+    publishedAt: FRESH_OR_FROZEN_GUIDE.publishedAt,
+    reviewedAt: FRESH_OR_FROZEN_GUIDE.reviewedAt,
+    contentReviewedAt: FRESH_OR_FROZEN_GUIDE.contentReviewedAt,
+    internalLinks: FRESH_OR_FROZEN_GUIDE.internalLinks,
+    disclosures: FRESH_OR_FROZEN_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: SUMMER_STEWS_GUIDE.title,
     path: SUMMER_STEWS_GUIDE_PATH,

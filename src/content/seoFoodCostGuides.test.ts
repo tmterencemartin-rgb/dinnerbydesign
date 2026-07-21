@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   COOKING_FOR_ONE_GUIDE,
   COOKING_FOR_ONE_PATH,
+  FRESH_OR_FROZEN_GUIDE,
+  FRESH_OR_FROZEN_GUIDE_PATH,
   LOWER_COST_CUTS_GUIDE,
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
@@ -15,6 +17,7 @@ import {
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
+  getFreshOrFrozenGuideJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
   getOffalBudgetGuideJsonLd,
@@ -22,6 +25,7 @@ import {
   getSummerStewsGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
+  renderFreshOrFrozenGuideInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
   renderOffalBudgetGuideInitialHtml,
@@ -192,6 +196,24 @@ describe('food-cost guide publishing data', () => {
 
     expect(getSummerStewsGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${SUMMER_STEWS_GUIDE_PATH}` }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+    ]));
+  });
+
+  it('publishes the fresh-or-frozen guide with a qualified comparison and crawlable links', () => {
+    expect(FRESH_OR_FROZEN_GUIDE_PATH).toBe('/food-costs/fresh-or-frozen');
+    expect(FRESH_OR_FROZEN_GUIDE.indexingStatus).toBe('index');
+    expect(FRESH_OR_FROZEN_GUIDE.disclosures).toEqual(['storage_and_cooking', 'source_timing']);
+    expect(FRESH_OR_FROZEN_GUIDE.sources).toHaveLength(2);
+    const html = renderFreshOrFrozenGuideInitialHtml();
+    expect(html).toContain(`<h1>${FRESH_OR_FROZEN_GUIDE.title}</h1>`);
+    expect(html).toContain('<table>');
+    expect(html).toContain('Neither format is universally better');
+    expect(html).toContain('/food-costs/portion-planning-and-food-waste');
+    expect(html).toContain('About this guide');
+    expect(getFreshOrFrozenGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
+      expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${FRESH_OR_FROZEN_GUIDE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
       expect.objectContaining({ '@type': 'BreadcrumbList' }),
     ]));

@@ -9,6 +9,8 @@ import {
 import {
   COOKING_FOR_ONE_GUIDE,
   COOKING_FOR_ONE_PATH,
+  FRESH_OR_FROZEN_GUIDE,
+  FRESH_OR_FROZEN_GUIDE_PATH,
   LOWER_COST_CUTS_GUIDE,
   LOWER_COST_CUTS_PATH,
   LOW_COST_COOKING_TECHNIQUES_GUIDE,
@@ -24,6 +26,7 @@ import {
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
   getCookingForOneJsonLd,
+  getFreshOrFrozenGuideJsonLd,
   getLowerCostCutsJsonLd,
   getLowCostCookingTechniquesJsonLd,
   getMediterraneanAffordableCookingJsonLd,
@@ -32,6 +35,7 @@ import {
   getSummerStewsGuideJsonLd,
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
+  renderFreshOrFrozenGuideInitialHtml,
   renderLowerCostCutsInitialHtml,
   renderLowCostCookingTechniquesInitialHtml,
   renderMediterraneanAffordableCookingInitialHtml,
@@ -247,3 +251,23 @@ const summerStewsOutputDir = path.join(distRoot, SUMMER_STEWS_GUIDE_PATH.slice(1
 await fs.mkdir(summerStewsOutputDir, { recursive: true });
 await fs.writeFile(path.join(summerStewsOutputDir, 'index.html'), summerStewsHtml, 'utf8');
 console.log(`Generated ${SUMMER_STEWS_GUIDE_PATH}/index.html`);
+
+const freshOrFrozenCanonicalUrl = `https://dinnerbydesign.app${FRESH_OR_FROZEN_GUIDE_PATH}`;
+let freshOrFrozenHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${FRESH_OR_FROZEN_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${FRESH_OR_FROZEN_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${freshOrFrozenCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${freshOrFrozenCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${FRESH_OR_FROZEN_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${FRESH_OR_FROZEN_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${FRESH_OR_FROZEN_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${FRESH_OR_FROZEN_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, renderFreshOrFrozenGuideInitialHtml())
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getFreshOrFrozenGuideJsonLd())}</script>\n</head>`);
+if (!freshOrFrozenHtml.includes(`<h1>${FRESH_OR_FROZEN_GUIDE.title}</h1>`) || !freshOrFrozenHtml.includes(`href="${freshOrFrozenCanonicalUrl}"`)) throw new Error('Fresh-or-frozen guide generation failed its content or canonical check.');
+const freshOrFrozenOutputDir = path.join(distRoot, FRESH_OR_FROZEN_GUIDE_PATH.slice(1));
+await fs.mkdir(freshOrFrozenOutputDir, { recursive: true });
+await fs.writeFile(path.join(freshOrFrozenOutputDir, 'index.html'), freshOrFrozenHtml, 'utf8');
+console.log(`Generated ${FRESH_OR_FROZEN_GUIDE_PATH}/index.html`);
