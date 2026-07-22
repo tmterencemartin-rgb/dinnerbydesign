@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion';
 import { 
   ChevronLeft, 
   Mail, 
@@ -31,6 +31,7 @@ interface ShoppingListViewProps {
 }
 
 export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
+  const shouldReduceMotion = useReducedMotion();
   const [isEmailing, setIsEmailing] = useState(false);
   const { 
     user,
@@ -232,6 +233,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
     try {
       if (!isCurrentlyInStock) {
         // Checking: Mark as in stock (adds to persistentPantryItems in local storage)
+        setShowPantry(true);
         await addPersistentPantryItem(normKey);
         await updateShoppingItem(item.id, { inStock: true, checked: true, excludedByPantry: true });
         addLog?.(`UI: Marked in-stock and saved to persistent staples: ${cleanName} (${normKey})`);
@@ -260,7 +262,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
     [hasScheduledDinners, shoppingList]
   );
   const pantryGotItItems = activeItems.filter(it => it.inStock || it.checked || it.excludedByPantry);
-  const editingItems = activeItems;
+  const editingItems = activeItems.filter(it => !it.inStock && !it.checked && !it.excludedByPantry);
   const pantryItems = activeItems.filter(it => it.excludedByPantry);
 
   const shoppingCostSummary = React.useMemo(
@@ -373,11 +375,14 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                     <span className="w-1 h-1 bg-gray-200 rounded-full" />
                     <div className="flex flex-col items-center sm:items-start -space-y-0.5">
                       <div className="flex items-center gap-1.5">
-                        <motion.p 
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          key={totalEstimatedCost}
-                          className="text-[12px] font-bold text-accent"
+                        <motion.p
+                          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 2 }}
+                          animate={shouldReduceMotion
+                            ? { opacity: 1 }
+                            : { opacity: 1, y: 0, backgroundColor: ['rgba(191, 75, 23, 0)', 'rgba(191, 75, 23, 0.12)', 'rgba(191, 75, 23, 0)'] }}
+                          transition={{ duration: shouldReduceMotion ? 0.01 : 0.65, ease: 'easeOut' }}
+                          key={`${totalEstimatedCost}-${expectedCheckoutCost}`}
+                          className="rounded px-1 text-[12px] font-bold text-accent"
                         >
                           Estimated ingredients: £{totalEstimatedCost.toFixed(2)} {numberOfNights > 0 ? `for ${numberOfNights} ${numberOfNights === 1 ? 'dinner' : 'dinners'}` : ''}
                         </motion.p>
@@ -519,6 +524,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
             </div>
           </div>
         ) : (
+          <LayoutGroup id="shopping-list-items">
           <div className="space-y-6 max-w-6xl mx-auto">
             {categories.length === 0 && pantryGotItItems.length > 0 && (
                <div className="py-6 text-center space-y-3 px-4 sm:px-6 bg-emerald-50/20 rounded max-w-lg mx-auto">
@@ -545,11 +551,17 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   Tick items you already have to reduce your estimated spend.
                 </p>
                 <div className="shopping-category-list mt-2">
+                <AnimatePresence initial={false}>
                 {categories.map(category => {
                   const isSmall = groupedItems[category].length <= 2;
                   return (
-                    <div 
+                    <motion.div
                       key={category} 
+                      layout
+                      initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0, marginBottom: 0 }}
+                      transition={{ duration: shouldReduceMotion ? 0.01 : 0.18, ease: 'easeOut' }}
                       className={`shopping-category-card mb-3 bg-white border border-gray-100 rounded hover:border-gray-200 transition-colors ${
                         isSmall ? 'p-2 md:p-1.5 lg:p-2' : 'p-2.5 md:p-2 lg:p-2.5'
                       }`}
@@ -578,9 +590,16 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
 
                     {/* Items List Wrapper */}
                     <div className="flex flex-col">
+                      <AnimatePresence initial={false}>
                       {groupedItems[category].map(item => (
-                        <div 
-                          key={item.id} 
+                        <motion.div
+                          key={item.id}
+                          layout
+                          layoutId={`shopping-item-${item.id}`}
+                          initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 8 }}
+                          transition={{ duration: shouldReduceMotion ? 0.01 : 0.18, ease: 'easeOut' }}
                           className={`flex items-center justify-between py-0 px-2 -mx-2 rounded group transition-all relative ${
                             (item.inStock || item.checked) ? 'bg-gray-50/50 opacity-60' : 'hover:bg-gray-50/30'
                           }`}
@@ -647,12 +666,14 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                               </button>
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
                       ))}
+                      </AnimatePresence>
                     </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
+                </AnimatePresence>
               </div>
             </div>
             )}
@@ -677,16 +698,26 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   </div>
                 </div>
 
+                <AnimatePresence initial={false}>
                 {showPantry && (
                   <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
+                    initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
+                    exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0.01 : 0.2, ease: 'easeOut' }}
                     className="space-y-4"
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-12 gap-y-3">
+                      <AnimatePresence initial={false}>
                       {pantryGotItItems.map(item => (
-                        <div 
-                          key={item.id} 
+                        <motion.div
+                          key={item.id}
+                          layout
+                          layoutId={`shopping-item-${item.id}`}
+                          initial={shouldReduceMotion ? false : { opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -8 }}
+                          transition={{ duration: shouldReduceMotion ? 0.01 : 0.18, ease: 'easeOut' }}
                           className="flex items-center justify-between py-2 px-3 bg-gray-50/50 hover:bg-gray-50 rounded group transition-all"
                         >
                           <div className="flex items-center gap-3 flex-grow min-w-0">
@@ -715,8 +746,9 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
-                        </div>
+                        </motion.div>
                       ))}
+                      </AnimatePresence>
                     </div>
 
                     {/* Manual In stock Pantry Staples (Original persistence) */}
@@ -740,9 +772,11 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                     )}
                   </motion.div>
                 )}
+                </AnimatePresence>
               </div>
             )}
           </div>
+          </LayoutGroup>
         )}
       </div>
     </div>

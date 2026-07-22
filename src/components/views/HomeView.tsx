@@ -118,6 +118,37 @@ const isNotBoringSummerSaladsQuery = (query: string) =>
     .map(value => value.toLowerCase())
     .includes(query.trim().toLowerCase());
 
+const SearchResultsSkeleton = () => (
+  <motion.div
+    key="search-results-skeleton"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.16 }}
+    className="mx-auto w-full max-w-4xl space-y-2 pb-16"
+    role="status"
+    aria-live="polite"
+    aria-label="Finding suitable dinner options"
+  >
+    <span className="sr-only">Finding suitable dinner options...</span>
+    {[0, 1, 2].map(index => (
+      <div
+        key={index}
+        className="rounded border border-gray-100 bg-white px-3 py-3 motion-safe:animate-pulse sm:px-4"
+        aria-hidden="true"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className={`h-3 rounded bg-gray-100 ${index === 1 ? 'w-3/5' : 'w-4/5'}`} />
+            <div className="h-2.5 w-2/5 rounded bg-gray-50" />
+          </div>
+          <div className="h-6 w-16 shrink-0 rounded bg-gray-50" />
+        </div>
+      </div>
+    ))}
+  </motion.div>
+);
+
 interface HomeViewProps {
   // ... (keeping props as they were for compatibility if possible, but adding useAuth internal logic)
   input: string;
@@ -1008,6 +1039,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
       {/* Results Section */}
       <AnimatePresence mode="wait">
+        {showFullLoader && <SearchResultsSkeleton />}
+
         {/* Search Error UI - Only show if no results exist */}
         {searchError && !isGenerating && !isAppending && !currentRecipes?.length && !currentReadyMeals?.length && (
           <motion.div 

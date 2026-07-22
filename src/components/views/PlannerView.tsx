@@ -697,8 +697,15 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 </button>
               </div>
 
+              <AnimatePresence initial={false}>
               {showPlanWeek && (
-                <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                <motion.div
+                  initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                  transition={{ duration: shouldReduceMotion ? 0.01 : 0.2, ease: 'easeOut' }}
+                  className="mt-4 overflow-hidden border-t border-gray-100 pt-4 space-y-3"
+                >
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
                     <label className="space-y-1">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Dinners</span>
@@ -871,8 +878,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       {planAlert}
                     </div>
                   )}
-                </div>
+                </motion.div>
               )}
+              </AnimatePresence>
             </div>
 
             {/* Unified Save & Schedule Panel */}
@@ -1052,10 +1060,26 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                 <span className="text-gray-400 text-[10px] ml-0.5">▼</span>
                               </button>
 
+                              <AnimatePresence initial={false}>
                               {isFilterDropdownOpen && (
                                 <>
-                                  <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsFilterDropdownOpen(false)} />
-                                  <div className="absolute left-0 md:left-auto md:right-0 top-full mt-1.5 w-56 bg-white border border-gray-100 rounded shadow-md p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                                  <motion.div
+                                    key="saved-filter-backdrop"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: shouldReduceMotion ? 0.01 : 0.15 }}
+                                    className="fixed inset-0 z-40 cursor-default"
+                                    onClick={() => setIsFilterDropdownOpen(false)}
+                                  />
+                                  <motion.div
+                                    key="saved-filter-menu"
+                                    initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                                    transition={{ duration: shouldReduceMotion ? 0.01 : 0.16, ease: 'easeOut' }}
+                                    className="absolute left-0 md:left-auto md:right-0 top-full mt-1.5 w-56 bg-white border border-gray-100 rounded shadow-md p-3 z-50"
+                                  >
                                     <div className="mb-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1 text-left">COOKING STYLE</div>
                                     <div className="space-y-1">
                                       <label className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded cursor-pointer text-xs font-medium text-gray-700 select-none">
@@ -1088,9 +1112,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         <button onClick={(e) => { e.stopPropagation(); handleResetFilters(); }} className="w-full text-center py-1 text-[10.5px] font-semibold text-accent hover:bg-accent/5 rounded-md transition-colors cursor-pointer">Reset Filters</button>
                                       </>
                                     )}
-                                  </div>
+                                  </motion.div>
                                 </>
                               )}
+                              </AnimatePresence>
                             </div>
 
                             {/* 2. Sort Dropdown */}
@@ -1356,8 +1381,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   }
                                 }}
                               >
+                                <AnimatePresence mode="wait" initial={false}>
                                 {entry ? (
-                                  <div className="space-y-0.5">
+                                  <motion.div
+                                    key={`${entry.id || dayId}-${entry.title}`}
+                                    initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 6 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -6 }}
+                                    transition={{ duration: shouldReduceMotion ? 0.01 : 0.18, ease: 'easeOut' }}
+                                    className="space-y-0.5"
+                                  >
                                     <h4 className="text-[13.5px] font-bold text-gray-900 truncate pr-4">{entry.title}</h4>
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                       <span className="text-[10.5px] font-bold text-accent uppercase tracking-wider">{entry.cuisine || 'Dinner'}</span>
@@ -1369,15 +1402,23 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         </span>
                                       )}
                                     </div>
-                                  </div>
+                                  </motion.div>
                                 ) : (
-                                  <div className="flex flex-col">
+                                  <motion.div
+                                    key={`${dayId}-empty`}
+                                    initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 4 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -4 }}
+                                    transition={{ duration: shouldReduceMotion ? 0.01 : 0.16, ease: 'easeOut' }}
+                                    className="flex flex-col"
+                                  >
                                     <span className="text-[13px] text-gray-400 font-medium">Nothing scheduled yet</span>
                                     {targetPlannerDay === dayId && (
                                       <p className="text-[11px] text-accent font-semibold mt-1 animate-in fade-in slide-in-from-top-1">Select a recipe below to schedule for {dayId}...</p>
                                     )}
-                                  </div>
+                                  </motion.div>
                                 )}
+                                </AnimatePresence>
                               </div>
 
                               <div className="flex items-center gap-2 shrink-0">
