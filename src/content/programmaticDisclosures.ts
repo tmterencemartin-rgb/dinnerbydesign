@@ -285,6 +285,35 @@ export const GROCERY_COST_PREDICTION_DISCLOSURES: ProgrammaticDisclosureItem[] =
   },
 ];
 
+export const CHEAPER_MEAT_CUTS_COST_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'How to use this guide',
+    body: 'This guide does not rank cuts or use live retailer prices. Prices, pack sizes and availability vary, and a lower pack or kilogram price does not automatically mean a lower cost per serving once bone, trimming and cooking time are considered.',
+  },
+];
+
+export const CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Marinades, spice blends, stock products and prepared sauces vary by brand and can contain allergens, so check every product label before use.',
+  },
+];
+
+export const CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Follow product cooking and storage instructions. Make sure chicken and turkey are steaming hot throughout, with no pink meat remaining and juices running clear. Follow current Food Standards Agency guidance when cooling, refrigerating, freezing, defrosting and reheating cooked meat.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food Standards Agency cooking and storage guidance was reviewed on 22 July 2026. Follow the cited sources for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -380,6 +409,15 @@ export const GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFoote
 
 export const GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Grocery estimates can improve visibility and control, but products, prices, pack sizes, substitutions and ingredients already at home vary by household and shop.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+  ],
+};
+
+export const CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'Prices, pack sizes, usable quantities, cooking time and availability vary. Compare the pack in front of you, check product labels and follow current food-safety guidance.',
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },

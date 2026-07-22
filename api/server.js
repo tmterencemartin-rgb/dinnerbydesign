@@ -163963,8 +163963,82 @@ var GROCERY_COST_PREDICTION_GUIDE = {
   ]
 };
 
+// src/content/cheaperMeatCutsGuide.ts
+var CHEAPER_MEAT_CUTS_GUIDE_PATH = "/food-costs/cooking-with-cheaper-cuts-of-meat";
+var CHEAPER_MEAT_CUTS_GUIDE = {
+  title: "Cooking with cheaper cuts of meat: what to buy and how to use it",
+  seoTitle: "Cooking with cheaper cuts of meat | DinnerByDesign",
+  description: "Learn how to cook beef shin, braising steak, chicken thighs, pork shoulder and turkey thighs \u2014 and when these cuts may offer better value.",
+  publishedAt: "2026-07-22",
+  reviewedAt: "2026-07-22",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Choose and cook lower-cost meat cuts using methods that suit their texture, usable quantity and available time",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-22",
+  editorialNotes: "Method-led guide rather than a live price ranking. Keep it distinct from the comparison guide for four servings, and recheck Food Standards Agency cooking and storage guidance before changing the review date.",
+  internalLinks: [
+    "/food-costs/cooking-for-four-with-lower-cost-cuts",
+    "/pricing-methodology",
+    "/food-costs/why-grocery-costs-are-hard-to-predict",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/cooking-with-offal-on-a-budget",
+    "/food-costs/low-cost-cooking-techniques",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/guides"
+  ],
+  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
+    },
+    {
+      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
+      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
+    }
+  ],
+  faqs: [
+    {
+      question: "Are cheaper cuts always cheaper per serving?",
+      answer: "Not always. Bone weight, trimming and cooking losses can reduce the usable meat you get, so it is worth considering cost per serving rather than price per pack or kilogram."
+    },
+    {
+      question: "Which cheaper cut is easiest for a beginner?",
+      answer: "Boneless chicken thighs are a reasonable starting point. They are forgiving to cook and work in a wide range of everyday dinners."
+    },
+    {
+      question: "Can chicken thighs replace chicken breast?",
+      answer: "Often, particularly in curries, casseroles and traybakes. The texture and cooking time differ slightly, so adjust the method rather than assume a direct swap."
+    },
+    {
+      question: "Does slow cooking use too much energy to save money?",
+      answer: "It depends on the appliance, cooking duration and energy tariff. There is no single answer, so consider how the cut will actually be cooked rather than assuming every slowly cooked dish will cost less overall."
+    },
+    {
+      question: "Can cooked meat be frozen?",
+      answer: "Yes. Cool, portion and store it safely, following current Food Standards Agency guidance and the product instructions."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: CHEAPER_MEAT_CUTS_GUIDE.title,
+    path: CHEAPER_MEAT_CUTS_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: CHEAPER_MEAT_CUTS_GUIDE.pageFamily,
+    primarySearchIntent: CHEAPER_MEAT_CUTS_GUIDE.primarySearchIntent,
+    indexingStatus: CHEAPER_MEAT_CUTS_GUIDE.indexingStatus,
+    publishedAt: CHEAPER_MEAT_CUTS_GUIDE.publishedAt,
+    reviewedAt: CHEAPER_MEAT_CUTS_GUIDE.reviewedAt,
+    contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
+    internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks,
+    disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: GROCERY_COST_PREDICTION_GUIDE.title,
     path: GROCERY_COST_PREDICTION_GUIDE_PATH,

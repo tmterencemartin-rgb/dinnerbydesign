@@ -40,9 +40,11 @@ import { FreshOrFrozenGuideView } from './components/views/FreshOrFrozenGuideVie
 import { BatchCookingGuideView } from './components/views/BatchCookingGuideView';
 import { GroceryCostOptionsGuideView } from './components/views/GroceryCostOptionsGuideView';
 import { GroceryCostPredictionGuideView } from './components/views/GroceryCostPredictionGuideView';
+import { CheaperMeatCutsGuideView } from './components/views/CheaperMeatCutsGuideView';
 import { GuidesLibraryView } from './components/views/GuidesLibraryView';
 import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH, getGroceryCostOptionsGuideJsonLd } from './content/groceryCostOptionsGuide';
 import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH, getGroceryCostPredictionGuideJsonLd } from './content/groceryCostPredictionGuide';
+import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH, getCheaperMeatCutsGuideJsonLd } from './content/cheaperMeatCutsGuide';
 import { PUBLIC_GUIDE_LIBRARY, getPublicGuideLibraryJsonLd } from './content/publicGuideLibrary';
 import { PUBLIC_LIBRARY_PATH } from './content/publicArticles';
 import {
@@ -205,6 +207,13 @@ const AppContent = () => {
           description: LOWER_COST_CUTS_GUIDE.description,
           canonicalPath: LOWER_COST_CUTS_PATH,
           jsonLd: getLowerCostCutsJsonLd()
+        };
+      case 'food-costs-cheaper-meat-cuts':
+        return {
+          title: CHEAPER_MEAT_CUTS_GUIDE.seoTitle,
+          description: CHEAPER_MEAT_CUTS_GUIDE.description,
+          canonicalPath: CHEAPER_MEAT_CUTS_GUIDE_PATH,
+          jsonLd: getCheaperMeatCutsGuideJsonLd()
         };
       case 'food-costs-low-cost-cooking-techniques':
         return {
@@ -395,7 +404,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-cheaper-meat-cuts' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -535,6 +544,17 @@ const AppContent = () => {
 
   if (view === 'food-costs-lower-cost-cuts') {
     return <LowerCostCutsGuideView onFindDinners={() => {
+      if (isGuest) {
+        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+        setView('signin');
+        return;
+      }
+      setView('planner');
+    }} />;
+  }
+
+  if (view === 'food-costs-cheaper-meat-cuts') {
+    return <CheaperMeatCutsGuideView onPlanWeek={() => {
       if (isGuest) {
         safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
         setView('signin');

@@ -83,6 +83,23 @@ Programmatic pages must feel lively, useful and enjoyable to read. They should h
 
 Dry, statistical or defensive copy should be rewritten before publication, even when it is technically accurate.
 
+### Human editorial style
+
+AI-assisted drafts must be revised so they read as natural human writing rather than polished template copy. Preserve the original meaning and context while applying the following editorial checks:
+
+- Vary sentence structure and length. Mix short, direct sentences with longer explanatory ones so the rhythm does not feel mechanically even.
+- Use appropriately qualified language where the evidence is uncertain, such as `may suggest`, `appears to` or `is likely to`. Do not add hesitation to settled facts or safety advice.
+- Add nuance, reasonable limitations or an alternative perspective where these genuinely help the reader. Avoid presenting a practical preference as a universal rule.
+- Remove generic or overused AI wording such as `delve`, `robust`, `innovative` and similarly inflated terms.
+- Use natural transitions sparingly. Do not repeatedly rely on formal connectors such as `therefore`, `moreover` or `in conclusion`.
+- Replace vague examples with specific, familiar situations: a half-used bag of spinach, two chicken breasts left in a pack or vegetables that need using before the weekend.
+- Keep the tone warm and human. A little informality is welcome where it suits the subject, but accuracy and clarity still come first.
+- First-person observations or a light anecdotal touch may be used when relevant, but never invent personal experience, testing or a customer story.
+- Vary how sentences and paragraphs begin. Repeated opening patterns should be rewritten.
+- Break up repeated ideas and formulaic section endings. Each paragraph should earn its place and move the reader forward.
+
+These edits must not introduce unsupported claims, fabricated experience or false uncertainty. Naturalness is an editorial quality check, not permission to weaken evidence, pricing disclosures, allergen information or food-safety guidance.
+
 ## Approved page families and URL patterns
 
 ### Broad dinner hubs

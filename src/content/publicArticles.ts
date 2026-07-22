@@ -2,6 +2,7 @@ import { BATCH_COOKING_GUIDE, BATCH_COOKING_GUIDE_PATH, COOKING_FOR_ONE_GUIDE, C
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH } from './groceryCostOptionsGuide';
 import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH } from './groceryCostPredictionGuide';
+import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -20,6 +21,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: CHEAPER_MEAT_CUTS_GUIDE.title, path: CHEAPER_MEAT_CUTS_GUIDE_PATH, category: 'Food cost guide',
+    pageFamily: CHEAPER_MEAT_CUTS_GUIDE.pageFamily, primarySearchIntent: CHEAPER_MEAT_CUTS_GUIDE.primarySearchIntent,
+    indexingStatus: CHEAPER_MEAT_CUTS_GUIDE.indexingStatus, publishedAt: CHEAPER_MEAT_CUTS_GUIDE.publishedAt,
+    reviewedAt: CHEAPER_MEAT_CUTS_GUIDE.reviewedAt, contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
+    internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks, disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures, status: 'published',
+  },
   {
     title: GROCERY_COST_PREDICTION_GUIDE.title, path: GROCERY_COST_PREDICTION_GUIDE_PATH, category: 'Food cost guide',
     pageFamily: GROCERY_COST_PREDICTION_GUIDE.pageFamily, primarySearchIntent: GROCERY_COST_PREDICTION_GUIDE.primarySearchIntent,

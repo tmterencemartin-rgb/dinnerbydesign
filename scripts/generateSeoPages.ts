@@ -61,6 +61,12 @@ import {
   renderGroceryCostPredictionGuideInitialHtml,
 } from '../src/content/groceryCostPredictionGuide';
 import {
+  CHEAPER_MEAT_CUTS_GUIDE,
+  CHEAPER_MEAT_CUTS_GUIDE_PATH,
+  getCheaperMeatCutsGuideJsonLd,
+  renderCheaperMeatCutsGuideInitialHtml,
+} from '../src/content/cheaperMeatCutsGuide';
+import {
   PUBLIC_GUIDE_LIBRARY,
   getPublicGuideLibraryJsonLd,
   renderPublicGuideLibraryInitialHtml,
@@ -361,6 +367,26 @@ const groceryCostPredictionOutputDir = path.join(distRoot, GROCERY_COST_PREDICTI
 await fs.mkdir(groceryCostPredictionOutputDir, { recursive: true });
 await fs.writeFile(path.join(groceryCostPredictionOutputDir, 'index.html'), groceryCostPredictionHtml, 'utf8');
 console.log(`Generated ${GROCERY_COST_PREDICTION_GUIDE_PATH}/index.html`);
+
+const cheaperMeatCutsCanonicalUrl = `https://dinnerbydesign.app${CHEAPER_MEAT_CUTS_GUIDE_PATH}`;
+let cheaperMeatCutsHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${CHEAPER_MEAT_CUTS_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${CHEAPER_MEAT_CUTS_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${cheaperMeatCutsCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${cheaperMeatCutsCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${CHEAPER_MEAT_CUTS_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${CHEAPER_MEAT_CUTS_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${CHEAPER_MEAT_CUTS_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${CHEAPER_MEAT_CUTS_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderCheaperMeatCutsGuideInitialHtml()))
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCheaperMeatCutsGuideJsonLd())}</script>\n</head>`);
+if (!cheaperMeatCutsHtml.includes(`<h1>${CHEAPER_MEAT_CUTS_GUIDE.title}</h1>`) || !cheaperMeatCutsHtml.includes(`href="${cheaperMeatCutsCanonicalUrl}"`)) throw new Error('Cheaper-meat-cuts guide generation failed its content or canonical check.');
+const cheaperMeatCutsOutputDir = path.join(distRoot, CHEAPER_MEAT_CUTS_GUIDE_PATH.slice(1));
+await fs.mkdir(cheaperMeatCutsOutputDir, { recursive: true });
+await fs.writeFile(path.join(cheaperMeatCutsOutputDir, 'index.html'), cheaperMeatCutsHtml, 'utf8');
+console.log(`Generated ${CHEAPER_MEAT_CUTS_GUIDE_PATH}/index.html`);
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
 const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;
