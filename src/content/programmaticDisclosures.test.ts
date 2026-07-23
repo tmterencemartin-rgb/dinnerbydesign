@@ -21,6 +21,9 @@ import {
   LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES,
   PROGRAMMATIC_DISCLOSURE_FOOTER,
   PROGRAMMATIC_DISCLOSURE_KEYS,
+  SHARED_INGREDIENTS_DISCLOSURE_FOOTER,
+  SHARED_INGREDIENTS_PLANNING_DISCLOSURES,
+  SHARED_INGREDIENTS_SAFETY_DISCLOSURES,
   SUMMER_STEWS_DISCLOSURE_FOOTER,
   SUMMER_STEWS_DISCLOSURES,
   UK_FOOD_COST_CONTEXT_DISCLOSURES,
@@ -31,7 +34,7 @@ import {
 describe('programmatic disclosure publishing copy', () => {
   it('keeps every disclosure on the controlled key list', () => {
     const allowed = new Set(PROGRAMMATIC_DISCLOSURE_KEYS);
-    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES, ...LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES, ...LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES, ...SUMMER_STEWS_DISCLOSURES, ...FRESH_OR_FROZEN_DISCLOSURES, ...BATCH_COOKING_DISCLOSURES, ...GROCERY_COST_OPTIONS_DISCLOSURES, ...GROCERY_COST_PREDICTION_DISCLOSURES, ...CHEAPER_MEAT_CUTS_COST_DISCLOSURES, ...CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES, ...CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
+    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES, ...LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES, ...LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES, ...SUMMER_STEWS_DISCLOSURES, ...FRESH_OR_FROZEN_DISCLOSURES, ...BATCH_COOKING_DISCLOSURES, ...GROCERY_COST_OPTIONS_DISCLOSURES, ...GROCERY_COST_PREDICTION_DISCLOSURES, ...CHEAPER_MEAT_CUTS_COST_DISCLOSURES, ...CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES, ...CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES, ...SHARED_INGREDIENTS_PLANNING_DISCLOSURES, ...SHARED_INGREDIENTS_SAFETY_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
   });
 
   it('renders important qualifications and methodology links in initial HTML', () => {
@@ -101,6 +104,15 @@ describe('programmatic disclosure publishing copy', () => {
     expect(CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES.map(item => item.key)).toEqual(['allergen_and_product']);
     expect(CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES.map(item => item.key)).toEqual(['storage_and_cooking', 'source_timing']);
     const footerHtml = renderProgrammaticDisclosureFooterInitialHtml(CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER);
+    expect(footerHtml).toContain('/guides');
+    expect(footerHtml).toContain('/pricing-methodology');
+    expect(footerHtml).toContain('/food-safety');
+  });
+
+  it('publishes the shared-ingredients serving, cost, product and safety qualifications', () => {
+    expect(SHARED_INGREDIENTS_PLANNING_DISCLOSURES.map(item => item.key)).toEqual(['serving_assumption', 'price_comparison', 'allergen_and_product']);
+    expect(SHARED_INGREDIENTS_SAFETY_DISCLOSURES.map(item => item.key)).toEqual(['storage_and_cooking', 'source_timing']);
+    const footerHtml = renderProgrammaticDisclosureFooterInitialHtml(SHARED_INGREDIENTS_DISCLOSURE_FOOTER);
     expect(footerHtml).toContain('/guides');
     expect(footerHtml).toContain('/pricing-methodology');
     expect(footerHtml).toContain('/food-safety');

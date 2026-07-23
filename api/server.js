@@ -163903,7 +163903,8 @@ var GROCERY_COST_OPTIONS_GUIDE = {
     "/food-costs/cooking-for-four-with-lower-cost-cuts",
     "/food-costs/cooking-with-offal-on-a-budget",
     "/food-costs/fresh-or-frozen",
-    "/food-costs/summer-stews-seasonal-vegetables"
+    "/food-costs/summer-stews-seasonal-vegetables",
+    "/food-costs/five-dinners-same-ingredients"
   ],
   disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
   sources: [
@@ -164023,8 +164024,81 @@ var CHEAPER_MEAT_CUTS_GUIDE = {
   ]
 };
 
+// src/content/sharedIngredientsGuide.ts
+var SHARED_INGREDIENTS_GUIDE_PATH = "/food-costs/five-dinners-same-ingredients";
+var SHARED_INGREDIENTS_GUIDE = {
+  title: "How to turn the same five ingredients into five different dinners",
+  seoTitle: "Five dinners using the same ingredients | DinnerByDesign",
+  description: "See how chicken thighs, potatoes, peppers, onions and tinned tomatoes can become five different dinners while helping reduce part-used packs.",
+  publishedAt: "2026-07-23",
+  reviewedAt: "2026-07-23",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Plan five different dinners around the same five core ingredients to reduce disconnected purchases and part-used packs",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-23",
+  editorialNotes: "Planning guide for two adults using one shared five-ingredient basket. Keep the five dinners distinct by method, texture and seasoning, and recheck Food Standards Agency guidance before changing the review date.",
+  internalLinks: [
+    "/food-costs/cooking-with-cheaper-cuts-of-meat",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/why-grocery-costs-are-hard-to-predict",
+    "/guides",
+    "/pricing-methodology",
+    "/food-safety"
+  ],
+  disclosures: ["serving_assumption", "price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
+      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
+    }
+  ],
+  faqs: [
+    {
+      question: "Do all five dinners use every core ingredient?",
+      answer: "Yes. Chicken thighs, potatoes, peppers, onions and tinned tomatoes appear in every dinner, but the cooking method, texture and seasoning change."
+    },
+    {
+      question: "Does repeating ingredients mean repeating the same dinner?",
+      answer: "It should not. Roasting, braising, pan cooking, stuffing and layering create different textures and presentations even when the shopping basket stays the same."
+    },
+    {
+      question: "Will buying one larger pack always cost less?",
+      answer: "No. Compare the pack price, the quantity and how much your household will genuinely use. The benefit comes from using what you buy, not simply choosing a larger pack."
+    },
+    {
+      question: "Should I prepare all five dinners at once?",
+      answer: "Not necessarily. Portion and label the chicken, but prepare vegetables only for the next one or two dinners so they retain more of their texture and freshness."
+    },
+    {
+      question: "Can I adapt the basket for a larger household?",
+      answer: "Yes. The examples assume two adults, so increase the quantities to suit your household and check that the available pack sizes still make sense for the plan."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: SHARED_INGREDIENTS_GUIDE.title,
+    path: SHARED_INGREDIENTS_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: SHARED_INGREDIENTS_GUIDE.pageFamily,
+    primarySearchIntent: SHARED_INGREDIENTS_GUIDE.primarySearchIntent,
+    indexingStatus: SHARED_INGREDIENTS_GUIDE.indexingStatus,
+    publishedAt: SHARED_INGREDIENTS_GUIDE.publishedAt,
+    reviewedAt: SHARED_INGREDIENTS_GUIDE.reviewedAt,
+    contentReviewedAt: SHARED_INGREDIENTS_GUIDE.contentReviewedAt,
+    internalLinks: SHARED_INGREDIENTS_GUIDE.internalLinks,
+    disclosures: SHARED_INGREDIENTS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: CHEAPER_MEAT_CUTS_GUIDE.title,
     path: CHEAPER_MEAT_CUTS_GUIDE_PATH,

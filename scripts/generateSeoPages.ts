@@ -67,6 +67,12 @@ import {
   renderCheaperMeatCutsGuideInitialHtml,
 } from '../src/content/cheaperMeatCutsGuide';
 import {
+  SHARED_INGREDIENTS_GUIDE,
+  SHARED_INGREDIENTS_GUIDE_PATH,
+  getSharedIngredientsGuideJsonLd,
+  renderSharedIngredientsGuideInitialHtml,
+} from '../src/content/sharedIngredientsGuide';
+import {
   PUBLIC_GUIDE_LIBRARY,
   getPublicGuideLibraryJsonLd,
   renderPublicGuideLibraryInitialHtml,
@@ -387,6 +393,26 @@ const cheaperMeatCutsOutputDir = path.join(distRoot, CHEAPER_MEAT_CUTS_GUIDE_PAT
 await fs.mkdir(cheaperMeatCutsOutputDir, { recursive: true });
 await fs.writeFile(path.join(cheaperMeatCutsOutputDir, 'index.html'), cheaperMeatCutsHtml, 'utf8');
 console.log(`Generated ${CHEAPER_MEAT_CUTS_GUIDE_PATH}/index.html`);
+
+const sharedIngredientsCanonicalUrl = `https://dinnerbydesign.app${SHARED_INGREDIENTS_GUIDE_PATH}`;
+let sharedIngredientsHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${SHARED_INGREDIENTS_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${SHARED_INGREDIENTS_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${sharedIngredientsCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${sharedIngredientsCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${SHARED_INGREDIENTS_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${SHARED_INGREDIENTS_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${SHARED_INGREDIENTS_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${SHARED_INGREDIENTS_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderSharedIngredientsGuideInitialHtml()))
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getSharedIngredientsGuideJsonLd())}</script>\n</head>`);
+if (!sharedIngredientsHtml.includes(`<h1>${SHARED_INGREDIENTS_GUIDE.title}</h1>`) || !sharedIngredientsHtml.includes(`href="${sharedIngredientsCanonicalUrl}"`)) throw new Error('Shared-ingredients guide generation failed its content or canonical check.');
+const sharedIngredientsOutputDir = path.join(distRoot, SHARED_INGREDIENTS_GUIDE_PATH.slice(1));
+await fs.mkdir(sharedIngredientsOutputDir, { recursive: true });
+await fs.writeFile(path.join(sharedIngredientsOutputDir, 'index.html'), sharedIngredientsHtml, 'utf8');
+console.log(`Generated ${SHARED_INGREDIENTS_GUIDE_PATH}/index.html`);
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
 const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;

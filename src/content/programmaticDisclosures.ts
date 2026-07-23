@@ -314,6 +314,37 @@ export const CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] 
   },
 ];
 
+export const SHARED_INGREDIENTS_PLANNING_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'serving_assumption',
+    title: 'Serving assumption',
+    body: 'The five dinner descriptions assume two adults. Adjust quantities for your household and compare the available pack sizes before buying.',
+  },
+  {
+    key: 'price_comparison',
+    title: 'A note on cost',
+    body: 'Using shared ingredients can reduce part-used packs, but it does not guarantee a lower checkout total. Pack sizes, current prices, cupboard ingredients and how much the household uses all affect the outcome.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and product labels',
+    body: 'Check labels on tinned products, seasonings and any substitutions for allergens, storage instructions and suitability.',
+  },
+];
+
+export const SHARED_INGREDIENTS_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Follow the chicken packaging and current Food Standards Agency guidance. Keep raw chicken separate, cook it thoroughly, cool and refrigerate leftovers promptly, and reheat them only once until steaming hot throughout.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food Standards Agency cooking, chilling, freezing and defrosting guidance was reviewed on 23 July 2026. Follow the cited sources for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -418,6 +449,15 @@ export const GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER: ProgrammaticDisclosureFo
 
 export const CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, pack sizes, usable quantities, cooking time and availability vary. Compare the pack in front of you, check product labels and follow current food-safety guidance.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+  ],
+};
+
+export const SHARED_INGREDIENTS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide illustrates one shared-ingredient planning approach rather than fixed recipes or guaranteed savings. Adjust quantities, check product labels and follow current food-safety guidance.',
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },
