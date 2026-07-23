@@ -341,7 +341,8 @@ Do not increase production merely because page generation is technically easy.
 9. Run tests for totals, metadata, initial HTML parity, structured data, sitemap inclusion and unknown-path 404 behaviour.
 10. Review the page at mobile, tablet and desktop widths.
 11. Deploy and verify live HTTP status, canonical, structured data and sitemap inclusion.
-12. Record the next content-review and price-review dates.
+12. When a new public programmatic page has been added, submit the canonical sitemap URL in Google Search Console. If authenticated access is unavailable, record the submission as outstanding.
+13. Record the next content-review and price-review dates.
 
 ## Release gate
 
@@ -360,6 +361,7 @@ Do not publish unless all applicable answers are yes:
 - Are metadata, canonical and structured data correct?
 - Is the page linked from another crawlable public page?
 - Is it present in the generated sitemap?
+- If this is a new public programmatic page, has the verified sitemap been submitted in Google Search Console or explicitly recorded as outstanding?
 - Do unknown records in the same family return HTTP 404?
 - Is the CTA useful and proportionate to the public value already provided?
 - Are review dates and ownership recorded?

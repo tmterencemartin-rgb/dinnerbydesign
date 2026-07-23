@@ -1,147 +1,150 @@
-# Ingredient Interpretation Rules
+# DinnerByDesign Project Instructions
 
-## Brand Naming and Wordmark
+These are the durable working rules for this repository. Detailed procedures belong in the linked documents rather than being repeated here.
 
-- Write the product name as `DinnerByDesign` in all prose, headings, metadata, emails, accessible labels, legal copy, and possessive constructions such as `DinnerByDesign's`.
-- Do not use `Dinner By Design` or `Dinner by Design` as the product name.
-- Use the approved `/dbd-logo-with-pin.png` asset when displaying the visual wordmark; do not recreate the wordmark with styled text.
-- Keep domains and email addresses lowercase, such as `dinnerbydesign.app` and `chef@dinnerbydesign.app`.
+## Documentation authority
 
-## Terminology Rule
+- Preferences and search behaviour: `docs/PREFERENCES_AND_SEARCH_RULES.md`
+- Public content and programmatic SEO: `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`
+- Deployment and acceptance checks: `docs/OPERATIONS_AND_RELEASE.md`
+- Durable implementation principles: `docs/ENGINEERING_NOTES.md`
+- Native iOS packaging: `docs/native-ios.md`
+- Active roadmap and technical debt: `TODO.md`
 
-Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+When implementation and documentation disagree, verify the running code and update the affected document in the same change.
 
-When the user lists ingredients (for example: 'red peppers, rice' or 'tomatoes'), interpret this as a list of separate ingredients.
+## Brand and terminology
 
-- Split on commas and the word 'and'.
-- Normalise ingredients to singular names in UK English (tomatoes → tomato, red peppers → red pepper).
-- Treat plurals and spelling variants as equivalent.
-- Always try to return recipes that contain all listed ingredients, not zero results.
+- Write the product name as `DinnerByDesign` in prose, headings, metadata, emails, accessible labels and legal copy.
+- Do not write `Dinner By Design` or `Dinner by Design` as the product name.
+- Use `/dbd-logo-with-pin.png` for the visual wordmark. Do not recreate it with styled text.
+- Keep domains and email addresses lowercase.
+- Use `dinner`, `recipe`, `dish`, `serving` or another accurate alternative in user-facing copy. Do not use the prohibited food-planning synonym.
+- Use UK English.
 
-# Local Host Testing & Connection Protocol
+## Editorial style
 
-When testing this web application locally, you can connect to your local backends or specify server overrides.
-- **Configuration**: The app includes a "Developer Connection Settings" section in the the Settings view (accessible in debug mode) to allow runtime server URL overrides.
-- **API Keys**: When running `npm run dev` locally, provide your own `GEMINI_API_KEY` in your local environment (shell or `.env` file).
+Humanise AI-assisted drafts without changing their meaning:
 
-# Search Service Architecture
+- Vary sentence structure and length.
+- Qualify genuine uncertainty with wording such as `may suggest`, `appears to` or `is likely to`.
+- Do not weaken settled facts, safety instructions or supported claims with artificial hesitation.
+- Add useful nuance, limitations or another reasonable perspective where relevant.
+- Avoid inflated, generic language such as `delve`, `robust` and `innovative`.
+- Use natural transitions sparingly.
+- Prefer specific, familiar examples to vague generalities.
+- Allow a little informality where it suits the subject.
+- Never invent personal experience, testing or customer stories.
+- Vary sentence and paragraph openings.
+- Use the rule of three sparingly.
+- Avoid em dashes.
 
-- **Model Strategy**: The application uses `gemini-3.5-flash` for all recipe generation and analysis tasks.
-- **Operational Silence**:
-  - Technical status indicators (e.g., "Connected", "Service key: OK", "Direct Mode") must be hidden from the primary UI.
-  - Diagnostics and connection overrides are moved to a hidden "Service Diagnostics" panel in Settings, accessible via URL parameter (`?debug=true`) or a 5-tap gesture on the Settings title (non-production only).
-- **Connection Modes**:
-  - **Cloud Proxy**: Default mode for production traffic.
-  - **Direct Mode**: Client-side connection for local development and troubleshooting.
-  - **Resilient Fallback**: If Direct Mode is enabled in the client but fails for any reason (e.g. quota limits, invalid API keys, or browser connectivity restrictions), the application automatically catches the error and seamlessly falls back to Cloud Proxy mode. This ensures that the user's planning flow remains uninterrupted.
-- **Error Handling**: Use plain English for all user-facing errors (e.g., "Our search service is experiencing a temporary issue" instead of "Quota Exceeded"). Avoid exposing technical codes or routing details.
+## Ingredient interpretation
 
-# Project Persistence & Communication
+When a user lists ingredients:
 
-- **Instruction Persistence**: All project-specific logic, architectural decisions, and custom rules MUST be recorded in `AGENTS.md`.
-- **Live Repo Location**: The live DinnerByDesign app repository for this project is `/Users/home/Desktop/DinnerByDesign/DinnerByDesign-app`.
-- **Serverless Compatibility**: The API routes and entry points are optimized to run seamlessly in read-only and ephemeral execution environments (e.g., serverless functions). Direct local file writes (such as to `api-errors.log`) are completely avoided, and all file path resolutions use absolute resolution with `path.resolve` to prevent execution path mismatch errors.
-- **Hiding Internals**: When communicating with the user, hide internal directory paths and engineering details. Focus on visual and functional outcomes.
-- **Evidence-Led Replies**: State whether acceptance tests were verified in the running app or implementation level. Avoid self-congratulatory language.
+- split on commas and the word `and`;
+- normalise singular and plural forms in UK English;
+- treat common spelling variants as equivalent;
+- try to return recipes containing all listed ingredients before relaxing the search.
 
-# Database Security Rules & Safe Trial Validation
+## Working repository and communication
 
-- **Safe Path Check Strategy**: When validating trial or premium status in Firestore Security Rules, the rules evaluate paths using an `exists` check block BEFORE looking up properties. This ensures first-time or guest users whose parent profiles are not yet loaded do not cause evaluation crashes (which behave as unexpected database rejection errors).
-- **Trial Status Schema Integrity**: If a user document hasn't been written to the database yet, we implicitly treat them as an active trial user so they can populate and sync initial subcollection data.
+- The maintained repository is `/Users/home/Desktop/DinnerByDesign/DinnerByDesign-app`.
+- Preserve unrelated work in a dirty working tree.
+- Stage only the intended files unless the user explicitly requests all changes.
+- When the user asks to push, commit the completed changes and publish them to the maintained remote.
+- Hide internal paths and low-level engineering details in user-facing updates.
+- State whether acceptance was verified in the running app, in production or at implementation level.
+- Record new durable product rules here or in the appropriate linked document.
 
-# Administrative Access
+## Search service
 
-- **Access Strategy**: Admin access is currently enforced via a verified-email allow-list in `AuthContext.tsx` and duplicated in `firestore.rules` for database security. 
-- **Future Considerations**: This mechanism is sufficient for initial launch but should be migrated to Firebase Custom Claims if the number of administrative users grows or if more granular role-based access control is required.
-- **Dashboard hierarchy**: Keep the admin dashboard divided into clearly labelled, visually separate panels for pricing data, editorial content, account overview, service health, and the user register. Summary metrics must never appear as though they belong to Published Articles.
+- Recipe generation and analysis use `gemini-3.5-flash`.
+- Production traffic uses the cloud proxy.
+- Direct mode is for local development and troubleshooting.
+- A failed direct request must fall back to the cloud proxy where the existing flow supports it.
+- Technical connection status belongs in the restricted diagnostics panel, not the ordinary interface.
+- User-facing errors must be plain English and must not expose provider codes or routing details.
+- Local development requires a valid `GEMINI_API_KEY`.
 
-# Authentication & Password Recovery Fallbacks
+## Serverless compatibility
 
-- **Google sign-in on web**: Web authentication must initialise Firebase with `browserPopupRedirectResolver`. Keep `127.0.0.1`, `localhost`, and the live DinnerByDesign domains in Firebase Authentication's authorised-domain list so the same Google sign-in flow works in local and production testing.
+- Do not write runtime state or logs to the local filesystem.
+- Use explicit path resolution.
+- Treat function storage as temporary and read-only.
 
-- **Password Reset Deliverability**:
-  - Because Cloud Run dynamic staging and preview domains change frequently and are not whitelisted in the Firebase Console's Authorized Domains list by default, the app is configured to fall back gracefully.
-  - If a password reset attempt using custom `actionCodeSettings` (which provides a continue URL redirection to the app) fails for *any reason*, the system automatically catches the exception and prints a warnings diagnostic. 
-  - It then immediately retries sending a standard, secure password reset email (without `actionCodeSettings`). This ensures password reset deliverability under all host domains and local environments.
-  - Neutral user messaging is maintained regardless of success/error state to prevent user-account enumeration attacks.
+## Data security and administration
 
-# Core Transactional Email Automation
+- Firestore rules must check that a path exists before reading properties from it.
+- A first-time user without a stored profile is treated as having an active trial while initial profile data is created.
+- Administrative access currently uses the verified-email allow-list in `AuthContext.tsx` and `firestore.rules`.
+- Migrate to Firebase Custom Claims if roles expand or become more granular.
+- Keep the admin dashboard divided into clearly labelled panels. Account metrics must not appear to belong to the published-articles section.
 
-- **Delivery path**: App-authored transactional emails are sent through `/api/send-email` using `Resend`. Stripe lifecycle emails use `sendTrackedEmail` in `src/api-server.ts` so delivery attempts are recorded in `emailEvents`.
-- **Welcome email**: Sent from `AuthContext.tsx` for first-time users and retried on profile load if `welcomeEmailSent` was not recorded.
-- **Trial ending reminder**: Sent from `AuthContext.tsx` when a non-paying user is within 24 hours of trial expiry. Subject format is `Your free trial ends [trial end date]`.
-- **Password changed confirmation**: Sent after successful password updates inside `updateUserPassword` in `AuthContext.tsx`; includes browser/OS and timestamp context for security awareness.
-- **Account deletion and data clear confirmation**: Sent from `SettingsView.tsx` after profile data collections are wiped and before `user.delete()` removes the authenticated session.
-- **Subscription active confirmation**: Sent from the Stripe `checkout.session.completed` webhook once per user when DinnerByDesign activates paid access.
-- **Subscription cancelled confirmation**: Sent from the Stripe `customer.subscription.deleted` webhook once per user.
-- **Payment failed notice**: Sent from the Stripe `invoice.payment_failed` webhook once per invoice, with grace-period messaging.
-- **Permanent access granted email**: Sent from `AdminDashboard.tsx` when an admin grants permanent full access.
-- **User-requested emails**: Recipe email, shopping-list email, Settings test email, and admin-triggered sends are not treated as automatic lifecycle emails, but they still use `/api/send-email` and appear in email telemetry where metadata is provided.
+## Authentication
 
-# Weekly Planner Controls
+- Web authentication uses `browserPopupRedirectResolver`.
+- Keep production and supported local domains authorised in Firebase.
+- Password reset first attempts the configured continuation URL, then retries the standard secure reset email if that attempt fails.
+- Use neutral password-reset messaging to reduce account enumeration risk.
 
-- **Protein options**: The weekly planner protein dropdown is alphabetised and includes Beef, Chicken, Eggs, Fish & seafood, Lamb, Mixed, No preference, Offal, Pescatarian, Pork, Pulses, Tofu / plant-based, Turkey, Vegetarian, and Vegan.
-- **Time options**: Weekly planner time supports Any, Quick, Under 30 mins, and Under 45 mins. Under-30 and under-45 selections set hard `maxTotalTime` limits in weekly-plan search params.
-- **Saved dinner quick filters**: The saved-list quick filters are Under 20 min, Vegetarian, High protein, and Batch-friendly. Cost remains a sort option through `Lowest cost first`, not a duplicate quick filter.
-- **Compact saved rows**: Do not show `Main salad` / `Side salad` in compact saved or planner rows. Salad type can remain visible in richer search-result/detail contexts where it helps comparison.
+## Transactional email
 
-# Programmatic SEO Experience Prototype
+- App-authored email uses `/api/send-email` with Resend.
+- Stripe lifecycle email uses `sendTrackedEmail` and records delivery attempts in `emailEvents`.
+- Maintain automatic email for welcome, trial ending, password change, account deletion, subscription activation, subscription cancellation, payment failure and permanent access.
+- User-requested recipe, shopping-list, test and administrator sends use the same delivery path but are not automatic lifecycle messages.
 
-- **Preview route**: The isolated budget-family public-page concept is available with `?design=budget-family` and is intentionally kept outside the standard signed-in navigation.
-- **Experience boundary**: Public SEO pages should demonstrate costs, ingredient reuse and the route into personalisation without adding SEO copy or category clutter to protected app views.
-- **Cost presentation**: Public cost claims must be labelled as estimates, show the price-check date, explain assumptions, and distinguish the coordinated basket from buying dinners separately.
-- **Affordability pilot boundary**: `AFFORDABILITY_PLANNER_PILOT` in `src/config/features.ts` gates the public budget-plan route and its planner handoff. Set it to `false` for an immediate product-level rollback without deleting the implementation.
-- **Shared planner path**: Public budget-plan handoffs prefill the existing `Plan my week` controls; they must not introduce a separate recipe-selection engine.
-- **Built-week cost feedback**: After weekly dinners are generated, show their combined estimated dinner cost, per-portion cost, budget variance, and pricing coverage above Saved. Keep this explicitly distinct from the later shopping-list estimate based on scheduled dinners, pack sizes, shared ingredients, and pantry items.
-- **Rollback checkpoint**: Local branch `backup/pre-affordability-planner-20260717` points to the repository state before this pilot was introduced.
+## Weekly planner
 
-# Programmatic Guide Publishing
+- Planner protein choices inherit compatible dietary, allergen, exclusion, religious and ethical preferences.
+- Available choices must explain that personalised preferences are being applied when the filtering could otherwise seem arbitrary.
+- Planner time choices are Any, Quick, Under 30 mins and Under 45 mins.
+- Under-30 and under-45 choices set hard maximum total times.
+- Saved-dinner quick filters are Under 20 min, Vegetarian, High protein and Batch-friendly.
+- Cost remains a sort option through `Lowest cost first`.
+- Compact saved and planner rows do not show salad type.
 
-- **Published guide registry**: Every public programmatic page must be registered in `src/content/publicArticles.ts`, included in `public/sitemap.xml`, linked from crawler-visible HTML, generated as static HTML by `scripts/generateSeoPages.ts`, and supplied with appropriate Article, FAQ and breadcrumb structured data.
-- **Disclosure matching**: Apply only the controlled disclosures relevant to the page's actual claims. Technique-led pages without numerical price claims do not need price-estimate or price-comparison disclosures.
-- **Public library threshold**: Keep individual guide links in the restrained footer until 12 programmatic pages are published. At page 12, create the public guide library and add its footer link before publication.
-- **Low-cost techniques guide**: `/food-costs/low-cost-cooking-techniques` is the fourth published programmatic page. It uses allergen, storage and source-timing disclosures, gives high-level examples rather than complete recipes, and cites clean public sources without internal editorial notes.
-- **Offal budget guide**: `/food-costs/cooking-with-offal-on-a-budget` is the sixth published programmatic page. Keep its dated retailer comparison qualified by pack cost, edible yield and finished-dinner cost; retain the controlled allergen, serving, storage, safety and source-timing disclosures; and recheck NHS, Food Standards Agency and retailer sources whenever its review date changes.
-- **Portion-planning guide**: `/food-costs/portion-planning-and-food-waste` is the seventh published programmatic page. Treat portion planning as pack and ingredient-use planning rather than restriction, keep its 300g/500g example explicitly illustrative, and retain controlled serving, storage, product and source-timing disclosures.
-- **Mediterranean-inspired cooking guide**: `/food-costs/mediterranean-inspired-affordable-cooking` is the eighth published programmatic page. Keep Mediterranean culinary traditions distinct, describe the value as technique-led rather than calling a cuisine cheap, retain the rice-storage, allergen and source-timing disclosures, and keep the Spanish preparation source transparently qualified.
+## Offal
 
-# Public Programmatic SEO Publishing Controls
+- Ordinary suggestions exclude offal unless `includeOffal` is enabled.
+- Use one saved `Include offal in suggestions` control.
+- A direct search for a recognised offal term may permit it for that search without changing the saved preference.
+- Selecting Offal in the weekly planner permits it for that plan only.
+- Continue to apply all other dietary, allergen, religious and ethical restrictions.
+- Enforce the rule in generation instructions and deterministic filtering.
 
-- **Publishing standard**: Every public programmatic topic, record, template and release must comply with `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`. Treat it as the operational version-controlled companion to the strategy document.
-- **Editorial voice**: Programmatic articles must be lively, practical and reader-friendly, not dry or statistics-led. Avoid percentages in public article copy, foreground supermarket and waste-reduction usefulness, and show that budget-conscious cooking can still offer appetising flavours, textures and variety. Culinary traditions may inspire accessible ideas but must be represented accurately, respectfully and without describing a whole cuisine as cheap.
-- **Cost transparency**: A published budget dinner plan must show both complete-pack checkout cost and apportioned value used. Its visible shopping list must reconcile exactly to both stated totals.
-- **Evidence quality**: Food-cost guides should cite primary publishers wherever available and record publication date, content review date, editorial owner, search intent, index status and internal links.
-- **Initial HTML parity**: Core copy, cost calculations, source links and every visible FAQ must also appear in the generated initial HTML and associated structured data where applicable.
-- **Page-family integrity**: Unknown paths below `/dinner-plans/` and `/food-costs/` must return HTTP 404 with `noindex, nofollow`; they must never fall through to the landing page with HTTP 200.
-- **Discovery**: Every published public article must be linked from another crawlable public page and registered in `src/content/publicArticles.ts` before release.
-- **Public guide library**: Page 12 launches the indexable `/guides` library. Keep one restrained `Guides` link in public and app footers, generate its static CollectionPage, ItemList and breadcrumb data from `PUBLISHED_ARTICLES`, and keep it out of protected primary navigation unless explicitly requested.
-- **Grocery-cost options cornerstone**: `/food-costs/ways-to-reduce-grocery-costs` is the twelfth published programmatic page. It links readers to all earlier guides, distinguishes pack cost from ingredient value, and retains the controlled comparison, allergen/product, food-safety and source-timing qualifications beside the claims they explain.
-- **Grocery-cost prediction guide**: `/food-costs/why-grocery-costs-are-hard-to-predict` is the thirteenth published programmatic page. Keep its consumer-facing distinction between ingredient value, complete-pack cost and additional shopping cost aligned with the pricing methodology; retain its cost-estimate, storage and source-review qualifications, and do not present an estimate as a guaranteed checkout total.
+## Programmatic SEO
 
-# Ingredient Price Refresh Workflow
+- Every public guide must comply with `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`.
+- Public pages may demonstrate cost, ingredient reuse and personalisation without cluttering protected app views.
+- Register each published page in the structured publishing registry.
+- Generate crawler-visible HTML, canonical metadata and the appropriate structured data.
+- Include published pages in the generated guide library and sitemap.
+- Unknown paths under the public page families must return HTTP 404 with `noindex, nofollow`.
+- Apply only the controlled disclosures relevant to the page's claims.
+- Public cost claims must distinguish ingredient value from complete-pack checkout cost.
+- After publication, verify the live page, canonical URL, structured data, internal discovery and sitemap entry.
+- Whenever a new public programmatic page is published, submit the canonical sitemap URL in Google Search Console after verifying the live sitemap.
+- If authenticated Search Console access is unavailable, report the submission as outstanding. Do not claim it was completed.
 
-- **No unlicensed retailer extraction**: Do not scrape or automate collection from retailer websites unless written permission or an appropriately licensed feed explicitly permits it.
-- **Licensed feed gate**: Scheduled price refresh requires `CRON_SECRET`, `INGREDIENT_PRICE_FEED_URL`, `INGREDIENT_PRICE_FEED_ALLOWED_ORIGIN`, and `INGREDIENT_PRICE_FEED_PERMISSION_CONFIRMED=true`. An optional bearer token is supplied through `INGREDIENT_PRICE_FEED_TOKEN`.
-- **Review boundary**: Unchanged active prices may have their verification date refreshed automatically. New products and changed product, pack or price data are staged in `pendingPriceRefresh` and must be approved by an administrator before affecting customer estimates.
-- **Safe fallback**: If no licensed feed is configured or a refresh fails, the existing verified catalogue and built-in UK reference prices remain in use.
+## Public affordability experience
 
-# Offal Preference
+- `AFFORDABILITY_PLANNER_PILOT` gates the public budget-plan route and planner handoff.
+- Public handoffs prefill the existing weekly planner. Do not create a second selection engine.
+- A built week may show combined estimated dish cost, cost per serving, budget variance and pricing coverage.
+- Keep that estimate distinct from the later shopping-list estimate based on scheduled dinners, complete packs, shared ingredients and available ingredients.
+- The rollback branch is `backup/pre-affordability-planner-20260717`.
 
-- **Default exclusion**: `UserPreferences.includeOffal` defaults to `false`. Ordinary recipe searches, ready-made searches and `Plan my week` must exclude offal unless the user opts in.
-- **Single control**: Use one `Include offal in suggestions` setting rather than separate controls for liver, kidney, heart or other types.
-- **Explicit-search override**: A direct search for offal, liver, kidney, heart or another recognised offal term may temporarily include matching results without changing the saved preference. Show a discreet explanation when this happens.
-- **Weekly-plan override**: Keep `Offal` visible as an explicit protein choice when compatible with the user's other restrictions. Selecting it permits offal for that weekly plan only and must not change the saved preference.
-- **Deterministic enforcement**: Apply the preference both in generation instructions and in the application safety filter. Recognised offal includes liver, kidney, animal heart, tongue, tripe, sweetbreads, liver pate and blood-based products such as black pudding.
-- **Existing protections**: Dietary, allergy and religious or ethical restrictions continue to apply when offal is included.
+## Ingredient price refresh
 
-# Public Guide Publishing Workflow
+- Do not scrape retailer websites without written permission or an appropriately licensed feed.
+- Scheduled refresh requires the configured secret, feed URL, allowed origin and confirmed permission flag.
+- Unchanged active prices may have their verification date refreshed automatically.
+- Stage new or changed product, pack and price data for administrator approval.
+- If no licensed feed is available, retain the verified catalogue and built-in UK reference prices.
 
-- **Single publishing source**: Every public guide and dinner-plan page must be represented in the structured publishing data used by the build. Do not maintain a second disconnected list of published URLs.
-- **Automatic sitemap inclusion**: A page with published status must be added to the generated sitemap as part of the production build. Draft, retired, protected and `noindex` pages must not be included.
-- **Build failure on omissions**: The production build or its tests must fail when a published public page is missing from the generated sitemap, has no canonical URL, or cannot produce its expected static HTML entry point.
-- **Post-deployment verification**: After publishing a new guide, verify that the live page returns HTTP 200, its canonical URL is correct, its structured data is present, and the live sitemap contains the URL.
-- **Search Console sitemap policy**: Keep one canonical sitemap URL submitted in Google Search Console. Do not resubmit it after every guide; Google periodically retrieves changes from the existing submission.
-- **Priority indexing**: Use URL Inspection and request indexing only for important, time-sensitive or cornerstone pages. Manual indexing is an optional publishing acceleration step, not a requirement for every new guide, and it does not guarantee inclusion in search results.
-- **Internal linking**: Each new guide must have at least one relevant link from another public page and should link onwards to the most appropriate dinner plan, methodology page or `Plan my week` route.
-- **Programmatic disclosures**: Every published record must declare its applicable disclosure keys and render the shared controlled wording from `src/content/programmaticDisclosures.ts`. Price, comparison, serving, evidence-timing, storage, product and commercial qualifications must appear beside the claim they explain; the shared `About this guide` footer is supplementary and must not conceal a material limitation.
-- **Illustrative calculations**: A plainly labelled round-figure calculation used only to demonstrate arithmetic is not a market-price claim. Do not attach a retailer source or price-check date unless the figures represent observed product prices.
+## Release rule
+
+Before production publication, follow `docs/OPERATIONS_AND_RELEASE.md`. A public guide release must also pass the release gate in `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`.

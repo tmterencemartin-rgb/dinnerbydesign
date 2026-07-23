@@ -1,20 +1,23 @@
 # DinnerByDesign
 
-## Terminology Rule
+DinnerByDesign is a UK-focused dinner-planning app for recipe search, saved dinners, weekly scheduling, ready-made supermarket options and generated shopping lists.
 
-Use "dinner" or "dinners" in user-facing copy. Avoid "meal" or "meals" unless quoting an external source or referring to a technical identifier, data key, or legacy name.
+## Run locally
 
-DinnerByDesign is a UK-focused dinner planning app for recipe search, saved dinners, weekly scheduling, ready-made supermarket options, and generated shopping lists.
+Prerequisite: Node.js.
 
-Recent app areas covered by the local documentation include preference-led search, transactional email automation, weekly planner controls, Firestore persistence helpers, and release checks.
+1. Install dependencies with `npm install`.
+2. Add `GEMINI_API_KEY` to `.env.local`.
+3. Start the app with `npm run dev`.
 
-## Run Locally
+Do not commit `.env.local`.
 
-**Prerequisites:**  Node.js
+## Documentation
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- [Project instructions](AGENTS.md)
+- [Preferences and search rules](docs/PREFERENCES_AND_SEARCH_RULES.md)
+- [Programmatic SEO publishing standard](docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md)
+- [Operations and release guide](docs/OPERATIONS_AND_RELEASE.md)
+- [Engineering notes](docs/ENGINEERING_NOTES.md)
+- [Native iOS wrapper](docs/native-ios.md)
+- [Roadmap and technical debt](TODO.md)
