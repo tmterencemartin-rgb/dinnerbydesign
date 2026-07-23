@@ -465,6 +465,15 @@ export const SHARED_INGREDIENTS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterC
   ],
 };
 
+export const COMPLETE_PACKS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'Pack sizes, prices, availability and product information vary. The quantities shown are planning illustrations rather than retailer-specific comparisons. Check product labels and follow current food-safety guidance.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+  ],
+};
+
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderProgrammaticDisclosuresInitialHtml(items: ProgrammaticDisclosureItem[]) {

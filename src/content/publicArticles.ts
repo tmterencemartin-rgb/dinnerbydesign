@@ -4,6 +4,7 @@ import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH } from './g
 import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH } from './groceryCostPredictionGuide';
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
 import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './sharedIngredientsGuide';
+import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH } from './completePacksGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -22,6 +23,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: COMPLETE_PACKS_GUIDE.title, path: COMPLETE_PACKS_GUIDE_PATH, category: 'Food cost guide',
+    pageFamily: COMPLETE_PACKS_GUIDE.pageFamily, primarySearchIntent: COMPLETE_PACKS_GUIDE.primarySearchIntent,
+    indexingStatus: COMPLETE_PACKS_GUIDE.indexingStatus, publishedAt: COMPLETE_PACKS_GUIDE.publishedAt,
+    reviewedAt: COMPLETE_PACKS_GUIDE.reviewedAt, contentReviewedAt: COMPLETE_PACKS_GUIDE.contentReviewedAt,
+    internalLinks: COMPLETE_PACKS_GUIDE.internalLinks, disclosures: COMPLETE_PACKS_GUIDE.disclosures, status: 'published',
+  },
   {
     title: SHARED_INGREDIENTS_GUIDE.title, path: SHARED_INGREDIENTS_GUIDE_PATH, category: 'Food cost guide',
     pageFamily: SHARED_INGREDIENTS_GUIDE.pageFamily, primarySearchIntent: SHARED_INGREDIENTS_GUIDE.primarySearchIntent,

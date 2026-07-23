@@ -163904,7 +163904,8 @@ var GROCERY_COST_OPTIONS_GUIDE = {
     "/food-costs/cooking-with-offal-on-a-budget",
     "/food-costs/fresh-or-frozen",
     "/food-costs/summer-stews-seasonal-vegetables",
-    "/food-costs/five-dinners-same-ingredients"
+    "/food-costs/five-dinners-same-ingredients",
+    "/food-costs/how-to-use-complete-packs"
   ],
   disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
   sources: [
@@ -164083,8 +164084,83 @@ var SHARED_INGREDIENTS_GUIDE = {
   ]
 };
 
+// src/content/completePacksGuide.ts
+var COMPLETE_PACKS_GUIDE_PATH = "/food-costs/how-to-use-complete-packs";
+var COMPLETE_PACKS_GUIDE = {
+  title: "How to use complete packs without wasting ingredients",
+  seoTitle: "How to use complete food packs and reduce waste | DinnerByDesign",
+  description: "Learn how to plan several dinners around complete supermarket packs, make use of pack remainders and avoid buying more than your household will use.",
+  publishedAt: "2026-07-23",
+  reviewedAt: "2026-07-23",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Plan practical uses for complete supermarket packs so checkout costs are easier to understand and fewer ingredients are wasted",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-23",
+  editorialNotes: "Keep complete-pack cost distinct from the value of ingredients used. Pack quantities are illustrative, and storage advice must remain led by product labels and current Food Standards Agency guidance.",
+  internalLinks: [
+    "/food-costs/why-grocery-costs-are-hard-to-predict",
+    "/pricing-methodology",
+    "/food-costs/five-dinners-same-ingredients",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/fresh-or-frozen",
+    "/food-costs/cooking-for-one-without-waste",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/food-safety",
+    "/guides"
+  ],
+  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
+      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
+    }
+  ],
+  faqs: [
+    {
+      question: "Does buying a larger pack always save money?",
+      answer: "Not always. It can lower the cost per unit while still costing the household more overall, particularly if part of the pack goes unused."
+    },
+    {
+      question: "How can I use a pack across two dinners without repeating the same dish?",
+      answer: "Change the cooking method, seasoning or texture the second time. Roasted chicken can become shredded chicken with rice; a tomato-based mince dinner can become a stuffed-pepper filling."
+    },
+    {
+      question: "Should I cook the whole pack at once?",
+      answer: "Not necessarily. Splitting a pack before cooking can preserve more flexibility than cooking everything at once and reheating part of it later."
+    },
+    {
+      question: "Is frozen produce better for avoiding waste?",
+      answer: "It can help, since portions can be taken out as needed, but it is not automatically better for every ingredient or household. It depends on freezer space and how the ingredient is used."
+    },
+    {
+      question: "What should I do when the smallest available pack is still too large?",
+      answer: "Look for loose alternatives where sold, plan a genuinely different second use in advance, or accept that a small amount may need to be frozen or discarded rather than forced into a dinner nobody wants."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: COMPLETE_PACKS_GUIDE.title,
+    path: COMPLETE_PACKS_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: COMPLETE_PACKS_GUIDE.pageFamily,
+    primarySearchIntent: COMPLETE_PACKS_GUIDE.primarySearchIntent,
+    indexingStatus: COMPLETE_PACKS_GUIDE.indexingStatus,
+    publishedAt: COMPLETE_PACKS_GUIDE.publishedAt,
+    reviewedAt: COMPLETE_PACKS_GUIDE.reviewedAt,
+    contentReviewedAt: COMPLETE_PACKS_GUIDE.contentReviewedAt,
+    internalLinks: COMPLETE_PACKS_GUIDE.internalLinks,
+    disclosures: COMPLETE_PACKS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: SHARED_INGREDIENTS_GUIDE.title,
     path: SHARED_INGREDIENTS_GUIDE_PATH,

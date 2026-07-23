@@ -377,6 +377,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/food-costs/cooking-for-four-with-lower-cost-cuts') return 'food-costs-lower-cost-cuts';
     if (location === '/food-costs/cooking-with-cheaper-cuts-of-meat') return 'food-costs-cheaper-meat-cuts';
     if (location === '/food-costs/five-dinners-same-ingredients') return 'food-costs-shared-ingredients';
+    if (location === '/food-costs/how-to-use-complete-packs') return 'food-costs-complete-packs';
     if (location === '/food-costs/low-cost-cooking-techniques') return 'food-costs-low-cost-cooking-techniques';
     if (location === '/food-costs/cooking-for-one-without-waste') return 'food-costs-cooking-for-one';
     if (location === '/food-costs/cooking-with-offal-on-a-budget') return 'food-costs-offal-budget';

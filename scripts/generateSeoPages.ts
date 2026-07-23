@@ -73,6 +73,12 @@ import {
   renderSharedIngredientsGuideInitialHtml,
 } from '../src/content/sharedIngredientsGuide';
 import {
+  COMPLETE_PACKS_GUIDE,
+  COMPLETE_PACKS_GUIDE_PATH,
+  getCompletePacksGuideJsonLd,
+  renderCompletePacksGuideInitialHtml,
+} from '../src/content/completePacksGuide';
+import {
   PUBLIC_GUIDE_LIBRARY,
   getPublicGuideLibraryJsonLd,
   renderPublicGuideLibraryInitialHtml,
@@ -413,6 +419,26 @@ const sharedIngredientsOutputDir = path.join(distRoot, SHARED_INGREDIENTS_GUIDE_
 await fs.mkdir(sharedIngredientsOutputDir, { recursive: true });
 await fs.writeFile(path.join(sharedIngredientsOutputDir, 'index.html'), sharedIngredientsHtml, 'utf8');
 console.log(`Generated ${SHARED_INGREDIENTS_GUIDE_PATH}/index.html`);
+
+const completePacksCanonicalUrl = `https://dinnerbydesign.app${COMPLETE_PACKS_GUIDE_PATH}`;
+let completePacksHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${COMPLETE_PACKS_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${COMPLETE_PACKS_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${completePacksCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${completePacksCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${COMPLETE_PACKS_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${COMPLETE_PACKS_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${COMPLETE_PACKS_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${COMPLETE_PACKS_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderCompletePacksGuideInitialHtml()))
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCompletePacksGuideJsonLd())}</script>\n</head>`);
+if (!completePacksHtml.includes(`<h1>${COMPLETE_PACKS_GUIDE.title}</h1>`) || !completePacksHtml.includes(`href="${completePacksCanonicalUrl}"`)) throw new Error('Complete-packs guide generation failed its content or canonical check.');
+const completePacksOutputDir = path.join(distRoot, COMPLETE_PACKS_GUIDE_PATH.slice(1));
+await fs.mkdir(completePacksOutputDir, { recursive: true });
+await fs.writeFile(path.join(completePacksOutputDir, 'index.html'), completePacksHtml, 'utf8');
+console.log(`Generated ${COMPLETE_PACKS_GUIDE_PATH}/index.html`);
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
 const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;

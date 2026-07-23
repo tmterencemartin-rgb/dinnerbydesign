@@ -34,6 +34,7 @@ export const GROCERY_COST_OPTIONS_GUIDE = {
     '/food-costs/fresh-or-frozen',
     '/food-costs/summer-stews-seasonal-vegetables',
     '/food-costs/five-dinners-same-ingredients',
+    '/food-costs/how-to-use-complete-packs',
   ],
   disclosures: ['price_comparison', 'allergen_and_product', 'storage_and_cooking', 'source_timing'] satisfies ProgrammaticDisclosureKey[],
   sources: [
