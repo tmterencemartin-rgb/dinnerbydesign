@@ -75,7 +75,7 @@ export const BudgetFamilySeoConcept: React.FC<BudgetFamilySeoConceptProps> = ({ 
             <img
               src="/dbd-logo-with-pin.png"
               alt="DinnerByDesign"
-              className="h-[38px] w-auto max-w-[230px] object-contain mix-blend-multiply sm:h-[46px]"
+              className="h-[34.2px] w-auto max-w-[207px] object-contain mix-blend-multiply sm:h-[41.4px]"
             />
             <span className="ml-[42px] mt-1 hidden text-[9px] font-medium tracking-[0.05em] text-dbd-ink-3 sm:block sm:ml-[52px]">
               Less searching. Better matches. Dinner, decided.

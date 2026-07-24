@@ -29,7 +29,7 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
         <img
           src="/dbd-logo-with-pin.png"
           alt="DinnerByDesign"
-          className="h-[49px] w-auto max-w-[297px] object-contain mix-blend-multiply mx-auto mb-6"
+          className="h-[44.1px] w-auto max-w-[267.3px] object-contain mix-blend-multiply mx-auto mb-6"
         />
         <h1 className="text-[20px] font-bold text-gray-900 tracking-tight mb-3">Authentication Error</h1>
         <p className="text-[14px] text-gray-600 mb-8 leading-relaxed">
@@ -93,7 +93,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
           <img
             src="/dbd-logo-with-pin.png"
             alt="DinnerByDesign"
-            className="h-[49px] w-auto max-w-[297px] object-contain mix-blend-multiply mx-auto mb-2"
+            className="h-[44.1px] w-auto max-w-[267.3px] object-contain mix-blend-multiply mx-auto mb-2"
           />
           <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mb-4">Less searching. Better matches. Dinner, decided.</p>
           

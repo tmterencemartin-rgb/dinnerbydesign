@@ -231,7 +231,7 @@ export const LandingView: React.FC = () => {
                 transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                 src="/dbd-logo-with-pin.png"
                 alt="DinnerByDesign"
-                className="h-[39px] w-auto max-w-[238px] origin-left object-contain mix-blend-multiply sm:h-[49px] sm:max-w-[297px]"
+                className="h-[35.1px] w-auto max-w-[214.2px] origin-left object-contain mix-blend-multiply sm:h-[44.1px] sm:max-w-[267.3px]"
               />
               <span className="text-[8.5px] font-medium text-dbd-ink-3 tracking-[0.01em] mt-1.5 block leading-none whitespace-nowrap">
                 Less searching. Better matches. Dinner, decided.
