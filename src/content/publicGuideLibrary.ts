@@ -1,9 +1,9 @@
 import { PUBLIC_LIBRARY_PATH, PUBLISHED_ARTICLES } from './publicArticles';
 
 export const PUBLIC_GUIDE_LIBRARY = {
-  title: 'Food cost and dinner-planning guides',
-  seoTitle: 'Food cost and dinner-planning guides | DinnerByDesign',
-  description: 'Practical DinnerByDesign guides to managing grocery costs, planning portions, using ingredients well and cooking varied dinners on a budget.',
+  title: 'Practical dinner, food cost and nutrition guides',
+  seoTitle: 'Dinner, food cost and nutrition guides | DinnerByDesign',
+  description: 'Practical DinnerByDesign guides to planning portions, understanding ingredients, managing grocery costs and cooking varied dinners.',
 };
 
 export function getPublicGuideLibraryJsonLd() {

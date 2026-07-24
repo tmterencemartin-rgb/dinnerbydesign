@@ -164145,8 +164145,47 @@ var COMPLETE_PACKS_GUIDE = {
   ]
 };
 
+// src/content/fiveADayGuide.ts
+var FIVE_A_DAY_GUIDE_PATH = "/guides/do-vegetables-in-dishes-count-towards-5-a-day";
+var FIVE_A_DAY_GUIDE = {
+  title: "Do vegetables in dishes count towards your 5 A Day?",
+  seoTitle: "Vegetables in dishes and your 5 A Day | DinnerByDesign",
+  description: "Find out how vegetables in Bolognese, paella, chilli and other dishes count towards your 5 A Day, including portions and the effect of cooking.",
+  publishedAt: "2026-07-24",
+  reviewedAt: "2026-07-24",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Nutrition guide",
+  primarySearchIntent: "Understand whether vegetables cooked into a dish count towards 5 A Day and how portions should be calculated",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-24",
+  editorialNotes: "Keep the portion rules aligned with current NHS guidance. The worked calculation is illustrative and does not represent a specific DinnerByDesign recipe.",
+  internalLinks: ["/guides", "/nutrition-methodology", "/signin"],
+  disclosures: ["serving_assumption", "source_timing"],
+  sources: [
+    { label: "NHS: 5 A Day, what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
+    { label: "NHS: 5 A Day portion sizes", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/portion-sizes/" },
+    { label: "NHS: Why 5 A Day?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/why-5-a-day/" },
+    { label: "British Heart Foundation: What counts as 5-a-day?", url: "https://www.bhf.org.uk/informationsupport/heart-matters-magazine/nutrition/5-a-day/what-counts-as-5-a-day" },
+    { label: "American Journal of Clinical Nutrition: Lycopene bioavailability study", url: "https://doi.org/10.1093/ajcn/66.1.116" }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: FIVE_A_DAY_GUIDE.title,
+    path: FIVE_A_DAY_GUIDE_PATH,
+    category: "Nutrition guide",
+    pageFamily: FIVE_A_DAY_GUIDE.pageFamily,
+    primarySearchIntent: FIVE_A_DAY_GUIDE.primarySearchIntent,
+    indexingStatus: FIVE_A_DAY_GUIDE.indexingStatus,
+    publishedAt: FIVE_A_DAY_GUIDE.publishedAt,
+    reviewedAt: FIVE_A_DAY_GUIDE.reviewedAt,
+    contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
+    internalLinks: FIVE_A_DAY_GUIDE.internalLinks,
+    disclosures: FIVE_A_DAY_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: COMPLETE_PACKS_GUIDE.title,
     path: COMPLETE_PACKS_GUIDE_PATH,
@@ -164375,7 +164414,7 @@ var PUBLIC_ARTICLES = [
 var PUBLISHED_ARTICLES = PUBLIC_ARTICLES.filter((article) => article.status === "published");
 function isUnknownPublicArticlePath(pathName) {
   const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, "") : pathName;
-  const belongsToPublicFamily = normalisedPath.startsWith("/dinner-plans/") || normalisedPath.startsWith("/food-costs/");
+  const belongsToPublicFamily = normalisedPath.startsWith("/dinner-plans/") || normalisedPath.startsWith("/food-costs/") || normalisedPath.startsWith("/guides/");
   return belongsToPublicFamily && !PUBLIC_ARTICLES.some((article) => article.path === normalisedPath && article.status === "published");
 }
 

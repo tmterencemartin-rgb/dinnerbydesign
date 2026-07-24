@@ -83,6 +83,12 @@ import {
   getPublicGuideLibraryJsonLd,
   renderPublicGuideLibraryInitialHtml,
 } from '../src/content/publicGuideLibrary';
+import {
+  FIVE_A_DAY_GUIDE,
+  FIVE_A_DAY_GUIDE_PATH,
+  getFiveADayGuideJsonLd,
+  renderFiveADayGuideInitialHtml,
+} from '../src/content/fiveADayGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 
 const distRoot = path.resolve(process.cwd(), 'dist');
@@ -439,6 +445,26 @@ const completePacksOutputDir = path.join(distRoot, COMPLETE_PACKS_GUIDE_PATH.sli
 await fs.mkdir(completePacksOutputDir, { recursive: true });
 await fs.writeFile(path.join(completePacksOutputDir, 'index.html'), completePacksHtml, 'utf8');
 console.log(`Generated ${COMPLETE_PACKS_GUIDE_PATH}/index.html`);
+
+const fiveADayCanonicalUrl = `https://dinnerbydesign.app${FIVE_A_DAY_GUIDE_PATH}`;
+let fiveADayHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${FIVE_A_DAY_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${FIVE_A_DAY_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${fiveADayCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${fiveADayCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${FIVE_A_DAY_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${FIVE_A_DAY_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${FIVE_A_DAY_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${FIVE_A_DAY_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderFiveADayGuideInitialHtml()))
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getFiveADayGuideJsonLd())}</script>\n</head>`);
+if (!fiveADayHtml.includes(`<h1>${FIVE_A_DAY_GUIDE.title}</h1>`) || !fiveADayHtml.includes(`href="${fiveADayCanonicalUrl}"`)) throw new Error('5 A Day guide generation failed its content or canonical check.');
+const fiveADayOutputDir = path.join(distRoot, FIVE_A_DAY_GUIDE_PATH.slice(1));
+await fs.mkdir(fiveADayOutputDir, { recursive: true });
+await fs.writeFile(path.join(fiveADayOutputDir, 'index.html'), fiveADayHtml, 'utf8');
+console.log(`Generated ${FIVE_A_DAY_GUIDE_PATH}/index.html`);
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
 const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;

@@ -44,6 +44,7 @@ import { CheaperMeatCutsGuideView } from './components/views/CheaperMeatCutsGuid
 import { SharedIngredientsGuideView } from './components/views/SharedIngredientsGuideView';
 import { CompletePacksGuideView } from './components/views/CompletePacksGuideView';
 import { GuidesLibraryView } from './components/views/GuidesLibraryView';
+import { FiveADayGuideView } from './components/views/FiveADayGuideView';
 import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH, getGroceryCostOptionsGuideJsonLd } from './content/groceryCostOptionsGuide';
 import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH, getGroceryCostPredictionGuideJsonLd } from './content/groceryCostPredictionGuide';
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH, getCheaperMeatCutsGuideJsonLd } from './content/cheaperMeatCutsGuide';
@@ -51,6 +52,7 @@ import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH, getSharedIngre
 import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH, getCompletePacksGuideJsonLd } from './content/completePacksGuide';
 import { PUBLIC_GUIDE_LIBRARY, getPublicGuideLibraryJsonLd } from './content/publicGuideLibrary';
 import { PUBLIC_LIBRARY_PATH } from './content/publicArticles';
+import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH, getFiveADayGuideJsonLd } from './content/fiveADayGuide';
 import {
   BATCH_COOKING_GUIDE,
   BATCH_COOKING_GUIDE_PATH,
@@ -310,6 +312,13 @@ const AppContent = () => {
           canonicalPath: PUBLIC_LIBRARY_PATH || '/guides',
           jsonLd: getPublicGuideLibraryJsonLd()
         };
+      case 'five-a-day-guide':
+        return {
+          title: FIVE_A_DAY_GUIDE.seoTitle,
+          description: FIVE_A_DAY_GUIDE.description,
+          canonicalPath: FIVE_A_DAY_GUIDE_PATH,
+          jsonLd: getFiveADayGuideJsonLd()
+        };
       case 'home':
       case 'landing':
       default:
@@ -422,7 +431,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-cheaper-meat-cuts' && view !== 'food-costs-shared-ingredients' && view !== 'food-costs-complete-packs' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'five-a-day-guide' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-cheaper-meat-cuts' && view !== 'food-costs-shared-ingredients' && view !== 'food-costs-complete-packs' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -722,6 +731,16 @@ const AppContent = () => {
         return;
       }
       setView('planner');
+    }} />;
+  }
+
+  if (view === 'five-a-day-guide') {
+    return <FiveADayGuideView onFindDinner={() => {
+      if (isGuest) {
+        setView('signin');
+        return;
+      }
+      setView('home');
     }} />;
   }
 

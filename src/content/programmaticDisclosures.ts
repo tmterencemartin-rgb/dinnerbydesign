@@ -345,6 +345,19 @@ export const SHARED_INGREDIENTS_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[]
   },
 ];
 
+export const FIVE_A_DAY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'serving_assumption',
+    title: 'Portion calculation',
+    body: 'The NHS adult reference is 80g for one portion of ordinary fresh, frozen or tinned fruit and vegetables. Children need different amounts, and purées, dried produce, juice, beans and pulses follow separate rules. The worked calculation is illustrative rather than a result from a specific DinnerByDesign recipe.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'NHS and British Heart Foundation guidance was reviewed on 24 July 2026. Follow the cited sources for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -471,6 +484,14 @@ export const COMPLETE_PACKS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy 
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },
     { href: '/food-safety', label: 'Storage and cooking safety' },
+  ],
+};
+
+export const FIVE_A_DAY_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide explains general UK 5 A Day guidance. It does not replace individual advice from a registered healthcare professional.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/nutrition-methodology', label: 'Nutrition estimate methodology' },
   ],
 };
 

@@ -158,6 +158,10 @@ Search-result overlays are not substitutes for permanent crawlable recipe pages.
 
 Use stable routes below `/food-costs/` or another approved guide family. Guides should explain pricing, budgeting, waste reduction or related decisions that do not fit a structured recipe or plan template. They must use primary evidence wherever available and link to relevant practical content.
 
+### Practical nutrition and cooking guides
+
+Use stable routes below `/guides/` for evidence-led editorial guidance that supports ordinary dinner decisions but does not fit a recipe, collection, plan or food-cost page. Health and nutrition claims must use current primary or official sources, state material portion assumptions beside the claim, and record an appropriate review date. These pages provide general information and must not diagnose, prescribe or replace individual professional advice.
+
 ## Required page structure
 
 Every collection or dinner-plan page must include:

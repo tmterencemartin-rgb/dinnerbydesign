@@ -5,6 +5,7 @@ import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH } fro
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
 import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './sharedIngredientsGuide';
 import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH } from './completePacksGuide';
+import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -23,6 +24,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: FIVE_A_DAY_GUIDE.title, path: FIVE_A_DAY_GUIDE_PATH, category: 'Nutrition guide',
+    pageFamily: FIVE_A_DAY_GUIDE.pageFamily, primarySearchIntent: FIVE_A_DAY_GUIDE.primarySearchIntent,
+    indexingStatus: FIVE_A_DAY_GUIDE.indexingStatus, publishedAt: FIVE_A_DAY_GUIDE.publishedAt,
+    reviewedAt: FIVE_A_DAY_GUIDE.reviewedAt, contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
+    internalLinks: FIVE_A_DAY_GUIDE.internalLinks, disclosures: FIVE_A_DAY_GUIDE.disclosures, status: 'published',
+  },
   {
     title: COMPLETE_PACKS_GUIDE.title, path: COMPLETE_PACKS_GUIDE_PATH, category: 'Food cost guide',
     pageFamily: COMPLETE_PACKS_GUIDE.pageFamily, primarySearchIntent: COMPLETE_PACKS_GUIDE.primarySearchIntent,
@@ -186,6 +194,6 @@ export const PUBLIC_LIBRARY_PATH: string | null = '/guides';
 
 export function isUnknownPublicArticlePath(pathName: string) {
   const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, '') : pathName;
-  const belongsToPublicFamily = normalisedPath.startsWith('/dinner-plans/') || normalisedPath.startsWith('/food-costs/');
+  const belongsToPublicFamily = normalisedPath.startsWith('/dinner-plans/') || normalisedPath.startsWith('/food-costs/') || normalisedPath.startsWith('/guides/');
   return belongsToPublicFamily && !PUBLIC_ARTICLES.some(article => article.path === normalisedPath && article.status === 'published');
 }

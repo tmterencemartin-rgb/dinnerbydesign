@@ -21,6 +21,7 @@ describe('public article registry', () => {
   it('identifies unpublished paths in protected public page families', () => {
     expect(isUnknownPublicArticlePath('/dinner-plans/not-a-real-plan')).toBe(true);
     expect(isUnknownPublicArticlePath('/food-costs/not-a-real-guide')).toBe(true);
+    expect(isUnknownPublicArticlePath('/guides/not-a-real-guide')).toBe(true);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40')).toBe(false);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40/')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe(false);
@@ -34,6 +35,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/batch-cooking-on-a-budget')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/ways-to-reduce-grocery-costs')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/why-grocery-costs-are-hard-to-predict')).toBe(false);
+    expect(isUnknownPublicArticlePath('/guides/do-vegetables-in-dishes-count-towards-5-a-day')).toBe(false);
     expect(isUnknownPublicArticlePath('/pricing-methodology')).toBe(false);
   });
 
