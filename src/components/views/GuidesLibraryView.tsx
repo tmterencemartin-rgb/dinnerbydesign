@@ -8,9 +8,19 @@ export const GuidesLibraryView: React.FC<{ onPlanWeek: () => void }> = ({ onPlan
     <main className="mx-auto max-w-5xl px-4 py-5 pb-12 sm:py-9 sm:pb-16">
       <nav aria-label="Breadcrumb" className="text-xs text-dbd-ink-3"><a href="/" className="hover:underline">DinnerByDesign</a><span className="px-2">/</span><span>Guides</span></nav>
       <header className="mt-4 max-w-3xl sm:mt-6"><p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-dbd-accent sm:text-[10px]">Public guide library</p><h1 className="mt-1.5 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{PUBLIC_GUIDE_LIBRARY.title}</h1><p className="mt-2.5 text-sm leading-6 text-dbd-ink-3 sm:mt-3">{PUBLIC_GUIDE_LIBRARY.description}</p></header>
+      <nav aria-label="Guide categories" className="mt-5 rounded border border-dbd-rule/60 bg-white p-4 sm:mt-7 sm:p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-dbd-ink-2">Browse by category</h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {PUBLIC_GUIDE_GROUPS.map(group => (
+            <a key={group.id} href={`#${group.id}`} className="rounded-full border border-dbd-rule px-3 py-2 text-xs font-medium text-dbd-ink-2 transition-colors hover:border-dbd-accent hover:text-dbd-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dbd-accent">
+              {group.title}
+            </a>
+          ))}
+        </div>
+      </nav>
       <div className="mt-6 space-y-8 border-t border-dbd-rule/50 pt-5 sm:mt-8 sm:space-y-10 sm:pt-6">
         {PUBLIC_GUIDE_GROUPS.map(group => (
-          <section key={group.title}>
+          <section key={group.id} id={group.id} className="scroll-mt-4">
             <div className="max-w-2xl">
               <h2 className="text-base font-semibold sm:text-lg">{group.title}</h2>
               <p className="mt-1 text-xs leading-5 text-dbd-ink-3 sm:text-sm">{group.description}</p>

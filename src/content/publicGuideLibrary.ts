@@ -8,11 +8,13 @@ export const PUBLIC_GUIDE_LIBRARY = {
 
 const PUBLIC_GUIDE_GROUP_CONFIG = [
   {
+    id: 'dinner-planning',
     title: 'Start with a dinner plan',
     description: 'A ready-made weekly structure with costs, servings and a practical route into planning.',
     paths: ['/dinner-plans/5-dinners-for-2-under-40'],
   },
   {
+    id: 'spend-less',
     title: 'Spend less on ingredients',
     description: 'Understand grocery costs and find realistic ways to choose lower-cost ingredients.',
     paths: [
@@ -26,6 +28,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
     ],
   },
   {
+    id: 'reduce-waste',
     title: 'Use what you buy',
     description: 'Plan portions, reuse ingredients and reduce the chance that part-used packs go to waste.',
     paths: [
@@ -37,6 +40,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
     ],
   },
   {
+    id: 'flavour-and-variety',
     title: 'Make affordable cooking more enjoyable',
     description: 'Add flavour, texture and variety without turning a modest shopping list into a costly one.',
     paths: [
@@ -48,6 +52,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
     ],
   },
   {
+    id: 'choices-and-nutrition',
     title: 'Compare choices and nutrition',
     description: 'Put common cooking and nutrition questions into a useful everyday context.',
     paths: [
@@ -58,6 +63,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
 ] as const;
 
 export const PUBLIC_GUIDE_GROUPS = PUBLIC_GUIDE_GROUP_CONFIG.map(group => ({
+  id: group.id,
   title: group.title,
   description: group.description,
   articles: group.paths.flatMap(path => {
@@ -105,7 +111,8 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ 
 export function renderPublicGuideLibraryInitialHtml() {
   const groups = PUBLIC_GUIDE_GROUPS.map(group => {
     const articles = group.articles.map(article => `<li><p>${escapeHtml(article.category)}</p><h3><a href="${escapeHtml(article.path)}">${escapeHtml(article.title)}</a></h3></li>`).join('');
-    return `<section><h2>${escapeHtml(group.title)}</h2><p>${escapeHtml(group.description)}</p><ul>${articles}</ul></section>`;
+    return `<section id="${escapeHtml(group.id)}"><h2>${escapeHtml(group.title)}</h2><p>${escapeHtml(group.description)}</p><ul>${articles}</ul></section>`;
   }).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Guides</nav><p>Public guide library</p><h1>${escapeHtml(PUBLIC_GUIDE_LIBRARY.title)}</h1><p>${escapeHtml(PUBLIC_GUIDE_LIBRARY.description)}</p>${groups}<section><h2>Plan dinners around your household</h2><p>Use DinnerByDesign to turn practical guidance into a coordinated week and a shopping list built from the dinners you schedule.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+  const categoryLinks = PUBLIC_GUIDE_GROUPS.map(group => `<li><a href="#${escapeHtml(group.id)}">${escapeHtml(group.title)}</a></li>`).join('');
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Guides</nav><p>Public guide library</p><h1>${escapeHtml(PUBLIC_GUIDE_LIBRARY.title)}</h1><p>${escapeHtml(PUBLIC_GUIDE_LIBRARY.description)}</p><nav aria-label="Guide categories"><h2>Browse by category</h2><ul>${categoryLinks}</ul></nav>${groups}<section><h2>Plan dinners around your household</h2><p>Use DinnerByDesign to turn practical guidance into a coordinated week and a shopping list built from the dinners you schedule.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
 }
