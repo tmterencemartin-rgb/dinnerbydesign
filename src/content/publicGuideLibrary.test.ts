@@ -10,10 +10,12 @@ describe('public guide library', () => {
     expect(html).toContain(`<h1>${PUBLIC_GUIDE_LIBRARY.title}</h1>`);
     PUBLISHED_ARTICLES.forEach(article => expect(html).toContain(`href="${article.path}"`));
     PUBLIC_GUIDE_GROUPS.forEach(group => {
-      expect(html).toContain(`<section id="${group.id}"><h2>${group.title}</h2>`);
+      expect(html).toContain(`<h2 id="${group.id}">${group.title}</h2>`);
       expect(html).toContain(`href="#${group.id}"`);
     });
     expect(html).toContain('<h2>Browse by category</h2>');
+    expect(html).toContain('<main id="guide-library-top">');
+    expect(html.match(/href="#guide-library-top"/g)).toHaveLength(PUBLIC_GUIDE_GROUPS.length);
     expect(html).toContain('Plan my week');
   });
 
