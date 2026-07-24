@@ -90,6 +90,12 @@ import {
   renderFiveADayGuideInitialHtml,
 } from '../src/content/fiveADayGuide';
 import {
+  HOME_COOKED_READY_MADE_GUIDE,
+  HOME_COOKED_READY_MADE_GUIDE_PATH,
+  getHomeCookedReadyMadeGuideJsonLd,
+  renderHomeCookedReadyMadeGuideInitialHtml,
+} from '../src/content/homeCookedReadyMadeGuide';
+import {
   LOW_COST_DINNERS_GUIDE,
   LOW_COST_DINNERS_GUIDE_PATH,
   getLowCostDinnersGuideJsonLd,
@@ -471,6 +477,26 @@ const fiveADayOutputDir = path.join(distRoot, FIVE_A_DAY_GUIDE_PATH.slice(1));
 await fs.mkdir(fiveADayOutputDir, { recursive: true });
 await fs.writeFile(path.join(fiveADayOutputDir, 'index.html'), fiveADayHtml, 'utf8');
 console.log(`Generated ${FIVE_A_DAY_GUIDE_PATH}/index.html`);
+
+const homeCookedReadyMadeCanonicalUrl = `https://dinnerbydesign.app${HOME_COOKED_READY_MADE_GUIDE_PATH}`;
+let homeCookedReadyMadeHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${HOME_COOKED_READY_MADE_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${HOME_COOKED_READY_MADE_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${homeCookedReadyMadeCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${homeCookedReadyMadeCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${HOME_COOKED_READY_MADE_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${HOME_COOKED_READY_MADE_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${HOME_COOKED_READY_MADE_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${HOME_COOKED_READY_MADE_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderHomeCookedReadyMadeGuideInitialHtml()))
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getHomeCookedReadyMadeGuideJsonLd())}</script>\n</head>`);
+if (!homeCookedReadyMadeHtml.includes(`<h1>${HOME_COOKED_READY_MADE_GUIDE.title}</h1>`) || !homeCookedReadyMadeHtml.includes(`href="${homeCookedReadyMadeCanonicalUrl}"`)) throw new Error('Home-cooked or ready-made guide generation failed its content or canonical check.');
+const homeCookedReadyMadeOutputDir = path.join(distRoot, HOME_COOKED_READY_MADE_GUIDE_PATH.slice(1));
+await fs.mkdir(homeCookedReadyMadeOutputDir, { recursive: true });
+await fs.writeFile(path.join(homeCookedReadyMadeOutputDir, 'index.html'), homeCookedReadyMadeHtml, 'utf8');
+console.log(`Generated ${HOME_COOKED_READY_MADE_GUIDE_PATH}/index.html`);
 
 const lowCostDinnersCanonicalUrl = `https://dinnerbydesign.app${LOW_COST_DINNERS_GUIDE_PATH}`;
 let lowCostDinnersHtml = sourceHtml

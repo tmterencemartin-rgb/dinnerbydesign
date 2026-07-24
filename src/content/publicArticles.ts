@@ -6,6 +6,7 @@ import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaper
 import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './sharedIngredientsGuide';
 import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH } from './completePacksGuide';
 import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
+import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH } from './homeCookedReadyMadeGuide';
 import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDinnersGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
@@ -25,6 +26,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: HOME_COOKED_READY_MADE_GUIDE.title, path: HOME_COOKED_READY_MADE_GUIDE_PATH, category: 'Cooking and nutrition guide',
+    pageFamily: HOME_COOKED_READY_MADE_GUIDE.pageFamily, primarySearchIntent: HOME_COOKED_READY_MADE_GUIDE.primarySearchIntent,
+    indexingStatus: HOME_COOKED_READY_MADE_GUIDE.indexingStatus, publishedAt: HOME_COOKED_READY_MADE_GUIDE.publishedAt,
+    reviewedAt: HOME_COOKED_READY_MADE_GUIDE.reviewedAt, contentReviewedAt: HOME_COOKED_READY_MADE_GUIDE.contentReviewedAt,
+    internalLinks: HOME_COOKED_READY_MADE_GUIDE.internalLinks, disclosures: HOME_COOKED_READY_MADE_GUIDE.disclosures, status: 'published',
+  },
   {
     title: LOW_COST_DINNERS_GUIDE.title, path: LOW_COST_DINNERS_GUIDE_PATH, category: 'Food cost guide',
     pageFamily: LOW_COST_DINNERS_GUIDE.pageFamily, primarySearchIntent: LOW_COST_DINNERS_GUIDE.primarySearchIntent,

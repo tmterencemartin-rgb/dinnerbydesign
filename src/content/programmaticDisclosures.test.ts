@@ -13,6 +13,8 @@ import {
   GROCERY_COST_OPTIONS_DISCLOSURES,
   GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER,
   GROCERY_COST_PREDICTION_DISCLOSURES,
+  HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER,
+  HOME_COOKED_READY_MADE_DISCLOSURES,
   LOWER_COST_CUTS_COMPARISON_DISCLOSURES,
   LOWER_COST_CUTS_DISCLOSURE_FOOTER,
   LOWER_COST_CUTS_SAFETY_DISCLOSURES,
@@ -34,7 +36,7 @@ import {
 describe('programmatic disclosure publishing copy', () => {
   it('keeps every disclosure on the controlled key list', () => {
     const allowed = new Set(PROGRAMMATIC_DISCLOSURE_KEYS);
-    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES, ...LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES, ...LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES, ...SUMMER_STEWS_DISCLOSURES, ...FRESH_OR_FROZEN_DISCLOSURES, ...BATCH_COOKING_DISCLOSURES, ...GROCERY_COST_OPTIONS_DISCLOSURES, ...GROCERY_COST_PREDICTION_DISCLOSURES, ...CHEAPER_MEAT_CUTS_COST_DISCLOSURES, ...CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES, ...CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES, ...SHARED_INGREDIENTS_PLANNING_DISCLOSURES, ...SHARED_INGREDIENTS_SAFETY_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
+    [...FIVE_DINNERS_PRICE_DISCLOSURES, ...UK_FOOD_COST_CONTEXT_DISCLOSURES, ...LOWER_COST_CUTS_COMPARISON_DISCLOSURES, ...LOWER_COST_CUTS_SAFETY_DISCLOSURES, ...LOW_COST_TECHNIQUES_PRODUCT_DISCLOSURES, ...LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES, ...SUMMER_STEWS_DISCLOSURES, ...FRESH_OR_FROZEN_DISCLOSURES, ...BATCH_COOKING_DISCLOSURES, ...GROCERY_COST_OPTIONS_DISCLOSURES, ...GROCERY_COST_PREDICTION_DISCLOSURES, ...CHEAPER_MEAT_CUTS_COST_DISCLOSURES, ...CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES, ...CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES, ...SHARED_INGREDIENTS_PLANNING_DISCLOSURES, ...SHARED_INGREDIENTS_SAFETY_DISCLOSURES, ...HOME_COOKED_READY_MADE_DISCLOSURES].forEach(item => expect(allowed.has(item.key)).toBe(true));
   });
 
   it('renders important qualifications and methodology links in initial HTML', () => {
@@ -116,5 +118,14 @@ describe('programmatic disclosure publishing copy', () => {
     expect(footerHtml).toContain('/guides');
     expect(footerHtml).toContain('/pricing-methodology');
     expect(footerHtml).toContain('/food-safety');
+  });
+
+  it('publishes the ready-made comparison qualifications and relevant methodology links', () => {
+    expect(HOME_COOKED_READY_MADE_DISCLOSURES.map(item => item.key)).toEqual(['serving_assumption', 'price_comparison', 'allergen_and_product', 'storage_and_cooking', 'source_timing']);
+    const footerHtml = renderProgrammaticDisclosureFooterInitialHtml(HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER);
+    expect(footerHtml).toContain('/guides');
+    expect(footerHtml).toContain('/nutrition-methodology');
+    expect(footerHtml).toContain('/food-safety');
+    expect(footerHtml).toContain('/pricing-methodology');
   });
 });

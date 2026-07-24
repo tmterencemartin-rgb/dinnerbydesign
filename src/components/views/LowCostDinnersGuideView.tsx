@@ -80,7 +80,7 @@ export const LowCostDinnersGuideView: React.FC<{ onFindDinner: () => void }> = (
 
         <Section title="A note on effort and cost">
           <p>It's worth being honest that none of this is effortless for everyone. Time, energy, equipment, food prices and access to a decent supermarket vary a great deal between households, and low-cost cooking asks more of some people than others.</p>
-          <p>Ready-made options aren't a step down from this either; they can be the sensible choice, particularly when they cut down on waste or suit a smaller household better than cooking from scratch.</p>
+          <p>Ready-made options aren't a step down from this either; they can be the sensible choice, particularly when they cut down on waste or suit a smaller household better than cooking from scratch. <a href="/guides/home-cooked-or-ready-made-dinners" className="font-semibold text-dbd-accent hover:underline">Compare the two approaches in more detail</a>.</p>
         </Section>
 
         <Section title="Where to start">

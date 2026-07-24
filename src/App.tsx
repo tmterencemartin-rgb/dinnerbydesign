@@ -45,6 +45,7 @@ import { SharedIngredientsGuideView } from './components/views/SharedIngredients
 import { CompletePacksGuideView } from './components/views/CompletePacksGuideView';
 import { GuidesLibraryView } from './components/views/GuidesLibraryView';
 import { FiveADayGuideView } from './components/views/FiveADayGuideView';
+import { HomeCookedReadyMadeGuideView } from './components/views/HomeCookedReadyMadeGuideView';
 import { LowCostDinnersGuideView } from './components/views/LowCostDinnersGuideView';
 import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH, getGroceryCostOptionsGuideJsonLd } from './content/groceryCostOptionsGuide';
 import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH, getGroceryCostPredictionGuideJsonLd } from './content/groceryCostPredictionGuide';
@@ -54,6 +55,7 @@ import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH, getCompletePacksGuideJ
 import { PUBLIC_GUIDE_LIBRARY, getPublicGuideLibraryJsonLd } from './content/publicGuideLibrary';
 import { PUBLIC_LIBRARY_PATH } from './content/publicArticles';
 import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH, getFiveADayGuideJsonLd } from './content/fiveADayGuide';
+import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH, getHomeCookedReadyMadeGuideJsonLd } from './content/homeCookedReadyMadeGuide';
 import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH, getLowCostDinnersGuideJsonLd } from './content/lowCostDinnersGuide';
 import {
   BATCH_COOKING_GUIDE,
@@ -321,6 +323,13 @@ const AppContent = () => {
           canonicalPath: FIVE_A_DAY_GUIDE_PATH,
           jsonLd: getFiveADayGuideJsonLd()
         };
+      case 'home-cooked-ready-made-guide':
+        return {
+          title: HOME_COOKED_READY_MADE_GUIDE.seoTitle,
+          description: HOME_COOKED_READY_MADE_GUIDE.description,
+          canonicalPath: HOME_COOKED_READY_MADE_GUIDE_PATH,
+          jsonLd: getHomeCookedReadyMadeGuideJsonLd()
+        };
       case 'low-cost-dinners-guide':
         return {
           title: LOW_COST_DINNERS_GUIDE.seoTitle,
@@ -440,7 +449,7 @@ const AppContent = () => {
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'five-a-day-guide' && view !== 'low-cost-dinners-guide' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-cheaper-meat-cuts' && view !== 'food-costs-shared-ingredients' && view !== 'food-costs-complete-packs' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
+    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'five-a-day-guide' && view !== 'home-cooked-ready-made-guide' && view !== 'low-cost-dinners-guide' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-cheaper-meat-cuts' && view !== 'food-costs-shared-ingredients' && view !== 'food-costs-complete-packs' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -745,6 +754,16 @@ const AppContent = () => {
 
   if (view === 'five-a-day-guide') {
     return <FiveADayGuideView onFindDinner={() => {
+      if (isGuest) {
+        setView('signin');
+        return;
+      }
+      setView('home');
+    }} />;
+  }
+
+  if (view === 'home-cooked-ready-made-guide') {
+    return <HomeCookedReadyMadeGuideView onFindDinner={() => {
       if (isGuest) {
         setView('signin');
         return;

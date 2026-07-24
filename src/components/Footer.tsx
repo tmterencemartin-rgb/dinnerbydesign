@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+const CONTACT_EMAIL = 'chef@dinnerbydesign.app';
 
 interface FooterProps {
   setView: (view: 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-methodology' | 'food-safety' | 'recipe-methodology' | 'nutrition-methodology' | 'privacy' | 'terms') => void;
@@ -6,6 +8,33 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const currentYear = new Date().getFullYear();
+  const [emailCopied, setEmailCopied] = useState(false);
+  const copiedResetTimer = useRef<number | null>(null);
+
+  useEffect(() => () => {
+    if (copiedResetTimer.current !== null) {
+      window.clearTimeout(copiedResetTimer.current);
+    }
+  }, []);
+
+  const copyEmailAsFallback = () => {
+    if (!navigator.clipboard?.writeText) return;
+
+    void navigator.clipboard.writeText(CONTACT_EMAIL).then(() => {
+      setEmailCopied(true);
+
+      if (copiedResetTimer.current !== null) {
+        window.clearTimeout(copiedResetTimer.current);
+      }
+
+      copiedResetTimer.current = window.setTimeout(() => {
+        setEmailCopied(false);
+        copiedResetTimer.current = null;
+      }, 2500);
+    }).catch(() => {
+      // The mail link still opens normally when clipboard access is unavailable.
+    });
+  };
   
   return (
     <footer className="shrink-0 border-t border-gray-100 bg-gray-50 py-4 sm:py-6">
@@ -17,10 +46,12 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
               Less searching. Better matches. Dinner, decided.
             </span>
             <a 
-              href="mailto:chef@dinnerbydesign.app" 
+              href={`mailto:${CONTACT_EMAIL}`}
+              onClick={copyEmailAsFallback}
+              aria-label={`Email ${CONTACT_EMAIL}. The address will also be copied.`}
               className="relative z-50 block py-0.5 text-[11px] font-semibold text-accent transition-colors hover:text-accent/80 hover:underline sm:text-xs"
             >
-              chef@dinnerbydesign.app
+              {emailCopied ? 'Email address copied' : CONTACT_EMAIL}
             </a>
           </div>
         </div>

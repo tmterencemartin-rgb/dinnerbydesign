@@ -37,6 +37,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/ways-to-reduce-grocery-costs')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/why-grocery-costs-are-hard-to-predict')).toBe(false);
     expect(isUnknownPublicArticlePath('/guides/do-vegetables-in-dishes-count-towards-5-a-day')).toBe(false);
+    expect(isUnknownPublicArticlePath('/guides/home-cooked-or-ready-made-dinners')).toBe(false);
     expect(isUnknownPublicArticlePath('/pricing-methodology')).toBe(false);
   });
 

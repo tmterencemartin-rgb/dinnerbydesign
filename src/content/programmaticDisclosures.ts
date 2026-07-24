@@ -366,6 +366,34 @@ export const LOW_COST_DINNERS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const HOME_COOKED_READY_MADE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'serving_assumption',
+    title: 'Pack size and portions',
+    body: 'A manufacturer-defined serving is predictable, but it is not a personalised recommendation. Appetite, age, activity and any individual dietary advice may change what is suitable.',
+  },
+  {
+    key: 'price_comparison',
+    title: 'How to read the cost comparison',
+    body: 'The cited UK study compared cost per 100g and did not include cooking energy or the value of household time. Pack sizes, ingredient reuse, equipment and what goes unused can change the answer for an individual household.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Product labels',
+    body: 'Check the complete nutrition panel, ingredient list, allergens and serving information. A front-of-pack claim such as high protein or under 500 calories describes one feature rather than the quality or suitability of the whole dish.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and reheating',
+    body: 'Follow use-by dates, storage directions and preparation instructions on the pack. For leftovers, follow current Food Standards Agency guidance and reheat only once until steaming hot throughout.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Evidence review',
+    body: 'The research and official guidance were reviewed on 24 July 2026. Product formulations and labelling guidance can change, so check the cited sources and the current pack.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -509,6 +537,16 @@ export const LOW_COST_DINNERS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCop
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This is a general comparison, not an assessment of every recipe or supermarket product. Individual nutritional needs, prices, ingredients and serving sizes vary.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/nutrition-methodology', label: 'Nutrition estimate methodology' },
+    { href: '/food-safety', label: 'Food safety guidance' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
   ],
 };
 

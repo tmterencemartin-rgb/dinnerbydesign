@@ -164170,6 +164170,43 @@ var FIVE_A_DAY_GUIDE = {
   ]
 };
 
+// src/content/homeCookedReadyMadeGuide.ts
+var HOME_COOKED_READY_MADE_GUIDE_PATH = "/guides/home-cooked-or-ready-made-dinners";
+var HOME_COOKED_READY_MADE_GUIDE = {
+  title: "Home-cooked or ready-made? The honest comparison",
+  seoTitle: "Home-cooked vs ready-made dinners: an honest comparison | DinnerByDesign",
+  description: "Compare home-cooked and ready-made dinners on cost, portions, ingredient waste, nutrition labels, safety and everyday effort.",
+  publishedAt: "2026-07-24",
+  reviewedAt: "2026-07-24",
+  nextReviewAt: "2027-07-24",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking and nutrition guide",
+  primarySearchIntent: "Compare home-cooked and ready-made dinners beyond convenience, including portions, waste, labels, nutrition, cost and safety",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-24",
+  editorialNotes: "Evidence-led comparison. Keep conclusions product-specific and avoid presenting either option as universally better.",
+  internalLinks: ["/guides", "/food-costs/make-low-cost-dinners-more-interesting", "/nutrition-methodology", "/food-safety", "/pricing-methodology", "/signin"],
+  disclosures: ["price_comparison", "serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Public Health Nutrition: UK comparison of ready-made and home-cooked dishes",
+      url: "https://doi.org/10.1017/S1368980023000034"
+    },
+    {
+      label: "GOV.UK: Food labelling, giving food information to consumers",
+      url: "https://www.gov.uk/guidance/food-labelling-giving-food-information-to-consumers"
+    },
+    {
+      label: "Institute for Fiscal Studies: Product reformulation and dietary salt intake",
+      url: "https://ifs.org.uk/articles/product-reformulation-effective-reducing-dietary-salt-intake"
+    },
+    {
+      label: "Food Standards Agency: Cooking and reheating food safely",
+      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
+    }
+  ]
+};
+
 // src/content/lowCostDinnersGuide.ts
 var LOW_COST_DINNERS_GUIDE_PATH = "/food-costs/make-low-cost-dinners-more-interesting";
 var LOW_COST_DINNERS_GUIDE = {
@@ -164188,6 +164225,7 @@ var LOW_COST_DINNERS_GUIDE = {
     "/guides",
     "/food-costs/low-cost-cooking-techniques",
     "/food-costs/five-dinners-same-ingredients",
+    "/guides/home-cooked-or-ready-made-dinners",
     "/pricing-methodology",
     "/signin"
   ],
@@ -164196,6 +164234,20 @@ var LOW_COST_DINNERS_GUIDE = {
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: HOME_COOKED_READY_MADE_GUIDE.title,
+    path: HOME_COOKED_READY_MADE_GUIDE_PATH,
+    category: "Cooking and nutrition guide",
+    pageFamily: HOME_COOKED_READY_MADE_GUIDE.pageFamily,
+    primarySearchIntent: HOME_COOKED_READY_MADE_GUIDE.primarySearchIntent,
+    indexingStatus: HOME_COOKED_READY_MADE_GUIDE.indexingStatus,
+    publishedAt: HOME_COOKED_READY_MADE_GUIDE.publishedAt,
+    reviewedAt: HOME_COOKED_READY_MADE_GUIDE.reviewedAt,
+    contentReviewedAt: HOME_COOKED_READY_MADE_GUIDE.contentReviewedAt,
+    internalLinks: HOME_COOKED_READY_MADE_GUIDE.internalLinks,
+    disclosures: HOME_COOKED_READY_MADE_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: LOW_COST_DINNERS_GUIDE.title,
     path: LOW_COST_DINNERS_GUIDE_PATH,
