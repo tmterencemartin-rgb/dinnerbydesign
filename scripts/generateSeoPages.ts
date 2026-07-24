@@ -89,6 +89,12 @@ import {
   getFiveADayGuideJsonLd,
   renderFiveADayGuideInitialHtml,
 } from '../src/content/fiveADayGuide';
+import {
+  LOW_COST_DINNERS_GUIDE,
+  LOW_COST_DINNERS_GUIDE_PATH,
+  getLowCostDinnersGuideJsonLd,
+  renderLowCostDinnersGuideInitialHtml,
+} from '../src/content/lowCostDinnersGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 
 const distRoot = path.resolve(process.cwd(), 'dist');
@@ -465,6 +471,26 @@ const fiveADayOutputDir = path.join(distRoot, FIVE_A_DAY_GUIDE_PATH.slice(1));
 await fs.mkdir(fiveADayOutputDir, { recursive: true });
 await fs.writeFile(path.join(fiveADayOutputDir, 'index.html'), fiveADayHtml, 'utf8');
 console.log(`Generated ${FIVE_A_DAY_GUIDE_PATH}/index.html`);
+
+const lowCostDinnersCanonicalUrl = `https://dinnerbydesign.app${LOW_COST_DINNERS_GUIDE_PATH}`;
+let lowCostDinnersHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${LOW_COST_DINNERS_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${LOW_COST_DINNERS_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${lowCostDinnersCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${lowCostDinnersCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${LOW_COST_DINNERS_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${LOW_COST_DINNERS_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOW_COST_DINNERS_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOW_COST_DINNERS_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderLowCostDinnersGuideInitialHtml()))
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowCostDinnersGuideJsonLd())}</script>\n</head>`);
+if (!lowCostDinnersHtml.includes('<h1>Low-cost dinners don&#039;t have to be boring</h1>') || !lowCostDinnersHtml.includes(`href="${lowCostDinnersCanonicalUrl}"`)) throw new Error('Low-cost-dinners guide generation failed its content or canonical check.');
+const lowCostDinnersOutputDir = path.join(distRoot, LOW_COST_DINNERS_GUIDE_PATH.slice(1));
+await fs.mkdir(lowCostDinnersOutputDir, { recursive: true });
+await fs.writeFile(path.join(lowCostDinnersOutputDir, 'index.html'), lowCostDinnersHtml, 'utf8');
+console.log(`Generated ${LOW_COST_DINNERS_GUIDE_PATH}/index.html`);
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
 const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;

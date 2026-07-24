@@ -390,6 +390,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/food-costs/why-grocery-costs-are-hard-to-predict') return 'food-costs-grocery-prediction';
     if (location === '/guides') return 'guides';
     if (location === '/guides/do-vegetables-in-dishes-count-towards-5-a-day') return 'five-a-day-guide';
+    if (location === '/food-costs/make-low-cost-dinners-more-interesting') return 'low-cost-dinners-guide';
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';

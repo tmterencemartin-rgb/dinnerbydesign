@@ -164170,8 +164170,46 @@ var FIVE_A_DAY_GUIDE = {
   ]
 };
 
+// src/content/lowCostDinnersGuide.ts
+var LOW_COST_DINNERS_GUIDE_PATH = "/food-costs/make-low-cost-dinners-more-interesting";
+var LOW_COST_DINNERS_GUIDE = {
+  title: "Low-cost dinners don't have to be boring",
+  seoTitle: "How to make low-cost dinners more interesting | DinnerByDesign",
+  description: "Practical ways to make affordable dinners more varied and satisfying using seasoning, texture, different cooking methods and inexpensive ingredients.",
+  publishedAt: "2026-07-24",
+  reviewedAt: "2026-07-24",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Find practical ways to make low-cost dinners more varied and enjoyable without expanding the shopping list",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-24",
+  editorialNotes: "Technique-led guide with no specific cost or savings figures. Review annually, next due 24 July 2027.",
+  internalLinks: [
+    "/guides",
+    "/food-costs/low-cost-cooking-techniques",
+    "/food-costs/five-dinners-same-ingredients",
+    "/pricing-methodology",
+    "/signin"
+  ],
+  disclosures: ["price_comparison"]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: LOW_COST_DINNERS_GUIDE.title,
+    path: LOW_COST_DINNERS_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: LOW_COST_DINNERS_GUIDE.pageFamily,
+    primarySearchIntent: LOW_COST_DINNERS_GUIDE.primarySearchIntent,
+    indexingStatus: LOW_COST_DINNERS_GUIDE.indexingStatus,
+    publishedAt: LOW_COST_DINNERS_GUIDE.publishedAt,
+    reviewedAt: LOW_COST_DINNERS_GUIDE.reviewedAt,
+    contentReviewedAt: LOW_COST_DINNERS_GUIDE.contentReviewedAt,
+    internalLinks: LOW_COST_DINNERS_GUIDE.internalLinks,
+    disclosures: LOW_COST_DINNERS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: FIVE_A_DAY_GUIDE.title,
     path: FIVE_A_DAY_GUIDE_PATH,

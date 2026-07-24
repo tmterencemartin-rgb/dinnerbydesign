@@ -358,6 +358,14 @@ export const FIVE_A_DAY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const LOW_COST_DINNERS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'A note on cost',
+    body: 'These techniques can help make a small set of ingredients feel more varied, but they do not guarantee a lower shopping total. Current prices, pack sizes, what is already at home and what goes unused all affect the result.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -492,6 +500,15 @@ export const FIVE_A_DAY_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/nutrition-methodology', label: 'Nutrition estimate methodology' },
+  ],
+};
+
+export const LOW_COST_DINNERS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide offers flexible cooking ideas rather than fixed recipes or guaranteed savings. Ingredient prices, pack sizes, availability and product information vary.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],
 };
 

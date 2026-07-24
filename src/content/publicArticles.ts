@@ -6,6 +6,7 @@ import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaper
 import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './sharedIngredientsGuide';
 import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH } from './completePacksGuide';
 import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
+import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDinnersGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -24,6 +25,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: LOW_COST_DINNERS_GUIDE.title, path: LOW_COST_DINNERS_GUIDE_PATH, category: 'Food cost guide',
+    pageFamily: LOW_COST_DINNERS_GUIDE.pageFamily, primarySearchIntent: LOW_COST_DINNERS_GUIDE.primarySearchIntent,
+    indexingStatus: LOW_COST_DINNERS_GUIDE.indexingStatus, publishedAt: LOW_COST_DINNERS_GUIDE.publishedAt,
+    reviewedAt: LOW_COST_DINNERS_GUIDE.reviewedAt, contentReviewedAt: LOW_COST_DINNERS_GUIDE.contentReviewedAt,
+    internalLinks: LOW_COST_DINNERS_GUIDE.internalLinks, disclosures: LOW_COST_DINNERS_GUIDE.disclosures, status: 'published',
+  },
   {
     title: FIVE_A_DAY_GUIDE.title, path: FIVE_A_DAY_GUIDE_PATH, category: 'Nutrition guide',
     pageFamily: FIVE_A_DAY_GUIDE.pageFamily, primarySearchIntent: FIVE_A_DAY_GUIDE.primarySearchIntent,
