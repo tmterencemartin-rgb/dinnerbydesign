@@ -53,11 +53,19 @@
       "destination": "/food-costs/uk-food-costs-2026/index.html"
     },
     {
+      "source": "/guides/do-vegetables-in-dishes-count-towards-5-a-day",
+      "destination": "/guides/do-vegetables-in-dishes-count-towards-5-a-day/index.html"
+    },
+    {
       "source": "/dinner-plans/(.*)",
       "destination": "/api/server.js"
     },
     {
       "source": "/food-costs/(.*)",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/guides/(.*)",
       "destination": "/api/server.js"
     },
     {
