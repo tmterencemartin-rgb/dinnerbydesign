@@ -9,8 +9,8 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   
   return (
     <footer className="mt-auto border-t border-gray-100 bg-gray-50 py-6">
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-3 sm:px-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end lg:px-6">
-        <div className="flex min-w-0 flex-col items-center space-y-2 lg:items-start">
+      <div className="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-5 px-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start lg:px-10">
+        <div className="flex min-w-0 flex-col items-center lg:items-start">
           <div className="text-gray-500 text-[13px] flex flex-col items-center lg:items-start gap-1 relative z-10">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
             <span className="text-gray-400 text-[12px] font-semibold">
@@ -22,9 +22,6 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             >
               chef@dinnerbydesign.app
             </a>
-          </div>
-          <div className="text-gray-400 text-[11px] max-w-2xl text-center lg:text-left leading-relaxed mt-4 pt-2 border-t border-gray-200/50 relative">
-            DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
           </div>
         </div>
         
@@ -71,6 +68,10 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           >
             Terms of Service
           </a>
+        </div>
+
+        <div className="border-t border-gray-200/50 pt-3 text-center text-[11px] leading-relaxed text-gray-400 lg:col-span-2 lg:text-left">
+          DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
         </div>
       </div>
     </footer>
