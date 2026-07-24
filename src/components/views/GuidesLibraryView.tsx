@@ -66,12 +66,15 @@ export const GuidesLibraryView: React.FC<{ onPlanWeek: () => void }> = ({ onPlan
               </div>
               <p className="mt-1 text-xs leading-5 text-dbd-ink-3 sm:text-sm">{group.description}</p>
             </div>
-            <div className="mt-2 grid border-t border-dbd-rule/50 sm:mt-4 sm:grid-cols-2 sm:gap-3 sm:border-0 lg:grid-cols-3">
+            <div className="mt-2 grid border-t border-dbd-rule/50 sm:mt-3 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8">
               {group.articles.map(article => (
-                <article key={article.path} className="border-b border-dbd-rule/50 py-3.5 sm:flex sm:h-full sm:flex-col sm:rounded sm:border sm:border-dbd-rule/60 sm:bg-white sm:p-4">
-                  <p className="text-[8.5px] font-semibold uppercase tracking-[0.12em] text-dbd-accent sm:text-[9px]">{article.category}</p>
-                  <h3 className="mt-1 text-sm font-medium leading-5 sm:mt-1.5 sm:flex-grow sm:text-base sm:font-semibold sm:leading-snug"><a href={article.path} className="hover:text-dbd-accent hover:underline">{article.title}</a></h3>
-                  <a href={article.path} className="mt-3 hidden items-center gap-1.5 text-xs font-semibold text-dbd-accent hover:underline sm:inline-flex">Read guide <ArrowRight size={13} /></a>
+                <article key={article.path} className="border-b border-dbd-rule/50">
+                  <h3>
+                    <a href={article.path} className="group flex min-h-12 items-start justify-between gap-3 py-3 text-sm font-medium leading-5 text-dbd-ink-2 transition-colors hover:text-dbd-accent sm:min-h-14 sm:py-3.5">
+                      <span>{article.title}</span>
+                      <ArrowRight size={13} className="mt-1 shrink-0 text-dbd-ink-3 transition-transform group-hover:translate-x-0.5 group-hover:text-dbd-accent" />
+                    </a>
+                  </h3>
                 </article>
               ))}
             </div>
