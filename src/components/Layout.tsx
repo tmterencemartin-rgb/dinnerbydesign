@@ -147,7 +147,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
         </div>
       </nav>
 
-      <main className="min-w-0 max-w-6xl mx-auto w-full px-3 sm:px-4 lg:px-6 py-4 bg-transparent">
+      <main className="min-w-0 flex-grow max-w-6xl mx-auto w-full px-3 sm:px-4 lg:px-6 py-4 bg-transparent">
         {children}
       </main>
 
