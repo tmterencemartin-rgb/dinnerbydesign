@@ -8,9 +8,9 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="border-t border-gray-100 bg-gray-50 py-4 px-4 mt-auto">
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row justify-between items-center lg:items-end space-y-4 lg:space-y-0">
-        <div className="flex flex-col items-center lg:items-start space-y-2">
+    <footer className="mt-auto border-t border-gray-100 bg-gray-50 px-4 py-6">
+      <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end">
+        <div className="flex min-w-0 flex-col items-center space-y-2 lg:items-start">
           <div className="text-gray-500 text-[13px] flex flex-col items-center lg:items-start gap-1 relative z-10">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
             <span className="text-gray-400 text-[12px] font-semibold">
@@ -28,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </div>
         
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 shrink-0">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 lg:justify-end">
           <a href="/guides" className="text-gray-500 hover:text-gray-900 text-[13px] transition-colors whitespace-nowrap">
             Guides
           </a>
