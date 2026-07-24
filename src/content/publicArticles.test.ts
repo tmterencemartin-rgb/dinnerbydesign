@@ -29,6 +29,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/five-dinners-same-ingredients')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/how-to-use-complete-packs')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/low-cost-cooking-techniques')).toBe(false);
+    expect(isUnknownPublicArticlePath('/food-costs/cheap-finishing-touches')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/make-low-cost-dinners-more-interesting')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-for-one-without-waste')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/summer-stews-seasonal-vegetables')).toBe(false);

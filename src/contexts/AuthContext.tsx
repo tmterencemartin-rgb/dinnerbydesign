@@ -391,6 +391,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (location === '/guides') return 'guides';
     if (location === '/guides/do-vegetables-in-dishes-count-towards-5-a-day') return 'five-a-day-guide';
     if (location === '/guides/home-cooked-or-ready-made-dinners') return 'home-cooked-ready-made-guide';
+    if (location === '/food-costs/cheap-finishing-touches') return 'cheap-finishing-touches-guide';
     if (location === '/food-costs/make-low-cost-dinners-more-interesting') return 'low-cost-dinners-guide';
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';

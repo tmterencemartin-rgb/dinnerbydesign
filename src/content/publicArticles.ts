@@ -7,6 +7,7 @@ import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './share
 import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH } from './completePacksGuide';
 import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
 import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH } from './homeCookedReadyMadeGuide';
+import { CHEAP_FINISHING_TOUCHES_GUIDE, CHEAP_FINISHING_TOUCHES_GUIDE_PATH } from './cheapFinishingTouchesGuide';
 import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDinnersGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
@@ -26,6 +27,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: CHEAP_FINISHING_TOUCHES_GUIDE.title, path: CHEAP_FINISHING_TOUCHES_GUIDE_PATH, category: 'Food cost guide',
+    pageFamily: CHEAP_FINISHING_TOUCHES_GUIDE.pageFamily, primarySearchIntent: CHEAP_FINISHING_TOUCHES_GUIDE.primarySearchIntent,
+    indexingStatus: CHEAP_FINISHING_TOUCHES_GUIDE.indexingStatus, publishedAt: CHEAP_FINISHING_TOUCHES_GUIDE.publishedAt,
+    reviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.reviewedAt, contentReviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.contentReviewedAt,
+    internalLinks: CHEAP_FINISHING_TOUCHES_GUIDE.internalLinks, disclosures: CHEAP_FINISHING_TOUCHES_GUIDE.disclosures, status: 'published',
+  },
   {
     title: HOME_COOKED_READY_MADE_GUIDE.title, path: HOME_COOKED_READY_MADE_GUIDE_PATH, category: 'Cooking and nutrition guide',
     pageFamily: HOME_COOKED_READY_MADE_GUIDE.pageFamily, primarySearchIntent: HOME_COOKED_READY_MADE_GUIDE.primarySearchIntent,

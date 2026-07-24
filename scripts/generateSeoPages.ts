@@ -96,6 +96,12 @@ import {
   renderHomeCookedReadyMadeGuideInitialHtml,
 } from '../src/content/homeCookedReadyMadeGuide';
 import {
+  CHEAP_FINISHING_TOUCHES_GUIDE,
+  CHEAP_FINISHING_TOUCHES_GUIDE_PATH,
+  getCheapFinishingTouchesGuideJsonLd,
+  renderCheapFinishingTouchesGuideInitialHtml,
+} from '../src/content/cheapFinishingTouchesGuide';
+import {
   LOW_COST_DINNERS_GUIDE,
   LOW_COST_DINNERS_GUIDE_PATH,
   getLowCostDinnersGuideJsonLd,
@@ -497,6 +503,26 @@ const homeCookedReadyMadeOutputDir = path.join(distRoot, HOME_COOKED_READY_MADE_
 await fs.mkdir(homeCookedReadyMadeOutputDir, { recursive: true });
 await fs.writeFile(path.join(homeCookedReadyMadeOutputDir, 'index.html'), homeCookedReadyMadeHtml, 'utf8');
 console.log(`Generated ${HOME_COOKED_READY_MADE_GUIDE_PATH}/index.html`);
+
+const cheapFinishingTouchesCanonicalUrl = `https://dinnerbydesign.app${CHEAP_FINISHING_TOUCHES_GUIDE_PATH}`;
+let cheapFinishingTouchesHtml = sourceHtml
+  .replace(/<title>.*?<\/title>/, `<title>${CHEAP_FINISHING_TOUCHES_GUIDE.seoTitle}</title>`)
+  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${CHEAP_FINISHING_TOUCHES_GUIDE.description}" />`)
+  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${cheapFinishingTouchesCanonicalUrl}" />`)
+  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${cheapFinishingTouchesCanonicalUrl}" />`)
+  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${CHEAP_FINISHING_TOUCHES_GUIDE.seoTitle}" />`)
+  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${CHEAP_FINISHING_TOUCHES_GUIDE.description}" />`)
+  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${CHEAP_FINISHING_TOUCHES_GUIDE.seoTitle}" />`)
+  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${CHEAP_FINISHING_TOUCHES_GUIDE.description}" />`)
+  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderCheapFinishingTouchesGuideInitialHtml()))
+  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCheapFinishingTouchesGuideJsonLd())}</script>\n</head>`);
+if (!cheapFinishingTouchesHtml.includes(`<h1>${CHEAP_FINISHING_TOUCHES_GUIDE.title}</h1>`) || !cheapFinishingTouchesHtml.includes(`href="${cheapFinishingTouchesCanonicalUrl}"`)) throw new Error('Cheap finishing touches guide generation failed its content or canonical check.');
+const cheapFinishingTouchesOutputDir = path.join(distRoot, CHEAP_FINISHING_TOUCHES_GUIDE_PATH.slice(1));
+await fs.mkdir(cheapFinishingTouchesOutputDir, { recursive: true });
+await fs.writeFile(path.join(cheapFinishingTouchesOutputDir, 'index.html'), cheapFinishingTouchesHtml, 'utf8');
+console.log(`Generated ${CHEAP_FINISHING_TOUCHES_GUIDE_PATH}/index.html`);
 
 const lowCostDinnersCanonicalUrl = `https://dinnerbydesign.app${LOW_COST_DINNERS_GUIDE_PATH}`;
 let lowCostDinnersHtml = sourceHtml

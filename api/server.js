@@ -164207,6 +164207,44 @@ var HOME_COOKED_READY_MADE_GUIDE = {
   ]
 };
 
+// src/content/cheapFinishingTouchesGuide.ts
+var CHEAP_FINISHING_TOUCHES_GUIDE_PATH = "/food-costs/cheap-finishing-touches";
+var CHEAP_FINISHING_TOUCHES_GUIDE = {
+  title: "Cheap finishing touches that make everyday dinners taste better",
+  seoTitle: "Low-cost ways to add flavour and texture to dinner | DinnerByDesign",
+  description: "Use acidity, crunch, savoury depth, heat and fresh contrast to lift everyday dinners without substantially increasing their cost.",
+  publishedAt: "2026-07-24",
+  reviewedAt: "2026-07-24",
+  nextReviewAt: "2027-07-24",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Find inexpensive finishing touches that add flavour, texture and contrast to everyday dinners",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-24",
+  editorialNotes: "Technique-led guide. Cheap and low-cost refer to cost per use and small quantities, not a guarantee that every complete pack is inexpensive.",
+  internalLinks: [
+    "/guides",
+    "/food-costs/how-to-use-complete-packs",
+    "/food-costs/five-dinners-same-ingredients",
+    "/food-safety",
+    "/food-costs/make-low-cost-dinners-more-interesting",
+    "/guides/home-cooked-or-ready-made-dinners",
+    "/pricing-methodology",
+    "/signin"
+  ],
+  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Love Food Hate Waste: Herbs",
+      url: "https://www.lovefoodhatewaste.com/foods-and-recipes/herbs"
+    },
+    {
+      label: "Food Standards Agency: Food allergies, intolerances and coeliac disease",
+      url: "https://www.food.gov.uk/food-safety-and-hygiene/food-allergies-intolerances-and-coeliac-disease"
+    }
+  ]
+};
+
 // src/content/lowCostDinnersGuide.ts
 var LOW_COST_DINNERS_GUIDE_PATH = "/food-costs/make-low-cost-dinners-more-interesting";
 var LOW_COST_DINNERS_GUIDE = {
@@ -164223,6 +164261,7 @@ var LOW_COST_DINNERS_GUIDE = {
   editorialNotes: "Technique-led guide with no specific cost or savings figures. Review annually, next due 24 July 2027.",
   internalLinks: [
     "/guides",
+    "/food-costs/cheap-finishing-touches",
     "/food-costs/low-cost-cooking-techniques",
     "/food-costs/five-dinners-same-ingredients",
     "/guides/home-cooked-or-ready-made-dinners",
@@ -164234,6 +164273,20 @@ var LOW_COST_DINNERS_GUIDE = {
 
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: CHEAP_FINISHING_TOUCHES_GUIDE.title,
+    path: CHEAP_FINISHING_TOUCHES_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: CHEAP_FINISHING_TOUCHES_GUIDE.pageFamily,
+    primarySearchIntent: CHEAP_FINISHING_TOUCHES_GUIDE.primarySearchIntent,
+    indexingStatus: CHEAP_FINISHING_TOUCHES_GUIDE.indexingStatus,
+    publishedAt: CHEAP_FINISHING_TOUCHES_GUIDE.publishedAt,
+    reviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.reviewedAt,
+    contentReviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.contentReviewedAt,
+    internalLinks: CHEAP_FINISHING_TOUCHES_GUIDE.internalLinks,
+    disclosures: CHEAP_FINISHING_TOUCHES_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: HOME_COOKED_READY_MADE_GUIDE.title,
     path: HOME_COOKED_READY_MADE_GUIDE_PATH,

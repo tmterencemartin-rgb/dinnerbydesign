@@ -50,7 +50,7 @@ export const LowCostDinnersGuideView: React.FC<{ onFindDinner: () => void }> = (
         <Section title="Build flavour inexpensively">
           <p>A short list of flavour-builders does most of the work here, and there's no need to own all of them at once, or to restock every one every week. One spice blend, one acidic ingredient and one savoury seasoning will already shift a dish a long way from its last outing.</p>
           <BulletList items={['Mustard', 'Curry powder', 'Smoked paprika', 'Dried herbs', 'Chilli flakes', 'Soy sauce', 'Vinegar or lemon juice', 'Garlic', 'Stock']} />
-          <p>It is worth tasting as you go, particularly with stock, soy sauce and other salty seasonings. It's easy to oversalt a dish by adding several of these on top of each other without checking first.</p>
+          <p>It is worth tasting as you go, particularly with stock, soy sauce and other salty seasonings. It's easy to oversalt a dish by adding several of these on top of each other without checking first. <a href="/food-costs/cheap-finishing-touches" className="font-semibold text-dbd-accent hover:underline">See which low-cost finishing touches add acidity, crunch, depth, heat or freshness</a>.</p>
         </Section>
 
         <Section title="Change the cooking method">

@@ -394,6 +394,29 @@ export const HOME_COOKED_READY_MADE_DISCLOSURES: ProgrammaticDisclosureItem[] = 
   },
 ];
 
+export const CHEAP_FINISHING_TOUCHES_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'What low-cost means here',
+    body: 'Cheap and low-cost refer to using a small amount repeatedly, not to a guarantee that every complete pack is inexpensive. Compare the shelf price, cost per use, storage life and whether the rest will actually be used.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Allergens and product labels',
+    body: 'Several suggestions may contain fish, milk, soya, tree nuts or cereals containing gluten. Check every label, ask what somebody with an allergy can safely eat and prevent cross-contamination during preparation.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storing herbs and opened products',
+    body: 'Follow product storage instructions. Chopped herbs can be frozen in a suitable container with a little oil or water; label and date them, and follow the cited guidance for suitable storage times.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Love Food Hate Waste and Food Standards Agency guidance was reviewed on 24 July 2026. Follow the cited sources and current product labels for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -536,6 +559,16 @@ export const LOW_COST_DINNERS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCop
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const CHEAP_FINISHING_TOUCHES_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'These are flexible finishing ideas rather than fixed recipes or guaranteed savings. Pack prices, allergens, storage instructions and suitability vary by product.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Food safety guidance' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],
 };

@@ -1,15 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import { PUBLISHED_ARTICLES, PUBLIC_LIBRARY_PATH } from './publicArticles';
-import { PUBLIC_GUIDE_LIBRARY, getPublicGuideLibraryJsonLd, renderPublicGuideLibraryInitialHtml } from './publicGuideLibrary';
+import { PUBLIC_GUIDE_GROUPS, PUBLIC_GUIDE_LIBRARY, getPublicGuideLibraryJsonLd, renderPublicGuideLibraryInitialHtml } from './publicGuideLibrary';
 
 describe('public guide library', () => {
   it('launches at the agreed route with every published article', () => {
     expect(PUBLIC_LIBRARY_PATH).toBe('/guides');
-    expect(PUBLISHED_ARTICLES).toHaveLength(19);
+    expect(PUBLISHED_ARTICLES).toHaveLength(20);
     const html = renderPublicGuideLibraryInitialHtml();
     expect(html).toContain(`<h1>${PUBLIC_GUIDE_LIBRARY.title}</h1>`);
     PUBLISHED_ARTICLES.forEach(article => expect(html).toContain(`href="${article.path}"`));
+    PUBLIC_GUIDE_GROUPS.forEach(group => expect(html).toContain(`<h2>${group.title}</h2>`));
     expect(html).toContain('Plan my week');
+  });
+
+  it('groups every published guide exactly once by customer need', () => {
+    const groupedPaths = PUBLIC_GUIDE_GROUPS.flatMap(group => group.articles.map(article => article.path));
+    expect(groupedPaths).toHaveLength(PUBLISHED_ARTICLES.length);
+    expect(new Set(groupedPaths)).toEqual(new Set(PUBLISHED_ARTICLES.map(article => article.path)));
   });
 
   it('provides collection, item-list and breadcrumb structured data', () => {
