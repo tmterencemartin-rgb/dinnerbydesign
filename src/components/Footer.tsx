@@ -8,8 +8,8 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="mt-auto border-t border-gray-100 bg-gray-50 px-4 py-6">
-      <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end">
+    <footer className="mt-auto border-t border-gray-100 bg-gray-50 py-6">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-3 sm:px-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end lg:px-6">
         <div className="flex min-w-0 flex-col items-center space-y-2 lg:items-start">
           <div className="text-gray-500 text-[13px] flex flex-col items-center lg:items-start gap-1 relative z-10">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
