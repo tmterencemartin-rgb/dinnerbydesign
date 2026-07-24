@@ -8,11 +8,11 @@ export const GuidesLibraryView: React.FC<{ onPlanWeek: () => void }> = ({ onPlan
     <main className="mx-auto max-w-5xl px-4 py-5 pb-12 sm:py-9 sm:pb-16">
       <nav aria-label="Breadcrumb" className="text-xs text-dbd-ink-3"><a href="/" className="hover:underline">DinnerByDesign</a><span className="px-2">/</span><span>Guides</span></nav>
       <header className="mt-4 max-w-3xl sm:mt-6"><p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-dbd-accent sm:text-[10px]">Public guide library</p><h1 className="mt-1.5 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{PUBLIC_GUIDE_LIBRARY.title}</h1><p className="mt-2.5 text-sm leading-6 text-dbd-ink-3 sm:mt-3">{PUBLIC_GUIDE_LIBRARY.description}</p></header>
-      <nav aria-label="Guide categories" className="mt-5 rounded border border-dbd-rule/60 bg-white p-4 sm:mt-7 sm:p-5">
-        <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-dbd-ink-2">Browse by category</h2>
-        <div className="mt-3 flex flex-wrap gap-2">
+      <nav aria-label="Guide categories" className="mt-5 border-y border-dbd-rule/50 py-3.5 sm:mt-7 sm:flex sm:items-baseline sm:gap-5 sm:py-4">
+        <h2 className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-dbd-ink-3">Browse by category</h2>
+        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 sm:mt-0">
           {PUBLIC_GUIDE_GROUPS.map(group => (
-            <a key={group.id} href={`#${group.id}`} className="rounded-full border border-dbd-rule px-3 py-2 text-xs font-medium text-dbd-ink-2 transition-colors hover:border-dbd-accent hover:text-dbd-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dbd-accent">
+            <a key={group.id} href={`#${group.id}`} className="text-xs leading-5 text-dbd-ink-2 underline decoration-dbd-rule underline-offset-4 transition-colors hover:text-dbd-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dbd-accent sm:text-sm">
               {group.title}
             </a>
           ))}
