@@ -8,7 +8,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="mt-auto border-t border-gray-100 bg-gray-50 py-6">
+    <footer className="grow border-t border-gray-100 bg-gray-50 py-6">
       <div className="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-5 px-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start lg:px-10">
         <div className="flex min-w-0 flex-col items-center lg:items-start">
           <div className="text-gray-500 text-[13px] flex flex-col items-center lg:items-start gap-1 relative z-10">
