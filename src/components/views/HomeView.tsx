@@ -923,7 +923,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
               {showCompactGuestStarters && (
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
                   {COMPACT_GUEST_SEARCH_STARTERS.map(suggestion => (
                     <button
                       key={suggestion}
