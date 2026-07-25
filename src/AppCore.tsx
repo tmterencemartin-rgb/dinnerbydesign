@@ -101,6 +101,15 @@ import {
 
 import { StatusBanner } from './components/StatusBanner';
 
+const ViewLoading = () => (
+  <div className="flex min-h-[42vh] items-center justify-center" role="status" aria-live="polite">
+    <div className="flex items-center gap-2 text-xs font-medium text-dbd-ink-3">
+      <span className="h-3 w-3 animate-pulse rounded-full bg-dbd-accent" aria-hidden="true" />
+      Opening…
+    </div>
+  </div>
+);
+
 const AppContent = () => {
   const {
     user,
@@ -435,25 +444,40 @@ const AppContent = () => {
 
   const [showFilters, setShowFilters] = useState(false);
   const [showInlineSuccess, setShowInlineSuccess] = useState(false);
+  const [isViewPending, startViewTransition] = React.useTransition();
   const isSearchDesignPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('design') === 'search-page';
   const isBudgetFamilySeoPreview = AFFORDABILITY_PLANNER_PILOT && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('design') === 'budget-family';
 
   const setView = (v: AppView, highlightOrFilters?: string | boolean | null) => {
-    if (typeof highlightOrFilters === 'string') {
-      setViewContext(v, highlightOrFilters);
-      setShowFilters(false);
-    } else if (typeof highlightOrFilters === 'boolean') {
-      setViewContext(v);
-      setShowFilters(highlightOrFilters);
-    } else {
-      setViewContext(v);
-    }
+    startViewTransition(() => {
+      if (typeof highlightOrFilters === 'string') {
+        setViewContext(v, highlightOrFilters);
+        setShowFilters(false);
+      } else if (typeof highlightOrFilters === 'boolean') {
+        setViewContext(v);
+        setShowFilters(highlightOrFilters);
+      } else {
+        setViewContext(v);
+      }
+    });
   };
 
   const searchState = useSearch();
 
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
+  React.useEffect(() => {
+    if (!isAuthReady || isGuest) return;
+    const preloadTimer = window.setTimeout(() => {
+      void Promise.all([
+        import('./components/views/PlannerView'),
+        import('./components/views/ShoppingListView'),
+        import('./components/views/SettingsView'),
+      ]).catch(() => undefined);
+    }, 1200);
+    return () => window.clearTimeout(preloadTimer);
+  }, [isAuthReady, isGuest]);
+
   React.useEffect(() => {
     if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'five-a-day-guide' && view !== 'home-cooked-ready-made-guide' && view !== 'cheap-finishing-touches-guide' && view !== 'low-cost-dinners-guide' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-cheaper-meat-cuts' && view !== 'food-costs-shared-ingredients' && view !== 'food-costs-complete-packs' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
@@ -854,46 +878,55 @@ const AppContent = () => {
         </div>
       )}
 
-      <AnimatePresence>
-        {view === 'home' && (
-          <HomeView
-            {...searchState}
-            showFilters={showFilters}
-            setShowFilters={setShowFilters}
-            setPreferencesError={() => {}}
-            contradictionWarning={contradictionWarning}
-            isEmptyResults={!searchState.isGenerating && !searchState.isAppending && !searchState.searchError && searchState.lastQuery !== '' && (searchState.source === 'cook' ? (searchState.currentRecipes !== null && searchState.currentRecipes.length === 0) : (searchState.currentReadyMeals !== null && searchState.currentReadyMeals.length === 0))}
-            showInlineSuccess={showInlineSuccess}
-            localPreferences={profile?.preferences || {}}
-            updateLocalPreference={() => {}}
-            handleTotalTimeChange={(val) => searchState.setMaxTotalTime(val)}
-            timeConflict={null}
-            setView={setView}
-            cookingMethods={searchState.cookingMethods}
-            setCookingMethods={searchState.setCookingMethods}
-            saladPreference={searchState.saladPreference}
-            setSaladPreference={searchState.setSaladPreference}
-          />
-        )}
-        {view === 'settings' && (
-          <SettingsView
-            setView={setView}
-            highlight={highlight}
-            clearHighlight={clearHighlight}
-          />
-        )}
-        {view === 'planner' && (
-          <PlannerView
-            setView={setView}
-          />
-        )}
-        {view === 'shopping' && (
-          <ShoppingListView setView={setView} />
-        )}
-        {view === 'admin' && (
-          <AdminDashboard />
-        )}
-      </AnimatePresence>
+      {isViewPending && (
+        <div className="mb-3 flex items-center gap-2 text-[11px] font-medium text-dbd-ink-3" role="status" aria-live="polite">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-dbd-accent" aria-hidden="true" />
+          Opening…
+        </div>
+      )}
+
+      <React.Suspense fallback={<ViewLoading />}>
+        <AnimatePresence>
+          {view === 'home' && (
+            <HomeView
+              {...searchState}
+              showFilters={showFilters}
+              setShowFilters={setShowFilters}
+              setPreferencesError={() => {}}
+              contradictionWarning={contradictionWarning}
+              isEmptyResults={!searchState.isGenerating && !searchState.isAppending && !searchState.searchError && searchState.lastQuery !== '' && (searchState.source === 'cook' ? (searchState.currentRecipes !== null && searchState.currentRecipes.length === 0) : (searchState.currentReadyMeals !== null && searchState.currentReadyMeals.length === 0))}
+              showInlineSuccess={showInlineSuccess}
+              localPreferences={profile?.preferences || {}}
+              updateLocalPreference={() => {}}
+              handleTotalTimeChange={(val) => searchState.setMaxTotalTime(val)}
+              timeConflict={null}
+              setView={setView}
+              cookingMethods={searchState.cookingMethods}
+              setCookingMethods={searchState.setCookingMethods}
+              saladPreference={searchState.saladPreference}
+              setSaladPreference={searchState.setSaladPreference}
+            />
+          )}
+          {view === 'settings' && (
+            <SettingsView
+              setView={setView}
+              highlight={highlight}
+              clearHighlight={clearHighlight}
+            />
+          )}
+          {view === 'planner' && (
+            <PlannerView
+              setView={setView}
+            />
+          )}
+          {view === 'shopping' && (
+            <ShoppingListView setView={setView} />
+          )}
+          {view === 'admin' && (
+            <AdminDashboard />
+          )}
+        </AnimatePresence>
+      </React.Suspense>
     </Layout>
       <AnimatePresence>
         {toast && (

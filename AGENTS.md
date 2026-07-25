@@ -58,6 +58,13 @@ When a user lists ingredients:
 - State whether acceptance was verified in the running app, in production or at implementation level.
 - Record new durable product rules here or in the appropriate linked document.
 
+## View navigation loading
+
+- Reserve the full branded loading screen for the initial app code load.
+- Use a React transition for ordinary view changes so the current interface remains visible until the next view is ready.
+- Keep any slow-view fallback inside the existing app layout rather than replacing the entire screen.
+- Prepare Planner, Shopping and Settings shortly after a signed-in session becomes ready to reduce first-visit delay.
+
 ## Search service
 
 - Recipe generation and analysis use `gemini-3.5-flash`.
