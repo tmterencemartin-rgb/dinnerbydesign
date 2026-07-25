@@ -60,12 +60,14 @@ export const PublicEditorialGuideView: React.FC<PublicEditorialGuideViewProps> =
 
         <article
           className={[
-            'text-[15px] leading-7 text-dbd-ink-3',
+            'text-[15px] leading-6 text-dbd-ink-3 sm:leading-7',
             '[&>section]:mt-10 [&>aside]:mt-8',
             '[&_section_section]:mt-7',
+            '[&_aside>section+section]:mt-6',
             '[&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-dbd-ink',
             '[&_h3]:font-semibold [&_h3]:text-dbd-ink',
             '[&_p]:mt-4',
+            '[&_aside>section>p]:mt-2.5',
             '[&_ul]:mt-4 [&_ul]:space-y-2 [&_ul]:pl-5',
             '[&_li]:list-disc [&_li]:pl-1',
             '[&_a]:font-semibold [&_a]:text-dbd-accent [&_a:hover]:underline',
