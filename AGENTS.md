@@ -145,6 +145,14 @@ When a user lists ingredients:
 - New guests may see no more than three compact starter searches. Returning guests should see a quiet remaining-search count rather than the full onboarding panel.
 - Count each guest search-service request against the three-search allowance, including `More choices`. Label that action clearly for guests and block it when the allowance is exhausted.
 
+## Public guides inside the working app
+
+- Keep contextual guide links short and situational. Show portion planning beside the portions control, pricing methodology beside cost controls and estimates, fresh-versus-frozen guidance only for relevant searches, and pack-use guidance in Shopping.
+- Direct loads under `/guides/`, `/food-costs/` and `/dinner-plans/` use the lightweight `PublicGuideApp` shell. They must not initialise authentication, search, planner, shopping or administration code.
+- `AppCore` owns the working application and may lazy-load individual views. Keep `src/lib/publicRoute.ts` aligned with public route families and preserve crawler-visible HTML generation for every published guide.
+- Direct guide routes use `PublicGuideShell` for the shared wordmark, breadcrumb treatment and public linked footer. Keep public footer links as ordinary URLs so they work without the authenticated app context.
+- Keep Playwright coverage for guest tab restrictions, search preferences, guide category jumps, guide-to-account handoffs, public footer links and the signed-in planner-to-shopping route. The signed-in journey uses `E2E_USER_EMAIL` and `E2E_USER_PASSWORD` when a dedicated test account is available.
+
 ## Ingredient price refresh
 
 - Do not scrape retailer websites without written permission or an appropriately licensed feed.

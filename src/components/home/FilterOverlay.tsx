@@ -718,7 +718,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                 <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
                   {/* Portions Counter */}
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Portions</label>
+                    <div className="flex items-center justify-between gap-3 pl-0.5">
+                      <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em]">Portions</label>
+                      <a
+                        href="/food-costs/portion-planning-and-food-waste"
+                        className="text-[10px] font-semibold text-dbd-accent hover:underline"
+                      >
+                        Portion-planning guide
+                      </a>
+                    </div>
                     <div className="flex items-center justify-between p-3 bg-gray-50/80 rounded border border-gray-200">
                       <span className="text-[13px] font-semibold text-gray-700">Adult portions</span>
                       <NumberStepper 
@@ -763,7 +771,15 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
                     {/* Price */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Max cost per portion</label>
+                      <div className="flex items-center justify-between gap-2 pl-0.5">
+                        <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em]">Max cost per portion</label>
+                        <a
+                          href="/pricing-methodology"
+                          className="text-[10px] font-semibold text-dbd-accent hover:underline"
+                        >
+                          How costs work
+                        </a>
+                      </div>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[13px] text-gray-400 font-bold">£</span>
                         <input 

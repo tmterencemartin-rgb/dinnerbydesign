@@ -340,6 +340,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
   const resultsQuery = lastQuery || input;
   const resultsIngredientIntent = React.useMemo(() => detectIngredientIntent(resultsQuery), [resultsQuery]);
+  const showFreshOrFrozenGuide = React.useMemo(
+    () => /\b(fresh\s+(?:or|vs|versus)\s+frozen|frozen\s+(?:veg(?:etables?)?|fruit|spinach|peas|fish)|freezer)\b/i.test(resultsQuery),
+    [resultsQuery]
+  );
   const resultsCount = (source === 'cook' ? currentRecipes?.length : currentReadyMeals?.length) || 0;
   const resultsHeading = React.useMemo(
     () => buildResultsHeading({
@@ -954,6 +958,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               hasVisibleResults={resultsCount > 0}
               ingredientIntent={ingredientIntent}
             />
+
+            {showFreshOrFrozenGuide && (hasPerformedSearch || isSearching || resultsCount > 0) && (
+              <p className="border-l-2 border-dbd-accent/25 px-3 text-[11.5px] leading-5 text-dbd-ink-3">
+                Choosing between fresh and frozen ingredients?{' '}
+                <a href="/food-costs/fresh-or-frozen" className="font-semibold text-dbd-accent hover:underline">
+                  Compare cost, shelf life and cooking uses
+                </a>
+              </p>
+            )}
 
             {(hasPerformedSearch || isSearching) &&
               queryExplicitlyRequestsOffal(input || lastQuery) &&
