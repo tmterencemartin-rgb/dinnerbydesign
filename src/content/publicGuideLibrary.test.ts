@@ -5,7 +5,7 @@ import { PUBLIC_GUIDE_GROUPS, PUBLIC_GUIDE_LIBRARY, getPublicGuideLibraryJsonLd,
 describe('public guide library', () => {
   it('launches at the agreed route with every published article', () => {
     expect(PUBLIC_LIBRARY_PATH).toBe('/guides');
-    expect(PUBLISHED_ARTICLES).toHaveLength(22);
+    expect(PUBLISHED_ARTICLES).toHaveLength(23);
     const html = renderPublicGuideLibraryInitialHtml();
     expect(html).toContain(`<h1>${PUBLIC_GUIDE_LIBRARY.title}</h1>`);
     PUBLISHED_ARTICLES.forEach(article => expect(html).toContain(`href="${article.path}"`));

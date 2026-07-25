@@ -119,6 +119,12 @@ import {
   getTraybakeGuideJsonLd,
   renderTraybakeGuideInitialHtml,
 } from '../src/content/traybakeGuide';
+import {
+  SAUSAGE_WAYS_GUIDE,
+  SAUSAGE_WAYS_GUIDE_PATH,
+  getSausageWaysGuideJsonLd,
+  renderSausageWaysGuideInitialHtml,
+} from '../src/content/sausageWaysGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 
 const distRoot = path.resolve(process.cwd(), 'dist');
@@ -600,6 +606,13 @@ await generateEditorialGuide(
   TRAYBAKE_GUIDE_PATH,
   renderTraybakeGuideInitialHtml,
   getTraybakeGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  SAUSAGE_WAYS_GUIDE,
+  SAUSAGE_WAYS_GUIDE_PATH,
+  renderSausageWaysGuideInitialHtml,
+  getSausageWaysGuideJsonLd,
 );
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');

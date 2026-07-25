@@ -466,6 +466,29 @@ export const TRAYBAKE_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const SAUSAGE_GUIDE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'How to read the price example',
+    body: 'The two Tesco products show how pack size and range can change the shelf price and unit price. They are examples, not a ranking of quality or value. Prices and availability vary.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Follow the pack instructions and use-by date. Cook sausages thoroughly, keep raw and cooked products separate, refrigerate leftovers promptly and follow the rice guidance in this article.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Sausages, stock, mustard, bread, yoghurt and prepared sauces vary by product and may contain allergens. Check every label, including vegetarian alternatives.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Price and guidance review',
+    body: 'Product prices and official food-safety guidance were checked 25 July 2026. Follow the cited product pages and official guidance for later information.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -646,6 +669,15 @@ export const TRAYBAKE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   links: [
     { href: '/food-safety', label: 'Food safety' },
     { href: '/guides', label: 'Browse all guides' },
+  ],
+};
+
+export const SAUSAGE_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide offers flexible dinner ideas rather than complete recipes. Product prices, pack sizes, ingredients, cooking instructions and allergens vary.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'How prices are calculated' },
+    { href: '/food-safety', label: 'Food safety' },
   ],
 };
 

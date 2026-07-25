@@ -33,6 +33,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/food-costs/make-low-cost-dinners-more-interesting')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-with-pulses-on-a-budget')).toBe(false);
     expect(isUnknownPublicArticlePath('/guides/how-to-build-a-traybake')).toBe(false);
+    expect(isUnknownPublicArticlePath('/guides/9-ways-with-sausages')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-for-one-without-waste')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/summer-stews-seasonal-vegetables')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/fresh-or-frozen')).toBe(false);

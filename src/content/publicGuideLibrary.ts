@@ -51,6 +51,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/food-costs/summer-stews-seasonal-vegetables',
       '/guides/how-to-build-a-traybake',
+      '/guides/9-ways-with-sausages',
     ],
   },
   {

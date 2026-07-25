@@ -96,6 +96,11 @@ import {
   TRAYBAKE_GUIDE_PATH,
   getTraybakeGuideJsonLd,
 } from './content/traybakeGuide';
+import {
+  SAUSAGE_WAYS_GUIDE,
+  SAUSAGE_WAYS_GUIDE_PATH,
+  getSausageWaysGuideJsonLd,
+} from './content/sausageWaysGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FoodCostGuideView = React.lazy(() => import('./components/views/FoodCostGuideView').then(module => ({ default: module.FoodCostGuideView })));
@@ -120,6 +125,7 @@ const CheapFinishingTouchesGuideView = React.lazy(() => import('./components/vie
 const LowCostDinnersGuideView = React.lazy(() => import('./components/views/LowCostDinnersGuideView').then(module => ({ default: module.LowCostDinnersGuideView })));
 const PulsesBudgetGuideView = React.lazy(() => import('./components/views/PulsesBudgetGuideView').then(module => ({ default: module.PulsesBudgetGuideView })));
 const TraybakeGuideView = React.lazy(() => import('./components/views/TraybakeGuideView').then(module => ({ default: module.TraybakeGuideView })));
+const SausageWaysGuideView = React.lazy(() => import('./components/views/SausageWaysGuideView').then(module => ({ default: module.SausageWaysGuideView })));
 
 type SeoConfig = {
   title: string;
@@ -252,6 +258,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [TRAYBAKE_GUIDE_PATH]: {
     seo: guideSeo(TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH, getTraybakeGuideJsonLd()),
     render: ({ search }) => <TraybakeGuideView onFindDinners={search} />,
+  },
+  [SAUSAGE_WAYS_GUIDE_PATH]: {
+    seo: guideSeo(SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH, getSausageWaysGuideJsonLd()),
+    render: ({ search }) => <SausageWaysGuideView onFindDinners={search} />,
   },
 };
 

@@ -164334,8 +164334,59 @@ var TRAYBAKE_GUIDE = {
   ]
 };
 
+// src/content/sausageWaysGuide.ts
+var SAUSAGE_WAYS_GUIDE_PATH = "/guides/9-ways-with-sausages";
+var SAUSAGE_WAYS_GUIDE = {
+  title: "9 ways with sausages for easy everyday dinners",
+  seoTitle: "9 easy ways with sausages for everyday dinners | DinnerByDesign",
+  description: "Nine practical ways to turn a pack of sausages into varied, affordable dinners, from traybakes and pasta to flatbreads, fried rice and hash.",
+  publishedAt: "2026-07-25",
+  reviewedAt: "2026-07-25",
+  nextReviewAt: "2027-07-25",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find simple and varied everyday dinner ideas using sausages",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-25",
+  editorialNotes: "One canonical inspiration guide with nine distinct ideas and one handoff to ordinary DinnerByDesign search.",
+  internalLinks: ["/guides", "/guides/how-to-build-a-traybake", "/food-costs/cooking-with-pulses-on-a-budget", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Tesco Groceries: Tesco British Pork Sausages 8 Pack 454G",
+      url: "https://www.tesco.com/shop/en-GB/products/261879050"
+    },
+    {
+      label: "Tesco Groceries: Tesco Finest 6 Pork Sausages 400G",
+      url: "https://www.tesco.com/shop/en-GB/products/280002982"
+    },
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food"
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: SAUSAGE_WAYS_GUIDE.title,
+    path: SAUSAGE_WAYS_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: SAUSAGE_WAYS_GUIDE.pageFamily,
+    primarySearchIntent: SAUSAGE_WAYS_GUIDE.primarySearchIntent,
+    indexingStatus: SAUSAGE_WAYS_GUIDE.indexingStatus,
+    publishedAt: SAUSAGE_WAYS_GUIDE.publishedAt,
+    reviewedAt: SAUSAGE_WAYS_GUIDE.reviewedAt,
+    contentReviewedAt: SAUSAGE_WAYS_GUIDE.contentReviewedAt,
+    internalLinks: SAUSAGE_WAYS_GUIDE.internalLinks,
+    disclosures: SAUSAGE_WAYS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: TRAYBAKE_GUIDE.title,
     path: TRAYBAKE_GUIDE_PATH,

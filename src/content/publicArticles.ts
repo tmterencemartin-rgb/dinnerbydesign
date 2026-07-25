@@ -11,6 +11,7 @@ import { CHEAP_FINISHING_TOUCHES_GUIDE, CHEAP_FINISHING_TOUCHES_GUIDE_PATH } fro
 import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDinnersGuide';
 import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGuide';
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
+import { SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH } from './sausageWaysGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -29,6 +30,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: SAUSAGE_WAYS_GUIDE.title, path: SAUSAGE_WAYS_GUIDE_PATH, category: 'Practical cooking guide',
+    pageFamily: SAUSAGE_WAYS_GUIDE.pageFamily, primarySearchIntent: SAUSAGE_WAYS_GUIDE.primarySearchIntent,
+    indexingStatus: SAUSAGE_WAYS_GUIDE.indexingStatus, publishedAt: SAUSAGE_WAYS_GUIDE.publishedAt,
+    reviewedAt: SAUSAGE_WAYS_GUIDE.reviewedAt, contentReviewedAt: SAUSAGE_WAYS_GUIDE.contentReviewedAt,
+    internalLinks: SAUSAGE_WAYS_GUIDE.internalLinks, disclosures: SAUSAGE_WAYS_GUIDE.disclosures, status: 'published',
+  },
   {
     title: TRAYBAKE_GUIDE.title, path: TRAYBAKE_GUIDE_PATH, category: 'Practical cooking guide',
     pageFamily: TRAYBAKE_GUIDE.pageFamily, primarySearchIntent: TRAYBAKE_GUIDE.primarySearchIntent,
