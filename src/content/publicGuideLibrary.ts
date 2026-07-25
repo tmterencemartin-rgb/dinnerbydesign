@@ -24,6 +24,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
       '/food-costs/cooking-for-four-with-lower-cost-cuts',
       '/food-costs/cooking-with-cheaper-cuts-of-meat',
       '/food-costs/cooking-with-offal-on-a-budget',
+      '/food-costs/cooking-with-pulses-on-a-budget',
       '/food-costs/cooking-for-one-without-waste',
     ],
   },
@@ -49,6 +50,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
       '/food-costs/low-cost-cooking-techniques',
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/food-costs/summer-stews-seasonal-vegetables',
+      '/guides/how-to-build-a-traybake',
     ],
   },
   {

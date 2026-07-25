@@ -164271,8 +164271,99 @@ var LOW_COST_DINNERS_GUIDE = {
   disclosures: ["price_comparison"]
 };
 
+// src/content/pulsesBudgetGuide.ts
+var PULSES_BUDGET_GUIDE_PATH = "/food-costs/cooking-with-pulses-on-a-budget";
+var PULSES_BUDGET_GUIDE = {
+  title: "Cooking with lentils, beans and chickpeas on a budget",
+  seoTitle: "Cooking with lentils, beans and chickpeas on a budget | DinnerByDesign",
+  description: "Compare dried and tinned pulses, choose the right variety for the dish and use lentils, beans and chickpeas without making dinner feel like a compromise.",
+  publishedAt: "2026-07-25",
+  reviewedAt: "2026-07-25",
+  nextReviewAt: "2027-01-25",
+  priceReviewedAt: "2026-07-25",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Learn how to buy and cook lentils, beans and chickpeas economically",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-25",
+  editorialNotes: "Price examples are a dated Tesco snapshot. Cooked yield and hob-use figures are explicitly presented as approximations.",
+  internalLinks: [
+    "/guides",
+    "/food-costs/cheap-finishing-touches",
+    "/food-costs/how-to-use-complete-packs",
+    "/food-costs/five-dinners-same-ingredients",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/fresh-or-frozen",
+    "/pricing-methodology",
+    "/food-safety",
+    "/signin"
+  ],
+  disclosures: ["price_estimate", "price_comparison", "source_timing", "storage_and_cooking", "allergen_and_product"],
+  sources: [
+    { label: "NHS: 5 A Day, what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
+    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
+    { label: "Food Standards Agency: Natural toxins factsheet", url: "https://acss.food.gov.uk/sites/default/files/natural-toxins-factsheet.pdf" },
+    { label: "Ofgem: Energy price cap unit rates and standing charges", url: "https://www.ofgem.gov.uk/information-consumers/energy-advice-households/energy-price-cap-unit-rates-and-standing-charges" },
+    { label: "Tesco Groceries: Laila Chickpeas 2kg", url: "https://www.tesco.com/shop/en-GB/products/310108624" },
+    { label: "Tesco Groceries: Lentils, grains and pulses", url: "https://www.tesco.com/groceries/en-GB/shop/food-cupboard/dried-pasta-rice-noodles-and-cous-cous/lentils-grains-and-pulses" }
+  ]
+};
+
+// src/content/traybakeGuide.ts
+var TRAYBAKE_GUIDE_PATH = "/guides/how-to-build-a-traybake";
+var TRAYBAKE_GUIDE = {
+  title: "How to build a traybake that cooks evenly and tastes properly finished",
+  seoTitle: "How to build a traybake that cooks evenly | DinnerByDesign",
+  description: "Tray size, staged cooking and a proper finish: the method behind a traybake that browns instead of steams. Search traybake dinners on DinnerByDesign.",
+  publishedAt: "2026-07-25",
+  reviewedAt: "2026-07-25",
+  nextReviewAt: "2027-07-25",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Learn how to build a traybake that browns well and finishes cooking at the same time",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-25",
+  editorialNotes: "One canonical technique guide with a single handoff to ordinary DinnerByDesign search. No indexable filter pages.",
+  internalLinks: ["/guides", "/food-safety", "/signin"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: TRAYBAKE_GUIDE.title,
+    path: TRAYBAKE_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: TRAYBAKE_GUIDE.pageFamily,
+    primarySearchIntent: TRAYBAKE_GUIDE.primarySearchIntent,
+    indexingStatus: TRAYBAKE_GUIDE.indexingStatus,
+    publishedAt: TRAYBAKE_GUIDE.publishedAt,
+    reviewedAt: TRAYBAKE_GUIDE.reviewedAt,
+    contentReviewedAt: TRAYBAKE_GUIDE.contentReviewedAt,
+    internalLinks: TRAYBAKE_GUIDE.internalLinks,
+    disclosures: TRAYBAKE_GUIDE.disclosures,
+    status: "published"
+  },
+  {
+    title: PULSES_BUDGET_GUIDE.title,
+    path: PULSES_BUDGET_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: PULSES_BUDGET_GUIDE.pageFamily,
+    primarySearchIntent: PULSES_BUDGET_GUIDE.primarySearchIntent,
+    indexingStatus: PULSES_BUDGET_GUIDE.indexingStatus,
+    publishedAt: PULSES_BUDGET_GUIDE.publishedAt,
+    reviewedAt: PULSES_BUDGET_GUIDE.reviewedAt,
+    contentReviewedAt: PULSES_BUDGET_GUIDE.contentReviewedAt,
+    internalLinks: PULSES_BUDGET_GUIDE.internalLinks,
+    disclosures: PULSES_BUDGET_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: CHEAP_FINISHING_TOUCHES_GUIDE.title,
     path: CHEAP_FINISHING_TOUCHES_GUIDE_PATH,

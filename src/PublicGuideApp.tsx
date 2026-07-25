@@ -86,6 +86,16 @@ import {
   LOW_COST_DINNERS_GUIDE_PATH,
   getLowCostDinnersGuideJsonLd,
 } from './content/lowCostDinnersGuide';
+import {
+  PULSES_BUDGET_GUIDE,
+  PULSES_BUDGET_GUIDE_PATH,
+  getPulsesBudgetGuideJsonLd,
+} from './content/pulsesBudgetGuide';
+import {
+  TRAYBAKE_GUIDE,
+  TRAYBAKE_GUIDE_PATH,
+  getTraybakeGuideJsonLd,
+} from './content/traybakeGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FoodCostGuideView = React.lazy(() => import('./components/views/FoodCostGuideView').then(module => ({ default: module.FoodCostGuideView })));
@@ -108,6 +118,8 @@ const FiveADayGuideView = React.lazy(() => import('./components/views/FiveADayGu
 const HomeCookedReadyMadeGuideView = React.lazy(() => import('./components/views/HomeCookedReadyMadeGuideView').then(module => ({ default: module.HomeCookedReadyMadeGuideView })));
 const CheapFinishingTouchesGuideView = React.lazy(() => import('./components/views/CheapFinishingTouchesGuideView').then(module => ({ default: module.CheapFinishingTouchesGuideView })));
 const LowCostDinnersGuideView = React.lazy(() => import('./components/views/LowCostDinnersGuideView').then(module => ({ default: module.LowCostDinnersGuideView })));
+const PulsesBudgetGuideView = React.lazy(() => import('./components/views/PulsesBudgetGuideView').then(module => ({ default: module.PulsesBudgetGuideView })));
+const TraybakeGuideView = React.lazy(() => import('./components/views/TraybakeGuideView').then(module => ({ default: module.TraybakeGuideView })));
 
 type SeoConfig = {
   title: string;
@@ -232,6 +244,14 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [LOW_COST_DINNERS_GUIDE_PATH]: {
     seo: guideSeo(LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH, getLowCostDinnersGuideJsonLd()),
     render: ({ search }) => <LowCostDinnersGuideView onFindDinner={search} />,
+  },
+  [PULSES_BUDGET_GUIDE_PATH]: {
+    seo: guideSeo(PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH, getPulsesBudgetGuideJsonLd()),
+    render: ({ search }) => <PulsesBudgetGuideView onFindDinners={search} />,
+  },
+  [TRAYBAKE_GUIDE_PATH]: {
+    seo: guideSeo(TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH, getTraybakeGuideJsonLd()),
+    render: ({ search }) => <TraybakeGuideView onFindDinners={search} />,
   },
 };
 

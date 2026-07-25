@@ -9,6 +9,8 @@ import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
 import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH } from './homeCookedReadyMadeGuide';
 import { CHEAP_FINISHING_TOUCHES_GUIDE, CHEAP_FINISHING_TOUCHES_GUIDE_PATH } from './cheapFinishingTouchesGuide';
 import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDinnersGuide';
+import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGuide';
+import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -27,6 +29,20 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: TRAYBAKE_GUIDE.title, path: TRAYBAKE_GUIDE_PATH, category: 'Practical cooking guide',
+    pageFamily: TRAYBAKE_GUIDE.pageFamily, primarySearchIntent: TRAYBAKE_GUIDE.primarySearchIntent,
+    indexingStatus: TRAYBAKE_GUIDE.indexingStatus, publishedAt: TRAYBAKE_GUIDE.publishedAt,
+    reviewedAt: TRAYBAKE_GUIDE.reviewedAt, contentReviewedAt: TRAYBAKE_GUIDE.contentReviewedAt,
+    internalLinks: TRAYBAKE_GUIDE.internalLinks, disclosures: TRAYBAKE_GUIDE.disclosures, status: 'published',
+  },
+  {
+    title: PULSES_BUDGET_GUIDE.title, path: PULSES_BUDGET_GUIDE_PATH, category: 'Food cost guide',
+    pageFamily: PULSES_BUDGET_GUIDE.pageFamily, primarySearchIntent: PULSES_BUDGET_GUIDE.primarySearchIntent,
+    indexingStatus: PULSES_BUDGET_GUIDE.indexingStatus, publishedAt: PULSES_BUDGET_GUIDE.publishedAt,
+    reviewedAt: PULSES_BUDGET_GUIDE.reviewedAt, contentReviewedAt: PULSES_BUDGET_GUIDE.contentReviewedAt,
+    internalLinks: PULSES_BUDGET_GUIDE.internalLinks, disclosures: PULSES_BUDGET_GUIDE.disclosures, status: 'published',
+  },
   {
     title: CHEAP_FINISHING_TOUCHES_GUIDE.title, path: CHEAP_FINISHING_TOUCHES_GUIDE_PATH, category: 'Food cost guide',
     pageFamily: CHEAP_FINISHING_TOUCHES_GUIDE.pageFamily, primarySearchIntent: CHEAP_FINISHING_TOUCHES_GUIDE.primarySearchIntent,

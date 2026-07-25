@@ -107,6 +107,18 @@ import {
   getLowCostDinnersGuideJsonLd,
   renderLowCostDinnersGuideInitialHtml,
 } from '../src/content/lowCostDinnersGuide';
+import {
+  PULSES_BUDGET_GUIDE,
+  PULSES_BUDGET_GUIDE_PATH,
+  getPulsesBudgetGuideJsonLd,
+  renderPulsesBudgetGuideInitialHtml,
+} from '../src/content/pulsesBudgetGuide';
+import {
+  TRAYBAKE_GUIDE,
+  TRAYBAKE_GUIDE_PATH,
+  getTraybakeGuideJsonLd,
+  renderTraybakeGuideInitialHtml,
+} from '../src/content/traybakeGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 
 const distRoot = path.resolve(process.cwd(), 'dist');
@@ -118,6 +130,38 @@ const hideInitialSeoContentWhenJavaScriptRuns = (initialHtml: string) => {
   }
 
   return `${rootStart}<div class="app-initial-fallback">${initialHtml.slice(rootStart.length, -6)}</div></div>`;
+};
+
+const generateEditorialGuide = async (
+  guide: { title: string; seoTitle: string; description: string },
+  guidePath: string,
+  renderInitialHtml: () => string,
+  getJsonLd: () => object,
+) => {
+  const canonical = `https://dinnerbydesign.app${guidePath}`;
+  const initialHtml = renderInitialHtml();
+  const guideHtml = sourceHtml
+    .replace(/<title>.*?<\/title>/, `<title>${guide.seoTitle}</title>`)
+    .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${guide.description}" />`)
+    .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+    .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${canonical}" />`)
+    .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${canonical}" />`)
+    .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${guide.seoTitle}" />`)
+    .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${guide.description}" />`)
+    .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${guide.seoTitle}" />`)
+    .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${guide.description}" />`)
+    .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+    .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(initialHtml))
+    .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getJsonLd())}</script>\n</head>`);
+
+  if (!guideHtml.includes(`<h1>${guide.title}</h1>`) || !guideHtml.includes(`href="${canonical}"`)) {
+    throw new Error(`${guidePath} generation failed its content or canonical check.`);
+  }
+
+  const outputDir = path.join(distRoot, guidePath.slice(1));
+  await fs.mkdir(outputDir, { recursive: true });
+  await fs.writeFile(path.join(outputDir, 'index.html'), guideHtml, 'utf8');
+  console.log(`Generated ${guidePath}/index.html`);
 };
 const canonicalUrl = `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`;
 const title = '5 Affordable Dinners for Two Under £40 | DinnerByDesign';
@@ -543,6 +587,20 @@ const lowCostDinnersOutputDir = path.join(distRoot, LOW_COST_DINNERS_GUIDE_PATH.
 await fs.mkdir(lowCostDinnersOutputDir, { recursive: true });
 await fs.writeFile(path.join(lowCostDinnersOutputDir, 'index.html'), lowCostDinnersHtml, 'utf8');
 console.log(`Generated ${LOW_COST_DINNERS_GUIDE_PATH}/index.html`);
+
+await generateEditorialGuide(
+  PULSES_BUDGET_GUIDE,
+  PULSES_BUDGET_GUIDE_PATH,
+  renderPulsesBudgetGuideInitialHtml,
+  getPulsesBudgetGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  TRAYBAKE_GUIDE,
+  TRAYBAKE_GUIDE_PATH,
+  renderTraybakeGuideInitialHtml,
+  getTraybakeGuideJsonLd,
+);
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
 const publicGuideLibraryCanonicalUrl = `https://dinnerbydesign.app${PUBLIC_LIBRARY_PATH}`;

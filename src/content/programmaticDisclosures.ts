@@ -417,6 +417,55 @@ export const CHEAP_FINISHING_TOUCHES_DISCLOSURES: ProgrammaticDisclosureItem[] =
   },
 ];
 
+export const PULSES_COST_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_estimate',
+    title: 'About these estimates',
+    body: 'Ingredient and energy figures are illustrative estimates based on products and energy rates checked 25 July 2026. Actual cost depends on the product, tariff, appliance, pan and cooking method.',
+  },
+  {
+    key: 'price_comparison',
+    title: 'How to use the comparison',
+    body: 'Compare cooked or drained quantities rather than shelf prices alone. Promotions, loyalty prices, pack sizes and availability change, so check the current unit price before buying.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Price and guidance review',
+    body: 'Product prices, Ofgem rates and official guidance were checked 25 July 2026. Follow the cited sources for later information.',
+  },
+];
+
+export const PULSES_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Follow the packet instructions for soaking and cooking dried pulses. Dried red kidney beans need particular care. Refrigerate cooked food promptly and follow the cited Food Standards Agency guidance.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Stock, miso, hard cheese, yoghurt, sauces and flavoured pulse products vary by brand and may contain allergens. Check every label.',
+  },
+];
+
+export const TRAYBAKE_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'storage_and_cooking',
+    title: 'Cooking safely',
+    body: 'Cooking time varies by ingredient size, cut and oven. Follow product instructions and use the Food Standards Agency checks described in this guide, particularly for chicken and fish.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Harissa, curry paste, stock, yoghurt and cheese vary by product and may contain allergens. Check labels and choose ingredients suitable for everyone eating the dinner.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food-safety guidance was reviewed 25 July 2026. Follow the cited Food Standards Agency page for later updates.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -580,6 +629,23 @@ export const HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFoo
     { href: '/nutrition-methodology', label: 'Nutrition estimate methodology' },
     { href: '/food-safety', label: 'Food safety guidance' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },
+  ],
+};
+
+export const PULSES_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide provides general cooking, cost and storage information. Product prices, energy tariffs, pack instructions and individual dietary needs vary.',
+  links: [
+    { href: '/pricing-methodology', label: 'How prices are calculated' },
+    { href: '/food-safety', label: 'Food safety' },
+    { href: '/guides', label: 'Browse all guides' },
+  ],
+};
+
+export const TRAYBAKE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide provides general cooking guidance. Ingredient size, oven performance, product instructions and individual dietary needs vary.',
+  links: [
+    { href: '/food-safety', label: 'Food safety' },
+    { href: '/guides', label: 'Browse all guides' },
   ],
 };
 

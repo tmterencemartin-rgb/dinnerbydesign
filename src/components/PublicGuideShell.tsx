@@ -5,6 +5,9 @@ const CONTACT_EMAIL = 'chef@dinnerbydesign.app';
 const getBreadcrumbs = (pathName: string) => {
   if (pathName === '/guides') return [{ label: 'Guides' }];
   if (pathName.startsWith('/dinner-plans/')) return [{ label: 'Affordable dinner plans' }];
+  if (pathName === '/guides/how-to-build-a-traybake') {
+    return [{ label: 'Guides', href: '/guides' }, { label: 'Practical cooking guide' }];
+  }
   if (pathName.startsWith('/guides/')) {
     return [{ label: 'Guides', href: '/guides' }, { label: 'Food cost guide' }];
   }
