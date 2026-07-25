@@ -547,6 +547,29 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     setInput('');
   }, [handleGenerate, isReadOnly, isSearching, setInput, setPreferencesError, setShowFilters]);
 
+  const handleCompactGuestStarter = React.useCallback((suggestion: string) => {
+    if (isReadOnly || isSearching) return;
+
+    if (suggestion === NOT_BORING_SUMMER_SALADS_SEARCH_TITLE) {
+      handleNotBoringSummerSalads();
+      return;
+    }
+
+    setSearchPlaceholderOverride(undefined);
+    setShowFilters(false);
+    setPreferencesError(null);
+    setInput(suggestion);
+    handleGenerate(suggestion);
+  }, [
+    handleGenerate,
+    handleNotBoringSummerSalads,
+    isReadOnly,
+    isSearching,
+    setInput,
+    setPreferencesError,
+    setShowFilters
+  ]);
+
   const handleClearSearchInput = React.useCallback(() => {
     setSearchPlaceholderOverride(undefined);
     clearResults();
@@ -905,10 +928,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     <button
                       key={suggestion}
                       type="button"
-                      onClick={() => {
-                        setInput(suggestion);
-                        searchInputRef.current?.focus();
-                      }}
+                      onClick={() => handleCompactGuestStarter(suggestion)}
+                      disabled={isReadOnly || isSearching}
                       className="text-left text-[11.5px] font-medium leading-5 text-dbd-ink-2 underline decoration-gray-200 underline-offset-4 transition-colors hover:text-dbd-accent"
                     >
                       {suggestion}
