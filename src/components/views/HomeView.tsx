@@ -39,6 +39,7 @@ import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 import { isNativeApp, isNativeTestBuild } from '../../lib/platform';
 import { queryExplicitlyRequestsOffal } from '../../lib/offalPreference';
+import { SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -108,6 +109,11 @@ const NOT_BORING_SUMMER_SALADS_QUERY =
 const NOT_BORING_SUMMER_SALADS_RESULTS_COPY =
   'Three ways to prepare unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal and ready in under 30 minutes.';
 const NOT_BORING_SUMMER_SALADS_NEXT_PLACEHOLDER = 'Or maybe you fancy firing up the BBQ?';
+const COMPACT_GUEST_SEARCH_STARTERS = [
+  'Quick chicken dinner under 30 minutes',
+  'Low-cost vegetarian dinner for two',
+  NOT_BORING_SUMMER_SALADS_SEARCH_TITLE
+];
 
 const isNotBoringSummerSaladsQuery = (query: string) =>
   [
@@ -366,6 +372,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const [hasPerformedSearch, setHasPerformedSearch] = React.useState(() => {
     return safeStorage.getItem('dbd_has_searched') === 'true';
   });
+  const useSimplifiedGuestSearchStates = SIMPLIFIED_GUEST_SEARCH_STATES && isGuestPreview;
+  const showSimplifiedGuestLimit = useSimplifiedGuestSearchStates && isGuestSearchLimitReached;
+  const showCompactGuestStarters =
+    useSimplifiedGuestSearchStates &&
+    guestSearchCount === 0 &&
+    !hasPerformedSearch &&
+    !isSearching &&
+    !currentRecipes?.length &&
+    !currentReadyMeals?.length;
 
   React.useEffect(() => {
     if (profile && !user?.isAnonymous) {
@@ -654,7 +669,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       <div className="w-full flex flex-col relative">
         <div className="flex flex-col">
           <div className="w-full max-w-4xl mx-auto space-y-4 my-2">
-            {isGuestPreview && (
+            {isGuestPreview && !SIMPLIFIED_GUEST_SEARCH_STATES && (
               <div className={`rounded border px-3 py-2 text-[12px] font-medium ${
                 isGuestSearchLimitReached 
                   ? 'border-dbd-accent/20 bg-dbd-accent/5 text-dbd-accent' 
@@ -690,6 +705,61 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             )}
 
+            {useSimplifiedGuestSearchStates && !isGuestSearchLimitReached && (
+              <div className="flex min-h-8 flex-col items-center justify-between gap-2 px-1 text-center text-[11.5px] font-medium text-gray-500 sm:flex-row sm:text-left">
+                <span>
+                  {guestSearchCount === 0
+                    ? 'Three free searches. No account required.'
+                    : `${guestSearchesRemaining} free ${guestSearchesRemaining === 1 ? 'search' : 'searches'} remaining.`}
+                </span>
+                {guestSearchCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={goToSignIn}
+                    className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-dbd-accent hover:underline"
+                  >
+                    Keep results
+                  </button>
+                )}
+              </div>
+            )}
+
+            {showSimplifiedGuestLimit ? (
+              <section className="rounded border border-dbd-accent/20 bg-white px-5 py-6 text-center sm:px-8 sm:py-7" aria-labelledby="guest-search-limit-heading">
+                <h2 id="guest-search-limit-heading" className="text-lg font-semibold text-dbd-ink sm:text-xl">
+                  Continue searching and keep your results
+                </h2>
+                <p className="mx-auto mt-2 max-w-xl text-[13px] leading-5 text-dbd-ink-3 sm:text-sm">
+                  Create an account to start your 7-day full-access trial. No card required.
+                </p>
+                <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={() => setView('signin')}
+                    className="inline-flex min-h-10 w-full items-center justify-center rounded bg-dbd-accent px-5 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid sm:w-auto"
+                  >
+                    Create account
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goToSignIn}
+                    className="inline-flex min-h-10 w-full items-center justify-center rounded border border-dbd-rule bg-white px-5 text-[11px] font-semibold uppercase tracking-wider text-dbd-ink-2 transition-colors hover:border-dbd-ink-3 hover:text-dbd-ink sm:w-auto"
+                  >
+                    Sign in
+                  </button>
+                </div>
+                {isNativeTest && resetGuestSearchCount && (
+                  <button
+                    type="button"
+                    onClick={resetGuestSearchCount}
+                    className="mt-4 text-[10px] font-semibold text-dbd-ink-3 hover:text-dbd-accent hover:underline"
+                  >
+                    Reset test searches
+                  </button>
+                )}
+              </section>
+            ) : (
+              <>
             {/* Row 1: Segmented Controls */}
             <div className="flex items-center justify-center pb-1">
               <SearchHeader 
@@ -782,7 +852,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              {showNotBoringSummerSaladsPrompt && (
+              {showNotBoringSummerSaladsPrompt && !useSimplifiedGuestSearchStates && (
                 <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
                   <div className="border-t border-gray-100 pt-2">
                     <button
@@ -802,7 +872,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
               
-              {(!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
+              {!useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
                   {!hasDismissedSearchOnboarding && !isSearching && (
                     <SearchOnboardingHelper 
@@ -827,7 +897,28 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   )}
                 </div>
               )}
+
+              {showCompactGuestStarters && (
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try</span>
+                  {COMPACT_GUEST_SEARCH_STARTERS.map(suggestion => (
+                    <button
+                      key={suggestion}
+                      type="button"
+                      onClick={() => {
+                        setInput(suggestion);
+                        searchInputRef.current?.focus();
+                      }}
+                      className="text-left text-[11.5px] font-medium leading-5 text-dbd-ink-2 underline decoration-gray-200 underline-offset-4 transition-colors hover:text-dbd-accent"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
+              </>
+            )}
           </div>
 
           <div className="flex flex-col gap-4 max-w-4xl mx-auto w-full">
@@ -1084,7 +1175,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
           >
             {!input ? (
               <div className="space-y-6 w-full max-w-xl mx-auto py-2">
-                {(!user || user.isAnonymous === true) && (
+                {(!user || user.isAnonymous === true) && (!useSimplifiedGuestSearchStates || !isGuestSearchLimitReached) && (
                   <SearchExamples 
                     onSelect={(val) => {
                       setShowFilters(false);

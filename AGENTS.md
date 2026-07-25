@@ -137,6 +137,13 @@ When a user lists ingredients:
 - Keep that estimate distinct from the later shopping-list estimate based on scheduled dinners, complete packs, shared ingredients and available ingredients.
 - The rollback branch is `backup/pre-affordability-planner-20260717`.
 
+## Guest Search experience
+
+- `SIMPLIFIED_GUEST_SEARCH_STATES` in `src/config/features.ts` gates the simplified new, returning and exhausted guest Search states.
+- Keep the existing guest Search interface available behind the `false` flag path. Set the flag to `false` for an immediate rollback without deleting either implementation.
+- When the free-search allowance is exhausted, replace inactive Search controls with one account panel while leaving any existing results visible below it.
+- New guests may see no more than three compact starter searches. Returning guests should see a quiet remaining-search count rather than the full onboarding panel.
+
 ## Ingredient price refresh
 
 - Do not scrape retailer websites without written permission or an appropriately licensed feed.
