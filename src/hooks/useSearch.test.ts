@@ -30,6 +30,8 @@ describe('useSearch Hook Lifecycle', () => {
   const mockAddLog = vi.fn();
   const mockSetError = vi.fn();
   const mockAddToSearchHistory = vi.fn();
+  const mockShowToast = vi.fn();
+  const mockSetView = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -42,6 +44,8 @@ describe('useSearch Hook Lifecycle', () => {
       isAuthReady: true,
       loading: false,
       addToSearchHistory: mockAddToSearchHistory,
+      showToast: mockShowToast,
+      setView: mockSetView,
     });
   });
 
@@ -200,6 +204,50 @@ describe('useSearch Hook Lifecycle', () => {
     });
 
     expect(result.current.currentRecipes).toHaveLength(1);
+  });
+
+  it('counts more choices as a guest search', async () => {
+    (geminiService.generateDinnerSuggestions as any)
+      .mockResolvedValueOnce({
+        recipes: [{ title: 'Chicken One', cuisine: 'British', totalTime: 25 }],
+        readyMeals: []
+      })
+      .mockResolvedValueOnce({
+        recipes: [{ title: 'Chicken Two', cuisine: 'British', totalTime: 20 }],
+        readyMeals: []
+      });
+
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.handleGenerate('quick chicken dinner');
+    });
+
+    expect(result.current.guestSearchCount).toBe(1);
+
+    await act(async () => {
+      await result.current.handleLoadMore();
+    });
+
+    expect(result.current.guestSearchCount).toBe(2);
+    expect(window.localStorage.getItem('dbd_guest_search_count_v1')).toBe('2');
+    expect(geminiService.generateDinnerSuggestions).toHaveBeenCalledTimes(2);
+  });
+
+  it('blocks more choices when a guest has used all free searches', async () => {
+    window.localStorage.setItem('dbd_guest_search_count_v1', '3');
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.handleLoadMore();
+    });
+
+    expect(geminiService.generateDinnerSuggestions).not.toHaveBeenCalled();
+    expect(mockShowToast).toHaveBeenCalledWith(
+      "You've used your 3 free searches. Create an account to start your 7-day full-access trial.",
+      'Create account',
+      expect.any(Function)
+    );
   });
 
   it('hides raw permission-denied provider payloads from users', async () => {

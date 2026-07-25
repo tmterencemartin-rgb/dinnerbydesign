@@ -15,6 +15,7 @@ interface RecipeListActionsProps {
   setIsLowCost?: (val: boolean) => void;
   source?: 'cook' | 'ready-made';
   onNavigateToSettings?: () => void;
+  usesGuestSearch?: boolean;
 }
 
 export const RecipeListActions = ({ 
@@ -29,24 +30,25 @@ export const RecipeListActions = ({
   isLowCost = false,
   setIsLowCost,
   source,
-  onNavigateToSettings
+  onNavigateToSettings,
+  usesGuestSearch = false
 }: RecipeListActionsProps) => {
   return (
     <div className="w-full bg-transparent rounded-t-xl px-2 border-b border-dbd-rule/40 mb-1 sm:mb-2 transition-colors duration-200">
       <div className="flex items-center justify-between gap-2 py-1 min-h-[36px] sm:py-1.5 sm:min-h-[44px] w-full">
         <div className="flex items-center gap-3">
           {onTryAgain && (
-            <Tooltip text="More recipes like this please..." position="bottom">
+            <Tooltip text={usesGuestSearch ? "Uses one of your free searches" : "More recipes like this please..."} position="bottom">
               <button 
                 type="button"
                 onClick={onTryAgain}
                 disabled={isGenerating}
-                aria-label="Show more recipe choices"
+                aria-label={usesGuestSearch ? "Show more recipe choices, uses one free search" : "Show more recipe choices"}
                 className="py-1 text-[10.5px] font-bold text-dbd-accent uppercase tracking-[0.1em] hover:opacity-80 transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap cursor-pointer"
               >
                 {isGenerating && <Loader2 className="w-2.5 h-2.5 animate-spin" />}
-                <span className="hidden sm:inline">More choices</span>
-                <span className="sm:hidden">More</span>
+                <span className="hidden sm:inline">{usesGuestSearch ? 'More choices · uses 1 search' : 'More choices'}</span>
+                <span className="sm:hidden">{usesGuestSearch ? 'More · 1 search' : 'More'}</span>
               </button>
             </Tooltip>
           )}

@@ -834,7 +834,14 @@ export function useSearch() {
   ]);
 
   const handleLoadMore = useCallback(async () => {
-    if (isGenerating || hasExhaustedSearch) return;
+    if (isGenerating || isAppending || hasExhaustedSearch) return;
+
+    const isGuestPreview = !user || user.isAnonymous;
+    if (isGuestPreview && guestSearchCount >= GUEST_SEARCH_LIMIT) {
+      showToast("You've used your 3 free searches. Create an account to start your 7-day full-access trial.", "Create account", () => setView('signin'));
+      return;
+    }
+
     setError(null);
     setLocalError(null);
     
@@ -877,17 +884,23 @@ export function useSearch() {
       const params = buildSearchParams(input || lastQuery, source, profile?.preferences || null, combinedOverrides);
       const cleaned = cleanSearchParams(params);
 
+      if (isGuestPreview) {
+        const nextGuestCount = Math.min(GUEST_SEARCH_LIMIT, guestSearchCount + 1);
+        setGuestSearchCount(nextGuestCount);
+        safeStorage.setItem(GUEST_SEARCH_COUNT_KEY, String(nextGuestCount));
+      }
+
       await performSearch(cleaned, { isAppend: true });
     } catch (err) {
       console.error("handleLoadMore failure:", err);
     }
   }, [
-    isGenerating, hasExhaustedSearch, currentRecipes, currentReadyMeals, dismissedTitles, 
+    isGenerating, isAppending, hasExhaustedSearch, currentRecipes, currentReadyMeals, dismissedTitles,
     cuisines, dietTypes, exclusions, religiousEthical, styleWellness, 
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
     saladPreference, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, includeOffal, servings, input, lastQuery,
-    source, profile?.preferences, performSearch
+    source, profile?.preferences, performSearch, user, guestSearchCount, showToast, setView
   ]);
 
 

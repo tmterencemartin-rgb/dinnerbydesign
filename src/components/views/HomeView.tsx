@@ -965,7 +965,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
             {(hasPerformedSearch || isSearching || (currentRecipes && currentRecipes.length > 0) || (currentReadyMeals && currentReadyMeals.length > 0)) && (
               <RecipeListActions 
-                onTryAgain={((source === 'cook' ? currentRecipes : currentReadyMeals) || isSearching || isAppending) ? handleLoadMore : undefined}
+                onTryAgain={!isGuestSearchLimitReached && ((source === 'cook' ? currentRecipes : currentReadyMeals) || isSearching || isAppending) ? handleLoadMore : undefined}
                 onNewSearch={((source === 'cook' ? currentRecipes : currentReadyMeals) || isSearching || isAppending) ? handleCloseAndNewSearch : undefined}
                 isGenerating={isSearching || isAppending}
                 totalCount={(source === 'cook' ? currentRecipes?.length : currentReadyMeals?.length) || 0}
@@ -974,6 +974,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 isLeftoverMode={isLeftoverMode}
                 setIsLeftoverMode={setIsLeftoverMode}
                 isLowCost={isLowCost}
+                usesGuestSearch={isGuestPreview}
                 setIsLowCost={!localPreferences.isLowCost ? (val) => {
                   console.log('[HomeView] setIsLowCost clicked:', val);
                   setIsLowCost(val);
@@ -1377,14 +1378,14 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             )}             {((currentRecipes?.length || 0) + (currentReadyMeals?.length || 0) > 0) && (
               <div className="flex flex-row gap-1.5 sm:gap-3 pt-0.5 sm:pt-4">
-                {!hasExhaustedSearch && (
+                {!hasExhaustedSearch && !isGuestSearchLimitReached && (
                   <button 
                     onClick={() => handleLoadMore()}
                     disabled={isGenerating || isAppending}
                     className="flex-1 min-w-0 px-2 py-2.5 sm:py-3 bg-white border border-gray-100 rounded text-[9px] sm:text-[10px] font-semibold text-accent uppercase tracking-[0.14em] sm:tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm cursor-pointer whitespace-nowrap"
                   >
                     {(isGenerating || isAppending) && <Loader2 className="w-3 h-3 animate-spin" />}
-                    More choices, please
+                    {isGuestPreview ? 'More choices · uses 1 search' : 'More choices, please'}
                   </button>
                 )}
                 <button 
