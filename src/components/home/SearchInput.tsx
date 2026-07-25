@@ -56,7 +56,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     if (isLeftoverMode) {
       return "What's in the fridge? Some leftover chicken or corned beef? A couple of red peppers?  Maybe some sticks of celery?";
     }
-    return "The BBQ awaits!";
+    return "Search by ingredient, dish, cuisine or chef";
   };
   return (
     <form
@@ -77,6 +77,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             onClick={handleStopSearch}
             className="p-1 px-1.5 rounded text-dbd-accent hover:bg-dbd-accent/10 transition-all duration-200"
             title="Stop search"
+            aria-label="Stop search"
           >
             <Square className="w-3 h-3 fill-current" />
           </button>
@@ -86,6 +87,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               type="button"
               onClick={toggleVoiceSearch}
               disabled={isReadOnly}
+              aria-label={isListening ? 'Stop voice search' : 'Search by voice'}
+              title={isListening ? 'Stop voice search' : 'Search by voice'}
               className={`p-1.5 px-2 rounded transition-all duration-200 ${
                 isListening 
                   ? 'bg-dbd-accent text-white animate-pulse shadow-sm' 
@@ -103,6 +106,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={isReadOnly}
+          aria-label="Search recipes by ingredient, dish, cuisine or chef"
           placeholder={isReadOnly ? (readOnlyPlaceholder || "Upgrade to search again") : getSearchPlaceholder()}
           className={`flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
         />
@@ -116,6 +120,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               inputRef.current?.focus();
             }}
             className="p-1 text-gray-300 hover:text-gray-500 transition-colors mr-0.5"
+            aria-label="Clear search"
           >
             <CircleX size={12} />
           </button>
@@ -125,6 +130,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       <button 
         type="submit"
         disabled={isListening || isReadOnly}
+        aria-label={isGenerating ? 'Searching for dinner options' : 'Find dinner options'}
         className={`shrink-0 px-3 sm:px-5 text-white text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center border-l border-gray-100 ${
           isReadOnly ? 'bg-gray-400' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
         }`}

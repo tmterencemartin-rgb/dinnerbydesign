@@ -328,17 +328,17 @@ export const LandingView: React.FC = () => {
             onClick={() => handleStart()}
             className="w-full sm:w-auto bg-dbd-accent hover:bg-dbd-accent-mid text-white font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-8 py-4 rounded-sm transition-all cursor-pointer shadow-md"
           >
-            Try 3 searches free
+            Try a free search
           </button>
           <button 
             onClick={() => scrollToSection('interactive-sandbox')}
             className="w-full sm:w-auto bg-white border border-dbd-rule hover:border-dbd-accent hover:text-dbd-accent text-dbd-ink font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-8 py-4 rounded-sm transition-all cursor-pointer flex items-center justify-center gap-2"
           >
-            Try a search <ArrowDownIcon className="w-4 h-4 animate-bounce" />
+            See how it works <ArrowDownIcon className="w-4 h-4" />
           </button>
         </div>
         <p className="mt-4 text-[12px] font-medium text-dbd-ink-3">
-          Try before you sign up.
+          Three searches. No account required.
         </p>
       </section>
 

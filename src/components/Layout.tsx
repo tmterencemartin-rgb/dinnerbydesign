@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Search, Calendar, ShoppingCart } from 'lucide-react';
+import { Search, Calendar, LockKeyhole, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { Footer } from './Footer';
@@ -34,6 +34,7 @@ const logoVariants = {
 
 export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSearch }) => {
   const { user, goToSignIn, showToast } = useAuth();
+  const isGuest = !user || user.isAnonymous;
 
   const requireAccount = useCallback((message: string) => {
     if (user && !user.isAnonymous) return false;
@@ -131,17 +132,27 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
             </button>
             <button 
               onClick={goToSavedRecipes}
-              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'planner' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
+              aria-label={isGuest ? 'Save & Schedule, sign in required' : 'Save & Schedule'}
+              title={isGuest ? 'Sign in to save and schedule dinners' : undefined}
+              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'planner' && !isGuest ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <Calendar className="w-4 h-4 mb-1 md:mb-1.5" />
-              <span className="text-[10px] font-semibold uppercase tracking-widest">Save & Schedule</span>
+              <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest">
+                Save & Schedule
+                {isGuest && <LockKeyhole className="h-2.5 w-2.5" aria-hidden="true" />}
+              </span>
             </button>
             <button 
               onClick={goToShopping}
-              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'shopping' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
+              aria-label={isGuest ? 'Shopping, sign in required' : 'Shopping'}
+              title={isGuest ? 'Sign in to create and manage your shopping list' : undefined}
+              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'shopping' && !isGuest ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <ShoppingCart className="w-4 h-4 mb-1 md:mb-1.5" />
-              <span className="text-[10px] font-semibold uppercase tracking-widest">Shopping</span>
+              <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest">
+                Shopping
+                {isGuest && <LockKeyhole className="h-2.5 w-2.5" aria-hidden="true" />}
+              </span>
             </button>
           </div>
         </div>
