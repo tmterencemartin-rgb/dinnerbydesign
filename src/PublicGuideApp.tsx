@@ -5,6 +5,11 @@ import { safeStorage } from './lib/storage';
 import { AFFORDABILITY_PLANNER_PENDING_KEY } from './config/features';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
 import {
+  FAMILY_DINNERS_FOR_FOUR,
+  FAMILY_DINNERS_FOR_FOUR_PATH,
+  getFamilyDinnersForFourJsonLd,
+} from './content/familyDinnersForFourPlan';
+import {
   BATCH_COOKING_GUIDE,
   BATCH_COOKING_GUIDE_PATH,
   COOKING_FOR_ONE_GUIDE,
@@ -94,6 +99,7 @@ import {
 } from './content/sausageWaysGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
+const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
 const FoodCostGuideView = React.lazy(() => import('./components/views/FoodCostGuideView').then(module => ({ default: module.FoodCostGuideView })));
 const CheaperMeatCutsGuideView = React.lazy(() => import('./components/views/CheaperMeatCutsGuideView').then(module => ({ default: module.CheaperMeatCutsGuideView })));
 const SharedIngredientsGuideView = React.lazy(() => import('./components/views/SharedIngredientsGuideView').then(module => ({ default: module.SharedIngredientsGuideView })));
@@ -167,6 +173,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
       jsonLd: getFiveDinnersForTwoJsonLd(),
     },
     render: ({ plan }) => <SeoMealPlanView onPersonalise={plan} />,
+  },
+  [FAMILY_DINNERS_FOR_FOUR_PATH]: {
+    seo: guideSeo(FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH, getFamilyDinnersForFourJsonLd()),
+    render: ({ plan }) => <FamilyDinnersForFourView onPersonalise={plan} />,
   },
   [UK_FOOD_COSTS_2026_PATH]: {
     seo: {

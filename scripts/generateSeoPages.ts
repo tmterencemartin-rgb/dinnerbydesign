@@ -7,6 +7,12 @@ import {
   renderFiveDinnersForTwoInitialHtml,
 } from '../src/content/seoMealPlans';
 import {
+  FAMILY_DINNERS_FOR_FOUR,
+  FAMILY_DINNERS_FOR_FOUR_PATH,
+  getFamilyDinnersForFourJsonLd,
+  renderFamilyDinnersForFourInitialHtml,
+} from '../src/content/familyDinnersForFourPlan';
+import {
   BATCH_COOKING_GUIDE,
   BATCH_COOKING_GUIDE_PATH,
   COOKING_FOR_ONE_GUIDE,
@@ -185,6 +191,13 @@ const outputDir = path.join(distRoot, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH.slice(1
 await fs.mkdir(outputDir, { recursive: true });
 await fs.writeFile(path.join(outputDir, 'index.html'), html, 'utf8');
 console.log(`Generated ${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}/index.html`);
+
+await generateEditorialGuide(
+  FAMILY_DINNERS_FOR_FOUR,
+  FAMILY_DINNERS_FOR_FOUR_PATH,
+  renderFamilyDinnersForFourInitialHtml,
+  getFamilyDinnersForFourJsonLd,
+);
 
 const guideCanonicalUrl = `https://dinnerbydesign.app${UK_FOOD_COSTS_2026_PATH}`;
 const guideTitle = `${UK_FOOD_COSTS_2026.title} | DinnerByDesign`;

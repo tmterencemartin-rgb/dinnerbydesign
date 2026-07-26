@@ -8,6 +8,7 @@ import { getApps, initializeApp } from "firebase-admin/app";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
+import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH, getFamilyDinnersForFourJsonLd, renderFamilyDinnersForFourInitialHtml } from "../src/content/familyDinnersForFourPlan";
 import { isUnknownPublicArticlePath } from "../src/content/publicArticles";
 import { getPublicPageRedirect } from "../src/content/publicRedirects";
 import {
@@ -1217,6 +1218,14 @@ export function createApp() {
           canonicalPath = FIVE_DINNERS_FOR_TWO_UNDER_40_PATH;
           schema = getFiveDinnersForTwoJsonLd();
           initialBody = renderFiveDinnersForTwoInitialHtml();
+        } else if (pathName === FAMILY_DINNERS_FOR_FOUR_PATH) {
+          title = FAMILY_DINNERS_FOR_FOUR.seoTitle;
+          description = FAMILY_DINNERS_FOR_FOUR.description;
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = FAMILY_DINNERS_FOR_FOUR_PATH;
+          schema = getFamilyDinnersForFourJsonLd();
+          initialBody = renderFamilyDinnersForFourInitialHtml();
         } else if (pathName === "/privacy") {
           title = "Privacy, Cookies & AI Data — DinnerByDesign";
           description = "Read how DinnerByDesign handles account data, AI processing, service providers, retention, cookies and UK data-protection rights.";

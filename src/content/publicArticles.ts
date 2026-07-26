@@ -1,5 +1,6 @@
 import { BATCH_COOKING_GUIDE, BATCH_COOKING_GUIDE_PATH, COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
+import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH } from './familyDinnersForFourPlan';
 import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH } from './groceryCostOptionsGuide';
 import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH } from './groceryCostPredictionGuide';
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
@@ -28,6 +29,20 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: FAMILY_DINNERS_FOR_FOUR.title,
+    path: FAMILY_DINNERS_FOR_FOUR_PATH,
+    category: 'Dinner plan',
+    pageFamily: FAMILY_DINNERS_FOR_FOUR.pageFamily,
+    primarySearchIntent: FAMILY_DINNERS_FOR_FOUR.primarySearchIntent,
+    indexingStatus: FAMILY_DINNERS_FOR_FOUR.indexingStatus,
+    publishedAt: FAMILY_DINNERS_FOR_FOUR.publishedAt,
+    reviewedAt: FAMILY_DINNERS_FOR_FOUR.reviewedAt,
+    contentReviewedAt: FAMILY_DINNERS_FOR_FOUR.contentReviewedAt,
+    internalLinks: [...FAMILY_DINNERS_FOR_FOUR.internalLinks],
+    disclosures: [...FAMILY_DINNERS_FOR_FOUR.disclosures],
+    status: FAMILY_DINNERS_FOR_FOUR.status,
+  },
   {
     title: SAUSAGE_WAYS_GUIDE.title, path: SAUSAGE_WAYS_GUIDE_PATH, category: 'Practical cooking guide',
     pageFamily: SAUSAGE_WAYS_GUIDE.pageFamily, primarySearchIntent: SAUSAGE_WAYS_GUIDE.primarySearchIntent,

@@ -26,6 +26,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/recipes/not-a-real-recipe')).toBe(true);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40')).toBe(false);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40/')).toBe(false);
+    expect(isUnknownPublicArticlePath('/dinner-plans/5-affordable-family-dinners-for-four')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe(true);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-with-cheaper-cuts-of-meat')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/five-dinners-same-ingredients')).toBe(false);

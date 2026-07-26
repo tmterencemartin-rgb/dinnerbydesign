@@ -30,6 +30,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
     shortDescription: 'Start with a ready-made week, then adapt it around your household, budget and preferences.',
     actionLabel: 'Plan my week',
     articlePaths: [
+      '/dinner-plans/5-affordable-family-dinners-for-four',
       '/dinner-plans/5-dinners-for-2-under-40',
     ],
   },
