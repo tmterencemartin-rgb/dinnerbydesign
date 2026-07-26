@@ -4,7 +4,11 @@ const normalisePath = (pathName: string) =>
 export const isPublicGuideRoute = (pathName: string) => {
   const path = normalisePath(pathName);
   return path === '/guides'
+    || path === '/dinner-plans'
+    || path === '/recipes'
+    || path === '/food-costs'
     || path.startsWith('/guides/')
+    || path.startsWith('/recipes/')
     || path.startsWith('/food-costs/')
     || path.startsWith('/dinner-plans/');
 };

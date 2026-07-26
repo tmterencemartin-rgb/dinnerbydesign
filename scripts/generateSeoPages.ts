@@ -106,6 +106,11 @@ import {
   renderSausageWaysGuideInitialHtml,
 } from '../src/content/sausageWaysGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
+import {
+  PUBLIC_PATHWAYS,
+  getPublicPathwayJsonLd,
+  renderPublicPathwayInitialHtml,
+} from '../src/content/publicPathways';
 
 const distRoot = path.resolve(process.cwd(), 'dist');
 const sourceHtml = await fs.readFile(path.join(distRoot, 'index.html'), 'utf8');
@@ -115,7 +120,12 @@ const hideInitialSeoContentWhenJavaScriptRuns = (initialHtml: string) => {
     throw new Error('Initial SEO content must have a single root container.');
   }
 
-  return `${rootStart}<div class="app-initial-fallback">${initialHtml.slice(rootStart.length, -6)}</div></div>`;
+  const publicPathwayNav = '<nav aria-label="Public pathways"><a href="/dinner-plans">Affordable dinner plans</a> · <a href="/recipes">Recipes</a> · <a href="/food-costs">Food-cost and waste guidance</a></nav>';
+  const content = initialHtml.includes('aria-label="Public pathways"')
+    ? initialHtml
+    : initialHtml.replace('</header>', `</header>${publicPathwayNav}`);
+
+  return `${rootStart}<div class="app-initial-fallback">${content.slice(rootStart.length, -6)}</div></div>`;
 };
 
 const generateEditorialGuide = async (
@@ -527,3 +537,12 @@ const publicGuideLibraryOutputDir = path.join(distRoot, PUBLIC_LIBRARY_PATH.slic
 await fs.mkdir(publicGuideLibraryOutputDir, { recursive: true });
 await fs.writeFile(path.join(publicGuideLibraryOutputDir, 'index.html'), publicGuideLibraryHtml, 'utf8');
 console.log(`Generated ${PUBLIC_LIBRARY_PATH}/index.html`);
+
+for (const pathway of PUBLIC_PATHWAYS) {
+  await generateEditorialGuide(
+    pathway,
+    pathway.path,
+    () => renderPublicPathwayInitialHtml(pathway),
+    () => getPublicPathwayJsonLd(pathway),
+  );
+}

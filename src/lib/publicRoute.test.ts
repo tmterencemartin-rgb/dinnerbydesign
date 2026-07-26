@@ -5,7 +5,11 @@ describe('isPublicGuideRoute', () => {
   it('routes public guide families to the lightweight guide shell', () => {
     expect(isPublicGuideRoute('/guides')).toBe(true);
     expect(isPublicGuideRoute('/guides/')).toBe(true);
+    expect(isPublicGuideRoute('/dinner-plans')).toBe(true);
+    expect(isPublicGuideRoute('/recipes')).toBe(true);
+    expect(isPublicGuideRoute('/food-costs')).toBe(true);
     expect(isPublicGuideRoute('/guides/do-vegetables-in-dishes-count-towards-5-a-day')).toBe(true);
+    expect(isPublicGuideRoute('/recipes/future-recipe')).toBe(true);
     expect(isPublicGuideRoute('/food-costs/fresh-or-frozen')).toBe(true);
     expect(isPublicGuideRoute('/dinner-plans/5-dinners-for-2-under-40')).toBe(true);
   });

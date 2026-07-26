@@ -57,8 +57,14 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
         </div>
         
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 sm:gap-x-6 sm:gap-y-2 lg:justify-end">
-          <a href="/guides" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Guides
+          <a href="/dinner-plans" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
+            Affordable dinner plans
+          </a>
+          <a href="/recipes" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
+            Recipes
+          </a>
+          <a href="/food-costs" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
+            Food-cost &amp; waste
           </a>
           <a
             href="/pricing-methodology"

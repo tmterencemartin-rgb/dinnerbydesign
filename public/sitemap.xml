@@ -43,6 +43,24 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://dinnerbydesign.app/dinner-plans</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dinnerbydesign.app/recipes</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dinnerbydesign.app/food-costs</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dinnerbydesign.app/dinner-plans/5-dinners-for-2-under-40</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>monthly</changefreq>
@@ -104,7 +122,7 @@
   </url>
   <url>
     <loc>https://dinnerbydesign.app/guides</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

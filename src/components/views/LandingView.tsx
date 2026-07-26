@@ -259,6 +259,12 @@ export const LandingView: React.FC = () => {
             >
               Pricing
             </button>
+            <button
+              onClick={() => scrollToSection('public-pathways')}
+              className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
+            >
+              Explore
+            </button>
           </div>
 
           {/* Mobile Menu Action button */}
@@ -300,6 +306,12 @@ export const LandingView: React.FC = () => {
               >
                 Pricing
               </button>
+              <button
+                onClick={() => scrollToSection('public-pathways')}
+                className="hover:text-dbd-accent py-2 transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
+              >
+                Explore public resources
+              </button>
               <hr className="border-dbd-rule/40 my-1" />
               <button 
                 onClick={handleSignIn} 
@@ -340,6 +352,49 @@ export const LandingView: React.FC = () => {
         <p className="mt-4 text-[12px] font-medium text-dbd-ink-3">
           Three searches. No account required.
         </p>
+      </section>
+
+      <section id="public-pathways" className="scroll-mt-nav border-y border-dbd-rule/50 bg-[#F4F1EA] px-6 py-12 sm:px-8 sm:py-16">
+        <div className="mx-auto max-w-5xl">
+          <div className="max-w-2xl">
+            <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
+              Explore DinnerByDesign
+            </span>
+            <h2 className="text-2xl font-sans font-bold leading-tight text-dbd-ink sm:text-3xl">Start with what you need</h2>
+            <p className="mt-3 text-[14px] leading-relaxed text-dbd-ink-2 sm:text-[16px]">
+              Three public pathways keep related topics together, so you can find a plan, a recipe idea or practical cost guidance without searching through one long list.
+            </p>
+          </div>
+          <div className="mt-7 grid gap-3 sm:grid-cols-3">
+            {[
+              {
+                number: '01',
+                title: 'Affordable dinner plans',
+                description: 'Ready-made weeks with servings, shared ingredients and realistic shopping estimates.',
+                href: '/dinner-plans',
+              },
+              {
+                number: '02',
+                title: 'Recipes',
+                description: 'Flexible formats and practical cooking ideas for everyday dinners.',
+                href: '/recipes',
+              },
+              {
+                number: '03',
+                title: 'Food-cost and waste guidance',
+                description: 'Clear help with grocery costs, portions, ingredient use and avoidable waste.',
+                href: '/food-costs',
+              },
+            ].map(pathway => (
+              <a key={pathway.href} href={pathway.href} className="group flex min-h-[188px] flex-col border border-dbd-rule/70 bg-white p-5 transition-colors hover:border-dbd-accent">
+                <span className="text-[10px] font-mono font-bold text-dbd-accent">{pathway.number}</span>
+                <h3 className="mt-3 text-lg font-bold leading-6 text-dbd-ink group-hover:text-dbd-accent">{pathway.title}</h3>
+                <p className="mt-2 text-[13px] leading-5 text-dbd-ink-2">{pathway.description}</p>
+                <span className="mt-auto pt-5 text-[11px] font-mono font-bold uppercase tracking-wider text-dbd-accent">Explore pathway →</span>
+              </a>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* 3. INTERACTIVE BROWSER PREVIEW SANDBOX */}
@@ -850,7 +905,9 @@ export const LandingView: React.FC = () => {
 
           {/* Privacy & Terms views trigger bar */}
           <div className="pt-4 border-t border-dbd-rule/40 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-ibm-plex-mono text-[11px] font-semibold text-dbd-ink-3">
-            <a href="/guides" className="hover:text-dbd-accent hover:underline">Guides</a>
+            <a href="/dinner-plans" className="hover:text-dbd-accent hover:underline">Affordable dinner plans</a>
+            <a href="/recipes" className="hover:text-dbd-accent hover:underline">Recipes</a>
+            <a href="/food-costs" className="hover:text-dbd-accent hover:underline">Food-cost &amp; waste</a>
             <button
               onClick={() => setView('pricing-methodology')}
               className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"

@@ -160,6 +160,14 @@ When a user lists ingredients:
 - Direct guide routes use `PublicGuideShell` for the shared wordmark, breadcrumb treatment and public linked footer. Keep public footer links as ordinary URLs so they work without the authenticated app context.
 - Keep Playwright coverage for guest tab restrictions, search preferences, guide category jumps, guide-to-account handoffs, public footer links and the signed-in planner-to-shopping route. The signed-in journey uses `E2E_USER_EMAIL` and `E2E_USER_PASSWORD` when a dedicated test account is available.
 
+## Public SEO pathways
+
+- `/guides` is a restrained signpost to three public pathways. It must not become a second full article index.
+- The permanent hubs are `/dinner-plans`, `/recipes` and `/food-costs`.
+- Every published public article must appear in exactly one pathway in `src/content/publicPathways.ts`. Tests enforce complete coverage and prevent duplicate assignments.
+- Assigning an article to a pathway does not change its existing canonical URL.
+- The public homepage, public header, footer, breadcrumbs, generated HTML and sitemap should make the three hubs easy to reach.
+
 ## Ingredient price refresh
 
 - Do not scrape retailer websites without written permission or an appropriately licensed feed.

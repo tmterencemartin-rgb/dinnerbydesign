@@ -198,6 +198,6 @@ export const PUBLIC_LIBRARY_PATH: string | null = '/guides';
 
 export function isUnknownPublicArticlePath(pathName: string) {
   const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, '') : pathName;
-  const belongsToPublicFamily = normalisedPath.startsWith('/dinner-plans/') || normalisedPath.startsWith('/food-costs/') || normalisedPath.startsWith('/guides/');
+  const belongsToPublicFamily = normalisedPath.startsWith('/dinner-plans/') || normalisedPath.startsWith('/recipes/') || normalisedPath.startsWith('/food-costs/') || normalisedPath.startsWith('/guides/');
   return belongsToPublicFamily && !PUBLIC_ARTICLES.some(article => article.path === normalisedPath && article.status === 'published');
 }

@@ -1,89 +1,42 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { PUBLIC_GUIDE_GROUPS, PUBLIC_GUIDE_LIBRARY } from '../../content/publicGuideLibrary';
+import { PUBLIC_GUIDE_LIBRARY, PUBLIC_GUIDE_PATHWAYS } from '../../content/publicGuideLibrary';
 
-export const GuidesLibraryView: React.FC<{ onPlanWeek: () => void }> = ({ onPlanWeek }) => {
-  const [scrollReserve, setScrollReserve] = React.useState(0);
-
-  const jumpToCategory = React.useCallback((categoryId: string) => {
-    const target = document.getElementById(categoryId);
-    if (!target) return;
-
-    const pageHeightWithoutReserve = document.documentElement.scrollHeight - scrollReserve;
-    const requiredReserve = Math.ceil(Math.max(0, target.offsetTop + window.innerHeight - pageHeightWithoutReserve + 16));
-    setScrollReserve(requiredReserve);
-
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
-    });
-  }, [scrollReserve]);
-
-  React.useEffect(() => {
-    const categoryId = window.location.hash.slice(1);
-    if (PUBLIC_GUIDE_GROUPS.some(group => group.id === categoryId)) {
-      jumpToCategory(categoryId);
-    }
-  }, [jumpToCategory]);
-
-  const handleCategoryClick = (event: React.MouseEvent<HTMLAnchorElement>, categoryId: string) => {
-    event.preventDefault();
-    window.history.pushState(null, '', `#${categoryId}`);
-    jumpToCategory(categoryId);
-  };
-
-  const handleBackToTop = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    setScrollReserve(0);
-    window.history.pushState(null, '', `${window.location.pathname}${window.location.search}`);
-    window.requestAnimationFrame(() => {
-      document.getElementById('guide-library-top')?.scrollIntoView({ block: 'start' });
-    });
-  };
-
-  return (
+export const GuidesLibraryView: React.FC<{ onPlanWeek: () => void }> = ({ onPlanWeek }) => (
   <div className="min-h-screen bg-[#faf9f7] text-dbd-ink">
-    <header className="border-b border-dbd-rule/50 bg-dbd-surface"><div className="mx-auto flex min-h-[72px] max-w-5xl items-center justify-between px-4 sm:min-h-[88px]"><a href="/" aria-label="DinnerByDesign home"><img src="/dbd-logo-with-pin.png" alt="DinnerByDesign" className="h-[30.6px] w-auto max-w-[189px] object-contain mix-blend-multiply sm:h-[36px]" /></a><a href="/signin?mode=signin" className="text-xs font-semibold text-dbd-accent hover:underline">Sign in</a></div></header>
-    <main id="guide-library-top" className="mx-auto max-w-5xl scroll-mt-2 px-4 py-5 pb-12 sm:py-9 sm:pb-16">
-      <nav aria-label="Breadcrumb" className="text-xs text-dbd-ink-3"><a href="/" className="hover:underline">DinnerByDesign</a><span className="px-2">/</span><span>Guides</span></nav>
-      <header className="mt-4 max-w-3xl sm:mt-6"><p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-dbd-accent sm:text-[10px]">Public guide library</p><h1 className="mt-1.5 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{PUBLIC_GUIDE_LIBRARY.title}</h1><p className="mt-2.5 text-sm leading-6 text-dbd-ink-3 sm:mt-3">{PUBLIC_GUIDE_LIBRARY.description}</p></header>
-      <nav aria-label="Guide categories" className="mt-5 border-y border-dbd-rule/50 py-3.5 sm:mt-7 sm:flex sm:items-baseline sm:gap-5 sm:py-4">
-        <h2 className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-dbd-ink-3">Browse by category</h2>
-        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 sm:mt-0">
-          {PUBLIC_GUIDE_GROUPS.map(group => (
-            <a key={group.id} href={`#${group.id}`} onClick={event => handleCategoryClick(event, group.id)} className="text-xs leading-5 text-dbd-ink-2 underline decoration-dbd-rule underline-offset-4 transition-colors hover:text-dbd-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dbd-accent sm:text-sm">
-              {group.title}
+    <main className="mx-auto max-w-5xl px-4 pb-12 sm:pb-16">
+      <header className="max-w-3xl">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-dbd-accent sm:text-[10px]">Public resources</p>
+        <h1 className="mt-1.5 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{PUBLIC_GUIDE_LIBRARY.title}</h1>
+        <p className="mt-2.5 text-sm leading-6 text-dbd-ink-3 sm:mt-3">{PUBLIC_GUIDE_LIBRARY.description}</p>
+      </header>
+
+      <section className="mt-7 sm:mt-9">
+        <h2 className="border-b border-dbd-rule/60 pb-3 text-base font-semibold sm:text-lg">Choose where to start</h2>
+        <div className="grid gap-3 pt-4 sm:grid-cols-3">
+          {PUBLIC_GUIDE_PATHWAYS.map((pathway, index) => (
+            <a key={pathway.id} href={pathway.path} className="group flex min-h-[190px] flex-col rounded border border-dbd-rule/70 bg-white p-5 transition-colors hover:border-dbd-accent">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-dbd-accent">0{index + 1}</span>
+              <h2 className="mt-3 text-lg font-semibold leading-6 text-dbd-ink group-hover:text-dbd-accent">{pathway.title}</h2>
+              <p className="mt-2 text-xs leading-5 text-dbd-ink-3">{pathway.shortDescription}</p>
+              <span className="mt-auto flex items-center justify-between pt-5 text-xs font-semibold text-dbd-ink-2 group-hover:text-dbd-accent">
+                <span>{pathway.articles.length} {pathway.articles.length === 1 ? 'guide' : 'guides'}</span>
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
             </a>
           ))}
         </div>
-      </nav>
-      <div className="mt-6 space-y-8 border-t border-dbd-rule/50 pt-5 sm:mt-8 sm:space-y-10 sm:pt-6">
-        {PUBLIC_GUIDE_GROUPS.map(group => (
-          <section key={group.id}>
-            <div className="max-w-2xl">
-              <div className="flex items-baseline justify-between gap-4">
-                <h2 id={group.id} className="scroll-mt-4 text-base font-semibold sm:text-lg">{group.title}</h2>
-                <a href="#guide-library-top" onClick={handleBackToTop} className="shrink-0 text-[10px] font-medium text-dbd-ink-3 underline decoration-dbd-rule underline-offset-4 hover:text-dbd-accent sm:text-xs" aria-label={`Back to the top from ${group.title}`}>Back to top</a>
-              </div>
-              <p className="mt-1 text-xs leading-5 text-dbd-ink-3 sm:text-sm">{group.description}</p>
-            </div>
-            <div className="mt-2 grid border-t border-dbd-rule/50 sm:mt-3 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8">
-              {group.articles.map(article => (
-                <article key={article.path} className="border-b border-dbd-rule/50">
-                  <h3>
-                    <a href={article.path} className="group flex min-h-12 items-start justify-between gap-3 py-3 text-sm font-medium leading-5 text-dbd-ink-2 transition-colors hover:text-dbd-accent sm:min-h-14 sm:py-3.5">
-                      <span>{article.title}</span>
-                      <ArrowRight size={13} className="mt-1 shrink-0 text-dbd-ink-3 transition-transform group-hover:translate-x-0.5 group-hover:text-dbd-accent" />
-                    </a>
-                  </h3>
-                </article>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
-      <section className="mt-8 rounded bg-dbd-ink p-5 text-white sm:flex sm:items-center sm:justify-between sm:gap-5"><div><h2 className="text-lg font-semibold">Plan dinners around your household</h2><p className="mt-1.5 max-w-2xl text-xs leading-5 text-white/70 sm:text-sm">Turn practical guidance into a coordinated week and a shopping list built from the dinners you schedule.</p></div><button type="button" onClick={onPlanWeek} className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded bg-white px-4 text-xs font-semibold text-dbd-ink sm:mt-0 sm:w-auto">Plan my week <ArrowRight size={14} /></button></section>
-      <div aria-hidden="true" style={{ height: scrollReserve }} />
+      </section>
+
+      <section className="mt-8 rounded bg-dbd-ink p-5 text-white sm:flex sm:items-center sm:justify-between sm:gap-5">
+        <div>
+          <h2 className="text-lg font-semibold">Plan dinners around your household</h2>
+          <p className="mt-1.5 max-w-2xl text-xs leading-5 text-white/70 sm:text-sm">Turn practical ideas into a coordinated week and a shopping list built from the dinners you schedule.</p>
+        </div>
+        <button type="button" onClick={onPlanWeek} className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded bg-white px-4 text-xs font-semibold text-dbd-ink sm:mt-0 sm:w-auto">
+          Plan my week <ArrowRight size={14} />
+        </button>
+      </section>
     </main>
   </div>
-  );
-};
+);

@@ -56,6 +56,13 @@ import {
 } from './content/publicGuideLibrary';
 import { PUBLIC_LIBRARY_PATH } from './content/publicArticles';
 import {
+  PUBLIC_DINNER_PLANS_PATH,
+  PUBLIC_FOOD_COSTS_PATH,
+  PUBLIC_RECIPES_PATH,
+  getPublicPathway,
+  getPublicPathwayJsonLd,
+} from './content/publicPathways';
+import {
   FIVE_A_DAY_GUIDE,
   FIVE_A_DAY_GUIDE_PATH,
   getFiveADayGuideJsonLd,
@@ -100,6 +107,7 @@ const BatchCookingGuideView = React.lazy(() => import('./components/views/BatchC
 const GroceryCostOptionsGuideView = React.lazy(() => import('./components/views/GroceryCostOptionsGuideView').then(module => ({ default: module.GroceryCostOptionsGuideView })));
 const GroceryCostPredictionGuideView = React.lazy(() => import('./components/views/GroceryCostPredictionGuideView').then(module => ({ default: module.GroceryCostPredictionGuideView })));
 const GuidesLibraryView = React.lazy(() => import('./components/views/GuidesLibraryView').then(module => ({ default: module.GuidesLibraryView })));
+const PublicPathwayView = React.lazy(() => import('./components/views/PublicPathwayView').then(module => ({ default: module.PublicPathwayView })));
 const FiveADayGuideView = React.lazy(() => import('./components/views/FiveADayGuideView').then(module => ({ default: module.FiveADayGuideView })));
 const HomeCookedReadyMadeGuideView = React.lazy(() => import('./components/views/HomeCookedReadyMadeGuideView').then(module => ({ default: module.HomeCookedReadyMadeGuideView })));
 const LowCostDinnersGuideView = React.lazy(() => import('./components/views/LowCostDinnersGuideView').then(module => ({ default: module.LowCostDinnersGuideView })));
@@ -132,6 +140,25 @@ const guideSeo = (
 });
 
 const PUBLIC_ROUTES: Record<string, PublicRoute> = {
+  ...[PUBLIC_DINNER_PLANS_PATH, PUBLIC_RECIPES_PATH, PUBLIC_FOOD_COSTS_PATH].reduce<Record<string, PublicRoute>>((routes, pathwayPath) => {
+    const pathway = getPublicPathway(pathwayPath);
+    if (!pathway) return routes;
+    routes[pathwayPath] = {
+      seo: {
+        title: pathway.seoTitle,
+        description: pathway.description,
+        canonicalPath: pathway.path,
+        jsonLd: getPublicPathwayJsonLd(pathway),
+      },
+      render: ({ plan, search }) => (
+        <PublicPathwayView
+          pathway={pathway}
+          onPrimaryAction={pathway.id === 'recipes' ? search : plan}
+        />
+      ),
+    };
+    return routes;
+  }, {}),
   [FIVE_DINNERS_FOR_TWO_UNDER_40_PATH]: {
     seo: {
       title: '5 Affordable Dinners for Two Under £40 | DinnerByDesign',

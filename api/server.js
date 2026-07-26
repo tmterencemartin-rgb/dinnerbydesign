@@ -164488,7 +164488,7 @@ var PUBLIC_ARTICLES = [
 var PUBLISHED_ARTICLES = PUBLIC_ARTICLES.filter((article) => article.status === "published");
 function isUnknownPublicArticlePath(pathName) {
   const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, "") : pathName;
-  const belongsToPublicFamily = normalisedPath.startsWith("/dinner-plans/") || normalisedPath.startsWith("/food-costs/") || normalisedPath.startsWith("/guides/");
+  const belongsToPublicFamily = normalisedPath.startsWith("/dinner-plans/") || normalisedPath.startsWith("/recipes/") || normalisedPath.startsWith("/food-costs/") || normalisedPath.startsWith("/guides/");
   return belongsToPublicFamily && !PUBLIC_ARTICLES.some((article) => article.path === normalisedPath && article.status === "published");
 }
 

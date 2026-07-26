@@ -1,17 +1,19 @@
 import React from 'react';
+import {
+  PUBLIC_PATHWAYS,
+  getPublicPathway,
+  getPublicPathwayForArticle,
+} from '../content/publicPathways';
 
 const CONTACT_EMAIL = 'chef@dinnerbydesign.app';
 
 const getBreadcrumbs = (pathName: string) => {
-  if (pathName === '/guides') return [{ label: 'Guides' }];
-  if (pathName.startsWith('/dinner-plans/')) return [{ label: 'Affordable dinner plans' }];
-  if (pathName === '/guides/how-to-build-a-traybake' || pathName === '/guides/9-ways-with-sausages') {
-    return [{ label: 'Guides', href: '/guides' }, { label: 'Practical cooking guide' }];
-  }
-  if (pathName.startsWith('/guides/')) {
-    return [{ label: 'Guides', href: '/guides' }, { label: 'Food cost guide' }];
-  }
-  return [{ label: 'Guides', href: '/guides' }, { label: 'Food cost guides' }];
+  if (pathName === '/guides') return [{ label: 'Explore' }];
+  const pathway = getPublicPathway(pathName);
+  if (pathway) return [{ label: pathway.title }];
+  const articlePathway = getPublicPathwayForArticle(pathName);
+  if (articlePathway) return [{ label: articlePathway.title, href: articlePathway.path }, { label: 'Guide' }];
+  return [{ label: 'Explore', href: '/guides' }];
 };
 
 const PublicGuideFooter: React.FC = () => (
@@ -25,7 +27,9 @@ const PublicGuideFooter: React.FC = () => (
         </a>
       </div>
       <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[11px] text-dbd-ink-3 sm:max-w-xl sm:justify-end sm:text-xs">
-        <a href="/guides" className="hover:text-dbd-accent">Guides</a>
+        <a href="/dinner-plans" className="hover:text-dbd-accent">Affordable dinner plans</a>
+        <a href="/recipes" className="hover:text-dbd-accent">Recipes</a>
+        <a href="/food-costs" className="hover:text-dbd-accent">Food-cost &amp; waste</a>
         <a href="/pricing-methodology" className="hover:text-dbd-accent">How prices are calculated</a>
         <a href="/food-safety" className="hover:text-dbd-accent">Food safety</a>
         <a href="/recipe-methodology" className="hover:text-dbd-accent">Recipe information</a>
@@ -42,20 +46,27 @@ const PublicGuideFooter: React.FC = () => (
 
 export const PublicGuideShell: React.FC<{ pathName: string; children: React.ReactNode }> = ({ pathName, children }) => {
   const breadcrumbs = getBreadcrumbs(pathName);
-  const isLibrary = pathName === '/guides';
+  const isCollection = pathName === '/guides' || Boolean(getPublicPathway(pathName));
 
   return (
     <div className="flex min-h-screen flex-col bg-[#faf9f7] text-dbd-ink">
       <header className="border-b border-dbd-rule/50 bg-dbd-surface">
-        <div className="mx-auto flex min-h-[72px] max-w-5xl items-center justify-between px-4 sm:min-h-[88px]">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-5 gap-y-3 px-4 py-3 sm:min-h-[88px] sm:flex-nowrap sm:py-0">
           <a href="/" aria-label="DinnerByDesign home">
             <img src="/dbd-logo-with-pin.png" alt="DinnerByDesign" className="h-[30.6px] w-auto max-w-[189px] object-contain mix-blend-multiply sm:h-[36px]" />
           </a>
+          <nav aria-label="Public pathways" className="order-last flex w-full items-center justify-between gap-3 border-t border-dbd-rule/40 pt-2.5 text-[10px] font-semibold text-dbd-ink-2 sm:order-none sm:w-auto sm:border-0 sm:pt-0 sm:text-xs">
+            {PUBLIC_PATHWAYS.map(pathway => (
+              <a key={pathway.id} href={pathway.path} aria-current={pathName === pathway.path ? 'page' : undefined} className="text-center leading-4 hover:text-dbd-accent aria-[current=page]:text-dbd-accent">
+                {pathway.id === 'food-costs' ? 'Food-cost & waste' : pathway.title}
+              </a>
+            ))}
+          </nav>
           <a href="/signin?mode=signin" className="text-xs font-semibold text-dbd-accent hover:underline">Sign in</a>
         </div>
       </header>
 
-      <div className={`mx-auto w-full px-4 pt-5 ${isLibrary ? 'max-w-5xl sm:pt-7' : 'max-w-3xl sm:pt-8'}`}>
+      <div className={`mx-auto w-full px-4 pt-5 ${isCollection ? 'max-w-5xl sm:pt-7' : 'max-w-3xl sm:pt-8'}`}>
         <nav aria-label="Breadcrumb" className="text-xs text-dbd-ink-3">
           <a href="/" className="hover:underline">DinnerByDesign</a>
           {breadcrumbs.map(crumb => (

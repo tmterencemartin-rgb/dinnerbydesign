@@ -23,6 +23,7 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/dinner-plans/not-a-real-plan')).toBe(true);
     expect(isUnknownPublicArticlePath('/food-costs/not-a-real-guide')).toBe(true);
     expect(isUnknownPublicArticlePath('/guides/not-a-real-guide')).toBe(true);
+    expect(isUnknownPublicArticlePath('/recipes/not-a-real-recipe')).toBe(true);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40')).toBe(false);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40/')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe(true);
@@ -73,5 +74,8 @@ describe('public article registry', () => {
     const sitemap = readFileSync('public/sitemap.xml', 'utf8');
     expect(PUBLIC_LIBRARY_PATH).toBe('/guides');
     expect(sitemap).toContain('<loc>https://dinnerbydesign.app/guides</loc>');
+    expect(sitemap).toContain('<loc>https://dinnerbydesign.app/dinner-plans</loc>');
+    expect(sitemap).toContain('<loc>https://dinnerbydesign.app/recipes</loc>');
+    expect(sitemap).toContain('<loc>https://dinnerbydesign.app/food-costs</loc>');
   });
 });
