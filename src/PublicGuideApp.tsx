@@ -11,10 +11,6 @@ import {
   COOKING_FOR_ONE_PATH,
   FRESH_OR_FROZEN_GUIDE,
   FRESH_OR_FROZEN_GUIDE_PATH,
-  LOWER_COST_CUTS_GUIDE,
-  LOWER_COST_CUTS_PATH,
-  LOW_COST_COOKING_TECHNIQUES_GUIDE,
-  LOW_COST_COOKING_TECHNIQUES_PATH,
   MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE,
   MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
   OFFAL_BUDGET_GUIDE,
@@ -28,8 +24,6 @@ import {
   getBatchCookingGuideJsonLd,
   getCookingForOneJsonLd,
   getFreshOrFrozenGuideJsonLd,
-  getLowerCostCutsJsonLd,
-  getLowCostCookingTechniquesJsonLd,
   getMediterraneanAffordableCookingJsonLd,
   getOffalBudgetGuideJsonLd,
   getPortionPlanningGuideJsonLd,
@@ -57,11 +51,6 @@ import {
   getSharedIngredientsGuideJsonLd,
 } from './content/sharedIngredientsGuide';
 import {
-  COMPLETE_PACKS_GUIDE,
-  COMPLETE_PACKS_GUIDE_PATH,
-  getCompletePacksGuideJsonLd,
-} from './content/completePacksGuide';
-import {
   PUBLIC_GUIDE_LIBRARY,
   getPublicGuideLibraryJsonLd,
 } from './content/publicGuideLibrary';
@@ -76,11 +65,6 @@ import {
   HOME_COOKED_READY_MADE_GUIDE_PATH,
   getHomeCookedReadyMadeGuideJsonLd,
 } from './content/homeCookedReadyMadeGuide';
-import {
-  CHEAP_FINISHING_TOUCHES_GUIDE,
-  CHEAP_FINISHING_TOUCHES_GUIDE_PATH,
-  getCheapFinishingTouchesGuideJsonLd,
-} from './content/cheapFinishingTouchesGuide';
 import {
   LOW_COST_DINNERS_GUIDE,
   LOW_COST_DINNERS_GUIDE_PATH,
@@ -104,11 +88,8 @@ import {
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FoodCostGuideView = React.lazy(() => import('./components/views/FoodCostGuideView').then(module => ({ default: module.FoodCostGuideView })));
-const LowerCostCutsGuideView = React.lazy(() => import('./components/views/LowerCostCutsGuideView').then(module => ({ default: module.LowerCostCutsGuideView })));
 const CheaperMeatCutsGuideView = React.lazy(() => import('./components/views/CheaperMeatCutsGuideView').then(module => ({ default: module.CheaperMeatCutsGuideView })));
 const SharedIngredientsGuideView = React.lazy(() => import('./components/views/SharedIngredientsGuideView').then(module => ({ default: module.SharedIngredientsGuideView })));
-const CompletePacksGuideView = React.lazy(() => import('./components/views/CompletePacksGuideView').then(module => ({ default: module.CompletePacksGuideView })));
-const LowCostCookingTechniquesGuideView = React.lazy(() => import('./components/views/LowCostCookingTechniquesGuideView').then(module => ({ default: module.LowCostCookingTechniquesGuideView })));
 const CookingForOneGuideView = React.lazy(() => import('./components/views/CookingForOneGuideView').then(module => ({ default: module.CookingForOneGuideView })));
 const OffalBudgetGuideView = React.lazy(() => import('./components/views/OffalBudgetGuideView').then(module => ({ default: module.OffalBudgetGuideView })));
 const PortionPlanningGuideView = React.lazy(() => import('./components/views/PortionPlanningGuideView').then(module => ({ default: module.PortionPlanningGuideView })));
@@ -121,7 +102,6 @@ const GroceryCostPredictionGuideView = React.lazy(() => import('./components/vie
 const GuidesLibraryView = React.lazy(() => import('./components/views/GuidesLibraryView').then(module => ({ default: module.GuidesLibraryView })));
 const FiveADayGuideView = React.lazy(() => import('./components/views/FiveADayGuideView').then(module => ({ default: module.FiveADayGuideView })));
 const HomeCookedReadyMadeGuideView = React.lazy(() => import('./components/views/HomeCookedReadyMadeGuideView').then(module => ({ default: module.HomeCookedReadyMadeGuideView })));
-const CheapFinishingTouchesGuideView = React.lazy(() => import('./components/views/CheapFinishingTouchesGuideView').then(module => ({ default: module.CheapFinishingTouchesGuideView })));
 const LowCostDinnersGuideView = React.lazy(() => import('./components/views/LowCostDinnersGuideView').then(module => ({ default: module.LowCostDinnersGuideView })));
 const PulsesBudgetGuideView = React.lazy(() => import('./components/views/PulsesBudgetGuideView').then(module => ({ default: module.PulsesBudgetGuideView })));
 const TraybakeGuideView = React.lazy(() => import('./components/views/TraybakeGuideView').then(module => ({ default: module.TraybakeGuideView })));
@@ -170,10 +150,6 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
     },
     render: ({ plan }) => <FoodCostGuideView onPlanWeek={plan} />,
   },
-  [LOWER_COST_CUTS_PATH]: {
-    seo: guideSeo(LOWER_COST_CUTS_GUIDE, LOWER_COST_CUTS_PATH, getLowerCostCutsJsonLd()),
-    render: ({ plan }) => <LowerCostCutsGuideView onFindDinners={plan} />,
-  },
   [CHEAPER_MEAT_CUTS_GUIDE_PATH]: {
     seo: guideSeo(CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH, getCheaperMeatCutsGuideJsonLd()),
     render: ({ plan }) => <CheaperMeatCutsGuideView onPlanWeek={plan} />,
@@ -181,14 +157,6 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [SHARED_INGREDIENTS_GUIDE_PATH]: {
     seo: guideSeo(SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH, getSharedIngredientsGuideJsonLd()),
     render: ({ plan }) => <SharedIngredientsGuideView onPlanWeek={plan} />,
-  },
-  [COMPLETE_PACKS_GUIDE_PATH]: {
-    seo: guideSeo(COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH, getCompletePacksGuideJsonLd()),
-    render: ({ plan }) => <CompletePacksGuideView onPlanWeek={plan} />,
-  },
-  [LOW_COST_COOKING_TECHNIQUES_PATH]: {
-    seo: guideSeo(LOW_COST_COOKING_TECHNIQUES_GUIDE, LOW_COST_COOKING_TECHNIQUES_PATH, getLowCostCookingTechniquesJsonLd()),
-    render: ({ plan }) => <LowCostCookingTechniquesGuideView onFindDinners={plan} />,
   },
   [COOKING_FOR_ONE_PATH]: {
     seo: guideSeo(COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, getCookingForOneJsonLd()),
@@ -242,10 +210,6 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [HOME_COOKED_READY_MADE_GUIDE_PATH]: {
     seo: guideSeo(HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH, getHomeCookedReadyMadeGuideJsonLd()),
     render: ({ search }) => <HomeCookedReadyMadeGuideView onFindDinner={search} />,
-  },
-  [CHEAP_FINISHING_TOUCHES_GUIDE_PATH]: {
-    seo: guideSeo(CHEAP_FINISHING_TOUCHES_GUIDE, CHEAP_FINISHING_TOUCHES_GUIDE_PATH, getCheapFinishingTouchesGuideJsonLd()),
-    render: ({ search }) => <CheapFinishingTouchesGuideView onFindDinner={search} />,
   },
   [LOW_COST_DINNERS_GUIDE_PATH]: {
     seo: guideSeo(LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH, getLowCostDinnersGuideJsonLd()),

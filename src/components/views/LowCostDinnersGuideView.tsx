@@ -32,7 +32,7 @@ export const LowCostDinnersGuideView: React.FC<{ onFindDinner: () => void }> = (
           <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Food cost guide</p>
           <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{guide.title}</h1>
           <p className="mt-4 max-w-2xl text-[15px] leading-7 text-dbd-ink-3">{guide.description}</p>
-          <p className="mt-3 text-xs text-dbd-ink-3">By {guide.editorialOwner} · Published 24 July 2026 · Last reviewed 24 July 2026</p>
+          <p className="mt-3 text-xs text-dbd-ink-3">By {guide.editorialOwner} · Published 24 July 2026 · Last reviewed 26 July 2026</p>
         </header>
 
         <section className="mt-10 border-t border-dbd-rule/50 pt-8">
@@ -50,7 +50,7 @@ export const LowCostDinnersGuideView: React.FC<{ onFindDinner: () => void }> = (
         <Section title="Build flavour inexpensively">
           <p>A short list of flavour-builders does most of the work here, and there's no need to own all of them at once, or to restock every one every week. One spice blend, one acidic ingredient and one savoury seasoning will already shift a dish a long way from its last outing.</p>
           <BulletList items={['Mustard', 'Curry powder', 'Smoked paprika', 'Dried herbs', 'Chilli flakes', 'Soy sauce', 'Vinegar or lemon juice', 'Garlic', 'Stock']} />
-          <p>It is worth tasting as you go, particularly with stock, soy sauce and other salty seasonings. It's easy to oversalt a dish by adding several of these on top of each other without checking first. <a href="/food-costs/cheap-finishing-touches" className="font-semibold text-dbd-accent hover:underline">See which low-cost finishing touches add acidity, crunch, depth, heat or freshness</a>.</p>
+          <p>It is worth tasting as you go, particularly with stock, soy sauce and other salty seasonings. It's easy to oversalt a dish by adding several of these on top of each other without checking first.</p>
         </Section>
 
         <Section title="Change the cooking method">
@@ -62,6 +62,12 @@ export const LowCostDinnersGuideView: React.FC<{ onFindDinner: () => void }> = (
           <p>Budget dishes can start to feel monotonous when everything on the plate has the same soft texture. A small contrasting element often makes more difference than adding another costly ingredient.</p>
           <BulletList items={['Toasted breadcrumbs', 'Crisp fried onions', 'Shredded raw vegetables', 'Pickled onions', 'Seeds', 'A spoonful of yoghurt', 'Fresh herbs, when affordable', 'A squeeze of lemon']} />
           <p>A bowl of dhal, for example, changes considerably with a spoonful of yoghurt and a scattering of toasted seeds on top, even though the dhal itself hasn't changed at all. The same logic applies to soups, stews and anything else that tends to come out uniformly soft.</p>
+        </Section>
+
+        <Section title="Work out what is actually missing">
+          <p>A finishing touch works best when it solves a particular problem rather than adding more ingredients at random. Taste first, then choose one adjustment:</p>
+          <BulletList items={['Tastes flat: try a little lemon juice or vinegar.', 'Feels heavy: add acidity, herbs or pickles.', 'Too soft: add toasted crumbs, seeds or crisp onions.', 'Lacks depth: try a small amount of soy sauce, miso or hard cheese.', 'Familiar but dull: add chilli, smoked paprika or a fresh herb.', 'Too hot: finish with yoghurt.']} />
+          <p>Start small, taste again and only make a second adjustment if the dish still needs it. Cost per use matters here as much as shelf price. A jar used across many dinners may offer better value than a fresh ingredient bought for one dish and left unused.</p>
         </Section>
 
         <Section title="Reuse ingredients without repeating the same dinner">
@@ -89,7 +95,7 @@ export const LowCostDinnersGuideView: React.FC<{ onFindDinner: () => void }> = (
         </Section>
 
         <Section title="Related guidance">
-          <p><a href="/food-costs/low-cost-cooking-techniques" className="font-semibold text-dbd-accent hover:underline">Explore three low-cost cooking techniques</a>, <a href="/food-costs/five-dinners-same-ingredients" className="font-semibold text-dbd-accent hover:underline">see how shared ingredients can become five different dinners</a> or <a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read how DinnerByDesign calculates ingredient costs</a>.</p>
+          <p><a href="/food-costs/ways-to-reduce-grocery-costs" className="font-semibold text-dbd-accent hover:underline">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/five-dinners-same-ingredients" className="font-semibold text-dbd-accent hover:underline">see how shared ingredients can become five different dinners</a> or <a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read how DinnerByDesign calculates ingredient costs</a>.</p>
         </Section>
 
         <ProgrammaticDisclosureFooter copy={LOW_COST_DINNERS_DISCLOSURE_FOOTER} className="mt-10" />

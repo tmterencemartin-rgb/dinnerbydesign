@@ -11,7 +11,7 @@ describe('cheaper meat cuts guide', () => {
     expect(CHEAPER_MEAT_CUTS_GUIDE_PATH).toBe('/food-costs/cooking-with-cheaper-cuts-of-meat');
     expect(CHEAPER_MEAT_CUTS_GUIDE.indexingStatus).toBe('index');
     expect(CHEAPER_MEAT_CUTS_GUIDE.disclosures).toEqual(['price_comparison', 'allergen_and_product', 'storage_and_cooking', 'source_timing']);
-    expect(CHEAPER_MEAT_CUTS_GUIDE.internalLinks).toContain('/food-costs/cooking-for-four-with-lower-cost-cuts');
+    expect(CHEAPER_MEAT_CUTS_GUIDE.internalLinks).not.toContain('/food-costs/cooking-for-four-with-lower-cost-cuts');
     expect(CHEAPER_MEAT_CUTS_GUIDE.internalLinks).toContain('/guides');
     expect(CHEAPER_MEAT_CUTS_GUIDE.sources).toHaveLength(2);
   });
@@ -20,6 +20,8 @@ describe('cheaper meat cuts guide', () => {
     const html = renderCheaperMeatCutsGuideInitialHtml();
     expect(html).toContain(`<h1>${CHEAPER_MEAT_CUTS_GUIDE.title}</h1>`);
     expect(html).toContain('Why are some cuts cheaper?');
+    expect(html).toContain('How to compare cuts for four servings');
+    expect(html).toContain('£1.50 per serving');
     expect(html).toContain('Chicken thighs and drumsticks');
     expect(html).toContain('When a cheaper cut may not be better value');
     expect(html).toContain('Frequently asked questions');

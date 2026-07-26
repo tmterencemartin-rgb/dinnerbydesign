@@ -25,8 +25,7 @@ export const PULSES_BUDGET_GUIDE = {
   editorialNotes: 'Price examples are a dated Tesco snapshot. Cooked yield and hob-use figures are explicitly presented as approximations.',
   internalLinks: [
     '/guides',
-    '/food-costs/cheap-finishing-touches',
-    '/food-costs/how-to-use-complete-packs',
+    '/food-costs/make-low-cost-dinners-more-interesting',
     '/food-costs/five-dinners-same-ingredients',
     '/food-costs/portion-planning-and-food-waste',
     '/food-costs/fresh-or-frozen',
@@ -182,6 +181,6 @@ export function renderPulsesBudgetGuideInitialHtml() {
 ])}</section>
 <section><h2>Frequently asked questions</h2>${faqs}</section>
 <section><h2>Sources and further reading</h2><p>Prices and guidance checked 25 July 2026. Cooked-yield ratios and hob-energy use are kitchen and industry approximations and vary by product, appliance and method.</p><ul>${sources}</ul></section>
-<section><h2>Related guides</h2><ul><li><a href="/food-costs/cheap-finishing-touches">Cheap finishing touches that make everyday dinners taste better</a></li><li><a href="/food-costs/how-to-use-complete-packs">How to use complete packs without wasting ingredients</a></li><li><a href="/food-costs/five-dinners-same-ingredients">Five different dinners using the same ingredients</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-costs/fresh-or-frozen">Fresh or frozen: which suits the way you cook?</a></li><li><a href="/pricing-methodology">How DinnerByDesign calculates ingredient prices</a></li></ul></section>
+<section><h2>Related guides</h2><ul><li><a href="/food-costs/make-low-cost-dinners-more-interesting">Make low-cost dinners more interesting</a></li><li><a href="/food-costs/five-dinners-same-ingredients">Plan five dinners around shared ingredients and complete packs</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-costs/fresh-or-frozen">Fresh or frozen: which suits the way you cook?</a></li><li><a href="/pricing-methodology">How DinnerByDesign calculates ingredient prices</a></li></ul></section>
 ${footer}</article><section><h2>Find a dinner built around pulses</h2><p>Search DinnerByDesign for dinners using lentils, beans or chickpeas.</p><p><a href="/signin">Find pulse-based dinners</a></p></section></main></div>`;
 }

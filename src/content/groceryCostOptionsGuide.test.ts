@@ -12,8 +12,7 @@ describe('grocery-cost options guide', () => {
     expect(GROCERY_COST_OPTIONS_GUIDE.indexingStatus).toBe('index');
     expect(GROCERY_COST_OPTIONS_GUIDE.disclosures).toEqual(['price_comparison', 'allergen_and_product', 'storage_and_cooking', 'source_timing']);
     expect(GROCERY_COST_OPTIONS_GUIDE.internalLinks).toContain('/guides');
-    expect(GROCERY_COST_OPTIONS_GUIDE.sources).toHaveLength(2);
-    expect(GROCERY_COST_OPTIONS_GUIDE.sources.every(source => source.url.startsWith('https://www.gov.uk/'))).toBe(true);
+    expect(GROCERY_COST_OPTIONS_GUIDE.sources).toHaveLength(4);
   });
 
   it('renders the complete reader page in crawler-visible HTML', () => {
@@ -21,6 +20,8 @@ describe('grocery-cost options guide', () => {
     expect(html).toContain(`<h1>${GROCERY_COST_OPTIONS_GUIDE.title}</h1>`);
     for (let number = 1; number <= 12; number += 1) expect(html).toContain(`<h2>${number}.`);
     expect(html).toContain('<table>');
+    expect(html).toContain('Koshary combines rice, pasta, lentils');
+    expect(html).toContain('Ribollita uses beans, vegetables and dry bread');
     expect(html).toContain('A note on cost');
     expect(html).toContain('Food safety');
     expect(html).toContain('Sources');

@@ -9,6 +9,7 @@ import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from
 import { sendEmail } from "../src/lib/resend";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
 import { isUnknownPublicArticlePath } from "../src/content/publicArticles";
+import { getPublicPageRedirect } from "../src/content/publicRedirects";
 import {
   catalogueEntryMatchesFeedItem,
   ingredientPriceDocumentId,
@@ -259,6 +260,19 @@ export function createApp() {
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true
   }));
+
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      return next();
+    }
+
+    const redirectPath = getPublicPageRedirect(req.path);
+    if (!redirectPath) {
+      return next();
+    }
+
+    return res.redirect(308, redirectPath);
+  });
 
   app.use((req, res, next) => {
     if (req.path === "/api/stripe-webhook") return next();

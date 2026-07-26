@@ -163623,62 +163623,6 @@ var UK_FOOD_COSTS_2026 = {
     { label: "IGD, June 2026 food inflation forecast", url: "https://www.igd.com/articles/igd-releases-new-food-inflation-forecast/73470" }
   ]
 };
-var LOWER_COST_CUTS_PATH = "/food-costs/cooking-for-four-with-lower-cost-cuts";
-var LOWER_COST_CUTS_GUIDE = {
-  title: "How to compare meat cuts when cooking for four",
-  seoTitle: "Lower-cost family dinners: comparing meat cuts | DinnerByDesign",
-  description: "How to compare meat cuts for four servings using pack price, usable yield, cooking method and storage considerations.",
-  publishedAt: "2026-07-19",
-  reviewedAt: "2026-07-19",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Compare meat cuts for four servings using current pack price, usable yield and suitable cooking methods",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-19",
-  editorialNotes: "The \xA36 calculation is illustrative arithmetic, not a market-price estimate. Review FSA guidance and AHDB links before changing the content review date.",
-  internalLinks: ["/food-costs/uk-food-costs-2026", "/pricing-methodology", "/food-safety", "/recipe-methodology"],
-  disclosures: ["price_comparison", "serving_assumption", "source_timing", "storage_and_cooking"],
-  sources: [
-    { label: "Food Standards Agency: cooking guidance", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" },
-    { label: "Food Standards Agency: chilling and leftover guidance", url: "https://www.food.gov.uk/research/food-and-you-2/food-and-you-2-wave-9-key-findings?print=1" },
-    { label: "AHDB Meat Purchasing Guide", url: "https://ahdb.org.uk/mpg" }
-  ],
-  faqs: [
-    { question: "Are lower-cost cuts lower quality?", answer: "A lower price does not by itself indicate lower quality or safety. Price can reflect demand, the characteristics of the cut, preparation and retailer pricing. Nutritional composition varies by cut and product, so compare the label where this matters." },
-    { question: "Do lower-cost cuts always take longer to cook?", answer: "Cuts with more connective tissue, such as shin, shoulder and braising steak, generally need longer, slower cooking. Cuts with less connective tissue, such as thighs and drumsticks, generally cook more quickly." },
-    { question: "Can one cut be substituted for another in a recipe?", answer: "Only where the cooking method matches. A cut suited to slow braising will not produce the same result if substituted into a quick-roast recipe, and the reverse also applies." },
-    { question: "How is cost compared between two cuts?", answer: "Compare price per kilogram of usable weight on the same date, including any additional ingredients the method requires." }
-  ]
-};
-var LOW_COST_COOKING_TECHNIQUES_PATH = "/food-costs/low-cost-cooking-techniques";
-var LOW_COST_COOKING_TECHNIQUES_GUIDE = {
-  title: "Three low-cost cooking techniques for making ingredients go further",
-  seoTitle: "3 low-cost cooking techniques | DinnerByDesign",
-  description: "Three low-cost cooking techniques for making ingredients go further, with practical UK substitutions, reuse guidance and food-safety notes.",
-  publishedAt: "2026-07-20",
-  reviewedAt: "2026-07-20",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Find practical low-cost cooking techniques for making affordable ingredients go further in UK households",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-20",
-  editorialNotes: "Keep examples at technique level rather than turning them into complete recipes. Recheck the cited food-safety guidance before changing the review date.",
-  internalLinks: ["/food-costs/uk-food-costs-2026", "/food-costs/cooking-for-four-with-lower-cost-cuts", "/food-safety", "/recipe-methodology"],
-  disclosures: ["allergen_and_product", "storage_and_cooking", "source_timing"],
-  sources: [
-    { label: "UNESCO: Koshary, daily-life dish and associated practices", url: "https://ich.unesco.org/en/RL/koshary-daily-life-dish-and-practices-associated-with-it-02278" },
-    { label: "Visit Tuscany: Ribollita recipe", url: "https://www.visittuscany.com/en/recipes/reboiled-soup-a.k.a.-ribollita-recipe/" },
-    { label: "Food Standards Agency: Best-before and use-by dates", url: "https://www.food.gov.uk/safety-hygiene/best-before-and-use-by-dates" }
-  ],
-  faqs: [
-    { question: "Can I use this technique without fish sauce?", answer: "Yes. Soy sauce can provide savoury flavour, although it tastes different and usually contains gluten. Tamari may be suitable when a gluten-free option is needed, but always check the label." },
-    { question: "Is koshary usually vegetarian?", answer: "The combination described here contains no meat or animal-derived ingredients. Check any ready-made sauces and toppings because products vary." },
-    { question: "Does bread need to be stale for ribollita?", answer: "Dry bread works well because it absorbs liquid and thickens the soup. Use bread only while it remains safe to eat, and discard it if there is any visible mould." },
-    { question: "Do I need specialist ingredients?", answer: "No. The examples can be built from ingredients widely available in UK supermarkets, with the substitutions shown where useful." },
-    { question: "Which staple ingredients are easiest to reuse across a week?", answer: "Rice, pasta, bread, beans, lentils, tinned tomatoes and versatile vegetables can each contribute to several different dinners." },
-    { question: "How can I plan a week around these techniques?", answer: "Choose dinners that share a staple ingredient or sauce, use concentrated flavourings in small quantities, and schedule ingredients that need using soon earlier in the week." }
-  ]
-};
 var COOKING_FOR_ONE_PATH = "/food-costs/cooking-for-one-without-waste";
 var COOKING_FOR_ONE_GUIDE = {
   title: "Cooking for one without overspending or wasting ingredients",
@@ -163692,7 +163636,7 @@ var COOKING_FOR_ONE_GUIDE = {
   indexingStatus: "index",
   contentReviewedAt: "2026-07-20",
   editorialNotes: "Keep advice practical and flexible. Recheck the cited food-safety guidance before changing the review date.",
-  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/food-safety", "/recipe-methodology"],
+  internalLinks: ["/food-costs/ways-to-reduce-grocery-costs", "/food-safety", "/recipe-methodology"],
   disclosures: ["allergen_and_product", "serving_assumption", "storage_and_cooking", "source_timing"],
   sources: [
     { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely" }
@@ -163719,7 +163663,7 @@ var OFFAL_BUDGET_GUIDE = {
   indexingStatus: "index",
   contentReviewedAt: "2026-07-20",
   editorialNotes: "Recheck retailer prices and the cited FSA and NHS guidance before changing the review date.",
-  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/pricing-methodology", "/food-safety", "/recipe-methodology"],
+  internalLinks: ["/food-costs/ways-to-reduce-grocery-costs", "/pricing-methodology", "/food-safety", "/recipe-methodology"],
   disclosures: ["price_comparison", "source_timing", "storage_and_cooking", "allergen_and_product", "serving_assumption"],
   sources: [
     { label: "Food Standards Agency: Cooking your food", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food?ContensisTextOnly=true" },
@@ -163751,7 +163695,7 @@ var PORTION_PLANNING_GUIDE = {
   primarySearchIntent: "Understand how portion planning, planned leftovers and pack-size awareness can reduce food spending and waste",
   indexingStatus: "index",
   editorialNotes: "The 300g and 500g example is illustrative arithmetic, not a retailer or product claim. Recheck FSA guidance before changing the review date.",
-  internalLinks: ["/food-costs/cooking-for-one-without-waste", "/food-costs/low-cost-cooking-techniques", "/food-costs/batch-cooking-on-a-budget", "/pricing-methodology", "/food-safety"],
+  internalLinks: ["/food-costs/cooking-for-one-without-waste", "/food-costs/ways-to-reduce-grocery-costs", "/food-costs/batch-cooking-on-a-budget", "/pricing-methodology", "/food-safety"],
   disclosures: ["serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
   sources: [
     { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
@@ -163778,7 +163722,7 @@ var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
   primarySearchIntent: "Use Mediterranean-inspired cooking techniques to make affordable ingredients appetising and reuse them across several dinners",
   indexingStatus: "index",
   editorialNotes: "Keep the traditions distinct, retain the softened Spanish framing, and recheck the cultural, FSA and allergen sources before changing the review date.",
-  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/food-costs/portion-planning-and-food-waste", "/food-costs/fresh-or-frozen", "/food-safety", "/recipe-methodology"],
+  internalLinks: ["/food-costs/ways-to-reduce-grocery-costs", "/food-costs/portion-planning-and-food-waste", "/food-costs/fresh-or-frozen", "/food-safety", "/recipe-methodology"],
   disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
   sources: [
     { label: "Visit Greece: Greek pulses to quicken your pulse", url: "https://www.visitgreece.gr/experiences/gastronomy/traditional-products/greek-pulses-to-quicken-your-pulse/" },
@@ -163809,7 +163753,7 @@ var SUMMER_STEWS_GUIDE = {
   indexingStatus: "index",
   contentReviewedAt: "2026-07-20",
   editorialNotes: "Review the cited Food Standards Agency guidance before changing the content review date. The dinner examples are flexible ideas rather than named traditional dishes.",
-  internalLinks: ["/food-costs/low-cost-cooking-techniques", "/food-costs/portion-planning-and-food-waste", "/food-safety", "/recipe-methodology"],
+  internalLinks: ["/food-costs/ways-to-reduce-grocery-costs", "/food-costs/portion-planning-and-food-waste", "/food-safety", "/recipe-methodology"],
   disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
   sources: [
     { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" }
@@ -163862,7 +163806,7 @@ var BATCH_COOKING_GUIDE = {
   indexingStatus: "index",
   contentReviewedAt: "2026-07-21",
   editorialNotes: "Food Standards Agency guidance was reviewed on 20 July 2026. No retailer prices, numerical savings or energy-consumption claims are included.",
-  internalLinks: ["/food-costs/portion-planning-and-food-waste", "/food-costs/low-cost-cooking-techniques", "/food-safety", "/recipe-methodology"],
+  internalLinks: ["/food-costs/portion-planning-and-food-waste", "/food-costs/ways-to-reduce-grocery-costs", "/food-safety", "/recipe-methodology"],
   disclosures: ["allergen_and_product", "storage_and_cooking", "source_timing"],
   sources: [
     { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" },
@@ -163884,13 +163828,13 @@ var GROCERY_COST_OPTIONS_GUIDE = {
   seoTitle: "12 ways to manage grocery costs | DinnerByDesign",
   description: "Explore 12 practical ways to manage grocery costs, use ingredients more effectively and reduce avoidable food waste.",
   publishedAt: "2026-07-21",
-  reviewedAt: "2026-07-21",
+  reviewedAt: "2026-07-26",
   editorialOwner: "DinnerByDesign editorial team",
   pageFamily: "Food cost guide",
   primarySearchIntent: "Find practical ways to manage grocery spending, use ingredients effectively and reduce avoidable food waste",
   indexingStatus: "index",
-  contentReviewedAt: "2026-07-21",
-  editorialNotes: "Cornerstone guide linking the first 11 public pages. Keep its methods aligned with the detailed guides and recheck Food Standards Agency sources whenever the review date changes.",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Cornerstone guide incorporating the former low-cost cooking-techniques material. Keep its methods aligned with the detailed guides and recheck cited sources whenever the review date changes.",
   internalLinks: [
     "/guides",
     "/food-costs/uk-food-costs-2026",
@@ -163898,19 +163842,19 @@ var GROCERY_COST_OPTIONS_GUIDE = {
     "/food-costs/portion-planning-and-food-waste",
     "/food-costs/cooking-for-one-without-waste",
     "/food-costs/batch-cooking-on-a-budget",
-    "/food-costs/low-cost-cooking-techniques",
     "/food-costs/mediterranean-inspired-affordable-cooking",
-    "/food-costs/cooking-for-four-with-lower-cost-cuts",
+    "/food-costs/cooking-with-cheaper-cuts-of-meat",
     "/food-costs/cooking-with-offal-on-a-budget",
     "/food-costs/fresh-or-frozen",
     "/food-costs/summer-stews-seasonal-vegetables",
-    "/food-costs/five-dinners-same-ingredients",
-    "/food-costs/how-to-use-complete-packs"
+    "/food-costs/five-dinners-same-ingredients"
   ],
   disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
   sources: [
     { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" },
-    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely" }
+    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely" },
+    { label: "UNESCO: Koshary, daily-life dish and associated practices", url: "https://ich.unesco.org/en/RL/koshary-daily-life-dish-and-practices-associated-with-it-02278" },
+    { label: "Visit Tuscany: Ribollita", url: "https://www.visittuscany.com/en/recipes/reboiled-soup-a.k.a.-ribollita-recipe/" }
   ],
   faqs: [
     { question: "What is the best way to start reducing grocery costs?", answer: "Start with whichever problem affects you most \u2014 waste, expensive ingredients, lack of time or unpredictable spending \u2014 and use the comparison table to find the matching technique, rather than trying to change everything at once." },
@@ -163970,23 +163914,21 @@ var CHEAPER_MEAT_CUTS_GUIDE_PATH = "/food-costs/cooking-with-cheaper-cuts-of-mea
 var CHEAPER_MEAT_CUTS_GUIDE = {
   title: "Cooking with cheaper cuts of meat: what to buy and how to use it",
   seoTitle: "Cooking with cheaper cuts of meat | DinnerByDesign",
-  description: "Learn how to cook beef shin, braising steak, chicken thighs, pork shoulder and turkey thighs \u2014 and when these cuts may offer better value.",
+  description: "Compare and cook beef shin, braising steak, chicken thighs, pork shoulder and turkey thighs, including usable quantity and cost per serving.",
   publishedAt: "2026-07-22",
-  reviewedAt: "2026-07-22",
+  reviewedAt: "2026-07-26",
   editorialOwner: "DinnerByDesign editorial team",
   pageFamily: "Food cost guide",
   primarySearchIntent: "Choose and cook lower-cost meat cuts using methods that suit their texture, usable quantity and available time",
   indexingStatus: "index",
-  contentReviewedAt: "2026-07-22",
-  editorialNotes: "Method-led guide rather than a live price ranking. Keep it distinct from the comparison guide for four servings, and recheck Food Standards Agency cooking and storage guidance before changing the review date.",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Consolidated method and four-serving comparison guide rather than a live price ranking. Recheck Food Standards Agency cooking and storage guidance before changing the review date.",
   internalLinks: [
-    "/food-costs/cooking-for-four-with-lower-cost-cuts",
     "/pricing-methodology",
     "/food-costs/why-grocery-costs-are-hard-to-predict",
     "/food-costs/batch-cooking-on-a-budget",
     "/food-costs/portion-planning-and-food-waste",
     "/food-costs/cooking-with-offal-on-a-budget",
-    "/food-costs/low-cost-cooking-techniques",
     "/food-costs/ways-to-reduce-grocery-costs",
     "/guides"
   ],
@@ -164028,17 +163970,17 @@ var CHEAPER_MEAT_CUTS_GUIDE = {
 // src/content/sharedIngredientsGuide.ts
 var SHARED_INGREDIENTS_GUIDE_PATH = "/food-costs/five-dinners-same-ingredients";
 var SHARED_INGREDIENTS_GUIDE = {
-  title: "How to turn the same five ingredients into five different dinners",
-  seoTitle: "Five dinners using the same ingredients | DinnerByDesign",
-  description: "See how chicken thighs, potatoes, peppers, onions and tinned tomatoes can become five different dinners while helping reduce part-used packs.",
+  title: "How to plan five dinners around shared ingredients and complete packs",
+  seoTitle: "Five dinners using shared ingredients and complete packs | DinnerByDesign",
+  description: "See how chicken thighs, potatoes, peppers, onions and tinned tomatoes can become five different dinners, with practical plans for complete packs.",
   publishedAt: "2026-07-23",
-  reviewedAt: "2026-07-23",
+  reviewedAt: "2026-07-26",
   editorialOwner: "DinnerByDesign editorial team",
   pageFamily: "Food cost guide",
-  primarySearchIntent: "Plan five different dinners around the same five core ingredients to reduce disconnected purchases and part-used packs",
+  primarySearchIntent: "Plan five different dinners around shared ingredients and complete packs to reduce disconnected purchases and part-used packs",
   indexingStatus: "index",
-  contentReviewedAt: "2026-07-23",
-  editorialNotes: "Planning guide for two adults using one shared five-ingredient basket. Keep the five dinners distinct by method, texture and seasoning, and recheck Food Standards Agency guidance before changing the review date.",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Consolidated shared-ingredient and complete-pack planning guide for two adults. Keep the five dinners distinct by method, texture and seasoning, and recheck Food Standards Agency guidance before changing the review date.",
   internalLinks: [
     "/food-costs/cooking-with-cheaper-cuts-of-meat",
     "/food-costs/ways-to-reduce-grocery-costs",
@@ -164078,69 +164020,12 @@ var SHARED_INGREDIENTS_GUIDE = {
       answer: "Not necessarily. Portion and label the chicken, but prepare vegetables only for the next one or two dinners so they retain more of their texture and freshness."
     },
     {
+      question: "Should I cook a complete pack at once?",
+      answer: "Not necessarily. Dividing a pack before cooking may preserve more flexibility than cooking everything at once. Follow the pack instructions, label anything frozen and decide how each portion will be used."
+    },
+    {
       question: "Can I adapt the basket for a larger household?",
       answer: "Yes. The examples assume two adults, so increase the quantities to suit your household and check that the available pack sizes still make sense for the plan."
-    }
-  ]
-};
-
-// src/content/completePacksGuide.ts
-var COMPLETE_PACKS_GUIDE_PATH = "/food-costs/how-to-use-complete-packs";
-var COMPLETE_PACKS_GUIDE = {
-  title: "How to use complete packs without wasting ingredients",
-  seoTitle: "How to use complete food packs and reduce waste | DinnerByDesign",
-  description: "Learn how to plan several dinners around complete supermarket packs, make use of pack remainders and avoid buying more than your household will use.",
-  publishedAt: "2026-07-23",
-  reviewedAt: "2026-07-23",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Plan practical uses for complete supermarket packs so checkout costs are easier to understand and fewer ingredients are wasted",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-23",
-  editorialNotes: "Keep complete-pack cost distinct from the value of ingredients used. Pack quantities are illustrative, and storage advice must remain led by product labels and current Food Standards Agency guidance.",
-  internalLinks: [
-    "/food-costs/why-grocery-costs-are-hard-to-predict",
-    "/pricing-methodology",
-    "/food-costs/five-dinners-same-ingredients",
-    "/food-costs/batch-cooking-on-a-budget",
-    "/food-costs/fresh-or-frozen",
-    "/food-costs/cooking-for-one-without-waste",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-costs/ways-to-reduce-grocery-costs",
-    "/food-safety",
-    "/guides"
-  ],
-  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
-      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
-    },
-    {
-      label: "Food Standards Agency: Cooking your food",
-      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
-    }
-  ],
-  faqs: [
-    {
-      question: "Does buying a larger pack always save money?",
-      answer: "Not always. It can lower the cost per unit while still costing the household more overall, particularly if part of the pack goes unused."
-    },
-    {
-      question: "How can I use a pack across two dinners without repeating the same dish?",
-      answer: "Change the cooking method, seasoning or texture the second time. Roasted chicken can become shredded chicken with rice; a tomato-based mince dinner can become a stuffed-pepper filling."
-    },
-    {
-      question: "Should I cook the whole pack at once?",
-      answer: "Not necessarily. Splitting a pack before cooking can preserve more flexibility than cooking everything at once and reheating part of it later."
-    },
-    {
-      question: "Is frozen produce better for avoiding waste?",
-      answer: "It can help, since portions can be taken out as needed, but it is not automatically better for every ingredient or household. It depends on freezer space and how the ingredient is used."
-    },
-    {
-      question: "What should I do when the smallest available pack is still too large?",
-      answer: "Look for loose alternatives where sold, plan a genuinely different second use in advance, or accept that a small amount may need to be frozen or discarded rather than forced into a dinner nobody wants."
     }
   ]
 };
@@ -164207,68 +164092,29 @@ var HOME_COOKED_READY_MADE_GUIDE = {
   ]
 };
 
-// src/content/cheapFinishingTouchesGuide.ts
-var CHEAP_FINISHING_TOUCHES_GUIDE_PATH = "/food-costs/cheap-finishing-touches";
-var CHEAP_FINISHING_TOUCHES_GUIDE = {
-  title: "Cheap finishing touches that make everyday dinners taste better",
-  seoTitle: "Low-cost ways to add flavour and texture to dinner | DinnerByDesign",
-  description: "Use acidity, crunch, savoury depth, heat and fresh contrast to lift everyday dinners without substantially increasing their cost.",
-  publishedAt: "2026-07-24",
-  reviewedAt: "2026-07-24",
-  nextReviewAt: "2027-07-24",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Find inexpensive finishing touches that add flavour, texture and contrast to everyday dinners",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-24",
-  editorialNotes: "Technique-led guide. Cheap and low-cost refer to cost per use and small quantities, not a guarantee that every complete pack is inexpensive.",
-  internalLinks: [
-    "/guides",
-    "/food-costs/how-to-use-complete-packs",
-    "/food-costs/five-dinners-same-ingredients",
-    "/food-safety",
-    "/food-costs/make-low-cost-dinners-more-interesting",
-    "/guides/home-cooked-or-ready-made-dinners",
-    "/pricing-methodology",
-    "/signin"
-  ],
-  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
-  sources: [
-    {
-      label: "Love Food Hate Waste: Herbs",
-      url: "https://www.lovefoodhatewaste.com/foods-and-recipes/herbs"
-    },
-    {
-      label: "Food Standards Agency: Food allergies, intolerances and coeliac disease",
-      url: "https://www.food.gov.uk/food-safety-and-hygiene/food-allergies-intolerances-and-coeliac-disease"
-    }
-  ]
-};
-
 // src/content/lowCostDinnersGuide.ts
 var LOW_COST_DINNERS_GUIDE_PATH = "/food-costs/make-low-cost-dinners-more-interesting";
 var LOW_COST_DINNERS_GUIDE = {
   title: "Low-cost dinners don't have to be boring",
   seoTitle: "How to make low-cost dinners more interesting | DinnerByDesign",
-  description: "Practical ways to make affordable dinners more varied and satisfying using seasoning, texture, different cooking methods and inexpensive ingredients.",
+  description: "Practical ways to make affordable dinners more varied and satisfying using seasoning, texture, cooking methods and low-cost finishing touches.",
   publishedAt: "2026-07-24",
-  reviewedAt: "2026-07-24",
+  reviewedAt: "2026-07-26",
   editorialOwner: "DinnerByDesign editorial team",
   pageFamily: "Food cost guide",
   primarySearchIntent: "Find practical ways to make low-cost dinners more varied and enjoyable without expanding the shopping list",
   indexingStatus: "index",
-  contentReviewedAt: "2026-07-24",
-  editorialNotes: "Technique-led guide with no specific cost or savings figures. Review annually, next due 24 July 2027.",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Consolidated flavour, texture, cooking-method and finishing-touch guide with no specific cost or savings figures. Review annually, next due 26 July 2027.",
   internalLinks: [
     "/guides",
-    "/food-costs/cheap-finishing-touches",
-    "/food-costs/low-cost-cooking-techniques",
+    "/food-costs/ways-to-reduce-grocery-costs",
     "/food-costs/five-dinners-same-ingredients",
     "/guides/home-cooked-or-ready-made-dinners",
     "/pricing-methodology",
     "/signin"
   ],
-  disclosures: ["price_comparison"]
+  disclosures: ["price_comparison", "allergen_and_product"]
 };
 
 // src/content/pulsesBudgetGuide.ts
@@ -164289,8 +164135,7 @@ var PULSES_BUDGET_GUIDE = {
   editorialNotes: "Price examples are a dated Tesco snapshot. Cooked yield and hob-use figures are explicitly presented as approximations.",
   internalLinks: [
     "/guides",
-    "/food-costs/cheap-finishing-touches",
-    "/food-costs/how-to-use-complete-packs",
+    "/food-costs/make-low-cost-dinners-more-interesting",
     "/food-costs/five-dinners-same-ingredients",
     "/food-costs/portion-planning-and-food-waste",
     "/food-costs/fresh-or-frozen",
@@ -164416,20 +164261,6 @@ var PUBLIC_ARTICLES = [
     status: "published"
   },
   {
-    title: CHEAP_FINISHING_TOUCHES_GUIDE.title,
-    path: CHEAP_FINISHING_TOUCHES_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: CHEAP_FINISHING_TOUCHES_GUIDE.pageFamily,
-    primarySearchIntent: CHEAP_FINISHING_TOUCHES_GUIDE.primarySearchIntent,
-    indexingStatus: CHEAP_FINISHING_TOUCHES_GUIDE.indexingStatus,
-    publishedAt: CHEAP_FINISHING_TOUCHES_GUIDE.publishedAt,
-    reviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.reviewedAt,
-    contentReviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.contentReviewedAt,
-    internalLinks: CHEAP_FINISHING_TOUCHES_GUIDE.internalLinks,
-    disclosures: CHEAP_FINISHING_TOUCHES_GUIDE.disclosures,
-    status: "published"
-  },
-  {
     title: HOME_COOKED_READY_MADE_GUIDE.title,
     path: HOME_COOKED_READY_MADE_GUIDE_PATH,
     category: "Cooking and nutrition guide",
@@ -164469,20 +164300,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
     internalLinks: FIVE_A_DAY_GUIDE.internalLinks,
     disclosures: FIVE_A_DAY_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: COMPLETE_PACKS_GUIDE.title,
-    path: COMPLETE_PACKS_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: COMPLETE_PACKS_GUIDE.pageFamily,
-    primarySearchIntent: COMPLETE_PACKS_GUIDE.primarySearchIntent,
-    indexingStatus: COMPLETE_PACKS_GUIDE.indexingStatus,
-    publishedAt: COMPLETE_PACKS_GUIDE.publishedAt,
-    reviewedAt: COMPLETE_PACKS_GUIDE.reviewedAt,
-    contentReviewedAt: COMPLETE_PACKS_GUIDE.contentReviewedAt,
-    internalLinks: COMPLETE_PACKS_GUIDE.internalLinks,
-    disclosures: COMPLETE_PACKS_GUIDE.disclosures,
     status: "published"
   },
   {
@@ -164640,34 +164457,6 @@ var PUBLIC_ARTICLES = [
     status: "published"
   },
   {
-    title: LOW_COST_COOKING_TECHNIQUES_GUIDE.title,
-    path: LOW_COST_COOKING_TECHNIQUES_PATH,
-    category: "Food cost guide",
-    pageFamily: LOW_COST_COOKING_TECHNIQUES_GUIDE.pageFamily,
-    primarySearchIntent: LOW_COST_COOKING_TECHNIQUES_GUIDE.primarySearchIntent,
-    indexingStatus: LOW_COST_COOKING_TECHNIQUES_GUIDE.indexingStatus,
-    publishedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.publishedAt,
-    reviewedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.reviewedAt,
-    contentReviewedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.contentReviewedAt,
-    internalLinks: LOW_COST_COOKING_TECHNIQUES_GUIDE.internalLinks,
-    disclosures: LOW_COST_COOKING_TECHNIQUES_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: LOWER_COST_CUTS_GUIDE.title,
-    path: LOWER_COST_CUTS_PATH,
-    category: "Food cost guide",
-    pageFamily: LOWER_COST_CUTS_GUIDE.pageFamily,
-    primarySearchIntent: LOWER_COST_CUTS_GUIDE.primarySearchIntent,
-    indexingStatus: LOWER_COST_CUTS_GUIDE.indexingStatus,
-    publishedAt: LOWER_COST_CUTS_GUIDE.publishedAt,
-    reviewedAt: LOWER_COST_CUTS_GUIDE.reviewedAt,
-    contentReviewedAt: LOWER_COST_CUTS_GUIDE.contentReviewedAt,
-    internalLinks: LOWER_COST_CUTS_GUIDE.internalLinks,
-    disclosures: LOWER_COST_CUTS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
     title: UK_FOOD_COSTS_2026.title,
     path: UK_FOOD_COSTS_2026_PATH,
     category: "Food cost guide",
@@ -164701,6 +164490,18 @@ function isUnknownPublicArticlePath(pathName) {
   const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, "") : pathName;
   const belongsToPublicFamily = normalisedPath.startsWith("/dinner-plans/") || normalisedPath.startsWith("/food-costs/") || normalisedPath.startsWith("/guides/");
   return belongsToPublicFamily && !PUBLIC_ARTICLES.some((article) => article.path === normalisedPath && article.status === "published");
+}
+
+// src/content/publicRedirects.ts
+var PUBLIC_PAGE_REDIRECTS = {
+  "/food-costs/cooking-for-four-with-lower-cost-cuts": "/food-costs/cooking-with-cheaper-cuts-of-meat",
+  "/food-costs/low-cost-cooking-techniques": "/food-costs/ways-to-reduce-grocery-costs",
+  "/food-costs/how-to-use-complete-packs": "/food-costs/five-dinners-same-ingredients",
+  "/food-costs/cheap-finishing-touches": "/food-costs/make-low-cost-dinners-more-interesting"
+};
+function getPublicPageRedirect(pathName) {
+  const normalisedPath = pathName.length > 1 ? pathName.replace(/\/+$/, "") : pathName;
+  return PUBLIC_PAGE_REDIRECTS[normalisedPath] || null;
 }
 
 // src/lib/ingredientPriceRefresh.ts
@@ -164970,6 +164771,16 @@ function createApp() {
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true
   }));
+  app.use((req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      return next();
+    }
+    const redirectPath = getPublicPageRedirect(req.path);
+    if (!redirectPath) {
+      return next();
+    }
+    return res.redirect(308, redirectPath);
+  });
   app.use((req, res, next) => {
     if (req.path === "/api/stripe-webhook") return next();
     return import_express.default.json()(req, res, next);

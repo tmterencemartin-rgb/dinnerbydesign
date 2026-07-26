@@ -133,7 +133,7 @@ describe('food-cost guide publishing data', () => {
     expect(html).toContain('Plan a short sequence, not a rigid week');
     expect(html).toContain('A three-dinner example');
     expect(html).toContain('Frequently asked questions');
-    expect(html).toContain('/food-costs/low-cost-cooking-techniques');
+    expect(html).toContain('/food-costs/ways-to-reduce-grocery-costs');
     expect(html).toContain('/food-safety');
     expect(html).toContain('About this guide');
 
@@ -194,7 +194,7 @@ describe('food-cost guide publishing data', () => {
     expect(html).toContain('Cook the chicken thoroughly');
     expect(html).toContain('Ingredients and allergens');
     expect(html).toContain('Frequently asked questions');
-    expect(html).toContain('/food-costs/low-cost-cooking-techniques');
+    expect(html).toContain('/food-costs/ways-to-reduce-grocery-costs');
     expect(html).toContain('/food-safety');
     expect(html).toContain('About this guide');
 

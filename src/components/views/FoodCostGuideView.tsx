@@ -60,7 +60,7 @@ export const FoodCostGuideView: React.FC<FoodCostGuideViewProps> = ({ onPlanWeek
         <section className="mt-10 rounded border border-dbd-rule/60 bg-white p-5">
           <h2 className="text-xl font-bold">Ways DinnerByDesign can help</h2>
           <p className="mt-3 text-sm leading-6 text-dbd-ink-3">DinnerByDesign's Low Cost filter surfaces suitable dinner ideas using lower-cost ingredients. Schedule one or more saved dinners and DinnerByDesign generates a costed shopping list, so you can review the estimate before you shop.</p>
-          <p className="mt-3 text-sm leading-6"><a href="/dinner-plans/5-dinners-for-2-under-40" className="font-semibold text-dbd-accent hover:underline">Explore five dinners for two under £40</a>, <a href="/food-costs/cooking-for-four-with-lower-cost-cuts" className="font-semibold text-dbd-accent hover:underline">compare meat cuts when cooking for four</a><span className="text-dbd-ink-3"> or </span><a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read how ingredient prices are calculated</a>.</p>
+          <p className="mt-3 text-sm leading-6"><a href="/dinner-plans/5-dinners-for-2-under-40" className="font-semibold text-dbd-accent hover:underline">Explore five dinners for two under £40</a>, <a href="/food-costs/cooking-with-cheaper-cuts-of-meat" className="font-semibold text-dbd-accent hover:underline">compare and cook cheaper meat cuts</a><span className="text-dbd-ink-3"> or </span><a href="/pricing-methodology" className="font-semibold text-dbd-accent hover:underline">read how ingredient prices are calculated</a>.</p>
         </section>
 
         <section className="mt-10">

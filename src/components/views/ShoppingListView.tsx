@@ -487,8 +487,8 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                 className="flex w-full max-w-2xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10.5px] font-medium text-gray-500"
               >
                 <span>Using part packs?</span>
-                <a href="/food-costs/how-to-use-complete-packs" className="font-semibold text-dbd-accent hover:underline">
-                  Use complete packs well
+                <a href="/food-costs/five-dinners-same-ingredients" className="font-semibold text-dbd-accent hover:underline">
+                  Plan around complete packs
                 </a>
                 <span aria-hidden="true" className="text-gray-300">·</span>
                 <a href="/food-costs/five-dinners-same-ingredients" className="font-semibold text-dbd-accent hover:underline">

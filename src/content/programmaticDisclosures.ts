@@ -364,6 +364,11 @@ export const LOW_COST_DINNERS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
     title: 'A note on cost',
     body: 'These techniques can help make a small set of ingredients feel more varied, but they do not guarantee a lower shopping total. Current prices, pack sizes, what is already at home and what goes unused all affect the result.',
   },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and product labels',
+    body: 'Soy sauce, miso, hard cheese, yoghurt, nuts, seeds, stock and ready-made seasonings can contain common allergens or substantial salt. Check every label for the people eating the dinner and use a suitable alternative where needed.',
+  },
 ];
 
 export const HOME_COOKED_READY_MADE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
@@ -631,6 +636,7 @@ export const LOW_COST_DINNERS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCop
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'Pricing methodology' },
+    { href: '/food-safety', label: 'Food safety guidance' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],
 };

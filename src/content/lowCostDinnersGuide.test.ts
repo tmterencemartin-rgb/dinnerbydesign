@@ -11,6 +11,8 @@ describe('low-cost dinners guide publishing data', () => {
     const html = renderLowCostDinnersGuideInitialHtml();
     expect(html).toContain('<h1>Low-cost dinners don&#039;t have to be boring</h1>');
     expect(html).toContain('Vegetables roasted quickly at a high temperature');
+    expect(html).toContain('Work out what is actually missing');
+    expect(html).toContain('Cost per use matters here');
     expect(html).toContain('It is worth noting that a shared ingredient list');
     LOW_COST_DINNERS_GUIDE.internalLinks
       .filter(path => path !== '/signin')

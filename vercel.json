@@ -2,6 +2,26 @@
   "version": 2,
   "redirects": [
     {
+      "source": "/food-costs/cooking-for-four-with-lower-cost-cuts",
+      "destination": "/food-costs/cooking-with-cheaper-cuts-of-meat",
+      "permanent": true
+    },
+    {
+      "source": "/food-costs/low-cost-cooking-techniques",
+      "destination": "/food-costs/ways-to-reduce-grocery-costs",
+      "permanent": true
+    },
+    {
+      "source": "/food-costs/how-to-use-complete-packs",
+      "destination": "/food-costs/five-dinners-same-ingredients",
+      "permanent": true
+    },
+    {
+      "source": "/food-costs/cheap-finishing-touches",
+      "destination": "/food-costs/make-low-cost-dinners-more-interesting",
+      "permanent": true
+    },
+    {
       "source": "/(.*)",
       "has": [
         {

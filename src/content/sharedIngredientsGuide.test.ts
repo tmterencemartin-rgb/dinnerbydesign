@@ -21,6 +21,9 @@ describe('shared ingredients guide', () => {
     expect(html).toContain(`<h1>${SHARED_INGREDIENTS_GUIDE.title}</h1>`);
     expect(html).toContain('Smoky chicken, pepper and potato tray bake');
     expect(html).toContain('Chicken, pepper and tomato bake with a crisp potato topping');
+    expect(html).toContain('Plan for complete packs, not only recipe quantities');
+    expect(html).toContain('Complete-pack planning examples');
+    expect(html).toContain('Five practical ways to handle a pack');
     expect(html).toContain('Buying one larger tray does not automatically reduce the cost per serving');
     expect(html).toContain('Frequently asked questions');
     expect(html).toContain('https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food');

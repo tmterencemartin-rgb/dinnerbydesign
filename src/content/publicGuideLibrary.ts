@@ -21,7 +21,6 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
       '/food-costs/ways-to-reduce-grocery-costs',
       '/food-costs/why-grocery-costs-are-hard-to-predict',
       '/food-costs/uk-food-costs-2026',
-      '/food-costs/cooking-for-four-with-lower-cost-cuts',
       '/food-costs/cooking-with-cheaper-cuts-of-meat',
       '/food-costs/cooking-with-offal-on-a-budget',
       '/food-costs/cooking-with-pulses-on-a-budget',
@@ -33,7 +32,6 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
     title: 'Use what you buy',
     description: 'Plan portions, reuse ingredients and reduce the chance that part-used packs go to waste.',
     paths: [
-      '/food-costs/how-to-use-complete-packs',
       '/food-costs/five-dinners-same-ingredients',
       '/food-costs/batch-cooking-on-a-budget',
       '/food-costs/portion-planning-and-food-waste',
@@ -45,9 +43,7 @@ const PUBLIC_GUIDE_GROUP_CONFIG = [
     title: 'Make affordable cooking more enjoyable',
     description: 'Add flavour, texture and variety without turning a modest shopping list into a costly one.',
     paths: [
-      '/food-costs/cheap-finishing-touches',
       '/food-costs/make-low-cost-dinners-more-interesting',
-      '/food-costs/low-cost-cooking-techniques',
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/food-costs/summer-stews-seasonal-vegetables',
       '/guides/how-to-build-a-traybake',

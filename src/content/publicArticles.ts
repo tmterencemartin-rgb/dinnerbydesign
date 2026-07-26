@@ -1,13 +1,11 @@
-import { BATCH_COOKING_GUIDE, BATCH_COOKING_GUIDE_PATH, COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, LOWER_COST_CUTS_GUIDE, LOWER_COST_CUTS_PATH, LOW_COST_COOKING_TECHNIQUES_GUIDE, LOW_COST_COOKING_TECHNIQUES_PATH, MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
+import { BATCH_COOKING_GUIDE, BATCH_COOKING_GUIDE_PATH, COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH } from './groceryCostOptionsGuide';
 import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH } from './groceryCostPredictionGuide';
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
 import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './sharedIngredientsGuide';
-import { COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH } from './completePacksGuide';
 import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
 import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH } from './homeCookedReadyMadeGuide';
-import { CHEAP_FINISHING_TOUCHES_GUIDE, CHEAP_FINISHING_TOUCHES_GUIDE_PATH } from './cheapFinishingTouchesGuide';
 import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDinnersGuide';
 import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGuide';
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
@@ -52,13 +50,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     internalLinks: PULSES_BUDGET_GUIDE.internalLinks, disclosures: PULSES_BUDGET_GUIDE.disclosures, status: 'published',
   },
   {
-    title: CHEAP_FINISHING_TOUCHES_GUIDE.title, path: CHEAP_FINISHING_TOUCHES_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: CHEAP_FINISHING_TOUCHES_GUIDE.pageFamily, primarySearchIntent: CHEAP_FINISHING_TOUCHES_GUIDE.primarySearchIntent,
-    indexingStatus: CHEAP_FINISHING_TOUCHES_GUIDE.indexingStatus, publishedAt: CHEAP_FINISHING_TOUCHES_GUIDE.publishedAt,
-    reviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.reviewedAt, contentReviewedAt: CHEAP_FINISHING_TOUCHES_GUIDE.contentReviewedAt,
-    internalLinks: CHEAP_FINISHING_TOUCHES_GUIDE.internalLinks, disclosures: CHEAP_FINISHING_TOUCHES_GUIDE.disclosures, status: 'published',
-  },
-  {
     title: HOME_COOKED_READY_MADE_GUIDE.title, path: HOME_COOKED_READY_MADE_GUIDE_PATH, category: 'Cooking and nutrition guide',
     pageFamily: HOME_COOKED_READY_MADE_GUIDE.pageFamily, primarySearchIntent: HOME_COOKED_READY_MADE_GUIDE.primarySearchIntent,
     indexingStatus: HOME_COOKED_READY_MADE_GUIDE.indexingStatus, publishedAt: HOME_COOKED_READY_MADE_GUIDE.publishedAt,
@@ -78,13 +69,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: FIVE_A_DAY_GUIDE.indexingStatus, publishedAt: FIVE_A_DAY_GUIDE.publishedAt,
     reviewedAt: FIVE_A_DAY_GUIDE.reviewedAt, contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
     internalLinks: FIVE_A_DAY_GUIDE.internalLinks, disclosures: FIVE_A_DAY_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: COMPLETE_PACKS_GUIDE.title, path: COMPLETE_PACKS_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: COMPLETE_PACKS_GUIDE.pageFamily, primarySearchIntent: COMPLETE_PACKS_GUIDE.primarySearchIntent,
-    indexingStatus: COMPLETE_PACKS_GUIDE.indexingStatus, publishedAt: COMPLETE_PACKS_GUIDE.publishedAt,
-    reviewedAt: COMPLETE_PACKS_GUIDE.reviewedAt, contentReviewedAt: COMPLETE_PACKS_GUIDE.contentReviewedAt,
-    internalLinks: COMPLETE_PACKS_GUIDE.internalLinks, disclosures: COMPLETE_PACKS_GUIDE.disclosures, status: 'published',
   },
   {
     title: SHARED_INGREDIENTS_GUIDE.title, path: SHARED_INGREDIENTS_GUIDE_PATH, category: 'Food cost guide',
@@ -175,34 +159,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     contentReviewedAt: COOKING_FOR_ONE_GUIDE.contentReviewedAt,
     internalLinks: COOKING_FOR_ONE_GUIDE.internalLinks,
     disclosures: COOKING_FOR_ONE_GUIDE.disclosures,
-    status: 'published',
-  },
-  {
-    title: LOW_COST_COOKING_TECHNIQUES_GUIDE.title,
-    path: LOW_COST_COOKING_TECHNIQUES_PATH,
-    category: 'Food cost guide',
-    pageFamily: LOW_COST_COOKING_TECHNIQUES_GUIDE.pageFamily,
-    primarySearchIntent: LOW_COST_COOKING_TECHNIQUES_GUIDE.primarySearchIntent,
-    indexingStatus: LOW_COST_COOKING_TECHNIQUES_GUIDE.indexingStatus,
-    publishedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.publishedAt,
-    reviewedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.reviewedAt,
-    contentReviewedAt: LOW_COST_COOKING_TECHNIQUES_GUIDE.contentReviewedAt,
-    internalLinks: LOW_COST_COOKING_TECHNIQUES_GUIDE.internalLinks,
-    disclosures: LOW_COST_COOKING_TECHNIQUES_GUIDE.disclosures,
-    status: 'published',
-  },
-  {
-    title: LOWER_COST_CUTS_GUIDE.title,
-    path: LOWER_COST_CUTS_PATH,
-    category: 'Food cost guide',
-    pageFamily: LOWER_COST_CUTS_GUIDE.pageFamily,
-    primarySearchIntent: LOWER_COST_CUTS_GUIDE.primarySearchIntent,
-    indexingStatus: LOWER_COST_CUTS_GUIDE.indexingStatus,
-    publishedAt: LOWER_COST_CUTS_GUIDE.publishedAt,
-    reviewedAt: LOWER_COST_CUTS_GUIDE.reviewedAt,
-    contentReviewedAt: LOWER_COST_CUTS_GUIDE.contentReviewedAt,
-    internalLinks: LOWER_COST_CUTS_GUIDE.internalLinks,
-    disclosures: LOWER_COST_CUTS_GUIDE.disclosures,
     status: 'published',
   },
   {

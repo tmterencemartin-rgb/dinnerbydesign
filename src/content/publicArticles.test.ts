@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { PUBLIC_LIBRARY_LAUNCH_THRESHOLD, PUBLIC_LIBRARY_PATH, PUBLISHED_ARTICLES, PUBLIC_ARTICLES, isUnknownPublicArticlePath } from './publicArticles';
+import { PUBLIC_PAGE_REDIRECTS, getPublicPageRedirect } from './publicRedirects';
 
 describe('public article registry', () => {
   it('provides unique internal links for every published article', () => {
@@ -24,12 +25,12 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/guides/not-a-real-guide')).toBe(true);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40')).toBe(false);
     expect(isUnknownPublicArticlePath('/dinner-plans/5-dinners-for-2-under-40/')).toBe(false);
-    expect(isUnknownPublicArticlePath('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe(false);
+    expect(isUnknownPublicArticlePath('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe(true);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-with-cheaper-cuts-of-meat')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/five-dinners-same-ingredients')).toBe(false);
-    expect(isUnknownPublicArticlePath('/food-costs/how-to-use-complete-packs')).toBe(false);
-    expect(isUnknownPublicArticlePath('/food-costs/low-cost-cooking-techniques')).toBe(false);
-    expect(isUnknownPublicArticlePath('/food-costs/cheap-finishing-touches')).toBe(false);
+    expect(isUnknownPublicArticlePath('/food-costs/how-to-use-complete-packs')).toBe(true);
+    expect(isUnknownPublicArticlePath('/food-costs/low-cost-cooking-techniques')).toBe(true);
+    expect(isUnknownPublicArticlePath('/food-costs/cheap-finishing-touches')).toBe(true);
     expect(isUnknownPublicArticlePath('/food-costs/make-low-cost-dinners-more-interesting')).toBe(false);
     expect(isUnknownPublicArticlePath('/food-costs/cooking-with-pulses-on-a-budget')).toBe(false);
     expect(isUnknownPublicArticlePath('/guides/how-to-build-a-traybake')).toBe(false);
@@ -45,9 +46,19 @@ describe('public article registry', () => {
     expect(isUnknownPublicArticlePath('/pricing-methodology')).toBe(false);
   });
 
+  it('maps every retired overlapping page to its surviving canonical page', () => {
+    expect(getPublicPageRedirect('/food-costs/cooking-for-four-with-lower-cost-cuts')).toBe('/food-costs/cooking-with-cheaper-cuts-of-meat');
+    expect(getPublicPageRedirect('/food-costs/low-cost-cooking-techniques/')).toBe('/food-costs/ways-to-reduce-grocery-costs');
+    expect(getPublicPageRedirect('/food-costs/how-to-use-complete-packs')).toBe('/food-costs/five-dinners-same-ingredients');
+    expect(getPublicPageRedirect('/food-costs/cheap-finishing-touches')).toBe('/food-costs/make-low-cost-dinners-more-interesting');
+    expect(getPublicPageRedirect('/food-costs/not-a-real-guide')).toBeNull();
+    expect(Object.keys(PUBLIC_PAGE_REDIRECTS)).toHaveLength(4);
+  });
+
   it('includes every published article in the canonical sitemap', () => {
     const sitemap = readFileSync('public/sitemap.xml', 'utf8');
     PUBLISHED_ARTICLES.forEach(article => expect(sitemap).toContain(`<loc>https://dinnerbydesign.app${article.path}</loc>`));
+    Object.keys(PUBLIC_PAGE_REDIRECTS).forEach(path => expect(sitemap).not.toContain(`<loc>https://dinnerbydesign.app${path}</loc>`));
   });
 
   it('requires the public library when the twelfth page is published', () => {

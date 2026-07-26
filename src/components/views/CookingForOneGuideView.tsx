@@ -90,7 +90,7 @@ export const CookingForOneGuideView: React.FC<CookingForOneGuideViewProps> = ({ 
 
         <section className="mt-10 rounded border border-dbd-rule/60 bg-white p-5">
           <h2 className="text-xl font-bold">Related guidance</h2>
-          <p className="mt-3 text-sm leading-6 text-dbd-ink-3"><a href="/food-costs/low-cost-cooking-techniques" className="font-semibold text-dbd-accent hover:underline">Explore low-cost cooking techniques</a>, <a href="/food-safety" className="font-semibold text-dbd-accent hover:underline">review food-safety guidance</a> or <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">read how dinners are selected</a>.</p>
+          <p className="mt-3 text-sm leading-6 text-dbd-ink-3"><a href="/food-costs/ways-to-reduce-grocery-costs" className="font-semibold text-dbd-accent hover:underline">Explore practical ways to manage grocery costs</a>, <a href="/food-safety" className="font-semibold text-dbd-accent hover:underline">review food-safety guidance</a> or <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">read how dinners are selected</a>.</p>
         </section>
       </article>
 

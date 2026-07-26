@@ -13,10 +13,6 @@ import {
   COOKING_FOR_ONE_PATH,
   FRESH_OR_FROZEN_GUIDE,
   FRESH_OR_FROZEN_GUIDE_PATH,
-  LOWER_COST_CUTS_GUIDE,
-  LOWER_COST_CUTS_PATH,
-  LOW_COST_COOKING_TECHNIQUES_GUIDE,
-  LOW_COST_COOKING_TECHNIQUES_PATH,
   MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE,
   MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
   OFFAL_BUDGET_GUIDE,
@@ -30,8 +26,6 @@ import {
   getBatchCookingGuideJsonLd,
   getCookingForOneJsonLd,
   getFreshOrFrozenGuideJsonLd,
-  getLowerCostCutsJsonLd,
-  getLowCostCookingTechniquesJsonLd,
   getMediterraneanAffordableCookingJsonLd,
   getOffalBudgetGuideJsonLd,
   getPortionPlanningGuideJsonLd,
@@ -39,8 +33,6 @@ import {
   getUkFoodCosts2026JsonLd,
   renderCookingForOneInitialHtml,
   renderFreshOrFrozenGuideInitialHtml,
-  renderLowerCostCutsInitialHtml,
-  renderLowCostCookingTechniquesInitialHtml,
   renderMediterraneanAffordableCookingInitialHtml,
   renderOffalBudgetGuideInitialHtml,
   renderPortionPlanningGuideInitialHtml,
@@ -73,12 +65,6 @@ import {
   renderSharedIngredientsGuideInitialHtml,
 } from '../src/content/sharedIngredientsGuide';
 import {
-  COMPLETE_PACKS_GUIDE,
-  COMPLETE_PACKS_GUIDE_PATH,
-  getCompletePacksGuideJsonLd,
-  renderCompletePacksGuideInitialHtml,
-} from '../src/content/completePacksGuide';
-import {
   PUBLIC_GUIDE_LIBRARY,
   getPublicGuideLibraryJsonLd,
   renderPublicGuideLibraryInitialHtml,
@@ -95,12 +81,6 @@ import {
   getHomeCookedReadyMadeGuideJsonLd,
   renderHomeCookedReadyMadeGuideInitialHtml,
 } from '../src/content/homeCookedReadyMadeGuide';
-import {
-  CHEAP_FINISHING_TOUCHES_GUIDE,
-  CHEAP_FINISHING_TOUCHES_GUIDE_PATH,
-  getCheapFinishingTouchesGuideJsonLd,
-  renderCheapFinishingTouchesGuideInitialHtml,
-} from '../src/content/cheapFinishingTouchesGuide';
 import {
   LOW_COST_DINNERS_GUIDE,
   LOW_COST_DINNERS_GUIDE_PATH,
@@ -220,54 +200,6 @@ const guideOutputDir = path.join(distRoot, UK_FOOD_COSTS_2026_PATH.slice(1));
 await fs.mkdir(guideOutputDir, { recursive: true });
 await fs.writeFile(path.join(guideOutputDir, 'index.html'), guideHtml, 'utf8');
 console.log(`Generated ${UK_FOOD_COSTS_2026_PATH}/index.html`);
-
-const cutsCanonicalUrl = `https://dinnerbydesign.app${LOWER_COST_CUTS_PATH}`;
-let cutsHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${LOWER_COST_CUTS_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${LOWER_COST_CUTS_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${cutsCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${cutsCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${LOWER_COST_CUTS_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${LOWER_COST_CUTS_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOWER_COST_CUTS_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOWER_COST_CUTS_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderLowerCostCutsInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowerCostCutsJsonLd())}</script>\n</head>`);
-
-if (!cutsHtml.includes(`<h1>${LOWER_COST_CUTS_GUIDE.title}</h1>`) || !cutsHtml.includes(`href="${cutsCanonicalUrl}"`)) {
-  throw new Error('Lower-cost-cuts guide generation failed its content or canonical check.');
-}
-
-const cutsOutputDir = path.join(distRoot, LOWER_COST_CUTS_PATH.slice(1));
-await fs.mkdir(cutsOutputDir, { recursive: true });
-await fs.writeFile(path.join(cutsOutputDir, 'index.html'), cutsHtml, 'utf8');
-console.log(`Generated ${LOWER_COST_CUTS_PATH}/index.html`);
-
-const techniquesCanonicalUrl = `https://dinnerbydesign.app${LOW_COST_COOKING_TECHNIQUES_PATH}`;
-let techniquesHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${techniquesCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${techniquesCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOW_COST_COOKING_TECHNIQUES_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderLowCostCookingTechniquesInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowCostCookingTechniquesJsonLd())}</script>\n</head>`);
-
-if (!techniquesHtml.includes(`<h1>${LOW_COST_COOKING_TECHNIQUES_GUIDE.title}</h1>`) || !techniquesHtml.includes(`href="${techniquesCanonicalUrl}"`)) {
-  throw new Error('Low-cost-cooking-techniques guide generation failed its content or canonical check.');
-}
-
-const techniquesOutputDir = path.join(distRoot, LOW_COST_COOKING_TECHNIQUES_PATH.slice(1));
-await fs.mkdir(techniquesOutputDir, { recursive: true });
-await fs.writeFile(path.join(techniquesOutputDir, 'index.html'), techniquesHtml, 'utf8');
-console.log(`Generated ${LOW_COST_COOKING_TECHNIQUES_PATH}/index.html`);
 
 const cookingForOneCanonicalUrl = `https://dinnerbydesign.app${COOKING_FOR_ONE_PATH}`;
 let cookingForOneHtml = sourceHtml
@@ -494,26 +426,6 @@ await fs.mkdir(sharedIngredientsOutputDir, { recursive: true });
 await fs.writeFile(path.join(sharedIngredientsOutputDir, 'index.html'), sharedIngredientsHtml, 'utf8');
 console.log(`Generated ${SHARED_INGREDIENTS_GUIDE_PATH}/index.html`);
 
-const completePacksCanonicalUrl = `https://dinnerbydesign.app${COMPLETE_PACKS_GUIDE_PATH}`;
-let completePacksHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${COMPLETE_PACKS_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${COMPLETE_PACKS_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${completePacksCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${completePacksCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${COMPLETE_PACKS_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${COMPLETE_PACKS_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${COMPLETE_PACKS_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${COMPLETE_PACKS_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderCompletePacksGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCompletePacksGuideJsonLd())}</script>\n</head>`);
-if (!completePacksHtml.includes(`<h1>${COMPLETE_PACKS_GUIDE.title}</h1>`) || !completePacksHtml.includes(`href="${completePacksCanonicalUrl}"`)) throw new Error('Complete-packs guide generation failed its content or canonical check.');
-const completePacksOutputDir = path.join(distRoot, COMPLETE_PACKS_GUIDE_PATH.slice(1));
-await fs.mkdir(completePacksOutputDir, { recursive: true });
-await fs.writeFile(path.join(completePacksOutputDir, 'index.html'), completePacksHtml, 'utf8');
-console.log(`Generated ${COMPLETE_PACKS_GUIDE_PATH}/index.html`);
-
 const fiveADayCanonicalUrl = `https://dinnerbydesign.app${FIVE_A_DAY_GUIDE_PATH}`;
 let fiveADayHtml = sourceHtml
   .replace(/<title>.*?<\/title>/, `<title>${FIVE_A_DAY_GUIDE.seoTitle}</title>`)
@@ -553,26 +465,6 @@ const homeCookedReadyMadeOutputDir = path.join(distRoot, HOME_COOKED_READY_MADE_
 await fs.mkdir(homeCookedReadyMadeOutputDir, { recursive: true });
 await fs.writeFile(path.join(homeCookedReadyMadeOutputDir, 'index.html'), homeCookedReadyMadeHtml, 'utf8');
 console.log(`Generated ${HOME_COOKED_READY_MADE_GUIDE_PATH}/index.html`);
-
-const cheapFinishingTouchesCanonicalUrl = `https://dinnerbydesign.app${CHEAP_FINISHING_TOUCHES_GUIDE_PATH}`;
-let cheapFinishingTouchesHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${CHEAP_FINISHING_TOUCHES_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${CHEAP_FINISHING_TOUCHES_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${cheapFinishingTouchesCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${cheapFinishingTouchesCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${CHEAP_FINISHING_TOUCHES_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${CHEAP_FINISHING_TOUCHES_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${CHEAP_FINISHING_TOUCHES_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${CHEAP_FINISHING_TOUCHES_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderCheapFinishingTouchesGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCheapFinishingTouchesGuideJsonLd())}</script>\n</head>`);
-if (!cheapFinishingTouchesHtml.includes(`<h1>${CHEAP_FINISHING_TOUCHES_GUIDE.title}</h1>`) || !cheapFinishingTouchesHtml.includes(`href="${cheapFinishingTouchesCanonicalUrl}"`)) throw new Error('Cheap finishing touches guide generation failed its content or canonical check.');
-const cheapFinishingTouchesOutputDir = path.join(distRoot, CHEAP_FINISHING_TOUCHES_GUIDE_PATH.slice(1));
-await fs.mkdir(cheapFinishingTouchesOutputDir, { recursive: true });
-await fs.writeFile(path.join(cheapFinishingTouchesOutputDir, 'index.html'), cheapFinishingTouchesHtml, 'utf8');
-console.log(`Generated ${CHEAP_FINISHING_TOUCHES_GUIDE_PATH}/index.html`);
 
 const lowCostDinnersCanonicalUrl = `https://dinnerbydesign.app${LOW_COST_DINNERS_GUIDE_PATH}`;
 let lowCostDinnersHtml = sourceHtml

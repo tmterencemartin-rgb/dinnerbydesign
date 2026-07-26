@@ -32,7 +32,7 @@ export const CheaperMeatCutsGuideView: React.FC<{ onPlanWeek: () => void }> = ({
     <main className="mx-auto max-w-3xl px-4 py-8 pb-20 sm:py-12">
       <nav aria-label="Breadcrumb" className="text-xs text-dbd-ink-3"><a href="/" className="hover:underline">DinnerByDesign</a><span className="px-2">/</span><a href="/guides" className="hover:underline">Guides</a><span className="px-2">/</span><span>Food cost guides</span></nav>
       <article>
-        <header className="mt-7"><p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Food cost guide</p><h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{guide.title}</h1><p className="mt-4 max-w-2xl text-[15px] leading-7 text-dbd-ink-3">{guide.description}</p><p className="mt-3 text-xs text-dbd-ink-3">By {guide.editorialOwner} · Published 22 July 2026 · Last reviewed 22 July 2026</p></header>
+        <header className="mt-7"><p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Food cost guide</p><h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{guide.title}</h1><p className="mt-4 max-w-2xl text-[15px] leading-7 text-dbd-ink-3">{guide.description}</p><p className="mt-3 text-xs text-dbd-ink-3">By {guide.editorialOwner} · Published 22 July 2026 · Last reviewed 26 July 2026</p></header>
         <div className="mt-10 border-t border-dbd-rule/50 pt-8"><EditorialHtml html={CHEAPER_MEAT_CUTS_OPENING_HTML} /></div>
         <ProgrammaticDisclosureList items={CHEAPER_MEAT_CUTS_COST_DISCLOSURES} className="mt-8" />
         <div className="mt-10"><EditorialHtml html={CHEAPER_MEAT_CUTS_DETAILS_HTML} /></div>
