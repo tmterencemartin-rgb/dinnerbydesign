@@ -28,7 +28,7 @@ const PublicGuideFooter: React.FC = () => (
       </div>
       <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[11px] text-dbd-ink-3 sm:max-w-xl sm:justify-end sm:text-xs">
         <a href="/dinner-plans" className="hover:text-dbd-accent">Affordable dinner plans</a>
-        <a href="/recipes" className="hover:text-dbd-accent">Recipes</a>
+        <a href="/recipes" className="hover:text-dbd-accent">Recipes and cooking ideas</a>
         <a href="/food-costs" className="hover:text-dbd-accent">Food-cost &amp; waste</a>
         <a href="/pricing-methodology" className="hover:text-dbd-accent">How prices are calculated</a>
         <a href="/food-safety" className="hover:text-dbd-accent">Food safety</a>

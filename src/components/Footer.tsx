@@ -61,7 +61,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             Affordable dinner plans
           </a>
           <a href="/recipes" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Recipes
+            Recipes and cooking ideas
           </a>
           <a href="/food-costs" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
             Food-cost &amp; waste

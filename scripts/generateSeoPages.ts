@@ -120,7 +120,7 @@ const hideInitialSeoContentWhenJavaScriptRuns = (initialHtml: string) => {
     throw new Error('Initial SEO content must have a single root container.');
   }
 
-  const publicPathwayNav = '<nav aria-label="Public pathways"><a href="/dinner-plans">Affordable dinner plans</a> · <a href="/recipes">Recipes</a> · <a href="/food-costs">Food-cost and waste guidance</a></nav>';
+  const publicPathwayNav = '<nav aria-label="Public pathways"><a href="/dinner-plans">Affordable dinner plans</a> · <a href="/recipes">Recipes and cooking ideas</a> · <a href="/food-costs">Food-cost and waste guidance</a></nav>';
   const content = initialHtml.includes('aria-label="Public pathways"')
     ? initialHtml
     : initialHtml.replace('</header>', `</header>${publicPathwayNav}`);

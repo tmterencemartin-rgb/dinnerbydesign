@@ -375,7 +375,7 @@ export const LandingView: React.FC = () => {
               },
               {
                 number: '02',
-                title: 'Recipes',
+                title: 'Recipes and cooking ideas',
                 description: 'Flexible formats and practical cooking ideas for everyday dinners.',
                 href: '/recipes',
               },
@@ -906,7 +906,7 @@ export const LandingView: React.FC = () => {
           {/* Privacy & Terms views trigger bar */}
           <div className="pt-4 border-t border-dbd-rule/40 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-ibm-plex-mono text-[11px] font-semibold text-dbd-ink-3">
             <a href="/dinner-plans" className="hover:text-dbd-accent hover:underline">Affordable dinner plans</a>
-            <a href="/recipes" className="hover:text-dbd-accent hover:underline">Recipes</a>
+            <a href="/recipes" className="hover:text-dbd-accent hover:underline">Recipes and cooking ideas</a>
             <a href="/food-costs" className="hover:text-dbd-accent hover:underline">Food-cost &amp; waste</a>
             <button
               onClick={() => setView('pricing-methodology')}

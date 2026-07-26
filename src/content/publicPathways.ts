@@ -37,8 +37,8 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
     id: 'recipes',
     path: PUBLIC_RECIPES_PATH,
     eyebrow: 'Recipes and cooking ideas',
-    title: 'Recipes and practical cooking ideas',
-    seoTitle: 'Recipes and practical cooking ideas | DinnerByDesign',
+    title: 'Recipes and cooking ideas',
+    seoTitle: 'Recipes and cooking ideas | DinnerByDesign',
     description: 'Flexible recipe ideas, dependable cooking formats and affordable ways to make everyday dinners more varied.',
     shortDescription: 'Find useful formats and ingredient-led ideas when you know roughly what you want to cook.',
     actionLabel: 'Find a recipe',
@@ -134,5 +134,5 @@ export function renderPublicPathwayInitialHtml(pathway: PublicPathway) {
     `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`
   )).join('');
 
-  return `<div id="root"><header><a href="/">DinnerByDesign</a><nav aria-label="Public pathways"><a href="${PUBLIC_DINNER_PLANS_PATH}">Affordable dinner plans</a> <a href="${PUBLIC_RECIPES_PATH}">Recipes</a> <a href="${PUBLIC_FOOD_COSTS_PATH}">Food-cost and waste guidance</a></nav></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / ${escapeHtml(pathway.title)}</nav><p>${escapeHtml(pathway.eyebrow)}</p><h1>${escapeHtml(pathway.title)}</h1><p>${escapeHtml(pathway.description)}</p><ul>${articles}</ul><section><h2>Explore another pathway</h2><ul>${otherPathways}</ul></section><section><h2>Make it personal</h2><p>Use DinnerByDesign to adapt ideas around your household, budget and preferences.</p><p><a href="/signin">${escapeHtml(pathway.actionLabel)}</a></p></section></main></div>`;
+  return `<div id="root"><header><a href="/">DinnerByDesign</a><nav aria-label="Public pathways"><a href="${PUBLIC_DINNER_PLANS_PATH}">Affordable dinner plans</a> <a href="${PUBLIC_RECIPES_PATH}">Recipes and cooking ideas</a> <a href="${PUBLIC_FOOD_COSTS_PATH}">Food-cost and waste guidance</a></nav></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / ${escapeHtml(pathway.title)}</nav><p>${escapeHtml(pathway.eyebrow)}</p><h1>${escapeHtml(pathway.title)}</h1><p>${escapeHtml(pathway.description)}</p><ul>${articles}</ul><section><h2>Explore another pathway</h2><ul>${otherPathways}</ul></section><section><h2>Make it personal</h2><p>Use DinnerByDesign to adapt ideas around your household, budget and preferences.</p><p><a href="/signin">${escapeHtml(pathway.actionLabel)}</a></p></section></main></div>`;
 }
