@@ -376,6 +376,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const [hasPerformedSearch, setHasPerformedSearch] = React.useState(() => {
     return safeStorage.getItem('dbd_has_searched') === 'true';
   });
+  const showBasicSearchGuidance =
+    (!user || user.isAnonymous) &&
+    (hasDismissedSearchOnboarding || isSearching);
   const useSimplifiedGuestSearchStates = SIMPLIFIED_GUEST_SEARCH_STATES && isGuestPreview;
   const showSimplifiedGuestLimit = useSimplifiedGuestSearchStates && isGuestSearchLimitReached;
   const showCompactGuestStarters =
@@ -913,7 +916,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     />
                   )}
                   
-                  {(hasDismissedSearchOnboarding || isSearching) && (
+                  {showBasicSearchGuidance && (
                     <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
                       <p className="text-[12px] text-gray-400 leading-relaxed font-semibold">
                         {source === 'cook' 
