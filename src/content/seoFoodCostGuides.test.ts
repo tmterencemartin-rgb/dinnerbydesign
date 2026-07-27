@@ -168,12 +168,14 @@ describe('food-cost guide publishing data', () => {
     expect(PORTION_PLANNING_GUIDE.indexingStatus).toBe('index');
     expect(PORTION_PLANNING_GUIDE.disclosures).toEqual(['serving_assumption', 'storage_and_cooking', 'allergen_and_product', 'source_timing']);
     expect(PORTION_PLANNING_GUIDE.sources).toHaveLength(2);
+    expect(PORTION_PLANNING_GUIDE.internalLinks).toContain('/dinner-plans/5-affordable-family-dinners-for-four');
     const html = renderPortionPlanningGuideInitialHtml();
     expect(html).toContain(`<h1>${PORTION_PLANNING_GUIDE.title}</h1>`);
     expect(html).toContain('Portion planning, not portion control');
     expect(html).toContain('Serving assumption');
     expect(html).toContain('Making portion planning work');
     expect(html).toContain('/pricing-methodology');
+    expect(html).toContain('href="/dinner-plans/5-affordable-family-dinners-for-four"');
     expect(getPortionPlanningGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${PORTION_PLANNING_GUIDE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),
@@ -210,11 +212,13 @@ describe('food-cost guide publishing data', () => {
     expect(FRESH_OR_FROZEN_GUIDE.indexingStatus).toBe('index');
     expect(FRESH_OR_FROZEN_GUIDE.disclosures).toEqual(['storage_and_cooking', 'source_timing']);
     expect(FRESH_OR_FROZEN_GUIDE.sources).toHaveLength(2);
+    expect(FRESH_OR_FROZEN_GUIDE.internalLinks).toContain('/dinner-plans/5-affordable-family-dinners-for-four');
     const html = renderFreshOrFrozenGuideInitialHtml();
     expect(html).toContain(`<h1>${FRESH_OR_FROZEN_GUIDE.title}</h1>`);
     expect(html).toContain('<table>');
     expect(html).toContain('Neither format is universally better');
     expect(html).toContain('/food-costs/portion-planning-and-food-waste');
+    expect(html).toContain('href="/dinner-plans/5-affordable-family-dinners-for-four"');
     expect(html).toContain('About this guide');
     expect(getFreshOrFrozenGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${FRESH_OR_FROZEN_GUIDE_PATH}` }),

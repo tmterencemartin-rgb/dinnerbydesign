@@ -164007,7 +164007,7 @@ var PORTION_PLANNING_GUIDE = {
   primarySearchIntent: "Understand how portion planning, planned leftovers and pack-size awareness can reduce food spending and waste",
   indexingStatus: "index",
   editorialNotes: "The 300g and 500g example is illustrative arithmetic, not a retailer or product claim. Recheck FSA guidance before changing the review date.",
-  internalLinks: ["/food-costs/cooking-for-one-without-waste", "/food-costs/ways-to-reduce-grocery-costs", "/food-costs/batch-cooking-on-a-budget", "/pricing-methodology", "/food-safety"],
+  internalLinks: ["/dinner-plans/5-affordable-family-dinners-for-four", "/food-costs/cooking-for-one-without-waste", "/food-costs/ways-to-reduce-grocery-costs", "/food-costs/batch-cooking-on-a-budget", "/pricing-methodology", "/food-safety"],
   disclosures: ["serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
   sources: [
     { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
@@ -164091,7 +164091,7 @@ var FRESH_OR_FROZEN_GUIDE = {
   indexingStatus: "index",
   contentReviewedAt: "2026-07-21",
   editorialNotes: "NHS and Food Standards Agency guidance was reviewed on 20 July 2026. Product-specific pages need their own source and suitability checks.",
-  internalLinks: ["/food-costs/portion-planning-and-food-waste", "/food-costs/summer-stews-seasonal-vegetables", "/food-safety", "/recipe-methodology"],
+  internalLinks: ["/dinner-plans/5-affordable-family-dinners-for-four", "/food-costs/portion-planning-and-food-waste", "/food-costs/summer-stews-seasonal-vegetables", "/food-safety", "/recipe-methodology"],
   disclosures: ["storage_and_cooking", "source_timing"],
   sources: [
     { label: "NHS: 5 A Day \u2014 what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
@@ -164150,6 +164150,7 @@ var GROCERY_COST_OPTIONS_GUIDE = {
   internalLinks: [
     "/guides",
     "/food-costs/uk-food-costs-2026",
+    "/dinner-plans/5-affordable-family-dinners-for-four",
     "/dinner-plans/5-dinners-for-2-under-40",
     "/food-costs/portion-planning-and-food-waste",
     "/food-costs/cooking-for-one-without-waste",
@@ -164294,6 +164295,7 @@ var SHARED_INGREDIENTS_GUIDE = {
   contentReviewedAt: "2026-07-26",
   editorialNotes: "Consolidated shared-ingredient and complete-pack planning guide for two adults. Keep the five dinners distinct by method, texture and seasoning, and recheck Food Standards Agency guidance before changing the review date.",
   internalLinks: [
+    "/dinner-plans/5-affordable-family-dinners-for-four",
     "/food-costs/cooking-with-cheaper-cuts-of-meat",
     "/food-costs/ways-to-reduce-grocery-costs",
     "/food-costs/portion-planning-and-food-waste",

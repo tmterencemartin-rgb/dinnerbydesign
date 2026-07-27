@@ -12,6 +12,7 @@ describe('shared ingredients guide', () => {
     expect(SHARED_INGREDIENTS_GUIDE.indexingStatus).toBe('index');
     expect(SHARED_INGREDIENTS_GUIDE.disclosures).toEqual(['serving_assumption', 'price_comparison', 'allergen_and_product', 'storage_and_cooking', 'source_timing']);
     expect(SHARED_INGREDIENTS_GUIDE.internalLinks).toContain('/food-costs/ways-to-reduce-grocery-costs');
+    expect(SHARED_INGREDIENTS_GUIDE.internalLinks).toContain('/dinner-plans/5-affordable-family-dinners-for-four');
     expect(SHARED_INGREDIENTS_GUIDE.internalLinks).toContain('/guides');
     expect(SHARED_INGREDIENTS_GUIDE.sources).toHaveLength(2);
   });
@@ -22,6 +23,7 @@ describe('shared ingredients guide', () => {
     expect(html).toContain('Smoky chicken, pepper and potato tray bake');
     expect(html).toContain('Chicken, pepper and tomato bake with a crisp potato topping');
     expect(html).toContain('Plan for complete packs, not only recipe quantities');
+    expect(html).toContain('href="/dinner-plans/5-affordable-family-dinners-for-four"');
     expect(html).toContain('Complete-pack planning examples');
     expect(html).toContain('Five practical ways to handle a pack');
     expect(html).toContain('Buying one larger tray does not automatically reduce the cost per serving');

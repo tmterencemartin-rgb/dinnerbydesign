@@ -12,6 +12,7 @@ describe('grocery-cost options guide', () => {
     expect(GROCERY_COST_OPTIONS_GUIDE.indexingStatus).toBe('index');
     expect(GROCERY_COST_OPTIONS_GUIDE.disclosures).toEqual(['price_comparison', 'allergen_and_product', 'storage_and_cooking', 'source_timing']);
     expect(GROCERY_COST_OPTIONS_GUIDE.internalLinks).toContain('/guides');
+    expect(GROCERY_COST_OPTIONS_GUIDE.internalLinks).toContain('/dinner-plans/5-affordable-family-dinners-for-four');
     expect(GROCERY_COST_OPTIONS_GUIDE.sources).toHaveLength(4);
   });
 
@@ -26,6 +27,7 @@ describe('grocery-cost options guide', () => {
     expect(html).toContain('Food safety');
     expect(html).toContain('Sources');
     expect(html).toContain('Plan my week');
+    expect(html).toContain('href="/dinner-plans/5-affordable-family-dinners-for-four"');
   });
 
   it('provides article, FAQ and breadcrumb structured data', () => {
