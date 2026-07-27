@@ -11,6 +11,7 @@ import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDi
 import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGuide';
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
 import { SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH } from './sausageWaysGuide';
+import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -29,6 +30,20 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: CHICKEN_THIGH_COST_GUIDE.title,
+    path: CHICKEN_THIGH_COST_GUIDE_PATH,
+    category: 'Recipe cost comparison',
+    pageFamily: CHICKEN_THIGH_COST_GUIDE.pageFamily,
+    primarySearchIntent: CHICKEN_THIGH_COST_GUIDE.primarySearchIntent,
+    indexingStatus: CHICKEN_THIGH_COST_GUIDE.indexingStatus,
+    publishedAt: CHICKEN_THIGH_COST_GUIDE.publishedAt,
+    reviewedAt: CHICKEN_THIGH_COST_GUIDE.reviewedAt,
+    contentReviewedAt: CHICKEN_THIGH_COST_GUIDE.contentReviewedAt,
+    internalLinks: [...CHICKEN_THIGH_COST_GUIDE.internalLinks],
+    disclosures: [...CHICKEN_THIGH_COST_GUIDE.disclosures],
+    status: CHICKEN_THIGH_COST_GUIDE.status,
+  },
   {
     title: FAMILY_DINNERS_FOR_FOUR.title,
     path: FAMILY_DINNERS_FOR_FOUR_PATH,

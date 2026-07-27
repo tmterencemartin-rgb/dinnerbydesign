@@ -44,6 +44,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
     shortDescription: 'Find useful formats and ingredient-led ideas when you know roughly what you want to cook.',
     actionLabel: 'Find a recipe',
     articlePaths: [
+      '/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates',
       '/guides/how-to-build-a-traybake',
       '/guides/9-ways-with-sausages',
       '/food-costs/summer-stews-seasonal-vegetables',

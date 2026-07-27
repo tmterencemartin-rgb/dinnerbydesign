@@ -111,6 +111,12 @@ import {
   getSausageWaysGuideJsonLd,
   renderSausageWaysGuideInitialHtml,
 } from '../src/content/sausageWaysGuide';
+import {
+  CHICKEN_THIGH_COST_GUIDE,
+  CHICKEN_THIGH_COST_GUIDE_PATH,
+  getChickenThighCostGuideJsonLd,
+  renderChickenThighCostGuideInitialHtml,
+} from '../src/content/chickenThighCostGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -528,6 +534,13 @@ await generateEditorialGuide(
   SAUSAGE_WAYS_GUIDE_PATH,
   renderSausageWaysGuideInitialHtml,
   getSausageWaysGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  CHICKEN_THIGH_COST_GUIDE,
+  CHICKEN_THIGH_COST_GUIDE_PATH,
+  renderChickenThighCostGuideInitialHtml,
+  getChickenThighCostGuideJsonLd,
 );
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');

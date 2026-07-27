@@ -164530,8 +164530,70 @@ var SAUSAGE_WAYS_GUIDE = {
   ]
 };
 
+// src/content/chickenThighCostGuide.ts
+var CHICKEN_THIGH_COST_GUIDE_PATH = "/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates";
+var CHICKEN_THIGH_COST_GUIDE = {
+  title: "Five chicken thigh recipes for four with Aldi cost estimates",
+  seoTitle: "Five Chicken Thigh Recipes for Four with Aldi Cost Estimates | DinnerByDesign",
+  description: "Compare five established chicken thigh recipes for four using Aldi UK cost estimates, including ingredient value, full-pack cost and price per serving.",
+  publishedAt: "2026-07-27",
+  reviewedAt: "2026-07-27",
+  nextReviewAt: "2026-10-27",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Recipe cost comparison",
+  primarySearchIntent: "Compare chicken thigh recipes for four by estimated Aldi ingredient and full-pack cost",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-27",
+  editorialNotes: "Curated external recipes with original methods retained by their publishers. DinnerByDesign supplies cost and practical-use analysis only.",
+  internalLinks: ["/recipes", "/pricing-methodology", "/recipe-methodology", "/food-safety", "/signin"],
+  disclosures: ["price_estimate", "price_comparison", "serving_assumption", "source_timing", "storage_and_cooking", "allergen_and_product"],
+  status: "published",
+  sources: [
+    { label: "Tesco Real Food: Easy chicken traybake", url: "https://realfood.tesco.com/recipes/easy-chicken-traybake.html" },
+    { label: "Aldi: Chicken Proven\xE7al and vegetable stew", url: "https://www.aldi.co.uk/recipes/courses/mains/chicken-provencal-and-vegetable-stew" },
+    { label: "Aldi: One Pot at Home Chicken", url: "https://www.aldi.co.uk/recipes/courses/mains/one-pot-at-home-chicken" },
+    { label: "Sainsbury\u2019s Magazine: Quick chicken and lentil curry", url: "https://www.sainsburysmagazine.co.uk/recipes/curries/easy-chicken-and-lentil-curry" },
+    { label: "delicious. magazine: Quick chicken noodles", url: "https://www.deliciousmagazine.co.uk/recipes/quick-chicken-noodles/" },
+    { label: "Aldi: Ashfields chicken thighs", url: "https://www.aldi.co.uk/product/ashfields-chicken-thighs-000000000000382103" },
+    { label: "Aldi: Ashfields chicken thigh fillets", url: "https://www.aldi.co.uk/product/ashfields-chicken-thigh-fillets-000000000000416054" },
+    { label: "Aldi: Ashfields chicken breast fillets", url: "https://www.aldi.co.uk/product/ashfields-chicken-breast-fillets-000000000000383730" },
+    { label: "Aldi: Nature\u2019s Pick brown onions", url: "https://www.aldi.co.uk/product/nature-s-pick-brown-onions-000000000000339777" },
+    { label: "Aldi: Nature\u2019s Pick British baking potatoes", url: "https://www.aldi.co.uk/product/nature-s-pick-british-baking-potatoes-000000000000339757" },
+    { label: "Aldi: Nature\u2019s Pick carrots", url: "https://www.aldi.co.uk/product/nature-s-pick-carrots-000000000000339791" },
+    { label: "Aldi: Nature\u2019s Pick mixed peppers", url: "https://www.aldi.co.uk/product/nature-s-pick-mixed-peppers-000000000000275392" },
+    { label: "Aldi: Four Seasons garden peas", url: "https://www.aldi.co.uk/product/four-seasons-garden-peas-000000000000366805" },
+    { label: "Aldi: Everyday Essentials chopped tomatoes", url: "https://www.aldi.co.uk/product/everyday-essentials-chopped-tomatoes-in-tomato-juice-000000000000278702" },
+    { label: "Aldi: Worldwide Foods basmati rice", url: "https://www.aldi.co.uk/product/worldwide-foods-basmati-rice-000000000000262344" },
+    { label: "Aldi: Solesta sunflower oil", url: "https://www.aldi.co.uk/product/solesta-sunflower-oil-000000000000198481" },
+    { label: "Aldi: Solesta olive oil", url: "https://www.aldi.co.uk/product/solesta-olive-oil-000000000000511100" },
+    { label: "Aldi: Nature\u2019s Pick courgettes", url: "https://www.aldi.co.uk/product/nature-s-pick-courgettes-000000000000339808" },
+    { label: "Aldi: Worldwide Foods red lentils", url: "https://www.aldi.co.uk/product/worldwide-foods-red-lentils-000000000000336258" },
+    { label: "Aldi: Ready, Set\u2026Cook! medium curry powder", url: "https://www.aldi.co.uk/product/ready-set-cook-medium-curry-powder-000000000336690001" },
+    { label: "Aldi: Nature\u2019s Pick red onions", url: "https://www.aldi.co.uk/product/nature-s-pick-red-onions-000000000000339914" },
+    { label: "Aldi: Nature\u2019s Pick garlic", url: "https://www.aldi.co.uk/product/nature-s-pick-garlic-000000000000273810" },
+    { label: "Aldi: Everyday Essentials wonky lemons", url: "https://www.aldi.co.uk/product/everyday-essentials-wonky-lemons-000000000000268496" },
+    { label: "Aldi: Nature\u2019s Pick limes", url: "https://www.aldi.co.uk/product/nature-s-pick-limes-000000000000285988" },
+    { label: "Aldi: Bramwells peri-peri seasoning", url: "https://www.aldi.co.uk/product/bramwells-peri-peri-seasoning-000000000337370007" },
+    { label: "Aldi: Bramwells medium peri-peri sauce and marinade", url: "https://www.aldi.co.uk/product/bramwells-medium-peri-peri-sauce-marinade-000000000337375001" }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: CHICKEN_THIGH_COST_GUIDE.title,
+    path: CHICKEN_THIGH_COST_GUIDE_PATH,
+    category: "Recipe cost comparison",
+    pageFamily: CHICKEN_THIGH_COST_GUIDE.pageFamily,
+    primarySearchIntent: CHICKEN_THIGH_COST_GUIDE.primarySearchIntent,
+    indexingStatus: CHICKEN_THIGH_COST_GUIDE.indexingStatus,
+    publishedAt: CHICKEN_THIGH_COST_GUIDE.publishedAt,
+    reviewedAt: CHICKEN_THIGH_COST_GUIDE.reviewedAt,
+    contentReviewedAt: CHICKEN_THIGH_COST_GUIDE.contentReviewedAt,
+    internalLinks: [...CHICKEN_THIGH_COST_GUIDE.internalLinks],
+    disclosures: [...CHICKEN_THIGH_COST_GUIDE.disclosures],
+    status: CHICKEN_THIGH_COST_GUIDE.status
+  },
   {
     title: FAMILY_DINNERS_FOR_FOUR.title,
     path: FAMILY_DINNERS_FOR_FOUR_PATH,
