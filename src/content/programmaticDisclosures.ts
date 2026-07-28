@@ -96,24 +96,29 @@ export const LOW_COST_TECHNIQUES_SAFETY_DISCLOSURES: ProgrammaticDisclosureItem[
 
 export const COOKING_FOR_ONE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   {
-    key: 'allergen_and_product',
-    title: 'Ingredients and allergens',
-    body: 'Pastes, sauces and stock products vary by brand and can contain gluten, dairy, nuts or other allergens. Check every product label before use.',
+    key: 'price_estimate',
+    title: 'About these estimates',
+    body: 'Aldi UK online prices were checked 27 July 2026. The £30.36 checkout estimate uses complete packs and ignores temporary promotional reductions. The £14.49 ingredient value uses the estimated quantities consumed across ten servings. Cooking oil, salt, pepper and cooking energy are excluded.',
   },
   {
     key: 'serving_assumption',
     title: 'Serving assumption',
-    body: 'Appetite and portion needs vary from person to person. Adjust quantities to suit you.',
+    body: 'Four published recipes provide ten servings: five scheduled dinners, three next-day lunches and two future freezer portions. Appetite and portion needs vary.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Prices and availability',
+    body: 'Prices, pack sizes and stock can vary by Aldi store and may change after the check date. Check the current product and price before shopping.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Pasta, noodles, breadcrumbs, yogurt, stock cubes, soy sauce and other packaged ingredients vary by product and may contain allergens. Check every label before use.',
   },
   {
     key: 'storage_and_cooking',
     title: 'Storage and safety',
-    body: 'Freeze suitable food before its use-by date and follow the label. Cool cooked food before freezing. Defrost in the fridge and use within 24 hours once fully defrosted.',
-  },
-  {
-    key: 'source_timing',
-    title: 'Guidance review',
-    body: 'Food-safety guidance was reviewed on 20 July 2026. Follow the linked Food Standards Agency guidance for later updates.',
+    body: 'Follow each product label and the original publisher’s cooking method. Cool leftovers and refrigerate or freeze them within two hours. Reheat only once until steaming hot throughout. Defrost frozen portions in the fridge and use within 24 hours.',
   },
 ];
 
@@ -521,8 +526,9 @@ export const LOW_COST_TECHNIQUES_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooter
 };
 
 export const COOKING_FOR_ONE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
-  body: 'This guide offers practical planning ideas rather than fixed quantities. Product suitability, storage instructions and allergens vary, so check labels and follow current food-safety guidance.',
+  body: 'This costed plan uses published recipes that DinnerByDesign did not develop or test. Prices and availability are a dated Aldi UK snapshot. Check current product labels and follow each publisher’s method and current food-safety guidance.',
   links: [
+    { href: '/pricing-methodology', label: 'Pricing methodology' },
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],

@@ -163937,29 +163937,35 @@ var UK_FOOD_COSTS_2026 = {
 };
 var COOKING_FOR_ONE_PATH = "/food-costs/cooking-for-one-without-waste";
 var COOKING_FOR_ONE_GUIDE = {
-  title: "Cooking for one without overspending or wasting ingredients",
-  seoTitle: "Cooking for one without overspending or waste | DinnerByDesign",
-  description: "Practical ways to plan varied dinners for one, reuse ingredients, choose suitable pack sizes and reduce avoidable food waste.",
+  title: "Five dinners for one from one Aldi basket",
+  seoTitle: "Five dinners for one from one Aldi basket | DinnerByDesign",
+  description: "A costed five-dinner plan for one using four established recipes, with an Aldi basket, next-day lunches, freezer portions and leftover guidance.",
   publishedAt: "2026-07-20",
-  reviewedAt: "2026-07-20",
+  reviewedAt: "2026-07-28",
+  priceReviewedAt: "2026-07-27",
   editorialOwner: "DinnerByDesign editorial team",
   pageFamily: "Food cost guide",
-  primarySearchIntent: "Plan varied dinners for one while managing ingredient spending and reducing avoidable food waste",
+  primarySearchIntent: "Find a costed five-dinner plan for one using a coordinated Aldi basket with realistic leftovers",
   indexingStatus: "index",
-  contentReviewedAt: "2026-07-20",
-  editorialNotes: "Keep advice practical and flexible. Recheck the cited food-safety guidance before changing the review date.",
-  internalLinks: ["/food-costs/ways-to-reduce-grocery-costs", "/food-safety", "/recipe-methodology"],
-  disclosures: ["allergen_and_product", "serving_assumption", "storage_and_cooking", "source_timing"],
+  contentReviewedAt: "2026-07-28",
+  editorialNotes: "Monthly price review required. Recheck every Aldi basket line, the four publisher recipes and FSA guidance. Keep complete-pack checkout cost distinct from ingredient value used and do not introduce promotional prices.",
+  internalLinks: ["/food-costs/ways-to-reduce-grocery-costs", "/food-costs/five-dinners-same-ingredients", "/pricing-methodology", "/food-safety", "/recipe-methodology"],
+  disclosures: ["price_estimate", "serving_assumption", "source_timing", "storage_and_cooking", "allergen_and_product"],
   sources: [
-    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely" }
+    { label: "Tesco Real Food: Chickpea saag", url: "https://realfood.tesco.com/recipes/chickpea-saag.html" },
+    { label: "Tesco Real Food: One-pot tomato pasta", url: "https://realfood.tesco.com/recipes/one-pot-tomato-pasta.html" },
+    { label: "Aldi: One pot balsamic chicken", url: "https://www.aldi.co.uk/recipes/collections/family-meals/one-pot-balsamic-chicken" },
+    { label: "Good Food: Chicken noodle soup", url: "https://www.bbcgoodfood.com/recipes/chicken-noodle-soup" },
+    { label: "Aldi UK product listings", url: "https://www.aldi.co.uk/products" },
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
   ],
   faqs: [
-    { question: "How can I avoid wasting ingredients when recipes serve more than one?", answer: "Choose dinners that share core ingredients, buy loose where you can, and freeze or repurpose the extra portion of anything a recipe makes rather than letting it sit unused." },
-    { question: "Is batch cooking worthwhile when I'm cooking only for myself?", answer: "Yes. The value comes from cooking a component once, such as a grain, sauce or tray of roasted vegetables, and finishing it differently each time rather than eating one identical dinner repeatedly." },
-    { question: "How do I stop several dinners tasting the same?", answer: "Change the finish, not the base. A different spice blend, sauce, or crunchy or fresh element added at the end can change the character of a dinner." },
-    { question: "Which ingredients are easiest to reuse across different dinners?", answer: "Grains, beans and lentils, tinned tomatoes, onions and roasted vegetables all take well to different flavour directions. Storage depends on the specific product and dish, so check suitability before freezing or keeping anything for later." },
-    { question: "Should I buy smaller packs or divide larger packs?", answer: "Either can work. Smaller or loose quantities can reduce surplus; larger packs can still work if the contents are suitable for freezing and you divide them promptly." },
-    { question: "How can DinnerByDesign help me plan for one person?", answer: "Use the search and planning tools to find dinners that share ingredients and build a short sequence rather than a full week, so nothing sits unused." }
+    { question: "Does this plan scale publisher recipes down to one serving?", answer: "No. Each recipe is used at its published yield. Extra servings become three named next-day lunches, the fifth scheduled dinner and two dated freezer portions." },
+    { question: "Why is the checkout total higher than the ingredient value used?", answer: "The checkout total covers every complete pack bought. Ingredient value counts only the quantities used in the ten servings. The remaining food carries into later cooking or needs a specific leftover plan." },
+    { question: "Does the plan claim to be zero waste?", answer: "No. It is coordinated to reduce waste. The article identifies the remaining chicken, spinach, mushrooms, yogurt, vegetables and cupboard products rather than pretending every pack is finished." },
+    { question: "Will the Aldi basket cost the same everywhere?", answer: "Not necessarily. Prices, pack sizes, promotions and stock can vary by store and change after the check date. The figures are a dated estimate rather than a promise." },
+    { question: "Did DinnerByDesign develop or test these recipes?", answer: "No. The recipes come from Tesco Real Food, Aldi and Good Food. Follow the original publisher for quantities, timings and method. DinnerByDesign provides the basket, costing and leftover analysis." },
+    { question: "What is assumed to be in the cupboard?", answer: "Cooking oil, salt and pepper are treated as already owned and excluded from the checkout and ingredient-value figures. Every other listed ingredient is costed." }
   ]
 };
 var OFFAL_BUDGET_GUIDE_PATH = "/food-costs/cooking-with-offal-on-a-budget";

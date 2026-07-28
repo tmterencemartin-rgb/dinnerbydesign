@@ -122,18 +122,24 @@ describe('food-cost guide publishing data', () => {
     ]));
   });
 
-  it('publishes the cooking-for-one guide with practical disclosures and structured data', () => {
+  it('publishes the costed cooking-for-one plan with reconciled prices and structured data', () => {
     expect(COOKING_FOR_ONE_PATH).toBe('/food-costs/cooking-for-one-without-waste');
     expect(COOKING_FOR_ONE_GUIDE.indexingStatus).toBe('index');
-    expect(COOKING_FOR_ONE_GUIDE.disclosures).toEqual(['allergen_and_product', 'serving_assumption', 'storage_and_cooking', 'source_timing']);
-    expect(COOKING_FOR_ONE_GUIDE.sources).toHaveLength(1);
+    expect(COOKING_FOR_ONE_GUIDE.disclosures).toEqual(['price_estimate', 'serving_assumption', 'source_timing', 'storage_and_cooking', 'allergen_and_product']);
+    expect(COOKING_FOR_ONE_GUIDE.sources).toHaveLength(6);
 
     const html = renderCookingForOneInitialHtml();
     expect(html).toContain(`<h1>${COOKING_FOR_ONE_GUIDE.title}</h1>`);
-    expect(html).toContain('Plan a short sequence, not a rigid week');
-    expect(html).toContain('A three-dinner example');
+    expect(html).toContain('The five-dinner schedule');
+    expect(html).toContain('£30.36');
+    expect(html).toContain('£14.49');
+    expect(html).toContain('Chickpea saag');
+    expect(html).toContain('One-pot balsamic chicken');
+    expect(html).toContain('Chicken noodle soup');
+    expect(html).toContain('DinnerByDesign selected and compared these published recipes');
     expect(html).toContain('Frequently asked questions');
     expect(html).toContain('/food-costs/ways-to-reduce-grocery-costs');
+    expect(html).toContain('/pricing-methodology');
     expect(html).toContain('/food-safety');
     expect(html).toContain('About this guide');
 

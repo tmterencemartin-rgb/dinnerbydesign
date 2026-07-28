@@ -27,6 +27,7 @@ import {
   renderProgrammaticDisclosureFooterInitialHtml,
   renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import { renderCookingForOnePlanInitialHtml } from './cookingForOnePlan';
 
 export interface FoodCostGuideSource {
   label: string;
@@ -256,29 +257,35 @@ export function renderLowCostCookingTechniquesInitialHtml() {
 export const COOKING_FOR_ONE_PATH = '/food-costs/cooking-for-one-without-waste';
 
 export const COOKING_FOR_ONE_GUIDE = {
-  title: 'Cooking for one without overspending or wasting ingredients',
-  seoTitle: 'Cooking for one without overspending or waste | DinnerByDesign',
-  description: 'Practical ways to plan varied dinners for one, reuse ingredients, choose suitable pack sizes and reduce avoidable food waste.',
+  title: 'Five dinners for one from one Aldi basket',
+  seoTitle: 'Five dinners for one from one Aldi basket | DinnerByDesign',
+  description: 'A costed five-dinner plan for one using four established recipes, with an Aldi basket, next-day lunches, freezer portions and leftover guidance.',
   publishedAt: '2026-07-20',
-  reviewedAt: '2026-07-20',
+  reviewedAt: '2026-07-28',
+  priceReviewedAt: '2026-07-27',
   editorialOwner: 'DinnerByDesign editorial team',
   pageFamily: 'Food cost guide',
-  primarySearchIntent: 'Plan varied dinners for one while managing ingredient spending and reducing avoidable food waste',
+  primarySearchIntent: 'Find a costed five-dinner plan for one using a coordinated Aldi basket with realistic leftovers',
   indexingStatus: 'index' as const,
-  contentReviewedAt: '2026-07-20',
-  editorialNotes: 'Keep advice practical and flexible. Recheck the cited food-safety guidance before changing the review date.',
-  internalLinks: ['/food-costs/ways-to-reduce-grocery-costs', '/food-safety', '/recipe-methodology'],
-  disclosures: ['allergen_and_product', 'serving_assumption', 'storage_and_cooking', 'source_timing'] satisfies ProgrammaticDisclosureKey[],
+  contentReviewedAt: '2026-07-28',
+  editorialNotes: 'Monthly price review required. Recheck every Aldi basket line, the four publisher recipes and FSA guidance. Keep complete-pack checkout cost distinct from ingredient value used and do not introduce promotional prices.',
+  internalLinks: ['/food-costs/ways-to-reduce-grocery-costs', '/food-costs/five-dinners-same-ingredients', '/pricing-methodology', '/food-safety', '/recipe-methodology'],
+  disclosures: ['price_estimate', 'serving_assumption', 'source_timing', 'storage_and_cooking', 'allergen_and_product'] satisfies ProgrammaticDisclosureKey[],
   sources: [
-    { label: 'Food Standards Agency: How to chill, freeze and defrost food safely', url: 'https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely' },
+    { label: 'Tesco Real Food: Chickpea saag', url: 'https://realfood.tesco.com/recipes/chickpea-saag.html' },
+    { label: 'Tesco Real Food: One-pot tomato pasta', url: 'https://realfood.tesco.com/recipes/one-pot-tomato-pasta.html' },
+    { label: 'Aldi: One pot balsamic chicken', url: 'https://www.aldi.co.uk/recipes/collections/family-meals/one-pot-balsamic-chicken' },
+    { label: 'Good Food: Chicken noodle soup', url: 'https://www.bbcgoodfood.com/recipes/chicken-noodle-soup' },
+    { label: 'Aldi UK product listings', url: 'https://www.aldi.co.uk/products' },
+    { label: 'Food Standards Agency: Cooking your food', url: 'https://www.food.gov.uk/safety-hygiene/cooking-your-food' },
   ] satisfies FoodCostGuideSource[],
   faqs: [
-    { question: 'How can I avoid wasting ingredients when recipes serve more than one?', answer: 'Choose dinners that share core ingredients, buy loose where you can, and freeze or repurpose the extra portion of anything a recipe makes rather than letting it sit unused.' },
-    { question: "Is batch cooking worthwhile when I'm cooking only for myself?", answer: 'Yes. The value comes from cooking a component once, such as a grain, sauce or tray of roasted vegetables, and finishing it differently each time rather than eating one identical dinner repeatedly.' },
-    { question: 'How do I stop several dinners tasting the same?', answer: 'Change the finish, not the base. A different spice blend, sauce, or crunchy or fresh element added at the end can change the character of a dinner.' },
-    { question: 'Which ingredients are easiest to reuse across different dinners?', answer: 'Grains, beans and lentils, tinned tomatoes, onions and roasted vegetables all take well to different flavour directions. Storage depends on the specific product and dish, so check suitability before freezing or keeping anything for later.' },
-    { question: 'Should I buy smaller packs or divide larger packs?', answer: 'Either can work. Smaller or loose quantities can reduce surplus; larger packs can still work if the contents are suitable for freezing and you divide them promptly.' },
-    { question: 'How can DinnerByDesign help me plan for one person?', answer: 'Use the search and planning tools to find dinners that share ingredients and build a short sequence rather than a full week, so nothing sits unused.' },
+    { question: 'Does this plan scale publisher recipes down to one serving?', answer: 'No. Each recipe is used at its published yield. Extra servings become three named next-day lunches, the fifth scheduled dinner and two dated freezer portions.' },
+    { question: 'Why is the checkout total higher than the ingredient value used?', answer: 'The checkout total covers every complete pack bought. Ingredient value counts only the quantities used in the ten servings. The remaining food carries into later cooking or needs a specific leftover plan.' },
+    { question: 'Does the plan claim to be zero waste?', answer: 'No. It is coordinated to reduce waste. The article identifies the remaining chicken, spinach, mushrooms, yogurt, vegetables and cupboard products rather than pretending every pack is finished.' },
+    { question: 'Will the Aldi basket cost the same everywhere?', answer: 'Not necessarily. Prices, pack sizes, promotions and stock can vary by store and change after the check date. The figures are a dated estimate rather than a promise.' },
+    { question: 'Did DinnerByDesign develop or test these recipes?', answer: 'No. The recipes come from Tesco Real Food, Aldi and Good Food. Follow the original publisher for quantities, timings and method. DinnerByDesign provides the basket, costing and leftover analysis.' },
+    { question: 'What is assumed to be in the cupboard?', answer: 'Cooking oil, salt and pepper are treated as already owned and excluded from the checkout and ingredient-value figures. Every other listed ingredient is costed.' },
   ],
 };
 
@@ -321,12 +328,13 @@ export function getCookingForOneJsonLd() {
 
 export function renderCookingForOneInitialHtml() {
   const guide = COOKING_FOR_ONE_GUIDE;
+  const plan = renderCookingForOnePlanInitialHtml();
   const disclosures = renderProgrammaticDisclosuresInitialHtml(COOKING_FOR_ONE_DISCLOSURES);
   const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml(COOKING_FOR_ONE_DISCLOSURE_FOOTER);
   const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
   const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
 
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>Half a bag of spinach going soft in the drawer. A bunch of coriander bought for one recipe, most of it left over. A pack of chicken thighs sized for four, when you only wanted two. Cooking for one often means working around packaging built for someone else&#039;s household, and it&#039;s easy to end up either throwing food away or eating the same dinner three nights running.</p><p>Neither has to be the trade-off. With a little planning, the same handful of ingredients can move in several different directions across a few days — a different spice, a different texture, a different feel — without extra shopping trips or a freezer full of identical containers.</p></section><section><h2>Plan a short sequence, not a rigid week</h2><p>Rather than mapping out a full week, choose three or four dinners at a time that share two or three core ingredients — a vegetable, a grain, a tin of something. A short sequence like this is easier to stick to than a rigid plan, and it leaves room to swap a dinner in or out if your week changes. It also means less produce sitting forgotten at the back of the fridge, because everything you&#039;ve bought already has somewhere to go.</p></section><section><h2>Buy ingredients that can do more than one job</h2><p>When you&#039;re choosing what to buy, look for ingredients that can cross into more than one style of dinner. A tray of vegetables for roasting, a tin of chickpeas and a pot of a grain such as couscous or bulgur wheat can each be cooked once and then taken in different directions with whatever you add afterwards. The versatility comes from the flavourings you finish with, not from buying something different for every dinner.</p></section><section><h2>Cook once, then change direction</h2><p>There&#039;s a difference between eating the same dinner three times and cooking one component once to use three ways. A tray of roasted vegetables, a pot of cooked grain, a pan of softened onion and garlic, or a simple tomato base can each be finished in a different direction — stirred through lemon and yogurt one night, folded into a spiced stew the next, tossed with ginger and soy after that. The cooking happens once; the dinner changes each time.</p></section><section><h2>Right-size fresh ingredients, and freeze early</h2><p>Where your supermarket sells fruit and vegetables loose, buying only the amount you&#039;ll use avoids the choice between a fixed pack and a fridge drawer of leftovers. For fresh meat, fish or vegetables you won&#039;t get through in a day or two, freezing them while they&#039;re still fresh protects both quality and your food budget more than leaving the decision until the last moment.</p><p>Divide food into individual portions and label them clearly before freezing, rather than freezing one large block — it&#039;s much easier to take out exactly what you need.</p></section>${disclosures}<section><h2>Build a flexible cupboard</h2><p>A small set of tinned, dried and frozen staples makes it much easier to put a dinner together without a shop: rice, pasta, lentils, chickpeas, tinned tomatoes, eggs and a bag of frozen vegetables between them cover a wide range of dinners on their own. What stops them feeling repetitive is what you add at the end — a spoonful of a spiced paste, a squeeze of lemon, a scattering of toasted seeds, a spoonful of yogurt or a chilli-flecked oil. The base stays simple; the finish is where the dinner changes character.</p></section><section><h2>Reduce effort without reducing variety</h2><p>Preparing aromatics — chopped onion, garlic, ginger — in one go, and keeping a base sauce or stock ready in the fridge or freezer, cuts down on the small repeated tasks that can make cooking for one feel like more effort than it should. A short rotation of dinners you know well is worth keeping too, not as a limit, but as a dependable starting point to build from when you feel like trying something new.</p></section><section><h2>A three-dinner example</h2><p>Roast a tray of onions, peppers and courgettes, and warm through a tin of chickpeas alongside a pot of a cooked grain such as couscous or bulgur wheat. From there:</p><ul><li>Take a portion in a North African-inspired direction: a spiced paste, a squeeze of lemon and a spoonful of yogurt or a plant-based alternative on top.</li><li>Take another towards a tomato and smoked paprika stew, finished with a slice of toasted bread for crunch.</li><li>Use what&#039;s left in a ginger, garlic and soy-inspired bowl, with something crisp and fresh — sliced spring onion or a handful of beansprouts — added at the end.</li></ul><p>Same roasting tray, same tin of chickpeas, same pot of grain — three distinctly different dinners. This sequence is an illustration of the technique rather than a claim about how any particular dish is traditionally made, and it&#039;s a starting point rather than a complete recipe with fixed quantities.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${disclosureFooter}<section><h2>Make your ingredients work harder</h2><p>Use DinnerByDesign to find suitable dinners, save your choices and plan around ingredients you want to use well.</p><p><a href="/signin">Plan dinners for one</a></p></section></main></div>`;
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/food-costs">Food-cost and waste guidance</a> / Cooking for one</nav><p>Costed dinner plan</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 28 July 2026</p><article>${plan}${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><p>Recipes, prices and guidance reviewed 28 July 2026. Aldi prices were checked 27 July 2026.</p><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/five-dinners-same-ingredients">see how shared ingredients can become different dinners</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${disclosureFooter}<section><h2>Make the plan fit your week</h2><p>Use DinnerByDesign to adapt dinner ideas around your preferences, budget and ingredients.</p><p><a href="/signin">Plan dinners for one</a></p></section></main></div>`;
 }
 
 export const OFFAL_BUDGET_GUIDE_PATH = '/food-costs/cooking-with-offal-on-a-budget';
