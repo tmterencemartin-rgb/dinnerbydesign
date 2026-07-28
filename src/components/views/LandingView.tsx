@@ -354,7 +354,7 @@ export const LandingView: React.FC = () => {
         </p>
       </section>
 
-      <section id="public-pathways" className="scroll-mt-nav border-y border-dbd-rule/50 bg-[#F4F1EA] px-6 py-12 sm:px-8 sm:py-16">
+      <section id="public-pathways" className="scroll-mt-nav border-y border-dbd-rule/50 bg-[#F4F1EA] px-3 py-12 sm:px-8 sm:py-16">
         <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl">
             <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
@@ -365,7 +365,7 @@ export const LandingView: React.FC = () => {
               Three public pathways keep related topics together, so you can find a plan, a recipe idea or practical cost guidance without searching through one long list.
             </p>
           </div>
-          <div className="mt-7 grid gap-3 sm:grid-cols-3">
+          <div className="mt-7 grid grid-cols-3 gap-2 sm:gap-3">
             {[
               {
                 number: '01',
@@ -386,11 +386,12 @@ export const LandingView: React.FC = () => {
                 href: '/food-costs',
               },
             ].map(pathway => (
-              <a key={pathway.href} href={pathway.href} className="group flex min-h-[188px] flex-col border border-dbd-rule/70 bg-white p-5 transition-colors hover:border-dbd-accent">
-                <span className="text-[10px] font-mono font-bold text-dbd-accent">{pathway.number}</span>
-                <h3 className="mt-3 text-lg font-bold leading-6 text-dbd-ink group-hover:text-dbd-accent">{pathway.title}</h3>
-                <p className="mt-2 text-[13px] leading-5 text-dbd-ink-2">{pathway.description}</p>
-                <span className="mt-auto pt-5 text-[11px] font-mono font-bold uppercase tracking-wider text-dbd-accent">Explore pathway →</span>
+              <a key={pathway.href} href={pathway.href} className="group flex min-h-[168px] min-w-0 flex-col border border-dbd-rule/70 bg-white p-3 transition-colors hover:border-dbd-accent sm:min-h-[188px] sm:p-5">
+                <span className="text-[9px] font-mono font-bold text-dbd-accent sm:text-[10px]">{pathway.number}</span>
+                <h3 className="mt-2 break-words text-[13px] font-bold leading-[1.3] text-dbd-ink group-hover:text-dbd-accent sm:mt-3 sm:text-lg sm:leading-6">{pathway.title}</h3>
+                <p className="mt-2 hidden text-[13px] leading-5 text-dbd-ink-2 sm:block">{pathway.description}</p>
+                <span className="mt-auto pt-4 text-[9px] font-mono font-bold uppercase tracking-wide text-dbd-accent sm:hidden">Explore →</span>
+                <span className="mt-auto hidden pt-5 text-[11px] font-mono font-bold uppercase tracking-wider text-dbd-accent sm:block">Explore pathway →</span>
               </a>
             ))}
           </div>
