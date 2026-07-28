@@ -26,6 +26,7 @@ When implementation and documentation disagree, verify the running code and upda
 
 Humanise AI-assisted drafts without changing their meaning:
 
+- Do not use `affordable` in public article H1 headings or SEO titles. Prefer a specific cost, budget, basket or value basis that readers can assess.
 - Vary sentence structure and length.
 - Qualify genuine uncertainty with wording such as `may suggest`, `appears to` or `is likely to`.
 - Do not weaken settled facts, safety instructions or supported claims with artificial hesitation.

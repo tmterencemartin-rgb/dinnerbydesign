@@ -57,9 +57,9 @@ export const FAMILY_DINNERS_FOR_FOUR_DISCLOSURES: ProgrammaticDisclosureItem[] =
 
 export const FAMILY_DINNERS_FOR_FOUR = {
   slug: '5-affordable-family-dinners-for-four',
-  title: 'Five affordable family dinners for four using one coordinated basket',
-  shortTitle: 'Five affordable family dinners for four',
-  seoTitle: '5 Affordable Family Dinners for Four | DinnerByDesign',
+  title: 'Five family dinners for four using one coordinated basket',
+  shortTitle: 'Five family dinners for four',
+  seoTitle: '5 family dinners for four using one basket | DinnerByDesign',
   description: 'Five affordable UK family dinners for four, with one coordinated shopping basket, shared ingredients, pack costs and practical ways to reduce waste.',
   householdSize: 4,
   dinnerCount: 5,

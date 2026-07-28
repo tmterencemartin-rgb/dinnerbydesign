@@ -28,6 +28,7 @@ export interface SeoFaq {
 export interface SeoMealPlan {
   slug: string;
   title: string;
+  seoTitle: string;
   shortTitle: string;
   description: string;
   householdSize: number;
@@ -65,7 +66,8 @@ export interface SeoMealPlan {
 
 export const FIVE_DINNERS_FOR_TWO_UNDER_40: SeoMealPlan = {
   slug: '5-dinners-for-2-under-40',
-  title: '5 affordable dinners for two under £40',
+  title: '5 dinners for two under £40',
+  seoTitle: '5 dinners for two under £40 | DinnerByDesign',
   shortTitle: 'Five dinners for two under £40',
   description: 'A five-night UK dinner plan for two, designed around a £40 target with shared ingredients, practical substitutions and transparent reference-price estimates.',
   householdSize: 2,

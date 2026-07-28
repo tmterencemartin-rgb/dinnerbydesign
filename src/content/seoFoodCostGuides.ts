@@ -438,7 +438,7 @@ export function renderPortionPlanningGuideInitialHtml() {
 export const MEDITERRANEAN_AFFORDABLE_COOKING_PATH = '/food-costs/mediterranean-inspired-affordable-cooking';
 
 export const MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
-  title: 'Mediterranean-inspired ways to make affordable ingredients taste good',
+  title: 'Mediterranean-inspired ways to make everyday ingredients taste good',
   seoTitle: 'Mediterranean-inspired budget cooking | DinnerByDesign',
   description: 'How techniques from Greek, Italian, Lebanese and Spanish cooking can help you make satisfying, affordable dinners, with practical UK-supermarket substitutions.',
   publishedAt: '2026-07-20', reviewedAt: '2026-07-20', contentReviewedAt: '2026-07-20',
@@ -490,7 +490,7 @@ export const SUMMER_STEWS_GUIDE_PATH = '/food-costs/summer-stews-seasonal-vegeta
 
 export const SUMMER_STEWS_GUIDE = {
   title: 'Summer stews: making vegetables go further',
-  seoTitle: 'Affordable summer stews and vegetable ideas | DinnerByDesign',
+  seoTitle: 'Summer stews and vegetable ideas | DinnerByDesign',
   description: 'A practical guide to building lighter, appetising stews around whichever vegetables are available, affordable or already in the fridge.',
   publishedAt: '2026-07-20',
   reviewedAt: '2026-07-20',

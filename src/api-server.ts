@@ -7,7 +7,7 @@ import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getApps, initializeApp } from "firebase-admin/app";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
-import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
+import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH, getFamilyDinnersForFourJsonLd, renderFamilyDinnersForFourInitialHtml } from "../src/content/familyDinnersForFourPlan";
 import { isUnknownPublicArticlePath } from "../src/content/publicArticles";
 import { getPublicPageRedirect } from "../src/content/publicRedirects";
@@ -1211,7 +1211,7 @@ export function createApp() {
 
         const pathName = req.path;
         if (pathName === FIVE_DINNERS_FOR_TWO_UNDER_40_PATH) {
-          title = "5 Affordable Dinners for Two Under £40 | DinnerByDesign";
+          title = FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle;
           description = "Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.";
           shareTitle = title;
           shareDescription = description;

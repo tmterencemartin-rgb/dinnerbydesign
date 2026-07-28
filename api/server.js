@@ -163454,7 +163454,8 @@ function renderProgrammaticDisclosureFooterInitialHtml(copy = PROGRAMMATIC_DISCL
 // src/content/seoMealPlans.ts
 var FIVE_DINNERS_FOR_TWO_UNDER_40 = {
   slug: "5-dinners-for-2-under-40",
-  title: "5 affordable dinners for two under \xA340",
+  title: "5 dinners for two under \xA340",
+  seoTitle: "5 dinners for two under \xA340 | DinnerByDesign",
   shortTitle: "Five dinners for two under \xA340",
   description: "A five-night UK dinner plan for two, designed around a \xA340 target with shared ingredients, practical substitutions and transparent reference-price estimates.",
   householdSize: 2,
@@ -163625,9 +163626,9 @@ var FAMILY_DINNERS_FOR_FOUR_DISCLOSURES = [
 ];
 var FAMILY_DINNERS_FOR_FOUR = {
   slug: "5-affordable-family-dinners-for-four",
-  title: "Five affordable family dinners for four using one coordinated basket",
-  shortTitle: "Five affordable family dinners for four",
-  seoTitle: "5 Affordable Family Dinners for Four | DinnerByDesign",
+  title: "Five family dinners for four using one coordinated basket",
+  shortTitle: "Five family dinners for four",
+  seoTitle: "5 family dinners for four using one basket | DinnerByDesign",
   description: "Five affordable UK family dinners for four, with one coordinated shopping basket, shared ingredients, pack costs and practical ways to reduce waste.",
   householdSize: 4,
   dinnerCount: 5,
@@ -164029,7 +164030,7 @@ var PORTION_PLANNING_GUIDE = {
 };
 var MEDITERRANEAN_AFFORDABLE_COOKING_PATH = "/food-costs/mediterranean-inspired-affordable-cooking";
 var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
-  title: "Mediterranean-inspired ways to make affordable ingredients taste good",
+  title: "Mediterranean-inspired ways to make everyday ingredients taste good",
   seoTitle: "Mediterranean-inspired budget cooking | DinnerByDesign",
   description: "How techniques from Greek, Italian, Lebanese and Spanish cooking can help you make satisfying, affordable dinners, with practical UK-supermarket substitutions.",
   publishedAt: "2026-07-20",
@@ -164061,7 +164062,7 @@ var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
 var SUMMER_STEWS_GUIDE_PATH = "/food-costs/summer-stews-seasonal-vegetables";
 var SUMMER_STEWS_GUIDE = {
   title: "Summer stews: making vegetables go further",
-  seoTitle: "Affordable summer stews and vegetable ideas | DinnerByDesign",
+  seoTitle: "Summer stews and vegetable ideas | DinnerByDesign",
   description: "A practical guide to building lighter, appetising stews around whichever vegetables are available, affordable or already in the fridge.",
   publishedAt: "2026-07-20",
   reviewedAt: "2026-07-20",
@@ -165978,7 +165979,7 @@ function createApp() {
         let initialBody = null;
         const pathName = req.path;
         if (pathName === FIVE_DINNERS_FOR_TWO_UNDER_40_PATH) {
-          title = "5 Affordable Dinners for Two Under \xA340 | DinnerByDesign";
+          title = FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle;
           description = "Five affordable UK dinners for two under a \xA340 target, with shared ingredients, full-pack checkout estimates and practical substitutions.";
           shareTitle = title;
           shareDescription = description;

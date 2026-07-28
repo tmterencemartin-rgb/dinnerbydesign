@@ -9,6 +9,7 @@ describe('public article registry', () => {
     expect(new Set(PUBLISHED_ARTICLES.map(article => article.path)).size).toBe(PUBLISHED_ARTICLES.length);
     expect(PUBLISHED_ARTICLES.every(article => article.path.startsWith('/'))).toBe(true);
     expect(PUBLISHED_ARTICLES.every(article => article.title && article.reviewedAt)).toBe(true);
+    expect(PUBLISHED_ARTICLES.every(article => !/\baffordable\b/i.test(article.title))).toBe(true);
     expect(PUBLISHED_ARTICLES.every(article => article.primarySearchIntent && article.publishedAt && article.contentReviewedAt)).toBe(true);
     expect(PUBLISHED_ARTICLES.every(article => article.indexingStatus === 'index' && article.internalLinks.length > 0)).toBe(true);
     expect(PUBLISHED_ARTICLES.every(article => article.disclosures.length > 0)).toBe(true);

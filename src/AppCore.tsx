@@ -24,7 +24,7 @@ const SuccessView = React.lazy(() => import('./components/views/SuccessView').th
 const SearchPageDesignConcept = React.lazy(() => import('./components/views/SearchPageDesignConcept').then(module => ({ default: module.SearchPageDesignConcept })));
 const BudgetFamilySeoConcept = React.lazy(() => import('./components/views/BudgetFamilySeoConcept').then(module => ({ default: module.BudgetFamilySeoConcept })));
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
-import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
+import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
 const FoodCostGuideView = React.lazy(() => import('./components/views/FoodCostGuideView').then(module => ({ default: module.FoodCostGuideView })));
 const LowerCostCutsGuideView = React.lazy(() => import('./components/views/LowerCostCutsGuideView').then(module => ({ default: module.LowerCostCutsGuideView })));
 const LowCostCookingTechniquesGuideView = React.lazy(() => import('./components/views/LowCostCookingTechniquesGuideView').then(module => ({ default: module.LowCostCookingTechniquesGuideView })));
@@ -207,7 +207,7 @@ const AppContent = () => {
         };
       case 'meal-plan-five-for-two-under-40':
         return {
-          title: '5 Affordable Dinners for Two Under £40 | DinnerByDesign',
+          title: FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle,
           description: 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.',
           canonicalPath: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
           jsonLd: getFiveDinnersForTwoJsonLd()

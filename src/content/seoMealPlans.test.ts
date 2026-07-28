@@ -20,6 +20,7 @@ describe('SEO meal-plan publishing data', () => {
     expect(plan.indexingStatus).toBe('index');
     expect(plan.primarySearchIntent).toBeTruthy();
     expect(plan.disclosures).toEqual(expect.arrayContaining(['price_estimate', 'serving_assumption']));
+    expect(`${plan.title} ${plan.shortTitle} ${plan.seoTitle}`).not.toMatch(/\baffordable\b/i);
   });
 
   it('uses the same canonical path in structured publishing data', () => {

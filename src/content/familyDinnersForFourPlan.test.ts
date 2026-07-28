@@ -20,6 +20,7 @@ describe('family dinners for four publishing data', () => {
       'Vegetable stock cubes',
       'Couscous',
     ]);
+    expect(`${plan.title} ${plan.shortTitle} ${plan.seoTitle}`).not.toMatch(/\baffordable\b/i);
   });
 
   it('uses the canonical route and required structured data', () => {

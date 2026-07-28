@@ -3,7 +3,7 @@ import { PublicGuideShell } from './components/PublicGuideShell';
 import { useSeo } from './hooks/useSeo';
 import { safeStorage } from './lib/storage';
 import { AFFORDABILITY_PLANNER_PENDING_KEY } from './config/features';
-import { FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
+import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd } from './content/seoMealPlans';
 import {
   FAMILY_DINNERS_FOR_FOUR,
   FAMILY_DINNERS_FOR_FOUR_PATH,
@@ -173,7 +173,7 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   }, {}),
   [FIVE_DINNERS_FOR_TWO_UNDER_40_PATH]: {
     seo: {
-      title: '5 Affordable Dinners for Two Under £40 | DinnerByDesign',
+      title: FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle,
       description: 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.',
       canonicalPath: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
       jsonLd: getFiveDinnersForTwoJsonLd(),

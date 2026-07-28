@@ -172,7 +172,7 @@ const generateEditorialGuide = async (
   console.log(`Generated ${guidePath}/index.html`);
 };
 const canonicalUrl = `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`;
-const title = '5 Affordable Dinners for Two Under £40 | DinnerByDesign';
+const title = FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle;
 const description = 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.';
 
 let html = sourceHtml
