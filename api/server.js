@@ -164585,8 +164585,112 @@ var CHICKEN_THIGH_COST_GUIDE = {
   ]
 };
 
+// src/content/fiveStaplesGuide.ts
+var FIVE_STAPLES_GUIDE_PATH = "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses";
+var FIVE_STAPLES_GUIDE = {
+  title: "Five dinners built around potatoes, rice, pasta, bread and pulses",
+  seoTitle: "5 dinners built around potatoes, rice, pasta, bread and pulses | DinnerByDesign",
+  description: "Five published recipes that put potatoes, rice, pasta, bread or pulses at the centre, with timings, servings, equipment, leftovers and pack-use notes.",
+  publishedAt: "2026-07-28",
+  reviewedAt: "2026-07-28",
+  nextReviewAt: "2027-07-28",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find practical dinner ideas built around potatoes, rice, pasta, bread and pulses",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-28",
+  editorialNotes: "Compares five established publisher recipes without reproducing their methods or presenting undated price claims.",
+  internalLinks: [
+    "/recipes",
+    "/food-costs/cooking-with-pulses-on-a-budget",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/five-dinners-same-ingredients",
+    "/food-costs/cooking-for-one-without-waste",
+    "/pricing-methodology",
+    "/food-safety",
+    "/recipe-methodology",
+    "/signin"
+  ],
+  disclosures: [
+    "price_comparison",
+    "allergen_and_product",
+    "storage_and_cooking",
+    "source_timing"
+  ],
+  sources: [
+    {
+      label: "Tesco Real Food: creamy leeks and chorizo sweet potatoes",
+      url: "https://realfood.tesco.com/recipes/creamy-leeks-and-chorizo-sweet-potatoes.html"
+    },
+    {
+      label: "Good Food: creamy tomato risotto",
+      url: "https://www.bbcgoodfood.com/recipes/creamy-tomato-risotto"
+    },
+    {
+      label: "delicious. magazine: speedy sun-dried tomato pasta",
+      url: "https://www.deliciousmagazine.co.uk/recipes/speedy-sun-dried-tomato-pasta/"
+    },
+    {
+      label: "Good Food: cherry tomato and ham bread and butter bake",
+      url: "https://www.bbcgoodfood.com/recipes/cherry-tomato-ham-bread-butter-bake"
+    },
+    {
+      label: "Tesco Real Food: coconut chickpea dumpling curry",
+      url: "https://realfood.tesco.com/recipes/coconut-chickpea-dumpling-curry.html"
+    },
+    {
+      label: "NHS: The Eatwell Guide",
+      url: "https://www.nhs.uk/live-well/eat-well/food-guidelines-and-food-labels/the-eatwell-guide/"
+    },
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    }
+  ],
+  faqs: [
+    {
+      question: "Which dinner is fastest?",
+      answer: "The sun-dried tomato pasta is the fastest of the five. The publisher gives five minutes of preparation and eight to twelve minutes of cooking, depending on the pasta shape."
+    },
+    {
+      question: "Which options serve four people?",
+      answer: "The creamy tomato risotto and the cherry tomato and ham bread bake both serve four as published. The other three serve two."
+    },
+    {
+      question: "Which dinners contain no meat?",
+      answer: "The tomato risotto is vegetarian. The coconut chickpea dumpling curry is vegan. Check every pack and chosen substitute if allergens or a strict dietary requirement matter."
+    },
+    {
+      question: "Can I swap in a wholegrain version?",
+      answer: "Sometimes, though wholewheat pasta, brown rice and different breads can change cooking time, liquid absorption and texture. Follow the publisher\u2019s tested ingredient list or its stated substitution advice."
+    },
+    {
+      question: "Is stale bread safe to use?",
+      answer: "Dry or stale bread can be used in the bake. Bread showing any mould should be discarded in full because growth can extend beyond the visible patch."
+    },
+    {
+      question: "Is a staple-led dinner always less expensive?",
+      answer: "No. The full ingredient list, current prices and pack sizes decide the result. Add a price only when the source, date, servings and costing method can be shown beside it."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: FIVE_STAPLES_GUIDE.title,
+    path: FIVE_STAPLES_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: FIVE_STAPLES_GUIDE.pageFamily,
+    primarySearchIntent: FIVE_STAPLES_GUIDE.primarySearchIntent,
+    indexingStatus: FIVE_STAPLES_GUIDE.indexingStatus,
+    publishedAt: FIVE_STAPLES_GUIDE.publishedAt,
+    reviewedAt: FIVE_STAPLES_GUIDE.reviewedAt,
+    contentReviewedAt: FIVE_STAPLES_GUIDE.contentReviewedAt,
+    internalLinks: [...FIVE_STAPLES_GUIDE.internalLinks],
+    disclosures: [...FIVE_STAPLES_GUIDE.disclosures],
+    status: "published"
+  },
   {
     title: CHICKEN_THIGH_COST_GUIDE.title,
     path: CHICKEN_THIGH_COST_GUIDE_PATH,

@@ -12,6 +12,7 @@ import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGui
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
 import { SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH } from './sausageWaysGuide';
 import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
+import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -30,6 +31,20 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: FIVE_STAPLES_GUIDE.title,
+    path: FIVE_STAPLES_GUIDE_PATH,
+    category: 'Practical cooking guide',
+    pageFamily: FIVE_STAPLES_GUIDE.pageFamily,
+    primarySearchIntent: FIVE_STAPLES_GUIDE.primarySearchIntent,
+    indexingStatus: FIVE_STAPLES_GUIDE.indexingStatus,
+    publishedAt: FIVE_STAPLES_GUIDE.publishedAt,
+    reviewedAt: FIVE_STAPLES_GUIDE.reviewedAt,
+    contentReviewedAt: FIVE_STAPLES_GUIDE.contentReviewedAt,
+    internalLinks: [...FIVE_STAPLES_GUIDE.internalLinks],
+    disclosures: [...FIVE_STAPLES_GUIDE.disclosures],
+    status: 'published',
+  },
   {
     title: CHICKEN_THIGH_COST_GUIDE.title,
     path: CHICKEN_THIGH_COST_GUIDE_PATH,

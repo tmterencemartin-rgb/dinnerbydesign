@@ -117,6 +117,12 @@ import {
   getChickenThighCostGuideJsonLd,
   renderChickenThighCostGuideInitialHtml,
 } from '../src/content/chickenThighCostGuide';
+import {
+  FIVE_STAPLES_GUIDE,
+  FIVE_STAPLES_GUIDE_PATH,
+  getFiveStaplesGuideJsonLd,
+  renderFiveStaplesGuideInitialHtml,
+} from '../src/content/fiveStaplesGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -541,6 +547,13 @@ await generateEditorialGuide(
   CHICKEN_THIGH_COST_GUIDE_PATH,
   renderChickenThighCostGuideInitialHtml,
   getChickenThighCostGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  FIVE_STAPLES_GUIDE,
+  FIVE_STAPLES_GUIDE_PATH,
+  renderFiveStaplesGuideInitialHtml,
+  getFiveStaplesGuideJsonLd,
 );
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');

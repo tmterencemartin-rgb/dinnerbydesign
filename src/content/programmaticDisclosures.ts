@@ -499,6 +499,29 @@ export const SAUSAGE_GUIDE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const FIVE_STAPLES_GUIDE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'price_comparison',
+    title: 'A note on cost',
+    body: 'This guide does not use live retailer prices or rank the five dinners by cost. The full ingredient list, pack sizes, current prices and ingredients already at home determine the result.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Chorizo, crème fraîche, stock, parmesan, pasta, cashews, bread, ham, curry paste and other packaged ingredients vary by product and may contain allergens. Check every label and follow the original publisher’s recipe.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and cooking',
+    body: 'Follow each publisher’s method and the product instructions. Cool cooked rice quickly, ideally within one hour, refrigerate it for no more than one day before reheating, and reheat it only once until steaming hot throughout.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Recipe and guidance review',
+    body: 'Publisher recipe details, NHS nutrition guidance and Food Standards Agency food-safety guidance were checked 28 July 2026. Follow the cited sources for later information.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -690,6 +713,16 @@ export const SAUSAGE_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy =
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'How prices are calculated' },
     { href: '/food-safety', label: 'Food safety' },
+  ],
+};
+
+export const FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'DinnerByDesign selected and compared these published recipes but did not develop or test them. Follow the original publisher’s ingredients, quantities, method, allergen information and safety advice.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/pricing-methodology', label: 'How prices are calculated' },
+    { href: '/food-safety', label: 'Food safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],
 };
 
