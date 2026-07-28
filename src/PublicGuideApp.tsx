@@ -107,6 +107,11 @@ import {
   FIVE_STAPLES_GUIDE_PATH,
   getFiveStaplesGuideJsonLd,
 } from './content/fiveStaplesGuide';
+import {
+  CONVENIENCE_FISH_GUIDE,
+  CONVENIENCE_FISH_GUIDE_PATH,
+  getConvenienceFishGuideJsonLd,
+} from './content/convenienceFishGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -132,6 +137,7 @@ const TraybakeGuideView = React.lazy(() => import('./components/views/TraybakeGu
 const SausageWaysGuideView = React.lazy(() => import('./components/views/SausageWaysGuideView').then(module => ({ default: module.SausageWaysGuideView })));
 const ChickenThighCostGuideView = React.lazy(() => import('./components/views/ChickenThighCostGuideView').then(module => ({ default: module.ChickenThighCostGuideView })));
 const FiveStaplesGuideView = React.lazy(() => import('./components/views/FiveStaplesGuideView').then(module => ({ default: module.FiveStaplesGuideView })));
+const ConvenienceFishGuideView = React.lazy(() => import('./components/views/ConvenienceFishGuideView').then(module => ({ default: module.ConvenienceFishGuideView })));
 
 type SeoConfig = {
   title: string;
@@ -283,6 +289,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [FIVE_STAPLES_GUIDE_PATH]: {
     seo: guideSeo(FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH, getFiveStaplesGuideJsonLd()),
     render: ({ search }) => <FiveStaplesGuideView onFindDinners={search} />,
+  },
+  [CONVENIENCE_FISH_GUIDE_PATH]: {
+    seo: guideSeo(CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH, getConvenienceFishGuideJsonLd()),
+    render: ({ search }) => <ConvenienceFishGuideView onFindDinners={search} />,
   },
 };
 

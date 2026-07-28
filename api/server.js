@@ -164675,8 +164675,122 @@ var FIVE_STAPLES_GUIDE = {
   ]
 };
 
+// src/content/convenienceFishGuide.ts
+var CONVENIENCE_FISH_GUIDE_PATH = "/guides/fish-finger-fishcake-scampi-dinner-ideas";
+var CONVENIENCE_FISH_GUIDE = {
+  title: "How to turn fish fingers, fishcakes and scampi into better weeknight dinners",
+  seoTitle: "Fish finger, fishcake and scampi dinner ideas | DinnerByDesign",
+  description: "Practical ways to turn fish fingers, fishcakes, scampi, goujons and breaded fillets into varied weeknight dinners, with sides, pack-use ideas and label guidance.",
+  publishedAt: "2026-07-28",
+  reviewedAt: "2026-07-28",
+  nextReviewAt: "2027-01-28",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find dinner ideas using fish fingers, fishcakes, scampi, goujons and breaded fillets",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-28",
+  editorialNotes: "Provides dinner formats without fixed product cooking times and distinguishes scampi from white fish.",
+  internalLinks: [
+    "/recipes",
+    "/guides/how-to-build-a-traybake",
+    "/guides/9-ways-with-sausages",
+    "/food-costs/make-low-cost-dinners-more-interesting",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-safety",
+    "/recipe-methodology",
+    "/signin"
+  ],
+  disclosures: [
+    "allergen_and_product",
+    "storage_and_cooking",
+    "source_timing"
+  ],
+  sources: [
+    {
+      label: "NHS: Fish and shellfish",
+      url: "https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/"
+    },
+    {
+      label: "Food Standards Agency: Allergen guidance for food businesses",
+      url: "https://www.food.gov.uk/business-guidance/allergen-guidance-for-food-businesses"
+    },
+    {
+      label: "Birds Eye: Cod fish fingers",
+      url: "https://www.birdseye.co.uk/range/frozen-fish/fish-fingers/26-cod-fish-fingers"
+    },
+    {
+      label: "Tesco: Cod fishcakes",
+      url: "https://www.tesco.com/shop/en-GB/products/291845420"
+    },
+    {
+      label: "Tesco: Haddock goujons",
+      url: "https://www.tesco.com/shop/en-GB/products/271284352"
+    },
+    {
+      label: "Tesco: Young's breaded cod fillets",
+      url: "https://www.tesco.com/shop/en-GB/products/323156114"
+    },
+    {
+      label: "Whitby Seafoods: Wholetail scampi",
+      url: "https://www.whitby-seafoods.com/product/frozen/whole-tail-scampi-frozen-200g.html"
+    },
+    {
+      label: "Whitby Seafoods: Scampi FAQ",
+      url: "https://www.whitby-seafoods.com/faq/"
+    },
+    {
+      label: "Good Food: Fish finger recipes",
+      url: "https://www.bbcgoodfood.com/recipes/collection/fish-finger-recipes"
+    },
+    {
+      label: "Birds Eye: How to cook frozen fish",
+      url: "https://www.birdseye.co.uk/recipes/frozen-food-cooking-tips/how-to-cook-frozen-fish"
+    }
+  ],
+  faqs: [
+    {
+      question: "What can I serve with fish fingers instead of chips?",
+      answer: "Wraps, sandwiches and tacos all work well, adding vegetables and a simple sauce rather than a second helping of potato."
+    },
+    {
+      question: "What vegetables go well with fishcakes?",
+      answer: "Greens, green beans, spinach and roasted tomatoes all pair well, particularly since many fishcakes already contain potato."
+    },
+    {
+      question: "What can I make with frozen scampi?",
+      answer: "Tacos, rice bowls and lighter chip-shop-style plates all suit scampi, with slaw, peas or a lemon dressing alongside."
+    },
+    {
+      question: "Do fishcakes need potatoes on the side?",
+      answer: "Not necessarily. Check the ingredient list first, since many fishcakes already contain a substantial amount of potato."
+    },
+    {
+      question: "Is scampi fish or shellfish?",
+      answer: "Shellfish. Scampi is made from langoustine, a crustacean, rather than white fish. Some products use whole tails and others use formed pieces, so check the description on the pack."
+    },
+    {
+      question: "Can fish fingers count as a portion of fish?",
+      answer: "Fish fingers contain fish, but whether a serving is equivalent to one NHS portion depends on the amount of fish in the product and how many are served. The NHS describes a portion as around 140g, so check the pack rather than relying on the number of fingers."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: CONVENIENCE_FISH_GUIDE.title,
+    path: CONVENIENCE_FISH_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: CONVENIENCE_FISH_GUIDE.pageFamily,
+    primarySearchIntent: CONVENIENCE_FISH_GUIDE.primarySearchIntent,
+    indexingStatus: CONVENIENCE_FISH_GUIDE.indexingStatus,
+    publishedAt: CONVENIENCE_FISH_GUIDE.publishedAt,
+    reviewedAt: CONVENIENCE_FISH_GUIDE.reviewedAt,
+    contentReviewedAt: CONVENIENCE_FISH_GUIDE.contentReviewedAt,
+    internalLinks: [...CONVENIENCE_FISH_GUIDE.internalLinks],
+    disclosures: [...CONVENIENCE_FISH_GUIDE.disclosures],
+    status: "published"
+  },
   {
     title: FIVE_STAPLES_GUIDE.title,
     path: FIVE_STAPLES_GUIDE_PATH,

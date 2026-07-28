@@ -522,6 +522,24 @@ export const FIVE_STAPLES_GUIDE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const CONVENIENCE_FISH_GUIDE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'allergen_and_product',
+    title: 'Products and allergens',
+    body: 'Fish, crustaceans and molluscs are separate regulated allergen categories. Coatings, fishcakes and sauces vary by product and may contain cereals containing gluten, egg, milk, mustard or other allergens. Check the current label every time.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Cooking and storage',
+    body: 'Follow the cooking, storage and reheating instructions on the pack in front of you. When combining products on one tray, use the stated oven setting and add each item at the point required by its own instructions.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance and product review',
+    body: 'NHS nutrition guidance, Food Standards Agency allergen guidance and the linked product information were checked 28 July 2026. Products and official guidance can change, so follow the current source and pack.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -721,6 +739,15 @@ export const FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterC
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/pricing-methodology', label: 'How prices are calculated' },
+    { href: '/food-safety', label: 'Food safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const CONVENIENCE_FISH_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'DinnerByDesign provides general dinner-planning ideas rather than product-specific cooking instructions. Product composition, allergens, serving information and preparation methods vary by brand.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
     { href: '/food-safety', label: 'Food safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },
   ],

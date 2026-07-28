@@ -123,6 +123,12 @@ import {
   getFiveStaplesGuideJsonLd,
   renderFiveStaplesGuideInitialHtml,
 } from '../src/content/fiveStaplesGuide';
+import {
+  CONVENIENCE_FISH_GUIDE,
+  CONVENIENCE_FISH_GUIDE_PATH,
+  getConvenienceFishGuideJsonLd,
+  renderConvenienceFishGuideInitialHtml,
+} from '../src/content/convenienceFishGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -554,6 +560,13 @@ await generateEditorialGuide(
   FIVE_STAPLES_GUIDE_PATH,
   renderFiveStaplesGuideInitialHtml,
   getFiveStaplesGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  CONVENIENCE_FISH_GUIDE,
+  CONVENIENCE_FISH_GUIDE_PATH,
+  renderConvenienceFishGuideInitialHtml,
+  getConvenienceFishGuideJsonLd,
 );
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');
