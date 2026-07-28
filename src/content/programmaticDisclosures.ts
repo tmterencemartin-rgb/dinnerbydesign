@@ -540,6 +540,24 @@ export const CONVENIENCE_FISH_GUIDE_DISCLOSURES: ProgrammaticDisclosureItem[] = 
   },
 ];
 
+export const TINNED_FISH_GUIDE_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'allergen_and_product',
+    title: 'Products and allergens',
+    body: 'Fish, crustaceans and molluscs are separate regulated allergen categories. Packing liquids, sauces and dressings may introduce other allergens. Check every current label and follow individual medical advice.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and preparation',
+    body: 'Follow the current pack instructions. Transfer unused contents to a covered container, refrigerate them and follow the manufacturer’s open-life guidance rather than storing leftovers in the opened tin.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance and product review',
+    body: 'NHS nutrition guidance, Food Standards Agency safety and allergen guidance, product wording and preserved-sardine marketing standards were checked 28 July 2026. Follow the current source and label for later information.',
+  },
+];
+
 export const PROGRAMMATIC_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.',
   links: [
@@ -746,6 +764,15 @@ export const FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterC
 
 export const CONVENIENCE_FISH_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'DinnerByDesign provides general dinner-planning ideas rather than product-specific cooking instructions. Product composition, allergens, serving information and preparation methods vary by brand.',
+  links: [
+    { href: '/guides', label: 'Browse all guides' },
+    { href: '/food-safety', label: 'Food safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const TINNED_FISH_GUIDE_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'DinnerByDesign provides flexible dinner ideas rather than product-specific recipes. Packing liquid, drained weight, salt, ingredients, allergens and preparation instructions vary between products.',
   links: [
     { href: '/guides', label: 'Browse all guides' },
     { href: '/food-safety', label: 'Food safety' },

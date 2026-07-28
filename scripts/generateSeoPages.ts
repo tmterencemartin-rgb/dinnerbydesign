@@ -129,6 +129,12 @@ import {
   getConvenienceFishGuideJsonLd,
   renderConvenienceFishGuideInitialHtml,
 } from '../src/content/convenienceFishGuide';
+import {
+  TINNED_FISH_GUIDE,
+  TINNED_FISH_GUIDE_PATH,
+  getTinnedFishGuideJsonLd,
+  renderTinnedFishGuideInitialHtml,
+} from '../src/content/tinnedFishGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -567,6 +573,13 @@ await generateEditorialGuide(
   CONVENIENCE_FISH_GUIDE_PATH,
   renderConvenienceFishGuideInitialHtml,
   getConvenienceFishGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  TINNED_FISH_GUIDE,
+  TINNED_FISH_GUIDE_PATH,
+  renderTinnedFishGuideInitialHtml,
+  getTinnedFishGuideJsonLd,
 );
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');

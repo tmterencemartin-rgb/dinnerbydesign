@@ -14,6 +14,7 @@ import { SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH } from './sausageWaysGuide'
 import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
 import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide';
 import { CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH } from './convenienceFishGuide';
+import { TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH } from './tinnedFishGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -32,6 +33,20 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: TINNED_FISH_GUIDE.title,
+    path: TINNED_FISH_GUIDE_PATH,
+    category: 'Practical cooking guide',
+    pageFamily: TINNED_FISH_GUIDE.pageFamily,
+    primarySearchIntent: TINNED_FISH_GUIDE.primarySearchIntent,
+    indexingStatus: TINNED_FISH_GUIDE.indexingStatus,
+    publishedAt: TINNED_FISH_GUIDE.publishedAt,
+    reviewedAt: TINNED_FISH_GUIDE.reviewedAt,
+    contentReviewedAt: TINNED_FISH_GUIDE.contentReviewedAt,
+    internalLinks: [...TINNED_FISH_GUIDE.internalLinks],
+    disclosures: [...TINNED_FISH_GUIDE.disclosures],
+    status: 'published',
+  },
   {
     title: CONVENIENCE_FISH_GUIDE.title,
     path: CONVENIENCE_FISH_GUIDE_PATH,

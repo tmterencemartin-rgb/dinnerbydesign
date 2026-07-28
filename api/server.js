@@ -164775,8 +164775,105 @@ var CONVENIENCE_FISH_GUIDE = {
   ]
 };
 
+// src/content/tinnedFishGuide.ts
+var TINNED_FISH_GUIDE_PATH = "/guides/tinned-fish-recipes-tuna-salmon-sardines";
+var TINNED_FISH_GUIDE = {
+  title: "Tinned fish recipes: easy dinner ideas with tuna, salmon, sardines and more",
+  seoTitle: "Tinned fish recipes and dinner ideas | DinnerByDesign",
+  description: "Practical tinned fish recipes and dinner ideas using tuna, salmon, sardines, pilchards, mackerel, crab, mussels, cockles and winkles.",
+  publishedAt: "2026-07-28",
+  reviewedAt: "2026-07-28",
+  nextReviewAt: "2027-01-28",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find practical dinner ideas using tinned fish and preserved seafood",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-28",
+  editorialNotes: "Separates fish, crustacean and mollusc products; uses no fixed product timings or unsupported health comparisons.",
+  internalLinks: [
+    "/recipes",
+    "/guides/fish-finger-fishcake-scampi-dinner-ideas",
+    "/food-costs/cooking-with-pulses-on-a-budget",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-safety",
+    "/recipe-methodology",
+    "/signin"
+  ],
+  disclosures: [
+    "allergen_and_product",
+    "storage_and_cooking",
+    "source_timing"
+  ],
+  sources: [
+    {
+      label: "NHS: Fish and shellfish",
+      url: "https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/"
+    },
+    {
+      label: "Food Standards Agency: Allergen guidance",
+      url: "https://www.gov.uk/government/publications/allergen-guidance-for-food-businesses"
+    },
+    {
+      label: "Food Standards Agency: Canned food safety",
+      url: "https://www.food.gov.uk/print/pdf/node/4286"
+    },
+    {
+      label: "Princes: Canned tuna range",
+      url: "https://www.princes.co.uk/product-categories/tuna-chunks/"
+    },
+    {
+      label: "UK legislation archive: Preserved sardine marketing standards",
+      url: "https://www.legislation.gov.uk/eur/1989/2136/pdfs/eur_19892136_2003-07-01_en.pdf"
+    }
+  ],
+  faqs: [
+    {
+      question: "Does tinned tuna count as oily fish?",
+      answer: "No. NHS guidance says that neither fresh nor tinned tuna counts as oily fish."
+    },
+    {
+      question: "Are sardines and pilchards the same fish?",
+      answer: "The names overlap, but the answer depends on the product. Preserved sardines and sardine-type products can come from several related species, so read the species and description on the label rather than relying on size."
+    },
+    {
+      question: "Can you eat the bones in tinned salmon or sardines?",
+      answer: "Yes. The NHS lists the soft bones in tinned salmon, sardines and pilchards as edible and notes that they provide calcium and phosphorus. They can still be removed if preferred."
+    },
+    {
+      question: "Should I drain tinned fish?",
+      answer: "It depends on the dish and the packing liquid. Drain brine when it would make the dish too salty; keep some tomato sauce when it forms part of the recipe. Check whether the nutrition panel is given for the drained product."
+    },
+    {
+      question: "Are anchovies the same as sardines?",
+      answer: "No. They are different fish and have different flavours and uses, even though both are sold in small tins or jars."
+    },
+    {
+      question: "Can tinned mackerel replace fresh mackerel?",
+      answer: "Sometimes. The texture, salt and sauce can change the dish, so it works better in recipes that welcome those differences than as an automatic swap."
+    },
+    {
+      question: "Can leftovers stay in the opened tin?",
+      answer: "No. Transfer them to a covered container, refrigerate them and follow the storage period on the manufacturer\u2019s label."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: TINNED_FISH_GUIDE.title,
+    path: TINNED_FISH_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: TINNED_FISH_GUIDE.pageFamily,
+    primarySearchIntent: TINNED_FISH_GUIDE.primarySearchIntent,
+    indexingStatus: TINNED_FISH_GUIDE.indexingStatus,
+    publishedAt: TINNED_FISH_GUIDE.publishedAt,
+    reviewedAt: TINNED_FISH_GUIDE.reviewedAt,
+    contentReviewedAt: TINNED_FISH_GUIDE.contentReviewedAt,
+    internalLinks: [...TINNED_FISH_GUIDE.internalLinks],
+    disclosures: [...TINNED_FISH_GUIDE.disclosures],
+    status: "published"
+  },
   {
     title: CONVENIENCE_FISH_GUIDE.title,
     path: CONVENIENCE_FISH_GUIDE_PATH,
