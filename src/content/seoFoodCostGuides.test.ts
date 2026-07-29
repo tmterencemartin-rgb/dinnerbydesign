@@ -175,6 +175,7 @@ describe('food-cost guide publishing data', () => {
     expect(PORTION_PLANNING_GUIDE.disclosures).toEqual(['serving_assumption', 'storage_and_cooking', 'allergen_and_product', 'source_timing']);
     expect(PORTION_PLANNING_GUIDE.sources).toHaveLength(2);
     expect(PORTION_PLANNING_GUIDE.internalLinks).toContain('/dinner-plans/5-affordable-family-dinners-for-four');
+    expect(PORTION_PLANNING_GUIDE.internalLinks).toContain('/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses');
     const html = renderPortionPlanningGuideInitialHtml();
     expect(html).toContain(`<h1>${PORTION_PLANNING_GUIDE.title}</h1>`);
     expect(html).toContain('Portion planning, not portion control');
@@ -182,6 +183,7 @@ describe('food-cost guide publishing data', () => {
     expect(html).toContain('Making portion planning work');
     expect(html).toContain('/pricing-methodology');
     expect(html).toContain('href="/dinner-plans/5-affordable-family-dinners-for-four"');
+    expect(html).toContain('href="/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses"');
     expect(getPortionPlanningGuideJsonLd()['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Article', mainEntityOfPage: `https://dinnerbydesign.app${PORTION_PLANNING_GUIDE_PATH}` }),
       expect.objectContaining({ '@type': 'FAQPage' }),

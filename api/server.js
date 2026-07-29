@@ -164014,7 +164014,7 @@ var PORTION_PLANNING_GUIDE = {
   primarySearchIntent: "Understand how portion planning, planned leftovers and pack-size awareness can reduce food spending and waste",
   indexingStatus: "index",
   editorialNotes: "The 300g and 500g example is illustrative arithmetic, not a retailer or product claim. Recheck FSA guidance before changing the review date.",
-  internalLinks: ["/dinner-plans/5-affordable-family-dinners-for-four", "/food-costs/cooking-for-one-without-waste", "/food-costs/ways-to-reduce-grocery-costs", "/food-costs/batch-cooking-on-a-budget", "/pricing-methodology", "/food-safety"],
+  internalLinks: ["/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses", "/dinner-plans/5-affordable-family-dinners-for-four", "/food-costs/cooking-for-one-without-waste", "/food-costs/ways-to-reduce-grocery-costs", "/food-costs/batch-cooking-on-a-budget", "/pricing-methodology", "/food-safety"],
   disclosures: ["serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
   sources: [
     { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
@@ -164156,6 +164156,7 @@ var GROCERY_COST_OPTIONS_GUIDE = {
   editorialNotes: "Cornerstone guide incorporating the former low-cost cooking-techniques material. Keep its methods aligned with the detailed guides and recheck cited sources whenever the review date changes.",
   internalLinks: [
     "/guides",
+    "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses",
     "/food-costs/uk-food-costs-2026",
     "/dinner-plans/5-affordable-family-dinners-for-four",
     "/dinner-plans/5-dinners-for-2-under-40",
@@ -164456,6 +164457,7 @@ var PULSES_BUDGET_GUIDE = {
   editorialNotes: "Price examples are a dated Tesco snapshot. Cooked yield and hob-use figures are explicitly presented as approximations.",
   internalLinks: [
     "/guides",
+    "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses",
     "/food-costs/make-low-cost-dinners-more-interesting",
     "/food-costs/five-dinners-same-ingredients",
     "/food-costs/portion-planning-and-food-waste",

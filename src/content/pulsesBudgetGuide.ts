@@ -25,6 +25,7 @@ export const PULSES_BUDGET_GUIDE = {
   editorialNotes: 'Price examples are a dated Tesco snapshot. Cooked yield and hob-use figures are explicitly presented as approximations.',
   internalLinks: [
     '/guides',
+    '/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses',
     '/food-costs/make-low-cost-dinners-more-interesting',
     '/food-costs/five-dinners-same-ingredients',
     '/food-costs/portion-planning-and-food-waste',
@@ -162,7 +163,7 @@ export function renderPulsesBudgetGuideInitialHtml() {
   'Lentils can do something similar: worked into a tomato and mince sauce one night, turned into a lentil and vegetable soup the next, then served spiced with rice and yoghurt later in the week.',
   "Opened tins should be stored, covered, in the fridge according to the instructions on the label. Tesco's own tinned chickpeas, for example, specify moving any unused contents into a covered container, refrigerating, and using within three days. Once lentils or chickpeas have been cooked from dried, or made into a sauce or soup at home, the general Food Standards Agency guidance for cooked food applies instead: eat within two days of cooking, or freeze. These are two different situations rather than conflicting advice: one is manufacturer guidance for an opened, unheated product, the other is general guidance for food cooked in your own kitchen.",
   "Cooked batches of dried pulses freeze well once cooled, which is often more useful than a bag that's produced more than the household will get through in that time.",
-])}</section>
+])}<p>The guide to <a href="/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses">dinners built around potatoes, rice, pasta, bread and pulses</a> includes a chickpea dumpling curry alongside four other staple-led ideas.</p></section>
 <section><h2>Food safety</h2>${paragraphs([
   "Dried pulses should be prepared according to the instructions on the packet, particularly soaking and cooking times, since these vary by type and brand. Dried kidney beans need particular care. According to the Food Standards Agency's natural toxins factsheet, dried red kidney beans contain natural toxins called lectins, which can cause stomach ache and vomiting; these are destroyed if the beans are soaked for at least 12 hours and then boiled vigorously for at least 10 minutes in fresh water. Tinned kidney beans have already been through this process as part of canning and can be used without further treatment.",
   "Tinned pulses are already cooked as part of the canning process, which is part of why they're convenient. Once a tin is opened, any unused contents should be moved into a separate container and refrigerated rather than left in the tin.",
