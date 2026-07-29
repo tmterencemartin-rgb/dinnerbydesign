@@ -637,7 +637,7 @@ export const LandingView: React.FC = () => {
             Create an account when DinnerByDesign earns it.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
-            Your first 3 searches are free without an account. Sign up to keep searching, save favourites, plan dinners and build shopping lists.
+            Your first 3 searches are free without an account. Sign up and get full access free for seven days, including continued searches, saved favourites, dinner planning and shopping lists.
           </p>
         </div>
 
