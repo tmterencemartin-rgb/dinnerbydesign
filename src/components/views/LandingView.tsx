@@ -495,7 +495,7 @@ export const LandingView: React.FC = () => {
             <h2>No tracking, clutter, clickbait or questionnaires.</h2>
           </div>
           <p className="text-[14px] sm:text-[17px] text-dbd-ink-2 max-w-2xl leading-relaxed mx-auto font-sans font-normal">
-            Just recipes.
+            Just recipes matched to your tastes, dietary needs, ingredients, time and budget.
           </p>
         </div>
       </section>
