@@ -1435,7 +1435,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               <div className="space-y-1">
                 <p className="text-[16px] text-gray-900 font-bold font-sans">DinnerByDesign</p>
                 <p className="text-[12px] text-gray-400 font-semibold max-w-xs leading-relaxed">
-                  Less searching. Better matches. Dinner, decided.
+                  Less searching. Precise matches. Dinner, decided.
                 </p>
               </div>
               <div className="flex items-center gap-4 pt-2">

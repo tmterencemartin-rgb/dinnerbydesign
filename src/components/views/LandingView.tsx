@@ -234,7 +234,7 @@ export const LandingView: React.FC = () => {
                 className="h-[35.1px] w-auto max-w-[214.2px] origin-left object-contain mix-blend-multiply sm:h-[44.1px] sm:max-w-[267.3px]"
               />
               <span className="text-[8.5px] font-medium text-dbd-ink-3 tracking-[0.01em] mt-1.5 block leading-none whitespace-nowrap">
-                Less searching. Better matches. Dinner, decided.
+                Less searching. Precise matches. Dinner, decided.
               </span>
             </div>
           </div>
@@ -509,7 +509,7 @@ export const LandingView: React.FC = () => {
               Built Around Your Kitchen
             </span>
             <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
-              Less searching. Better matches. Dinner, decided.
+              Less searching. Precise matches. Dinner, decided.
             </h3>
           </div>
 
@@ -838,7 +838,7 @@ export const LandingView: React.FC = () => {
               <span className="text-dbd-ink">Design</span>
             </h5>
             <p className="text-[12px] text-dbd-ink-3 font-semibold pt-1">
-              Less searching. Better matches. Dinner, decided.
+              Less searching. Precise matches. Dinner, decided.
             </p>
             <p className="text-[11px] sm:text-[12px] text-dbd-ink-3 max-w-4xl mx-auto leading-relaxed pt-3">
               DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.

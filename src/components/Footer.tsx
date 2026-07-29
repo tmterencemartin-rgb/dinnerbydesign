@@ -43,7 +43,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           <div className="relative z-10 flex flex-col items-center gap-0.5 text-[11px] text-gray-500 sm:gap-1 sm:text-[13px] lg:items-start">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
             <span className="text-[10.5px] font-semibold text-gray-400 sm:text-[12px]">
-              Less searching. Better matches. Dinner, decided.
+              Less searching. Precise matches. Dinner, decided.
             </span>
             <a 
               href={`mailto:${CONTACT_EMAIL}`}

@@ -78,7 +78,7 @@ export const BudgetFamilySeoConcept: React.FC<BudgetFamilySeoConceptProps> = ({ 
               className="h-[34.2px] w-auto max-w-[207px] object-contain mix-blend-multiply sm:h-[41.4px]"
             />
             <span className="ml-[42px] mt-1 hidden text-[9px] font-medium tracking-[0.05em] text-dbd-ink-3 sm:block sm:ml-[52px]">
-              Less searching. Better matches. Dinner, decided.
+              Less searching. Precise matches. Dinner, decided.
             </span>
           </button>
           <button className="text-xs font-bold text-dbd-accent">Sign in</button>

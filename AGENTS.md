@@ -21,6 +21,7 @@ When implementation and documentation disagree, verify the running code and upda
 - Keep domains and email addresses lowercase.
 - Use `dinner`, `recipe`, `dish`, `serving` or another accurate alternative in user-facing copy. Do not use the prohibited food-planning synonym.
 - Use UK English.
+- The approved tagline is `Less searching. Precise matches. Dinner, decided.` Use this exact wording wherever the tagline appears.
 
 ## Editorial style
 
