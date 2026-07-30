@@ -397,7 +397,11 @@ export function createApp() {
           providers: identity.providers,
           disabled: identity.disabled,
         }))
-        .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+        .sort((a, b) => {
+          const bCreatedAt = b.createdAt ? Date.parse(b.createdAt) : 0;
+          const aCreatedAt = a.createdAt ? Date.parse(a.createdAt) : 0;
+          return bCreatedAt - aCreatedAt;
+        });
 
       return res.json({
         ok: true,
