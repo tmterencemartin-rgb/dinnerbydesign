@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth as getFirebaseAdminAuth } from "firebase-admin/auth";
+import firebaseConfig from "../firebase-applet-config.json";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
@@ -18,22 +19,8 @@ import {
   parseLicensedIngredientPriceFeed,
 } from "../src/lib/ingredientPriceRefresh";
 import { summariseAccountReconciliation } from "../src/lib/accountReconciliation";
-// Safe dynamic lazy loading of firebase-applet-config.json to support serverless / ephemeral environments
-let firebaseConfigCache: any = null;
 function getFirebaseConfig() {
-  if (firebaseConfigCache) return firebaseConfigCache;
-  
-  let config: any = {};
-  try {
-    const configPath = path.resolve(process.cwd(), "firebase-applet-config.json");
-    if (fs.existsSync(configPath)) {
-      config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-    }
-  } catch (e) {
-    console.warn("[FirebaseConfig] Failed to load firebase-applet-config.json lazily:", e);
-  }
-  firebaseConfigCache = config;
-  return config;
+  return firebaseConfig;
 }
 
 process.on("uncaughtException", (err) => {

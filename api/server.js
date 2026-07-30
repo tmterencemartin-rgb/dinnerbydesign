@@ -155749,6 +155749,18 @@ var UserMetadata = import_auth.default.UserMetadata;
 var UserRecord = import_auth.default.UserRecord;
 var getAuth = import_auth.default.getAuth;
 
+// firebase-applet-config.json
+var firebase_applet_config_default = {
+  projectId: "gen-lang-client-0925408841",
+  appId: "1:302877651140:web:2a5ea3bfcef2c473165991",
+  apiKey: "AIzaSyCqBh_8OYI5aP8etFl_cGtwRY8t87N2T-A",
+  authDomain: "gen-lang-client-0925408841.firebaseapp.com",
+  firestoreDatabaseId: "ai-studio-ffdbb575-df5b-4ac3-a6ad-710b4076125a",
+  storageBucket: "gen-lang-client-0925408841.firebasestorage.app",
+  messagingSenderId: "302877651140",
+  measurementId: ""
+};
+
 // node_modules/@google/genai/dist/node/index.mjs
 var import_p_retry = __toESM(require_p_retry(), 1);
 var import_google_auth_library = __toESM(require_src5(), 1);
@@ -184971,20 +184983,8 @@ function summariseAccountReconciliation(identities, profileIds) {
 
 // src/api-server.ts
 var import_meta2 = {};
-var firebaseConfigCache = null;
 function getFirebaseConfig() {
-  if (firebaseConfigCache) return firebaseConfigCache;
-  let config = {};
-  try {
-    const configPath = import_path.default.resolve(process.cwd(), "firebase-applet-config.json");
-    if (import_fs2.default.existsSync(configPath)) {
-      config = JSON.parse(import_fs2.default.readFileSync(configPath, "utf-8"));
-    }
-  } catch (e2) {
-    console.warn("[FirebaseConfig] Failed to load firebase-applet-config.json lazily:", e2);
-  }
-  firebaseConfigCache = config;
-  return config;
+  return firebase_applet_config_default;
 }
 process.on("uncaughtException", (err) => {
   console.error("FATAL UNCAUGHT EXCEPTION:", err);
