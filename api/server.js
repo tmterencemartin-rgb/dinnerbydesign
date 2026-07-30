@@ -184969,6 +184969,10 @@ function findRegisteredIdentitiesWithoutProfiles(identities, profileIds) {
   const profileIdSet = new Set(profileIds);
   return identities.filter((identity) => !identity.isAnonymous && !profileIdSet.has(identity.uid));
 }
+function findAnonymousIdentitiesWithoutProfiles(identities, profileIds) {
+  const profileIdSet = new Set(profileIds);
+  return identities.filter((identity) => identity.isAnonymous && !profileIdSet.has(identity.uid));
+}
 function summariseAccountReconciliation(identities, profileIds) {
   const profileIdSet = new Set(profileIds);
   const identityIdSet = new Set(identities.map((identity) => identity.uid));
@@ -184980,7 +184984,7 @@ function summariseAccountReconciliation(identities, profileIds) {
     anonymousIdentities: anonymousIdentities.length,
     profileDocuments: profileIdSet.size,
     registeredWithoutProfile: findRegisteredIdentitiesWithoutProfiles(identities, profileIdSet).length,
-    anonymousWithoutProfile: anonymousIdentities.filter((identity) => !profileIdSet.has(identity.uid)).length,
+    anonymousWithoutProfile: findAnonymousIdentitiesWithoutProfiles(identities, profileIdSet).length,
     profilesWithoutAuthentication: [...profileIdSet].filter((uid) => !identityIdSet.has(uid)).length
   };
 }
@@ -185290,11 +185294,16 @@ function createApp() {
         const aCreatedAt = a.createdAt ? Date.parse(a.createdAt) : 0;
         return bCreatedAt - aCreatedAt;
       });
+      const anonymousWithoutProfileUids = findAnonymousIdentitiesWithoutProfiles(
+        identities,
+        profileIds
+      ).map((identity) => identity.uid);
       return res.json({
         ok: true,
         summary: {
           ...summary,
-          registeredWithoutProfileAccounts
+          registeredWithoutProfileAccounts,
+          anonymousWithoutProfileUids
         },
         checkedAt: (/* @__PURE__ */ new Date()).toISOString()
       });
@@ -185303,6 +185312,64 @@ function createApp() {
       return res.status(503).json({
         ok: false,
         error: "Account reconciliation is unavailable. Server-side Firebase administration must be configured."
+      });
+    }
+  });
+  app.post("/api/admin/accounts/cleanup", import_express.default.json(), async (req, res) => {
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+    const category = String(req.body?.category || "");
+    const requestedUids = Array.isArray(req.body?.uids) ? [...new Set(
+      req.body.uids.map((uid) => String(uid || "").trim()).filter((uid) => uid.length > 0)
+    )] : [];
+    if (!["registered_without_profile", "anonymous_without_profile"].includes(category)) {
+      return res.status(400).json({ ok: false, error: "A valid cleanup category is required." });
+    }
+    if (requestedUids.length === 0 || requestedUids.length > 1e3 || requestedUids.some((uid) => uid.length > 128)) {
+      return res.status(400).json({ ok: false, error: "Between 1 and 1,000 valid account identifiers are required." });
+    }
+    if (requestedUids.includes(admin.uid)) {
+      return res.status(400).json({ ok: false, error: "The administrative account cannot be included." });
+    }
+    try {
+      const [identities, profileSnapshot] = await Promise.all([
+        listAllAuthenticationIdentities(),
+        getDb().collection("users").get()
+      ]);
+      const profileIds = profileSnapshot.docs.map((profile) => profile.id);
+      const eligibleIdentities = category === "registered_without_profile" ? findRegisteredIdentitiesWithoutProfiles(identities, profileIds) : findAnonymousIdentitiesWithoutProfiles(identities, profileIds);
+      const eligibleByUid = new Map(eligibleIdentities.map((identity) => [identity.uid, identity]));
+      const invalidUids = requestedUids.filter((uid) => {
+        const identity = eligibleByUid.get(uid);
+        const email = String(identity?.email || "").toLowerCase();
+        return !identity || ADMIN_EMAILS.has(email);
+      });
+      if (invalidUids.length > 0) {
+        return res.status(409).json({
+          ok: false,
+          error: "Cleanup stopped because one or more accounts no longer match the reviewed category.",
+          invalidCount: invalidUids.length
+        });
+      }
+      const result = await getAdminAuth().deleteUsers(requestedUids);
+      if (result.failureCount > 0) {
+        return res.status(500).json({
+          ok: false,
+          error: `${result.failureCount} account identities could not be deleted.`,
+          successCount: result.successCount,
+          failureCount: result.failureCount
+        });
+      }
+      return res.json({
+        ok: true,
+        category,
+        deletedCount: result.successCount
+      });
+    } catch (error) {
+      console.error("[AdminAccounts] Cleanup failed:", error);
+      return res.status(500).json({
+        ok: false,
+        error: "The reviewed account identities could not be deleted."
       });
     }
   });

@@ -92,6 +92,7 @@ When a user lists ingredients:
 - Keep the admin dashboard divided into clearly labelled panels. Account metrics must not appear to belong to the published-articles section.
 - Distinguish Firebase Authentication identities from stored app profiles in administrator reporting. Show registered and anonymous identities separately and flag identities without profiles.
 - Administrator account deletion must use the protected server endpoint to remove the sign-in identity and recursively delete the profile and its subcollections. Client-only profile deletion is not a complete account deletion.
+- Bulk identity cleanup must accept an exact reviewed UID list, recheck that every target still lacks a profile, exclude administrator identities and stop if any target no longer matches the reviewed category.
 - Server-side authentication reconciliation and complete-account deletion require `FIREBASE_SERVICE_ACCOUNT_JSON` in the production environment.
 
 ## Authentication

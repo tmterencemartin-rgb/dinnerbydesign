@@ -27,6 +27,14 @@ export function findRegisteredIdentitiesWithoutProfiles(
   return identities.filter(identity => !identity.isAnonymous && !profileIdSet.has(identity.uid));
 }
 
+export function findAnonymousIdentitiesWithoutProfiles(
+  identities: AuthenticationIdentitySnapshot[],
+  profileIds: Iterable<string>,
+): AuthenticationIdentitySnapshot[] {
+  const profileIdSet = new Set(profileIds);
+  return identities.filter(identity => identity.isAnonymous && !profileIdSet.has(identity.uid));
+}
+
 export function summariseAccountReconciliation(
   identities: AuthenticationIdentitySnapshot[],
   profileIds: Iterable<string>,
@@ -42,7 +50,7 @@ export function summariseAccountReconciliation(
     anonymousIdentities: anonymousIdentities.length,
     profileDocuments: profileIdSet.size,
     registeredWithoutProfile: findRegisteredIdentitiesWithoutProfiles(identities, profileIdSet).length,
-    anonymousWithoutProfile: anonymousIdentities.filter(identity => !profileIdSet.has(identity.uid)).length,
+    anonymousWithoutProfile: findAnonymousIdentitiesWithoutProfiles(identities, profileIdSet).length,
     profilesWithoutAuthentication: [...profileIdSet].filter(uid => !identityIdSet.has(uid)).length,
   };
 }

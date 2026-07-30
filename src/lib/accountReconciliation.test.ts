@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  findAnonymousIdentitiesWithoutProfiles,
   findRegisteredIdentitiesWithoutProfiles,
   summariseAccountReconciliation,
 } from './accountReconciliation';
@@ -43,6 +44,18 @@ describe('account reconciliation', () => {
 
     expect(missing).toEqual([
       { uid: 'missing', isAnonymous: false, email: 'missing@example.com' },
+    ]);
+  });
+
+  it('returns only anonymous identities that have no stored profile', () => {
+    const missing = findAnonymousIdentitiesWithoutProfiles([
+      { uid: 'customer', isAnonymous: false },
+      { uid: 'guest-with-profile', isAnonymous: true },
+      { uid: 'guest-without-profile', isAnonymous: true },
+    ], ['customer', 'guest-with-profile']);
+
+    expect(missing).toEqual([
+      { uid: 'guest-without-profile', isAnonymous: true },
     ]);
   });
 });

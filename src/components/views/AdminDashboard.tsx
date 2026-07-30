@@ -67,6 +67,7 @@ interface AccountReconciliation {
   registeredWithoutProfile: number;
   anonymousWithoutProfile: number;
   profilesWithoutAuthentication: number;
+  anonymousWithoutProfileUids: string[];
   registeredWithoutProfileAccounts: Array<{
     uid: string;
     email: string | null;
@@ -243,6 +244,30 @@ export const AdminDashboard: React.FC = () => {
     return result;
   }, [currentUser]);
 
+  const cleanupProfilelessIdentities = React.useCallback(async (
+    category: 'registered_without_profile' | 'anonymous_without_profile',
+    uids: string[],
+  ) => {
+    if (!currentUser) {
+      throw new Error('Sign in as an administrator to clean up account identities.');
+    }
+
+    const token = await currentUser.getIdToken();
+    const response = await fetch(getApiUrl('/api/admin/accounts/cleanup'), {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ category, uids }),
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      throw new Error(result?.error || 'The reviewed account identities could not be deleted.');
+    }
+    return result as { deletedCount: number };
+  }, [currentUser]);
+
   useEffect(() => {
     if (!isAdmin) {
       setView('home');
@@ -372,6 +397,61 @@ export const AdminDashboard: React.FC = () => {
           setActionLoading(null);
         }
       }
+    );
+  };
+
+  const handleCleanupProfilelessRegisteredAccounts = () => {
+    const accounts = accountReconciliation?.registeredWithoutProfileAccounts || [];
+    if (accounts.length === 0) {
+      showCustomAlert('No Accounts to Remove', 'There are no registered sign-ins without profiles.');
+      return;
+    }
+
+    showCustomConfirm(
+      'Delete Reviewed Test Sign-ins?',
+      `This permanently deletes the ${accounts.length} registered sign-ins currently listed without profiles. The action will stop if any listed identity has acquired a profile.\n\nThis cannot be undone.`,
+      async () => {
+        setActionLoading('cleanup-registered');
+        try {
+          const result = await cleanupProfilelessIdentities(
+            'registered_without_profile',
+            accounts.map(account => account.uid),
+          );
+          await refreshAccountReconciliation();
+          showCustomAlert('Cleanup Complete', `${result.deletedCount} registered test sign-ins were deleted.`);
+        } catch (error: any) {
+          await refreshAccountReconciliation();
+          showCustomAlert('Cleanup Stopped', error?.message || 'The registered sign-ins could not be deleted.');
+        } finally {
+          setActionLoading(null);
+        }
+      },
+    );
+  };
+
+  const handleCleanupAnonymousAccounts = () => {
+    const uids = accountReconciliation?.anonymousWithoutProfileUids || [];
+    if (uids.length === 0) {
+      showCustomAlert('No Identities to Remove', 'There are no anonymous identities without profiles.');
+      return;
+    }
+
+    showCustomConfirm(
+      'Delete Anonymous Identities?',
+      `This permanently deletes the ${uids.length} anonymous identities currently shown without profiles. Registered accounts and identities with profiles are excluded.\n\nOld anonymous browser sessions will return to the ordinary signed-out guest state. This cannot be undone.`,
+      async () => {
+        setActionLoading('cleanup-anonymous');
+        try {
+          const result = await cleanupProfilelessIdentities('anonymous_without_profile', uids);
+          await refreshAccountReconciliation();
+          showCustomAlert('Cleanup Complete', `${result.deletedCount} anonymous identities were deleted.`);
+        } catch (error: any) {
+          await refreshAccountReconciliation();
+          showCustomAlert('Cleanup Stopped', error?.message || 'The anonymous identities could not be deleted.');
+        } finally {
+          setActionLoading(null);
+        }
+      },
     );
   };
 
@@ -989,6 +1069,16 @@ export const AdminDashboard: React.FC = () => {
                       <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Anonymous identities</p>
                       <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.anonymousIdentities}</p>
                       <p className="text-[10.5px] font-medium text-gray-500">{accountReconciliation.anonymousWithoutProfile} without a profile</p>
+                      {accountReconciliation.anonymousWithoutProfileUids.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={handleCleanupAnonymousAccounts}
+                          disabled={actionLoading !== null}
+                          className="mt-2 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:text-red-800 disabled:opacity-50"
+                        >
+                          {actionLoading === 'cleanup-anonymous' ? 'Removing…' : 'Remove reviewed identities'}
+                        </button>
+                      )}
                     </div>
                     <div className="rounded border border-gray-200 bg-white p-2.5">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">App profiles</p>
@@ -1004,10 +1094,22 @@ export const AdminDashboard: React.FC = () => {
                   {accountReconciliation.registeredWithoutProfileAccounts.length > 0 && (
                     <div className="mt-3 overflow-hidden rounded border border-amber-200 bg-white">
                       <div className="border-b border-amber-100 bg-amber-50/70 px-3 py-2.5">
-                        <h4 className="text-[12px] font-bold text-amber-900">Registered accounts without profiles</h4>
-                        <p className="mt-0.5 text-[10.5px] font-medium text-amber-800">
-                          Review these individually. No account is repaired or deleted automatically.
-                        </p>
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                          <div>
+                            <h4 className="text-[12px] font-bold text-amber-900">Registered accounts without profiles</h4>
+                            <p className="mt-0.5 text-[10.5px] font-medium text-amber-800">
+                              Review these individually. No account is repaired or deleted automatically.
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleCleanupProfilelessRegisteredAccounts}
+                            disabled={actionLoading !== null}
+                            className="w-fit shrink-0 rounded border border-red-200 bg-white px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:bg-red-50 disabled:opacity-50"
+                          >
+                            {actionLoading === 'cleanup-registered' ? 'Removing…' : 'Remove reviewed test sign-ins'}
+                          </button>
+                        </div>
                       </div>
                       <div className="divide-y divide-gray-100">
                         {accountReconciliation.registeredWithoutProfileAccounts.map(account => (
