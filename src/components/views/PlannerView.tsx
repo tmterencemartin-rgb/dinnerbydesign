@@ -326,6 +326,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     () => savedRecipes.filter(r => !r.isArchived),
     [savedRecipes]
   );
+  const isPlannerEmpty = activeSavedRecipes.length === 0 && planner.length === 0;
   const activeUnscheduledSavedCount = React.useMemo(
     () => activeSavedRecipes.filter(item => !item.scheduledDate).length,
     [activeSavedRecipes]
@@ -683,18 +684,33 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
             <div className={`bg-white rounded border border-gray-100 px-4 sm:px-5 py-4 relative ${showPlanWeek ? 'z-40' : 'z-0'}`}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
-                  <h3 className="text-[13.5px] font-bold text-gray-950">Make your food budget go further</h3>
+                  <h3 className="text-[13.5px] font-bold text-gray-950">
+                    {isPlannerEmpty ? 'Start building your week' : 'Make your food budget go further'}
+                  </h3>
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
-                    We build a week of dinners around your household, budget and available time. Suitable dinners are prioritised, with ingredients reused across the week to cut shopping costs and food waste.
+                    {isPlannerEmpty
+                      ? 'Find and save recipes yourself, or let DinnerByDesign build a week around your household, budget and available time.'
+                      : 'We build a week of dinners around your household, budget and available time. Suitable dinners are prioritised, with ingredients reused across the week to cut shopping costs and food waste.'}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowPlanWeek(prev => !prev)}
-                  className="h-9 self-start px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0 sm:self-auto"
-                >
-                  {showPlanWeek ? 'Close' : 'Plan my week'}
-                </button>
+                <div className="flex flex-wrap gap-2 self-start sm:self-auto">
+                  {isPlannerEmpty && (
+                    <button
+                      type="button"
+                      onClick={() => setView('home')}
+                      className="h-9 px-4 rounded border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-widest text-gray-700 hover:border-gray-400 hover:text-gray-950 transition-colors"
+                    >
+                      Find recipes
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowPlanWeek(prev => !prev)}
+                    className="h-9 px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0"
+                  >
+                    {showPlanWeek ? 'Close' : 'Plan my week'}
+                  </button>
+                </div>
               </div>
 
               <AnimatePresence initial={false}>
@@ -883,7 +899,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               </AnimatePresence>
             </div>
 
-            {/* Unified Save & Schedule Panel */}
+            {!isPlannerEmpty && (
+            /* Unified Save & Schedule Panel */
             <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
               <div className="py-3 sm:py-5 space-y-6">
@@ -997,20 +1014,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   )}
                   </AnimatePresence>
 
-                  {activeSavedRecipes.length === 0 ? (
-                    <div className="w-full py-6 px-4 text-center max-w-md mx-auto bg-white/50">
-                      <h5 className="font-semibold text-gray-900 mb-1 font-display text-[14px] tracking-tight">Nothing saved yet</h5>
-                      <p className="text-[12.5px] text-gray-500 leading-relaxed mb-4 max-w-sm mx-auto">
-                        Save dinners from Search, then schedule them here.
-                      </p>
-                      <button 
-                        onClick={() => setView('home')}
-                        className="uppercase tracking-widest text-[10px] font-bold bg-gray-900 text-white px-4 py-2 rounded hover:bg-black transition-all inline-block cursor-pointer"
-                      >
-                        Find recipes
-                      </button>
-                    </div>
-                  ) : (
+                  {activeSavedRecipes.length > 0 && (
                     <div>
                       {/* Search and Organize Controls - Integrated Header */}
                       <div className="border-b border-gray-100 px-1.5 pb-2 sm:px-2">
@@ -1357,21 +1361,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   </div>
 
                   {/* WEEKLY SCHEDULE GRID */}
-                  {planner.length === 0 && activeSavedRecipes.length === 0 ? (
-                    <div id="weekly-schedule-list" className="rounded border border-gray-100 bg-gray-50/50 px-4 py-5 text-center">
-                      <h4 className="text-[13px] font-bold text-gray-900">Your week is clear</h4>
-                      <p className="mx-auto mt-1 max-w-md text-[12px] leading-relaxed text-gray-500">
-                        Use Plan my week above, or find and save a recipe before choosing a day.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setView('home')}
-                        className="mt-3 h-8 rounded border border-gray-200 bg-white px-3 text-[10.5px] font-bold uppercase tracking-widest text-gray-700 hover:border-gray-400 hover:text-gray-950"
-                      >
-                        Find recipes
-                      </button>
-                    </div>
-                  ) : (
                   <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
                     {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(dayId => {
                       const entry = planner.find(e => e.scheduledDate === dayId);
@@ -1599,8 +1588,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       );
                     })}
                   </div>
-                  )}
-
                   {supermarketPlanSummary.plannedDinnerCount > 0 && (
                     <div className="border border-gray-100 bg-white rounded px-3 py-3 sm:px-4 sm:py-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.025)]">
                       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
@@ -1635,6 +1622,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 </div>
               </div>
             </div>
+            )}
           </>
         )}
       </div>

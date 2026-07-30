@@ -67,7 +67,7 @@ When a user lists ingredients:
 - Keep any slow-view fallback inside the existing app layout rather than replacing the entire screen.
 - Prepare Planner, Shopping and Settings shortly after a signed-in session becomes ready to reduce first-visit delay.
 - On narrow screens, give the Search field a full row and place its primary action and Preferences on the row below. Keep the single-row control on wider screens.
-- When both Saved and Scheduled are empty, show one compact empty-week planner panel instead of seven repeated empty day rows.
+- When both Saved and Scheduled are empty, show one compact starting panel with Find recipes and Plan my week actions. Hide the separate Saved and Scheduled sections until either contains something.
 
 ## Search service
 
