@@ -56,56 +56,61 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </div>
         
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 sm:gap-x-6 sm:gap-y-2 lg:justify-end">
-          <a href="/dinner-plans" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Affordable dinner plans
-          </a>
-          <a href="/recipes" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Recipes and cooking ideas
-          </a>
-          <a href="/food-costs" className="whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Food-cost &amp; waste
-          </a>
-          <a
-            href="/pricing-methodology"
-            onClick={(e) => {
-              e.preventDefault();
-              setView('pricing-methodology');
-            }}
-            className="cursor-pointer whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]"
-          >
-            How prices are calculated
-          </a>
-          <a href="/food-safety" onClick={(e) => { e.preventDefault(); setView('food-safety'); }} className="cursor-pointer whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Food safety
-          </a>
-          <a href="/recipe-methodology" onClick={(e) => { e.preventDefault(); setView('recipe-methodology'); }} className="cursor-pointer whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Recipe information
-          </a>
-          <a href="/nutrition-methodology" onClick={(e) => { e.preventDefault(); setView('nutrition-methodology'); }} className="cursor-pointer whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]">
-            Nutrition estimates
-          </a>
-          <a 
-            href="/privacy"
-            onClick={(e) => {
-              e.preventDefault();
-              setView('privacy');
-            }}
-            className="cursor-pointer whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]"
-          >
-            Privacy & cookies
-          </a>
-          <a 
-            href="/terms"
-            onClick={(e) => {
-              e.preventDefault();
-              setView('terms');
-            }}
-            className="cursor-pointer whitespace-nowrap text-[11px] text-gray-500 transition-colors hover:text-gray-900 sm:text-[13px]"
-          >
-            Terms of Service
-          </a>
-        </div>
+        <nav aria-label="Footer" className="grid grid-cols-3 gap-x-3 gap-y-3 text-left sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:gap-y-2 lg:justify-end">
+          <div className="min-w-0 sm:contents">
+            <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-gray-400 sm:hidden">Guides</p>
+            <div className="flex flex-col items-start gap-1.5 sm:contents">
+              <a href="/dinner-plans" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Affordable dinner plans</a>
+              <a href="/recipes" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Recipes and cooking ideas</a>
+              <a href="/food-costs" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Food-cost &amp; waste</a>
+            </div>
+          </div>
+
+          <div className="min-w-0 sm:contents">
+            <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-gray-400 sm:hidden">Information</p>
+            <div className="flex flex-col items-start gap-1.5 sm:contents">
+              <a
+                href="/pricing-methodology"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setView('pricing-methodology');
+                }}
+                className="cursor-pointer text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]"
+              >
+                How prices are calculated
+              </a>
+              <a href="/food-safety" onClick={(e) => { e.preventDefault(); setView('food-safety'); }} className="cursor-pointer text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Food safety</a>
+              <a href="/recipe-methodology" onClick={(e) => { e.preventDefault(); setView('recipe-methodology'); }} className="cursor-pointer text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Recipe information</a>
+              <a href="/nutrition-methodology" onClick={(e) => { e.preventDefault(); setView('nutrition-methodology'); }} className="cursor-pointer text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Nutrition estimates</a>
+            </div>
+          </div>
+
+          <div className="min-w-0 sm:contents">
+            <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-gray-400 sm:hidden">Legal</p>
+            <div className="flex flex-col items-start gap-1.5 sm:contents">
+              <a
+                href="/privacy"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setView('privacy');
+                }}
+                className="cursor-pointer text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]"
+              >
+                Privacy & cookies
+              </a>
+              <a
+                href="/terms"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setView('terms');
+                }}
+                className="cursor-pointer text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]"
+              >
+                Terms of Service
+              </a>
+            </div>
+          </div>
+        </nav>
 
         <div className="border-t border-gray-200/50 pt-2.5 text-center text-[9.5px] leading-4 text-gray-400 sm:pt-3 sm:text-[11px] sm:leading-relaxed lg:col-span-2 lg:text-left">
           DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.

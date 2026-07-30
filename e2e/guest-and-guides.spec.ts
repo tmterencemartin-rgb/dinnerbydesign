@@ -53,6 +53,30 @@ test.describe('public landing page', () => {
 });
 
 test.describe('public guides', () => {
+  test('mobile pathways swipe horizontally and the footer is grouped', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 1440) >= 640, 'Mobile layout check');
+
+    await page.goto('/guides');
+    await expect(page.getByText('Swipe to explore all three pathways.')).toBeVisible();
+
+    const pathwayRow = page.getByTestId('public-pathways-row');
+    const pathwayMetrics = await pathwayRow.evaluate(element => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      cardCount: element.querySelectorAll('a').length,
+    }));
+
+    expect(pathwayMetrics.cardCount).toBe(3);
+    expect(pathwayMetrics.scrollWidth).toBeGreaterThan(pathwayMetrics.clientWidth);
+
+    const footer = page.getByRole('navigation', { name: 'Footer' });
+    await expect(footer.getByText('Guides', { exact: true })).toBeVisible();
+    await expect(footer.getByText('Information', { exact: true })).toBeVisible();
+    await expect(footer.getByText('Legal', { exact: true })).toBeVisible();
+    await expect(footer.getByRole('link', { name: 'Recipes and cooking ideas' })).toHaveAttribute('href', '/recipes');
+    await expect(footer.getByRole('link', { name: 'Privacy & cookies' })).toHaveAttribute('href', '/privacy');
+  });
+
   test('category links align the selected category with the viewport', async ({ page }) => {
     await page.goto('/guides');
     const categoryLink = page.getByRole('link', { name: 'Compare choices and nutrition' }).first();

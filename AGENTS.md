@@ -68,6 +68,8 @@ When a user lists ingredients:
 - Prepare Planner, Shopping and Settings shortly after a signed-in session becomes ready to reduce first-visit delay.
 - On narrow screens, give the Search field a full row and place its primary action and Preferences on the row below. Keep the single-row control on wider screens.
 - When both Saved and Scheduled are empty, show one compact starting panel with Find recipes and Plan my week actions. Hide the separate Saved and Scheduled sections until either contains something.
+- Group dense mobile footer links under Guides, Information and Legal while keeping the desktop footer presentation and every destination intact.
+- On `/guides`, keep the three pathway cards in a horizontally swipeable, snap-aligned row on narrow screens. Preserve the supporting copy and use the three-column grid on wider screens.
 
 ## Search service
 

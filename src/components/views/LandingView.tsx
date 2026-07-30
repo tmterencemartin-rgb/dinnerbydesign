@@ -863,33 +863,32 @@ export const LandingView: React.FC = () => {
             </div>
           </div>
 
-          {/* Privacy & Terms views trigger bar */}
-          <div className="pt-4 border-t border-dbd-rule/40 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-ibm-plex-mono text-[11px] font-semibold text-dbd-ink-3">
-            <a href="/dinner-plans" className="hover:text-dbd-accent hover:underline">Affordable dinner plans</a>
-            <a href="/recipes" className="hover:text-dbd-accent hover:underline">Recipes and cooking ideas</a>
-            <a href="/food-costs" className="hover:text-dbd-accent hover:underline">Food-cost &amp; waste</a>
-            <button
-              onClick={() => setView('pricing-methodology')}
-              className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"
-            >
-              Pricing methodology
-            </button>
-            <button onClick={() => setView('food-safety')} className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Food safety</button>
-            <button onClick={() => setView('recipe-methodology')} className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Recipe information</button>
-            <button onClick={() => setView('nutrition-methodology')} className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Nutrition estimates</button>
-            <button 
-              onClick={() => setView('privacy')} 
-              className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"
-            >
-              Privacy & cookies
-            </button>
-            <button 
-              onClick={() => setView('terms')} 
-              className="hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none"
-            >
-              Terms of Service
-            </button>
-          </div>
+          <nav aria-label="Footer" className="mx-auto grid max-w-lg grid-cols-3 gap-x-3 gap-y-3 border-t border-dbd-rule/40 pt-4 text-left font-ibm-plex-mono text-[10.5px] font-semibold leading-4 text-dbd-ink-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:text-[11px]">
+            <div className="min-w-0 sm:contents">
+              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Guides</p>
+              <div className="flex flex-col gap-1.5 sm:contents">
+                <a href="/dinner-plans" className="hover:text-dbd-accent hover:underline">Affordable dinner plans</a>
+                <a href="/recipes" className="hover:text-dbd-accent hover:underline">Recipes and cooking ideas</a>
+                <a href="/food-costs" className="hover:text-dbd-accent hover:underline">Food-cost &amp; waste</a>
+              </div>
+            </div>
+            <div className="min-w-0 sm:contents">
+              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Information</p>
+              <div className="flex flex-col items-start gap-1.5 sm:contents">
+                <button onClick={() => setView('pricing-methodology')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Pricing methodology</button>
+                <button onClick={() => setView('food-safety')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Food safety</button>
+                <button onClick={() => setView('recipe-methodology')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Recipe information</button>
+                <button onClick={() => setView('nutrition-methodology')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Nutrition estimates</button>
+              </div>
+            </div>
+            <div className="min-w-0 sm:contents">
+              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Legal</p>
+              <div className="flex flex-col items-start gap-1.5 sm:contents">
+                <button onClick={() => setView('privacy')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Privacy & cookies</button>
+                <button onClick={() => setView('terms')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Terms of Service</button>
+              </div>
+            </div>
+          </nav>
 
         </div>
       </footer>
