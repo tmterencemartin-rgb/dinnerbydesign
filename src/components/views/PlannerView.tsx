@@ -689,7 +689,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   </h3>
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
                     {isPlannerEmpty
-                      ? 'Find and save recipes yourself, or let DinnerByDesign build a week around your household, budget and available time.'
+                      ? 'No recipes saved yet. Find recipes to save and they’ll appear here, ready to schedule. Or let DinnerByDesign build a week around your household, budget and available time.'
                       : 'We build a week of dinners around your household, budget and available time. Suitable dinners are prioritised, with ingredients reused across the week to cut shopping costs and food waste.'}
                   </p>
                 </div>
@@ -700,7 +700,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       onClick={() => setView('home')}
                       className="h-9 px-4 rounded border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-widest text-gray-700 hover:border-gray-400 hover:text-gray-950 transition-colors"
                     >
-                      Find recipes
+                      Find recipes to save
                     </button>
                   )}
                   <button
