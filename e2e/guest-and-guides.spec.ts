@@ -20,6 +20,36 @@ test.describe('guest access', () => {
     await expect(page.getByRole('heading', { name: 'Recipe preferences' })).toBeVisible();
     await expect(page.getByText('Three free searches. No account required.')).toBeVisible();
   });
+
+  test('mobile search keeps the field above equally sized actions', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 1440) >= 640, 'Mobile layout check');
+
+    const input = page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' });
+    const findButton = page.getByRole('button', { name: 'Find dinner options' });
+    const preferencesButton = page.getByRole('button', { name: 'Open search preferences' });
+
+    const inputBox = await input.boundingBox();
+    const findBox = await findButton.boundingBox();
+    const preferencesBox = await preferencesButton.boundingBox();
+
+    expect(inputBox).not.toBeNull();
+    expect(findBox).not.toBeNull();
+    expect(preferencesBox).not.toBeNull();
+    expect(findBox!.y).toBeGreaterThan(inputBox!.y + 20);
+    expect(Math.abs(findBox!.y - preferencesBox!.y)).toBeLessThanOrEqual(2);
+    expect(Math.abs(findBox!.width - preferencesBox!.width)).toBeLessThanOrEqual(4);
+    expect(inputBox!.width).toBeGreaterThan(findBox!.width * 1.5);
+  });
+});
+
+test.describe('public landing page', () => {
+  test('mobile demonstration shows one compact result preview', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 1440) >= 640, 'Mobile layout check');
+
+    await page.goto('/?view=landing');
+    await expect(page.getByText('3 matches • one preview shown')).toBeVisible();
+    await expect(page.locator('#interactive-sandbox h4:visible')).toHaveCount(1);
+  });
 });
 
 test.describe('public guides', () => {

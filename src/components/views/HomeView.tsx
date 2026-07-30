@@ -840,29 +840,52 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     isReadOnly={isReadOnly || isGuestSearchLimitReached}
                     readOnlyPlaceholder={isGuestSearchLimitReached ? "Create an account to search again" : undefined}
                     placeholderOverride={searchPlaceholderOverride}
+                    mobileSecondaryAction={(
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowFilters(true);
+                          setPreferencesError(null);
+                        }}
+                        className={`flex h-11 w-full items-center justify-center gap-2 rounded border text-gray-600 transition-colors cursor-pointer ${
+                          showFilters
+                            ? 'bg-gray-100 border-gray-400 text-gray-900'
+                            : 'bg-white border-gray-200 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900'
+                        }`}
+                        aria-label="Open search preferences"
+                        title="Open search preferences"
+                      >
+                        <Settings className="w-4 h-4" />
+                        <span className="text-[10px] font-bold font-ibm-plex-mono uppercase tracking-[0.1em]">
+                          Preferences
+                        </span>
+                      </button>
+                    )}
                   />
                 </div>
-                <Tooltip text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowFilters(true);
-                      setPreferencesError(null);
-                    }}
-                    className={`flex items-center justify-center gap-2 px-3 h-11 rounded border text-gray-500 hover:text-gray-900 transition-colors cursor-pointer shrink-0 ${
-                      showFilters
-                        ? 'bg-gray-100 border-gray-400 text-gray-900'
-                        : 'bg-white border-gray-200 hover:border-gray-400 hover:bg-gray-50'
-                    }`}
-                    aria-label="Open search preferences"
-                    title="Open search preferences"
-                  >
-                    <Settings className="w-4.5 h-4.5" />
-                    <span className="hidden sm:inline text-[12px] font-bold font-ibm-plex-mono uppercase tracking-wider">
-                      Preferences
-                    </span>
-                  </button>
-                </Tooltip>
+                <div className="hidden sm:block">
+                  <Tooltip text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowFilters(true);
+                        setPreferencesError(null);
+                      }}
+                      className={`flex items-center justify-center gap-2 px-3 h-11 rounded border text-gray-500 hover:text-gray-900 transition-colors cursor-pointer shrink-0 ${
+                        showFilters
+                          ? 'bg-gray-100 border-gray-400 text-gray-900'
+                          : 'bg-white border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                      }`}
+                      aria-label="Open search preferences"
+                      title="Open search preferences"
+                    >
+                      <Settings className="w-4.5 h-4.5" />
+                      <span className="text-[12px] font-bold font-ibm-plex-mono uppercase tracking-wider">
+                        Preferences
+                      </span>
+                    </button>
+                  </Tooltip>
+                </div>
               </div>
 
               {source === 'ready-made' && (

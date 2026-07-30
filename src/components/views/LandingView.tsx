@@ -380,7 +380,7 @@ export const LandingView: React.FC = () => {
             </div>
 
             {/* Sandbox Inner App Stage */}
-            <div className="p-4 sm:p-8 bg-[#FAF8F5] text-left">
+            <div className="p-3 sm:p-8 bg-[#FAF8F5] text-left">
               
               {/* Recipe Source Toggle (HOMEMADE / READY-MADE) */}
               <div className="flex justify-center mb-6 max-w-sm sm:max-w-md mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono font-semibold">
@@ -421,11 +421,11 @@ export const LandingView: React.FC = () => {
               <div className="max-w-2xl mx-auto mt-4 px-1">
                 <p className="text-[12px] font-ibm-plex-mono font-semibold text-dbd-ink-3 mb-2">Try these preset queries:</p>
                 <div className="flex flex-wrap gap-2">
-                  {['Chicken Fricassee', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag) => (
+                  {['Chicken Fricassee', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag, index) => (
                     <button
                       key={tag}
                       onClick={() => selectSandboxTag(tag)}
-                      className={`text-[11px] sm:text-[12px] font-mono px-3 py-2 border rounded-sm transition-all cursor-pointer ${sandboxQuery === tag ? 'bg-dbd-accent/10 border-dbd-accent text-dbd-accent font-bold' : 'bg-white border-dbd-rule/80 text-dbd-ink-2 hover:border-dbd-ink hover:text-dbd-ink'}`}
+                      className={`${index >= 5 ? 'hidden sm:inline-flex' : 'inline-flex'} text-[11px] sm:text-[12px] font-mono px-3 py-2 border rounded-sm transition-all cursor-pointer ${sandboxQuery === tag ? 'bg-dbd-accent/10 border-dbd-accent text-dbd-accent font-bold' : 'bg-white border-dbd-rule/80 text-dbd-ink-2 hover:border-dbd-ink hover:text-dbd-ink'}`}
                     >
                       {tag}
                     </button>
@@ -440,13 +440,16 @@ export const LandingView: React.FC = () => {
                   {isSandboxSearching ? (
                     <span className="text-dbd-accent animate-pulse font-medium">Re-indexing published records...</span>
                   ) : (
-                    <span>{currentResultList.length} recipes • verified in 0.54s</span>
+                    <>
+                      <span className="sm:hidden">{currentResultList.length} matches • one preview shown</span>
+                      <span className="hidden sm:inline">{currentResultList.length} recipes • verified in 0.54s</span>
+                    </>
                   )}
                 </span>
               </div>
 
               {/* Recipe List sandbox render */}
-              <div className="max-w-2xl mx-auto space-y-3 relative min-h-[220px]">
+              <div className="max-w-2xl mx-auto space-y-3 relative min-h-[108px] sm:min-h-[220px]">
                 {isSandboxSearching ? (
                   <div className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-xs select-none">
                     <div className="text-center">
@@ -460,7 +463,7 @@ export const LandingView: React.FC = () => {
                   <div 
                     key={index} 
                     onClick={() => handleStart(sandboxQuery)}
-                    className="group bg-white border border-dbd-rule/50 hover:border-dbd-accent/60 hover:shadow-xs p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer transition-all"
+                    className={`${index > 0 ? 'hidden sm:flex' : 'flex'} group bg-white border border-dbd-rule/50 hover:border-dbd-accent/60 hover:shadow-xs p-4 flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer transition-all`}
                   >
                     <div>
                       <h4 className="text-[14px] sm:text-[15px] font-semibold text-dbd-ink group-hover:text-dbd-accent transition-colors leading-tight mb-1 font-sans">
@@ -688,7 +691,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Pricing Box card Panel */}
-          <div className="bg-white border border-dbd-rule sm:rounded-xl px-4 py-4 sm:p-6 flex flex-col justify-start shadow-none sm:shadow-md relative overflow-hidden self-start">
+          <div className="order-first sm:order-none bg-white border border-dbd-rule sm:rounded-xl px-4 py-4 sm:p-6 flex flex-col justify-start shadow-none sm:shadow-md relative overflow-hidden self-start">
             
             <div>
               <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-dbd-accent block mb-1 select-none uppercase">

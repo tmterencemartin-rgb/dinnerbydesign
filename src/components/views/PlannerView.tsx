@@ -1357,6 +1357,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   </div>
 
                   {/* WEEKLY SCHEDULE GRID */}
+                  {planner.length === 0 && activeSavedRecipes.length === 0 ? (
+                    <div id="weekly-schedule-list" className="rounded border border-gray-100 bg-gray-50/50 px-4 py-5 text-center">
+                      <h4 className="text-[13px] font-bold text-gray-900">Your week is clear</h4>
+                      <p className="mx-auto mt-1 max-w-md text-[12px] leading-relaxed text-gray-500">
+                        Use Plan my week above, or find and save a recipe before choosing a day.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setView('home')}
+                        className="mt-3 h-8 rounded border border-gray-200 bg-white px-3 text-[10.5px] font-bold uppercase tracking-widest text-gray-700 hover:border-gray-400 hover:text-gray-950"
+                      >
+                        Find recipes
+                      </button>
+                    </div>
+                  ) : (
                   <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
                     {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(dayId => {
                       const entry = planner.find(e => e.scheduledDate === dayId);
@@ -1584,6 +1599,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       );
                     })}
                   </div>
+                  )}
 
                   {supermarketPlanSummary.plannedDinnerCount > 0 && (
                     <div className="border border-gray-100 bg-white rounded px-3 py-3 sm:px-4 sm:py-3.5 shadow-[0_1px_4px_rgba(15,23,42,0.025)]">

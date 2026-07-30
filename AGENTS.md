@@ -66,6 +66,8 @@ When a user lists ingredients:
 - Use a React transition for ordinary view changes so the current interface remains visible until the next view is ready.
 - Keep any slow-view fallback inside the existing app layout rather than replacing the entire screen.
 - Prepare Planner, Shopping and Settings shortly after a signed-in session becomes ready to reduce first-visit delay.
+- On narrow screens, give the Search field a full row and place its primary action and Preferences on the row below. Keep the single-row control on wider screens.
+- When both Saved and Scheduled are empty, show one compact empty-week planner panel instead of seven repeated empty day rows.
 
 ## Search service
 

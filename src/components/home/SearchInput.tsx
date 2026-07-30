@@ -20,6 +20,7 @@ interface SearchInputProps {
   isReadOnly?: boolean;
   readOnlyPlaceholder?: string;
   placeholderOverride?: string;
+  mobileSecondaryAction?: React.ReactNode;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -38,7 +39,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   isLowCost = false,
   isReadOnly = false,
   readOnlyPlaceholder,
-  placeholderOverride
+  placeholderOverride,
+  mobileSecondaryAction
 }) => {
   const getSearchPlaceholder = (): string => {
     if (isListening) {
@@ -66,11 +68,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           handleGenerate();
         }
       }}
-      className={`flex w-full items-stretch h-11 rounded ring-1 transition-all overflow-hidden ${
-        isReadOnly ? 'bg-gray-100 ring-gray-100 opacity-75' : 'bg-gray-50 ring-gray-200 focus-within:ring-2 focus-within:ring-gray-900/10'
+      className={`grid grid-cols-2 gap-2 w-full items-stretch transition-all sm:flex sm:h-11 sm:gap-0 sm:overflow-hidden sm:rounded sm:ring-1 ${
+        isReadOnly ? 'opacity-75 sm:bg-gray-100 sm:ring-gray-100' : 'sm:bg-gray-50 sm:ring-gray-200 sm:focus-within:ring-2 sm:focus-within:ring-gray-900/10'
       }`}
     >
-      <div className="flex-1 flex items-center min-w-0 px-1">
+      <div className={`col-span-2 flex h-11 min-w-0 items-center rounded px-1 ring-1 transition-all sm:h-auto sm:flex-1 sm:rounded-none sm:ring-0 ${
+        isReadOnly ? 'bg-gray-100 ring-gray-100' : 'bg-gray-50 ring-gray-200 focus-within:ring-2 focus-within:ring-gray-900/10 sm:focus-within:ring-0'
+      }`}>
         {isGenerating ? (
           <button
             type="button"
@@ -131,7 +135,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         type="submit"
         disabled={isListening || isReadOnly}
         aria-label={isGenerating ? 'Searching for dinner options' : 'Find dinner options'}
-        className={`shrink-0 px-3 sm:px-5 text-white text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center border-l border-gray-100 ${
+        className={`h-11 rounded px-3 text-white text-[10px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center sm:h-auto sm:rounded-none sm:px-5 sm:text-[11px] sm:border-l sm:border-gray-100 ${
           isReadOnly ? 'bg-gray-400' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
         }`}
       >
@@ -141,6 +145,12 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           'Find options'
         )}
       </button>
+
+      {mobileSecondaryAction && (
+        <div className="h-11 sm:hidden">
+          {mobileSecondaryAction}
+        </div>
+      )}
     </form>
   );
 };
