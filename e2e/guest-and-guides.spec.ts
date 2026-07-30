@@ -116,4 +116,78 @@ test.describe('signed-in planning', () => {
     await page.getByRole('button', { name: 'Shopping' }).click();
     await expect(page.getByRole('heading', { name: 'Shopping list' })).toBeVisible();
   });
+
+  test('search, save, schedule and shopping list journey', async ({ page }) => {
+    test.skip(
+      !process.env.E2E_USER_EMAIL ||
+      !process.env.E2E_USER_PASSWORD ||
+      process.env.E2E_RUN_LIVE_JOURNEY !== 'true',
+      'Set dedicated credentials and E2E_RUN_LIVE_JOURNEY=true to run the data-writing journey.'
+    );
+    test.setTimeout(90_000);
+
+    let savedTitle = '';
+
+    try {
+      await page.goto('/signin?mode=signin');
+      await page.getByLabel('Email').fill(process.env.E2E_USER_EMAIL!);
+      await page.getByLabel('Password').fill(process.env.E2E_USER_PASSWORD!);
+      await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+
+      const searchInput = page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' });
+      await expect(searchInput).toBeVisible();
+      await searchInput.fill('tomato pasta');
+      await page.getByRole('button', { name: 'Find dinner options' }).click();
+
+      const viewButtons = page.getByRole('button', { name: 'View', exact: true });
+      await expect(viewButtons.first()).toBeVisible({ timeout: 60_000 });
+      await viewButtons.first().click();
+
+      const detail = page.getByTestId('recipe-detail');
+      const detailHeading = detail.getByRole('heading', { level: 3 }).first();
+      savedTitle = (await detailHeading.innerText()).trim();
+      expect(savedTitle).not.toBe('');
+
+      await detail.getByRole('button', { name: 'Save', exact: true }).click();
+      await expect(page.getByRole('heading', { name: 'Save & Schedule' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: savedTitle, exact: true })).toBeVisible();
+
+      const savedRecipe = page.getByTestId('saved-recipe-item').filter({ hasText: savedTitle });
+      await savedRecipe.getByRole('button', { name: 'Schedule', exact: true }).click();
+
+      const availableDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      let scheduledDay = '';
+      for (const day of availableDays) {
+        const unbookedDay = page.getByRole('button', { name: day, exact: true });
+        if (await unbookedDay.count() === 1) {
+          scheduledDay = day;
+          await unbookedDay.click();
+          break;
+        }
+      }
+      expect(scheduledDay).not.toBe('');
+      await expect(savedRecipe.getByRole('button', { name: 'Scheduled', exact: true })).toBeVisible();
+
+      await page.getByRole('button', { name: 'Shopping' }).click();
+      await expect(page.getByRole('heading', { name: 'Shopping list' })).toBeVisible();
+      await expect(page.getByPlaceholder('Add an extra item to your list...')).toBeVisible();
+    } finally {
+      if (savedTitle) {
+        await page.getByRole('button', { name: 'Save & Schedule' }).click().catch(() => undefined);
+        const deleteButton = page.getByRole('button', { name: `Permanently delete ${savedTitle}` });
+        if (await deleteButton.count() === 1) {
+          page.once('dialog', dialog => dialog.accept());
+          await deleteButton.click();
+        } else {
+          const archiveButton = page
+            .getByTestId('saved-recipe-item')
+            .filter({ hasText: savedTitle })
+            .getByRole('button', { name: 'Archive', exact: true });
+          if (await archiveButton.count() === 1) {
+            await archiveButton.click();
+          }
+        }
+      }
+    }
+  });
 });

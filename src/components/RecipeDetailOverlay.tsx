@@ -80,6 +80,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
 
   return (
     <motion.div
+      data-testid="recipe-detail"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

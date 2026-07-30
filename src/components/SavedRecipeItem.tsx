@@ -159,7 +159,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
 
   if (layoutMode === 'grid') {
     return (
-      <div className={`bg-white border border-gray-100 rounded p-4 hover:border-gray-200 transition-all duration-200 flex flex-col justify-between h-full relative group min-h-[160px] ${isChoosingDay ? 'z-40' : 'z-10'}`}>
+      <div data-testid="saved-recipe-item" data-recipe-title={recipe.title} className={`bg-white border border-gray-100 rounded p-4 hover:border-gray-200 transition-all duration-200 flex flex-col justify-between h-full relative group min-h-[160px] ${isChoosingDay ? 'z-40' : 'z-10'}`}>
         <div className="space-y-2">
           {/* Header row: Cuisine / Retailer + Delete Button */}
           <div className="flex items-center justify-between">
@@ -399,7 +399,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   }
 
   return (
-    <div className={`${isBacklog ? 'py-1.5' : 'py-2'} px-0 sm:px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
+    <div data-testid="saved-recipe-item" data-recipe-title={recipe.title} className={`${isBacklog ? 'py-1.5' : 'py-2'} px-0 sm:px-0.5 border-b border-gray-100 last:border-none relative group transition-colors bg-white ${isChoosingDay ? 'z-40' : ''}`}>
       {isExpanded && (
         <button 
           onClick={() => setIsExpanded(false)}
