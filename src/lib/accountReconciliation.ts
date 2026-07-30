@@ -1,6 +1,12 @@
 export interface AuthenticationIdentitySnapshot {
   uid: string;
   isAnonymous: boolean;
+  email?: string | null;
+  displayName?: string | null;
+  createdAt?: string | null;
+  lastSignInAt?: string | null;
+  providers?: string[];
+  disabled?: boolean;
 }
 
 export interface AccountReconciliationSummary {
@@ -11,6 +17,14 @@ export interface AccountReconciliationSummary {
   registeredWithoutProfile: number;
   anonymousWithoutProfile: number;
   profilesWithoutAuthentication: number;
+}
+
+export function findRegisteredIdentitiesWithoutProfiles(
+  identities: AuthenticationIdentitySnapshot[],
+  profileIds: Iterable<string>,
+): AuthenticationIdentitySnapshot[] {
+  const profileIdSet = new Set(profileIds);
+  return identities.filter(identity => !identity.isAnonymous && !profileIdSet.has(identity.uid));
 }
 
 export function summariseAccountReconciliation(
@@ -27,7 +41,7 @@ export function summariseAccountReconciliation(
     registeredIdentities: registeredIdentities.length,
     anonymousIdentities: anonymousIdentities.length,
     profileDocuments: profileIdSet.size,
-    registeredWithoutProfile: registeredIdentities.filter(identity => !profileIdSet.has(identity.uid)).length,
+    registeredWithoutProfile: findRegisteredIdentitiesWithoutProfiles(identities, profileIdSet).length,
     anonymousWithoutProfile: anonymousIdentities.filter(identity => !profileIdSet.has(identity.uid)).length,
     profilesWithoutAuthentication: [...profileIdSet].filter(uid => !identityIdSet.has(uid)).length,
   };

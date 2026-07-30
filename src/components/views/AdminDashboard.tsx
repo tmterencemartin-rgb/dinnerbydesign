@@ -67,6 +67,15 @@ interface AccountReconciliation {
   registeredWithoutProfile: number;
   anonymousWithoutProfile: number;
   profilesWithoutAuthentication: number;
+  registeredWithoutProfileAccounts: Array<{
+    uid: string;
+    email: string | null;
+    displayName: string | null;
+    createdAt: string | null;
+    lastSignInAt: string | null;
+    providers: string[];
+    disabled: boolean;
+  }>;
 }
 
 export const AdminDashboard: React.FC = () => {
@@ -992,6 +1001,45 @@ export const AdminDashboard: React.FC = () => {
                       <p className="text-[10.5px] font-medium text-gray-500">Registered and anonymous</p>
                     </div>
                   </div>
+                  {accountReconciliation.registeredWithoutProfileAccounts.length > 0 && (
+                    <div className="mt-3 overflow-hidden rounded border border-amber-200 bg-white">
+                      <div className="border-b border-amber-100 bg-amber-50/70 px-3 py-2.5">
+                        <h4 className="text-[12px] font-bold text-amber-900">Registered accounts without profiles</h4>
+                        <p className="mt-0.5 text-[10.5px] font-medium text-amber-800">
+                          Review these individually. No account is repaired or deleted automatically.
+                        </p>
+                      </div>
+                      <div className="divide-y divide-gray-100">
+                        {accountReconciliation.registeredWithoutProfileAccounts.map(account => (
+                          <div key={account.uid} className="px-3 py-2.5">
+                            <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                              <div className="min-w-0">
+                                <p className="truncate text-[12px] font-bold text-gray-900">
+                                  {account.email || account.displayName || 'Registered account'}
+                                </p>
+                                {account.displayName && account.email && (
+                                  <p className="mt-0.5 text-[10.5px] font-medium text-gray-500">{account.displayName}</p>
+                                )}
+                              </div>
+                              <div className="shrink-0 text-[10.5px] font-medium text-gray-500 sm:text-right">
+                                <p>Created {formatDateTime(account.createdAt)}</p>
+                                <p>
+                                  {account.lastSignInAt
+                                    ? `Last sign-in ${formatDateTime(account.lastSignInAt)}`
+                                    : 'No recorded sign-in'}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium text-gray-400">
+                              <span>{account.providers.length > 0 ? account.providers.join(', ') : 'Email or phone sign-in'}</span>
+                              {account.disabled && <span className="font-bold text-red-600">Disabled</span>}
+                              <span className="font-mono">UID {account.uid}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : accountReconciliationError ? (
                 <div className="mt-3 rounded border border-amber-200 bg-amber-50/60 p-3">

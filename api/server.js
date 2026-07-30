@@ -184965,6 +184965,10 @@ function ingredientPriceDocumentId(ingredientKey) {
 }
 
 // src/lib/accountReconciliation.ts
+function findRegisteredIdentitiesWithoutProfiles(identities, profileIds) {
+  const profileIdSet = new Set(profileIds);
+  return identities.filter((identity) => !identity.isAnonymous && !profileIdSet.has(identity.uid));
+}
 function summariseAccountReconciliation(identities, profileIds) {
   const profileIdSet = new Set(profileIds);
   const identityIdSet = new Set(identities.map((identity) => identity.uid));
@@ -184975,7 +184979,7 @@ function summariseAccountReconciliation(identities, profileIds) {
     registeredIdentities: registeredIdentities.length,
     anonymousIdentities: anonymousIdentities.length,
     profileDocuments: profileIdSet.size,
-    registeredWithoutProfile: registeredIdentities.filter((identity) => !profileIdSet.has(identity.uid)).length,
+    registeredWithoutProfile: findRegisteredIdentitiesWithoutProfiles(identities, profileIdSet).length,
     anonymousWithoutProfile: anonymousIdentities.filter((identity) => !profileIdSet.has(identity.uid)).length,
     profilesWithoutAuthentication: [...profileIdSet].filter((uid) => !identityIdSet.has(uid)).length
   };
@@ -185078,7 +185082,13 @@ async function listAllAuthenticationIdentities() {
     page.users.forEach((userRecord) => {
       identities.push({
         uid: userRecord.uid,
-        isAnonymous: !userRecord.email && !userRecord.phoneNumber && userRecord.providerData.length === 0
+        isAnonymous: !userRecord.email && !userRecord.phoneNumber && userRecord.providerData.length === 0,
+        email: userRecord.email || null,
+        displayName: userRecord.displayName || null,
+        createdAt: userRecord.metadata.creationTime || null,
+        lastSignInAt: userRecord.metadata.lastSignInTime || null,
+        providers: userRecord.providerData.map((provider) => provider.providerId),
+        disabled: userRecord.disabled
       });
     });
     pageToken = page.pageToken;
@@ -185259,13 +185269,29 @@ function createApp() {
         listAllAuthenticationIdentities(),
         getDb().collection("users").get()
       ]);
+      const profileIds = profileSnapshot.docs.map((profile) => profile.id);
       const summary = summariseAccountReconciliation(
         identities,
-        profileSnapshot.docs.map((profile) => profile.id)
+        profileIds
       );
+      const registeredWithoutProfileAccounts = findRegisteredIdentitiesWithoutProfiles(
+        identities,
+        profileIds
+      ).map((identity) => ({
+        uid: identity.uid,
+        email: identity.email,
+        displayName: identity.displayName,
+        createdAt: identity.createdAt,
+        lastSignInAt: identity.lastSignInAt,
+        providers: identity.providers,
+        disabled: identity.disabled
+      })).sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
       return res.json({
         ok: true,
-        summary,
+        summary: {
+          ...summary,
+          registeredWithoutProfileAccounts
+        },
         checkedAt: (/* @__PURE__ */ new Date()).toISOString()
       });
     } catch (error) {

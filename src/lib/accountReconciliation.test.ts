@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { summariseAccountReconciliation } from './accountReconciliation';
+import {
+  findRegisteredIdentitiesWithoutProfiles,
+  summariseAccountReconciliation,
+} from './accountReconciliation';
 
 describe('account reconciliation', () => {
   it('separates registered and anonymous identities from stored profiles', () => {
@@ -29,5 +32,17 @@ describe('account reconciliation', () => {
     expect(summary.profileDocuments).toBe(1);
     expect(summary.registeredWithoutProfile).toBe(0);
     expect(summary.profilesWithoutAuthentication).toBe(0);
+  });
+
+  it('returns only registered identities that have no stored profile', () => {
+    const missing = findRegisteredIdentitiesWithoutProfiles([
+      { uid: 'customer', isAnonymous: false, email: 'customer@example.com' },
+      { uid: 'missing', isAnonymous: false, email: 'missing@example.com' },
+      { uid: 'guest', isAnonymous: true },
+    ], ['customer']);
+
+    expect(missing).toEqual([
+      { uid: 'missing', isAnonymous: false, email: 'missing@example.com' },
+    ]);
   });
 });

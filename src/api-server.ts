@@ -18,7 +18,10 @@ import {
   ingredientPriceDocumentId,
   parseLicensedIngredientPriceFeed,
 } from "../src/lib/ingredientPriceRefresh";
-import { summariseAccountReconciliation } from "../src/lib/accountReconciliation";
+import {
+  findRegisteredIdentitiesWithoutProfiles,
+  summariseAccountReconciliation,
+} from "../src/lib/accountReconciliation";
 function getFirebaseConfig() {
   return firebaseConfig;
 }
@@ -124,7 +127,16 @@ async function verifyAdminRequest(req: express.Request, res: express.Response) {
 }
 
 async function listAllAuthenticationIdentities() {
-  const identities: Array<{ uid: string; isAnonymous: boolean }> = [];
+  const identities: Array<{
+    uid: string;
+    isAnonymous: boolean;
+    email: string | null;
+    displayName: string | null;
+    createdAt: string | null;
+    lastSignInAt: string | null;
+    providers: string[];
+    disabled: boolean;
+  }> = [];
   let pageToken: string | undefined;
 
   do {
@@ -133,6 +145,12 @@ async function listAllAuthenticationIdentities() {
       identities.push({
         uid: userRecord.uid,
         isAnonymous: !userRecord.email && !userRecord.phoneNumber && userRecord.providerData.length === 0,
+        email: userRecord.email || null,
+        displayName: userRecord.displayName || null,
+        createdAt: userRecord.metadata.creationTime || null,
+        lastSignInAt: userRecord.metadata.lastSignInTime || null,
+        providers: userRecord.providerData.map(provider => provider.providerId),
+        disabled: userRecord.disabled,
       });
     });
     pageToken = page.pageToken;
@@ -361,14 +379,32 @@ export function createApp() {
         listAllAuthenticationIdentities(),
         getDb().collection("users").get(),
       ]);
+      const profileIds = profileSnapshot.docs.map((profile: any) => profile.id);
       const summary = summariseAccountReconciliation(
         identities,
-        profileSnapshot.docs.map((profile: any) => profile.id),
+        profileIds,
       );
+      const registeredWithoutProfileAccounts = findRegisteredIdentitiesWithoutProfiles(
+        identities,
+        profileIds,
+      )
+        .map(identity => ({
+          uid: identity.uid,
+          email: identity.email,
+          displayName: identity.displayName,
+          createdAt: identity.createdAt,
+          lastSignInAt: identity.lastSignInAt,
+          providers: identity.providers,
+          disabled: identity.disabled,
+        }))
+        .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
 
       return res.json({
         ok: true,
-        summary,
+        summary: {
+          ...summary,
+          registeredWithoutProfileAccounts,
+        },
         checkedAt: new Date().toISOString(),
       });
     } catch (error) {
