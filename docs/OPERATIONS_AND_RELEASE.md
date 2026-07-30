@@ -26,6 +26,7 @@ STRIPE_WEBHOOK_SECRET=
 RESEND_API_KEY=
 RESEND_FROM_EMAIL=
 ALLOWED_ORIGINS=
+FIREBASE_SERVICE_ACCOUNT_JSON=
 ```
 
 Set `RESEND_FROM_EMAIL` to `chef@dinnerbydesign.app`.
@@ -35,6 +36,8 @@ Set `ALLOWED_ORIGINS` to the production domains, separated by commas:
 ```env
 ALLOWED_ORIGINS=https://dinnerbydesign.app,https://www.dinnerbydesign.app
 ```
+
+Set `FIREBASE_SERVICE_ACCOUNT_JSON` to the complete JSON credential for a dedicated Firebase service account used by protected administrator endpoints. It is required for authentication reconciliation and complete-account deletion. Keep it encrypted in Vercel and never commit it.
 
 Do not commit `.env.local`.
 

@@ -4,7 +4,8 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
-import { getApps, initializeApp } from "firebase-admin/app";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getAuth as getFirebaseAdminAuth } from "firebase-admin/auth";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
@@ -16,6 +17,7 @@ import {
   ingredientPriceDocumentId,
   parseLicensedIngredientPriceFeed,
 } from "../src/lib/ingredientPriceRefresh";
+import { summariseAccountReconciliation } from "../src/lib/accountReconciliation";
 // Safe dynamic lazy loading of firebase-applet-config.json to support serverless / ephemeral environments
 let firebaseConfigCache: any = null;
 function getFirebaseConfig() {
@@ -58,6 +60,7 @@ function logApiError(type: string, error: any) {
 }
 
 const PRODUCTION_APP_URL = "https://dinnerbydesign.app";
+const ADMIN_EMAILS = new Set(["tmterencemartin@gmail.com"]);
 
 function getAppOrigin(req: express.Request): string {
   const requestOrigin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get("host")}`;
@@ -76,17 +79,79 @@ function getAppOrigin(req: express.Request): string {
 
 // Initialize Firebase Admin lazily
 let _db: any = null;
-function getDb() {
-  if (!_db) {
+function ensureFirebaseAdminApp() {
+  if (getApps().length === 0) {
     const config = getFirebaseConfig();
-    if (getApps().length === 0) {
+    const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+
+    if (serviceAccountJson) {
+      const serviceAccount = JSON.parse(serviceAccountJson);
+      initializeApp({
+        credential: cert(serviceAccount),
+        projectId: serviceAccount.project_id || config.projectId || process.env.FIREBASE_PROJECT_ID,
+      });
+    } else {
       initializeApp({
         projectId: config.projectId || process.env.FIREBASE_PROJECT_ID,
       });
     }
+  }
+}
+
+function getDb() {
+  if (!_db) {
+    const config = getFirebaseConfig();
+    ensureFirebaseAdminApp();
     _db = getFirestore(config.firestoreDatabaseId || undefined);
   }
   return _db;
+}
+
+function getAdminAuth() {
+  ensureFirebaseAdminApp();
+  return getFirebaseAdminAuth();
+}
+
+async function verifyAdminRequest(req: express.Request, res: express.Response) {
+  const authorization = req.get("authorization") || "";
+  const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+
+  if (!token) {
+    res.status(401).json({ ok: false, error: "Sign in as an administrator to continue." });
+    return null;
+  }
+
+  try {
+    const decoded = await getAdminAuth().verifyIdToken(token);
+    const email = String(decoded.email || "").toLowerCase();
+    if (!ADMIN_EMAILS.has(email)) {
+      res.status(403).json({ ok: false, error: "Administrator access is required." });
+      return null;
+    }
+    return decoded;
+  } catch (error) {
+    console.error("[AdminAuth] Token verification failed:", error);
+    res.status(401).json({ ok: false, error: "Your administrator session could not be verified." });
+    return null;
+  }
+}
+
+async function listAllAuthenticationIdentities() {
+  const identities: Array<{ uid: string; isAnonymous: boolean }> = [];
+  let pageToken: string | undefined;
+
+  do {
+    const page = await getAdminAuth().listUsers(1000, pageToken);
+    page.users.forEach(userRecord => {
+      identities.push({
+        uid: userRecord.uid,
+        isAnonymous: !userRecord.email && !userRecord.phoneNumber && userRecord.providerData.length === 0,
+      });
+    });
+    pageToken = page.pageToken;
+  } while (pageToken);
+
+  return identities;
 }
 
 interface EmailEventMeta {
@@ -298,6 +363,82 @@ export function createApp() {
       timestamp: new Date().toISOString(),
       geminiKeyConfigured: !!process.env.GEMINI_API_KEY
     });
+  });
+
+  app.get("/api/admin/accounts/reconciliation", async (req, res) => {
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+
+    try {
+      const [identities, profileSnapshot] = await Promise.all([
+        listAllAuthenticationIdentities(),
+        getDb().collection("users").get(),
+      ]);
+      const summary = summariseAccountReconciliation(
+        identities,
+        profileSnapshot.docs.map((profile: any) => profile.id),
+      );
+
+      return res.json({
+        ok: true,
+        summary,
+        checkedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("[AdminAccounts] Reconciliation failed:", error);
+      return res.status(503).json({
+        ok: false,
+        error: "Account reconciliation is unavailable. Server-side Firebase administration must be configured.",
+      });
+    }
+  });
+
+  app.delete("/api/admin/accounts/:uid", async (req, res) => {
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+
+    const targetUid = String(req.params.uid || "").trim();
+    if (!targetUid || targetUid.length > 128) {
+      return res.status(400).json({ ok: false, error: "A valid account identifier is required." });
+    }
+    if (targetUid === admin.uid) {
+      return res.status(400).json({ ok: false, error: "You cannot delete your own administrative account." });
+    }
+
+    try {
+      const profileRef = getDb().collection("users").doc(targetUid);
+      const profileSnapshot = await profileRef.get();
+      const profileEmail = String(profileSnapshot.data()?.email || "").toLowerCase();
+      let authenticationRecord: any = null;
+
+      try {
+        authenticationRecord = await getAdminAuth().getUser(targetUid);
+      } catch (error: any) {
+        if (error?.code !== "auth/user-not-found") throw error;
+      }
+
+      const authenticationEmail = String(authenticationRecord?.email || "").toLowerCase();
+      if (ADMIN_EMAILS.has(profileEmail) || ADMIN_EMAILS.has(authenticationEmail)) {
+        return res.status(400).json({ ok: false, error: "The administrative account cannot be deleted." });
+      }
+
+      if (authenticationRecord) {
+        await getAdminAuth().deleteUser(targetUid);
+      }
+      await getDb().recursiveDelete(profileRef);
+
+      return res.json({
+        ok: true,
+        authenticationIdentityDeleted: !!authenticationRecord,
+        profileDataDeleted: profileSnapshot.exists,
+      });
+    } catch (error) {
+      console.error(`[AdminAccounts] Failed to delete ${targetUid}:`, error);
+      return res.status(500).json({
+        ok: false,
+        error: "The complete account could not be deleted.",
+      });
+    }
   });
 
   // Stripe lazy initialization

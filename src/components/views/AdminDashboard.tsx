@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, deleteDoc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { collection, query, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
@@ -59,6 +59,16 @@ interface AdminDinnerStats {
   scheduledCount: number;
 }
 
+interface AccountReconciliation {
+  authenticationIdentities: number;
+  registeredIdentities: number;
+  anonymousIdentities: number;
+  profileDocuments: number;
+  registeredWithoutProfile: number;
+  anonymousWithoutProfile: number;
+  profilesWithoutAuthentication: number;
+}
+
 export const AdminDashboard: React.FC = () => {
   const { setView, isAdmin, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -73,6 +83,8 @@ export const AdminDashboard: React.FC = () => {
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const [editingNoteUid, setEditingNoteUid] = useState<string | null>(null);
   const [noteSavingUid, setNoteSavingUid] = useState<string | null>(null);
+  const [accountReconciliation, setAccountReconciliation] = useState<AccountReconciliation | null>(null);
+  const [accountReconciliationError, setAccountReconciliationError] = useState<string | null>(null);
   const [modal, setModal] = useState<{
     isOpen: boolean;
     type: 'confirm_access' | 'confirm_delete' | 'confirm_delete_all' | 'alert';
@@ -176,6 +188,52 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const refreshAccountReconciliation = React.useCallback(async () => {
+    if (!currentUser) {
+      setAccountReconciliation(null);
+      setAccountReconciliationError('Sign in as an administrator to compare account records.');
+      return;
+    }
+
+    try {
+      const token = await currentUser.getIdToken();
+      const response = await fetch(getApiUrl('/api/admin/accounts/reconciliation'), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result?.ok || !result?.summary) {
+        throw new Error(result?.error || 'Account reconciliation is unavailable.');
+      }
+      setAccountReconciliation(result.summary as AccountReconciliation);
+      setAccountReconciliationError(null);
+    } catch (error: any) {
+      console.error('Account reconciliation failed:', error);
+      setAccountReconciliation(null);
+      setAccountReconciliationError(error?.message || 'Account reconciliation is unavailable.');
+    }
+  }, [currentUser]);
+
+  const deleteCompleteAccount = React.useCallback(async (userId: string) => {
+    if (!currentUser) {
+      throw new Error('Sign in as an administrator to delete an account.');
+    }
+
+    const token = await currentUser.getIdToken();
+    const response = await fetch(getApiUrl(`/api/admin/accounts/${encodeURIComponent(userId)}`), {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      throw new Error(result?.error || 'The complete account could not be deleted.');
+    }
+    return result;
+  }, [currentUser]);
+
   useEffect(() => {
     if (!isAdmin) {
       setView('home');
@@ -200,6 +258,7 @@ export const AdminDashboard: React.FC = () => {
 
         setUsers(userData);
         setNoteDrafts(Object.fromEntries(userData.map(user => [user.uid, user.adminNote || ''])));
+        await refreshAccountReconciliation();
 
         const statsEntries = await Promise.all(userData.map(async user => {
           try {
@@ -271,7 +330,7 @@ export const AdminDashboard: React.FC = () => {
     };
 
     fetchDashboardData();
-  }, [isAdmin, setView]);
+  }, [isAdmin, refreshAccountReconciliation, setView]);
 
   const handleDeleteUser = (userId: string, email: string) => {
     if (userId === currentUser?.uid || email === 'tmterencemartin@gmail.com') {
@@ -283,17 +342,23 @@ export const AdminDashboard: React.FC = () => {
     }
 
     showCustomConfirm(
-      "Confirm User Deletion",
-      `Are you absolutely sure you want to permanently delete the user account for "${email || userId}"?\n\nThis will remove their profile document from the database. This action is irreversible.`,
+      "Confirm Complete Account Deletion",
+      `Are you absolutely sure you want to permanently delete the account for "${email || userId}"?\n\nThis removes the sign-in identity, profile, saved recipes, preferences and shopping data. This action is irreversible.`,
       async () => {
         setActionLoading(userId);
         try {
-          await deleteDoc(doc(db, 'users', userId));
+          await deleteCompleteAccount(userId);
           setUsers(prev => prev.filter(u => u.uid !== userId));
-          showCustomAlert("Success", `User "${email || userId}" deleted successfully.`);
+          setDinnerStats(prev => {
+            const next = { ...prev };
+            delete next[userId];
+            return next;
+          });
+          await refreshAccountReconciliation();
+          showCustomAlert("Success", `Account "${email || userId}" deleted successfully.`);
         } catch (err: any) {
-          console.error("Error deleting user:", err);
-          showCustomAlert("Error", `Failed to delete user: ${err?.message || 'Access denied'}`);
+          console.error("Error deleting account:", err);
+          showCustomAlert("Error", `Failed to delete account: ${err?.message || 'Access denied'}`);
         } finally {
           setActionLoading(null);
         }
@@ -305,8 +370,8 @@ export const AdminDashboard: React.FC = () => {
     const listToDelete = users.filter(u => u.uid !== currentUser?.uid && u.email !== 'tmterencemartin@gmail.com');
     if (listToDelete.length === 0) {
       showCustomAlert(
-        "No Users to Delete",
-        "There are no other user accounts in the list to delete."
+        "No Accounts to Delete",
+        "There are no other app profiles in the register to delete."
       );
       return;
     }
@@ -314,8 +379,8 @@ export const AdminDashboard: React.FC = () => {
     setModal({
       isOpen: true,
       type: 'confirm_delete_all',
-      title: "⚠️ Clear All Guest Users?",
-      message: `This will permanently delete ALL ${listToDelete.length} other user accounts from the database.\n\nYour own admin account will be safely excluded.\n\nAre you absolutely sure you want to proceed? This cannot be undone.`,
+      title: "Delete All Listed Accounts?",
+      message: `This will permanently delete all ${listToDelete.length} other accounts listed in the app-profile register, including their sign-in identities, profiles and stored app data.\n\nYour own administrative account will be excluded. Authentication identities without profiles are not included.\n\nAre you absolutely sure you want to proceed? This cannot be undone.`,
       onConfirm: async () => {
         setLoading(true);
         let deletedCount = 0;
@@ -323,10 +388,10 @@ export const AdminDashboard: React.FC = () => {
 
         for (const u of listToDelete) {
           try {
-            await deleteDoc(doc(db, 'users', u.uid));
+            await deleteCompleteAccount(u.uid);
             deletedCount++;
           } catch (err) {
-            console.error(`Error deleting user ${u.uid}:`, err);
+            console.error(`Error deleting account ${u.uid}:`, err);
             failedCount++;
           }
         }
@@ -347,6 +412,7 @@ export const AdminDashboard: React.FC = () => {
           });
 
           setUsers(userData);
+          await refreshAccountReconciliation();
         } catch (err) {
           console.error('Error re-fetching users:', err);
         } finally {
@@ -356,12 +422,12 @@ export const AdminDashboard: React.FC = () => {
         if (failedCount > 0) {
           showCustomAlert(
             "Bulk Deletion Completed",
-            `Successfully deleted ${deletedCount} users. Failed to delete ${failedCount} users.`
+            `Successfully deleted ${deletedCount} accounts. Failed to delete ${failedCount} accounts.`
           );
         } else {
           showCustomAlert(
             "Bulk Deletion Successful",
-            `Successfully deleted all ${deletedCount} other user accounts!`
+            `Successfully deleted all ${deletedCount} other accounts.`
           );
         }
       }
@@ -811,10 +877,10 @@ export const AdminDashboard: React.FC = () => {
                 onClick={handleDeleteAllUsers}
                 disabled={loading || actionLoading !== null}
                 className="h-9 px-2 text-[11px] font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition-colors inline-flex items-center justify-center gap-1 uppercase tracking-wider whitespace-nowrap disabled:opacity-50 sm:px-3 sm:text-xs sm:gap-1.5"
-                title="Delete all other user accounts from the database"
+                title="Delete all other accounts listed in the app-profile register"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                Delete All Users
+                Delete All Listed Accounts
               </button>
             </div>
           </div>
@@ -861,11 +927,11 @@ export const AdminDashboard: React.FC = () => {
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Accounts</p>
                 <h2 id="account-overview-heading" className="mt-1 text-base font-bold text-gray-950">Account overview</h2>
-                <p className="mt-1 text-xs font-medium text-gray-500">Access, payment and usage totals across all registered users.</p>
+                <p className="mt-1 text-xs font-medium text-gray-500">Stored app profiles, access, payment and usage totals.</p>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
               {[
-                { label: 'Total users', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
+                { label: 'App profiles', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
                 { label: 'Paid access', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe / ${summaryStats.permanentAccess} permanent`, icon: CreditCard },
                 { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid, incomplete or paused', icon: AlertTriangle },
                 { label: 'Usage', value: summaryStats.aiCalls || summaryStats.totalSearches, detail: `${summaryStats.succeededAiCalls} model calls succeeded`, icon: Activity }
@@ -887,6 +953,52 @@ export const AdminDashboard: React.FC = () => {
                 );
               })}
               </div>
+              {accountReconciliation ? (
+                <div className="mt-3 rounded border border-gray-200 bg-gray-50/60 p-3" aria-label="Account reconciliation">
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h3 className="text-[13px] font-bold text-gray-950">Authentication reconciliation</h3>
+                      <p className="text-[11px] font-medium text-gray-500">Compares Firebase sign-in identities with stored DinnerByDesign profiles.</p>
+                    </div>
+                    <span className={`w-fit rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${
+                      accountReconciliation.registeredWithoutProfile === 0 && accountReconciliation.profilesWithoutAuthentication === 0
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : 'bg-amber-50 text-amber-700'
+                    }`}>
+                      {accountReconciliation.registeredWithoutProfile === 0 && accountReconciliation.profilesWithoutAuthentication === 0
+                        ? 'Aligned'
+                        : 'Review needed'}
+                    </span>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4">
+                    <div className="rounded border border-gray-200 bg-white p-2.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Registered sign-ins</p>
+                      <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.registeredIdentities}</p>
+                      <p className="text-[10.5px] font-medium text-gray-500">{accountReconciliation.registeredWithoutProfile} without a profile</p>
+                    </div>
+                    <div className="rounded border border-gray-200 bg-white p-2.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Anonymous identities</p>
+                      <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.anonymousIdentities}</p>
+                      <p className="text-[10.5px] font-medium text-gray-500">{accountReconciliation.anonymousWithoutProfile} without a profile</p>
+                    </div>
+                    <div className="rounded border border-gray-200 bg-white p-2.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">App profiles</p>
+                      <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.profileDocuments}</p>
+                      <p className="text-[10.5px] font-medium text-gray-500">{accountReconciliation.profilesWithoutAuthentication} without a sign-in</p>
+                    </div>
+                    <div className="rounded border border-gray-200 bg-white p-2.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">All identities</p>
+                      <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.authenticationIdentities}</p>
+                      <p className="text-[10.5px] font-medium text-gray-500">Registered and anonymous</p>
+                    </div>
+                  </div>
+                </div>
+              ) : accountReconciliationError ? (
+                <div className="mt-3 rounded border border-amber-200 bg-amber-50/60 p-3">
+                  <p className="text-[12px] font-bold text-amber-800">Authentication reconciliation unavailable</p>
+                  <p className="mt-1 text-[11px] font-medium text-amber-700">{accountReconciliationError}</p>
+                </div>
+              ) : null}
             </section>
 
             <section className="order-2 rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="operations-heading">
@@ -1048,10 +1160,10 @@ export const AdminDashboard: React.FC = () => {
               <div className="flex flex-col gap-2 border-b border-gray-200 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">User register</p>
-                  <h2 id="user-accounts-heading" className="mt-1 text-base font-bold text-gray-950">User accounts</h2>
-                  <p className="mt-1 text-xs font-medium text-gray-500">Review access, activity, subscriptions and private admin notes.</p>
+                  <h2 id="user-accounts-heading" className="mt-1 text-base font-bold text-gray-950">App profiles</h2>
+                  <p className="mt-1 text-xs font-medium text-gray-500">Review stored profiles, access, activity, subscriptions and private admin notes.</p>
                 </div>
-                <p className="text-xs font-semibold text-gray-500">{filteredUsers.length} of {users.length} users shown</p>
+                <p className="text-xs font-semibold text-gray-500">{filteredUsers.length} of {users.length} profiles shown</p>
               </div>
               <div className="bg-white">
               <div className="divide-y divide-gray-100">
@@ -1192,9 +1304,9 @@ export const AdminDashboard: React.FC = () => {
                                   ? 'text-gray-400 cursor-not-allowed'
                                   : 'text-gray-400 hover:text-red-600'
                               } disabled:opacity-50`}
-                              title="Delete user"
+                              title="Delete the sign-in identity, profile and stored app data"
                             >
-                              Delete
+                              Delete account
                             </button>
                           )}
                         </div>
