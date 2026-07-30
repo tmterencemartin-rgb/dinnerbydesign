@@ -106,6 +106,7 @@ When a user lists ingredients:
 
 - App-authored email uses `/api/send-email` with Resend.
 - Stripe lifecycle email uses `sendTrackedEmail` and records delivery attempts in `emailEvents`.
+- Set an email's `...Sent` profile flag only after the provider confirms delivery. A simulated provider response must remain distinguishable from delivery and must not set a sent flag.
 - Maintain automatic email for welcome, trial ending, password change, account deletion, subscription activation, subscription cancellation, payment failure and permanent access.
 - User-requested recipe, shopping-list, test and administrator sends use the same delivery path but are not automatic lifecycle messages.
 

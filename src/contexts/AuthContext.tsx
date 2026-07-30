@@ -36,6 +36,7 @@ import {
 } from 'firebase/firestore';
 import { db, auth, handleFirestoreError } from '../firebase';
 import { getApiUrl } from '../lib/api';
+import { isConfirmedEmailDelivery } from '../lib/emailDelivery';
 import { isNativeApp, isNativeTestBuild } from '../lib/platform';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { 
@@ -1509,7 +1510,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         })
           .then(r => r.json())
           .then(async resp => {
-            if (resp?.ok) {
+            if (isConfirmedEmailDelivery(resp)) {
               addLog(`AUTH: Welcome email successfully sent to ${email}`);
               const uid = currentUser?.uid;
               if (uid) {
@@ -1607,7 +1608,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         });
 
         const resp = await response.json().catch(() => null);
-        if (resp?.ok) {
+        if (isConfirmedEmailDelivery(resp)) {
           await updateDoc(doc(db, 'users', uid), {
             trialEndingReminderEmailSent: true,
             trialEndingReminderEmailSentAt: serverTimestamp()

@@ -9,6 +9,7 @@ import { getAuth as getFirebaseAdminAuth } from "firebase-admin/auth";
 import firebaseConfig from "../firebase-applet-config.json";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
+import { getSimulatedEmailResult } from "../src/lib/emailDelivery";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH, getFamilyDinnersForFourJsonLd, renderFamilyDinnersForFourInitialHtml } from "../src/content/familyDinnersForFourPlan";
 import { isUnknownPublicArticlePath } from "../src/content/publicArticles";
@@ -1222,11 +1223,7 @@ export function createApp() {
           simulated: true,
           error
         });
-        return res.status(200).json({ 
-          ok: true, 
-          simulated: true,
-          message: "Email simulated successfully (Sandbox/Verification Restriction)."
-        });
+        return res.status(200).json(getSimulatedEmailResult());
       }
       
       // Only log genuine unexpected errors

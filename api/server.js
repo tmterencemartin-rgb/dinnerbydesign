@@ -183095,6 +183095,19 @@ async function sendEmail({
   }
 }
 
+// src/lib/emailDelivery.ts
+function getSimulatedEmailResult() {
+  return {
+    ok: false,
+    delivered: false,
+    simulated: true,
+    error: {
+      code: "EMAIL_NOT_DELIVERED",
+      message: "The email provider did not confirm delivery."
+    }
+  };
+}
+
 // src/content/programmaticDisclosures.ts
 var FIVE_DINNERS_PRICE_DISCLOSURES = [
   {
@@ -185983,11 +185996,7 @@ function createApp() {
           simulated: true,
           error
         });
-        return res.status(200).json({
-          ok: true,
-          simulated: true,
-          message: "Email simulated successfully (Sandbox/Verification Restriction)."
-        });
+        return res.status(200).json(getSimulatedEmailResult());
       }
       console.error("[API] send-email caught unexpected error:", error);
       await recordEmailEvent({
