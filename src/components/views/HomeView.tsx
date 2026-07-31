@@ -760,7 +760,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   Continue searching and keep your results
                 </h2>
                 <p className="mx-auto mt-2 max-w-xl text-[13px] leading-5 text-dbd-ink-3 sm:text-sm">
-                  Create an account to start your 7-day full-access trial. No card required.
+                  Create an account to start your free, 7-day full-access trial. No card required.
                 </p>
                 <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <button
