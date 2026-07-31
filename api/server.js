@@ -177019,7 +177019,6 @@ var safeStorage = {
 };
 
 // src/lib/api.ts
-var import_meta = {};
 function isLocalhost() {
   if (typeof window === "undefined") return false;
   return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname.startsWith("192.168.") || window.location.hostname.startsWith("10.");
@@ -177064,7 +177063,8 @@ function getApiUrl(path3) {
       return `${cleanBase}${normalizedPath}`;
     }
   }
-  const envUrl = typeof import_meta !== "undefined" && import_meta.env ? import_meta.env.VITE_API_BASE_URL : typeof process !== "undefined" ? process.env.VITE_API_BASE_URL : void 0;
+  const browserEnv = globalThis;
+  const envUrl = browserEnv.__DBD_API_BASE_URL__ || (typeof process !== "undefined" ? process.env.VITE_API_BASE_URL : void 0);
   if (envUrl && envUrl !== "undefined" && envUrl !== "null" && envUrl.trim() !== "") {
     const cleanBase = envUrl.trim().endsWith("/") ? envUrl.trim().slice(0, -1) : envUrl.trim();
     return `${cleanBase}${normalizedPath}`;
@@ -185270,7 +185270,7 @@ function summariseAccountReconciliation(identities, profileIds) {
 }
 
 // src/api-server.ts
-var import_meta2 = {};
+var import_meta = {};
 function getFirebaseConfig() {
   return firebase_applet_config_default;
 }
@@ -185482,8 +185482,8 @@ async function recordAiUsageEvent(details) {
 var _filename = "";
 var _dirname = "";
 try {
-  if (typeof import_meta2 !== "undefined" && import_meta2.url) {
-    _filename = (0, import_url.fileURLToPath)(import_meta2.url);
+  if (typeof import_meta !== "undefined" && import_meta.url) {
+    _filename = (0, import_url.fileURLToPath)(import_meta.url);
     _dirname = import_path.default.dirname(_filename);
   } else if (typeof __filename !== "undefined") {
     _filename = __filename;

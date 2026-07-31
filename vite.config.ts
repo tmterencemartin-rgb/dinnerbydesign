@@ -12,6 +12,9 @@ export default defineConfig(({mode}) => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    define: {
+      'globalThis.__DBD_API_BASE_URL__': JSON.stringify(env.VITE_API_BASE_URL || ''),
+    },
     test: {
       environment: 'jsdom',
       globals: true,

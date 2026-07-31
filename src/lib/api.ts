@@ -86,9 +86,11 @@ export function getApiUrl(path: string): string {
   }
 
   // 2. Try environment variable
-  const envUrl = (typeof import.meta !== 'undefined' && import.meta.env) 
-    ? (import.meta.env.VITE_API_BASE_URL as string | undefined) 
-    : (typeof process !== 'undefined' ? (process.env.VITE_API_BASE_URL as string | undefined) : undefined);
+  const browserEnv = globalThis as typeof globalThis & {
+    __DBD_API_BASE_URL__?: string;
+  };
+  const envUrl = browserEnv.__DBD_API_BASE_URL__ ||
+    (typeof process !== 'undefined' ? (process.env.VITE_API_BASE_URL as string | undefined) : undefined);
     
   // Check for common falsy/invalid string values from env injectors
   if (envUrl && envUrl !== 'undefined' && envUrl !== 'null' && envUrl.trim() !== '') {
