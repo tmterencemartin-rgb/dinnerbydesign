@@ -3,6 +3,7 @@ import { Recipe, ReadyMeal, SearchParams, UserPreferences } from "../types";
 import { getApiUrl, getApiConfig, isLocalhost } from "../lib/api";
 import { PREFERRED_SOURCES } from '../data/preferredSources';
 import { parseAndNormaliseIngredients } from '../lib/ingredientParser';
+import { ACTIVE_GEMINI_MODEL } from '../config/aiModel';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
 const SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
@@ -417,7 +418,7 @@ const sanitizeRealityChecks = (checks: any): any[] => {
     .slice(0, 3);
 };
 
-const SEARCH_MODEL = 'gemini-3.1-flash-lite';
+const SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
 
 async function fetchProxySuggestions(searchParams: SearchParams, preferences?: UserPreferences, signal?: AbortSignal): Promise<any> {
   const controller = new AbortController();

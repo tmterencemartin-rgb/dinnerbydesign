@@ -5957,106 +5957,133 @@ var require_on_finished = __commonJS({
   }
 });
 
-// node_modules/content-type/index.js
-var require_content_type = __commonJS({
-  "node_modules/content-type/index.js"(exports2) {
+// node_modules/type-is/node_modules/content-type/dist/index.js
+var require_dist = __commonJS({
+  "node_modules/type-is/node_modules/content-type/dist/index.js"(exports2) {
     "use strict";
-    var PARAM_REGEXP = /; *([!#$%&'*+.^_`|~0-9A-Za-z-]+) *= *("(?:[\u000b\u0020\u0021\u0023-\u005b\u005d-\u007e\u0080-\u00ff]|\\[\u000b\u0020-\u00ff])*"|[!#$%&'*+.^_`|~0-9A-Za-z-]+) */g;
-    var TEXT_REGEXP = /^[\u000b\u0020-\u007e\u0080-\u00ff]+$/;
-    var TOKEN_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
-    var QESC_REGEXP = /\\([\u000b\u0020-\u00ff])/g;
-    var QUOTE_REGEXP = /([\\"])/g;
-    var TYPE_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+\/[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+    Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.format = format;
     exports2.parse = parse;
+    var TEXT_REGEXP = /^[\u0009\u0020-\u007e\u0080-\u00ff]*$/;
+    var TOKEN_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+    var QUOTE_REGEXP = /[\\"]/g;
+    var TYPE_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+\/[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+    var NullObject = /* @__PURE__ */ (() => {
+      const C = function() {
+      };
+      C.prototype = /* @__PURE__ */ Object.create(null);
+      return C;
+    })();
     function format(obj) {
-      if (!obj || typeof obj !== "object") {
-        throw new TypeError("argument obj is required");
-      }
-      var parameters = obj.parameters;
-      var type = obj.type;
+      const { type, parameters } = obj;
       if (!type || !TYPE_REGEXP.test(type)) {
-        throw new TypeError("invalid type");
+        throw new TypeError(`Invalid type: ${type}`);
       }
-      var string = type;
-      if (parameters && typeof parameters === "object") {
-        var param;
-        var params = Object.keys(parameters).sort();
-        for (var i2 = 0; i2 < params.length; i2++) {
-          param = params[i2];
+      let result = type;
+      if (parameters) {
+        for (const param of Object.keys(parameters)) {
           if (!TOKEN_REGEXP.test(param)) {
-            throw new TypeError("invalid parameter name");
+            throw new TypeError(`Invalid parameter name: ${param}`);
           }
-          string += "; " + param + "=" + qstring(parameters[param]);
+          result += `; ${param}=${qstring(parameters[param])}`;
         }
       }
-      return string;
+      return result;
     }
-    function parse(string) {
-      if (!string) {
-        throw new TypeError("argument string is required");
-      }
-      var header = typeof string === "object" ? getcontenttype(string) : string;
-      if (typeof header !== "string") {
-        throw new TypeError("argument string is required to be a string");
-      }
-      var index = header.indexOf(";");
-      var type = index !== -1 ? header.slice(0, index).trim() : header.trim();
-      if (!TYPE_REGEXP.test(type)) {
-        throw new TypeError("invalid media type");
-      }
-      var obj = new ContentType(type.toLowerCase());
-      if (index !== -1) {
-        var key;
-        var match2;
-        var value;
-        PARAM_REGEXP.lastIndex = index;
-        while (match2 = PARAM_REGEXP.exec(header)) {
-          if (match2.index !== index) {
-            throw new TypeError("invalid parameter format");
-          }
-          index += match2[0].length;
-          key = match2[1].toLowerCase();
-          value = match2[2];
-          if (value.charCodeAt(0) === 34) {
-            value = value.slice(1, -1);
-            if (value.indexOf("\\") !== -1) {
-              value = value.replace(QESC_REGEXP, "$1");
+    function parse(header, options) {
+      const len = header.length;
+      let index = skipOWS(header, 0, len);
+      const valueStart = index;
+      index = skipValue(header, index, len);
+      const valueEnd = trailingOWS(header, valueStart, index);
+      const type = header.slice(valueStart, valueEnd).toLowerCase();
+      const parameters = options?.parameters === false ? new NullObject() : parseParameters(header, index, len);
+      return { type, parameters };
+    }
+    var SP = 32;
+    var HTAB = 9;
+    var SEMI = 59;
+    var EQ = 61;
+    var DQUOTE = 34;
+    var BSLASH = 92;
+    function parseParameters(header, index, len) {
+      const parameters = new NullObject();
+      parameter: while (index < len) {
+        index = skipOWS(header, index + 1, len);
+        const keyStart = index;
+        while (index < len) {
+          const code = header.charCodeAt(index);
+          if (code === SEMI)
+            continue parameter;
+          if (code === EQ) {
+            const keyEnd = trailingOWS(header, keyStart, index);
+            const key = header.slice(keyStart, keyEnd).toLowerCase();
+            index = skipOWS(header, index + 1, len);
+            if (index < len && header.charCodeAt(index) === DQUOTE) {
+              index++;
+              let value = "";
+              while (index < len) {
+                const code2 = header.charCodeAt(index++);
+                if (code2 === DQUOTE) {
+                  index = skipValue(header, index, len);
+                  if (parameters[key] === void 0)
+                    parameters[key] = value;
+                  break;
+                }
+                if (code2 === BSLASH && index < len) {
+                  value += header[index++];
+                  continue;
+                }
+                value += String.fromCharCode(code2);
+              }
+              continue parameter;
             }
+            const valueStart = index;
+            index = skipValue(header, index, len);
+            if (parameters[key] === void 0) {
+              const valueEnd = trailingOWS(header, valueStart, index);
+              parameters[key] = header.slice(valueStart, valueEnd);
+            }
+            continue parameter;
           }
-          obj.parameters[key] = value;
-        }
-        if (index !== header.length) {
-          throw new TypeError("invalid parameter format");
+          index++;
         }
       }
-      return obj;
+      return parameters;
     }
-    function getcontenttype(obj) {
-      var header;
-      if (typeof obj.getHeader === "function") {
-        header = obj.getHeader("content-type");
-      } else if (typeof obj.headers === "object") {
-        header = obj.headers && obj.headers["content-type"];
+    function skipValue(str, index, len) {
+      while (index < len) {
+        const char = str.charCodeAt(index);
+        if (char === SEMI)
+          break;
+        index++;
       }
-      if (typeof header !== "string") {
-        throw new TypeError("content-type header is missing from object");
-      }
-      return header;
+      return index;
     }
-    function qstring(val) {
-      var str = String(val);
-      if (TOKEN_REGEXP.test(str)) {
+    function skipOWS(header, index, len) {
+      while (index < len) {
+        const char = header.charCodeAt(index);
+        if (char !== SP && char !== HTAB)
+          break;
+        index++;
+      }
+      return index;
+    }
+    function trailingOWS(header, start, end) {
+      while (end > start) {
+        const char = header.charCodeAt(end - 1);
+        if (char !== SP && char !== HTAB)
+          break;
+        end--;
+      }
+      return end;
+    }
+    function qstring(str) {
+      if (TOKEN_REGEXP.test(str))
         return str;
-      }
-      if (str.length > 0 && !TEXT_REGEXP.test(str)) {
-        throw new TypeError("invalid parameter value");
-      }
-      return '"' + str.replace(QUOTE_REGEXP, "\\$1") + '"';
-    }
-    function ContentType(type) {
-      this.parameters = /* @__PURE__ */ Object.create(null);
-      this.type = type;
+      if (TEXT_REGEXP.test(str))
+        return `"${str.replace(QUOTE_REGEXP, "\\$&")}"`;
+      throw new TypeError(`Invalid parameter value: ${str}`);
     }
   }
 });
@@ -15640,7 +15667,7 @@ var require_media_typer = __commonJS({
 var require_type_is = __commonJS({
   "node_modules/type-is/index.js"(exports2, module2) {
     "use strict";
-    var contentType = require_content_type();
+    var contentType = require_dist();
     var mime = require_mime_types();
     var typer = require_media_typer();
     module2.exports = typeofrequest;
@@ -15649,9 +15676,12 @@ var require_type_is = __commonJS({
     module2.exports.normalize = normalize;
     module2.exports.match = mimeMatch;
     function typeis(value, types_) {
+      if (value && typeof value === "object") {
+        value = value.headers["content-type"];
+      }
       var i2;
       var types3 = types_;
-      var val = tryNormalizeType(value);
+      var val = normalizeType(value);
       if (!val) {
         return false;
       }
@@ -15717,15 +15747,140 @@ var require_type_is = __commonJS({
       return true;
     }
     function normalizeType(value) {
-      var type = contentType.parse(value).type;
+      if (!value) return null;
+      var type = contentType.parse(value, { parameters: false }).type;
       return typer.test(type) ? type : null;
     }
-    function tryNormalizeType(value) {
-      try {
-        return value ? normalizeType(value) : null;
-      } catch (err) {
-        return null;
+  }
+});
+
+// node_modules/body-parser/node_modules/content-type/dist/index.js
+var require_dist2 = __commonJS({
+  "node_modules/body-parser/node_modules/content-type/dist/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.format = format;
+    exports2.parse = parse;
+    var TEXT_REGEXP = /^[\u0009\u0020-\u007e\u0080-\u00ff]*$/;
+    var TOKEN_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+    var QUOTE_REGEXP = /[\\"]/g;
+    var TYPE_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+\/[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+    var NullObject = /* @__PURE__ */ (() => {
+      const C = function() {
+      };
+      C.prototype = /* @__PURE__ */ Object.create(null);
+      return C;
+    })();
+    function format(obj) {
+      const { type, parameters } = obj;
+      if (!type || !TYPE_REGEXP.test(type)) {
+        throw new TypeError(`Invalid type: ${type}`);
       }
+      let result = type;
+      if (parameters) {
+        for (const param of Object.keys(parameters)) {
+          if (!TOKEN_REGEXP.test(param)) {
+            throw new TypeError(`Invalid parameter name: ${param}`);
+          }
+          result += `; ${param}=${qstring(parameters[param])}`;
+        }
+      }
+      return result;
+    }
+    function parse(header, options) {
+      const len = header.length;
+      let index = skipOWS(header, 0, len);
+      const valueStart = index;
+      index = skipValue(header, index, len);
+      const valueEnd = trailingOWS(header, valueStart, index);
+      const type = header.slice(valueStart, valueEnd).toLowerCase();
+      const parameters = options?.parameters === false ? new NullObject() : parseParameters(header, index, len);
+      return { type, parameters };
+    }
+    var SP = 32;
+    var HTAB = 9;
+    var SEMI = 59;
+    var EQ = 61;
+    var DQUOTE = 34;
+    var BSLASH = 92;
+    function parseParameters(header, index, len) {
+      const parameters = new NullObject();
+      parameter: while (index < len) {
+        index = skipOWS(header, index + 1, len);
+        const keyStart = index;
+        while (index < len) {
+          const code = header.charCodeAt(index);
+          if (code === SEMI)
+            continue parameter;
+          if (code === EQ) {
+            const keyEnd = trailingOWS(header, keyStart, index);
+            const key = header.slice(keyStart, keyEnd).toLowerCase();
+            index = skipOWS(header, index + 1, len);
+            if (index < len && header.charCodeAt(index) === DQUOTE) {
+              index++;
+              let value = "";
+              while (index < len) {
+                const code2 = header.charCodeAt(index++);
+                if (code2 === DQUOTE) {
+                  index = skipValue(header, index, len);
+                  if (parameters[key] === void 0)
+                    parameters[key] = value;
+                  break;
+                }
+                if (code2 === BSLASH && index < len) {
+                  value += header[index++];
+                  continue;
+                }
+                value += String.fromCharCode(code2);
+              }
+              continue parameter;
+            }
+            const valueStart = index;
+            index = skipValue(header, index, len);
+            if (parameters[key] === void 0) {
+              const valueEnd = trailingOWS(header, valueStart, index);
+              parameters[key] = header.slice(valueStart, valueEnd);
+            }
+            continue parameter;
+          }
+          index++;
+        }
+      }
+      return parameters;
+    }
+    function skipValue(str, index, len) {
+      while (index < len) {
+        const char = str.charCodeAt(index);
+        if (char === SEMI)
+          break;
+        index++;
+      }
+      return index;
+    }
+    function skipOWS(header, index, len) {
+      while (index < len) {
+        const char = header.charCodeAt(index);
+        if (char !== SP && char !== HTAB)
+          break;
+        index++;
+      }
+      return index;
+    }
+    function trailingOWS(header, start, end) {
+      while (end > start) {
+        const char = header.charCodeAt(end - 1);
+        if (char !== SP && char !== HTAB)
+          break;
+        end--;
+      }
+      return end;
+    }
+    function qstring(str) {
+      if (TOKEN_REGEXP.test(str))
+        return str;
+      if (TEXT_REGEXP.test(str))
+        return `"${str.replace(QUOTE_REGEXP, "\\$&")}"`;
+      throw new TypeError(`Invalid parameter value: ${str}`);
     }
   }
 });
@@ -15735,7 +15890,7 @@ var require_utils = __commonJS({
   "node_modules/body-parser/lib/utils.js"(exports2, module2) {
     "use strict";
     var bytes = require_bytes();
-    var contentType = require_content_type();
+    var contentType = require_dist2();
     var typeis = require_type_is();
     module2.exports = {
       getCharset,
@@ -15743,11 +15898,9 @@ var require_utils = __commonJS({
       passthrough
     };
     function getCharset(req) {
-      try {
-        return (contentType.parse(req).parameters.charset || "").toLowerCase();
-      } catch {
-        return void 0;
-      }
+      const header = req.headers["content-type"];
+      if (!header) return void 0;
+      return contentType.parse(header).parameters.charset?.toLowerCase();
     }
     function typeChecker(type) {
       return function checkType(req) {
@@ -15758,15 +15911,18 @@ var require_utils = __commonJS({
       if (!defaultType) {
         throw new TypeError("defaultType must be provided");
       }
-      var inflate = options?.inflate !== false;
-      var limit = typeof options?.limit !== "number" ? bytes.parse(options?.limit || "100kb") : options?.limit;
-      var type = options?.type || defaultType;
-      var verify2 = options?.verify || false;
-      var defaultCharset = options?.defaultCharset || "utf-8";
+      const inflate = options?.inflate !== false;
+      const limit = typeof options?.limit === "undefined" || options?.limit === null ? 102400 : bytes.parse(options.limit);
+      const type = options?.type || defaultType;
+      const verify2 = options?.verify || false;
+      const defaultCharset = options?.defaultCharset || "utf-8";
+      if (limit === null) {
+        throw new TypeError(`option limit "${String(options.limit)}" is invalid`);
+      }
       if (verify2 !== false && typeof verify2 !== "function") {
         throw new TypeError("option verify must be function");
       }
-      var shouldParse = typeof type !== "function" ? typeChecker(type) : type;
+      const shouldParse = typeof type !== "function" ? typeChecker(type) : type;
       return {
         inflate,
         limit,
@@ -15813,7 +15969,7 @@ var require_read = __commonJS({
         next();
         return;
       }
-      var encoding = null;
+      let encoding = null;
       if (options?.skipCharset !== true) {
         encoding = getCharset(req) || options.defaultCharset;
         if (!!options?.isValidCharset && !options.isValidCharset(encoding)) {
@@ -15825,10 +15981,10 @@ var require_read = __commonJS({
           return;
         }
       }
-      var length;
-      var opts = options;
-      var stream;
-      var verify2 = opts.verify;
+      let length;
+      const opts = options;
+      let stream;
+      const verify2 = opts.verify;
       try {
         stream = contentstream(req, debug, opts.inflate);
         length = stream.length;
@@ -15847,7 +16003,7 @@ var require_read = __commonJS({
       debug("read body");
       getBody(stream, opts, function(error, body) {
         if (error) {
-          var _error;
+          let _error;
           if (error.type === "encoding.unsupported") {
             _error = createError(415, 'unsupported charset "' + encoding.toUpperCase() + '"', {
               charset: encoding.toLowerCase(),
@@ -15877,7 +16033,7 @@ var require_read = __commonJS({
             return;
           }
         }
-        var str = body;
+        let str = body;
         try {
           debug("parse body");
           str = typeof body !== "string" && encoding !== null ? iconv.decode(body, encoding) : body;
@@ -15893,8 +16049,8 @@ var require_read = __commonJS({
       });
     }
     function contentstream(req, debug, inflate) {
-      var encoding = (req.headers["content-encoding"] || "identity").toLowerCase();
-      var length = req.headers["content-length"];
+      const encoding = (req.headers["content-encoding"] || "identity").toLowerCase();
+      const length = req.headers["content-length"];
       debug('content-encoding "%s"', encoding);
       if (inflate === false && encoding !== "identity") {
         throw createError(415, "content encoding unsupported", {
@@ -15906,7 +16062,7 @@ var require_read = __commonJS({
         req.length = length;
         return req;
       }
-      var stream = createDecompressionStream(encoding, debug);
+      const stream = createDecompressionStream(encoding, debug);
       req.pipe(stream);
       return stream;
     }
@@ -15952,18 +16108,43 @@ var require_json = __commonJS({
     var JSON_SYNTAX_REGEXP = /#+/g;
     function json2(options) {
       const normalizedOptions = normalizeOptions(options, "application/json");
-      var reviver = options?.reviver;
-      var strict = options?.strict !== false;
-      function parse(body) {
-        if (body.length === 0) {
-          return {};
-        }
-        if (strict) {
-          var first = firstchar(body);
+      const parse = createJsonParser(options);
+      const readOptions = {
+        ...normalizedOptions,
+        // assert charset per RFC 7159 sec 8.1
+        isValidCharset: (charset) => charset.slice(0, 4) === "utf-"
+      };
+      return function jsonParser(req, res, next) {
+        read(req, res, next, parse, debug, readOptions);
+      };
+    }
+    function createJsonParser(options) {
+      const reviver = options?.reviver;
+      const strict = options?.strict !== false;
+      if (strict) {
+        return function parse(body) {
+          if (body.length === 0) {
+            return {};
+          }
+          const first = firstchar(body);
           if (first !== "{" && first !== "[") {
             debug("strict violation");
             throw createStrictSyntaxError(body, first);
           }
+          try {
+            debug("parse json");
+            return JSON.parse(body, reviver);
+          } catch (e2) {
+            throw normalizeJsonSyntaxError(e2, {
+              message: e2.message,
+              stack: e2.stack
+            });
+          }
+        };
+      }
+      return function parse(body) {
+        if (body.length === 0) {
+          return {};
         }
         try {
           debug("parse json");
@@ -15974,19 +16155,11 @@ var require_json = __commonJS({
             stack: e2.stack
           });
         }
-      }
-      const readOptions = {
-        ...normalizedOptions,
-        // assert charset per RFC 7159 sec 8.1
-        isValidCharset: (charset) => charset.slice(0, 4) === "utf-"
-      };
-      return function jsonParser(req, res, next) {
-        read(req, res, next, parse, debug, readOptions);
       };
     }
     function createStrictSyntaxError(str, char) {
-      var index = str.indexOf(char);
-      var partial = "";
+      const index = str.indexOf(char);
+      let partial = "";
       if (index !== -1) {
         partial = str.substring(0, index) + JSON_SYNTAX_CHAR.repeat(str.length - index);
       }
@@ -16003,13 +16176,13 @@ var require_json = __commonJS({
       }
     }
     function firstchar(str) {
-      var match2 = FIRST_CHAR_REGEXP.exec(str);
+      const match2 = FIRST_CHAR_REGEXP.exec(str);
       return match2 ? match2[1] : void 0;
     }
     function normalizeJsonSyntaxError(error, obj) {
-      var keys = Object.getOwnPropertyNames(error);
-      for (var i2 = 0; i2 < keys.length; i2++) {
-        var key = keys[i2];
+      const keys = Object.getOwnPropertyNames(error);
+      for (let i2 = 0; i2 < keys.length; i2++) {
+        const key = keys[i2];
         if (key !== "stack" && key !== "message") {
           delete error[key];
         }
@@ -18661,10 +18834,7 @@ var require_urlencoded = __commonJS({
       if (normalizedOptions.defaultCharset !== "utf-8" && normalizedOptions.defaultCharset !== "iso-8859-1") {
         throw new TypeError("option defaultCharset must be either utf-8 or iso-8859-1");
       }
-      var queryparse = createQueryParser(options);
-      function parse(body, encoding) {
-        return body.length ? queryparse(body, encoding) : {};
-      }
+      const parse = createQueryParser(options);
       const readOptions = {
         ...normalizedOptions,
         // assert charset
@@ -18675,11 +18845,11 @@ var require_urlencoded = __commonJS({
       };
     }
     function createQueryParser(options) {
-      var extended = Boolean(options?.extended);
-      var parameterLimit = options?.parameterLimit !== void 0 ? options?.parameterLimit : 1e3;
-      var charsetSentinel = options?.charsetSentinel;
-      var interpretNumericEntities = options?.interpretNumericEntities;
-      var depth = extended ? options?.depth !== void 0 ? options?.depth : 32 : 0;
+      const extended = Boolean(options?.extended);
+      let parameterLimit = options?.parameterLimit !== void 0 ? options?.parameterLimit : 1e3;
+      const charsetSentinel = options?.charsetSentinel;
+      const interpretNumericEntities = options?.interpretNumericEntities;
+      const depth = extended ? options?.depth !== void 0 ? options?.depth : 32 : 0;
       if (isNaN(parameterLimit) || parameterLimit < 1) {
         throw new TypeError("option parameterLimit must be a positive number");
       }
@@ -18689,15 +18859,16 @@ var require_urlencoded = __commonJS({
       if (isFinite(parameterLimit)) {
         parameterLimit = parameterLimit | 0;
       }
-      return function queryparse(body, encoding) {
-        var paramCount = parameterCount(body, parameterLimit);
+      return function parse(body, encoding) {
+        if (!body.length) return {};
+        const paramCount = parameterCount(body, parameterLimit);
         if (paramCount === void 0) {
           debug("too many parameters");
           throw createError(413, "too many parameters", {
             type: "parameters.too.many"
           });
         }
-        var arrayLimit = extended ? Math.max(100, paramCount) : paramCount;
+        const arrayLimit = extended ? Math.max(100, paramCount) : paramCount;
         debug("parse " + (extended ? "extended " : "") + "urlencoding");
         try {
           return qs2.parse(body, {
@@ -18739,26 +18910,10 @@ var require_body_parser = __commonJS({
   "node_modules/body-parser/index.js"(exports2, module2) {
     "use strict";
     exports2 = module2.exports = bodyParser;
-    Object.defineProperty(exports2, "json", {
-      configurable: true,
-      enumerable: true,
-      get: () => require_json()
-    });
-    Object.defineProperty(exports2, "raw", {
-      configurable: true,
-      enumerable: true,
-      get: () => require_raw()
-    });
-    Object.defineProperty(exports2, "text", {
-      configurable: true,
-      enumerable: true,
-      get: () => require_text()
-    });
-    Object.defineProperty(exports2, "urlencoded", {
-      configurable: true,
-      enumerable: true,
-      get: () => require_urlencoded()
-    });
+    exports2.json = require_json();
+    exports2.raw = require_raw();
+    exports2.text = require_text();
+    exports2.urlencoded = require_urlencoded();
     function bodyParser() {
       throw new Error("The bodyParser() generic has been split into individual middleware to use instead.");
     }
@@ -19151,6 +19306,110 @@ var require_view = __commonJS({
       } catch (e2) {
         return void 0;
       }
+    }
+  }
+});
+
+// node_modules/content-type/index.js
+var require_content_type = __commonJS({
+  "node_modules/content-type/index.js"(exports2) {
+    "use strict";
+    var PARAM_REGEXP = /; *([!#$%&'*+.^_`|~0-9A-Za-z-]+) *= *("(?:[\u000b\u0020\u0021\u0023-\u005b\u005d-\u007e\u0080-\u00ff]|\\[\u000b\u0020-\u00ff])*"|[!#$%&'*+.^_`|~0-9A-Za-z-]+) */g;
+    var TEXT_REGEXP = /^[\u000b\u0020-\u007e\u0080-\u00ff]+$/;
+    var TOKEN_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+    var QESC_REGEXP = /\\([\u000b\u0020-\u00ff])/g;
+    var QUOTE_REGEXP = /([\\"])/g;
+    var TYPE_REGEXP = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+\/[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+    exports2.format = format;
+    exports2.parse = parse;
+    function format(obj) {
+      if (!obj || typeof obj !== "object") {
+        throw new TypeError("argument obj is required");
+      }
+      var parameters = obj.parameters;
+      var type = obj.type;
+      if (!type || !TYPE_REGEXP.test(type)) {
+        throw new TypeError("invalid type");
+      }
+      var string = type;
+      if (parameters && typeof parameters === "object") {
+        var param;
+        var params = Object.keys(parameters).sort();
+        for (var i2 = 0; i2 < params.length; i2++) {
+          param = params[i2];
+          if (!TOKEN_REGEXP.test(param)) {
+            throw new TypeError("invalid parameter name");
+          }
+          string += "; " + param + "=" + qstring(parameters[param]);
+        }
+      }
+      return string;
+    }
+    function parse(string) {
+      if (!string) {
+        throw new TypeError("argument string is required");
+      }
+      var header = typeof string === "object" ? getcontenttype(string) : string;
+      if (typeof header !== "string") {
+        throw new TypeError("argument string is required to be a string");
+      }
+      var index = header.indexOf(";");
+      var type = index !== -1 ? header.slice(0, index).trim() : header.trim();
+      if (!TYPE_REGEXP.test(type)) {
+        throw new TypeError("invalid media type");
+      }
+      var obj = new ContentType(type.toLowerCase());
+      if (index !== -1) {
+        var key;
+        var match2;
+        var value;
+        PARAM_REGEXP.lastIndex = index;
+        while (match2 = PARAM_REGEXP.exec(header)) {
+          if (match2.index !== index) {
+            throw new TypeError("invalid parameter format");
+          }
+          index += match2[0].length;
+          key = match2[1].toLowerCase();
+          value = match2[2];
+          if (value.charCodeAt(0) === 34) {
+            value = value.slice(1, -1);
+            if (value.indexOf("\\") !== -1) {
+              value = value.replace(QESC_REGEXP, "$1");
+            }
+          }
+          obj.parameters[key] = value;
+        }
+        if (index !== header.length) {
+          throw new TypeError("invalid parameter format");
+        }
+      }
+      return obj;
+    }
+    function getcontenttype(obj) {
+      var header;
+      if (typeof obj.getHeader === "function") {
+        header = obj.getHeader("content-type");
+      } else if (typeof obj.headers === "object") {
+        header = obj.headers && obj.headers["content-type"];
+      }
+      if (typeof header !== "string") {
+        throw new TypeError("content-type header is missing from object");
+      }
+      return header;
+    }
+    function qstring(val) {
+      var str = String(val);
+      if (TOKEN_REGEXP.test(str)) {
+        return str;
+      }
+      if (str.length > 0 && !TEXT_REGEXP.test(str)) {
+        throw new TypeError("invalid parameter value");
+      }
+      return '"' + str.replace(QUOTE_REGEXP, "\\$1") + '"';
+    }
+    function ContentType(type) {
+      this.parameters = /* @__PURE__ */ Object.create(null);
+      this.type = type;
     }
   }
 });
@@ -20238,7 +20497,7 @@ var require_is_promise = __commonJS({
 });
 
 // node_modules/path-to-regexp/dist/index.js
-var require_dist = __commonJS({
+var require_dist3 = __commonJS({
   "node_modules/path-to-regexp/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -20611,7 +20870,7 @@ var require_layer = __commonJS({
   "node_modules/router/lib/layer.js"(exports2, module2) {
     "use strict";
     var isPromise = require_is_promise();
-    var pathRegexp = require_dist();
+    var pathRegexp = require_dist3();
     var debug = require_src()("router:layer");
     var deprecate3 = require_depd()("router");
     var TRAILING_SLASH_REGEXP = /\/+$/;
@@ -24876,7 +25135,7 @@ var require_helpers = __commonJS({
 });
 
 // node_modules/agent-base/dist/index.js
-var require_dist2 = __commonJS({
+var require_dist4 = __commonJS({
   "node_modules/agent-base/dist/index.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
@@ -25128,7 +25387,7 @@ var require_parse_proxy_response = __commonJS({
 });
 
 // node_modules/https-proxy-agent/dist/index.js
-var require_dist3 = __commonJS({
+var require_dist5 = __commonJS({
   "node_modules/https-proxy-agent/dist/index.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
@@ -25167,7 +25426,7 @@ var require_dist3 = __commonJS({
     var tls = __importStar(require("tls"));
     var assert_1 = __importDefault(require("assert"));
     var debug_1 = __importDefault(require_src());
-    var agent_base_1 = require_dist2();
+    var agent_base_1 = require_dist4();
     var url_1 = require("url");
     var parse_proxy_response_1 = require_parse_proxy_response();
     var debug = (0, debug_1.default)("https-proxy-agent");
@@ -32198,7 +32457,7 @@ Content-Type: ${partContentType}\r
        * @returns A proxy agent
        */
       static async #getProxyAgent() {
-        this.#proxyAgent ||= (await Promise.resolve().then(() => __toESM(require_dist3()))).HttpsProxyAgent;
+        this.#proxyAgent ||= (await Promise.resolve().then(() => __toESM(require_dist5()))).HttpsProxyAgent;
         return this.#proxyAgent;
       }
       static async #getFetch() {
@@ -42278,7 +42537,7 @@ var require_package3 = __commonJS({
   "node_modules/firebase-admin/package.json"(exports2, module2) {
     module2.exports = {
       name: "firebase-admin",
-      version: "14.1.0",
+      version: "14.2.0",
       description: "Firebase admin SDK for Node.js",
       author: "Firebase <firebase-support@google.com> (https://firebase.google.com/)",
       license: "Apache-2.0",
@@ -42487,7 +42746,6 @@ var require_package3 = __commonJS({
         "@fastify/busboy": "^3.0.0",
         "@firebase/database-compat": "^2.1.4",
         "@firebase/database-types": "^1.0.20",
-        "farmhash-modern": "^1.1.0",
         "fast-deep-equal": "^3.1.1",
         "google-auth-library": "^10.6.2",
         jsonwebtoken: "^9.0.0",
@@ -42508,14 +42766,12 @@ var require_package3 = __commonJS({
         "@types/chai": "^4.0.0",
         "@types/chai-as-promised": "^7.1.0",
         "@types/firebase-token-generator": "^2.0.28",
-        "@types/jsonwebtoken": "8.5.1",
+        "@types/jsonwebtoken": "8.5.9",
         "@types/lodash": "^4.14.104",
         "@types/minimist": "^1.2.2",
         "@types/mocha": "^10.0.0",
         "@types/nock": "^11.1.0",
         "@types/node": "^26.0.0",
-        "@types/request": "^2.47.0",
-        "@types/request-promise": "^4.1.41",
         "@types/sinon": "^21.0.1",
         "@types/sinon-chai": "^3.0.0",
         "@typescript-eslint/eslint-plugin": "^8.62.0",
@@ -42542,8 +42798,6 @@ var require_package3 = __commonJS({
         nock: "^14.0.15",
         "npm-run-all": "^4.1.5",
         nyc: "^18.0.0",
-        request: "^2.75.0",
-        "request-promise": "^4.1.1",
         "run-sequence": "^2.2.1",
         sinon: "^22.0.0",
         "sinon-chai": "^3.0.0",
@@ -49752,6 +50006,9 @@ var require_parse3 = __commonJS({
           token2 = next();
         }
         while (token2 !== "=") {
+          if (token2 === null) {
+            throw illegal(token2, "end of input");
+          }
           if (token2 === "(") {
             var parensValue = next();
             skip(")");
@@ -149496,7 +149753,7 @@ var require_sha256 = __commonJS({
 });
 
 // node_modules/standardwebhooks/dist/index.js
-var require_dist4 = __commonJS({
+var require_dist6 = __commonJS({
   "node_modules/standardwebhooks/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -177015,6 +177272,16 @@ function parseAndNormaliseIngredients(query) {
   return results;
 }
 
+// src/config/aiModel.ts
+var ACTIVE_GEMINI_MODEL = "gemini-3.1-flash-lite";
+var ACTIVE_GEMINI_PRICING_USD_PER_MILLION = {
+  input: 0.25,
+  output: 1.5
+};
+function estimateGeminiCostUsd(inputTokens, outputTokens) {
+  return Math.max(inputTokens || 0, 0) / 1e6 * ACTIVE_GEMINI_PRICING_USD_PER_MILLION.input + Math.max(outputTokens || 0, 0) / 1e6 * ACTIVE_GEMINI_PRICING_USD_PER_MILLION.output;
+}
+
 // src/services/geminiService.ts
 var SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
 var GeminiServiceError = class extends Error {
@@ -177311,7 +177578,7 @@ var sanitizeRealityChecks = (checks) => {
     tone: allowedTones.has(check2.tone) ? check2.tone : "neutral"
   })).filter((check2) => check2.label && check2.note).slice(0, 3);
 };
-var SEARCH_MODEL = "gemini-3.1-flash-lite";
+var SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
 async function fetchProxySuggestions(searchParams, preferences, signal) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
@@ -181763,7 +182030,7 @@ var PostalMime = class _PostalMime {
 };
 
 // node_modules/resend/dist/index.mjs
-var import_standardwebhooks = __toESM(require_dist4(), 1);
+var import_standardwebhooks = __toESM(require_dist6(), 1);
 var version = "6.14.0";
 function buildPaginationQuery(options) {
   const searchParams = new URLSearchParams();
@@ -185190,13 +185457,8 @@ async function recordStripeWebhookEvent(event, status, details = {}) {
     console.error("[Webhook Health] Failed to record Stripe webhook event:", logErr);
   }
 }
-var GEMINI_FLASH_INPUT_USD_PER_MILLION = 1.5;
-var GEMINI_FLASH_OUTPUT_USD_PER_MILLION = 9;
 function estimateTokensFromChars(chars) {
   return Math.ceil(Math.max(chars || 0, 0) / 4);
-}
-function estimateGeminiCostUsd(inputTokens, outputTokens) {
-  return inputTokens / 1e6 * GEMINI_FLASH_INPUT_USD_PER_MILLION + outputTokens / 1e6 * GEMINI_FLASH_OUTPUT_USD_PER_MILLION;
 }
 function classifyAiRequest(searchParams) {
   const query = String(searchParams?.query || "").toLowerCase();
@@ -185453,7 +185715,7 @@ function createApp() {
       await recordAiUsageEvent({
         type: classifyAiRequest(searchParams),
         source: searchParams.source || "cook",
-        model: usage?.model || "gemini-3.5-flash",
+        model: usage?.model || ACTIVE_GEMINI_MODEL,
         status: "succeeded",
         queryLength: String(searchParams.query || "").length,
         requestedCount: searchParams.count || 3,
@@ -185472,7 +185734,7 @@ function createApp() {
       await recordAiUsageEvent({
         type: classifyAiRequest(failedSearchParams),
         source: failedSearchParams.source || "cook",
-        model: "gemini-3.5-flash",
+        model: ACTIVE_GEMINI_MODEL,
         status: "failed",
         queryLength: String(failedSearchParams.query || "").length,
         requestedCount: failedSearchParams.count || 3,
@@ -186564,6 +186826,8 @@ on-finished/index.js:
    * MIT Licensed
    *)
 
+content-type/dist/index.js:
+content-type/dist/index.js:
 content-type/index.js:
   (*!
    * content-type
@@ -186816,7 +187080,7 @@ firebase-admin/lib/auth/auth-api-request.js:
 firebase-admin/lib/auth/token-generator.js:
 firebase-admin/lib/auth/user-record.js:
 firebase-admin/lib/auth/auth.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * @license
    * Copyright 2017 Google LLC
@@ -186837,7 +187101,7 @@ firebase-admin/lib/auth/auth.js:
 firebase-admin/lib/app/error.js:
 firebase-admin/lib/firestore/error.js:
 firebase-admin/lib/auth/error.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2026 Google LLC
    *
@@ -186855,7 +187119,7 @@ firebase-admin/lib/auth/error.js:
    *)
 
 firebase-admin/lib/app/credential-internal.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * @license
    * Copyright 2020 Google LLC
@@ -186877,7 +187141,7 @@ firebase-admin/lib/app/lifecycle.js:
 firebase-admin/lib/app/credential-factory.js:
 firebase-admin/lib/app/index.js:
 firebase-admin/lib/utils/crypto-signer.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * @license
    * Copyright 2021 Google LLC
@@ -187462,7 +187726,7 @@ gtoken/build/cjs/src/index.cjs:
 firebase-admin/lib/firestore/index.js:
 firebase-admin/lib/auth/identifier.js:
 firebase-admin/lib/auth/index.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2020 Google LLC
    *
@@ -187483,7 +187747,7 @@ firebase-admin/lib/auth/user-import-builder.js:
 firebase-admin/lib/auth/action-code-settings-builder.js:
 firebase-admin/lib/auth/auth-config.js:
 firebase-admin/lib/auth/token-verifier.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2018 Google LLC
    *
@@ -187502,7 +187766,7 @@ firebase-admin/lib/auth/token-verifier.js:
 
 firebase-admin/lib/auth/tenant.js:
 firebase-admin/lib/auth/tenant-manager.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2019 Google LLC
    *
@@ -187520,7 +187784,7 @@ firebase-admin/lib/auth/tenant-manager.js:
    *)
 
 firebase-admin/lib/auth/project-config.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2022 Google LLC
    *
@@ -187539,7 +187803,7 @@ firebase-admin/lib/auth/project-config.js:
 
 firebase-admin/lib/utils/jwt.js:
 firebase-admin/lib/auth/base-auth.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2021 Google LLC
    *
@@ -187557,7 +187821,7 @@ firebase-admin/lib/auth/base-auth.js:
    *)
 
 firebase-admin/lib/auth/project-config-manager.js:
-  (*! firebase-admin v14.1.0 *)
+  (*! firebase-admin v14.2.0 *)
 
 @google/genai/dist/node/index.mjs:
 @google/genai/dist/node/index.mjs:

@@ -73,7 +73,7 @@ When a user lists ingredients:
 
 ## Search service
 
-- Recipe generation and analysis use `gemini-3.5-flash`.
+- Recipe search uses `gemini-3.1-flash-lite`; enrichment and match-rationale calls retain `gemini-3.5-flash`.
 - Production traffic uses the cloud proxy.
 - Direct mode is for local development and troubleshooting.
 - A failed direct request must fall back to the cloud proxy where the existing flow supports it.

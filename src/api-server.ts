@@ -14,6 +14,7 @@ import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getF
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH, getFamilyDinnersForFourJsonLd, renderFamilyDinnersForFourInitialHtml } from "../src/content/familyDinnersForFourPlan";
 import { isUnknownPublicArticlePath } from "../src/content/publicArticles";
 import { getPublicPageRedirect } from "../src/content/publicRedirects";
+import { ACTIVE_GEMINI_MODEL, estimateGeminiCostUsd } from "../src/config/aiModel";
 import {
   catalogueEntryMatchesFeedItem,
   ingredientPriceDocumentId,
@@ -262,16 +263,8 @@ async function recordStripeWebhookEvent(event: any, status: "processing" | "succ
   }
 }
 
-const GEMINI_FLASH_INPUT_USD_PER_MILLION = 1.5;
-const GEMINI_FLASH_OUTPUT_USD_PER_MILLION = 9;
-
 function estimateTokensFromChars(chars: number) {
   return Math.ceil(Math.max(chars || 0, 0) / 4);
-}
-
-function estimateGeminiCostUsd(inputTokens: number, outputTokens: number) {
-  return (inputTokens / 1_000_000) * GEMINI_FLASH_INPUT_USD_PER_MILLION +
-    (outputTokens / 1_000_000) * GEMINI_FLASH_OUTPUT_USD_PER_MILLION;
 }
 
 function classifyAiRequest(searchParams: any) {
@@ -574,7 +567,7 @@ export function createApp() {
       await recordAiUsageEvent({
         type: classifyAiRequest(searchParams),
         source: searchParams.source || 'cook',
-        model: usage?.model || 'gemini-3.5-flash',
+        model: usage?.model || ACTIVE_GEMINI_MODEL,
         status: 'succeeded',
         queryLength: String(searchParams.query || '').length,
         requestedCount: searchParams.count || 3,
@@ -593,7 +586,7 @@ export function createApp() {
       await recordAiUsageEvent({
         type: classifyAiRequest(failedSearchParams),
         source: failedSearchParams.source || 'cook',
-        model: 'gemini-3.5-flash',
+        model: ACTIVE_GEMINI_MODEL,
         status: 'failed',
         queryLength: String(failedSearchParams.query || '').length,
         requestedCount: failedSearchParams.count || 3,
