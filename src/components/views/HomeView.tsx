@@ -770,13 +770,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   >
                     Create account
                   </button>
-                  <button
-                    type="button"
-                    onClick={goToSignIn}
-                    className="inline-flex min-h-10 w-full items-center justify-center rounded border border-dbd-rule bg-white px-5 text-[11px] font-semibold uppercase tracking-wider text-dbd-ink-2 transition-colors hover:border-dbd-ink-3 hover:text-dbd-ink sm:w-auto"
-                  >
-                    Sign in
-                  </button>
                 </div>
                 {isNativeTest && resetGuestSearchCount && (
                   <button
