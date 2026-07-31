@@ -16,6 +16,7 @@ interface RecipeListActionsProps {
   source?: 'cook' | 'ready-made';
   onNavigateToSettings?: () => void;
   usesGuestSearch?: boolean;
+  guestSearchesRemaining?: number;
 }
 
 export const RecipeListActions = ({ 
@@ -31,7 +32,8 @@ export const RecipeListActions = ({
   setIsLowCost,
   source,
   onNavigateToSettings,
-  usesGuestSearch = false
+  usesGuestSearch = false,
+  guestSearchesRemaining
 }: RecipeListActionsProps) => {
   return (
     <div className="w-full bg-transparent rounded-t-xl px-2 border-b border-dbd-rule/40 mb-1 sm:mb-2 transition-colors duration-200">
@@ -69,6 +71,12 @@ export const RecipeListActions = ({
                 <span className="sm:hidden">New</span>
               </button>
             </Tooltip>
+          )}
+
+          {guestSearchesRemaining !== undefined && (
+            <span className="whitespace-nowrap text-[10.5px] font-bold tracking-[0.04em] text-dbd-ink-2 sm:text-[11px]">
+              {guestSearchesRemaining} free {guestSearchesRemaining === 1 ? 'search' : 'searches'} left
+            </span>
           )}
         </div>
 
