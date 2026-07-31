@@ -735,7 +735,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             )}
 
-            {useSimplifiedGuestSearchStates && !isGuestSearchLimitReached && !hasPerformedSearch && (
+            {useSimplifiedGuestSearchStates && !isGuestSearchLimitReached && !hasPerformedSearch && !isSearching && !isAppending && !currentRecipes?.length && !currentReadyMeals?.length && (
               <div className="flex min-h-8 flex-col items-center justify-between gap-2 px-1 text-center text-[11.5px] font-medium text-gray-500 sm:flex-row sm:text-left">
                 <span>
                   {guestSearchCount === 0
@@ -1011,7 +1011,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 isSuppressed={isDietaryRuleSuppressed || suppressedPermanentKeys.length > 0}
                 source={source}
                 isLeftoverMode={isLeftoverMode}
-                guestSearchesRemaining={useSimplifiedGuestSearchStates && hasPerformedSearch && !isGuestSearchLimitReached ? guestSearchesRemaining : undefined}
+                guestSearchesRemaining={useSimplifiedGuestSearchStates && !isGuestSearchLimitReached && ((source === 'cook' ? currentRecipes?.length : currentReadyMeals?.length) || isSearching || isAppending) ? guestSearchesRemaining : undefined}
                 setIsLeftoverMode={setIsLeftoverMode}
                 isLowCost={isLowCost}
                 usesGuestSearch={isGuestPreview}
