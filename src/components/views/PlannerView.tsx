@@ -971,7 +971,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Estimated dinner cost</p>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Estimated ingredient value</p>
                           <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
                             <span className="text-[22px] font-bold tracking-tight text-gray-950">£{builtWeekCost.estimatedTotal.toFixed(2)}</span>
                             <span className="text-[11px] font-medium text-gray-500">
@@ -982,7 +982,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             About £{builtWeekCost.estimatedPerPortion.toFixed(2)} per portion
                             {builtWeekCost.budgetVariance !== null && (
                               <span className={builtWeekCost.budgetVariance >= 0 ? ' text-emerald-700 font-semibold' : ' text-amber-700 font-semibold'}>
-                                {' '}· £{Math.abs(builtWeekCost.budgetVariance).toFixed(2)} {builtWeekCost.budgetVariance >= 0 ? 'within' : 'above'} your £{builtWeekCost.budgetTarget?.toFixed(2)} target
+                                {' '}· £{Math.abs(builtWeekCost.budgetVariance).toFixed(2)} {builtWeekCost.budgetVariance >= 0 ? 'below' : 'above'} your £{builtWeekCost.budgetTarget?.toFixed(2)} planning target
                               </span>
                             )}
                           </p>
@@ -992,7 +992,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             </p>
                           )}
                           <p className="mt-1 text-[10.5px] leading-relaxed text-gray-400">
-                            Schedule one or more of these saved dinners to generate your shopping list. The cost estimate of £{builtWeekCost.estimatedTotal.toFixed(2)} may change after pack sizes, shared ingredients and items you already have are taken into account.
+                            This is the estimated value of the quantities used, not the amount you may pay at checkout. Schedule dinners to see the expected checkout cost, which accounts for complete packs, shared ingredients and items already in stock.
                           </p>
                           <button
                             type="button"
