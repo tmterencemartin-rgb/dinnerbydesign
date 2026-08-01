@@ -893,7 +893,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   >
                     {hasNearbyRetailers
                       ? `Prioritising nearby retailers: ${supermarkets.slice(0, 3).join(', ')}${supermarkets.length > 3 ? '...' : ''}. Change this in search preferences.`
-                      : 'Want more useful Ready-made results? Add nearby retailers in search preferences.'}
+                      : 'Want more relevant ready-made results? Add nearby retailers in preferences.'}
                   </button>
                 </div>
               )}
