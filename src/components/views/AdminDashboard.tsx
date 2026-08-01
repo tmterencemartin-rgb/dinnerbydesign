@@ -1326,28 +1326,53 @@ export const AdminDashboard: React.FC = () => {
                   const stats = dinnerStats[user.uid] || { savedCount: 0, scheduledCount: 0 };
                   const graceEndsAt = toDate(user.subscriptionPaymentGraceEndsAt);
                   const hasActiveGrace = !!graceEndsAt && graceEndsAt.getTime() > Date.now();
-                  const primaryDetails = [
-                    `Joined ${formatDate(user.createdAt)}`,
-                    trialEnd ? `Trial ends ${formatDate(trialEnd)}` : null,
-                    `${stats.savedCount} saved`,
-                    `${stats.scheduledCount} scheduled`,
-                    user.welcomeEmailSent ? 'Welcome sent' : 'Welcome not sent',
-                    confirmationSent ? 'Subscription email sent' : 'No subscription email',
-                    `Searches ${getSearchCount(user)}`
-                  ].filter(Boolean);
-                  const secondaryDetails = [
-                    hasStripe ? `Stripe customer ${formatShortId(subscription?.stripeCustomerId)}` : 'No Stripe customer yet',
-                    subscription?.subscriptionStatus ? `Stripe ${subscription.subscriptionStatus}` : null,
-                    hasActiveGrace ? `Grace ends ${formatDate(graceEndsAt)}` : null,
-                    getSubscriptionStartDate(user) ? `Subscribed ${formatDate(getSubscriptionStartDate(user))}` : null,
-                    subscription?.currentPeriodEnd ? `${getPeriodLabel(user)} ${formatDate(subscription.currentPeriodEnd)}` : null,
-                    subscription?.stripeSubscriptionId ? `Sub ${formatShortId(subscription.stripeSubscriptionId)}` : null,
-                    user.permanentAccessGrantedAt ? `Permanent access ${formatDate(user.permanentAccessGrantedAt)}` : null,
-                    user.permanentAccessEmailSentAt ? `Permanent email sent ${formatDate(user.permanentAccessEmailSentAt)}` : null,
-                    user.permanentAccessEmailError ? `Permanent email failed: ${user.permanentAccessEmailError}` : null,
-                    subscription?.updatedAt ? `Stripe updated ${formatDateTime(subscription.updatedAt)}` : null,
-                    `Profile ${user.accessStatus || 'trial'}`
-                  ].filter(Boolean);
+                  const trialEndDate = toDate(trialEnd);
+                  const trialHasEnded = !!trialEndDate && trialEndDate.getTime() < Date.now();
+                  const detailGroups: Array<{ label: string; items: Array<{ label: string; value: string; muted?: boolean; mono?: boolean }> }> = [
+                    {
+                      label: 'Account',
+                      items: [
+                        { label: 'Joined', value: formatDate(user.createdAt) },
+                        trialEndDate ? { label: trialHasEnded ? 'Trial ended' : 'Trial ends', value: formatDate(trialEndDate) } : null,
+                        { label: 'Profile', value: user.accessStatus || 'trial' },
+                      ].filter(Boolean),
+                    },
+                    {
+                      label: 'Activity',
+                      items: [
+                        { label: 'Saved', value: String(stats.savedCount) },
+                        { label: 'Scheduled', value: String(stats.scheduledCount) },
+                        { label: 'Searches', value: String(getSearchCount(user)) },
+                      ],
+                    },
+                    {
+                      label: 'Email',
+                      items: [
+                        { label: 'Welcome', value: user.welcomeEmailSent ? 'Sent' : 'Not sent' },
+                        { label: 'Subscription confirmation', value: confirmationSent ? 'Sent' : 'Not sent' },
+                      ],
+                    },
+                    {
+                      label: 'Access',
+                      items: [
+                        user.permanentAccessGrantedAt ? { label: 'Permanent access', value: formatDate(user.permanentAccessGrantedAt) } : null,
+                        user.permanentAccessEmailSentAt ? { label: 'Access email', value: `Sent ${formatDate(user.permanentAccessEmailSentAt)}` } : null,
+                        user.permanentAccessEmailError ? { label: 'Access email', value: 'Failed', muted: false } : null,
+                      ].filter(Boolean),
+                    },
+                    {
+                      label: 'Billing',
+                      items: [
+                        { label: 'Stripe customer', value: hasStripe ? formatShortId(subscription?.stripeCustomerId) : 'None', muted: !hasStripe },
+                        subscription?.subscriptionStatus ? { label: 'Status', value: subscription.subscriptionStatus } : null,
+                        hasActiveGrace ? { label: 'Grace ends', value: formatDate(graceEndsAt) } : null,
+                        getSubscriptionStartDate(user) ? { label: 'Subscribed', value: formatDate(getSubscriptionStartDate(user)) } : null,
+                        subscription?.currentPeriodEnd ? { label: getPeriodLabel(user), value: formatDate(subscription.currentPeriodEnd) } : null,
+                        subscription?.stripeSubscriptionId ? { label: 'Subscription', value: formatShortId(subscription.stripeSubscriptionId), mono: true } : null,
+                        subscription?.updatedAt ? { label: 'Stripe updated', value: formatDateTime(subscription.updatedAt) } : null,
+                      ].filter(Boolean),
+                    },
+                  ].filter(group => group.items.length > 0);
 
                   return (
                     <div key={user.uid} className="flex flex-col gap-2 px-5 py-3 hover:bg-gray-50/70 transition-colors group">
@@ -1358,23 +1383,22 @@ export const AdminDashboard: React.FC = () => {
                             {getStatusBadge(user)}
                             <span className="text-gray-400 text-xs font-mono truncate">{user.email || 'No email'}</span>
                           </div>
-                          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600">
-                            {primaryDetails.map((item, index) => (
-                              <span key={item as string} className="inline-flex items-center gap-2">
-                                <span>{item}</span>
-                                {index < primaryDetails.length - 1 && <span className="text-gray-300" aria-hidden="true">·</span>}
-                              </span>
+                          <div className="mt-3 grid gap-x-5 gap-y-3 text-[11px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                            {detailGroups.map((group) => (
+                              <div key={group.label} className="min-w-0">
+                                <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">{group.label}</p>
+                                <div className="space-y-1">
+                                  {group.items.map((item) => (
+                                    <div key={`${group.label}-${item.label}`} className="flex min-w-0 items-baseline gap-1.5 leading-snug">
+                                      <span className="shrink-0 text-gray-400">{item.label}</span>
+                                      <span className={`${item.muted ? 'italic text-gray-400' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`}>{item.value}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
                             ))}
                           </div>
-                          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-400">
-                            {secondaryDetails.map((item, index) => (
-                              <span key={item as string} className="inline-flex items-center gap-2">
-                                <span className={`${String(item).startsWith('No Stripe') ? 'italic' : ''} ${String(item).startsWith('Sub ') ? 'font-mono' : ''}`}>{item}</span>
-                                {index < secondaryDetails.length - 1 && <span className="text-gray-300" aria-hidden="true">·</span>}
-                              </span>
-                            ))}
-                            <span className="hidden group-hover:inline text-gray-300 font-mono">· UID {user.uid}</span>
-                          </div>
+                          <p className="mt-2 hidden text-[10px] font-mono text-gray-300 group-hover:block">UID {user.uid}</p>
                           <div className="mt-2">
                             {editingNoteUid === user.uid ? (
                               <div className="flex flex-col sm:flex-row gap-2">
