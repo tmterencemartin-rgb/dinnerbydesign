@@ -172,7 +172,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 onRemove();
               }}
               className="p-1 text-gray-300 hover:text-red-400 transition-colors cursor-pointer"
-              title="Archive"
+              title="Remove from collection"
             >
               <Archive size={14} className="w-3.5 h-3.5" />
             </button>
@@ -629,9 +629,9 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       onRemove();
                     }}
                     className="inline-flex h-7 items-center gap-1.5 px-2.5 rounded border border-gray-100 text-[11px] font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
-                    title="Archive"
+                    title="Remove from collection"
                   >
-                    <span>Archive</span>
+                    <span>Remove</span>
                   </button>
                 </div>
               )}

@@ -482,7 +482,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     try {
       await updateRecipe(recipe.id, { isArchived: true, archivedAt: serverTimestamp() });
       addLog(`UI ACTION: archiveSavedRecipe SUCCESS for ${recipe.id}`);
-      showToast("Archived from Saved");
+      showToast("Removed from your collection");
     } catch (err: any) {
       addLog(`UI ERROR: archiveSavedRecipe failed for ${recipe.id}: ${err.message}`);
     }
@@ -910,7 +910,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   {/* SAVED HEADER ROW */}
                   <div className="flex items-center justify-between border-b border-gray-100 pb-2">
                     <div className="flex items-baseline gap-2 pl-1">
-                      <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Saved</h3>
+                      <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">My collection</h3>
                       <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
@@ -918,7 +918,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         <div className="flex items-center gap-2">
                           {showDeleteAllSavedConfirm ? (
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Archive all?</span>
+                              <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Clear collection?</span>
                               <button
                                 onClick={() => setShowDeleteAllSavedConfirm(false)}
                                 className="text-[11px] text-gray-500 font-bold hover:underline"
@@ -950,7 +950,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               onClick={() => setShowDeleteAllSavedConfirm(true)}
                               className="text-[10.5px] font-bold text-accent uppercase tracking-widest hover:underline"
                             >
-                              Archive list
+                              Clear collection
                             </button>
                           )}
                         </div>
@@ -1026,7 +1026,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               type="text"
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
-                              placeholder="Search saved dinners..."
+                              placeholder="Search your collection..."
                               className="w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[11.5px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
