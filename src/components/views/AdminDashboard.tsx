@@ -1387,9 +1387,9 @@ export const AdminDashboard: React.FC = () => {
                             {detailGroups.map((group) => (
                               <div key={group.label} className="min-w-0">
                                 <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">{group.label}</p>
-                                <div className="space-y-1">
+                                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                                   {group.items.map((item) => (
-                                    <div key={`${group.label}-${item.label}`} className="flex min-w-0 items-baseline gap-1.5 leading-snug">
+                                    <div key={`${group.label}-${item.label}`} className="inline-flex min-w-0 items-baseline gap-1.5 leading-snug">
                                       <span className="shrink-0 text-gray-400">{item.label}</span>
                                       <span className={`${item.muted ? 'italic text-gray-400' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`}>{item.value}</span>
                                     </div>
