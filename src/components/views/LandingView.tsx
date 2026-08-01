@@ -831,7 +831,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 9. INDEPENDENCE CLAUSE & COGNIZANT LEGAL FOOTER */}
-      <footer className="bg-[#FAF8F5] border-t border-dbd-rule pt-10 sm:pt-16 pb-12 px-6 sm:px-8">
+      <footer className="bg-[#FAF8F5] border-t border-dbd-rule pt-6 sm:pt-10 pb-6 px-6 sm:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-8 select-none">
           
           <div className="flex flex-col items-center justify-center space-y-1.5">
