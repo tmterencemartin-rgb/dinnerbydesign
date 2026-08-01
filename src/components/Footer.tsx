@@ -56,19 +56,19 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </div>
         
-        <nav aria-label="Footer" className="grid grid-cols-3 gap-x-3 gap-y-3 text-left md:gap-x-6 md:gap-y-0">
-          <div className="min-w-0 sm:contents">
-            <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-gray-400 sm:hidden md:mb-2 md:block">Guides</p>
-            <div className="flex flex-col items-start gap-1.5 sm:contents md:gap-2">
+        <nav aria-label="Footer" className="grid grid-cols-1 gap-5 text-left sm:grid-cols-3 sm:gap-x-6 sm:gap-y-0">
+          <div className="min-w-0">
+            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Guides</p>
+            <div className="flex flex-col items-start gap-1.5 md:gap-2">
               <a href="/dinner-plans" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Affordable dinner plans</a>
               <a href="/recipes" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Recipes and cooking ideas</a>
               <a href="/food-costs" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Food-cost &amp; waste</a>
             </div>
           </div>
 
-          <div className="min-w-0 sm:contents">
-            <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-gray-400 sm:hidden md:mb-2 md:block">Information</p>
-            <div className="flex flex-col items-start gap-1.5 sm:contents md:gap-2">
+          <div className="min-w-0">
+            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Information</p>
+            <div className="flex flex-col items-start gap-1.5 md:gap-2">
               <a
                 href="/pricing-methodology"
                 onClick={(e) => {
@@ -85,9 +85,9 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             </div>
           </div>
 
-          <div className="min-w-0 sm:contents">
-            <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-gray-400 sm:hidden md:mb-2 md:block">Legal</p>
-            <div className="flex flex-col items-start gap-1.5 sm:contents md:gap-2">
+          <div className="min-w-0">
+            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Legal</p>
+            <div className="flex flex-col items-start gap-1.5 md:gap-2">
               <a
                 href="/privacy"
                 onClick={(e) => {
