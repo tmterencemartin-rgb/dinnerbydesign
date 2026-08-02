@@ -1334,6 +1334,11 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <h2 className="text-[13px] sm:text-[15px] font-bold text-dbd-ink tracking-tight leading-snug">
                   {resultsHeading}
                 </h2>
+                {resultsIngredientIntent?.isIngredientLed && resultsIngredientIntent.ingredients.length > 0 && (
+                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
+                    Search focus: {resultsIngredientIntent.ingredients.map(sentenceCase).join(', ')}. Each result shows its match explanation where available.
+                  </p>
+                )}
                 {showNotBoringSummerSaladsResultsCopy && (
                   <p className="mt-1 text-[12px] font-normal leading-relaxed text-gray-500">
                     {NOT_BORING_SUMMER_SALADS_RESULTS_COPY}

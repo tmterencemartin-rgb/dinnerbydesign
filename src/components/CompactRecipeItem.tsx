@@ -52,20 +52,20 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
         <button
           type="button"
           onClick={onClick}
-          className="flex-1 min-w-0 text-left active:scale-[0.99] transition-transform"
+          className="flex-1 min-w-0 text-left active:scale-[0.99] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent/30 focus-visible:ring-offset-2 rounded"
         >
           <div className="flex flex-col">
             {/* Row 1: Taxonomy & Source */}
             <div className="flex items-center gap-1 mb-0.5 sm:mb-1">
               {shouldShowCuisineLabel && (
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest shrink-0">
                   {cuisineLabel}
                 </span>
               )}
               {domain && (
                 <>
                   {shouldShowCuisineLabel && <Separator />}
-                  <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate">
+                    <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider truncate">
                     {domain}
                   </span>
                 </>
@@ -75,6 +75,13 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
             <h3 className="text-[15px] font-bold text-gray-900 truncate leading-tight group-hover:text-accent transition-colors">
               {item.title}
             </h3>
+
+            {item.matchReason && (
+              <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-gray-500">
+                <span className="font-bold uppercase tracking-wider text-[9px] text-gray-500">Match:</span>{' '}
+                {item.matchReason}
+              </p>
+            )}
 
             {/* Row 2: Visual Metadata (Strictly matching user snippet) */}
             <div className="flex flex-wrap items-center gap-y-0.5 sm:gap-y-1 mt-1 sm:mt-2 text-[11px] text-gray-500 font-medium tracking-tight">
@@ -149,7 +156,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
           <button
             type="button"
             onClick={onClick}
-            className="min-w-[44px] text-center rounded bg-gray-50 px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:bg-dbd-accent/5 group-hover:text-dbd-accent transition-colors"
+            className="min-w-[44px] text-center rounded bg-gray-50 px-2 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:bg-dbd-accent/5 group-hover:text-dbd-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent/30 focus-visible:ring-offset-2"
           >
             View
           </button>
