@@ -177699,6 +177699,8 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const activePreferredSourceIds = searchParams.preferredSourceIds || [];
   const activeIncludeOffal = searchParams.includeOffal !== void 0 ? searchParams.includeOffal : preferences?.includeOffal === true;
   const activePreferredSourceNames = activePreferredSourceIds.length > 0 ? PREFERRED_SOURCES.filter((s2) => activePreferredSourceIds.includes(s2.id)).map((s2) => s2.label) : [];
+  const hasExplicitDietOrProteinIntent = /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|prawn|shrimp|tofu)\b/i.test(query);
+  const shouldEncourageRecipeVariety = !isReadyMade && activeDietaryRule === "none" && !hasExplicitDietOrProteinIntent;
   if (targetCuisines && targetCuisines.length > 0) appliedFilters.push(...targetCuisines);
   else if (legacyCuisine) appliedFilters.push(legacyCuisine);
   if (activeDietaryRule && activeDietaryRule !== "none") {
@@ -177761,6 +177763,11 @@ INGREDIENT-LED SEARCH ACTIVE:
   const offalLogic = activeIncludeOffal ? "" : `
 OFFAL EXCLUSION (HARD):
 - Do not return recipes or ready-made products containing liver, kidney, heart, tongue, tripe, sweetbreads, blood sausage, black pudding or other offal.`;
+  const recipeVarietyLogic = shouldEncourageRecipeVariety ? `
+RECIPE VARIETY (NO DIETARY RULE ACTIVE):
+- The user has not asked for vegetarian, vegan or meat-free recipes.
+- For a dish with established meat and vegetarian versions, return a useful mix where valid: include at least one conventional meat or other animal-protein version and at least one vegetarian version when the requested count allows.
+- Do not use all vegetarian results as the default for a broad dish search, and do not treat the absence of a dietary preference as a preference for vegetarian recipes.` : "";
   try {
     const modelClient = getAI();
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
@@ -177803,7 +177810,7 @@ HARD CONSTRAINTS:
 12. High Omega-3 Prioritisation: ${activeHighOmega3 ? "Active (focus on oily fish, walnuts, chia, flaxseed)" : "No"}
 13. High Protein Prioritisation: ${activeHighProtein ? "Active (focus on lean meats, fish, pulses, eggs)" : "No"}
 14. Offal: ${activeIncludeOffal ? "Allowed" : "Excluded"}
-${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}
+${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}
 `;
     const rejectionPolicy = `Return { "items": [] } if:
 - The query "${query}" strictly violates any HARD DIETARY, RELIGIOUS, or ALLERGY constraint.
@@ -177829,6 +177836,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     ${activePreferredSourceNames.length > 0 ? `Requirement: Gently favour recipes from these trusted sources: ${activePreferredSourceNames.join(", ")}.` : ""}
     ${activeMaxTime ? `Must be under ${activeMaxTime} mins.` : ""}
     ${excludeTitles?.length ? `MANDATORY EXCLUSION: Do NOT suggest any of these recipes: ${excludeTitles.join(", ")}.` : ""}
+    ${shouldEncourageRecipeVariety ? "Return a varied set when the dish has both meat and vegetarian versions; do not make every result vegetarian unless the query requires it." : ""}
     Generate ${count} stubs.`;
     const config2 = {
       systemInstruction: finalSystemInstruction,
@@ -177943,7 +177951,48 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       throw new GeminiServiceError("empty", "Empty response from search service.");
     }
     const data = JSON.parse(text);
-    const rawItems = data.items || [];
+    let rawItems = Array.isArray(data.items) ? data.items : [];
+    let wasRepaired = false;
+    let repairPrompt = "";
+    let repairOutputText = "";
+    const initialItems = rawItems;
+    const initialVegetarianOnly = shouldEncourageRecipeVariety && initialItems.length > 0 && initialItems.every((item) => item.isVegetarian === true);
+    const missingCount = Math.max(0, count - initialItems.length);
+    const repairCount = missingCount + (initialVegetarianOnly && missingCount === 0 ? 1 : 0);
+    if (repairCount > 0) {
+      const existingTitles = [...excludeTitles || [], ...initialItems.map((item) => String(item.title || "").trim())].filter(Boolean);
+      repairPrompt = `Search intent: "${query}".
+Return exactly ${repairCount} additional ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs.
+Do not repeat any existing title: ${existingTitles.join(", ") || "None"}.
+      ${shouldEncourageRecipeVariety ? "At least one added result must be a conventional non-vegetarian version where that is a normal fit for this dish. The user has not selected a vegetarian preference." : ""}
+${isReadyMade ? "Return commercially available UK ready-made products only." : "Return home-cooking recipes only."}`;
+      try {
+        const repairConfig = {
+          ...config2,
+          systemInstruction: `${finalSystemInstruction}
+REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's exclusions and variety requirement.`
+        };
+        const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt, repairConfig);
+        repairOutputText = repairResponse.text || "";
+        const repairData = repairOutputText ? JSON.parse(repairOutputText) : {};
+        const repairItems = Array.isArray(repairData.items) ? repairData.items : [];
+        if (initialVegetarianOnly && missingCount === 0 && repairItems.length > 0) {
+          rawItems = [...initialItems.slice(0, -1), repairItems[0]];
+        } else {
+          rawItems = [...initialItems, ...repairItems];
+        }
+        wasRepaired = repairItems.length > 0;
+      } catch (repairError) {
+        console.warn("[GeminiService] Result repair pass failed; keeping the original search results.", repairError);
+      }
+    }
+    const seenTitles = /* @__PURE__ */ new Set();
+    rawItems = rawItems.filter((item) => {
+      const titleKey = String(item.title || "").trim().toLowerCase();
+      if (!titleKey || seenTitles.has(titleKey)) return false;
+      seenTitles.add(titleKey);
+      return true;
+    }).slice(0, count);
     let items = rawItems.map((item) => ({
       ...item,
       realityChecks: sanitizeRealityChecks(item.realityChecks),
@@ -177969,14 +178018,14 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       budgetContradiction: data.budgetContradiction,
       isCurated: false,
       diagnostics: {
-        repaired: false,
+        repaired: wasRepaired,
         timings: { geminiCall: geminiDuration, totalRoundTrip: Date.now() - start },
         usage: {
           model: SEARCH_MODEL,
-          inputChars: finalSystemInstruction.length + prompt.length,
-          outputChars: text.length,
-          inputTokensEstimate: estimateTokensFromText(finalSystemInstruction + prompt),
-          outputTokensEstimate: estimateTokensFromText(text)
+          inputChars: finalSystemInstruction.length + prompt.length + (repairPrompt ? finalSystemInstruction.length + repairPrompt.length : 0),
+          outputChars: text.length + repairOutputText.length,
+          inputTokensEstimate: estimateTokensFromText(finalSystemInstruction + prompt + (repairPrompt ? finalSystemInstruction + repairPrompt : "")),
+          outputTokensEstimate: estimateTokensFromText(text + repairOutputText)
         },
         fromCache: false
       }
