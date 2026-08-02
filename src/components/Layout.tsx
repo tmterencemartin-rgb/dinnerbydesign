@@ -162,7 +162,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
         {children}
       </main>
 
-      {isGuest && <Footer setView={setView} />}
+      <Footer setView={setView} />
     </div>
   );
 };
