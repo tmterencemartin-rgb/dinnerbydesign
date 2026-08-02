@@ -709,16 +709,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               </div>
             </div>
 
-            <div className={`bg-white rounded border border-gray-100 px-4 sm:px-5 py-4 relative ${showPlanWeek ? 'z-40' : 'z-0'}`}>
+            <div className={`bg-white rounded border border-gray-100 px-4 sm:px-5 relative ${isPlannerEmpty ? 'py-4' : 'py-2.5'} ${showPlanWeek ? 'z-40' : 'z-0'}`}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <h3 className="text-[13.5px] font-bold text-gray-950">
-                    {isPlannerEmpty ? 'Start building your week' : 'Make your food budget go further'}
+                    {isPlannerEmpty ? 'Start building your week' : 'Plan a week automatically'}
                   </h3>
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
                     {isPlannerEmpty
                       ? 'No recipes saved yet. Find recipes to save and they’ll appear here, ready to schedule. Or let DinnerByDesign build a week around your household, budget and available time.'
-                      : 'We build a week of dinners around your household, budget and available time. Suitable dinners are prioritised, with ingredients reused across the week to cut shopping costs and food waste.'}
+                      : 'Use your preferences to generate a set of dinners and add them to your collection.'}
                   </p>
                 </div>
                 <div className="flex max-w-full flex-wrap gap-2 self-start sm:self-auto">
