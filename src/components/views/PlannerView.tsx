@@ -169,6 +169,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [scheduledNoteDraft, setScheduledNoteDraft] = useState('');
   const [isSavingScheduledNote, setIsSavingScheduledNote] = useState(false);
   const [isRecentlyRemovedOpen, setIsRecentlyRemovedOpen] = useState(false);
+  const [removedSearchQuery, setRemovedSearchQuery] = useState('');
 
   useEffect(() => {
     setCheckedIngredients({});
@@ -331,6 +332,15 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     () => savedRecipes.filter(r => r.isArchived),
     [savedRecipes]
   );
+  const filteredArchivedSavedRecipes = React.useMemo(() => {
+    const query = removedSearchQuery.trim().toLowerCase();
+    if (!query) return archivedSavedRecipes;
+    return archivedSavedRecipes.filter(recipe => (
+      [recipe.title, recipe.cuisine, recipe.description]
+        .filter(Boolean)
+        .some(value => String(value).toLowerCase().includes(query))
+    ));
+  }, [archivedSavedRecipes, removedSearchQuery]);
   const isPlannerEmpty = activeSavedRecipes.length === 0 && archivedSavedRecipes.length === 0 && planner.length === 0;
   const activeUnscheduledSavedCount = React.useMemo(
     () => activeSavedRecipes.filter(item => !item.scheduledDate).length,
@@ -1673,8 +1683,19 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           <p className="mt-1 px-1 text-[11px] leading-relaxed text-gray-400">
                             Removed recipes stay here until you restore or permanently delete them.
                           </p>
+                          <div className="relative mt-2">
+                            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                            <input
+                              type="search"
+                              value={removedSearchQuery}
+                              onChange={(e) => setRemovedSearchQuery(e.target.value)}
+                              placeholder="Search removed recipes..."
+                              aria-label="Search removed recipes"
+                              className="h-8 w-full rounded border border-gray-100 bg-white pl-8 pr-3 text-[11px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-accent/40 focus-visible:ring-2 focus-visible:ring-accent/20"
+                            />
+                          </div>
                           <div className="mt-2 divide-y divide-gray-50 rounded border border-gray-100 bg-gray-50/40">
-                            {archivedSavedRecipes.map(recipe => (
+                            {filteredArchivedSavedRecipes.length > 0 ? filteredArchivedSavedRecipes.map(recipe => (
                               <div key={recipe.id} className="flex items-center justify-between gap-3 px-2.5 py-2.5 sm:px-3">
                                 <button
                                   type="button"
@@ -1705,7 +1726,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   </button>
                                 </div>
                               </div>
-                            ))}
+                            )) : (
+                              <p className="px-3 py-3 text-[11px] text-gray-500">No removed recipes match this search.</p>
+                            )}
                           </div>
                         </>
                       )}
