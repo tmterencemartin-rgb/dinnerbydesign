@@ -28,7 +28,7 @@ import { handleFirestoreError } from '../firebase';
 
 // Bump this when result-generation behaviour changes so an under-filled batch
 // from an earlier build cannot mask the newer repair logic.
-const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v2';
+const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v3';
 const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';

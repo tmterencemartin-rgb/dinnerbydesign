@@ -177286,32 +177286,54 @@ function estimateGeminiCostUsd(inputTokens, outputTokens) {
 var SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
 var BROAD_CHILLI_FALLBACKS = [
   {
-    title: "Chilli con carne",
-    description: "A classic beef mince and kidney bean chilli with tomatoes, onion and warming spices.",
+    title: "Quick beef chilli con carne",
+    description: "A fast beef mince and kidney bean chilli with tomatoes, onion and warming spices.",
     cuisine: "Mexican-inspired",
-    totalTime: 45,
-    caloriesPerPortion: 560,
+    totalTime: 25,
+    caloriesPerPortion: 450,
     costPerPortion: "\xA31.80 pp",
     isVegetarian: false,
     isVegan: false,
     isPescatarian: false,
     convenienceProfile: "scratch",
-    ingredients: ["Beef mince", "Kidney beans", "Chopped tomatoes", "Onion", "Chilli powder"],
-    totalIngredientsCount: 9,
+    ingredients: ["Beef mince", "Kidney beans", "Chopped tomatoes", "Chilli powder"],
+    totalIngredientsCount: 8,
     sourceUrl: "https://www.bbcgoodfood.com/search?q=chilli%20con%20carne",
     saladType: "none",
     batchCooking: { suitable: true, confidence: "high", reason: "Keeps and reheats well for another dinner.", storage: "Cool promptly and refrigerate for up to 2 days.", reheat: "Reheat until piping hot throughout." },
     realityChecks: [
-      { label: "Weeknight fit", note: "Needs simmering time, but most of it is hands-off.", tone: "neutral" },
+      { label: "Weeknight fit", note: "Uses a short simmer for a faster version of the classic.", tone: "positive" },
       { label: "Shopping friction", note: "Uses ordinary mince, beans and tinned tomatoes.", tone: "positive" },
       { label: "Leftover friendly", note: "Usually reheats well and can be frozen.", tone: "positive" }
+    ]
+  },
+  {
+    title: "Turkey and black bean chilli",
+    description: "A lean turkey mince chilli with black beans, tomatoes and smoky seasoning.",
+    cuisine: "Mexican-inspired",
+    totalTime: 25,
+    caloriesPerPortion: 380,
+    costPerPortion: "\xA31.80 pp",
+    isVegetarian: false,
+    isVegan: false,
+    isPescatarian: false,
+    convenienceProfile: "scratch",
+    ingredients: ["Turkey mince", "Black beans", "Chopped tomatoes", "Smoked paprika"],
+    totalIngredientsCount: 8,
+    sourceUrl: "https://www.tescorealfood.com/search?query=turkey%20chilli",
+    saladType: "none",
+    batchCooking: { suitable: true, confidence: "medium", reason: "The sauce keeps turkey mince from drying out too much.", storage: "Cool promptly and refrigerate for up to 2 days.", reheat: "Reheat with a splash of water until piping hot." },
+    realityChecks: [
+      { label: "Weeknight fit", note: "Turkey cooks quickly, so this suits a busy evening.", tone: "positive" },
+      { label: "Cost caution", note: "Turkey mince varies by shop, so check the shelf price.", tone: "neutral" },
+      { label: "Cleanup", note: "One-pan cooking keeps washing up low.", tone: "positive" }
     ]
   },
   {
     title: "Chicken and bean chilli",
     description: "A lighter chilli with chicken, beans, tomatoes and smoky spices.",
     cuisine: "Mexican-inspired",
-    totalTime: 40,
+    totalTime: 30,
     caloriesPerPortion: 490,
     costPerPortion: "\xA31.95 pp",
     isVegetarian: false,
@@ -177327,6 +177349,28 @@ var BROAD_CHILLI_FALLBACKS = [
       { label: "Weeknight fit", note: "A straightforward one-pan dinner with moderate simmering time.", tone: "positive" },
       { label: "Cost caution", note: "Chicken thigh is usually better value than breast.", tone: "neutral" },
       { label: "Leftover friendly", note: "Works well as a second dinner if chilled promptly.", tone: "positive" }
+    ]
+  },
+  {
+    title: "Three-bean vegetarian chilli",
+    description: "A quick vegetarian chilli with mixed beans, tomatoes and warm spices.",
+    cuisine: "Mexican-inspired",
+    totalTime: 20,
+    caloriesPerPortion: 360,
+    costPerPortion: "\xA31.10 pp",
+    isVegetarian: true,
+    isVegan: true,
+    isPescatarian: true,
+    convenienceProfile: "scratch",
+    ingredients: ["Mixed beans", "Chopped tomatoes", "Onion", "Smoked paprika"],
+    totalIngredientsCount: 8,
+    sourceUrl: "https://www.bbcgoodfood.com/search?q=three%20bean%20chilli",
+    saladType: "none",
+    batchCooking: { suitable: true, confidence: "high", reason: "Bean chilli keeps its texture and reheats evenly.", storage: "Cool promptly and refrigerate for up to 3 days.", reheat: "Reheat until bubbling and piping hot." },
+    realityChecks: [
+      { label: "Shopping friction", note: "Mostly store-cupboard tins and spices.", tone: "positive" },
+      { label: "Weeknight fit", note: "Very quick once the onion is chopped.", tone: "positive" },
+      { label: "Portion caution", note: "Beans are filling, especially with rice or wraps.", tone: "neutral" }
     ]
   }
 ];
@@ -177820,11 +177864,31 @@ CHILLI DISH INTENT:
 - Treat "chilli" or "chili" here as the cooked dish, not as a request for fresh chilli peppers or chilli powder.
 - Unless the user names a protein or dietary style, include at least one conventional meat or poultry chilli when the requested count allows.
 - Do not let vegetarian chilli results displace all conventional versions simply because they are common or easy to generate.` : "";
+  const activeExcludedTerms = [
+    ...preferences?.allergies || [],
+    ...preferences?.exclusions || [],
+    ...searchParams.exclusions || [],
+    ...searchParams.excludeIngredients || []
+  ].filter(Boolean);
+  const itemContainsAnyTerm = (item, terms) => {
+    const searchable = [
+      item.title,
+      item.description,
+      ...Array.isArray(item.ingredients) ? item.ingredients : []
+    ].filter(Boolean).join(" ").toLowerCase();
+    return terms.some((term) => {
+      const cleaned = String(term).trim().toLowerCase();
+      if (!cleaned) return false;
+      const base = cleaned.endsWith("ies") ? `${cleaned.slice(0, -3)}y` : cleaned.endsWith("es") ? cleaned.slice(0, -2) : cleaned.endsWith("s") ? cleaned.slice(0, -1) : cleaned;
+      const safeBase = base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(`\\b${safeBase}(s|es|ies)?\\b`, "i").test(searchable);
+    });
+  };
   const eligibleChilliFallbacks = BROAD_CHILLI_FALLBACKS.filter((item) => {
     const fallbackCost = parseFloat(String(item.costPerPortion).replace(/[^\d.]/g, ""));
-    return (!activeMaxTime || item.totalTime <= activeMaxTime) && (!activeCalorieLimit || item.caloriesPerPortion <= activeCalorieLimit) && (!activeBudgetLimit || fallbackCost <= activeBudgetLimit);
+    return (!activeMaxTime || item.totalTime <= activeMaxTime) && (!activeCalorieLimit || item.caloriesPerPortion <= activeCalorieLimit) && (!activeBudgetLimit || fallbackCost <= activeBudgetLimit) && !itemContainsAnyTerm(item, activeExcludedTerms);
   });
-  const canUseChilliFallback = shouldEncourageRecipeVariety && isBroadChilliDishSearch && activeSaladPref !== "main-only" && activeSaladPref !== "side-only" && !activeIsSimple && activeCookingMethods.length === 0 && activeCookingFats.length === 0 && activeReligious.length === 0 && !preferences?.allergies?.length && !preferences?.exclusions?.length && !searchParams.exclusions?.length && eligibleChilliFallbacks.length > 0;
+  const canUseChilliFallback = shouldEncourageRecipeVariety && isBroadChilliDishSearch && !isReadyMade && activeSaladPref !== "main-only" && activeSaladPref !== "side-only" && !activeIsSimple && activeCookingMethods.length === 0 && activeCookingFats.length === 0 && activeReligious.length === 0 && eligibleChilliFallbacks.length > 0;
   try {
     const modelClient = getAI();
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
