@@ -872,21 +872,35 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const data = JSON.parse(text);
     let rawItems = Array.isArray(data.items) ? data.items : [];
     let wasRepaired = false;
-    let repairPrompt = '';
-    let repairOutputText = '';
+    const repairPrompts: string[] = [];
+    const repairOutputs: string[] = [];
 
-    const initialItems = rawItems;
-    const initialVegetarianOnly = shouldEncourageRecipeVariety && initialItems.length > 0 && initialItems.every((item: any) => item.isVegetarian === true);
-    const missingCount = Math.max(0, count - initialItems.length);
-    const repairCount = missingCount + (initialVegetarianOnly && missingCount === 0 ? 1 : 0);
+    const dedupeItems = (itemsToDedupe: any[]) => {
+      const seenTitles = new Set<string>();
+      return itemsToDedupe.filter((item: any) => {
+        const titleKey = String(item.title || '').trim().toLowerCase();
+        if (!titleKey || seenTitles.has(titleKey)) return false;
+        seenTitles.add(titleKey);
+        return true;
+      });
+    };
 
-    if (repairCount > 0) {
-      const existingTitles = [...(excludeTitles || []), ...initialItems.map((item: any) => String(item.title || '').trim())].filter(Boolean);
-      repairPrompt = `Search intent: "${query}".
+    // The model may under-fill an otherwise valid response. Make a small number
+    // of bounded repair requests rather than accepting one result as complete.
+    for (let repairAttempt = 0; repairAttempt < 3; repairAttempt += 1) {
+      rawItems = dedupeItems(rawItems);
+      const missingCount = Math.max(0, count - rawItems.length);
+      const allVegetarian = shouldEncourageRecipeVariety && rawItems.length > 0 && rawItems.every((item: any) => item.isVegetarian === true);
+      if (missingCount === 0 && !allVegetarian) break;
+
+      const repairCount = Math.max(1, missingCount);
+      const existingTitles = [...(excludeTitles || []), ...rawItems.map((item: any) => String(item.title || '').trim())].filter(Boolean);
+      const repairPrompt = `Search intent: "${query}".
 Return exactly ${repairCount} additional ${isReadyMade ? 'UK supermarket ready-made products' : 'recipe'} stubs.
 Do not repeat any existing title: ${existingTitles.join(', ') || 'None'}.
-      ${shouldEncourageRecipeVariety ? 'At least one added result must be a conventional non-vegetarian version where that is a normal fit for this dish. The user has not selected a vegetarian preference.' : ''}
+${allVegetarian ? 'At least one added result must be a conventional non-vegetarian version where that is a normal fit for this dish. The user has not selected a vegetarian preference.' : ''}
 ${isReadyMade ? 'Return commercially available UK ready-made products only.' : 'Return home-cooking recipes only.'}`;
+      repairPrompts.push(repairPrompt);
 
       try {
         const repairConfig = {
@@ -895,28 +909,29 @@ ${isReadyMade ? 'Return commercially available UK ready-made products only.' : '
 REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's exclusions and variety requirement.`
         };
         const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt, repairConfig);
-        repairOutputText = repairResponse.text || '';
+        const repairOutputText = repairResponse.text || '';
+        repairOutputs.push(repairOutputText);
         const repairData = repairOutputText ? JSON.parse(repairOutputText) : {};
         const repairItems = Array.isArray(repairData.items) ? repairData.items : [];
+        const nonVegetarianRepair = allVegetarian
+          ? repairItems.find((item: any) => item.isVegetarian !== true)
+          : null;
 
-        if (initialVegetarianOnly && missingCount === 0 && repairItems.length > 0) {
-          rawItems = [...initialItems.slice(0, -1), repairItems[0]];
+        if (allVegetarian && nonVegetarianRepair) {
+          rawItems = [...rawItems.slice(0, -1), nonVegetarianRepair, ...repairItems.filter((item: any) => item !== nonVegetarianRepair)];
         } else {
-          rawItems = [...initialItems, ...repairItems];
+          rawItems = [...rawItems, ...repairItems];
         }
-        wasRepaired = repairItems.length > 0;
+        wasRepaired = wasRepaired || repairItems.length > 0;
       } catch (repairError) {
-        console.warn('[GeminiService] Result repair pass failed; keeping the original search results.', repairError);
+        console.warn('[GeminiService] Result repair pass failed; keeping the results already found.', repairError);
+        break;
       }
     }
 
-    const seenTitles = new Set<string>();
-    rawItems = rawItems.filter((item: any) => {
-      const titleKey = String(item.title || '').trim().toLowerCase();
-      if (!titleKey || seenTitles.has(titleKey)) return false;
-      seenTitles.add(titleKey);
-      return true;
-    }).slice(0, count);
+    rawItems = dedupeItems(rawItems).slice(0, count);
+    const repairPrompt = repairPrompts.join('\n');
+    const repairOutputText = repairOutputs.join('\n');
 
     let items = rawItems.map((item: any) => ({
       ...item,
