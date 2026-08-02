@@ -711,7 +711,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
             <div className={`bg-white rounded border border-gray-100 px-4 sm:px-5 py-4 relative ${showPlanWeek ? 'z-40' : 'z-0'}`}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div>
+                <div className="min-w-0 flex-1">
                   <h3 className="text-[13.5px] font-bold text-gray-950">
                     {isPlannerEmpty ? 'Start building your week' : 'Make your food budget go further'}
                   </h3>
@@ -721,7 +721,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       : 'We build a week of dinners around your household, budget and available time. Suitable dinners are prioritised, with ingredients reused across the week to cut shopping costs and food waste.'}
                   </p>
                 </div>
-                <div className="flex flex-wrap gap-2 self-start sm:self-auto">
+                <div className="flex max-w-full flex-wrap gap-2 self-start sm:self-auto">
                   {isPlannerEmpty && (
                     <button
                       type="button"
