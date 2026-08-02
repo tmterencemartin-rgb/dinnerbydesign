@@ -1176,9 +1176,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           <div className="pt-1.5 bg-transparent">
                             <div id="saved-recipes-list">
                               {processed.length === 0 && activeSavedRecipes.length > 0 ? (
-                                <div className="py-5 text-center bg-gray-50/50 mx-1 my-1">
-                                  <p className="text-[12px] text-gray-950 font-medium">No saved dinners match this view.</p>
-                                  <button onClick={handleResetFilters} className="text-[11px] text-accent font-bold hover:underline mt-1 inline-block cursor-pointer">Show all saved dinners</button>
+                                <div className="flex items-center justify-between gap-3 bg-gray-50/50 mx-1 my-1 px-3 py-2.5">
+                                  <p className="text-[11px] text-gray-600 font-medium">No saved dinners match these filters.</p>
+                                  <button onClick={handleResetFilters} className="shrink-0 text-[10.5px] text-accent font-bold hover:underline cursor-pointer">Show all</button>
                                 </div>
                               ) : (
                                 (() => {
@@ -1248,65 +1248,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </div>
                   )}
 
-                  {archivedSavedRecipes.length > 0 && (
-                    <div className="mt-4 border-t border-gray-100 pt-4">
-                      <button
-                        type="button"
-                        onClick={() => setIsRecentlyRemovedOpen(prev => !prev)}
-                        aria-expanded={isRecentlyRemovedOpen}
-                        className="flex w-full items-center justify-between gap-3 px-1 text-left"
-                      >
-                        <span className="flex items-baseline gap-2">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Recently removed</span>
-                          <span className="text-[11px] text-gray-400 font-medium">{archivedSavedRecipes.length}</span>
-                        </span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-accent">
-                          {isRecentlyRemovedOpen ? 'Hide' : 'Show'}
-                        </span>
-                      </button>
-                      {isRecentlyRemovedOpen && (
-                        <>
-                          <p className="mt-1 px-1 text-[11px] leading-relaxed text-gray-400">
-                            Removed recipes stay here until you restore or permanently delete them.
-                          </p>
-                          <div className="mt-2 divide-y divide-gray-50 rounded border border-gray-100 bg-gray-50/40">
-                            {archivedSavedRecipes.map(recipe => (
-                              <div key={recipe.id} className="flex items-center justify-between gap-3 px-2.5 py-2.5 sm:px-3">
-                                <button
-                                  type="button"
-                                  onClick={() => setViewingPlannerEntry(recipe)}
-                                  className="min-w-0 text-left hover:opacity-75"
-                                >
-                                  <span className="block truncate text-[12px] font-semibold text-gray-700">{recipe.title}</span>
-                                  <span className="mt-0.5 block truncate text-[10.5px] text-gray-400">
-                                    {recipe.cuisine || 'Dinner'}{recipe.totalTime ? ` · ${recipe.totalTime} mins` : ''}
-                                  </span>
-                                </button>
-                                <div className="flex shrink-0 items-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleRestoreSavedRecipe(recipe)}
-                                    className="text-[10px] font-bold uppercase tracking-wider text-accent hover:underline"
-                                  >
-                                    Restore
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handlePermanentlyDeleteSavedRecipe(recipe)}
-                                    className="p-1 text-gray-400 hover:text-red-500"
-                                    title="Permanently delete"
-                                    aria-label={`Permanently delete ${recipe.title}`}
-                                  >
-                                    <Trash size={14} />
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
                 </div>
 
                 {/* SECTION 2: SCHEDULED (WEEKLY PLAN) */}
@@ -1708,6 +1649,66 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           </button>
                         </div>
                       </div>
+                    </div>
+                  )}
+
+                  {archivedSavedRecipes.length > 0 && (
+                    <div className="border-t border-gray-100 pt-4">
+                      <button
+                        type="button"
+                        onClick={() => setIsRecentlyRemovedOpen(prev => !prev)}
+                        aria-expanded={isRecentlyRemovedOpen}
+                        className="flex w-full items-center justify-between gap-3 px-1 text-left"
+                      >
+                        <span className="flex items-baseline gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Removed from collection</span>
+                          <span className="text-[11px] text-gray-400 font-medium">{archivedSavedRecipes.length} removed</span>
+                        </span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-accent">
+                          {isRecentlyRemovedOpen ? 'Hide' : 'Show'}
+                        </span>
+                      </button>
+                      {isRecentlyRemovedOpen && (
+                        <>
+                          <p className="mt-1 px-1 text-[11px] leading-relaxed text-gray-400">
+                            Removed recipes stay here until you restore or permanently delete them.
+                          </p>
+                          <div className="mt-2 divide-y divide-gray-50 rounded border border-gray-100 bg-gray-50/40">
+                            {archivedSavedRecipes.map(recipe => (
+                              <div key={recipe.id} className="flex items-center justify-between gap-3 px-2.5 py-2.5 sm:px-3">
+                                <button
+                                  type="button"
+                                  onClick={() => setViewingPlannerEntry(recipe)}
+                                  className="min-w-0 text-left hover:opacity-75"
+                                >
+                                  <span className="block truncate text-[12px] font-semibold text-gray-700">{recipe.title}</span>
+                                  <span className="mt-0.5 block truncate text-[10.5px] text-gray-400">
+                                    {recipe.cuisine || 'Dinner'}{recipe.totalTime ? ` · ${recipe.totalTime} mins` : ''}
+                                  </span>
+                                </button>
+                                <div className="flex shrink-0 items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRestoreSavedRecipe(recipe)}
+                                    className="text-[10px] font-bold uppercase tracking-wider text-accent hover:underline"
+                                  >
+                                    Restore
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handlePermanentlyDeleteSavedRecipe(recipe)}
+                                    className="p-1 text-gray-400 hover:text-red-500"
+                                    title="Permanently delete"
+                                    aria-label={`Permanently delete ${recipe.title}`}
+                                  >
+                                    <Trash size={14} />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
