@@ -54,6 +54,8 @@ describe('Ingredient Parser & Normalizer', () => {
 
   test('does not treat ordinary dish names as ingredient-led searches', () => {
     expect(detectIngredientIntent('chicken curry')).toBeNull();
+    expect(detectIngredientIntent('chilli')).toBeNull();
+    expect(detectIngredientIntent('chilli recipe')).toBeNull();
     expect(detectIngredientIntent('Jamie Oliver pasta')).toBeNull();
   });
 });

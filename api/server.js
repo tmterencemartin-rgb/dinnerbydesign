@@ -177747,6 +177747,7 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const activePreferredSourceNames = activePreferredSourceIds.length > 0 ? PREFERRED_SOURCES.filter((s2) => activePreferredSourceIds.includes(s2.id)).map((s2) => s2.label) : [];
   const hasExplicitDietOrProteinIntent = /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|prawn|shrimp|tofu)\b/i.test(query);
   const shouldEncourageRecipeVariety = !isReadyMade && activeDietaryRule === "none" && !hasExplicitDietOrProteinIntent;
+  const isBroadChilliDishSearch = /\b(chilli|chili)\b/i.test(query) && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);
   if (targetCuisines && targetCuisines.length > 0) appliedFilters.push(...targetCuisines);
   else if (legacyCuisine) appliedFilters.push(legacyCuisine);
   if (activeDietaryRule && activeDietaryRule !== "none") {
@@ -177814,7 +177815,16 @@ RECIPE VARIETY (NO DIETARY RULE ACTIVE):
 - The user has not asked for vegetarian, vegan or meat-free recipes.
 - For a dish with established meat and vegetarian versions, return a useful mix where valid: include at least one conventional meat or other animal-protein version and at least one vegetarian version when the requested count allows.
 - Do not use all vegetarian results as the default for a broad dish search, and do not treat the absence of a dietary preference as a preference for vegetarian recipes.` : "";
-  const canUseChilliFallback = shouldEncourageRecipeVariety && /\bchilli\b/i.test(query) && activeSaladPref === "all" && !activeIsSimple && !activeIsLowCost && !activeMaxTime && !activeCalorieLimit && !activeBudgetLimit && activeCookingMethods.length === 0 && activeCookingFats.length === 0 && activeReligious.length === 0 && !preferences?.allergies?.length && !preferences?.exclusions?.length && !searchParams.exclusions?.length;
+  const chilliDishIntentLogic = isBroadChilliDishSearch ? `
+CHILLI DISH INTENT:
+- Treat "chilli" or "chili" here as the cooked dish, not as a request for fresh chilli peppers or chilli powder.
+- Unless the user names a protein or dietary style, include at least one conventional meat or poultry chilli when the requested count allows.
+- Do not let vegetarian chilli results displace all conventional versions simply because they are common or easy to generate.` : "";
+  const eligibleChilliFallbacks = BROAD_CHILLI_FALLBACKS.filter((item) => {
+    const fallbackCost = parseFloat(String(item.costPerPortion).replace(/[^\d.]/g, ""));
+    return (!activeMaxTime || item.totalTime <= activeMaxTime) && (!activeCalorieLimit || item.caloriesPerPortion <= activeCalorieLimit) && (!activeBudgetLimit || fallbackCost <= activeBudgetLimit);
+  });
+  const canUseChilliFallback = shouldEncourageRecipeVariety && isBroadChilliDishSearch && activeSaladPref !== "main-only" && activeSaladPref !== "side-only" && !activeIsSimple && activeCookingMethods.length === 0 && activeCookingFats.length === 0 && activeReligious.length === 0 && !preferences?.allergies?.length && !preferences?.exclusions?.length && !searchParams.exclusions?.length && eligibleChilliFallbacks.length > 0;
   try {
     const modelClient = getAI();
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
@@ -177857,7 +177867,7 @@ HARD CONSTRAINTS:
 12. High Omega-3 Prioritisation: ${activeHighOmega3 ? "Active (focus on oily fish, walnuts, chia, flaxseed)" : "No"}
 13. High Protein Prioritisation: ${activeHighProtein ? "Active (focus on lean meats, fish, pulses, eggs)" : "No"}
 14. Offal: ${activeIncludeOffal ? "Allowed" : "Excluded"}
-${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}
+${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}${chilliDishIntentLogic}
 `;
     const rejectionPolicy = `Return { "items": [] } if:
 - The query "${query}" strictly violates any HARD DIETARY, RELIGIOUS, or ALLERGY constraint.
@@ -178057,7 +178067,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         ...excludeTitles || [],
         ...rawItems.map((item) => String(item.title || "").trim())
       ].filter(Boolean).map((title) => title.toLowerCase()));
-      const fallbackItems = BROAD_CHILLI_FALLBACKS.filter((item) => !existingTitles.has(item.title.toLowerCase()));
+      const fallbackItems = eligibleChilliFallbacks.filter((item) => !existingTitles.has(item.title.toLowerCase()));
       const allVegetarian = rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
       if (allVegetarian && rawItems.length >= count && fallbackItems.length > 0) {
         rawItems = [...rawItems.slice(0, count - 1), fallbackItems[0]];
