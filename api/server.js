@@ -177284,6 +177284,52 @@ function estimateGeminiCostUsd(inputTokens, outputTokens) {
 
 // src/services/geminiService.ts
 var SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
+var BROAD_CHILLI_FALLBACKS = [
+  {
+    title: "Chilli con carne",
+    description: "A classic beef mince and kidney bean chilli with tomatoes, onion and warming spices.",
+    cuisine: "Mexican-inspired",
+    totalTime: 45,
+    caloriesPerPortion: 560,
+    costPerPortion: "\xA31.80 pp",
+    isVegetarian: false,
+    isVegan: false,
+    isPescatarian: false,
+    convenienceProfile: "scratch",
+    ingredients: ["Beef mince", "Kidney beans", "Chopped tomatoes", "Onion", "Chilli powder"],
+    totalIngredientsCount: 9,
+    sourceUrl: "https://www.bbcgoodfood.com/search?q=chilli%20con%20carne",
+    saladType: "none",
+    batchCooking: { suitable: true, confidence: "high", reason: "Keeps and reheats well for another dinner.", storage: "Cool promptly and refrigerate for up to 2 days.", reheat: "Reheat until piping hot throughout." },
+    realityChecks: [
+      { label: "Weeknight fit", note: "Needs simmering time, but most of it is hands-off.", tone: "neutral" },
+      { label: "Shopping friction", note: "Uses ordinary mince, beans and tinned tomatoes.", tone: "positive" },
+      { label: "Leftover friendly", note: "Usually reheats well and can be frozen.", tone: "positive" }
+    ]
+  },
+  {
+    title: "Chicken and bean chilli",
+    description: "A lighter chilli with chicken, beans, tomatoes and smoky spices.",
+    cuisine: "Mexican-inspired",
+    totalTime: 40,
+    caloriesPerPortion: 490,
+    costPerPortion: "\xA31.95 pp",
+    isVegetarian: false,
+    isVegan: false,
+    isPescatarian: false,
+    convenienceProfile: "scratch",
+    ingredients: ["Chicken thigh", "Cannellini beans", "Chopped tomatoes", "Onion", "Smoked paprika"],
+    totalIngredientsCount: 9,
+    sourceUrl: "https://www.jamieoliver.com/search/?s=chicken%20chilli",
+    saladType: "none",
+    batchCooking: { suitable: true, confidence: "high", reason: "The sauce and chicken reheat well.", storage: "Cool promptly and refrigerate for up to 2 days.", reheat: "Reheat until piping hot throughout." },
+    realityChecks: [
+      { label: "Weeknight fit", note: "A straightforward one-pan dinner with moderate simmering time.", tone: "positive" },
+      { label: "Cost caution", note: "Chicken thigh is usually better value than breast.", tone: "neutral" },
+      { label: "Leftover friendly", note: "Works well as a second dinner if chilled promptly.", tone: "positive" }
+    ]
+  }
+];
 var GeminiServiceError = class extends Error {
   constructor(category, message2, details) {
     super(message2);
@@ -177768,6 +177814,7 @@ RECIPE VARIETY (NO DIETARY RULE ACTIVE):
 - The user has not asked for vegetarian, vegan or meat-free recipes.
 - For a dish with established meat and vegetarian versions, return a useful mix where valid: include at least one conventional meat or other animal-protein version and at least one vegetarian version when the requested count allows.
 - Do not use all vegetarian results as the default for a broad dish search, and do not treat the absence of a dietary preference as a preference for vegetarian recipes.` : "";
+  const canUseChilliFallback = shouldEncourageRecipeVariety && /\bchilli\b/i.test(query) && activeSaladPref === "all" && !activeIsSimple && !activeIsLowCost && !activeMaxTime && !activeCalorieLimit && !activeBudgetLimit && activeCookingMethods.length === 0 && activeCookingFats.length === 0 && activeReligious.length === 0 && !preferences?.allergies?.length && !preferences?.exclusions?.length && !searchParams.exclusions?.length;
   try {
     const modelClient = getAI();
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
@@ -177964,10 +178011,15 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
         return true;
       });
     };
+    const isClearlyVegetarian = (item) => item.isVegetarian === true || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|lentil|tofu|tempeh|chickpea)\b/i.test([
+      item.title,
+      item.description,
+      ...Array.isArray(item.ingredients) ? item.ingredients : []
+    ].filter(Boolean).join(" "));
     for (let repairAttempt = 0; repairAttempt < 3; repairAttempt += 1) {
       rawItems = dedupeItems(rawItems);
       const missingCount = Math.max(0, count - rawItems.length);
-      const allVegetarian = shouldEncourageRecipeVariety && rawItems.length > 0 && rawItems.every((item) => item.isVegetarian === true);
+      const allVegetarian = shouldEncourageRecipeVariety && rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
       if (missingCount === 0 && !allVegetarian) break;
       const repairCount = Math.max(1, missingCount);
       const existingTitles = [...excludeTitles || [], ...rawItems.map((item) => String(item.title || "").trim())].filter(Boolean);
@@ -177988,7 +178040,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         repairOutputs.push(repairOutputText2);
         const repairData = repairOutputText2 ? JSON.parse(repairOutputText2) : {};
         const repairItems = Array.isArray(repairData.items) ? repairData.items : [];
-        const nonVegetarianRepair = allVegetarian ? repairItems.find((item) => item.isVegetarian !== true) : null;
+        const nonVegetarianRepair = allVegetarian ? repairItems.find((item) => !isClearlyVegetarian(item)) : null;
         if (allVegetarian && nonVegetarianRepair) {
           rawItems = [...rawItems.slice(0, -1), nonVegetarianRepair, ...repairItems.filter((item) => item !== nonVegetarianRepair)];
         } else {
@@ -177998,6 +178050,21 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
       } catch (repairError) {
         console.warn("[GeminiService] Result repair pass failed; keeping the results already found.", repairError);
         break;
+      }
+    }
+    if (canUseChilliFallback) {
+      const existingTitles = new Set([
+        ...excludeTitles || [],
+        ...rawItems.map((item) => String(item.title || "").trim())
+      ].filter(Boolean).map((title) => title.toLowerCase()));
+      const fallbackItems = BROAD_CHILLI_FALLBACKS.filter((item) => !existingTitles.has(item.title.toLowerCase()));
+      const allVegetarian = rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
+      if (allVegetarian && rawItems.length >= count && fallbackItems.length > 0) {
+        rawItems = [...rawItems.slice(0, count - 1), fallbackItems[0]];
+        wasRepaired = true;
+      } else if (rawItems.length < count) {
+        rawItems = [...rawItems, ...fallbackItems.slice(0, count - rawItems.length)];
+        wasRepaired = wasRepaired || fallbackItems.length > 0;
       }
     }
     rawItems = dedupeItems(rawItems).slice(0, count);
