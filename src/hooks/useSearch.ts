@@ -26,7 +26,9 @@ import {
 import { DIETARY_TAXONOMY } from '../constants';
 import { handleFirestoreError } from '../firebase';
 
-const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v1';
+// Bump this when result-generation behaviour changes so an under-filled batch
+// from an earlier build cannot mask the newer repair logic.
+const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v2';
 const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
@@ -426,7 +428,10 @@ export function useSearch() {
           }
 
           const finalItems = [...recipesWithFinalIds, ...readyMealsWithFinalIds] as (Recipe | ReadyMeal)[];
-          if (cacheKey && finalItems.length > 0) {
+          // Only cache complete batches. An under-filled response should be
+          // eligible for a fresh generation rather than being replayed for 15
+          // minutes as though it were a complete result set.
+          if (cacheKey && finalItems.length >= (params.count || INITIAL_COOK_FROM_SCRATCH_RESULTS)) {
             writeSearchCacheEntry(cacheKey, {
               createdAt: Date.now(),
               recipes: recipesWithFinalIds as Recipe[],
