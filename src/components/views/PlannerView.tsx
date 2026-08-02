@@ -751,7 +751,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </select>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Weekly budget</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Ingredient-value target</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] font-bold text-gray-400">£</span>
                         <input
@@ -761,6 +761,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           className="w-full h-10 bg-gray-50 border border-gray-100 rounded pl-7 pr-3 text-[12px] font-semibold text-gray-700 outline-none"
                         />
                       </div>
+                      <p className="text-[9.5px] leading-snug text-gray-400">
+                        Compares the estimated value of ingredients used. Checkout may cost more because complete packs are purchased.
+                      </p>
                     </label>
                     <div className="space-y-1">
                       <PreferenceDropdown

@@ -530,6 +530,15 @@ export const AdminDashboard: React.FC = () => {
     return user.subscription?.accessStatus || user.accessStatus || 'trial';
   };
 
+  const getAccessLabel = (user: UserProfile) => {
+    if (user.permanentAccess) return 'Permanent';
+    switch (getAccessStatus(user)) {
+      case 'paid': return 'Paid';
+      case 'read_only': return 'Read only';
+      default: return 'Trial';
+    }
+  };
+
   const handleTogglePermanentAccess = (targetUser: UserProfile) => {
     const nextValue = !targetUser.permanentAccess;
     const action = nextValue ? 'grant' : 'revoke';
@@ -1334,7 +1343,7 @@ export const AdminDashboard: React.FC = () => {
                       items: [
                         { label: 'Joined', value: formatDate(user.createdAt) },
                         trialEndDate ? { label: trialHasEnded ? 'Trial ended' : 'Trial ends', value: formatDate(trialEndDate) } : null,
-                        { label: 'Profile', value: user.accessStatus || 'trial' },
+                        { label: 'Access', value: getAccessLabel(user) },
                       ].filter(Boolean),
                     },
                     {
