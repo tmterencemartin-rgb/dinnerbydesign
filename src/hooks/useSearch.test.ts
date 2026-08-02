@@ -250,6 +250,40 @@ describe('useSearch Hook Lifecycle', () => {
     );
   });
 
+  it('tops up broad chilli searches after client-side filtering leaves one result', async () => {
+    (geminiService.generateDinnerSuggestions as any).mockResolvedValue({
+      recipes: [{
+        title: 'Turkey and Sweetcorn Chilli',
+        description: 'A quick turkey chilli with sweetcorn.',
+        cuisine: 'Tex-Mex',
+        ingredients: ['Turkey mince', 'Sweetcorn', 'Chopped tomatoes'],
+        instructions: [],
+        totalServings: 2,
+        totalTime: 15,
+        saladType: 'none',
+        sourceUrl: 'recipe-search',
+        isVegetarian: false,
+        isPescatarian: false,
+        isVegan: false,
+        dietFlagsVerified: true
+      }],
+      readyMeals: []
+    });
+
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.handleGenerate('chilli');
+    });
+
+    expect(result.current.currentRecipes).toHaveLength(3);
+    expect(result.current.currentRecipes?.map(r => r.title)).toEqual([
+      'Turkey and Sweetcorn Chilli',
+      'Quick beef chilli con carne',
+      'No-bean beef chilli'
+    ]);
+  });
+
   it('hides raw permission-denied provider payloads from users', async () => {
     const providerPayload = '{"error":{"code":403,"message":"Lightning dunning decision is deny for project: projects/58614176053","status":"PERMISSION_DENIED"}}';
     (geminiService.generateDinnerSuggestions as any).mockRejectedValue(

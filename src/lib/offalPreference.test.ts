@@ -34,4 +34,12 @@ describe('offal preference helpers', () => {
     expect(itemContainsOffal(recipe('Artichoke hearts with pasta'))).toBe(false);
     expect(itemContainsOffal(recipe('Kidney bean chilli'))).toBe(false);
   });
+
+  it('does not treat repeated kidney bean mentions as offal', () => {
+    const chilli = recipe('Quick beef chilli con carne');
+    chilli.description = 'A fast beef mince and kidney bean chilli with tomatoes.';
+    chilli.ingredients = ['Beef mince', 'Kidney beans', 'Chopped tomatoes'];
+
+    expect(itemContainsOffal(chilli)).toBe(false);
+  });
 });

@@ -65,6 +65,50 @@ const BROAD_CHILLI_FALLBACKS = [
     ]
   },
   {
+    title: 'No-bean beef chilli',
+    description: 'A quick beef chilli with tomatoes, onion, peppers and smoky spices, without beans.',
+    cuisine: 'Mexican-inspired',
+    totalTime: 20,
+    caloriesPerPortion: 430,
+    costPerPortion: '£1.85 pp',
+    isVegetarian: false,
+    isVegan: false,
+    isPescatarian: false,
+    convenienceProfile: 'scratch',
+    ingredients: ['Beef mince', 'Chopped tomatoes', 'Onion', 'Pepper', 'Chilli powder'],
+    totalIngredientsCount: 8,
+    sourceUrl: 'recipe-search',
+    saladType: 'none',
+    batchCooking: { suitable: true, confidence: 'high', reason: 'A tomato-based chilli reheats well.', storage: 'Cool promptly and refrigerate for up to 2 days.', reheat: 'Reheat until piping hot throughout.' },
+    realityChecks: [
+      { label: 'Weeknight fit', note: 'A short simmer keeps this within a fast evening window.', tone: 'positive' },
+      { label: 'Shopping friction', note: 'Uses ordinary mince, tinned tomatoes and peppers.', tone: 'positive' },
+      { label: 'Leftover friendly', note: 'The sauce usually tastes better after resting.', tone: 'positive' }
+    ]
+  },
+  {
+    title: 'Turkey and sweetcorn chilli',
+    description: 'A quick turkey chilli with sweetcorn, tomatoes and mild chilli spice.',
+    cuisine: 'Mexican-inspired',
+    totalTime: 15,
+    caloriesPerPortion: 380,
+    costPerPortion: '£1.55 pp',
+    isVegetarian: false,
+    isVegan: false,
+    isPescatarian: false,
+    convenienceProfile: 'scratch',
+    ingredients: ['Turkey mince', 'Sweetcorn', 'Chopped tomatoes', 'Chilli powder'],
+    totalIngredientsCount: 7,
+    sourceUrl: 'recipe-search',
+    saladType: 'none',
+    batchCooking: { suitable: true, confidence: 'medium', reason: 'The sauce helps turkey mince reheat without drying out.', storage: 'Cool promptly and refrigerate for up to 2 days.', reheat: 'Reheat gently with a splash of water until piping hot.' },
+    realityChecks: [
+      { label: 'Weeknight fit', note: 'Turkey mince cooks quickly, so this is the fastest option.', tone: 'positive' },
+      { label: 'Cost caution', note: 'Turkey mince prices vary, but sweetcorn helps stretch it.', tone: 'neutral' },
+      { label: 'Cleanup', note: 'One-pan cooking keeps washing up low.', tone: 'positive' }
+    ]
+  },
+  {
     title: 'Chicken and bean chilli',
     description: 'A lighter chilli with chicken, beans, tomatoes and smoky spices.',
     cuisine: 'Mexican-inspired',

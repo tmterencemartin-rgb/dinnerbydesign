@@ -28,11 +28,117 @@ import { handleFirestoreError } from '../firebase';
 
 // Bump this when result-generation behaviour changes so an under-filled batch
 // from an earlier build cannot mask the newer repair logic.
-const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v3';
+const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v4';
 const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
 const GUEST_SEARCH_LIMIT = 3;
+
+const isBroadChilliDishQuery = (query: string) => /\b(chilli|chili)\b/i.test(query)
+  && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);
+
+const BROAD_CHILLI_CLIENT_FALLBACKS: Recipe[] = [
+  {
+    title: 'Quick beef chilli con carne',
+    description: 'A fast beef mince and kidney bean chilli with tomatoes and warming spices.',
+    ingredients: ['Beef mince', 'Kidney beans', 'Chopped tomatoes', 'Chilli powder'],
+    instructions: [],
+    cuisine: 'Mexican-inspired',
+    totalServings: 2,
+    totalTime: 20,
+    saladType: 'none',
+    sourceUrl: 'recipe-search',
+    totalIngredientsCount: 8,
+    caloriesPerPortion: 450,
+    costPerPortion: '£1.80 pp',
+    isVegetarian: false,
+    isPescatarian: false,
+    isVegan: false,
+    dietFlagsVerified: true,
+    convenienceProfile: 'scratch',
+    batchCooking: { suitable: true, confidence: 'high' },
+    realityChecks: [
+      { label: 'Weeknight fit', note: 'Uses a short simmer for a faster version of the classic.', tone: 'positive' },
+      { label: 'Shopping friction', note: 'Uses ordinary mince, beans and tinned tomatoes.', tone: 'positive' },
+      { label: 'Cleanup', note: 'One-pan cooking keeps washing up low.', tone: 'positive' }
+    ]
+  },
+  {
+    title: 'No-bean beef chilli',
+    description: 'A quick beef chilli with tomatoes, onion, peppers and smoky spices, without beans.',
+    ingredients: ['Beef mince', 'Chopped tomatoes', 'Onion', 'Pepper', 'Chilli powder'],
+    instructions: [],
+    cuisine: 'Mexican-inspired',
+    totalServings: 2,
+    totalTime: 20,
+    saladType: 'none',
+    sourceUrl: 'recipe-search',
+    totalIngredientsCount: 8,
+    caloriesPerPortion: 430,
+    costPerPortion: '£1.85 pp',
+    isVegetarian: false,
+    isPescatarian: false,
+    isVegan: false,
+    dietFlagsVerified: true,
+    convenienceProfile: 'scratch',
+    batchCooking: { suitable: true, confidence: 'high' },
+    realityChecks: [
+      { label: 'Weeknight fit', note: 'A short simmer keeps this within a fast evening window.', tone: 'positive' },
+      { label: 'Shopping friction', note: 'Uses ordinary mince, tinned tomatoes and peppers.', tone: 'positive' },
+      { label: 'Leftover friendly', note: 'The sauce usually tastes better after resting.', tone: 'positive' }
+    ]
+  },
+  {
+    title: 'Turkey and sweetcorn chilli',
+    description: 'A quick turkey chilli with sweetcorn, tomatoes and mild chilli spice.',
+    ingredients: ['Turkey mince', 'Sweetcorn', 'Chopped tomatoes', 'Chilli powder'],
+    instructions: [],
+    cuisine: 'Mexican-inspired',
+    totalServings: 2,
+    totalTime: 15,
+    saladType: 'none',
+    sourceUrl: 'recipe-search',
+    totalIngredientsCount: 7,
+    caloriesPerPortion: 380,
+    costPerPortion: '£1.55 pp',
+    isVegetarian: false,
+    isPescatarian: false,
+    isVegan: false,
+    dietFlagsVerified: true,
+    convenienceProfile: 'scratch',
+    batchCooking: { suitable: true, confidence: 'medium' },
+    realityChecks: [
+      { label: 'Weeknight fit', note: 'Turkey mince cooks quickly, so this is the fastest option.', tone: 'positive' },
+      { label: 'Cost caution', note: 'Turkey mince prices vary, but sweetcorn helps stretch it.', tone: 'neutral' },
+      { label: 'Cleanup', note: 'One-pan cooking keeps washing up low.', tone: 'positive' }
+    ]
+  },
+  {
+    title: 'Three-bean vegetarian chilli',
+    description: 'A quick vegetarian chilli with mixed beans, tomatoes and warm spices.',
+    ingredients: ['Mixed beans', 'Chopped tomatoes', 'Onion', 'Smoked paprika'],
+    instructions: [],
+    cuisine: 'Mexican-inspired',
+    totalServings: 2,
+    totalTime: 18,
+    saladType: 'none',
+    sourceUrl: 'recipe-search',
+    totalIngredientsCount: 8,
+    caloriesPerPortion: 360,
+    costPerPortion: '£1.10 pp',
+    isVegetarian: true,
+    isPescatarian: true,
+    isVegan: true,
+    dietFlagsVerified: true,
+    convenienceProfile: 'scratch',
+    batchCooking: { suitable: true, confidence: 'high' },
+    realityChecks: [
+      { label: 'Shopping friction', note: 'Mostly store-cupboard tins and spices.', tone: 'positive' },
+      { label: 'Weeknight fit', note: 'Very quick once the onion is chopped.', tone: 'positive' },
+      { label: 'Portion caution', note: 'Beans are filling, especially with rice or wraps.', tone: 'neutral' }
+    ]
+  }
+];
 
 const hasMeaningfulBudgetContradiction = (contradiction: any): contradiction is {
   ingredient: string;
@@ -347,13 +453,39 @@ export function useSearch() {
           includeOffal: params.includeOffal === true
         };
 
-        const recipesWithFinalIds = accumulatedRecipes
+        let recipesWithFinalIds = accumulatedRecipes
           .filter(r => passesHardConstraints(r, effectivePrefs))
           .filter(r => !timeLimit || r.totalTime <= timeLimit)
           .map(r => ({
             ...r,
             id: r.id || getRecipeKey(r)
           }));
+
+        if (
+          params.source === 'cook'
+          && isBroadChilliDishQuery(params.query || '')
+          && recipesWithFinalIds.length < (params.count || INITIAL_COOK_FROM_SCRATCH_RESULTS)
+        ) {
+          const existingTitles = new Set([
+            ...(params.excludeTitles || []),
+            ...recipesWithFinalIds.map(r => r.title)
+          ].map(title => title.toLowerCase().trim()));
+          const needed = (params.count || INITIAL_COOK_FROM_SCRATCH_RESULTS) - recipesWithFinalIds.length;
+          const chilliTopUps = BROAD_CHILLI_CLIENT_FALLBACKS
+            .filter(r => !existingTitles.has(r.title.toLowerCase().trim()))
+            .filter(r => passesHardConstraints(r, effectivePrefs))
+            .filter(r => !timeLimit || r.totalTime <= timeLimit)
+            .slice(0, needed)
+            .map(r => ({
+              ...r,
+              id: r.id || getRecipeKey(r)
+            }));
+
+          if (chilliTopUps.length > 0) {
+            recipesWithFinalIds = [...recipesWithFinalIds, ...chilliTopUps];
+            addLog(`SEARCH: broad chilli client top-up added ${chilliTopUps.length} result(s).`);
+          }
+        }
           
         const readyMealsWithFinalIds = accumulatedReadyMeals
           .filter(m => passesHardConstraints(m, effectivePrefs))
