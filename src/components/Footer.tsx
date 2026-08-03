@@ -56,7 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </div>
         
-        <nav aria-label="Footer" className="grid grid-cols-3 gap-x-3 gap-y-3 text-left sm:gap-x-6 sm:gap-y-0">
+        <nav aria-label="Footer" className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-3 text-left sm:gap-x-6 sm:gap-y-0 md:justify-items-start">
           <div className="min-w-0">
             <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Guides</p>
             <div className="flex flex-col items-start gap-1.5 md:gap-2">

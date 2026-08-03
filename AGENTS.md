@@ -70,6 +70,7 @@ When a user lists ingredients:
 - Keep the shared app shell gutters aligned across header, main content and footer: 12px on narrow screens, 16px from the small breakpoint and 24px from the large breakpoint.
 - When both Saved and Scheduled are empty, show one compact starting panel that says no recipes are saved, explains that saved recipes will appear there ready to schedule, and offers Find recipes to save and Plan my week actions. Hide the separate Saved and Scheduled sections until either contains something.
 - Group dense mobile footer links under Guides, Information and Legal while keeping the desktop footer presentation and every destination intact.
+- Centre the narrow footer category blocks within their equal columns, while keeping each category's links left-aligned; restore left-aligned category blocks from the medium breakpoint.
 - On `/guides`, keep the three pathway cards in a horizontally swipeable, snap-aligned row on narrow screens. Preserve the supporting copy and use the three-column grid on wider screens.
 
 ## Search service
