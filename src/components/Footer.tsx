@@ -38,7 +38,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   
   return (
     <footer className="shrink-0 border-t border-gray-100 bg-gray-50 py-4 sm:py-6">
-      <div className="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-5 px-3 sm:px-4 md:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.8fr)] md:items-start lg:gap-x-12 lg:px-6">
+      <div className="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-5 px-3 sm:px-4 md:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.8fr)] md:items-start lg:grid-cols-[minmax(340px,1.35fr)_repeat(3,minmax(0,1fr))] lg:gap-x-12 lg:px-6">
         <div className="flex min-w-0 flex-col items-center md:items-start">
           <div className="relative z-10 flex flex-col items-center gap-0.5 text-[11px] text-gray-500 sm:gap-1 sm:text-[13px] md:items-start">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
@@ -56,7 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </div>
         
-        <nav aria-label="Footer" className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-3 text-left sm:gap-x-6 sm:gap-y-0 md:justify-items-start">
+        <nav aria-label="Footer" className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-3 text-left sm:gap-x-6 sm:gap-y-0 md:justify-items-start lg:col-span-3">
           <div className="min-w-0">
             <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Guides</p>
             <div className="flex flex-col items-start gap-1.5 md:gap-2">
@@ -112,7 +112,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </nav>
 
-        <div className="border-t border-gray-200/50 pt-2.5 text-center text-[9.5px] leading-4 text-gray-400 sm:pt-3 sm:text-[11px] sm:leading-relaxed md:col-span-2 md:text-left">
+        <div className="border-t border-gray-200/50 pt-2.5 text-center text-[9.5px] leading-4 text-gray-400 sm:pt-3 sm:text-[11px] sm:leading-relaxed md:col-span-2 md:text-left lg:col-span-4">
           DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
         </div>
       </div>
