@@ -38,7 +38,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   
   return (
     <footer className="shrink-0 border-t border-gray-100 bg-gray-50 py-4 sm:py-6">
-      <div className="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-5 px-4 sm:px-8 md:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.8fr)] md:items-start lg:gap-x-12 lg:px-10">
+      <div className="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-5 px-3 sm:px-4 md:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.8fr)] md:items-start lg:gap-x-12 lg:px-6">
         <div className="flex min-w-0 flex-col items-center md:items-start">
           <div className="relative z-10 flex flex-col items-center gap-0.5 text-[11px] text-gray-500 sm:gap-1 sm:text-[13px] md:items-start">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
