@@ -259,12 +259,12 @@ export const LandingView: React.FC = () => {
             >
               Pricing
             </button>
-            <button
-              onClick={() => scrollToSection('public-pathways')}
+            <a
+              href="/guides"
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
             >
               Explore
-            </button>
+            </a>
           </div>
 
           {/* Mobile Menu Action button */}
@@ -306,12 +306,12 @@ export const LandingView: React.FC = () => {
               >
                 Pricing
               </button>
-              <button
-                onClick={() => scrollToSection('public-pathways')}
+              <a
+                href="/guides"
                 className="hover:text-dbd-accent py-2 transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
               >
                 Explore public resources
-              </button>
+              </a>
               <hr className="border-dbd-rule/40 my-1" />
               <button 
                 onClick={handleSignIn} 
