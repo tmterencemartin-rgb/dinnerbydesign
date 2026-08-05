@@ -532,7 +532,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pb-20"
+      className="-mx-1 pb-20 sm:mx-0"
     >
       <div className="space-y-4 -mt-4">
         {viewingPlannerEntry ? (
@@ -554,7 +554,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               </button>
             </div>
             
-            <div className="px-4 space-y-4">
+            <div className="px-3 space-y-4 sm:px-4">
               <div className="space-y-4">
                 <div className="text-[11px] font-bold text-accent uppercase tracking-wider">
                   {viewingPlannerEntry.scheduledDate}
@@ -719,7 +719,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               </div>
             </div>
 
-            <div className={`bg-white rounded border border-gray-100 px-4 sm:px-5 relative ${isPlannerEmpty ? 'py-4' : 'py-2.5'} ${showPlanWeek ? 'z-40' : 'z-0'}`}>
+            <div className={`bg-white rounded border border-gray-100 px-3 sm:px-5 relative ${isPlannerEmpty ? 'py-4' : 'py-2.5'} ${showPlanWeek ? 'z-40' : 'z-0'}`}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <h3 className="text-[13.5px] font-bold text-gray-950">
@@ -944,7 +944,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
             /* Unified Save & Schedule Panel */
             <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
               {/* Panel Content - Single scrollable flow */}
-              <div className="px-4 sm:px-5 py-3 sm:py-5 space-y-6">
+              <div className="px-3 sm:px-5 py-3 sm:py-5 space-y-6">
                 
                 {/* SECTION 1: SAVED (BACKLOG) */}
                 <div id="saved-recipes-section" className="space-y-2.5 relative z-20 scroll-mt-[150px]">
