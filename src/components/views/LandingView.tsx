@@ -552,6 +552,21 @@ export const LandingView: React.FC = () => {
         </div>
       </section>
 
+      {/* TROLLEY INGREDIENTS SECTION */}
+      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto">
+        <div className="max-w-prose text-left select-none">
+          <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
+            BUILT AROUND WHAT'S ALREADY IN YOUR TROLLEY
+          </span>
+          <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
+            Popular ingredients. Used properly.
+          </h3>
+          <p className="mt-6 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+            Mince, chicken thighs, tinned tomatoes, frozen peas — the ingredients most UK kitchens buy every week. DinnerByDesign finds ways to cook them that don't feel like the same dinner on repeat.
+          </p>
+        </div>
+      </section>
+
       {/* 6. THREE TABS FEATURE EXPLAINER GRID */}
       <section id="how-it-works" className="py-16 bg-[#F4F1EA] border-t border-dbd-rule/40 scroll-mt-nav px-6 sm:px-8">
         <div className="max-w-5xl mx-auto">
