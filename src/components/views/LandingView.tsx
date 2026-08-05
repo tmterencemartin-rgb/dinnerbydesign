@@ -486,23 +486,6 @@ export const LandingView: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. VALUE STATEMENT SECTION (No Ads / No Backstories) */}
-      <section id="why-different" className="my-16 bg-[#EEECE7] border-y border-dbd-rule/60 py-16 px-6 sm:px-8 text-center scroll-mt-nav select-none">
-        <div className="max-w-4xl mx-auto">
-          <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.25em] text-dbd-accent uppercase block mb-6">
-            A Tool, Not a Magazine
-          </span>
-          <div className="space-y-1 mb-8 font-sans text-3xl sm:text-4xl leading-[1.15] font-bold text-dbd-ink select-none">
-            <h2>No ads.</h2>
-            <h2>No backstories.</h2>
-            <h2>No tracking, clutter, clickbait or questionnaires.</h2>
-          </div>
-          <p className="text-[14px] sm:text-[17px] text-dbd-ink-2 max-w-2xl leading-relaxed mx-auto font-sans font-normal">
-            Just a shorter route from a dinner question to a useful shortlist.
-          </p>
-        </div>
-      </section>
-
       {/* 5. BUILT AROUND YOUR KITCHEN */}
       <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
