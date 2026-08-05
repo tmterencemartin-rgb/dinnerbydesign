@@ -413,7 +413,7 @@ const AppContent = () => {
                     "name": "Does it estimate shopping costs?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners."
+                      "text": "Yes. Items are grouped so you can work through the list more easily, with ingredients combined across scheduled dinners where the app can scale them sensibly."
                     }
                   },
                   {

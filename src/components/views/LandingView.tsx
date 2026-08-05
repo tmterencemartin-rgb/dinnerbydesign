@@ -330,7 +330,7 @@ export const LandingView: React.FC = () => {
           Find what to cook, what to buy <br /> and what it might cost.
         </h1>
         <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
-          An ad-free, UK-focused dinner app for finding recipes, planning around your budget and building costed shopping lists. Try three real searches without an account, then create one when you want to save, schedule and plan your week.
+          An ad-free, UK-focused dinner app for finding recipes, planning around your budget and building costed shopping lists. Free searches give you three real tries without an account. The free trial starts when you create one to save, schedule and plan your week.
         </p>
 
         {/* Action button grouping */}
@@ -350,7 +350,7 @@ export const LandingView: React.FC = () => {
           </button>
         </div>
         <p className="mt-4 text-[12px] font-medium text-dbd-ink-3">
-          Three searches. No account required.
+          Free searches: three tries, no account required.
         </p>
       </section>
 
@@ -498,7 +498,7 @@ export const LandingView: React.FC = () => {
             <h2>No tracking, clutter, clickbait or questionnaires.</h2>
           </div>
           <p className="text-[14px] sm:text-[17px] text-dbd-ink-2 max-w-2xl leading-relaxed mx-auto font-sans font-normal">
-            Just recipes matched to your tastes, dietary needs, ingredients, time and budget.
+            Just a shorter route from a dinner question to a useful shortlist.
           </p>
         </div>
       </section>
@@ -512,7 +512,7 @@ export const LandingView: React.FC = () => {
               Built Around Your Kitchen
             </span>
             <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
-              Less searching. Precise matches. Dinner, decided.
+              Built around the way you cook.
             </h3>
           </div>
 
@@ -640,7 +640,7 @@ export const LandingView: React.FC = () => {
             Create an account when DinnerByDesign earns it.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
-            Your first 3 searches are free without an account. Sign up and get full access free for seven days, including continued searches, saved favourites, dinner planning and shopping lists.
+            Free searches give you three tries without an account. The free trial gives you seven days of full access after sign-up, including continued searches, saved favourites, dinner planning and shopping lists.
           </p>
         </div>
 
@@ -806,7 +806,7 @@ export const LandingView: React.FC = () => {
               },
               {
                 question: 'Does it estimate shopping costs?',
-                answer: 'Yes. DinnerByDesign estimates cost per portion and builds a grouped UK shopping list from your scheduled dinners.'
+                answer: 'Yes. Items are grouped so you can work through the list more easily, with ingredients combined across scheduled dinners where the app can scale them sensibly.'
               },
               {
                 question: 'Can DinnerByDesign plan dinners to a weekly budget?',
