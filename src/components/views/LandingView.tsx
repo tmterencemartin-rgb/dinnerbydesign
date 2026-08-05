@@ -562,7 +562,7 @@ export const LandingView: React.FC = () => {
             Popular ingredients. Used properly.
           </h3>
           <p className="mt-6 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-            Mince, chicken thighs, tinned tomatoes, frozen peas — the ingredients most UK kitchens buy every week. DinnerByDesign finds ways to cook them that don't feel like the same dinner on repeat.
+            Minced beef, chicken thighs, tinned tomatoes, frozen vegetables — the ingredients most UK kitchens buy every week. DinnerByDesign finds ways to cook them that don't feel like the same dinner on repeat.
           </p>
         </div>
       </section>
