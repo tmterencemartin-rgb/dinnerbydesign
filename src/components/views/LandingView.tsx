@@ -545,7 +545,7 @@ export const LandingView: React.FC = () => {
             Inexpensive cooking. Not uninteresting cooking.
           </h3>
           <p className="mt-6 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-            For many households, the weekly shop is one of the largest regular costs — and keeping it down usually means buying the same basic ingredients: mince, sausages, chicken, fish fingers, tinned and frozen staples. DinnerByDesign works with that, not around it: finding different ways to cook the same shopping list, including recipes from cuisines where cheap, everyday ingredients are already the tradition, not a workaround.
+            For many households, the weekly shop is one of the largest regular costs — and keeping them down usually means buying the same basic ingredients: mince, sausages, chicken, fish fingers, tinned and frozen staples. DinnerByDesign works with that, not around it: finding different ways to cook the same shopping list, including recipes from cuisines where cheap, everyday ingredients are already the tradition, not a workaround.
           </p>
         </div>
       </section>
