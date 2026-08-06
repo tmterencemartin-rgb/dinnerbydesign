@@ -127,6 +127,11 @@ import {
   TINNED_FISH_GUIDE_PATH,
   getTinnedFishGuideJsonLd,
 } from './content/tinnedFishGuide';
+import {
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
+  getNineBudgetDinnersThreeCuisinesGuideJsonLd,
+} from './content/nineBudgetDinnersThreeCuisinesGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -156,6 +161,7 @@ const ChickenThighCostGuideView = React.lazy(() => import('./components/views/Ch
 const FiveStaplesGuideView = React.lazy(() => import('./components/views/FiveStaplesGuideView').then(module => ({ default: module.FiveStaplesGuideView })));
 const ConvenienceFishGuideView = React.lazy(() => import('./components/views/ConvenienceFishGuideView').then(module => ({ default: module.ConvenienceFishGuideView })));
 const TinnedFishGuideView = React.lazy(() => import('./components/views/TinnedFishGuideView').then(module => ({ default: module.TinnedFishGuideView })));
+const NineBudgetDinnersThreeCuisinesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersThreeCuisinesGuideView').then(module => ({ default: module.NineBudgetDinnersThreeCuisinesGuideView })));
 
 type SeoConfig = {
   title: string;
@@ -323,6 +329,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [TINNED_FISH_GUIDE_PATH]: {
     seo: guideSeo(TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH, getTinnedFishGuideJsonLd()),
     render: ({ search }) => <TinnedFishGuideView onFindDinners={search} />,
+  },
+  [NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH]: {
+    seo: guideSeo(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH, getNineBudgetDinnersThreeCuisinesGuideJsonLd()),
+    render: ({ search }) => <NineBudgetDinnersThreeCuisinesGuideView onFindDinners={search} />,
   },
 };
 

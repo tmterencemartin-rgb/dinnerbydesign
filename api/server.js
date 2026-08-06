@@ -185119,6 +185119,57 @@ var TINNED_FISH_GUIDE = {
   ]
 };
 
+// src/content/nineBudgetDinnersThreeCuisinesGuide.ts
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH = "/guides/nine-budget-dinners-three-cuisines";
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE = {
+  title: "Nine budget dinners from three cuisines: Indian, Mexican and Egyptian",
+  seoTitle: "Nine budget dinners from three cuisines: Indian, Mexican and Egyptian | DinnerByDesign",
+  description: "Nine varied budget dinners inspired by Indian, Mexican and Egyptian cooking, using overlapping ingredients and practical UK supermarket substitutions.",
+  publishedAt: "2026-08-06",
+  reviewedAt: "2026-08-06",
+  nextReviewAt: "2026-09-06",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find varied budget dinner ideas inspired by Indian, Mexican and Egyptian cooking",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-06",
+  editorialNotes: "One canonical guide showing how an overlapping shopping list can produce varied dinners inspired by three cuisines, with transparent Tesco guide prices and food-safety guidance.",
+  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/food-costs/five-dinners-same-ingredients", "/pricing-methodology", "/food-safety", "/signin"],
+  disclosures: ["price_estimate", "price_comparison", "serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
+    },
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.food.gov.uk/safety-hygiene/home-food-fact-checker"
+    }
+  ],
+  faqs: [
+    {
+      question: "Can budget cooking still produce varied dinners?",
+      answer: "Yes. The nine examples use overlapping ingredients but change the spice mix, texture and way the dinner is served. Dal, tacos, ful medames and koshari do not eat alike even when they share onions, pulses, rice or tomatoes."
+    },
+    {
+      question: "What ingredients are used most often?",
+      answer: "Onions and garlic form the base of nearly all nine dinners. Tinned tomatoes, rice, pulses, potatoes, eggs and a small group of spices also recur across the list."
+    },
+    {
+      question: "Are these traditional versions of the dishes?",
+      answer: "No. They are home-style or inspired adaptations for a UK cupboard. The guide identifies where a substitution or simplified method changes the dish rather than presenting it as a definitive version."
+    },
+    {
+      question: "How should cooked rice be stored?",
+      answer: "Cool cooked rice as quickly as possible, ideally within one hour, then cover and refrigerate it. Use it within 24 hours, reheat it only once and make sure it is steaming hot throughout before serving."
+    },
+    {
+      question: "Do the price figures include every ingredient?",
+      answer: "They cover the main ingredients listed for each dinner. Oil and salt are assumed to be in the cupboard, while rice, bread and tortillas are included only where the dinner fact line says so. The named products and price-check date are set out in the costing methodology."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
   {
@@ -185231,6 +185282,20 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.contentReviewedAt,
     internalLinks: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.internalLinks,
     disclosures: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.disclosures,
+    status: "published"
+  },
+  {
+    title: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.title,
+    path: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.pageFamily,
+    primarySearchIntent: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.primarySearchIntent,
+    indexingStatus: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.indexingStatus,
+    publishedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.publishedAt,
+    reviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.reviewedAt,
+    contentReviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.contentReviewedAt,
+    internalLinks: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.internalLinks,
+    disclosures: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.disclosures,
     status: "published"
   },
   {

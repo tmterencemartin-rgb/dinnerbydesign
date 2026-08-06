@@ -147,6 +147,12 @@ import {
   getTinnedFishGuideJsonLd,
   renderTinnedFishGuideInitialHtml,
 } from '../src/content/tinnedFishGuide';
+import {
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
+  getNineBudgetDinnersThreeCuisinesGuideJsonLd,
+  renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
+} from '../src/content/nineBudgetDinnersThreeCuisinesGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -578,6 +584,13 @@ await generateEditorialGuide(
   LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
   renderLeftoverRoastChickenBudgetDinnersGuideInitialHtml,
   getLeftoverRoastChickenBudgetDinnersGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
+  renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
+  getNineBudgetDinnersThreeCuisinesGuideJsonLd,
 );
 
 await generateEditorialGuide(
