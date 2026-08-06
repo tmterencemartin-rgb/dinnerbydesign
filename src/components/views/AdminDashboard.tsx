@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { getApiUrl } from '../../lib/api';
 import { IngredientPriceCatalogueAdmin } from '../admin/IngredientPriceCatalogueAdmin';
 import { PUBLISHED_ARTICLES } from '../../content/publicArticles';
+import { formatPublicArticleTitle, formatPublicNumber } from '../../content/publicPathways';
 
 type AdminStatusFilter = AccessStatus | 'all' | 'permanent_access' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
 
@@ -1001,7 +1002,7 @@ export const AdminDashboard: React.FC = () => {
                   <h2 id="published-articles-heading" className="mt-1 text-base font-bold text-gray-950">Published articles</h2>
                   <p className="mt-1 text-xs font-medium text-gray-500">Open every public editorial page from one place.</p>
                 </div>
-                <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{PUBLISHED_ARTICLES.length} live</span>
+                <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{formatPublicNumber(PUBLISHED_ARTICLES.length)} live</span>
               </div>
               <div className="mt-4 grid gap-2 md:grid-cols-2">
                 {PUBLISHED_ARTICLES.map(article => (
@@ -1014,7 +1015,7 @@ export const AdminDashboard: React.FC = () => {
                   >
                     <span className="min-w-0">
                       <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">{article.category}</span>
-                      <span className="mt-0.5 block text-xs font-bold leading-4 text-gray-800 group-hover:text-dbd-accent">{article.title}</span>
+                      <span className="mt-0.5 block text-xs font-bold leading-4 text-gray-800 group-hover:text-dbd-accent">{formatPublicArticleTitle(article.title)}</span>
                     </span>
                     <ExternalLink className="h-3.5 w-3.5 shrink-0 text-gray-400 group-hover:text-dbd-accent" aria-hidden="true" />
                   </a>
