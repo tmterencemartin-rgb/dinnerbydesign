@@ -51,6 +51,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
       '/guides/how-to-build-a-traybake',
       '/guides/9-ways-with-sausages',
       '/guides/9-budget-dinners-with-beef-or-pork-mince',
+      '/guides/9-budget-dinners-with-leftover-roast-chicken',
       '/food-costs/summer-stews-seasonal-vegetables',
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/guides/do-vegetables-in-dishes-count-towards-5-a-day',

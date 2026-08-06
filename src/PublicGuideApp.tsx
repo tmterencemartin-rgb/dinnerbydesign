@@ -103,6 +103,11 @@ import {
   getMinceBudgetDinnersGuideJsonLd,
 } from './content/minceBudgetDinnersGuide';
 import {
+  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
+  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+  getLeftoverRoastChickenBudgetDinnersGuideJsonLd,
+} from './content/leftoverRoastChickenBudgetDinnersGuide';
+import {
   CHICKEN_THIGH_COST_GUIDE,
   CHICKEN_THIGH_COST_GUIDE_PATH,
   getChickenThighCostGuideJsonLd,
@@ -146,6 +151,7 @@ const PulsesBudgetGuideView = React.lazy(() => import('./components/views/Pulses
 const TraybakeGuideView = React.lazy(() => import('./components/views/TraybakeGuideView').then(module => ({ default: module.TraybakeGuideView })));
 const SausageWaysGuideView = React.lazy(() => import('./components/views/SausageWaysGuideView').then(module => ({ default: module.SausageWaysGuideView })));
 const MinceBudgetDinnersGuideView = React.lazy(() => import('./components/views/MinceBudgetDinnersGuideView').then(module => ({ default: module.MinceBudgetDinnersGuideView })));
+const LeftoverRoastChickenBudgetDinnersGuideView = React.lazy(() => import('./components/views/LeftoverRoastChickenBudgetDinnersGuideView').then(module => ({ default: module.LeftoverRoastChickenBudgetDinnersGuideView })));
 const ChickenThighCostGuideView = React.lazy(() => import('./components/views/ChickenThighCostGuideView').then(module => ({ default: module.ChickenThighCostGuideView })));
 const FiveStaplesGuideView = React.lazy(() => import('./components/views/FiveStaplesGuideView').then(module => ({ default: module.FiveStaplesGuideView })));
 const ConvenienceFishGuideView = React.lazy(() => import('./components/views/ConvenienceFishGuideView').then(module => ({ default: module.ConvenienceFishGuideView })));
@@ -297,6 +303,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [MINCE_BUDGET_DINNERS_GUIDE_PATH]: {
     seo: guideSeo(MINCE_BUDGET_DINNERS_GUIDE, MINCE_BUDGET_DINNERS_GUIDE_PATH, getMinceBudgetDinnersGuideJsonLd()),
     render: ({ search }) => <MinceBudgetDinnersGuideView onFindDinners={search} />,
+  },
+  [LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH]: {
+    seo: guideSeo(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE, LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH, getLeftoverRoastChickenBudgetDinnersGuideJsonLd()),
+    render: ({ search }) => <LeftoverRoastChickenBudgetDinnersGuideView onFindDinners={search} />,
   },
   [CHICKEN_THIGH_COST_GUIDE_PATH]: {
     seo: guideSeo(CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH, getChickenThighCostGuideJsonLd()),

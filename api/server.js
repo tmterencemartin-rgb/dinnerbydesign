@@ -184765,6 +184765,39 @@ var MINCE_BUDGET_DINNERS_GUIDE = {
   ]
 };
 
+// src/content/leftoverRoastChickenBudgetDinnersGuide.ts
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH = "/guides/9-budget-dinners-with-leftover-roast-chicken";
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE = {
+  title: "9 budget dinners with leftover roast chicken",
+  seoTitle: "9 Budget Dinners With Leftover Roast Chicken | DinnerByDesign",
+  description: "Nine practical dinner ideas for using leftover roast chicken, with ways to stretch portions, use everyday ingredients and reduce food waste.",
+  publishedAt: "2026-08-06",
+  reviewedAt: "2026-08-06",
+  nextReviewAt: "2027-08-06",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using leftover roast chicken",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-06",
+  editorialNotes: "One canonical leftover-led guide with nine distinct roast chicken dinner ideas, food-safety guidance and one handoff to ordinary DinnerByDesign search.",
+  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food"
+    },
+    {
+      label: "Food Standards Agency: Reheating leftovers until steaming hot throughout",
+      url: "https://www.food.gov.uk/research/behaviour-and-perception/not-reheating-leftovers-until-steaming-hot-throughout"
+    }
+  ]
+};
+
 // src/content/chickenThighCostGuide.ts
 var CHICKEN_THIGH_COST_GUIDE_PATH = "/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates";
 var CHICKEN_THIGH_COST_GUIDE = {
@@ -185184,6 +185217,20 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: MINCE_BUDGET_DINNERS_GUIDE.contentReviewedAt,
     internalLinks: MINCE_BUDGET_DINNERS_GUIDE.internalLinks,
     disclosures: MINCE_BUDGET_DINNERS_GUIDE.disclosures,
+    status: "published"
+  },
+  {
+    title: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.title,
+    path: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.pageFamily,
+    primarySearchIntent: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.primarySearchIntent,
+    indexingStatus: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.indexingStatus,
+    publishedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.publishedAt,
+    reviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.reviewedAt,
+    contentReviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.contentReviewedAt,
+    internalLinks: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.internalLinks,
+    disclosures: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.disclosures,
     status: "published"
   },
   {

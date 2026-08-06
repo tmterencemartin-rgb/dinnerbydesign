@@ -118,6 +118,12 @@ import {
   renderMinceBudgetDinnersGuideInitialHtml,
 } from '../src/content/minceBudgetDinnersGuide';
 import {
+  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
+  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+  getLeftoverRoastChickenBudgetDinnersGuideJsonLd,
+  renderLeftoverRoastChickenBudgetDinnersGuideInitialHtml,
+} from '../src/content/leftoverRoastChickenBudgetDinnersGuide';
+import {
   CHICKEN_THIGH_COST_GUIDE,
   CHICKEN_THIGH_COST_GUIDE_PATH,
   getChickenThighCostGuideJsonLd,
@@ -565,6 +571,13 @@ await generateEditorialGuide(
   MINCE_BUDGET_DINNERS_GUIDE_PATH,
   renderMinceBudgetDinnersGuideInitialHtml,
   getMinceBudgetDinnersGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
+  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+  renderLeftoverRoastChickenBudgetDinnersGuideInitialHtml,
+  getLeftoverRoastChickenBudgetDinnersGuideJsonLd,
 );
 
 await generateEditorialGuide(

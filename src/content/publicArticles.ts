@@ -12,6 +12,7 @@ import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGui
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
 import { SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH } from './sausageWaysGuide';
 import { MINCE_BUDGET_DINNERS_GUIDE, MINCE_BUDGET_DINNERS_GUIDE_PATH } from './minceBudgetDinnersGuide';
+import { LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE, LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH } from './leftoverRoastChickenBudgetDinnersGuide';
 import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
 import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide';
 import { CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH } from './convenienceFishGuide';
@@ -117,6 +118,13 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: MINCE_BUDGET_DINNERS_GUIDE.indexingStatus, publishedAt: MINCE_BUDGET_DINNERS_GUIDE.publishedAt,
     reviewedAt: MINCE_BUDGET_DINNERS_GUIDE.reviewedAt, contentReviewedAt: MINCE_BUDGET_DINNERS_GUIDE.contentReviewedAt,
     internalLinks: MINCE_BUDGET_DINNERS_GUIDE.internalLinks, disclosures: MINCE_BUDGET_DINNERS_GUIDE.disclosures, status: 'published',
+  },
+  {
+    title: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.title, path: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH, category: 'Practical cooking guide',
+    pageFamily: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.pageFamily, primarySearchIntent: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.primarySearchIntent,
+    indexingStatus: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.indexingStatus, publishedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.publishedAt,
+    reviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.reviewedAt, contentReviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.contentReviewedAt,
+    internalLinks: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.internalLinks, disclosures: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.disclosures, status: 'published',
   },
   {
     title: TRAYBAKE_GUIDE.title, path: TRAYBAKE_GUIDE_PATH, category: 'Practical cooking guide',
