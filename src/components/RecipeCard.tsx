@@ -382,9 +382,16 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </span>
                     )}
                     {mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') && (
-                      <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px]">
+                      <a
+                        href={recipe.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(event) => event.stopPropagation()}
+                        className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px] hover:text-dbd-accent hover:underline"
+                        aria-label={`Open recipe source for ${recipe.title}`}
+                      >
                         {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
-                      </span>
+                      </a>
                     )}
                   </div>
                 

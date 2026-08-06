@@ -598,9 +598,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     
                     if (viewingPlannerEntry.sourceUrl && !viewingPlannerEntry.sourceUrl.includes('recipe-search')) {
                       parts.push(
-                        <span key="source" className="text-gray-500 font-bold uppercase tracking-wider text-[10.5px]">
+                        <a
+                          key="source"
+                          href={viewingPlannerEntry.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-gray-500 font-bold uppercase tracking-wider text-[10.5px] hover:text-dbd-accent hover:underline"
+                          aria-label={`Open recipe source for ${viewingPlannerEntry.title}`}
+                        >
                           {viewingPlannerEntry.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
-                        </span>
+                        </a>
                       );
                     }
                     

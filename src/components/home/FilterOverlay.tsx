@@ -594,7 +594,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               {openSections.sources && (
                 <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
                   <p className="text-[11px] text-gray-400 font-medium leading-relaxed italic pl-1 border-l-2 border-accent/20">
-                    Your selected sources help shape recommendations and shopping links, but recipe searches may still include relevant results from other sources.
+                    Your selected sources help shape recommendations and shopping links, but recipe searches may still include relevant results from other sources. <a href="/recipe-methodology" className="font-semibold text-dbd-accent not-italic hover:underline">Where recipes come from</a>
                   </p>
                   {source === 'cook' ? (
                     /* Trusted Sources */

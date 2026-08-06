@@ -75,9 +75,11 @@ export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) =
       <p>Results are not routinely reviewed by a person before display. Automation can produce a plausible but incorrect recipe detail, source, product name, price, retailer or explanation. Important information must therefore be checked against the current source, product label or retailer listing.</p>
       <p>These systems support dinner planning; they do not make decisions with legal or similarly significant effects about users.</p>
     </Section>
-    <Section title="External sources and attribution">
-      <p>Where an identifiable recipe source is available, DinnerByDesign displays or links to the relevant publisher or source domain. External recipes remain the property of their publishers.</p>
-      <p>A source link does not mean the publisher created, approved or endorsed DinnerByDesign’s generated summary. When exact source instructions matter, follow the publisher’s current page.</p>
+    <Section title="Where recipes come from">
+      <p>Some dinner suggestions include a named external recipe publisher. When a source page is available, DinnerByDesign shows the publisher on the result and links to it. The publisher owns that recipe and its current ingredients, method and other details.</p>
+      <p>Other results are generic dinner ideas created by DinnerByDesign from the search and selected preferences. They are practical planning suggestions, not a copy of a publisher’s recipe. Check the linked publisher page when exact instructions or source details matter.</p>
+      <p>Trusted sources are a preference, not a guarantee. They help rank results, but a stronger match from another reputable source may still appear.</p>
+      <p>A source link does not mean that the publisher created, approved or endorsed DinnerByDesign’s summary, or that DinnerByDesign has a commercial relationship with that publisher.</p>
     </Section>
     <Section title="How search results are selected">
       <p>Search terms establish the user’s immediate intent. Active dietary rules, allergies and exclusions act as hard constraints. Other settings—such as cuisine, time, budget, cooking method, preferred sources, nearby retailers and nutrition priorities—help narrow or rank suitable options.</p>

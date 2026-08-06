@@ -456,9 +456,17 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                   
                   if (isBacklog && recipe.mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search')) {
                     items.push(
-                      <span key="source" className="text-gray-500 font-bold uppercase tracking-wider text-[10px]">
+                      <a
+                        key="source"
+                        href={recipe.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(event) => event.stopPropagation()}
+                        className="text-gray-500 font-bold uppercase tracking-wider text-[10px] hover:text-dbd-accent hover:underline"
+                        aria-label={`Open recipe source for ${recipe.title}`}
+                      >
                         {recipe.sourceUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
-                      </span>
+                      </a>
                     );
                   }
                   
