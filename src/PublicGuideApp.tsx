@@ -98,6 +98,11 @@ import {
   getSausageWaysGuideJsonLd,
 } from './content/sausageWaysGuide';
 import {
+  MINCE_BUDGET_DINNERS_GUIDE,
+  MINCE_BUDGET_DINNERS_GUIDE_PATH,
+  getMinceBudgetDinnersGuideJsonLd,
+} from './content/minceBudgetDinnersGuide';
+import {
   CHICKEN_THIGH_COST_GUIDE,
   CHICKEN_THIGH_COST_GUIDE_PATH,
   getChickenThighCostGuideJsonLd,
@@ -140,6 +145,7 @@ const LowCostDinnersGuideView = React.lazy(() => import('./components/views/LowC
 const PulsesBudgetGuideView = React.lazy(() => import('./components/views/PulsesBudgetGuideView').then(module => ({ default: module.PulsesBudgetGuideView })));
 const TraybakeGuideView = React.lazy(() => import('./components/views/TraybakeGuideView').then(module => ({ default: module.TraybakeGuideView })));
 const SausageWaysGuideView = React.lazy(() => import('./components/views/SausageWaysGuideView').then(module => ({ default: module.SausageWaysGuideView })));
+const MinceBudgetDinnersGuideView = React.lazy(() => import('./components/views/MinceBudgetDinnersGuideView').then(module => ({ default: module.MinceBudgetDinnersGuideView })));
 const ChickenThighCostGuideView = React.lazy(() => import('./components/views/ChickenThighCostGuideView').then(module => ({ default: module.ChickenThighCostGuideView })));
 const FiveStaplesGuideView = React.lazy(() => import('./components/views/FiveStaplesGuideView').then(module => ({ default: module.FiveStaplesGuideView })));
 const ConvenienceFishGuideView = React.lazy(() => import('./components/views/ConvenienceFishGuideView').then(module => ({ default: module.ConvenienceFishGuideView })));
@@ -287,6 +293,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [SAUSAGE_WAYS_GUIDE_PATH]: {
     seo: guideSeo(SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH, getSausageWaysGuideJsonLd()),
     render: ({ search }) => <SausageWaysGuideView onFindDinners={search} />,
+  },
+  [MINCE_BUDGET_DINNERS_GUIDE_PATH]: {
+    seo: guideSeo(MINCE_BUDGET_DINNERS_GUIDE, MINCE_BUDGET_DINNERS_GUIDE_PATH, getMinceBudgetDinnersGuideJsonLd()),
+    render: ({ search }) => <MinceBudgetDinnersGuideView onFindDinners={search} />,
   },
   [CHICKEN_THIGH_COST_GUIDE_PATH]: {
     seo: guideSeo(CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH, getChickenThighCostGuideJsonLd()),

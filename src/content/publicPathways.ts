@@ -50,6 +50,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
       '/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates',
       '/guides/how-to-build-a-traybake',
       '/guides/9-ways-with-sausages',
+      '/guides/9-budget-dinners-with-beef-or-pork-mince',
       '/food-costs/summer-stews-seasonal-vegetables',
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/guides/do-vegetables-in-dishes-count-towards-5-a-day',

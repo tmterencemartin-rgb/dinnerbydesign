@@ -184736,6 +184736,35 @@ var SAUSAGE_WAYS_GUIDE = {
   ]
 };
 
+// src/content/minceBudgetDinnersGuide.ts
+var MINCE_BUDGET_DINNERS_GUIDE_PATH = "/guides/9-budget-dinners-with-beef-or-pork-mince";
+var MINCE_BUDGET_DINNERS_GUIDE = {
+  title: "9 budget dinners with beef or pork mince",
+  seoTitle: "9 Budget Dinners With Beef or Pork Mince | DinnerByDesign",
+  description: "Nine practical dinner ideas using beef or pork mince, with ways to stretch portions, use up everyday ingredients and keep weeknight cooking simple.",
+  publishedAt: "2026-08-06",
+  reviewedAt: "2026-08-06",
+  nextReviewAt: "2027-08-06",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using beef mince or pork mince",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-06",
+  editorialNotes: "One canonical ingredient-led guide with nine distinct mince dinner ideas and one handoff to ordinary DinnerByDesign search.",
+  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food"
+    }
+  ]
+};
+
 // src/content/chickenThighCostGuide.ts
 var CHICKEN_THIGH_COST_GUIDE_PATH = "/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates";
 var CHICKEN_THIGH_COST_GUIDE = {
@@ -185141,6 +185170,20 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: SAUSAGE_WAYS_GUIDE.contentReviewedAt,
     internalLinks: SAUSAGE_WAYS_GUIDE.internalLinks,
     disclosures: SAUSAGE_WAYS_GUIDE.disclosures,
+    status: "published"
+  },
+  {
+    title: MINCE_BUDGET_DINNERS_GUIDE.title,
+    path: MINCE_BUDGET_DINNERS_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: MINCE_BUDGET_DINNERS_GUIDE.pageFamily,
+    primarySearchIntent: MINCE_BUDGET_DINNERS_GUIDE.primarySearchIntent,
+    indexingStatus: MINCE_BUDGET_DINNERS_GUIDE.indexingStatus,
+    publishedAt: MINCE_BUDGET_DINNERS_GUIDE.publishedAt,
+    reviewedAt: MINCE_BUDGET_DINNERS_GUIDE.reviewedAt,
+    contentReviewedAt: MINCE_BUDGET_DINNERS_GUIDE.contentReviewedAt,
+    internalLinks: MINCE_BUDGET_DINNERS_GUIDE.internalLinks,
+    disclosures: MINCE_BUDGET_DINNERS_GUIDE.disclosures,
     status: "published"
   },
   {

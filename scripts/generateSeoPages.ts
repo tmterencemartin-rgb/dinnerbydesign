@@ -112,6 +112,12 @@ import {
   renderSausageWaysGuideInitialHtml,
 } from '../src/content/sausageWaysGuide';
 import {
+  MINCE_BUDGET_DINNERS_GUIDE,
+  MINCE_BUDGET_DINNERS_GUIDE_PATH,
+  getMinceBudgetDinnersGuideJsonLd,
+  renderMinceBudgetDinnersGuideInitialHtml,
+} from '../src/content/minceBudgetDinnersGuide';
+import {
   CHICKEN_THIGH_COST_GUIDE,
   CHICKEN_THIGH_COST_GUIDE_PATH,
   getChickenThighCostGuideJsonLd,
@@ -552,6 +558,13 @@ await generateEditorialGuide(
   SAUSAGE_WAYS_GUIDE_PATH,
   renderSausageWaysGuideInitialHtml,
   getSausageWaysGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  MINCE_BUDGET_DINNERS_GUIDE,
+  MINCE_BUDGET_DINNERS_GUIDE_PATH,
+  renderMinceBudgetDinnersGuideInitialHtml,
+  getMinceBudgetDinnersGuideJsonLd,
 );
 
 await generateEditorialGuide(
