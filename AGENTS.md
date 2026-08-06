@@ -73,6 +73,7 @@ When a user lists ingredients:
 - Centre the narrow footer category blocks within their equal columns, while keeping each category's links left-aligned; restore left-aligned category blocks from the medium breakpoint.
 - On wide screens, use a four-column footer grid with a wider identity column and three equal category columns; keep the disclaimer spanning the full grid.
 - On `/guides`, stack the three pathway cards in one full-width column on narrow screens. Use the three-column grid on wider screens.
+- Keep concise, contextual transparency notices beside dietary preferences, generated price and nutrition figures, and search inputs. Link to the fuller safety, pricing, nutrition or privacy explanation where useful.
 
 ## Search service
 

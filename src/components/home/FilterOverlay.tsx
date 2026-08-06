@@ -438,7 +438,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   <div className="bg-amber-50/40 border-l-2 border-amber-400 px-3 py-2.5 rounded-sm flex items-start gap-2.5">
                     <ShieldAlert size={14} className="text-amber-600 mt-0.5 shrink-0" />
                     <p className="text-[10.5px] text-amber-900/75 font-medium leading-relaxed">
-                      We aim to filter out unsuitable recipes based on your selections, but you should always check ingredients and product labels before cooking or serving.
+                      We filter obvious conflicts from your selections, but cannot confirm allergy, medical, religious or other suitability. Check ingredients, packaging and cooking guidance before preparing or serving. <a href="/food-safety" className="font-semibold text-amber-900 hover:underline">Food safety</a>
                     </p>
                   </div>
 

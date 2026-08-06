@@ -398,7 +398,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 {/* Row 2: Performance Stats (Nutrition, Price, Time) */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
                     {(recipe.caloriesPerPortion || recipe.calories) && (
-                      <Tooltip text="Estimated calories for one adult portion">
+                        <Tooltip text="Estimated calories for one adult portion. Actual values vary with ingredients, quantities and brands.">
                         <span className="cursor-help whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                           {recipe.caloriesPerPortion || recipe.calories} kcal pp
                         </span>
@@ -406,7 +406,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     )}
                     {recipe.costPerPortion && (
                       <div className="flex items-center gap-1">
-                        <Tooltip text="Estimated cost for one adult portion">
+                        <Tooltip text="Estimated cost for one adult portion. Prices, pack sizes and availability vary by retailer, location and date.">
                           <span className="cursor-help border-b border-dotted border-gray-300 whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                             {recipe.costPerPortion} pp
                           </span>
@@ -431,6 +431,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   </div>
                   <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-[9.5px] font-semibold text-dbd-accent">
                     <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Recipe information</a>
+                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Price estimates</a>
                     <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Nutrition estimates</a>
                     <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="hover:underline">Food safety</a>
                   </div>

@@ -365,7 +365,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-gray-600 font-medium tracking-tight justify-start">
                     {(meal.costPerPortion || meal.price) && (
-                      <Tooltip text="Estimated price for one adult portion">
+                      <Tooltip text="Estimated price for one adult portion. Prices, pack sizes and availability vary by retailer, location and date.">
                         <span className="cursor-help whitespace-nowrap">
                           {meal.costPerPortion || meal.price} pp
                         </span>
@@ -377,7 +377,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                       </span>
                     )}
                     {(meal.caloriesPerPortion || meal.calories) && (
-                      <Tooltip text="Estimated calories for one adult portion">
+                      <Tooltip text="Estimated calories for one adult portion. Actual values vary with ingredients, quantities and brands.">
                         <span className="cursor-help whitespace-nowrap">
                           {meal.caloriesPerPortion || meal.calories} kcal pp
                         </span>
@@ -401,6 +401,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                   </div>
                   <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-[9.5px] font-semibold text-dbd-accent">
                     <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Product information</a>
+                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Price estimates</a>
                     <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Nutrition estimates</a>
                     <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="hover:underline">Label and allergy checks</a>
                   </div>
