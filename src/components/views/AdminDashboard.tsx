@@ -998,7 +998,7 @@ export const AdminDashboard: React.FC = () => {
             <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="published-articles-heading">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Editorial content</p>
+                  <p className="text-[10px] font-bold text-dbd-accent">Editorial content</p>
                   <h2 id="published-articles-heading" className="mt-1 text-base font-bold text-gray-950">Published articles</h2>
                   <p className="mt-1 text-xs font-medium text-gray-500">Open every public editorial page from one place.</p>
                 </div>
@@ -1014,7 +1014,7 @@ export const AdminDashboard: React.FC = () => {
                     className="group flex min-h-14 items-center justify-between gap-3 rounded border border-gray-200 bg-gray-50/60 px-3 py-2.5 transition-colors hover:border-dbd-accent/30 hover:bg-white"
                   >
                     <span className="min-w-0">
-                      <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">{article.category}</span>
+                      <span className="block text-[10px] font-semibold text-gray-500">{article.category}</span>
                       <span className="mt-0.5 block text-xs font-bold leading-4 text-gray-800 group-hover:text-dbd-accent">{formatPublicArticleTitle(article.title)}</span>
                     </span>
                     <ExternalLink className="h-3.5 w-3.5 shrink-0 text-gray-400 group-hover:text-dbd-accent" aria-hidden="true" />
