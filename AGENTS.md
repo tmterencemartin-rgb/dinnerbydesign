@@ -72,7 +72,7 @@ When a user lists ingredients:
 - Group dense mobile footer links under Guides, Information and Legal while keeping the desktop footer presentation and every destination intact.
 - Centre the narrow footer category blocks within their equal columns, while keeping each category's links left-aligned; restore left-aligned category blocks from the medium breakpoint.
 - On wide screens, use a four-column footer grid with a wider identity column and three equal category columns; keep the disclaimer spanning the full grid.
-- On `/guides`, keep the three pathway cards in a horizontally swipeable, snap-aligned row on narrow screens. Preserve the supporting copy and use the three-column grid on wider screens.
+- On `/guides`, stack the three pathway cards in one full-width column on narrow screens. Use the three-column grid on wider screens.
 
 ## Search service
 

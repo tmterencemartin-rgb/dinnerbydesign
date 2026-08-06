@@ -13,13 +13,12 @@ export const GuidesLibraryView: React.FC<{ onPlanWeek: () => void }> = ({ onPlan
 
       <section className="mt-7 sm:mt-9">
         <h2 className="border-b border-dbd-rule/60 pb-3 text-base font-semibold sm:text-lg">Choose where to start</h2>
-        <p className="pt-3 text-[10px] font-semibold text-dbd-ink-3 sm:hidden">Swipe to explore all three pathways.</p>
         <div
           data-testid="public-pathways-row"
-          className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0 sm:pt-4"
+          className="grid grid-cols-1 gap-3 pt-3 sm:grid-cols-3 sm:pt-4"
         >
           {PUBLIC_GUIDE_PATHWAYS.map((pathway, index) => (
-            <a key={pathway.id} href={pathway.path} className="group flex min-h-[190px] w-[78%] max-w-[300px] shrink-0 snap-start flex-col rounded border border-dbd-rule/70 bg-white p-5 transition-colors hover:border-dbd-accent sm:w-auto sm:max-w-none">
+            <a key={pathway.id} href={pathway.path} className="group flex min-h-[190px] flex-col rounded border border-dbd-rule/70 bg-white p-5 transition-colors hover:border-dbd-accent">
               <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-dbd-accent">0{index + 1}</span>
               <h2 className="mt-3 text-lg font-semibold leading-6 text-dbd-ink group-hover:text-dbd-accent">{pathway.title}</h2>
               <p className="mt-2 text-xs leading-5 text-dbd-ink-3">{pathway.shortDescription}</p>
