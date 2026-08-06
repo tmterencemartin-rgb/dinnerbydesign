@@ -562,6 +562,9 @@ export const LandingView: React.FC = () => {
           <p className="mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             DinnerByDesign helps people meet those challenges. It starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
           </p>
+          <p className="mt-6 text-[13px] font-ibm-plex-mono font-semibold text-dbd-accent">
+            Terence, Head chef
+          </p>
         </div>
       </section>
 
