@@ -52,6 +52,14 @@ describe('Ingredient Parser & Normalizer', () => {
     });
   });
 
+  test('detects a single ingredient in an explicit ingredient phrase', () => {
+    expect(detectIngredientIntent('I have chicken')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['chicken'],
+      reason: 'phrase'
+    });
+  });
+
   test('does not treat ordinary dish names as ingredient-led searches', () => {
     expect(detectIngredientIntent('chicken curry')).toBeNull();
     expect(detectIngredientIntent('chilli')).toBeNull();
