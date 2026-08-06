@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { PUBLIC_PATHWAYS, type PublicPathway } from '../../content/publicPathways';
+import { formatPublicArticleTitle, formatPublicNumber, PUBLIC_PATHWAYS, type PublicPathway } from '../../content/publicPathways';
 
 interface PublicPathwayViewProps {
   pathway: PublicPathway;
@@ -23,7 +23,7 @@ export const PublicPathwayView: React.FC<PublicPathwayViewProps> = ({ pathway, o
           <div className="flex items-end justify-between gap-4 border-b border-dbd-rule/60 pb-3">
             <div>
               <h2 className="text-base font-semibold sm:text-lg">Browse this pathway</h2>
-              <p className="mt-1 text-xs leading-5 text-dbd-ink-3">{pathway.articles.length} {pathway.articles.length === 1 ? 'guide' : 'guides'}, with no duplicate topics.</p>
+              <p className="mt-1 text-xs leading-5 text-dbd-ink-3">{formatPublicNumber(pathway.articles.length)} {pathway.articles.length === 1 ? 'guide' : 'guides'}, with no duplicate topics.</p>
             </div>
           </div>
           <div className="grid sm:grid-cols-2 sm:gap-x-7 lg:grid-cols-3">
@@ -32,7 +32,7 @@ export const PublicPathwayView: React.FC<PublicPathwayViewProps> = ({ pathway, o
                 <a href={article.path} className="group flex min-h-[92px] items-start justify-between gap-4 py-4 text-dbd-ink-2 transition-colors hover:text-dbd-accent">
                   <span>
                     <span className="block text-[9px] font-semibold uppercase tracking-[0.11em] text-dbd-ink-3">{index === 0 ? 'Start here' : article.category}</span>
-                    <span className="mt-1.5 block text-sm font-semibold leading-5">{article.title}</span>
+                    <span className="mt-1.5 block text-sm font-semibold leading-5">{formatPublicArticleTitle(article.title)}</span>
                   </span>
                   <ArrowRight size={14} className="mt-5 shrink-0 text-dbd-ink-3 transition-transform group-hover:translate-x-0.5 group-hover:text-dbd-accent" />
                 </a>

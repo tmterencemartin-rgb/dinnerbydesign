@@ -4,6 +4,26 @@ export const PUBLIC_DINNER_PLANS_PATH = '/dinner-plans';
 export const PUBLIC_RECIPES_PATH = '/recipes';
 export const PUBLIC_FOOD_COSTS_PATH = '/food-costs';
 
+const SMALL_NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS_WORDS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+const numberToWords = (value: number): string => {
+  if (value < 20) return SMALL_NUMBER_WORDS[value];
+  if (value < 100) return `${TENS_WORDS[Math.floor(value / 10)]}${value % 10 ? `-${SMALL_NUMBER_WORDS[value % 10]}` : ''}`;
+  if (value < 1000) return `${SMALL_NUMBER_WORDS[Math.floor(value / 100)]} hundred${value % 100 ? ` and ${numberToWords(value % 100)}` : ''}`;
+  if (value < 10000) return `${numberToWords(Math.floor(value / 1000))} thousand${value % 1000 ? ` and ${numberToWords(value % 1000)}` : ''}`;
+  return String(value);
+};
+
+export const formatPublicArticleTitle = (title: string) => title.replace(/£(\d+)|\b\d+\b/g, token => {
+  const isPounds = token.startsWith('£');
+  const number = Number(isPounds ? token.slice(1) : token);
+  const words = numberToWords(number);
+  return isPounds ? `${words} pounds` : words;
+});
+
+export const formatPublicNumber = (value: number) => numberToWords(value);
+
 export type PublicPathwayId = 'dinner-plans' | 'recipes' | 'food-costs';
 
 export interface PublicPathway {
@@ -116,7 +136,7 @@ export function getPublicPathwayJsonLd(pathway: PublicPathway) {
         itemListElement: pathway.articles.map((article, index) => ({
           '@type': 'ListItem',
           position: index + 1,
-          name: article.title,
+          name: formatPublicArticleTitle(article.title),
           url: `https://dinnerbydesign.app${article.path}`,
         })),
       },
@@ -135,7 +155,7 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ 
 
 export function renderPublicPathwayInitialHtml(pathway: PublicPathway) {
   const articles = pathway.articles.map(article => (
-    `<li><p>${escapeHtml(article.category)}</p><h2><a href="${escapeHtml(article.path)}">${escapeHtml(article.title)}</a></h2></li>`
+    `<li><p>${escapeHtml(article.category)}</p><h2><a href="${escapeHtml(article.path)}">${escapeHtml(formatPublicArticleTitle(article.title))}</a></h2></li>`
   )).join('');
   const otherPathways = PUBLIC_PATHWAYS.filter(item => item.id !== pathway.id).map(item => (
     `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`
