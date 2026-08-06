@@ -206,13 +206,11 @@ export function detectIngredientIntent(query: string): {
     .map(item => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, '').trim())
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
-  if (ingredients.length === 0) return null;
+  if (ingredients.length < 2) return null;
 
   if (ingredientPhrases.test(trimmed)) {
     return { isIngredientLed: true, ingredients, reason: 'phrase' };
   }
-
-  if (ingredients.length < 2) return null;
 
   if (hasListPunctuation) {
     return { isIngredientLed: true, ingredients, reason: 'list' };

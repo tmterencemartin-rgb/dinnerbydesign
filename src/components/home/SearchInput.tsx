@@ -21,8 +21,6 @@ interface SearchInputProps {
   readOnlyPlaceholder?: string;
   placeholderOverride?: string;
   mobileSecondaryAction?: React.ReactNode;
-  isIngredientSearch?: boolean;
-  onToggleIngredientSearch?: () => void;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -42,9 +40,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   isReadOnly = false,
   readOnlyPlaceholder,
   placeholderOverride,
-  mobileSecondaryAction,
-  isIngredientSearch = false,
-  onToggleIngredientSearch
+  mobileSecondaryAction
 }) => {
   const getSearchPlaceholder = (): string => {
     if (isListening) {
@@ -52,9 +48,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     }
     if (placeholderOverride) {
       return placeholderOverride;
-    }
-    if (isIngredientSearch) {
-      return "Try chicken, rice and peppers";
     }
     if (isLowCost && isLeftoverMode) {
       return "Search low-cost recipes matching your ingredients";
@@ -68,34 +61,17 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     return "Search by ingredient, dish, cuisine or chef";
   };
   return (
-    <div className="w-full">
-      {source === 'cook' && onToggleIngredientSearch && (
-        <div className="mb-2 flex justify-end">
-          <button
-            type="button"
-            onClick={onToggleIngredientSearch}
-            aria-pressed={isIngredientSearch}
-            className={`rounded border px-2.5 py-1.5 text-[10px] font-semibold transition-colors ${
-              isIngredientSearch
-                ? 'border-dbd-accent/40 bg-dbd-accent/10 text-dbd-accent'
-                : 'border-gray-200 bg-white text-gray-500 hover:border-gray-400 hover:text-gray-800'
-            }`}
-          >
-            {isIngredientSearch ? 'Searching by ingredient' : 'Search by ingredient'}
-          </button>
-        </div>
-      )}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!isGenerating && !isReadOnly && !isListening) {
-            handleGenerate();
-          }
-        }}
-        className={`grid grid-cols-2 gap-2 w-full items-stretch transition-all sm:flex sm:h-11 sm:gap-0 sm:overflow-hidden sm:rounded sm:ring-1 ${
-          isReadOnly ? 'opacity-75 sm:bg-gray-100 sm:ring-gray-100' : 'sm:bg-gray-50 sm:ring-gray-200 sm:focus-within:ring-2 sm:focus-within:ring-gray-900/10'
-        }`}
-      >
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!isGenerating && !isReadOnly && !isListening) {
+          handleGenerate();
+        }
+      }}
+      className={`grid grid-cols-2 gap-2 w-full items-stretch transition-all sm:flex sm:h-11 sm:gap-0 sm:overflow-hidden sm:rounded sm:ring-1 ${
+        isReadOnly ? 'opacity-75 sm:bg-gray-100 sm:ring-gray-100' : 'sm:bg-gray-50 sm:ring-gray-200 sm:focus-within:ring-2 sm:focus-within:ring-gray-900/10'
+      }`}
+    >
       <div className={`col-span-2 flex h-11 min-w-0 items-center rounded px-1 ring-1 transition-all sm:h-auto sm:flex-1 sm:rounded-none sm:ring-0 ${
         isReadOnly ? 'bg-gray-100 ring-gray-100' : 'bg-gray-50 ring-gray-200 focus-within:ring-2 focus-within:ring-gray-900/10 sm:focus-within:ring-0'
       }`}>
@@ -175,7 +151,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           {mobileSecondaryAction}
         </div>
       )}
-      </form>
-    </div>
+    </form>
   );
 };

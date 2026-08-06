@@ -462,16 +462,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     return () => window.removeEventListener('dbd-sign-in-requested', handleSignInRequested);
   }, []);
   const [searchPlaceholderOverride, setSearchPlaceholderOverride] = React.useState<string | undefined>();
-  const [isIngredientSearch, setIsIngredientSearch] = React.useState(false);
-
-  React.useEffect(() => {
-    if (source !== 'cook' && isIngredientSearch) {
-      setIsIngredientSearch(false);
-      if (/^\s*i have\b/i.test(input)) {
-        setInput(input.replace(/^\s*i have\s*/i, ''));
-      }
-    }
-  }, [input, isIngredientSearch, setInput, source]);
 
   const isSaved = (recipe: any) => savedRecipes.some(r => !r.isArchived && isSameRecipe(r, recipe));
   const isScheduled = (recipe: any) => savedRecipes.some(r => !r.isArchived && isSameRecipe(r, recipe) && !!r.scheduledDate);
@@ -816,24 +806,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     input={input}
                     setInput={setInput}
                     onClear={handleClearSearchInput}
-                    isIngredientSearch={isIngredientSearch}
-                    onToggleIngredientSearch={() => {
-                      const next = !isIngredientSearch;
-                      setIsIngredientSearch(next);
-                      if (!next && /^\s*i have\b/i.test(input)) {
-                        setInput(input.replace(/^\s*i have\s*/i, ''));
-                      }
-                      searchInputRef.current?.focus();
-                    }}
                     isGenerating={isSearching}
                     handleGenerate={(q, p, pref) => {
                       console.log('[HomeView] handleGenerate triggered via input');
                       const submittedQuery = (q !== undefined ? q : input).trim();
-                      const ingredientQuery = isIngredientSearch && source === 'cook' && submittedQuery
-                        ? (/^\s*(i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only)\b/i.test(submittedQuery)
-                          ? submittedQuery
-                          : `I have ${submittedQuery}`)
-                        : submittedQuery;
                       const isNotBoringSaladSearch = source === 'cook' && isNotBoringSummerSaladsQuery(submittedQuery);
                       setSearchPlaceholderOverride(
                         isNotBoringSaladSearch
@@ -841,10 +817,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                           : undefined
                       );
                       setShowFilters(false);
-                      if (ingredientQuery && ingredientQuery !== submittedQuery) {
-                        setInput(ingredientQuery);
-                      }
-                      handleGenerate(ingredientQuery || q, p, pref);
+                      handleGenerate(q, p, pref);
                       if (isNotBoringSaladSearch) {
                         setInput('');
                       }

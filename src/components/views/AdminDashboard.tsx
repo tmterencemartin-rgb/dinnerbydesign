@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { collection, query, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
@@ -11,6 +11,7 @@ import { PUBLISHED_ARTICLES } from '../../content/publicArticles';
 import { formatPublicArticleTitle, formatPublicNumber } from '../../content/publicPathways';
 
 type AdminStatusFilter = AccessStatus | 'all' | 'permanent_access' | 'stripe_linked' | 'payment_issue' | 'no_stripe';
+type PublishedArticleSort = 'newest' | 'oldest' | 'title' | 'category' | 'topic' | 'reviewed';
 
 interface StripeWebhookHealthEvent {
   eventId: string;
@@ -88,6 +89,8 @@ export const AdminDashboard: React.FC = () => {
   const [aiUsageEvents, setAiUsageEvents] = useState<AiUsageEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [publishedArticleQuery, setPublishedArticleQuery] = useState('');
+  const [publishedArticleSort, setPublishedArticleSort] = useState<PublishedArticleSort>('newest');
   const [statusFilter, setStatusFilter] = useState<AdminStatusFilter>('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [dinnerStats, setDinnerStats] = useState<Record<string, AdminDinnerStats>>({});
@@ -109,6 +112,29 @@ export const AdminDashboard: React.FC = () => {
     title: '',
     message: ''
   });
+
+  const visiblePublishedArticles = useMemo(() => {
+    const query = publishedArticleQuery.trim().toLowerCase();
+    const filtered = PUBLISHED_ARTICLES.filter(article => {
+      if (!query) return true;
+      return [
+        article.title,
+        article.category,
+        article.pageFamily,
+        article.primarySearchIntent,
+        article.path,
+      ].some(value => value.toLowerCase().includes(query));
+    });
+
+    return [...filtered].sort((a, b) => {
+      if (publishedArticleSort === 'newest') return b.publishedAt.localeCompare(a.publishedAt);
+      if (publishedArticleSort === 'oldest') return a.publishedAt.localeCompare(b.publishedAt);
+      if (publishedArticleSort === 'reviewed') return b.reviewedAt.localeCompare(a.reviewedAt);
+      if (publishedArticleSort === 'category') return a.category.localeCompare(b.category) || a.title.localeCompare(b.title);
+      if (publishedArticleSort === 'topic') return a.primarySearchIntent.localeCompare(b.primarySearchIntent) || a.title.localeCompare(b.title);
+      return formatPublicArticleTitle(a.title).localeCompare(formatPublicArticleTitle(b.title));
+    });
+  }, [publishedArticleQuery, publishedArticleSort]);
 
   const showCustomAlert = (title: string, message: string) => {
     setModal({
@@ -1004,8 +1030,41 @@ export const AdminDashboard: React.FC = () => {
                 </div>
                 <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{formatPublicNumber(PUBLISHED_ARTICLES.length)} live</span>
               </div>
-              <div className="mt-4 grid gap-2 md:grid-cols-2">
-                {PUBLISHED_ARTICLES.map(article => (
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+                <div className="relative min-w-0 flex-1">
+                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                  <label htmlFor="published-article-search" className="sr-only">Search published articles by ingredient or topic</label>
+                  <input
+                    id="published-article-search"
+                    type="search"
+                    value={publishedArticleQuery}
+                    onChange={event => setPublishedArticleQuery(event.target.value)}
+                    placeholder="Search by ingredient or topic"
+                    className="h-9 w-full rounded border border-gray-200 bg-white pl-8 pr-3 text-xs text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:border-dbd-accent/50 focus:ring-2 focus:ring-dbd-accent/10"
+                  />
+                </div>
+                <label className="flex h-9 shrink-0 items-center gap-2 rounded border border-gray-200 bg-white px-2.5 text-xs text-gray-500">
+                  <span>Sort by</span>
+                  <select
+                    value={publishedArticleSort}
+                    onChange={event => setPublishedArticleSort(event.target.value as PublishedArticleSort)}
+                    aria-label="Sort published articles"
+                    className="bg-transparent font-semibold text-gray-800 outline-none"
+                  >
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                    <option value="title">Title A to Z</option>
+                    <option value="category">Category</option>
+                    <option value="topic">Ingredient or topic</option>
+                    <option value="reviewed">Last reviewed</option>
+                  </select>
+                </label>
+              </div>
+              <div className="mt-2 text-[11px] text-gray-500">
+                Showing {visiblePublishedArticles.length} of {PUBLISHED_ARTICLES.length} published articles
+              </div>
+              <div className="mt-3 grid gap-2 md:grid-cols-2">
+                {visiblePublishedArticles.map(article => (
                   <a
                     key={article.path}
                     href={article.path}
@@ -1021,6 +1080,11 @@ export const AdminDashboard: React.FC = () => {
                   </a>
                 ))}
               </div>
+              {visiblePublishedArticles.length === 0 && (
+                <p className="mt-3 rounded border border-dashed border-gray-200 px-3 py-4 text-center text-xs text-gray-500">
+                  No published articles match that ingredient or topic.
+                </p>
+              )}
             </section>
 
             <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="account-overview-heading">
