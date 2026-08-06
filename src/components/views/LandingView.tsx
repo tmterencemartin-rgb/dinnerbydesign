@@ -557,7 +557,7 @@ export const LandingView: React.FC = () => {
             Why I Built DinnerByDesign
           </h3>
           <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-            As food prices keep rising, families want to keep a lid on the cost of dinner. They want ingredients to stretch further, fewer things going to waste, and interesting recipes using low-cost family favourite ingredients.
+            As food prices continue to rise, families want to keep a lid on the cost of dinner. They want ingredients to stretch further, fewer things going to waste, and interesting recipes using low-cost family favourite ingredients.
           </p>
           <p className="mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             DinnerByDesign helps people meet those challenges. It starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
