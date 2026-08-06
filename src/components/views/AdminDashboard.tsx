@@ -3,7 +3,7 @@ import { collection, query, getDocs, doc, updateDoc, serverTimestamp, Timestamp 
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
-import { ArrowLeft, Search, Download, ExternalLink, CreditCard, Trash2, Users, AlertTriangle, Activity, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Search, Download, ExternalLink, CreditCard, Trash2, Users, AlertTriangle, Activity, ShieldCheck, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getApiUrl } from '../../lib/api';
 import { IngredientPriceCatalogueAdmin } from '../admin/IngredientPriceCatalogueAdmin';
@@ -93,6 +93,7 @@ export const AdminDashboard: React.FC = () => {
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const [editingNoteUid, setEditingNoteUid] = useState<string | null>(null);
   const [noteSavingUid, setNoteSavingUid] = useState<string | null>(null);
+  const [expandedAccountUids, setExpandedAccountUids] = useState<Record<string, boolean>>({});
   const [accountReconciliation, setAccountReconciliation] = useState<AccountReconciliation | null>(null);
   const [accountReconciliationError, setAccountReconciliationError] = useState<string | null>(null);
   const [modal, setModal] = useState<{
@@ -1367,84 +1368,109 @@ export const AdminDashboard: React.FC = () => {
                     },
                   ].filter(group => group.items.length > 0);
 
+                  const isExpanded = !!expandedAccountUids[user.uid];
+
                   return (
-                    <div key={user.uid} className="px-4 py-3.5 transition-colors hover:bg-gray-50/70 group sm:px-5">
-                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                    <div key={user.uid} className="px-4 py-2.5 transition-colors hover:bg-gray-50/70 sm:px-5">
+                      <div className="flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-4">
                         <div className="min-w-0">
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                            <p className="font-bold leading-tight text-gray-950 text-sm sm:text-[15px]">{user.displayName || user.email || 'User'}</p>
+                          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                            <p className="truncate text-sm font-bold leading-tight text-gray-950 sm:text-[15px]">{user.displayName || user.email || 'User'}</p>
                             {getStatusBadge(user)}
-                            <span className="min-w-0 basis-full truncate text-xs font-mono text-gray-400 sm:basis-auto" title={user.email || 'No email'}>{user.email || 'No email'}</span>
+                            <span className="min-w-0 basis-full truncate font-mono text-[11.5px] text-gray-400 sm:basis-auto" title={user.email || 'No email'}>{user.email || 'No email'}</span>
                           </div>
-                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] leading-snug">
-                            <span><span className="text-gray-400">Joined</span> <span className="font-medium text-gray-700">{formatDate(user.createdAt)}</span></span>
-                            {trialEndDate && <span><span className="text-gray-400">{trialHasEnded ? 'Trial ended' : 'Trial ends'}</span> <span className="font-medium text-gray-700">{formatDate(trialEndDate)}</span></span>}
-                            <span><span className="text-gray-400">Access</span> <span className="font-medium text-gray-700">{getAccessLabel(user)}</span></span>
-                            <span><span className="text-gray-400">Saved</span> <span className="font-medium text-gray-700">{stats.savedCount}</span></span>
-                            <span><span className="text-gray-400">Scheduled</span> <span className="font-medium text-gray-700">{stats.scheduledCount}</span></span>
-                            <span><span className="text-gray-400">Searches</span> <span className="font-medium text-gray-700">{getSearchCount(user)}</span></span>
+
+                          <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[10.5px] leading-snug">
+                            <span><span className="text-gray-400">Joined</span> <span className="font-semibold text-gray-700">{formatDate(user.createdAt)}</span></span>
+                            {trialEndDate && <span><span className="text-gray-400">{trialHasEnded ? 'Trial ended' : 'Trial ends'}</span> <span className="font-semibold text-gray-700">{formatDate(trialEndDate)}</span></span>}
+                            <span><span className="text-gray-400">Saved</span> <span className="font-semibold text-gray-700">{stats.savedCount}</span></span>
+                            <span><span className="text-gray-400">Scheduled</span> <span className="font-semibold text-gray-700">{stats.scheduledCount}</span></span>
+                            <span><span className="text-gray-400">Searches</span> <span className="font-semibold text-gray-700">{getSearchCount(user)}</span></span>
                           </div>
-                          <div className="mt-3 grid gap-x-5 gap-y-2.5 text-[11px] sm:grid-cols-3">
-                            {detailGroups.map((group) => (
-                              <div key={group.label} className="min-w-0">
-                                <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">{group.label}</p>
-                                <div className="flex flex-wrap gap-x-3 gap-y-1">
-                                  {group.items.map((item) => (
-                                    <div key={`${group.label}-${item.label}`} className="inline-flex min-w-0 items-baseline gap-1.5 leading-snug">
-                                      <span className="shrink-0 text-gray-400">{item.label}</span>
-                                      <span className={`${item.muted ? 'italic text-gray-400' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`} title={item.value}>{item.value}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          <p className="mt-2 hidden text-[10px] font-mono text-gray-300 group-hover:block">UID {user.uid}</p>
-                          <div className="mt-2.5">
-                            {editingNoteUid === user.uid ? (
-                              <div className="flex flex-col sm:flex-row gap-2">
-                                <input
-                                  type="text"
-                                  value={noteDrafts[user.uid] || ''}
-                                  onChange={(e) => setNoteDrafts(prev => ({ ...prev, [user.uid]: e.target.value }))}
-                                  placeholder="Private admin note"
-                                  className="min-w-0 flex-1 border border-gray-200 rounded px-2.5 py-1.5 text-xs text-gray-700 outline-none focus:border-dbd-accent"
-                                />
-                                <div className="flex items-center gap-2">
-                                  <button
-                                    onClick={() => handleSaveAdminNote(user)}
-                                    disabled={noteSavingUid === user.uid}
-                                    className="text-xs font-bold text-dbd-accent hover:text-dbd-accent/80 disabled:opacity-50"
-                                  >
-                                    {noteSavingUid === user.uid ? 'Saving...' : 'Save note'}
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      setNoteDrafts(prev => ({ ...prev, [user.uid]: user.adminNote || '' }));
-                                      setEditingNoteUid(null);
-                                    }}
-                                    className="text-xs font-bold text-gray-400 hover:text-gray-600"
-                                  >
-                                    Cancel
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
+
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] leading-snug text-gray-400">
+                            <span>Welcome <span className="font-semibold text-gray-600">{user.welcomeEmailSent ? 'sent' : 'not sent'}</span></span>
+                            {confirmationSent && <span>Subscription confirmation <span className="font-semibold text-gray-600">sent</span></span>}
+                            {user.permanentAccessEmailSentAt && <span>Access email <span className="font-semibold text-gray-600">sent {formatDate(user.permanentAccessEmailSentAt)}</span></span>}
+                            {user.permanentAccessEmailError && <span className="font-semibold text-red-600">Access email failed</span>}
+                            {hasActiveGrace && <span className="font-semibold text-amber-700">Grace ends {formatDate(graceEndsAt)}</span>}
+                            {editingNoteUid !== user.uid && (
                               <button
                                 onClick={() => setEditingNoteUid(user.uid)}
-                                className={`text-left text-[11px] leading-snug ${
+                                className={`min-w-0 truncate text-left font-semibold ${
                                   user.adminNote
-                                    ? 'text-gray-600 hover:text-gray-900'
+                                    ? 'max-w-[220px] text-gray-500 hover:text-gray-900'
                                     : 'text-gray-300 hover:text-gray-500'
                                 }`}
+                                title={user.adminNote || 'Add private note'}
                               >
-                                {user.adminNote ? `Note: ${user.adminNote}` : 'Add private note'}
+                                {user.adminNote ? `Note: ${user.adminNote}` : 'Add note'}
                               </button>
                             )}
                           </div>
+
+                          {editingNoteUid === user.uid && (
+                            <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                              <input
+                                type="text"
+                                value={noteDrafts[user.uid] || ''}
+                                onChange={(e) => setNoteDrafts(prev => ({ ...prev, [user.uid]: e.target.value }))}
+                                placeholder="Private admin note"
+                                className="min-w-0 flex-1 rounded border border-gray-200 px-2.5 py-1.5 text-xs text-gray-700 outline-none focus:border-dbd-accent"
+                              />
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => handleSaveAdminNote(user)}
+                                  disabled={noteSavingUid === user.uid}
+                                  className="text-xs font-bold text-dbd-accent hover:text-dbd-accent/80 disabled:opacity-50"
+                                >
+                                  {noteSavingUid === user.uid ? 'Saving...' : 'Save note'}
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setNoteDrafts(prev => ({ ...prev, [user.uid]: user.adminNote || '' }));
+                                    setEditingNoteUid(null);
+                                  }}
+                                  className="text-xs font-bold text-gray-400 hover:text-gray-600"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          {isExpanded && (
+                            <div className="mt-2.5 rounded border border-gray-100 bg-gray-50/60 p-3">
+                              <div className="grid gap-x-5 gap-y-2.5 text-[11px] sm:grid-cols-3">
+                                {detailGroups.map((group) => (
+                                  <div key={group.label} className="min-w-0">
+                                    <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">{group.label}</p>
+                                    <div className="flex flex-wrap gap-x-3 gap-y-1">
+                                      {group.items.map((item) => (
+                                        <div key={`${group.label}-${item.label}`} className="inline-flex min-w-0 items-baseline gap-1.5 leading-snug">
+                                          <span className="shrink-0 text-gray-400">{item.label}</span>
+                                          <span className={`${item.muted ? 'italic text-gray-400' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`} title={item.value}>{item.value}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              <p className="mt-2 text-[10px] font-mono text-gray-300">UID {user.uid}</p>
+                            </div>
+                          )}
                         </div>
 
-                        <div className="flex items-center justify-end gap-3 shrink-0">
+                        <div className="flex shrink-0 flex-wrap items-center justify-start gap-2 lg:justify-end">
+                          <button
+                            onClick={() => setExpandedAccountUids(prev => ({ ...prev, [user.uid]: !prev[user.uid] }))}
+                            className="inline-flex items-center gap-1 rounded border border-gray-200 px-2 py-1 text-[11px] font-bold text-gray-500 transition-colors hover:border-gray-300 hover:text-gray-800"
+                            aria-expanded={isExpanded}
+                            title={isExpanded ? 'Hide account details' : 'Show account details'}
+                          >
+                            Details
+                            <ChevronDown className={`h-3 w-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                          </button>
                           {canManageUser && (
                             <button
                               onClick={() => handleTogglePermanentAccess(user)}
@@ -1464,10 +1490,10 @@ export const AdminDashboard: React.FC = () => {
                               href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="inline-flex items-center gap-1 text-xs font-bold text-dbd-accent hover:text-dbd-accent/80 transition-colors"
+                              className="inline-flex items-center gap-1 text-xs font-bold text-dbd-accent transition-colors hover:text-dbd-accent/80"
                             >
                               Stripe
-                              <ExternalLink className="w-3 h-3" />
+                              <ExternalLink className="h-3 w-3" />
                             </a>
                           )}
                           {canManageUser && (
@@ -1476,12 +1502,12 @@ export const AdminDashboard: React.FC = () => {
                               disabled={loading || actionLoading !== null}
                               className={`text-xs font-bold transition-colors ${
                                 actionLoading === user.uid
-                                  ? 'text-gray-400 cursor-not-allowed'
+                                  ? 'cursor-not-allowed text-gray-400'
                                   : 'text-gray-400 hover:text-red-600'
                               } disabled:opacity-50`}
                               title="Delete the sign-in identity, profile and stored app data"
                             >
-                              Delete account
+                              Delete
                             </button>
                           )}
                         </div>
