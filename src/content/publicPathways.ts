@@ -15,12 +15,16 @@ const numberToWords = (value: number): string => {
   return String(value);
 };
 
-export const formatPublicArticleTitle = (title: string) => title.replace(/£(\d+)|\b\d+\b/g, token => {
-  const isPounds = token.startsWith('£');
-  const number = Number(isPounds ? token.slice(1) : token);
-  const words = numberToWords(number);
-  return isPounds ? `${words} pounds` : words;
-});
+export const formatPublicArticleTitle = (title: string) => {
+  const formattedTitle = title.replace(/£(\d+)|\b\d+\b/g, token => {
+    const isPounds = token.startsWith('£');
+    const number = Number(isPounds ? token.slice(1) : token);
+    const words = numberToWords(number);
+    return isPounds ? `${words} pounds` : words;
+  });
+
+  return formattedTitle ? `${formattedTitle[0].toUpperCase()}${formattedTitle.slice(1)}` : formattedTitle;
+};
 
 export const formatPublicNumber = (value: number) => numberToWords(value);
 

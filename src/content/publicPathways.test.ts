@@ -14,9 +14,9 @@ describe('public pathways', () => {
   const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
   it('spells out numbers in public article titles', () => {
-    expect(formatPublicArticleTitle('12 practical ways to reduce grocery costs')).toBe('twelve practical ways to reduce grocery costs');
+    expect(formatPublicArticleTitle('12 practical ways to reduce grocery costs')).toBe('Twelve practical ways to reduce grocery costs');
     expect(formatPublicArticleTitle('Why UK food costs are rising in 2026')).toBe('Why UK food costs are rising in two thousand and twenty-six');
-    expect(formatPublicArticleTitle('5 dinners for two under £40')).toBe('five dinners for two under forty pounds');
+    expect(formatPublicArticleTitle('5 dinners for two under £40')).toBe('Five dinners for two under forty pounds');
   });
 
   it('spells out pathway guide counts', () => {
