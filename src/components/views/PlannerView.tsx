@@ -1040,7 +1040,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             </p>
                           )}
                           <p className="mt-1 text-[10.5px] leading-relaxed text-gray-400">
-                            This is the estimated value of the quantities used, not the amount you may pay at checkout. Schedule dinners to see the expected checkout cost, which accounts for complete packs, shared ingredients and items already in stock.
+                            This estimates the ingredient value used in these dinners, not what you may pay at checkout. Schedule dinners to estimate the shopping cost, including complete packs, shared ingredients and items already in stock.
                           </p>
                           <button
                             type="button"
