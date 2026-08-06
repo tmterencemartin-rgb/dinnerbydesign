@@ -577,7 +577,8 @@ export const LandingView: React.FC = () => {
               How It Works
             </span>
             <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink">
-              Three tabs. Search, schedule, shop.
+              <span className="sm:hidden">Three tabs;<br />search, schedule, shop.</span>
+              <span className="hidden sm:inline">Three tabs. Search, schedule, shop.</span>
             </h3>
           </div>
 
