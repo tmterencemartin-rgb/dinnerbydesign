@@ -638,7 +638,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
         </div>
 
         {/* Tab switcher navigation bar */}
-        <div className="flex border-b border-gray-100 justify-start sm:justify-center gap-1 sm:gap-4 mt-6 overflow-x-auto no-scrollbar scroll-smooth px-4">
+        <div className="flex border-b border-gray-100 justify-start sm:justify-center gap-1 sm:gap-4 mt-6 overflow-x-auto no-scrollbar scroll-smooth">
           <button
             onClick={() => setActiveTab('profile')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
@@ -785,7 +785,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
           >
             <div className={isAdmin && user && !user.isAnonymous ? "grid gap-4 md:grid-cols-2" : "space-y-4"}>
               {/* Account Card */}
-              <div id="account-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-3">
+              <div id="account-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-3">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Profile</h3>
                 {user && !user.isAnonymous ? (
                   <div className="space-y-3 pb-1">
@@ -825,7 +825,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               </div>
 
               {isAdmin && user && !user.isAnonymous && (
-                <div className="bg-white rounded p-5 sm:p-6 space-y-4 border border-gray-100">
+                <div className="bg-white rounded p-4 sm:p-5 space-y-4 border border-gray-100">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                     <div className="space-y-1">
                       <h3 className="text-[13.5px] text-gray-900 font-bold">Admin dashboard</h3>

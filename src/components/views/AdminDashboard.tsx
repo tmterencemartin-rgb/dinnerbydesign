@@ -918,8 +918,8 @@ export const AdminDashboard: React.FC = () => {
       className="min-h-screen bg-gray-50/70"
     >
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 py-4">
+        <div className="w-full flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-center gap-3 lg:min-w-[210px]">
             <button 
               onClick={() => setView('settings')}
@@ -985,7 +985,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 py-5 sm:px-5 sm:py-6">
+      <div className="w-full py-5 sm:py-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dbd-accent"></div>
