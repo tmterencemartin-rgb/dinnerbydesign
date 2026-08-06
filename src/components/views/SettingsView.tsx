@@ -1050,7 +1050,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             animate={{ opacity: 1, y: 0 }} 
             className="space-y-6"
           >
-            <div id="subscription-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div id="subscription-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Subscription</h3>
                 {(accessStatus === 'paid' || accessStatus === 'trial') && (
@@ -1157,7 +1157,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             animate={{ opacity: 1, y: 0 }} 
             className="space-y-6"
           >
-            <div id="security-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div id="security-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Security</h3>
               </div>
@@ -1287,7 +1287,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             className="space-y-6"
           >
             {/* Support Contact Card */}
-            <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-6">
+            <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-6">
               <div className="space-y-1">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Help & Support</h3>
                 <p className="text-[13.5px] text-gray-900 font-bold">How can we help you today?</p>
@@ -1378,7 +1378,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             </div>
 
             {/* Billing Help Card */}
-            <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Billing & Account</h3>
               <div className="space-y-4 pl-0.5">
                 <div className="flex items-start gap-3">
@@ -1404,7 +1404,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             </div>
 
             {/* Troubleshooting Card */}
-            <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
                 <Settings size={14} className="text-gray-400" />
                 Search Setup
@@ -1470,7 +1470,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             className="space-y-6"
           >
             {/* Developer Connection Card */}
-            <div id="developer-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div id="developer-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Internal tools</h3>
               
               <div className="space-y-1">
@@ -1529,7 +1529,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             </div>
 
             {/* Request Routing Settings */}
-            <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Request routing</h3>
               <div className="space-y-1">
                 <h4 className="text-[13.5px] text-gray-900 font-bold">Server route</h4>
@@ -1592,7 +1592,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             </div>
 
             {showDebug && (
-              <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+              <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
                 <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Service Diagnostics</h3>
                 <div className="p-0.5">
                   <ConnectionDiagnostics />
@@ -1610,7 +1610,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             className="space-y-6"
           >
             {/* Privacy Management Card */}
-            <div id="privacy-section" className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div id="privacy-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
                 <Database className="w-3.5 h-3.5 text-gray-400" />
                 Privacy & Data
@@ -1632,7 +1632,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             </div>
 
             {/* Legal Notices Card */}
-            <div className="bg-white rounded border border-gray-100 p-5 sm:p-6 space-y-4">
+            <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-gray-500" />
                 Legal Notices
@@ -1660,7 +1660,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {/* Account Protection / Delete Section for Signed-In Users */}
             {user && !user.isAnonymous && (
-              <div className="bg-red-50/20 rounded border border-red-100 p-5 sm:p-6 space-y-4">
+              <div className="bg-red-50/20 rounded border border-red-100 p-4 sm:p-5 space-y-4">
                 <h3 className="text-[11px] font-bold text-red-500 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
                   Account Security
