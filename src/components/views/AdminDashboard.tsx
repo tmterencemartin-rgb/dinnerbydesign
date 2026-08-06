@@ -1339,22 +1339,6 @@ export const AdminDashboard: React.FC = () => {
                   const trialHasEnded = !!trialEndDate && trialEndDate.getTime() < Date.now();
                   const detailGroups: Array<{ label: string; items: Array<{ label: string; value: string; muted?: boolean; mono?: boolean }> }> = [
                     {
-                      label: 'Account',
-                      items: [
-                        { label: 'Joined', value: formatDate(user.createdAt) },
-                        trialEndDate ? { label: trialHasEnded ? 'Trial ended' : 'Trial ends', value: formatDate(trialEndDate) } : null,
-                        { label: 'Access', value: getAccessLabel(user) },
-                      ].filter(Boolean),
-                    },
-                    {
-                      label: 'Activity',
-                      items: [
-                        { label: 'Saved', value: String(stats.savedCount) },
-                        { label: 'Scheduled', value: String(stats.scheduledCount) },
-                        { label: 'Searches', value: String(getSearchCount(user)) },
-                      ],
-                    },
-                    {
                       label: 'Email',
                       items: [
                         { label: 'Welcome', value: user.welcomeEmailSent ? 'Sent' : 'Not sent' },
@@ -1384,23 +1368,31 @@ export const AdminDashboard: React.FC = () => {
                   ].filter(group => group.items.length > 0);
 
                   return (
-                    <div key={user.uid} className="flex flex-col gap-2 px-5 py-3 hover:bg-gray-50/70 transition-colors group">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <p className="font-bold text-gray-950 text-sm leading-tight">{user.displayName || user.email || 'User'}</p>
+                    <div key={user.uid} className="px-4 py-3.5 transition-colors hover:bg-gray-50/70 group sm:px-5">
+                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                            <p className="font-bold leading-tight text-gray-950 text-sm sm:text-[15px]">{user.displayName || user.email || 'User'}</p>
                             {getStatusBadge(user)}
-                            <span className="text-gray-400 text-xs font-mono truncate">{user.email || 'No email'}</span>
+                            <span className="min-w-0 basis-full truncate text-xs font-mono text-gray-400 sm:basis-auto" title={user.email || 'No email'}>{user.email || 'No email'}</span>
                           </div>
-                          <div className="mt-3 grid gap-x-5 gap-y-3 text-[11px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] leading-snug">
+                            <span><span className="text-gray-400">Joined</span> <span className="font-medium text-gray-700">{formatDate(user.createdAt)}</span></span>
+                            {trialEndDate && <span><span className="text-gray-400">{trialHasEnded ? 'Trial ended' : 'Trial ends'}</span> <span className="font-medium text-gray-700">{formatDate(trialEndDate)}</span></span>}
+                            <span><span className="text-gray-400">Access</span> <span className="font-medium text-gray-700">{getAccessLabel(user)}</span></span>
+                            <span><span className="text-gray-400">Saved</span> <span className="font-medium text-gray-700">{stats.savedCount}</span></span>
+                            <span><span className="text-gray-400">Scheduled</span> <span className="font-medium text-gray-700">{stats.scheduledCount}</span></span>
+                            <span><span className="text-gray-400">Searches</span> <span className="font-medium text-gray-700">{getSearchCount(user)}</span></span>
+                          </div>
+                          <div className="mt-3 grid gap-x-5 gap-y-2.5 text-[11px] sm:grid-cols-3">
                             {detailGroups.map((group) => (
                               <div key={group.label} className="min-w-0">
                                 <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">{group.label}</p>
-                                <div className={`${group.label === 'Activity' ? 'grid grid-cols-3 gap-x-2 gap-y-1' : group.label === 'Email' || group.label === 'Access' ? 'grid grid-cols-2 gap-x-2 gap-y-1' : 'flex flex-wrap items-baseline gap-x-3 gap-y-1'}`}>
+                                <div className="flex flex-wrap gap-x-3 gap-y-1">
                                   {group.items.map((item) => (
                                     <div key={`${group.label}-${item.label}`} className="inline-flex min-w-0 items-baseline gap-1.5 leading-snug">
                                       <span className="shrink-0 text-gray-400">{item.label}</span>
-                                      <span className={`${item.muted ? 'italic text-gray-400' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`}>{item.value}</span>
+                                      <span className={`${item.muted ? 'italic text-gray-400' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`} title={item.value}>{item.value}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -1408,7 +1400,7 @@ export const AdminDashboard: React.FC = () => {
                             ))}
                           </div>
                           <p className="mt-2 hidden text-[10px] font-mono text-gray-300 group-hover:block">UID {user.uid}</p>
-                          <div className="mt-2">
+                          <div className="mt-2.5">
                             {editingNoteUid === user.uid ? (
                               <div className="flex flex-col sm:flex-row gap-2">
                                 <input
