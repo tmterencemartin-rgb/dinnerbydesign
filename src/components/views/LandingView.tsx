@@ -550,6 +550,21 @@ export const LandingView: React.FC = () => {
         </div>
       </section>
 
+      {/* WHY I BUILT DINNERBYDESIGN */}
+      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
+        <div className="max-w-prose text-left select-none">
+          <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-6">
+            Why I Built DinnerByDesign
+          </h3>
+          <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+            As food prices keep rising, families want to keep a lid on the cost of dinner. They want ingredients to stretch further, fewer things going to waste, and interesting recipes using low-cost family favourite ingredients.
+          </p>
+          <p className="mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+            DinnerByDesign helps people meet those challenges. It starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
+          </p>
+        </div>
+      </section>
+
       {/* 6. THREE TABS FEATURE EXPLAINER GRID */}
       <section id="how-it-works" className="py-16 bg-[#F4F1EA] border-t border-dbd-rule/40 scroll-mt-nav px-6 sm:px-8">
         <div className="max-w-5xl mx-auto">
