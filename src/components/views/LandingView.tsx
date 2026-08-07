@@ -327,10 +327,10 @@ export const LandingView: React.FC = () => {
       {/* 2. HERO HEADER SECTION */}
       <section className="relative px-6 max-w-5xl mx-auto pt-16 pb-12 sm:pt-24 sm:pb-16 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold text-dbd-ink font-sans leading-[1.15] tracking-tight mb-6 max-w-4xl mx-auto">
-          Find what to cook, what to buy <br /> and what it might cost.
+          Make the weekly shop go further.
         </h1>
         <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
-          An ad-free, UK-focused dinner app for finding recipes, planning around your budget and building costed shopping lists. Free searches give you three real tries without an account. The free trial starts when you create one to save, schedule and plan your week.
+          DinnerByDesign helps you plan varied dinners around what you already have, reuse ingredients across the week and see estimated shopping costs before you buy. Free searches give you three real tries without an account. The free trial starts when you create one to save, schedule and plan your week.
         </p>
 
         {/* Action button grouping */}
