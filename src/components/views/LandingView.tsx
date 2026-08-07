@@ -330,7 +330,7 @@ export const LandingView: React.FC = () => {
           Make the weekly shop go further.
         </h1>
         <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
-          DinnerByDesign helps you plan varied dinners around what you already have, reuse ingredients across the week and see estimated shopping costs before you buy. Free searches give you three real tries without an account. The free trial starts when you create one to save, schedule and plan your week.
+          DinnerByDesign helps you plan varied dinners around what you already have, reuse ingredients across the week and see estimated shopping costs before you buy. Free searches give you three real tries without an account. The free trial starts when you create an account, giving you seven days to save recipes, schedule dinners and plan your week.
         </p>
 
         {/* Action button grouping */}
