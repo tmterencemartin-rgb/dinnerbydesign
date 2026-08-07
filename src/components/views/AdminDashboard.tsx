@@ -961,7 +961,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>
           
-          <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-[minmax(220px,1fr)_auto] lg:w-auto lg:grid-cols-[260px_auto]">
+          <div className="grid w-full grid-cols-1 gap-2 lg:w-auto lg:grid-cols-[260px_auto]">
             <div className="relative min-w-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input 
@@ -973,7 +973,7 @@ export const AdminDashboard: React.FC = () => {
               />
             </div>
 
-            <div className="grid min-w-0 grid-cols-[minmax(112px,1fr)_auto_auto] items-center gap-1.5 sm:grid-cols-[180px_auto_auto] sm:gap-2">
+            <div className="grid min-w-0 grid-cols-1 items-stretch gap-1.5 lg:grid-cols-[180px_auto_auto] lg:items-center lg:gap-2">
               <select 
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
@@ -992,7 +992,7 @@ export const AdminDashboard: React.FC = () => {
               <button
                 onClick={handleExportCsv}
                 disabled={loading || filteredUsers.length === 0}
-                className="h-9 px-2 text-[11px] font-bold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded transition-colors inline-flex items-center justify-center gap-1 uppercase tracking-wider whitespace-nowrap disabled:opacity-50 sm:px-3 sm:text-xs sm:gap-1.5"
+                className="h-9 w-full px-2 text-[11px] font-bold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded transition-colors inline-flex items-center justify-center gap-1 uppercase tracking-wider whitespace-nowrap disabled:opacity-50 lg:w-auto lg:px-3 lg:text-xs lg:gap-1.5"
                 title="Export the current filtered subscriber list"
               >
                 <Download className="w-3.5 h-3.5" />
@@ -1002,7 +1002,7 @@ export const AdminDashboard: React.FC = () => {
               <button
                 onClick={handleDeleteAllUsers}
                 disabled={loading || actionLoading !== null}
-                className="h-9 px-2 text-[11px] font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition-colors inline-flex items-center justify-center gap-1 uppercase tracking-wider whitespace-nowrap disabled:opacity-50 sm:px-3 sm:text-xs sm:gap-1.5"
+                className="h-9 w-full px-2 text-[11px] font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition-colors inline-flex items-center justify-center gap-1 uppercase tracking-wider whitespace-nowrap disabled:opacity-50 lg:w-auto lg:px-3 lg:text-xs lg:gap-1.5"
                 title="Delete all other accounts listed in the app-profile register"
               >
                 <Trash2 className="w-3.5 h-3.5" />
