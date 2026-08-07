@@ -29,7 +29,7 @@ ALLOWED_ORIGINS=
 FIREBASE_SERVICE_ACCOUNT_JSON=
 ```
 
-Set `RESEND_FROM_EMAIL` to `chef@dinnerbydesign.app`.
+Set `RESEND_FROM_EMAIL` to `terence@dinnerbydesign.app`.
 
 Set `ALLOWED_ORIGINS` to the production domains, separated by commas:
 
@@ -59,7 +59,7 @@ Do not commit `.env.local`.
 ### Resend
 
 - Keep the sending domain verified.
-- Confirm that automatic account and subscription emails use `chef@dinnerbydesign.app`.
+- Confirm that automatic account and subscription emails use `terence@dinnerbydesign.app`.
 - Check the admin email-events panel when investigating a missing message.
 
 ## Before every release

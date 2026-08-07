@@ -1489,7 +1489,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   <p>Questions or feedback? Reply to this email — we read and answer every one.</p>
   <p style="margin-top: 24px; font-weight: 500; margin-bottom: 2px;">The DinnerByDesign team</p>
-  <p style="margin: 0; font-size: 13px; color: #666;"><a href="mailto:chef@dinnerbydesign.app" style="color: #666; text-decoration: underline;">chef@dinnerbydesign.app</a></p>
+  <p style="margin: 0; font-size: 13px; color: #666;"><a href="mailto:terence@dinnerbydesign.app" style="color: #666; text-decoration: underline;">terence@dinnerbydesign.app</a></p>
 </div>
         `.trim();
 
@@ -1502,7 +1502,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             to: email,
             subject: "Welcome to DinnerByDesign",
             html: emailHtml,
-            from: "DinnerByDesign <chef@dinnerbydesign.app>",
+            from: "DinnerByDesign <terence@dinnerbydesign.app>",
             type: "welcome",
             source: "auth_context",
             userId: currentUser?.uid || null
@@ -1600,7 +1600,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             to: email,
             subject: `Your free trial ends ${formattedEnd}`,
             html: emailHtml,
-            from: "DinnerByDesign <chef@dinnerbydesign.app>",
+            from: "DinnerByDesign <terence@dinnerbydesign.app>",
             type: "trial_ending",
             source: "auth_context",
             userId: uid
@@ -1705,7 +1705,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </div>
 
     <p style="margin: 20px 0 0 0; color: #666; font-size: 13.5px;">
-      If you have any questions, email us at <a href="mailto:chef@dinnerbydesign.app" style="color: #111; text-decoration: underline; font-weight: 500;">chef@dinnerbydesign.app</a> and we'll get back to you as soon as we can.
+      If you have any questions, email us at <a href="mailto:terence@dinnerbydesign.app" style="color: #111; text-decoration: underline; font-weight: 500;">terence@dinnerbydesign.app</a> and we'll get back to you as soon as we can.
     </p>
   </div>
 

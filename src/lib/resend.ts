@@ -117,7 +117,7 @@ export async function sendEmail({
   to,
   subject,
   html,
-  from = 'DinnerByDesign <chef@dinnerbydesign.app>',
+  from = 'DinnerByDesign <terence@dinnerbydesign.app>',
 }: {
   to: string | string[];
   subject: string;

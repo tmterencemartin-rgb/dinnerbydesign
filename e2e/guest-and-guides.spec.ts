@@ -92,8 +92,8 @@ test.describe('public guides', () => {
     await page.goto('/food-costs/fresh-or-frozen');
     await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toContainText('Food cost guides');
 
-    const contact = page.getByRole('link', { name: 'chef@dinnerbydesign.app' });
-    await expect(contact).toHaveAttribute('href', 'mailto:chef@dinnerbydesign.app');
+    const contact = page.getByRole('link', { name: 'terence@dinnerbydesign.app' });
+    await expect(contact).toHaveAttribute('href', 'mailto:terence@dinnerbydesign.app');
     await expect(page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'Guides' })).toHaveAttribute('href', '/guides');
 
     await page.getByRole('button', { name: /Plan my week/ }).click();

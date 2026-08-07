@@ -873,10 +873,10 @@ export const LandingView: React.FC = () => {
               </span>
               <span className="hidden sm:inline">·</span>
               <a 
-                href="mailto:chef@dinnerbydesign.app" 
+                href="mailto:terence@dinnerbydesign.app" 
                 className="font-bold text-dbd-accent hover:text-dbd-accent-mid transition-all"
               >
-                chef@dinnerbydesign.app
+                terence@dinnerbydesign.app
               </a>
             </div>
           </div>

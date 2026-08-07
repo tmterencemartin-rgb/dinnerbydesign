@@ -5,7 +5,7 @@ import {
   getPublicPathwayForArticle,
 } from '../content/publicPathways';
 
-const CONTACT_EMAIL = 'chef@dinnerbydesign.app';
+const CONTACT_EMAIL = 'terence@dinnerbydesign.app';
 
 const getBreadcrumbs = (pathName: string) => {
   if (pathName === '/guides') return [{ label: 'Explore' }];

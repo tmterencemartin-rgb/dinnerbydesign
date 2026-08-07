@@ -124,7 +124,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     {
       id: 'display',
       question: "My recipe isn't displaying correctly.",
-      answer: 'Please try clearing your browser\'s cache and cookies, or try a different browser. If the issue persists, contact us at chef@dinnerbydesign.app.'
+      answer: 'Please try clearing your browser\'s cache and cookies, or try a different browser. If the issue persists, contact us at terence@dinnerbydesign.app.'
     }
   ];
 
@@ -1307,17 +1307,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   <div className="pt-2">
                     <button 
                       onClick={() => {
-                        navigator.clipboard.writeText('chef@dinnerbydesign.app');
+                        navigator.clipboard.writeText('terence@dinnerbydesign.app');
                         setShowEmailCopied(true);
                         setTimeout(() => setShowEmailCopied(false), 3000);
                         const a = document.createElement('a');
-                        a.href = 'mailto:chef@dinnerbydesign.app';
+                        a.href = 'mailto:terence@dinnerbydesign.app';
                         a.click();
                       }}
                       className="w-full py-2 bg-gray-900 hover:bg-black text-white text-[11px] font-bold uppercase tracking-wider rounded transition-all flex items-center justify-center gap-2"
                     >
                       <Mail size={14} />
-                      Email chef@dinnerbydesign.app
+                      Email terence@dinnerbydesign.app
                     </button>
                     {showEmailCopied && (
                       <p className="text-[10px] text-emerald-600 font-bold mt-2 text-center flex items-center justify-center gap-1">

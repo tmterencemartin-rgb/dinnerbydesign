@@ -213,7 +213,7 @@ export const AdminDashboard: React.FC = () => {
         to: targetUser.email,
         subject: 'Your DinnerByDesign access is now permanent',
         html,
-        from: 'DinnerByDesign <chef@dinnerbydesign.app>',
+        from: 'DinnerByDesign <terence@dinnerbydesign.app>',
         type: 'permanent_access_granted',
         source: 'admin_dashboard',
         userId: targetUser.uid

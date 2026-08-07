@@ -183534,7 +183534,7 @@ async function sendEmail({
   to,
   subject,
   html,
-  from = "DinnerByDesign <chef@dinnerbydesign.app>"
+  from = "DinnerByDesign <terence@dinnerbydesign.app>"
 }) {
   const resend = getResendClient();
   const resolvedFrom = resolveFromAddress(from);
@@ -186453,7 +186453,7 @@ function createApp() {
                         <a href="${appUrl}/?view=home" style="background-color: #111827; color: #ffffff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Open DinnerByDesign</a>
                       </div>
                       <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">To change or cancel your subscription, open DinnerByDesign and go to Settings \u2192 Subscription.</p>
-                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
+                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:terence@dinnerbydesign.app" style="color: #111827;">terence@dinnerbydesign.app</a>.</p>
                     </div>
                   `
                 }, {
@@ -186551,7 +186551,7 @@ function createApp() {
                       <div style="margin: 28px 0;">
                         <a href="${appUrl}/?view=settings" style="background-color: #111827; color: #ffffff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Open Account Settings</a>
                       </div>
-                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
+                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:terence@dinnerbydesign.app" style="color: #111827;">terence@dinnerbydesign.app</a>.</p>
                     </div>
                   `
                 }, {
@@ -186645,7 +186645,7 @@ function createApp() {
                       <div style="margin: 28px 0;">
                         <a href="${invoiceUrl || `${appUrl}/?view=settings`}" style="background-color: #111827; color: #ffffff; padding: 13px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Update payment details</a>
                       </div>
-                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:chef@dinnerbydesign.app" style="color: #111827;">chef@dinnerbydesign.app</a>.</p>
+                      <p style="font-size: 14px; color: #6b7280; margin: 0;">Questions? Reply to this email or contact <a href="mailto:terence@dinnerbydesign.app" style="color: #111827;">terence@dinnerbydesign.app</a>.</p>
                     </div>
                   `
                 }, {

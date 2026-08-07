@@ -28,7 +28,7 @@ const MethodologyShell: React.FC<MethodologyProps & { eyebrow: string; title: st
       </header>
       <div className="mt-8 space-y-6">{children}</div>
       <div className="mt-10 border-t border-gray-100 pt-6 text-[14px] leading-relaxed text-gray-500">
-        Questions can be sent to <a href="mailto:chef@dinnerbydesign.app" className="font-semibold text-dbd-accent hover:underline">chef@dinnerbydesign.app</a>.
+        Questions can be sent to <a href="mailto:terence@dinnerbydesign.app" className="font-semibold text-dbd-accent hover:underline">terence@dinnerbydesign.app</a>.
       </div>
     </motion.main>
   );

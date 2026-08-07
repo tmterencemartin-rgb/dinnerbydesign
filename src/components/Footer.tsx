@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const CONTACT_EMAIL = 'chef@dinnerbydesign.app';
+const CONTACT_EMAIL = 'terence@dinnerbydesign.app';
 
 interface FooterProps {
   setView: (view: 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-methodology' | 'food-safety' | 'recipe-methodology' | 'nutrition-methodology' | 'privacy' | 'terms') => void;
