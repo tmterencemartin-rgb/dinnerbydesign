@@ -442,7 +442,7 @@ export const LandingView: React.FC = () => {
                     <span className="text-dbd-accent animate-pulse font-medium">Re-indexing published records...</span>
                   ) : (
                     <>
-                      <span className="sm:hidden">{currentResultList.length} matches • one preview shown</span>
+                      <span className="sm:hidden">{currentResultList.length} matches</span>
                       <span className="hidden sm:inline">{currentResultList.length} recipes • verified in 0.54s</span>
                     </>
                   )}
@@ -464,7 +464,7 @@ export const LandingView: React.FC = () => {
                   <div 
                     key={index} 
                     onClick={() => handleStart(sandboxQuery)}
-                    className={`${index > 0 ? 'hidden sm:flex' : 'flex'} group bg-white border border-dbd-rule/50 hover:border-dbd-accent/60 hover:shadow-xs p-4 flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer transition-all`}
+                    className="flex group bg-white border border-dbd-rule/50 hover:border-dbd-accent/60 hover:shadow-xs p-4 flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer transition-all"
                   >
                     <div>
                       <h4 className="text-[14px] sm:text-[15px] font-semibold text-dbd-ink group-hover:text-dbd-accent transition-colors leading-tight mb-1 font-sans">
