@@ -78,6 +78,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
       '/guides/9-budget-dinners-with-leftover-roast-chicken',
       '/guides/nine-budget-dinners-three-cuisines',
       '/guides/nine-budget-friendly-dinners-with-eggs',
+      '/guides/nine-budget-dinners-with-tinned-vegetables',
       '/food-costs/summer-stews-seasonal-vegetables',
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/guides/do-vegetables-in-dishes-count-towards-5-a-day',

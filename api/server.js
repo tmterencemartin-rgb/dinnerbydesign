@@ -185223,6 +185223,43 @@ var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE = {
   ]
 };
 
+// src/content/nineBudgetDinnersWithTinnedVegetablesGuide.ts
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH = "/guides/nine-budget-dinners-with-tinned-vegetables";
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE = {
+  title: "Nine budget dinners with tinned vegetables",
+  seoTitle: "Nine budget dinners with tinned vegetables | DinnerByDesign",
+  description: "Nine varied dinners using tinned vegetables, beans and potatoes, with established recipe sources and practical ideas for using what is already in the cupboard.",
+  publishedAt: "2026-08-07",
+  reviewedAt: "2026-08-07",
+  nextReviewAt: "2026-09-07",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using tinned vegetables",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-07",
+  editorialNotes: "Nine source-led dinners showing how tinned vegetables, beans and potatoes can support varied cooking with a useful cupboard back-up.",
+  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-friendly-dinners-with-eggs", "/guides/nine-budget-dinners-three-cuisines", "/guides/9-ways-with-sausages", "/food-safety", "/signin"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka" },
+    { label: "Easy tuna pasta bake, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/easy-tuna-pasta-bake" },
+    { label: "Vegetable and bean chilli, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/vegetable-bean-chilli" },
+    { label: "Easy fish pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie" },
+    { label: "Tomato and chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry" },
+    { label: "Dum Aloo Potato Curry, Krumpli", url: "https://www.krumpli.co.uk/dum-aloo-curry/" },
+    { label: "Bean and sausage hotpot, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bean-and-sausage-hotpot" },
+    { label: "Refried bean quesadillas, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/refried-bean-quesadillas" },
+    { label: "Sweetcorn fritters with eggs and black bean salsa, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/sweetcorn-fritters-eggs-black-bean-salsa" }
+  ],
+  faqs: [
+    { question: "Which tinned vegetables are most useful for dinner?", answer: "Chopped tomatoes, sweetcorn, peas and potatoes are useful cupboard staples. Beans and chickpeas are pulses rather than vegetables, but they are equally useful in a cupboard and work alongside the tinned vegetables in several of these dinners." },
+    { question: "Can tinned potatoes be used in a dinner?", answer: "Yes. The dum aloo potato curry linked in this guide gives instructions for using tinned new potatoes as an alternative to boiling and peeling fresh ones." },
+    { question: "Are tinned vegetables better than fresh or frozen?", answer: "No. Fresh, frozen and tinned vegetables all have a place. Tins are useful because they keep for months and can provide a back-up when the fridge is running low." },
+    { question: "How can I avoid wasting tins?", answer: "Keep a small rotating stock, buy a couple of extras as part of an ordinary shop and use the oldest tins first. This makes it less likely that unopened tins disappear at the back of the cupboard." },
+    { question: "Are these complete recipes?", answer: "No. They are source-led dinner ideas with practical notes. Use the linked publisher recipe for its full ingredient list, method, timings and current instructions." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
   {
@@ -185363,6 +185400,20 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.contentReviewedAt,
     internalLinks: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.internalLinks,
     disclosures: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.disclosures,
+    status: "published"
+  },
+  {
+    title: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.title,
+    path: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.pageFamily,
+    primarySearchIntent: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.primarySearchIntent,
+    indexingStatus: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.indexingStatus,
+    publishedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.publishedAt,
+    reviewedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.reviewedAt,
+    contentReviewedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.contentReviewedAt,
+    internalLinks: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.internalLinks,
+    disclosures: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.disclosures,
     status: "published"
   },
   {

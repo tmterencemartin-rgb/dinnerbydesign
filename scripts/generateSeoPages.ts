@@ -159,6 +159,12 @@ import {
   getNineBudgetFriendlyDinnersWithEggsGuideJsonLd,
   renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml,
 } from '../src/content/nineBudgetFriendlyDinnersWithEggsGuide';
+import {
+  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE,
+  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+  getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
+  renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml,
+} from '../src/content/nineBudgetDinnersWithTinnedVegetablesGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -604,6 +610,13 @@ await generateEditorialGuide(
   NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
   renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml,
   getNineBudgetFriendlyDinnersWithEggsGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE,
+  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+  renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml,
+  getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
 );
 
 await generateEditorialGuide(
