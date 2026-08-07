@@ -40,7 +40,7 @@ export const LandingView: React.FC = () => {
   // Scroll tracking & responsive menus
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
-  const [sandboxQuery, setSandboxQuery] = useState('Chicken Fricassee');
+  const [sandboxQuery, setSandboxQuery] = useState('Leftover chicken');
   const [sandboxSource, setSandboxSource] = useState<'cook' | 'ready-made'>('cook');
   const [isSandboxSearching, setIsSandboxSearching] = useState(false);
   const [subscriptionEmail, setSubscriptionEmail] = useState('');
@@ -49,10 +49,10 @@ export const LandingView: React.FC = () => {
 
   // Predefined datasets for the interactive sandbox mockup
   const mockCookData: Record<string, { title: string; meta: string; source: string }[]> = {
-    'Chicken Fricassee': [
-      { title: 'Classic Creamy Chicken Fricassée', meta: '45 min · serves 4 · ~£6.80', source: 'BBC Food' },
-      { title: 'French Bistro Chicken Fricassée', meta: '50 min · serves 2 · ~£5.50', source: 'Good Food' },
-      { title: "Jamie’s Quick Chicken Fricassée", meta: '30 min · serves 4 · ~£7.20', source: 'Jamie Oliver' }
+    'Leftover chicken': [
+      { title: 'Leftover chicken pasta bake', meta: '35 min · serves 4 · ~£4.80', source: 'BBC Food' },
+      { title: 'Leftover chicken fried rice', meta: '25 min · serves 4 · ~£3.60', source: 'Good Food' },
+      { title: 'Leftover chicken and vegetable curry', meta: '30 min · serves 4 · ~£4.20', source: 'Jamie Oliver' }
     ],
     'Minced Beef': [
       { title: 'Easy Minced Beef Tacos', meta: '20 min · serves 4 · ~£3.80', source: 'Good Food' },
@@ -102,10 +102,10 @@ export const LandingView: React.FC = () => {
   };
 
   const mockReadyMadeData: Record<string, { title: string; meta: string; source: string }[]> = {
-    'Chicken Fricassee': [
-      { title: 'M&S Gastropub Chicken Fricassée', meta: '40 min · serves 2 · ~£8.00', source: 'Marks & Spencer' },
-      { title: 'Waitrose Slow Cooked Chicken Fricassée', meta: '35 min · serves 2 · ~£7.50', source: 'Waitrose' },
-      { title: 'Tesco Finest Chicken Fricassée with Rice', meta: '15 min · serves 1 · ~£4.50', source: 'Tesco' }
+    'Leftover chicken': [
+      { title: 'M&S cooked chicken pieces', meta: 'Ready to eat · serves 2 · ~£5.00', source: 'Marks & Spencer' },
+      { title: 'Waitrose roast chicken slices', meta: 'Ready to eat · serves 2 · ~£4.50', source: 'Waitrose' },
+      { title: 'Tesco cooked chicken breast pieces', meta: 'Ready to eat · serves 2 · ~£4.00', source: 'Tesco' }
     ],
     'Minced Beef': [
       { title: 'Sainsbury’s Rich Beef Cottage Pie', meta: '30 min · serves 1 · ~£3.20', source: "Sainsbury's" },
@@ -210,8 +210,8 @@ export const LandingView: React.FC = () => {
 
   // Get current state records
   const currentResultList = sandboxSource === 'cook'
-    ? (mockCookData[sandboxQuery] || mockCookData['Chicken Fricassee'])
-    : (mockReadyMadeData[sandboxQuery] || mockReadyMadeData['Chicken Fricassee']);
+    ? (mockCookData[sandboxQuery] || mockCookData['Leftover chicken'])
+    : (mockReadyMadeData[sandboxQuery] || mockReadyMadeData['Leftover chicken']);
 
   return (
     <div className="native-scroll-root bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
@@ -422,7 +422,7 @@ export const LandingView: React.FC = () => {
               <div className="max-w-2xl mx-auto mt-4 px-1">
                 <p className="text-[12px] font-ibm-plex-mono font-semibold text-dbd-ink-3 mb-2">Try these preset queries:</p>
                 <div className="flex flex-wrap gap-2">
-                  {['Chicken Fricassee', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag, index) => (
+                  {['Leftover chicken', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag, index) => (
                     <button
                       key={tag}
                       onClick={() => selectSandboxTag(tag)}
