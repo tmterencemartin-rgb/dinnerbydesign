@@ -18,6 +18,7 @@ import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide'
 import { CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH } from './convenienceFishGuide';
 import { TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH } from './tinnedFishGuide';
 import { NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH } from './nineBudgetDinnersThreeCuisinesGuide';
+import { NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE, NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH } from './nineBudgetFriendlyDinnersWithEggsGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -133,6 +134,13 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.publishedAt,
     reviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.contentReviewedAt,
     internalLinks: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.disclosures, status: 'published',
+  },
+  {
+    title: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.title, path: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH, category: 'Practical cooking guide',
+    pageFamily: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.primarySearchIntent,
+    indexingStatus: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.publishedAt,
+    reviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.contentReviewedAt,
+    internalLinks: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.internalLinks, disclosures: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.disclosures, status: 'published',
   },
   {
     title: TRAYBAKE_GUIDE.title, path: TRAYBAKE_GUIDE_PATH, category: 'Practical cooking guide',

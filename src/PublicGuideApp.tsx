@@ -132,6 +132,11 @@ import {
   NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
   getNineBudgetDinnersThreeCuisinesGuideJsonLd,
 } from './content/nineBudgetDinnersThreeCuisinesGuide';
+import {
+  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE,
+  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
+  getNineBudgetFriendlyDinnersWithEggsGuideJsonLd,
+} from './content/nineBudgetFriendlyDinnersWithEggsGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -162,6 +167,7 @@ const FiveStaplesGuideView = React.lazy(() => import('./components/views/FiveSta
 const ConvenienceFishGuideView = React.lazy(() => import('./components/views/ConvenienceFishGuideView').then(module => ({ default: module.ConvenienceFishGuideView })));
 const TinnedFishGuideView = React.lazy(() => import('./components/views/TinnedFishGuideView').then(module => ({ default: module.TinnedFishGuideView })));
 const NineBudgetDinnersThreeCuisinesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersThreeCuisinesGuideView').then(module => ({ default: module.NineBudgetDinnersThreeCuisinesGuideView })));
+const NineBudgetFriendlyDinnersWithEggsGuideView = React.lazy(() => import('./components/views/NineBudgetFriendlyDinnersWithEggsGuideView').then(module => ({ default: module.NineBudgetFriendlyDinnersWithEggsGuideView })));
 
 type SeoConfig = {
   title: string;
@@ -333,6 +339,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH]: {
     seo: guideSeo(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH, getNineBudgetDinnersThreeCuisinesGuideJsonLd()),
     render: ({ search }) => <NineBudgetDinnersThreeCuisinesGuideView onFindDinners={search} />,
+  },
+  [NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH]: {
+    seo: guideSeo(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE, NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH, getNineBudgetFriendlyDinnersWithEggsGuideJsonLd()),
+    render: ({ search }) => <NineBudgetFriendlyDinnersWithEggsGuideView onFindDinners={search} />,
   },
 };
 

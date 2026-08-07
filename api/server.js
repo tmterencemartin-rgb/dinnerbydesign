@@ -185170,6 +185170,59 @@ var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE = {
   ]
 };
 
+// src/content/nineBudgetFriendlyDinnersWithEggsGuide.ts
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH = "/guides/nine-budget-friendly-dinners-with-eggs";
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE = {
+  title: "Nine budget-friendly dinners with eggs",
+  seoTitle: "Nine budget-friendly dinners with eggs | DinnerByDesign",
+  description: "Nine varied budget-friendly dinners with eggs, rice, potatoes, beans, pasta and vegetables, using established recipe sources and practical leftovers advice.",
+  publishedAt: "2026-08-07",
+  reviewedAt: "2026-08-07",
+  nextReviewAt: "2026-09-07",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find varied budget-friendly dinner ideas using eggs",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-07",
+  editorialNotes: "Nine source-led dinner ideas showing how eggs can support varied, budget-friendly cooking while helping use up rice, potatoes, vegetables and leftovers.",
+  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-dinners-three-cuisines", "/guides/9-ways-with-sausages", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka" },
+    { label: "Easy egg-fried rice, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-fried-rice" },
+    { label: "Spanish tortilla, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/spanish-tortilla" },
+    { label: "Quick veg and soft cheese frittata, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/quick-veg-soft-cheese-frittata" },
+    { label: "Egg curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-curry" },
+    { label: "One-pan eggs with tomatoes, peppers & yogurt, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/turkish-one-pan-eggs-peppers-menemen" },
+    { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak" },
+    { label: "Potato hash with greens, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/potato-hash-with-greens" },
+    { label: "Beans-and-Greens Pasta with Fried Eggs, Food Network Kitchen", url: "https://www.foodnetwork.com/fnk/recipes/beans-and-greens-pasta-with-fried-eggs-9840292" },
+    { label: "Food Standards Agency: Rice", url: "https://www.food.gov.uk/print/pdf/node/4286" }
+  ],
+  faqs: [
+    {
+      question: "Can eggs make a filling budget-friendly dinner?",
+      answer: "Yes. Eggs add protein to inexpensive ingredients such as rice, potatoes, beans, pasta and vegetables, while the recipes use different spices, textures and cooking methods to keep the dinners varied."
+    },
+    {
+      question: "Which of these egg dinners are best for using leftovers?",
+      answer: "Egg-fried rice uses cooked rice, bubble and squeak uses leftover mashed potato and cooked vegetables, and the frittata is useful for small amounts of several vegetables. The shakshuka-style sauces can also use tomatoes and peppers that are starting to soften."
+    },
+    {
+      question: "Can I substitute ingredients in these egg dinners?",
+      answer: "Yes, within reason. Frozen vegetables can replace fresh ones, tinned beans can usually replace another tinned bean, and ordinary spaghetti can replace chickpea spaghetti in the pasta dish. The article identifies where a substitution changes the original source recipe."
+    },
+    {
+      question: "How should cooked rice be stored?",
+      answer: "Cool cooked rice as quickly as possible, ideally within one hour, then cover and refrigerate it. Use it within 24 hours, reheat it only once and make sure it is steaming hot throughout before serving."
+    },
+    {
+      question: "Are these complete recipes?",
+      answer: "No. They are source-led dinner ideas and practical notes that point to the established recipe for the full method, ingredients and timings. Follow the linked source recipe and its current instructions when cooking."
+    }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
   {
@@ -185296,6 +185349,20 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.contentReviewedAt,
     internalLinks: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.internalLinks,
     disclosures: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.disclosures,
+    status: "published"
+  },
+  {
+    title: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.title,
+    path: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.pageFamily,
+    primarySearchIntent: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.primarySearchIntent,
+    indexingStatus: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.indexingStatus,
+    publishedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.publishedAt,
+    reviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.reviewedAt,
+    contentReviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.contentReviewedAt,
+    internalLinks: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.internalLinks,
+    disclosures: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.disclosures,
     status: "published"
   },
   {
