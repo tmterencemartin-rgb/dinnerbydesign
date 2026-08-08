@@ -494,7 +494,7 @@ export const LandingView: React.FC = () => {
             Why I built DinnerByDesign
           </h3>
           <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-            I live on my own, which adds a layer of difficulty to grocery shopping and cooking. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
+            I live on my own, which means smaller portions, odd quantities and a lot of ingredients I can't use up before they go off. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
           </p>
           <p className="mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             My app starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
