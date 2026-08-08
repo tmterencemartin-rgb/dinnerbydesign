@@ -37,7 +37,7 @@ export const ContactView: React.FC = () => {
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6 sm:py-14">
       <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Contact</p>
-      <h1 className="mt-2 text-3xl font-bold leading-tight text-dbd-ink sm:text-4xl">Send an enquiry</h1>
+      <h1 className="mt-2 text-3xl font-bold leading-tight text-dbd-ink sm:text-4xl">Get in touch</h1>
       <p className="mt-4 max-w-xl text-[15px] leading-7 text-dbd-ink-3">Questions, feedback or a problem with the app? Send a message and we will get back to you by email.</p>
 
       {status === 'sent' ? (
