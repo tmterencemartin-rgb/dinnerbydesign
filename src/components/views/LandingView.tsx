@@ -487,52 +487,21 @@ export const LandingView: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. BUILT AROUND YOUR KITCHEN */}
-      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
-          
-          <div className="md:col-span-5 select-none">
-            <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
-              Built Around Your Kitchen
-            </span>
-            <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
-              Built around the way you cook.
-            </h3>
-          </div>
-
-          <div className="md:col-span-7">
-            <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed mb-8 max-w-prose select-none">
-              Set one or more of the 18 filters once, or adjust per search. DinnerByDesign pinpoints and shortlists recipes that fit your diet, budget, cooking method and time.
-            </p>
-            
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-8 text-[11.5px] sm:text-[13px] font-mono font-bold text-dbd-ink-3 uppercase tracking-wider select-none">
-              <div className="flex items-center gap-2.5 whitespace-nowrap">
-                <span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />
-                Diet & health
-              </div>
-              <div className="flex items-center gap-2.5 whitespace-nowrap">
-                <span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />
-                Cost
-              </div>
-              <div className="flex items-center gap-2.5 whitespace-nowrap">
-                <span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />
-                Time & effort
-              </div>
-              <div className="flex items-center gap-2.5 whitespace-nowrap">
-                <span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />
-                Cooking methods
-              </div>
-              <div className="flex items-center gap-2.5 whitespace-nowrap">
-                <span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />
-                Servings & style
-              </div>
-              <div className="flex items-center gap-2.5 whitespace-nowrap">
-                <span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />
-                Sourcing
-              </div>
-            </div>
-          </div>
-
+      {/* 5. WHY I BUILT DINNERBYDESIGN */}
+      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
+        <div className="max-w-prose text-left select-none">
+          <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-6">
+            Why I Built DinnerByDesign
+          </h3>
+          <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+            I live on my own, which adds a layer of difficulty to grocery shopping and cooking. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
+          </p>
+          <p className="mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+            My app starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
+          </p>
+          <p className="mt-6 text-[13px] font-ibm-plex-mono font-semibold text-dbd-accent">
+            Terence, Head chef
+          </p>
         </div>
       </section>
 
@@ -551,21 +520,31 @@ export const LandingView: React.FC = () => {
         </div>
       </section>
 
-      {/* WHY I BUILT DINNERBYDESIGN */}
-      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
-        <div className="max-w-prose text-left select-none">
-          <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-6">
-            Why I Built DinnerByDesign
-          </h3>
-          <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-            I live on my own, which adds a layer of difficulty to grocery shopping and cooking. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
-          </p>
-          <p className="mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-            My app starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
-          </p>
-          <p className="mt-6 text-[13px] font-ibm-plex-mono font-semibold text-dbd-accent">
-            Terence, Head chef
-          </p>
+      {/* BUILT AROUND YOUR KITCHEN */}
+      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+          <div className="md:col-span-5 select-none">
+            <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
+              Built Around Your Kitchen
+            </span>
+            <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
+              Built around the way you cook.
+            </h3>
+          </div>
+
+          <div className="md:col-span-7">
+            <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed mb-8 max-w-prose select-none">
+              Set one or more of the 18 filters once, or adjust per search. DinnerByDesign pinpoints and shortlists recipes that fit your diet, budget, cooking method and time.
+            </p>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-8 text-[11.5px] sm:text-[13px] font-mono font-bold text-dbd-ink-3 uppercase tracking-wider select-none">
+              <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Diet & health</div>
+              <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Cost</div>
+              <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Time & effort</div>
+              <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Cooking methods</div>
+              <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Servings & style</div>
+              <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Sourcing</div>
+            </div>
+          </div>
         </div>
       </section>
 
