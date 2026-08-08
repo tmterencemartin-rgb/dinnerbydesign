@@ -666,7 +666,7 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Budget-aware weekly planning</strong>: set a weekly target, build several personalised dinners and see their combined estimated cost before scheduling. <button type="button" onClick={() => setView('pricing-methodology')} className="font-semibold text-dbd-accent hover:underline">See how prices are calculated.</button></span>
+                <span><strong>Budget-aware weekly planning</strong>: set a weekly target, build a week of dinners and see their combined estimated cost before scheduling. <button type="button" onClick={() => setView('pricing-methodology')} className="font-semibold text-dbd-accent hover:underline">See how prices are calculated.</button></span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -678,7 +678,7 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Clutter-free and ad-free</strong>: no ads, sponsor blocks, long back stories, questionnaires, distracting food photography or unnecessary noise.</span>
+                <span><strong>Clutter-free and ad-free</strong>: no ads, sponsor blocks, lengthy back stories, questionnaires, distracting food photography or unnecessary noise.</span>
               </li>
             </ul>
           </div>
