@@ -491,7 +491,7 @@ export const LandingView: React.FC = () => {
       <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
         <div className="max-w-prose text-left select-none">
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-6">
-            Why I Built DinnerByDesign
+            Why I built DinnerByDesign
           </h3>
           <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             I live on my own, which adds a layer of difficulty to grocery shopping and cooking. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
@@ -528,7 +528,7 @@ export const LandingView: React.FC = () => {
               Built Around Your Kitchen
             </span>
             <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
-              built around the way you cook.
+              Built around the way you cook.
             </h3>
           </div>
 
