@@ -38,6 +38,7 @@ const PublicGuideFooter: React.FC = () => (
         <div className="min-w-0 sm:contents">
           <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Information</p>
           <div className="flex flex-col gap-1.5 sm:contents">
+            <a href="/contact" className="hover:text-dbd-accent">Contact us</a>
             <a href="/pricing-methodology" className="hover:text-dbd-accent">How prices are calculated</a>
             <a href="/food-safety" className="hover:text-dbd-accent">Food safety</a>
             <a href="/recipe-methodology" className="hover:text-dbd-accent">Recipe information</a>

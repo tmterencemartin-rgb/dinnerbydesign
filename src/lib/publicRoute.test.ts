@@ -5,6 +5,8 @@ describe('isPublicGuideRoute', () => {
   it('routes public guide families to the lightweight guide shell', () => {
     expect(isPublicGuideRoute('/guides')).toBe(true);
     expect(isPublicGuideRoute('/guides/')).toBe(true);
+    expect(isPublicGuideRoute('/contact')).toBe(true);
+    expect(isPublicGuideRoute('/contact/')).toBe(true);
     expect(isPublicGuideRoute('/dinner-plans')).toBe(true);
     expect(isPublicGuideRoute('/recipes')).toBe(true);
     expect(isPublicGuideRoute('/food-costs')).toBe(true);

@@ -18963,8 +18963,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml5;
-    function escapeHtml5(string) {
+    module2.exports = escapeHtml6;
+    function escapeHtml6(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -19095,13 +19095,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml5 = require_escape_html();
+    var escapeHtml6 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message2) {
-      var body = escapeHtml5(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml6(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -23043,7 +23043,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml5 = require_escape_html();
+    var escapeHtml6 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -23096,7 +23096,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml5(msg));
+      var doc = createHtmlDocument("Error", escapeHtml6(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -23196,7 +23196,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml5(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml6(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23600,7 +23600,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml5 = require_escape_html();
+    var escapeHtml6 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23939,7 +23939,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml5(address);
+          var u = escapeHtml6(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -24067,7 +24067,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml5 = require_escape_html();
+    var escapeHtml6 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -24153,7 +24153,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml5(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml6(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -183534,7 +183534,8 @@ async function sendEmail({
   to,
   subject,
   html,
-  from = "DinnerByDesign <terence@dinnerbydesign.app>"
+  from = "DinnerByDesign <terence@dinnerbydesign.app>",
+  replyTo
 }) {
   const resend = getResendClient();
   const resolvedFrom = resolveFromAddress(from);
@@ -183544,7 +183545,8 @@ async function sendEmail({
       from: resolvedFrom,
       to,
       subject,
-      html
+      html,
+      replyTo
     });
     if (!error) {
       console.log(`[Resend] Email successfully sent from standard sender: ${from}`);
@@ -183561,7 +183563,8 @@ async function sendEmail({
         from: fallbackFrom,
         to,
         subject,
-        html
+        html,
+        replyTo
       });
       if (retryResult.error) {
         console.log("[Resend] Fallback retry also returned status:", JSON.stringify(retryResult.error, null, 2));
@@ -183590,7 +183593,8 @@ async function sendEmail({
           from: fallbackFrom,
           to,
           subject,
-          html
+          html,
+          replyTo
         });
         if (retryResult.error) {
           throw retryResult.error;
@@ -185900,6 +185904,34 @@ Details: ${details}`);
 }
 var PRODUCTION_APP_URL = "https://dinnerbydesign.app";
 var ADMIN_EMAILS = /* @__PURE__ */ new Set(["tmterencemartin@gmail.com"]);
+var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
+var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
+var CONTACT_RATE_LIMIT_MAXIMUM = 4;
+var contactAttempts = /* @__PURE__ */ new Map();
+var escapeHtml5 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+function hasContactRateLimitCapacity(req) {
+  const forwardedFor = req.get("x-forwarded-for");
+  const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
+  const now = Date.now();
+  const recentAttempts = (contactAttempts.get(client) || []).filter((attempt) => now - attempt < CONTACT_RATE_LIMIT_WINDOW_MS);
+  if (recentAttempts.length >= CONTACT_RATE_LIMIT_MAXIMUM) {
+    contactAttempts.set(client, recentAttempts);
+    return false;
+  }
+  recentAttempts.push(now);
+  contactAttempts.set(client, recentAttempts);
+  return true;
+}
+function isTrustedContactOrigin(req) {
+  const origin = req.get("origin");
+  if (!origin) return false;
+  try {
+    const parsed = new URL(origin);
+    return parsed.origin === PRODUCTION_APP_URL || ["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
+  } catch {
+    return false;
+  }
+}
 function getAppOrigin(req) {
   const requestOrigin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get("host")}`;
   const origin = Array.isArray(requestOrigin) ? requestOrigin[0] : requestOrigin;
@@ -186886,6 +186918,44 @@ function createApp() {
           name: error.name || "EMAIL_FAILURE"
         }
       });
+    }
+  });
+  app.post("/api/contact", async (req, res) => {
+    if (!isTrustedContactOrigin(req)) {
+      return res.status(403).json({ ok: false, error: "This enquiry could not be sent from this site." });
+    }
+    const name = String(req.body?.name || "").trim();
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const message2 = String(req.body?.message || "").trim();
+    const company = String(req.body?.company || "").trim();
+    if (company) {
+      return res.status(200).json({ ok: true });
+    }
+    if (!name || !email || !message2 || name.length > 120 || email.length > 254 || message2.length > 4e3) {
+      return res.status(400).json({ ok: false, error: "Please enter your name, email address and message." });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ ok: false, error: "Please enter a valid email address." });
+    }
+    if (!hasContactRateLimitCapacity(req)) {
+      return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
+    }
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml5(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml5(email)}">${escapeHtml5(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml5(message2)}</div></div>`;
+    try {
+      const response = await sendTrackedEmail({
+        to: CONTACT_RECIPIENT,
+        subject: `DinnerByDesign enquiry from ${name}`,
+        html,
+        replyTo: email
+      }, {
+        type: "contact_enquiry",
+        source: "public_contact_form",
+        metadata: { name, replyTo: email }
+      });
+      return res.status(200).json({ ok: true, response });
+    } catch (error) {
+      console.error("[Contact] Failed to send enquiry:", error);
+      return res.status(503).json({ ok: false, error: "We could not send your enquiry just now. Please try again shortly." });
     }
   });
   app.get("/api/health", (_req, res) => {

@@ -118,11 +118,13 @@ export async function sendEmail({
   subject,
   html,
   from = 'DinnerByDesign <terence@dinnerbydesign.app>',
+  replyTo,
 }: {
   to: string | string[];
   subject: string;
   html: string;
   from?: string;
+  replyTo?: string;
 }) {
   const resend = getResendClient();
   const resolvedFrom = resolveFromAddress(from);
@@ -134,6 +136,7 @@ export async function sendEmail({
       to,
       subject,
       html,
+      replyTo,
     });
 
     if (!error) {
@@ -166,6 +169,7 @@ export async function sendEmail({
         to,
         subject,
         html,
+        replyTo,
       });
       
       if (retryResult.error) {
@@ -204,6 +208,7 @@ export async function sendEmail({
           to,
           subject,
           html,
+          replyTo,
         });
         
         if (retryResult.error) {

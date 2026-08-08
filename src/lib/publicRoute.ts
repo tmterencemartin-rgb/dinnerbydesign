@@ -4,6 +4,7 @@ const normalisePath = (pathName: string) =>
 export const isPublicGuideRoute = (pathName: string) => {
   const path = normalisePath(pathName);
   return path === '/guides'
+    || path === '/contact'
     || path === '/dinner-plans'
     || path === '/recipes'
     || path === '/food-costs'

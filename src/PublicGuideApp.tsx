@@ -186,6 +186,7 @@ const NineBudgetFriendlyDinnersWithEggsGuideView = React.lazy(() => import('./co
 const NineBudgetDinnersWithTinnedVegetablesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithTinnedVegetablesGuideView').then(module => ({ default: module.NineBudgetDinnersWithTinnedVegetablesGuideView })));
 const WholeChickenValueGuideView = React.lazy(() => import('./components/views/WholeChickenValueGuideView').then(module => ({ default: module.WholeChickenValueGuideView })));
 const BubbleAndSqueakBudgetDinnersGuideView = React.lazy(() => import('./components/views/BubbleAndSqueakBudgetDinnersGuideView').then(module => ({ default: module.BubbleAndSqueakBudgetDinnersGuideView })));
+const ContactView = React.lazy(() => import('./components/views/ContactView').then(module => ({ default: module.ContactView })));
 
 type SeoConfig = {
   title: string;
@@ -212,6 +213,15 @@ const guideSeo = (
 });
 
 const PUBLIC_ROUTES: Record<string, PublicRoute> = {
+  '/contact': {
+    seo: {
+      title: 'Contact DinnerByDesign',
+      description: 'Send an enquiry to DinnerByDesign.',
+      canonicalPath: '/contact',
+      noIndex: true,
+    },
+    render: () => <ContactView />,
+  },
   ...[PUBLIC_DINNER_PLANS_PATH, PUBLIC_RECIPES_PATH, PUBLIC_FOOD_COSTS_PATH].reduce<Record<string, PublicRoute>>((routes, pathwayPath) => {
     const pathway = getPublicPathway(pathwayPath);
     if (!pathway) return routes;

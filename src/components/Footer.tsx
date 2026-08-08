@@ -69,6 +69,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           <div className="min-w-0">
             <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Information</p>
             <div className="flex flex-col items-start gap-1.5 md:gap-2">
+              <a href="/contact" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Contact us</a>
               <a
                 href="/pricing-methodology"
                 onClick={(e) => {

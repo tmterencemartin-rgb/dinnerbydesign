@@ -54,6 +54,46 @@ function logApiError(type: string, error: any) {
 
 const PRODUCTION_APP_URL = "https://dinnerbydesign.app";
 const ADMIN_EMAILS = new Set(["tmterencemartin@gmail.com"]);
+const CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
+const CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const CONTACT_RATE_LIMIT_MAXIMUM = 4;
+const contactAttempts = new Map<string, number[]>();
+
+const escapeHtml = (value: string) => value
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#039;");
+
+function hasContactRateLimitCapacity(req: express.Request) {
+  const forwardedFor = req.get("x-forwarded-for");
+  const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
+  const now = Date.now();
+  const recentAttempts = (contactAttempts.get(client) || []).filter(attempt => now - attempt < CONTACT_RATE_LIMIT_WINDOW_MS);
+
+  if (recentAttempts.length >= CONTACT_RATE_LIMIT_MAXIMUM) {
+    contactAttempts.set(client, recentAttempts);
+    return false;
+  }
+
+  recentAttempts.push(now);
+  contactAttempts.set(client, recentAttempts);
+  return true;
+}
+
+function isTrustedContactOrigin(req: express.Request) {
+  const origin = req.get("origin");
+  if (!origin) return false;
+
+  try {
+    const parsed = new URL(origin);
+    return parsed.origin === PRODUCTION_APP_URL
+      || ["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
+  } catch {
+    return false;
+  }
+}
 
 function getAppOrigin(req: express.Request): string {
   const requestOrigin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get("host")}`;
@@ -212,7 +252,7 @@ async function recordEmailEvent({
 }
 
 async function sendTrackedEmail(
-  email: { to: string; subject: string; html: string; from?: string },
+  email: { to: string; subject: string; html: string; from?: string; replyTo?: string },
   meta: EmailEventMeta
 ) {
   try {
@@ -1242,6 +1282,52 @@ export function createApp() {
           name: error.name || "EMAIL_FAILURE"
         }
       });
+    }
+  });
+
+  app.post("/api/contact", async (req, res) => {
+    if (!isTrustedContactOrigin(req)) {
+      return res.status(403).json({ ok: false, error: "This enquiry could not be sent from this site." });
+    }
+
+    const name = String(req.body?.name || "").trim();
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const message = String(req.body?.message || "").trim();
+    const company = String(req.body?.company || "").trim();
+
+    if (company) {
+      return res.status(200).json({ ok: true });
+    }
+
+    if (!name || !email || !message || name.length > 120 || email.length > 254 || message.length > 4000) {
+      return res.status(400).json({ ok: false, error: "Please enter your name, email address and message." });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ ok: false, error: "Please enter a valid email address." });
+    }
+
+    if (!hasContactRateLimitCapacity(req)) {
+      return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
+    }
+
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml(message)}</div></div>`;
+
+    try {
+      const response = await sendTrackedEmail({
+        to: CONTACT_RECIPIENT,
+        subject: `DinnerByDesign enquiry from ${name}`,
+        html,
+        replyTo: email,
+      }, {
+        type: "contact_enquiry",
+        source: "public_contact_form",
+        metadata: { name, replyTo: email },
+      });
+      return res.status(200).json({ ok: true, response });
+    } catch (error) {
+      console.error("[Contact] Failed to send enquiry:", error);
+      return res.status(503).json({ ok: false, error: "We could not send your enquiry just now. Please try again shortly." });
     }
   });
 
