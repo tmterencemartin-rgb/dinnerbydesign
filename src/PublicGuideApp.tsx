@@ -147,6 +147,11 @@ import {
   WHOLE_CHICKEN_VALUE_GUIDE_PATH,
   getWholeChickenValueGuideJsonLd,
 } from './content/wholeChickenValueGuide';
+import {
+  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
+  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
+  getBubbleAndSqueakBudgetDinnersGuideJsonLd,
+} from './content/bubbleAndSqueakBudgetDinnersGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -180,6 +185,7 @@ const NineBudgetDinnersThreeCuisinesGuideView = React.lazy(() => import('./compo
 const NineBudgetFriendlyDinnersWithEggsGuideView = React.lazy(() => import('./components/views/NineBudgetFriendlyDinnersWithEggsGuideView').then(module => ({ default: module.NineBudgetFriendlyDinnersWithEggsGuideView })));
 const NineBudgetDinnersWithTinnedVegetablesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithTinnedVegetablesGuideView').then(module => ({ default: module.NineBudgetDinnersWithTinnedVegetablesGuideView })));
 const WholeChickenValueGuideView = React.lazy(() => import('./components/views/WholeChickenValueGuideView').then(module => ({ default: module.WholeChickenValueGuideView })));
+const BubbleAndSqueakBudgetDinnersGuideView = React.lazy(() => import('./components/views/BubbleAndSqueakBudgetDinnersGuideView').then(module => ({ default: module.BubbleAndSqueakBudgetDinnersGuideView })));
 
 type SeoConfig = {
   title: string;
@@ -363,6 +369,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [WHOLE_CHICKEN_VALUE_GUIDE_PATH]: {
     seo: guideSeo(WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH, getWholeChickenValueGuideJsonLd()),
     render: ({ search }) => <WholeChickenValueGuideView onFindDinners={search} />,
+  },
+  [BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH]: {
+    seo: guideSeo(BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH, getBubbleAndSqueakBudgetDinnersGuideJsonLd()),
+    render: ({ search }) => <BubbleAndSqueakBudgetDinnersGuideView onFindDinners={search} />,
   },
 };
 

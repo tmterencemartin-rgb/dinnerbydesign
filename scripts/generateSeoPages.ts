@@ -171,6 +171,12 @@ import {
   getWholeChickenValueGuideJsonLd,
   renderWholeChickenValueGuideInitialHtml,
 } from '../src/content/wholeChickenValueGuide';
+import {
+  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
+  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
+  getBubbleAndSqueakBudgetDinnersGuideJsonLd,
+  renderBubbleAndSqueakBudgetDinnersGuideInitialHtml,
+} from '../src/content/bubbleAndSqueakBudgetDinnersGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -630,6 +636,13 @@ await generateEditorialGuide(
   WHOLE_CHICKEN_VALUE_GUIDE_PATH,
   renderWholeChickenValueGuideInitialHtml,
   getWholeChickenValueGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
+  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
+  renderBubbleAndSqueakBudgetDinnersGuideInitialHtml,
+  getBubbleAndSqueakBudgetDinnersGuideJsonLd,
 );
 
 await generateEditorialGuide(

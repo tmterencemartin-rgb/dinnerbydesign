@@ -185290,8 +185290,52 @@ var WHOLE_CHICKEN_VALUE_GUIDE = {
   ]
 };
 
+// src/content/bubbleAndSqueakBudgetDinnersGuide.ts
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH = "/guides/nine-budget-dinners-built-around-bubble-and-squeak";
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE = {
+  title: "Nine budget dinners built around bubble and squeak",
+  seoTitle: "Nine Budget Dinners Built Around Bubble and Squeak | DinnerByDesign",
+  description: "Nine practical ways to turn bubble and squeak into a varied dinner, using eggs, beans, fish, leftover chicken and cupboard ingredients.",
+  publishedAt: "2026-08-08",
+  reviewedAt: "2026-08-08",
+  nextReviewAt: "2027-08-08",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find dinner ideas built around bubble and squeak",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-08",
+  editorialNotes: "Nine clearly labelled variations on one verified bubble-and-squeak method, with one separately sourced chickpea sauce.",
+  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak" },
+    { label: "Tomato & chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Can I make bubble and squeak without leftovers?", answer: "Yes. Cook potato and vegetables specifically for it, then cool them before frying. Cold potato helps the mixture hold together." },
+    { question: "What vegetables work in bubble and squeak?", answer: "Cabbage and sprouts are traditional, but cooked carrots, peas and greens can work too. Use vegetables that are safe to eat and have been stored properly." },
+    { question: "How do I stop bubble and squeak falling apart?", answer: "Use cold cooked potato, avoid overloading the pan and add a little flour, breadcrumbs or beaten egg if the mixture feels too loose." },
+    { question: "Can bubble and squeak be a dinner on its own?", answer: "Yes. Eggs, beans, fish, sausages or a sauce can turn it into a fuller dinner, depending on what is available." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.title,
+    path: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.pageFamily,
+    primarySearchIntent: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.primarySearchIntent,
+    indexingStatus: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.indexingStatus,
+    publishedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.publishedAt,
+    reviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.reviewedAt,
+    contentReviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.contentReviewedAt,
+    internalLinks: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.internalLinks,
+    disclosures: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: WHOLE_CHICKEN_VALUE_GUIDE.title,
     path: WHOLE_CHICKEN_VALUE_GUIDE_PATH,
