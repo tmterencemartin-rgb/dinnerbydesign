@@ -68,7 +68,7 @@ export const ContactView: React.FC = () => {
           <p className="text-xs leading-5 text-dbd-ink-3">We use your details only to respond to this enquiry. See our <a href="/privacy" className="font-semibold text-dbd-accent hover:underline">privacy information</a>.</p>
           <button type="submit" disabled={status === 'sending'} className="inline-flex min-h-11 items-center justify-center gap-2 bg-dbd-accent px-5 text-xs font-semibold text-white transition-colors hover:bg-dbd-accent-mid disabled:cursor-not-allowed disabled:opacity-70">
             <Send size={15} aria-hidden="true" />
-            {status === 'sending' ? 'Sending' : 'Send enquiry'}
+            {status === 'sending' ? 'Sending' : 'Send'}
           </button>
         </form>
       )}
