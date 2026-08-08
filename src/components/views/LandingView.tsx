@@ -847,8 +847,9 @@ export const LandingView: React.FC = () => {
                 © 2026 DinnerByDesign. All rights reserved.
               </span>
               <span className="hidden sm:inline">·</span>
-              <a 
-                href="mailto:terence@dinnerbydesign.app" 
+              <a
+                href="/contact"
+                aria-label="Contact DinnerByDesign"
                 className="font-bold text-dbd-accent hover:text-dbd-accent-mid transition-all"
               >
                 terence@dinnerbydesign.app
