@@ -799,7 +799,7 @@ export const LandingView: React.FC = () => {
               },
               {
                 question: 'Does it estimate shopping costs?',
-                answer: 'Yes. Items are grouped so you can work through the list more easily, with ingredients combined across scheduled dinners where the app can scale them sensibly.'
+                answer: 'Yes. Each shopping list shows an estimated cost, with items grouped so you can work through them more easily and ingredients combined across scheduled dinners where the app can scale them sensibly.'
               },
               {
                 question: 'Can DinnerByDesign plan dinners to a weekly budget?',
