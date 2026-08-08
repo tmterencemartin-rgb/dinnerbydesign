@@ -20,6 +20,7 @@ import { TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH } from './tinnedFishGuide';
 import { NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH } from './nineBudgetDinnersThreeCuisinesGuide';
 import { NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE, NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH } from './nineBudgetFriendlyDinnersWithEggsGuide';
 import { NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE, NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH } from './nineBudgetDinnersWithTinnedVegetablesGuide';
+import { WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH } from './wholeChickenValueGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -38,6 +39,13 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  {
+    title: WHOLE_CHICKEN_VALUE_GUIDE.title, path: WHOLE_CHICKEN_VALUE_GUIDE_PATH, category: 'Food cost guide',
+    pageFamily: WHOLE_CHICKEN_VALUE_GUIDE.pageFamily, primarySearchIntent: WHOLE_CHICKEN_VALUE_GUIDE.primarySearchIntent,
+    indexingStatus: WHOLE_CHICKEN_VALUE_GUIDE.indexingStatus, publishedAt: WHOLE_CHICKEN_VALUE_GUIDE.publishedAt,
+    reviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.reviewedAt, contentReviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.contentReviewedAt,
+    internalLinks: WHOLE_CHICKEN_VALUE_GUIDE.internalLinks, disclosures: WHOLE_CHICKEN_VALUE_GUIDE.disclosures, status: 'published',
+  },
   {
     title: TINNED_FISH_GUIDE.title,
     path: TINNED_FISH_GUIDE_PATH,

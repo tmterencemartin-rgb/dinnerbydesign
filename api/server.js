@@ -185260,8 +185260,52 @@ var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE = {
   ]
 };
 
+// src/content/wholeChickenValueGuide.ts
+var WHOLE_CHICKEN_VALUE_GUIDE_PATH = "/guides/is-a-whole-chicken-better-value-than-chicken-pieces";
+var WHOLE_CHICKEN_VALUE_GUIDE = {
+  title: "Is a whole chicken better value than chicken pieces?",
+  seoTitle: "Is a Whole Chicken Better Value Than Chicken Pieces? | DinnerByDesign",
+  description: "A practical guide to comparing a whole chicken with chicken pieces, including how to use the cuts, whether to joint it and when pre-cut chicken makes more sense.",
+  publishedAt: "2026-08-08",
+  reviewedAt: "2026-08-08",
+  nextReviewAt: "2027-08-08",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Decide whether a whole chicken is better value than chicken pieces",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-08",
+  editorialNotes: "A source-led buying guide that distinguishes whole-chicken planning from using leftover roast chicken.",
+  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "source_timing"],
+  sources: [
+    { label: "How to joint a raw chicken, BBC Good Food", url: "https://www.bbcgoodfood.com/videos/techniques/how-joint-raw-chicken-video" },
+    { label: "JFC Jamie's fried chicken, Jamie Oliver", url: "https://www.jamieoliver.com/recipes/chicken/jfc-jamie-s-fried-chicken/" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Is a whole chicken always cheaper than chicken pieces?", answer: "No. A whole chicken can offer good value when its cuts and carcass will be used, but current prices, freezer space and the parts your household prefers all matter." },
+    { question: "Do I need to joint a whole chicken?", answer: "No. Roasting it whole and dividing the cooked meat afterwards can work just as well. Jointing is useful when different cuts will be cooked in different dinners." },
+    { question: "What can I do with a chicken carcass?", answer: "Use it to make stock or soup if that fits your cooking. If it will not be used, include that honestly when deciding whether a whole chicken represents value." },
+    { question: "When are chicken pieces the better choice?", answer: "Pieces can make more sense for cooking for one, limited freezer space, a dinner needing one particular cut, or anyone who would rather not handle a whole raw bird." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: WHOLE_CHICKEN_VALUE_GUIDE.title,
+    path: WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+    category: "Food cost guide",
+    pageFamily: WHOLE_CHICKEN_VALUE_GUIDE.pageFamily,
+    primarySearchIntent: WHOLE_CHICKEN_VALUE_GUIDE.primarySearchIntent,
+    indexingStatus: WHOLE_CHICKEN_VALUE_GUIDE.indexingStatus,
+    publishedAt: WHOLE_CHICKEN_VALUE_GUIDE.publishedAt,
+    reviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.reviewedAt,
+    contentReviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.contentReviewedAt,
+    internalLinks: WHOLE_CHICKEN_VALUE_GUIDE.internalLinks,
+    disclosures: WHOLE_CHICKEN_VALUE_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: TINNED_FISH_GUIDE.title,
     path: TINNED_FISH_GUIDE_PATH,

@@ -165,6 +165,12 @@ import {
   getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
   renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml,
 } from '../src/content/nineBudgetDinnersWithTinnedVegetablesGuide';
+import {
+  WHOLE_CHICKEN_VALUE_GUIDE,
+  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  getWholeChickenValueGuideJsonLd,
+  renderWholeChickenValueGuideInitialHtml,
+} from '../src/content/wholeChickenValueGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -617,6 +623,13 @@ await generateEditorialGuide(
   NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
   renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml,
   getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  WHOLE_CHICKEN_VALUE_GUIDE,
+  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  renderWholeChickenValueGuideInitialHtml,
+  getWholeChickenValueGuideJsonLd,
 );
 
 await generateEditorialGuide(

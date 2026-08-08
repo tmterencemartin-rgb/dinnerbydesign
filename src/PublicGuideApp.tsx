@@ -142,6 +142,11 @@ import {
   NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
   getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
 } from './content/nineBudgetDinnersWithTinnedVegetablesGuide';
+import {
+  WHOLE_CHICKEN_VALUE_GUIDE,
+  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  getWholeChickenValueGuideJsonLd,
+} from './content/wholeChickenValueGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -174,6 +179,7 @@ const TinnedFishGuideView = React.lazy(() => import('./components/views/TinnedFi
 const NineBudgetDinnersThreeCuisinesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersThreeCuisinesGuideView').then(module => ({ default: module.NineBudgetDinnersThreeCuisinesGuideView })));
 const NineBudgetFriendlyDinnersWithEggsGuideView = React.lazy(() => import('./components/views/NineBudgetFriendlyDinnersWithEggsGuideView').then(module => ({ default: module.NineBudgetFriendlyDinnersWithEggsGuideView })));
 const NineBudgetDinnersWithTinnedVegetablesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithTinnedVegetablesGuideView').then(module => ({ default: module.NineBudgetDinnersWithTinnedVegetablesGuideView })));
+const WholeChickenValueGuideView = React.lazy(() => import('./components/views/WholeChickenValueGuideView').then(module => ({ default: module.WholeChickenValueGuideView })));
 
 type SeoConfig = {
   title: string;
@@ -353,6 +359,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH]: {
     seo: guideSeo(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE, NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH, getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd()),
     render: ({ search }) => <NineBudgetDinnersWithTinnedVegetablesGuideView onFindDinners={search} />,
+  },
+  [WHOLE_CHICKEN_VALUE_GUIDE_PATH]: {
+    seo: guideSeo(WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH, getWholeChickenValueGuideJsonLd()),
+    render: ({ search }) => <WholeChickenValueGuideView onFindDinners={search} />,
   },
 };
 
