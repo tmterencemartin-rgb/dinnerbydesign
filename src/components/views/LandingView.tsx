@@ -528,7 +528,7 @@ export const LandingView: React.FC = () => {
               Built Around Your Kitchen
             </span>
             <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
-              Built around the way you cook.
+              built around the way you cook.
             </h3>
           </div>
 
