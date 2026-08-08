@@ -658,15 +658,11 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Fast, focused results</strong>: get tailored dinner ideas quickly, without scrolling through ads, back stories or clutter.</span>
+                <span><strong>Fast, focused results</strong>: get tailored dinner ideas in seconds.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Recipe comparison</strong>: compare cost, calories, time, source, servings and ingredients side by side.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Cost and nutrition per portion</strong>: see estimated cost-per-portion, calorie information and nutritional breakdowns. <button type="button" onClick={() => setView('nutrition-methodology')} className="font-semibold text-dbd-accent hover:underline">How nutrition is estimated.</button></span>
+                <span><strong>Compare cost and nutrition</strong>: see estimated cost-per-portion, calories and nutritional breakdowns for each dinner, and compare cost, time, source, servings and ingredients side by side. <button type="button" onClick={() => setView('nutrition-methodology')} className="font-semibold text-dbd-accent hover:underline">How nutrition is estimated.</button></span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
