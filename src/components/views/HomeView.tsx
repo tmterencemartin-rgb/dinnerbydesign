@@ -389,7 +389,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     !currentRecipes?.length &&
     !currentReadyMeals?.length;
   const showCentredInitialSearch =
-    !hasPerformedSearch &&
     !isSearching &&
     !isAppending &&
     !currentRecipes?.length &&
