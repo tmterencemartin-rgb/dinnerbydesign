@@ -43,7 +43,7 @@ export const ContactView: React.FC = () => {
       {status === 'sent' ? (
         <section className="mt-8 border border-dbd-accent/20 bg-white p-6" aria-live="polite">
           <CheckCircle2 className="h-6 w-6 text-dbd-accent" aria-hidden="true" />
-          <h2 className="mt-3 text-xl font-semibold text-dbd-ink">Your enquiry has been sent</h2>
+          <h2 className="mt-3 text-xl font-semibold text-dbd-ink">Your message has been sent</h2>
           <p className="mt-2 text-sm leading-6 text-dbd-ink-3">Thank you. We will reply to {email}.</p>
         </section>
       ) : (
