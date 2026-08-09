@@ -159,6 +159,7 @@ import {
 } from './content/nineBudgetDinnersWithPotatoesGuide';
 import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd } from './content/nineBudgetDinnersWithRiceGuide';
 import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd } from './content/meatStretchingGuide';
+import { NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE, NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, getNineBudgetDinnersWithSavouryPiesGuideJsonLd } from './content/nineBudgetDinnersWithSavouryPiesGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -196,6 +197,7 @@ const BubbleAndSqueakBudgetDinnersGuideView = React.lazy(() => import('./compone
 const NineBudgetDinnersWithPotatoesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithPotatoesGuideView').then(module => ({ default: module.NineBudgetDinnersWithPotatoesGuideView })));
 const NineBudgetDinnersWithRiceGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithRiceGuideView').then(module => ({ default: module.NineBudgetDinnersWithRiceGuideView })));
 const MeatStretchingGuideView = React.lazy(() => import('./components/views/MeatStretchingGuideView').then(module => ({ default: module.MeatStretchingGuideView })));
+const NineBudgetDinnersWithSavouryPiesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithSavouryPiesGuideView').then(module => ({ default: module.NineBudgetDinnersWithSavouryPiesGuideView })));
 const ContactView = React.lazy(() => import('./components/views/ContactView').then(module => ({ default: module.ContactView })));
 
 type SeoConfig = {
@@ -400,6 +402,7 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   },
   [NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH]: { seo: guideSeo(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd()), render: ({ search }) => <NineBudgetDinnersWithRiceGuideView onFindDinners={search} /> },
   [MEAT_STRETCHING_GUIDE_PATH]: { seo: guideSeo(MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd()), render: ({ search }) => <MeatStretchingGuideView onFindDinners={search} /> },
+  [NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH]: { seo: guideSeo(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE, NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, getNineBudgetDinnersWithSavouryPiesGuideJsonLd()), render: ({ search }) => <NineBudgetDinnersWithSavouryPiesGuideView onFindDinners={search} /> },
 };
 
 const normalisePath = (pathName: string) =>

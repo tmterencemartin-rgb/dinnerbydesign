@@ -185433,8 +185433,46 @@ var MEAT_STRETCHING_GUIDE = {
   ]
 };
 
+// src/content/nineBudgetDinnersWithSavouryPiesGuide.ts
+var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH = "/guides/nine-budget-dinners-with-savoury-pies";
+var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE = {
+  title: "Nine budget dinners with savoury pies",
+  seoTitle: "Nine budget dinners with savoury pies | DinnerByDesign",
+  description: "Nine savoury pie dinners from established UK recipe sources, with practical ideas for stretching ingredients, using leftovers and choosing budget-friendly toppings.",
+  publishedAt: "2026-08-09",
+  reviewedAt: "2026-08-09",
+  nextReviewAt: "2027-02-09",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using savoury pies",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-09",
+  editorialNotes: "Nine source-led savoury pie dinners with adaptations clearly separated from publisher methods.",
+  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-beef-or-pork-mince", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/guides/nine-budget-dinners-with-potatoes", "/guides/nine-budget-dinners-with-tinned-vegetables", "/guides/seven-ways-to-make-meat-go-further", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Seven veg cottage pie, Tesco Real Food", url: "https://realfood.tesco.com/recipes/seven-veg-cottage-pie.html" },
+    { label: "Chip shop fish pie, Tesco Real Food", url: "https://realfood.tesco.com/recipes/chip-shop-fish-pie.html" },
+    { label: "Chicken and leek pot pies, Tesco Real Food", url: "https://realfood.tesco.com/recipes/chicken-and-leek-pot-pies.html" },
+    { label: "Cowboy pie, Tesco Real Food", url: "https://realfood.tesco.com/recipes/cowboy-pie.html" },
+    { label: "Lentil shepherd's pie with garlic and herb mash, Tesco Real Food", url: "https://realfood.tesco.com/recipes/lentil-shepherds-pie-with-garlic-and-herb-mash.html" },
+    { label: "Creamy mushroom pot pie, Tesco Real Food", url: "https://realfood.tesco.com/recipes/creamy-mushroom-pot-pie.html" },
+    { label: "Melting cheese and onion pie, Olive magazine", url: "https://www.olivemagazine.com/recipes/vegetarian/melting-cheese-and-onion-pie/" },
+    { label: "Chicken, tarragon and mushroom pies, Tesco Real Food", url: "https://realfood.tesco.com/recipes/chicken-tarragon-and-mushroom-pies.html" },
+    { label: "Corned beef pie, Tesco Real Food", url: "https://realfood.tesco.com/recipes/corned-beef-pie.html" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Can savoury pies help with budget cooking?", answer: "They can, when the filling and topping are chosen carefully. A pie can stretch smaller amounts of meat, fish, vegetables or pulses into a fuller dinner without relying on a large centrepiece ingredient." },
+    { question: "Do all savoury pies need pastry?", answer: "No. Mash, sliced potato, puff pastry, shortcrust pastry, filo and crumble-style toppings can all work, depending on the filling and what is already in the kitchen." },
+    { question: "Can I freeze savoury pies?", answer: "Some source recipes are marked freezable and some give specific freezing or reheating instructions. Follow the linked publisher guidance for the individual recipe, and use current Food Standards Agency advice for safe storage and reheating." },
+    { question: "Are pies always lower cost than other dinners?", answer: "No. The cost depends on the filling, topping, pack sizes and what is already at home. The useful point is that pies give small amounts of protein, vegetables or pulses somewhere practical to go." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  { title: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, category: "Practical cooking guide", pageFamily: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.disclosures, status: "published" },
   { title: MEAT_STRETCHING_GUIDE.title, path: MEAT_STRETCHING_GUIDE_PATH, category: "Practical cooking guide", pageFamily: MEAT_STRETCHING_GUIDE.pageFamily, primarySearchIntent: MEAT_STRETCHING_GUIDE.primarySearchIntent, indexingStatus: MEAT_STRETCHING_GUIDE.indexingStatus, publishedAt: MEAT_STRETCHING_GUIDE.publishedAt, reviewedAt: MEAT_STRETCHING_GUIDE.reviewedAt, contentReviewedAt: MEAT_STRETCHING_GUIDE.contentReviewedAt, internalLinks: MEAT_STRETCHING_GUIDE.internalLinks, disclosures: MEAT_STRETCHING_GUIDE.disclosures, status: "published" },
   { title: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, category: "Practical cooking guide", pageFamily: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.disclosures, status: "published" },
   {

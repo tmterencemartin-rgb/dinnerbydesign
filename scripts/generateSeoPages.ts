@@ -185,6 +185,7 @@ import {
 } from '../src/content/nineBudgetDinnersWithPotatoesGuide';
 import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd, renderNineBudgetDinnersWithRiceGuideInitialHtml } from '../src/content/nineBudgetDinnersWithRiceGuide';
 import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd, renderMeatStretchingGuideInitialHtml } from '../src/content/meatStretchingGuide';
+import { NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE, NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, getNineBudgetDinnersWithSavouryPiesGuideJsonLd, renderNineBudgetDinnersWithSavouryPiesGuideInitialHtml } from '../src/content/nineBudgetDinnersWithSavouryPiesGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -663,6 +664,8 @@ await generateEditorialGuide(
 await generateEditorialGuide(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, renderNineBudgetDinnersWithRiceGuideInitialHtml, getNineBudgetDinnersWithRiceGuideJsonLd);
 
 await generateEditorialGuide(MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, renderMeatStretchingGuideInitialHtml, getMeatStretchingGuideJsonLd);
+
+await generateEditorialGuide(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE, NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, renderNineBudgetDinnersWithSavouryPiesGuideInitialHtml, getNineBudgetDinnersWithSavouryPiesGuideJsonLd);
 
 await generateEditorialGuide(
   CHICKEN_THIGH_COST_GUIDE,
