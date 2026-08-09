@@ -82,6 +82,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
       '/guides/is-a-whole-chicken-better-value-than-chicken-pieces',
       '/guides/nine-budget-dinners-built-around-bubble-and-squeak',
       '/guides/nine-budget-dinners-with-potatoes',
+      '/guides/nine-budget-dinners-with-rice',
       '/food-costs/summer-stews-seasonal-vegetables',
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/guides/do-vegetables-in-dishes-count-towards-5-a-day',

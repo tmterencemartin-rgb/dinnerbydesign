@@ -23,6 +23,7 @@ import { NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE, NINE_BUDGET_DINNERS_W
 import { WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH } from './wholeChickenValueGuide';
 import { BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH } from './bubbleAndSqueakBudgetDinnersGuide';
 import { NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE, NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH } from './nineBudgetDinnersWithPotatoesGuide';
+import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH } from './nineBudgetDinnersWithRiceGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -41,6 +42,7 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  { title: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, category: 'Practical cooking guide', pageFamily: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.disclosures, status: 'published' },
   {
     title: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH, category: 'Practical cooking guide',
     pageFamily: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.primarySearchIntent,

@@ -183,6 +183,7 @@ import {
   getNineBudgetDinnersWithPotatoesGuideJsonLd,
   renderNineBudgetDinnersWithPotatoesGuideInitialHtml,
 } from '../src/content/nineBudgetDinnersWithPotatoesGuide';
+import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd, renderNineBudgetDinnersWithRiceGuideInitialHtml } from '../src/content/nineBudgetDinnersWithRiceGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -657,6 +658,8 @@ await generateEditorialGuide(
   renderNineBudgetDinnersWithPotatoesGuideInitialHtml,
   getNineBudgetDinnersWithPotatoesGuideJsonLd,
 );
+
+await generateEditorialGuide(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, renderNineBudgetDinnersWithRiceGuideInitialHtml, getNineBudgetDinnersWithRiceGuideJsonLd);
 
 await generateEditorialGuide(
   CHICKEN_THIGH_COST_GUIDE,

@@ -185361,8 +185361,46 @@ var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE = {
   ]
 };
 
+// src/content/nineBudgetDinnersWithRiceGuide.ts
+var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH = "/guides/nine-budget-dinners-with-rice";
+var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE = {
+  title: "Nine budget dinners with rice",
+  seoTitle: "Nine budget dinners with rice | DinnerByDesign",
+  description: "Nine varied rice-led dinners from established recipe sources, with practical ideas for leftovers, cupboard ingredients and reducing waste.",
+  publishedAt: "2026-08-09",
+  reviewedAt: "2026-08-09",
+  nextReviewAt: "2027-02-09",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using rice",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-09",
+  editorialNotes: "Nine source-led rice dinners that show how one cupboard staple can support varied cooking without treating rice as automatically the lowest-cost or superior staple.",
+  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-friendly-dinners-with-eggs", "/guides/nine-budget-dinners-with-tinned-vegetables", "/guides/nine-budget-dinners-three-cuisines", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Easy egg-fried rice, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-fried-rice" },
+    { label: "Tomato & chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry" },
+    { label: "Zesty lentil & haddock pilaf, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/zesty-lentil-haddock-pilaf" },
+    { label: "Next level kedgeree, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/next-level-kedgeree" },
+    { label: "Mushroom risotto, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/mushroom-risotto" },
+    { label: "Vegetable & bean chilli, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/vegetable-bean-chilli" },
+    { label: "Smoky spiced jollof rice & coconut-fried plantain, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/smoky-spiced-jollof-rice-coconut-fried-plantain" },
+    { label: "Stuffed peppers with rice, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/easy-stuffed-peppers" },
+    { label: "Cauliflower baked rice, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/cauliflower-baked-rice" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Can I use leftover rice for these dinners?", answer: "Egg-fried rice and stuffed peppers are useful options for properly cooled and refrigerated cooked rice. Follow Food Standards Agency guidance before using leftovers." },
+    { question: "Which rice should I buy?", answer: "Use the type named by the source recipe. Basmati, easy-cook, risotto rice and ready-cooked pouches behave differently, so swapping them can change the result." },
+    { question: "Does rice always make a dinner low cost?", answer: "No. The cost depends on the other ingredients, pack size and what is already at home. Rice is useful because it can take many different forms across the week." },
+    { question: "Can rice be used beyond curries and stir-fries?", answer: "Yes. This guide includes pilaf, kedgeree, risotto, chilli, jollof rice, stuffed peppers and a baked rice dish." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  { title: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, category: "Practical cooking guide", pageFamily: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.disclosures, status: "published" },
   {
     title: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.title,
     path: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
