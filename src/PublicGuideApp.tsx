@@ -158,6 +158,7 @@ import {
   getNineBudgetDinnersWithPotatoesGuideJsonLd,
 } from './content/nineBudgetDinnersWithPotatoesGuide';
 import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd } from './content/nineBudgetDinnersWithRiceGuide';
+import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd } from './content/meatStretchingGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -194,6 +195,7 @@ const WholeChickenValueGuideView = React.lazy(() => import('./components/views/W
 const BubbleAndSqueakBudgetDinnersGuideView = React.lazy(() => import('./components/views/BubbleAndSqueakBudgetDinnersGuideView').then(module => ({ default: module.BubbleAndSqueakBudgetDinnersGuideView })));
 const NineBudgetDinnersWithPotatoesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithPotatoesGuideView').then(module => ({ default: module.NineBudgetDinnersWithPotatoesGuideView })));
 const NineBudgetDinnersWithRiceGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithRiceGuideView').then(module => ({ default: module.NineBudgetDinnersWithRiceGuideView })));
+const MeatStretchingGuideView = React.lazy(() => import('./components/views/MeatStretchingGuideView').then(module => ({ default: module.MeatStretchingGuideView })));
 const ContactView = React.lazy(() => import('./components/views/ContactView').then(module => ({ default: module.ContactView })));
 
 type SeoConfig = {
@@ -397,6 +399,7 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
     render: ({ search }) => <NineBudgetDinnersWithPotatoesGuideView onFindDinners={search} />,
   },
   [NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH]: { seo: guideSeo(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd()), render: ({ search }) => <NineBudgetDinnersWithRiceGuideView onFindDinners={search} /> },
+  [MEAT_STRETCHING_GUIDE_PATH]: { seo: guideSeo(MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd()), render: ({ search }) => <MeatStretchingGuideView onFindDinners={search} /> },
 };
 
 const normalisePath = (pathName: string) =>

@@ -24,6 +24,7 @@ import { WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH } from './who
 import { BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH } from './bubbleAndSqueakBudgetDinnersGuide';
 import { NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE, NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH } from './nineBudgetDinnersWithPotatoesGuide';
 import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH } from './nineBudgetDinnersWithRiceGuide';
+import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH } from './meatStretchingGuide';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -42,6 +43,7 @@ export interface PublicArticleLink {
 }
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
+  { title: MEAT_STRETCHING_GUIDE.title, path: MEAT_STRETCHING_GUIDE_PATH, category: 'Practical cooking guide', pageFamily: MEAT_STRETCHING_GUIDE.pageFamily, primarySearchIntent: MEAT_STRETCHING_GUIDE.primarySearchIntent, indexingStatus: MEAT_STRETCHING_GUIDE.indexingStatus, publishedAt: MEAT_STRETCHING_GUIDE.publishedAt, reviewedAt: MEAT_STRETCHING_GUIDE.reviewedAt, contentReviewedAt: MEAT_STRETCHING_GUIDE.contentReviewedAt, internalLinks: MEAT_STRETCHING_GUIDE.internalLinks, disclosures: MEAT_STRETCHING_GUIDE.disclosures, status: 'published' },
   { title: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, category: 'Practical cooking guide', pageFamily: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.disclosures, status: 'published' },
   {
     title: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH, category: 'Practical cooking guide',

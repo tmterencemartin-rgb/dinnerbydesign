@@ -185398,8 +185398,44 @@ var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE = {
   ]
 };
 
+// src/content/meatStretchingGuide.ts
+var MEAT_STRETCHING_GUIDE_PATH = "/guides/seven-ways-to-make-meat-go-further";
+var MEAT_STRETCHING_GUIDE = {
+  title: "Seven ways to make meat go further with beans, lentils and mushrooms",
+  seoTitle: "Seven ways to make meat go further | DinnerByDesign",
+  description: "Seven familiar dinners showing how beans, lentils and mushrooms can make a smaller amount of meat go further without making dinner feel like a compromise.",
+  publishedAt: "2026-08-09",
+  reviewedAt: "2026-08-09",
+  nextReviewAt: "2027-02-09",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Ways to make meat go further with beans, lentils and mushrooms",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-09",
+  editorialNotes: "Seven source-led dinners that distinguish published recipe methods from practical, clearly labelled adaptations.",
+  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-beef-or-pork-mince", "/guides/nine-budget-dinners-with-tinned-vegetables", "/guides/nine-budget-dinners-with-rice", "/guides/cooking-with-pulses-on-a-budget", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Chilli con carne, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/chilli-con-carne-recipe" },
+    { label: "Cottage pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/775643/cottage-pie" },
+    { label: "Bean & sausage hotpot, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bean-and-sausage-hotpot" },
+    { label: "Fragrant chicken curry with chick peas, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/fragrant-chicken-curry-chick-peas" },
+    { label: "Spaghetti Bolognese, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/spaghetti-bolognese" },
+    { label: "Bacon & mushroom pasta, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bacon-mushroom-pasta" },
+    { label: "Beef meatballs with tomato sauce, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/beef-meatballs-with-tomato-sauce" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Can I replace all the meat with beans or lentils?", answer: "You can, but this guide is about making a smaller amount of meat cover more dinners. Start by replacing some of the meat, then adjust the seasoning and texture to suit the dish." },
+    { question: "Which lentils work best?", answer: "Green and brown lentils hold their shape in pies and sauces. Red lentils soften more, which suits chilli and tomato-based sauces." },
+    { question: "Do tinned beans need cooking first?", answer: "Tinned beans are already cooked. Drain and rinse them where the label suggests, then warm them through in the sauce or hotpot." },
+    { question: "Will mushrooms make a mince dish watery?", answer: "Finely chop them and cook them first so their moisture cooks away before they go into the sauce or filling." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  { title: MEAT_STRETCHING_GUIDE.title, path: MEAT_STRETCHING_GUIDE_PATH, category: "Practical cooking guide", pageFamily: MEAT_STRETCHING_GUIDE.pageFamily, primarySearchIntent: MEAT_STRETCHING_GUIDE.primarySearchIntent, indexingStatus: MEAT_STRETCHING_GUIDE.indexingStatus, publishedAt: MEAT_STRETCHING_GUIDE.publishedAt, reviewedAt: MEAT_STRETCHING_GUIDE.reviewedAt, contentReviewedAt: MEAT_STRETCHING_GUIDE.contentReviewedAt, internalLinks: MEAT_STRETCHING_GUIDE.internalLinks, disclosures: MEAT_STRETCHING_GUIDE.disclosures, status: "published" },
   { title: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, category: "Practical cooking guide", pageFamily: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.disclosures, status: "published" },
   {
     title: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.title,
