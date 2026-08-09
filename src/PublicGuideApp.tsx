@@ -152,6 +152,11 @@ import {
   BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
   getBubbleAndSqueakBudgetDinnersGuideJsonLd,
 } from './content/bubbleAndSqueakBudgetDinnersGuide';
+import {
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE,
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
+  getNineBudgetDinnersWithPotatoesGuideJsonLd,
+} from './content/nineBudgetDinnersWithPotatoesGuide';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -186,6 +191,7 @@ const NineBudgetFriendlyDinnersWithEggsGuideView = React.lazy(() => import('./co
 const NineBudgetDinnersWithTinnedVegetablesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithTinnedVegetablesGuideView').then(module => ({ default: module.NineBudgetDinnersWithTinnedVegetablesGuideView })));
 const WholeChickenValueGuideView = React.lazy(() => import('./components/views/WholeChickenValueGuideView').then(module => ({ default: module.WholeChickenValueGuideView })));
 const BubbleAndSqueakBudgetDinnersGuideView = React.lazy(() => import('./components/views/BubbleAndSqueakBudgetDinnersGuideView').then(module => ({ default: module.BubbleAndSqueakBudgetDinnersGuideView })));
+const NineBudgetDinnersWithPotatoesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithPotatoesGuideView').then(module => ({ default: module.NineBudgetDinnersWithPotatoesGuideView })));
 const ContactView = React.lazy(() => import('./components/views/ContactView').then(module => ({ default: module.ContactView })));
 
 type SeoConfig = {
@@ -383,6 +389,10 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   [BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH]: {
     seo: guideSeo(BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH, getBubbleAndSqueakBudgetDinnersGuideJsonLd()),
     render: ({ search }) => <BubbleAndSqueakBudgetDinnersGuideView onFindDinners={search} />,
+  },
+  [NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH]: {
+    seo: guideSeo(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE, NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH, getNineBudgetDinnersWithPotatoesGuideJsonLd()),
+    render: ({ search }) => <NineBudgetDinnersWithPotatoesGuideView onFindDinners={search} />,
   },
 };
 

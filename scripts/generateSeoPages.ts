@@ -177,6 +177,12 @@ import {
   getBubbleAndSqueakBudgetDinnersGuideJsonLd,
   renderBubbleAndSqueakBudgetDinnersGuideInitialHtml,
 } from '../src/content/bubbleAndSqueakBudgetDinnersGuide';
+import {
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE,
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
+  getNineBudgetDinnersWithPotatoesGuideJsonLd,
+  renderNineBudgetDinnersWithPotatoesGuideInitialHtml,
+} from '../src/content/nineBudgetDinnersWithPotatoesGuide';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -643,6 +649,13 @@ await generateEditorialGuide(
   BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
   renderBubbleAndSqueakBudgetDinnersGuideInitialHtml,
   getBubbleAndSqueakBudgetDinnersGuideJsonLd,
+);
+
+await generateEditorialGuide(
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE,
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
+  renderNineBudgetDinnersWithPotatoesGuideInitialHtml,
+  getNineBudgetDinnersWithPotatoesGuideJsonLd,
 );
 
 await generateEditorialGuide(

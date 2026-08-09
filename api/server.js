@@ -185324,8 +185324,59 @@ var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE = {
   ]
 };
 
+// src/content/nineBudgetDinnersWithPotatoesGuide.ts
+var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH = "/guides/nine-budget-dinners-with-potatoes";
+var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE = {
+  title: "Nine budget dinners with potatoes",
+  seoTitle: "Nine budget dinners with potatoes | DinnerByDesign",
+  description: "Nine varied potato-led dinners from established recipe sources, with practical ideas for leftovers, cupboard ingredients and reducing waste.",
+  publishedAt: "2026-08-09",
+  reviewedAt: "2026-08-09",
+  nextReviewAt: "2027-02-09",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using potatoes",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-09",
+  editorialNotes: "Nine source-led potato dinners that show how one bag can support varied cooking without treating potatoes as automatically the lowest-cost or superior staple.",
+  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-friendly-dinners-with-eggs", "/guides/nine-budget-dinners-with-tinned-vegetables", "/guides/nine-budget-dinners-built-around-bubble-and-squeak", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Spanish tortilla, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/spanish-tortilla" },
+    { label: "Dum aloo potato curry, Krumpli", url: "https://www.krumpli.co.uk/dum-aloo-curry/" },
+    { label: "Sausage, onion and potato tray bake, Love Food Hate Waste", url: "https://www.lovefoodhatewaste.com/foods-and-recipes/sausage-onion-and-potato-tray-bake" },
+    { label: "Pea & mint fishcakes, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/pea-mint-fishcakes" },
+    { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak" },
+    { label: "Leek and potato soup, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/leek-and-potato-soup?navref=quicklink" },
+    { label: "Gnocchi with creamy tomato & spinach sauce, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/10338/gnocchi-with-creamy-tomato-and-spinach-sauce" },
+    { label: "Golden veggie shepherd's pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/10035/golden-veggie-shepherds-pie" },
+    { label: "Potato hash with greens, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/potato-hash-with-greens" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Which potatoes work best for these dinners?", answer: "Use the variety suggested by the source recipe where it specifies one. Otherwise, choose what is already in the cupboard and adapt the cooking time until the potato is tender." },
+    { question: "Can leftover cooked potato be used in these dinners?", answer: "Yes. Spanish tortilla, fishcakes, bubble and squeak, shepherd\u2019s pie and hash are all useful places for cooked potato, provided it has been cooled and stored safely." },
+    { question: "Can I use tinned potatoes?", answer: "The dum aloo recipe specifically includes instructions for tinned new potatoes. They can be useful when peeling and boiling fresh potatoes is not practical." },
+    { question: "Are potatoes always the lowest-cost staple?", answer: "No. The best value depends on the shop, season, pack size and what is already at home. Potatoes are useful because one bag can take several different forms across the week." }
+  ]
+};
+
 // src/content/publicArticles.ts
 var PUBLIC_ARTICLES = [
+  {
+    title: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.title,
+    path: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
+    category: "Practical cooking guide",
+    pageFamily: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.pageFamily,
+    primarySearchIntent: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.primarySearchIntent,
+    indexingStatus: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.indexingStatus,
+    publishedAt: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.publishedAt,
+    reviewedAt: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.reviewedAt,
+    contentReviewedAt: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.contentReviewedAt,
+    internalLinks: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.internalLinks,
+    disclosures: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.disclosures,
+    status: "published"
+  },
   {
     title: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.title,
     path: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
