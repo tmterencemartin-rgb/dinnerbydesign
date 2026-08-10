@@ -1,5 +1,10 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
-import { renderProgrammaticDisclosureFooterInitialHtml, renderProgrammaticDisclosuresInitialHtml } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH = '/guides/nine-budget-dinners-with-rice';
 
@@ -43,9 +48,7 @@ export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE = {
   ],
 };
 
-interface GuideSection { title?: string; paragraphs: string[]; relatedLink?: { label: string; url: string }; }
-
-export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS: GuideSection[] = [
+export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS: PublicGuideSection[] = [
   { paragraphs: [
     "A bag of rice keeps for months in the cupboard, which makes it a sensible thing to have in whether or not there is a specific dinner planned around it. It works with vegetables, eggs, beans, fish and small amounts of meat, and it moves easily between cuisines, from a curry to a risotto to a stir-fry.",
     'Rice is not always the lowest-cost staple, or nutritionally better than pasta, potatoes or bread. A single bag can still support a varied run of dinners, particularly when it is paired with whatever else is already in the cupboard, fridge or freezer that week.',
@@ -67,21 +70,31 @@ export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS: GuideSection[] = [
 ];
 
 export function getNineBudgetDinnersWithRiceGuideJsonLd() {
-  const guide = NINE_BUDGET_DINNERS_WITH_RICE_GUIDE;
-  const url = `https://dinnerbydesign.app${NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH}`;
-  return { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': `${url}#article`, headline: guide.title, description: guide.description, datePublished: guide.publishedAt, dateModified: guide.reviewedAt, author: { '@type': 'Organization', name: guide.editorialOwner }, publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' }, mainEntityOfPage: url, citation: guide.sources.map(source => source.url) },
-    { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' }, { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' }, { '@type': 'ListItem', position: 3, name: guide.title, item: url }] },
-  ] };
+  return getPublicGuideJsonLd(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD);
 }
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderNineBudgetDinnersWithRiceGuideInitialHtml() {
-  const guide = NINE_BUDGET_DINNERS_WITH_RICE_GUIDE;
-  const sections = NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS.map(section => `<section>${section.title ? `<h2>${escapeHtml(section.title)}</h2>` : ''}${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}${section.relatedLink ? `<p>Related guide: <a href="${escapeHtml(section.relatedLink.url)}">${escapeHtml(section.relatedLink.label)}</a></p>` : ''}</section>`).join('');
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 9 August 2026 · Last reviewed 9 August 2026</p><article>${sections}${renderProgrammaticDisclosuresInitialHtml(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURES)}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${renderProgrammaticDisclosureFooterInitialHtml(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURE_FOOTER)}</article><section><h2>Find dinners for tonight</h2><p>Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.</p><p><a href="/signin">Find dinners</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD);
 }
+
+export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'nine-budget-dinners-with-rice',
+  slug: 'nine-budget-dinners-with-rice',
+  path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'standard',
+  ...NINE_BUDGET_DINNERS_WITH_RICE_GUIDE,
+  metaDescription: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.description,
+  label: 'Practical cooking guide',
+  disclosureItems: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS,
+  cta: {
+    title: 'Find dinners for tonight',
+    copy: 'Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.',
+    label: 'Find dinners',
+    href: '/signin',
+  },
+};

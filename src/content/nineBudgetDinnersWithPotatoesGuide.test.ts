@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE, NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH, getNineBudgetDinnersWithPotatoesGuideJsonLd, renderNineBudgetDinnersWithPotatoesGuideInitialHtml } from './nineBudgetDinnersWithPotatoesGuide';
+import {
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE,
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
+  getNineBudgetDinnersWithPotatoesGuideJsonLd,
+  renderNineBudgetDinnersWithPotatoesGuideInitialHtml,
+} from './nineBudgetDinnersWithPotatoesGuide';
 
 describe('nine budget dinners with potatoes public guide', () => {
   it('renders the approved dinners, sources, links and handoff', () => {
@@ -8,6 +14,7 @@ describe('nine budget dinners with potatoes public guide', () => {
     expect(html).toContain('4. Pea and mint fishcakes');
     expect(html).toContain('coated in breadcrumbs and fried until golden');
     expect(html).toContain('href="/guides/nine-budget-dinners-built-around-bubble-and-squeak"');
+    expect(html).toContain(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD.cta.copy);
     NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.sources.forEach(source => expect(html).toContain(`href="${source.url}"`));
     expect(html.match(/href="\/signin"/g)).toHaveLength(1);
     expect(html.replace(/href="[^"]+"/g, '').toLowerCase()).not.toContain('meal');
@@ -17,5 +24,6 @@ describe('nine budget dinners with potatoes public guide', () => {
     const jsonLd = getNineBudgetDinnersWithPotatoesGuideJsonLd();
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH}`);
+    expect(jsonLd['@graph'][0].citation).toHaveLength(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD.sources.length);
   });
 });

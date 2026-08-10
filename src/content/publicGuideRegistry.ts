@@ -1,9 +1,17 @@
 import {
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
 } from './nineBudgetDinnersWithSavouryPiesGuide';
+import {
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
+} from './nineBudgetDinnersWithPotatoesGuide';
+import {
+  NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
+} from './nineBudgetDinnersWithRiceGuide';
 import type { PublicGuideRecord } from './publicGuideModel';
 
 export const PUBLIC_GUIDE_RECORDS = [
+  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
+  NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
 ] satisfies PublicGuideRecord[];
 

@@ -185326,6 +185326,16 @@ var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE = {
 
 // src/content/nineBudgetDinnersWithPotatoesGuide.ts
 var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH = "/guides/nine-budget-dinners-with-potatoes";
+var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_DISCLOSURES = [
+  { key: "price_comparison", title: "A note on budget wording", body: "This guide uses no live retailer prices or fixed savings. What each dinner costs depends on current prices, the ingredients already at home and the products chosen." },
+  { key: "storage_and_cooking", title: "Storage and cooking safety", body: "Cool, store and reheat cooked potato and other leftovers safely. Follow the linked recipe and current Food Standards Agency guidance, as timings and storage advice vary." },
+  { key: "allergen_and_product", title: "Ingredients and allergens", body: "Fish, eggs, dairy, sausages, pesto, mustard, stock and other packaged ingredients vary by product and may contain allergens. Check labels for everyone eating the dinner." },
+  { key: "source_timing", title: "Source review", body: "The recipe and food-safety sources were checked on 9 August 2026. Follow the linked publisher page for the current ingredients, method and timings." }
+];
+var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers source-led dinner ideas rather than complete recipes. Ingredients, cooking instructions, storage advice and allergens vary between products and publishers.",
+  links: [{ href: "/guides", label: "Browse all guides" }, { href: "/food-safety", label: "Food safety" }]
+};
 var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE = {
   title: "Nine budget dinners with potatoes",
   seoTitle: "Nine budget dinners with potatoes | DinnerByDesign",
@@ -185360,9 +185370,88 @@ var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE = {
     { question: "Are potatoes always the lowest-cost staple?", answer: "No. The best value depends on the shop, season, pack size and what is already at home. Potatoes are useful because one bag can take several different forms across the week." }
   ]
 };
+var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_SECTIONS = [
+  { paragraphs: [
+    "Potatoes work well in cost-conscious cooking for practical reasons rather than any single one. A bag keeps for weeks in a cool, dark place, so it does not need using up in a hurry the way fresh vegetables often do. It combines easily with whatever else is around, whether that is a tin of something, a handful of frozen vegetables, a few eggs or the last of a joint of meat.",
+    "None of that means potatoes are always the lowest-cost option, or that they are nutritionally superior to rice, pasta or other staples. A single bag can, though, support several genuinely different dinners across a week, particularly when it is paired with cupboard basics rather than served on its own.",
+    "The nine dinners below are taken from established recipe publishers. Each uses potato differently: as the base of a curry, folded into a fry-up, layered under a pie, stirred into soup, or bound into cakes and dumplings."
+  ] },
+  { title: "1. Spanish tortilla", paragraphs: [
+    "A thick potato and onion omelette, cooked slowly until the base and edges are golden and the middle is just set, served warm or at room temperature. BBC Good Food lists it as serving four, with thirty minutes of preparation and fifty minutes of cooking.",
+    "Potato is the bulk of the dish rather than a side. A pepper, leftover cooked vegetables or a handful of peas can go in with the onion, and cooked potato from an earlier dinner can reduce the preparation time."
+  ] },
+  { title: "2. Dum aloo potato curry", paragraphs: [
+    "Krumpli\u2019s North Indian and Bangladeshi potato curry fries new potatoes in ghee, then simmers them in a spiced tomato gravy thickened with cashew nuts and finished with cream. It serves two and gives instructions for tinned new potatoes as well as fresh.",
+    "Serve it with rice or flatbread when that suits the household. The sauce keeps for three to five days, making it a reasonable one to prepare ahead."
+  ] },
+  { title: "3. Sausage, onion and potato tray bake", paragraphs: [
+    "Love Food Hate Waste combines sausages, onion and thickly sliced new potatoes with oil, mustard and thyme, then roasts everything together in one tray. It serves four and takes forty minutes.",
+    "Potatoes and onion make up most of the volume, allowing a modest number of sausages to cover the whole dish. The recipe notes that the potatoes need washing rather than peeling, and leftover portions should be refrigerated and reheated only once until piping hot."
+  ] },
+  { title: "4. Pea and mint fishcakes", paragraphs: [
+    "Flaked cooked fish is mixed with mashed potato, pea and mint pesto, spring onion and egg, shaped into cakes, coated in breadcrumbs and fried until golden. BBC Good Food\u2019s version uses potato to give the fishcakes their bulk and hold them together.",
+    "Frozen peas can stand in for fresh, and a small amount of leftover mash has a clear use here. Shape and chill the cakes in advance when that makes the evening easier."
+  ] },
+  { title: "5. Bubble and squeak", paragraphs: [
+    "Cold leftover mash fried with cabbage or sprouts, onion, garlic and a little bacon until crisp at the edges. BBC Good Food\u2019s recipe serves four, with ten minutes of preparation and twenty minutes of cooking.",
+    "A fried or poached egg on top makes it a fuller dinner. This is one of the most direct ways to use cooked potato and vegetables from a previous roast rather than letting them sit in the fridge without a plan."
+  ], relatedLink: { label: "Nine budget dinners built around bubble and squeak", url: "/guides/nine-budget-dinners-built-around-bubble-and-squeak" } },
+  { title: "6. Leek and potato soup", paragraphs: [
+    "The Food Standards Agency recipe simmers leeks and potatoes in stock until soft, then seasons and serves the soup with crusty bread. It serves six, takes fifty minutes and is described by the FSA as a low-budget, hearty soup.",
+    "Potato gives the soup body without requiring cream or flour. A leek or potato that looks a little tired but is still sound is suitable once it has been trimmed and cooked."
+  ] },
+  { title: "7. Gnocchi with creamy tomato and spinach sauce", paragraphs: [
+    "Potato gnocchi is tossed with a tomato and mascarpone sauce, with spinach wilted through at the end and Parmesan and basil to serve. BBC Good Food lists four servings, with ten minutes of preparation and ten minutes of cooking.",
+    "It is a different potato format from the fry-ups and bakes above, closer to pasta. This is also a useful place for the end of a bag of spinach before it wilts beyond use."
+  ] },
+  { title: "8. Golden veggie shepherd's pie", paragraphs: [
+    "A filling of lentils, carrots, celery and mushrooms in a tomato and wine sauce, topped with mashed potato and grated cheddar, then baked until golden. The potato topping turns a pan of lentils and vegetables into a substantial dinner.",
+    "The source recipe is designed for batch cooking and freezing in individual portions. Tinned green lentils can replace dried ones when the cooking time needs shortening, and the wine is optional."
+  ] },
+  { title: "9. Potato hash with greens", paragraphs: [
+    "Diced potato is fried with onion and pepper, seasoned with paprika and tarragon, finished with spinach and topped with a poached egg. BBC Good Food lists two servings, with ten minutes of preparation and forty minutes of cooking.",
+    "A tin of beans can be stirred through to add bulk, although it is an adaptation rather than part of the published recipe. Poaching the eggs in the reserved potato water saves using a separate pan."
+  ] },
+  { title: "Storing potatoes and using leftovers", paragraphs: [
+    "Keep raw potatoes somewhere cool, dark and well ventilated, rather than in the fridge. A cupboard or paper bag away from direct light works better than a plastic bag, which can trap moisture and speed up sprouting.",
+    "Cool cooked potato promptly, cover it and refrigerate it. Eat leftovers within a couple of days and reheat them only once, until piping hot throughout. Check the Food Standards Agency guidance before using anything that has been in the fridge for more than a day or two.",
+    "A bag of potatoes does not need to dictate a week of familiar dinners. It can turn up in a curry, soup, pie or fry-up, alongside whatever tinned, frozen or fresh ingredients happen to be around."
+  ], relatedLink: { label: "Browse the guides library", url: "/guides" } }
+];
+var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD = {
+  id: "nine-budget-dinners-with-potatoes",
+  slug: "nine-budget-dinners-with-potatoes",
+  path: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE,
+  metaDescription: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_SECTIONS,
+  cta: {
+    title: "Find dinners for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
+    label: "Find dinners",
+    href: "/signin"
+  }
+};
 
 // src/content/nineBudgetDinnersWithRiceGuide.ts
 var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH = "/guides/nine-budget-dinners-with-rice";
+var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURES = [
+  { key: "price_comparison", title: "A note on budget wording", body: "This guide uses no live retailer prices or fixed savings. What each dinner costs depends on current prices, the ingredients already at home and the products chosen." },
+  { key: "storage_and_cooking", title: "Storage and cooking safety", body: "Cool, store and reheat cooked rice and other leftovers safely. Follow the linked recipe and current Food Standards Agency guidance, as timings and storage advice vary." },
+  { key: "allergen_and_product", title: "Ingredients and allergens", body: "Fish, eggs, dairy, stock, pesto, mustard, coconut products and other packaged ingredients vary by product and may contain allergens. Check labels for everyone eating the dinner." },
+  { key: "source_timing", title: "Source review", body: "The recipe and food-safety sources were checked on 9 August 2026. Follow the linked publisher page for the current ingredients, method and timings." }
+];
+var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers source-led dinner ideas rather than complete recipes. Ingredients, cooking instructions, storage advice and allergens vary between products and publishers.",
+  links: [{ href: "/guides", label: "Browse all guides" }, { href: "/food-safety", label: "Food safety" }]
+};
 var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE = {
   title: "Nine budget dinners with rice",
   seoTitle: "Nine budget dinners with rice | DinnerByDesign",
@@ -185396,6 +185485,47 @@ var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE = {
     { question: "Does rice always make a dinner low cost?", answer: "No. The cost depends on the other ingredients, pack size and what is already at home. Rice is useful because it can take many different forms across the week." },
     { question: "Can rice be used beyond curries and stir-fries?", answer: "Yes. This guide includes pilaf, kedgeree, risotto, chilli, jollof rice, stuffed peppers and a baked rice dish." }
   ]
+};
+var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS = [
+  { paragraphs: [
+    "A bag of rice keeps for months in the cupboard, which makes it a sensible thing to have in whether or not there is a specific dinner planned around it. It works with vegetables, eggs, beans, fish and small amounts of meat, and it moves easily between cuisines, from a curry to a risotto to a stir-fry.",
+    "Rice is not always the lowest-cost staple, or nutritionally better than pasta, potatoes or bread. A single bag can still support a varied run of dinners, particularly when it is paired with whatever else is already in the cupboard, fridge or freezer that week.",
+    "Cooked rice needs careful handling. Check the Food Standards Agency guidance before building a dinner around rice that has been in the fridge for a day or two."
+  ] },
+  { title: "1. Easy egg-fried rice", paragraphs: ["A stir-fry of rice, egg, onion and spring onion, seasoned to taste. BBC Good Food lists four servings, with ten minutes of preparation and ten minutes of cooking.", "Cold, day-old rice fries well, making this a direct use for a rice-based leftover. Frozen peas, sweetcorn or diced carrot are useful additions when vegetables need using."] },
+  { title: "2. Tomato and chickpea curry", paragraphs: ["Chickpeas warmed in a spiced tomato and coconut sauce, served with rice. It serves four, with ten minutes of preparation and forty-five minutes of cooking.", "Rice turns a tinned-ingredient sauce into dinner. The sauce freezes well on its own, so it can be paired with freshly cooked rice on a different night."] },
+  { title: "3. Zesty lentil and haddock pilaf", paragraphs: ["Rice and lentils are folded through with flaked smoked haddock, lemon zest and parsley, then topped with almonds and crisp fried onions. It serves four, with four minutes of preparation and sixteen minutes of cooking.", "Rice and lentils give the dish its bulk, so a modest amount of fish goes a long way. The almonds can be left out and another smoked or white fish can be used instead."] },
+  { title: "4. Next level kedgeree", paragraphs: ["Smoked haddock in a curried, cream-enriched sauce, stirred through rice and topped with a poached egg, coriander and garam masala. It serves four, with thirty minutes of preparation and forty-five minutes of cooking.", "The sauce can be made a day ahead and kept chilled for up to two days, then reheated with freshly cooked rice. Frozen peas are an optional addition in the source recipe."] },
+  { title: "5. Mushroom risotto", paragraphs: ["Arborio rice is cooked with stock made from soaked dried mushrooms, fresh mushrooms, butter and cheese until creamy and tender. It serves four, with five minutes of preparation and twenty-five minutes of cooking, plus soaking.", "This is the dinner where the rice itself does most of the work. The source suggests chicken, roasted pumpkin or butternut squash as ways to vary it."] },
+  { title: "6. Vegetable and bean chilli with rice", paragraphs: ["A chilli of courgette, peppers, red lentils, tomatoes, sweetcorn and butter beans, served with rice. It serves four, with ten minutes of preparation and thirty-five minutes of cooking.", "Rice gives the chilli a useful base, and the sauce freezes well for another dinner. Tinned beans and whatever vegetables need using can keep it flexible."] },
+  { title: "7. Smoky spiced jollof rice", paragraphs: ["Rice cooks in a smoky blended tomato and pepper sauce and is served with coconut-fried plantain. It serves six, with ten minutes of preparation and forty minutes of cooking.", "The source recipe freezes half the tomato and pepper mix for a future dinner, which makes the next batch simpler to prepare."] },
+  { title: "8. Stuffed peppers with rice", paragraphs: ["Peppers are softened in the microwave, then filled with ready-cooked rice, pesto, olives and goat\u2019s cheese before cooking again until hot. It serves four, with five minutes of preparation and ten minutes of cooking.", "The recipe uses ready-cooked rice pouches as a cupboard standby. Properly cooled leftover rice can be used instead, and another soft cheese can replace goat\u2019s cheese."] },
+  { title: "9. Cauliflower baked rice", paragraphs: ["Rice bakes under foil with cauliflower, onion, dried fruit and boiling water until tender, then is finished with feta, olives and herbs. It serves six to eight, with fifteen minutes of preparation and forty-five minutes of cooking.", "The rice cooks directly in the oven rather than being boiled separately, making this the only baked rice dinner on the list. Broccoli or leeks can stand in for some of the cauliflower."] },
+  { title: "Using rice across the week", paragraphs: [
+    "There is no need to cook a large pan of rice and work through it without a plan. Cook a fresh batch for one dinner, such as the tomato and chickpea curry, then use properly cooled and refrigerated rice in egg-fried rice or stuffed peppers later in the week.",
+    "A limited shop does not have to mean a repetitive one. Rice can become a curry, risotto, stuffed pepper, smoky one-pot dish or a bake, each with a different flavour and texture."
+  ], relatedLink: { label: "Browse the guides library", url: "/guides" } }
+];
+var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD = {
+  id: "nine-budget-dinners-with-rice",
+  slug: "nine-budget-dinners-with-rice",
+  path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...NINE_BUDGET_DINNERS_WITH_RICE_GUIDE,
+  metaDescription: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS,
+  cta: {
+    title: "Find dinners for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
+    label: "Find dinners",
+    href: "/signin"
+  }
 };
 
 // src/content/meatStretchingGuide.ts
