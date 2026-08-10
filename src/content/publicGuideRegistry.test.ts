@@ -73,6 +73,7 @@ import {
   OFFAL_BUDGET_GUIDE_PATH,
   PORTION_PLANNING_GUIDE_PATH,
   SUMMER_STEWS_GUIDE_PATH,
+  UK_FOOD_COSTS_2026_PATH,
 } from './seoFoodCostGuides';
 import {
   PUBLIC_GUIDE_RECORDS,
@@ -101,6 +102,7 @@ describe('public guide registry', () => {
     expect(paths).toContain(PULSES_BUDGET_GUIDE_PATH);
     expect(paths).toContain(TRAYBAKE_GUIDE_PATH);
     expect(paths).toContain(LOW_COST_DINNERS_GUIDE_PATH);
+    expect(paths).toContain(UK_FOOD_COSTS_2026_PATH);
     expect(paths).toContain(GROCERY_COST_OPTIONS_GUIDE_PATH);
     expect(paths).toContain(GROCERY_COST_PREDICTION_GUIDE_PATH);
     expect(paths).toContain(CHEAPER_MEAT_CUTS_GUIDE_PATH);
@@ -145,6 +147,7 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(PULSES_BUDGET_GUIDE_PATH)?.title).toBe('Cooking with lentils, beans and chickpeas on a budget');
     expect(getPublicGuideRecordByPath(TRAYBAKE_GUIDE_PATH)?.title).toBe('How to build a traybake that cooks evenly and tastes properly finished');
     expect(getPublicGuideRecordByPath(LOW_COST_DINNERS_GUIDE_PATH)?.title).toBe("Low-cost dinners don't have to be boring");
+    expect(getPublicGuideRecordByPath(UK_FOOD_COSTS_2026_PATH)?.title).toBe('Why UK food costs are rising in 2026 — and what it means for your shopping');
     expect(getPublicGuideRecordByPath(GROCERY_COST_OPTIONS_GUIDE_PATH)?.title).toBe('12 practical ways to reduce and manage your grocery costs');
     expect(getPublicGuideRecordByPath(GROCERY_COST_PREDICTION_GUIDE_PATH)?.title).toBe('Why is it so difficult to budget accurately for food?');
     expect(getPublicGuideRecordByPath(CHEAPER_MEAT_CUTS_GUIDE_PATH)?.title).toBe('Cooking with cheaper cuts of meat: what to buy and how to use it');
