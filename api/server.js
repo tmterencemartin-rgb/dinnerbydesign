@@ -183658,6 +183658,62 @@ var SAUSAGE_GUIDE_DISCLOSURES = [
     body: "Product prices and official food-safety guidance were checked 25 July 2026. Follow the cited product pages and official guidance for later information."
   }
 ];
+var FIVE_STAPLES_GUIDE_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "A note on cost",
+    body: "This guide does not use live retailer prices or rank the five dinners by cost. The full ingredient list, pack sizes, current prices and ingredients already at home determine the result."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Chorizo, cr\xE8me fra\xEEche, stock, parmesan, pasta, cashews, bread, ham, curry paste and other packaged ingredients vary by product and may contain allergens. Check every label and follow the original publisher\u2019s recipe."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow each publisher\u2019s method and the product instructions. Cool cooked rice quickly, ideally within one hour, refrigerate it for no more than one day before reheating, and reheat it only once until steaming hot throughout."
+  },
+  {
+    key: "source_timing",
+    title: "Recipe and guidance review",
+    body: "Publisher recipe details, NHS nutrition guidance and Food Standards Agency food-safety guidance were checked 28 July 2026. Follow the cited sources for later information."
+  }
+];
+var CONVENIENCE_FISH_GUIDE_DISCLOSURES = [
+  {
+    key: "allergen_and_product",
+    title: "Products and allergens",
+    body: "Fish, crustaceans and molluscs are separate regulated allergen categories. Coatings, fishcakes and sauces vary by product and may contain cereals containing gluten, egg, milk, mustard or other allergens. Check the current label every time."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Cooking and storage",
+    body: "Follow the cooking, storage and reheating instructions on the pack in front of you. When combining products on one tray, use the stated oven setting and add each item at the point required by its own instructions."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance and product review",
+    body: "NHS nutrition guidance, Food Standards Agency allergen guidance and the linked product information were checked 28 July 2026. Products and official guidance can change, so follow the current source and pack."
+  }
+];
+var TINNED_FISH_GUIDE_DISCLOSURES = [
+  {
+    key: "allergen_and_product",
+    title: "Products and allergens",
+    body: "Fish, crustaceans and molluscs are separate regulated allergen categories. Packing liquids, sauces and dressings may introduce other allergens. Check every current label and follow individual medical advice."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and preparation",
+    body: "Follow the current pack instructions. Transfer unused contents to a covered container, refrigerate them and follow the manufacturer\u2019s open-life guidance rather than storing leftovers in the opened tin."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance and product review",
+    body: "NHS nutrition guidance, Food Standards Agency safety and allergen guidance, product wording and preserved-sardine marketing standards were checked 28 July 2026. Follow the current source and label for later information."
+  }
+];
 var PROGRAMMATIC_DISCLOSURE_FOOTER = {
   body: "Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.",
   links: [
@@ -183671,6 +183727,31 @@ var SAUSAGE_GUIDE_DISCLOSURE_FOOTER = {
     { href: "/guides", label: "Browse all guides" },
     { href: "/pricing-methodology", label: "How prices are calculated" },
     { href: "/food-safety", label: "Food safety" }
+  ]
+};
+var FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER = {
+  body: "DinnerByDesign selected and compared these published recipes but did not develop or test them. Follow the original publisher\u2019s ingredients, quantities, method, allergen information and safety advice.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "How prices are calculated" },
+    { href: "/food-safety", label: "Food safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var CONVENIENCE_FISH_GUIDE_DISCLOSURE_FOOTER = {
+  body: "DinnerByDesign provides general dinner-planning ideas rather than product-specific cooking instructions. Product composition, allergens, serving information and preparation methods vary by brand.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/food-safety", label: "Food safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var TINNED_FISH_GUIDE_DISCLOSURE_FOOTER = {
+  body: "DinnerByDesign provides flexible dinner ideas rather than product-specific recipes. Packing liquid, drained weight, salt, ingredients, allergens and preparation instructions vary between products.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/food-safety", label: "Food safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
   ]
 };
 var escapeHtml2 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
@@ -184778,279 +184859,6 @@ var CHICKEN_THIGH_COST_GUIDE = {
     { label: "Aldi: Nature\u2019s Pick limes", url: "https://www.aldi.co.uk/product/nature-s-pick-limes-000000000000285988" },
     { label: "Aldi: Bramwells peri-peri seasoning", url: "https://www.aldi.co.uk/product/bramwells-peri-peri-seasoning-000000000337370007" },
     { label: "Aldi: Bramwells medium peri-peri sauce and marinade", url: "https://www.aldi.co.uk/product/bramwells-medium-peri-peri-sauce-marinade-000000000337375001" }
-  ]
-};
-
-// src/content/fiveStaplesGuide.ts
-var FIVE_STAPLES_GUIDE_PATH = "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses";
-var FIVE_STAPLES_GUIDE = {
-  title: "Five dinners built around potatoes, rice, pasta, bread and pulses",
-  seoTitle: "5 dinners built around potatoes, rice, pasta, bread and pulses | DinnerByDesign",
-  description: "Five published recipes that put potatoes, rice, pasta, bread or pulses at the centre, with timings, servings, equipment, leftovers and pack-use notes.",
-  publishedAt: "2026-07-28",
-  reviewedAt: "2026-07-28",
-  nextReviewAt: "2027-07-28",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find practical dinner ideas built around potatoes, rice, pasta, bread and pulses",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-28",
-  editorialNotes: "Compares five established publisher recipes without reproducing their methods or presenting undated price claims.",
-  internalLinks: [
-    "/recipes",
-    "/food-costs/cooking-with-pulses-on-a-budget",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-costs/five-dinners-same-ingredients",
-    "/food-costs/cooking-for-one-without-waste",
-    "/pricing-methodology",
-    "/food-safety",
-    "/recipe-methodology",
-    "/signin"
-  ],
-  disclosures: [
-    "price_comparison",
-    "allergen_and_product",
-    "storage_and_cooking",
-    "source_timing"
-  ],
-  sources: [
-    {
-      label: "Tesco Real Food: creamy leeks and chorizo sweet potatoes",
-      url: "https://realfood.tesco.com/recipes/creamy-leeks-and-chorizo-sweet-potatoes.html"
-    },
-    {
-      label: "Good Food: creamy tomato risotto",
-      url: "https://www.bbcgoodfood.com/recipes/creamy-tomato-risotto"
-    },
-    {
-      label: "delicious. magazine: speedy sun-dried tomato pasta",
-      url: "https://www.deliciousmagazine.co.uk/recipes/speedy-sun-dried-tomato-pasta/"
-    },
-    {
-      label: "Good Food: cherry tomato and ham bread and butter bake",
-      url: "https://www.bbcgoodfood.com/recipes/cherry-tomato-ham-bread-butter-bake"
-    },
-    {
-      label: "Tesco Real Food: coconut chickpea dumpling curry",
-      url: "https://realfood.tesco.com/recipes/coconut-chickpea-dumpling-curry.html"
-    },
-    {
-      label: "NHS: The Eatwell Guide",
-      url: "https://www.nhs.uk/live-well/eat-well/food-guidelines-and-food-labels/the-eatwell-guide/"
-    },
-    {
-      label: "Food Standards Agency: Home food fact checker",
-      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
-    }
-  ],
-  faqs: [
-    {
-      question: "Which dinner is fastest?",
-      answer: "The sun-dried tomato pasta is the fastest of the five. The publisher gives five minutes of preparation and eight to twelve minutes of cooking, depending on the pasta shape."
-    },
-    {
-      question: "Which options serve four people?",
-      answer: "The creamy tomato risotto and the cherry tomato and ham bread bake both serve four as published. The other three serve two."
-    },
-    {
-      question: "Which dinners contain no meat?",
-      answer: "The tomato risotto is vegetarian. The coconut chickpea dumpling curry is vegan. Check every pack and chosen substitute if allergens or a strict dietary requirement matter."
-    },
-    {
-      question: "Can I swap in a wholegrain version?",
-      answer: "Sometimes, though wholewheat pasta, brown rice and different breads can change cooking time, liquid absorption and texture. Follow the publisher\u2019s tested ingredient list or its stated substitution advice."
-    },
-    {
-      question: "Is stale bread safe to use?",
-      answer: "Dry or stale bread can be used in the bake. Bread showing any mould should be discarded in full because growth can extend beyond the visible patch."
-    },
-    {
-      question: "Is a staple-led dinner always less expensive?",
-      answer: "No. The full ingredient list, current prices and pack sizes decide the result. Add a price only when the source, date, servings and costing method can be shown beside it."
-    }
-  ]
-};
-
-// src/content/convenienceFishGuide.ts
-var CONVENIENCE_FISH_GUIDE_PATH = "/guides/fish-finger-fishcake-scampi-dinner-ideas";
-var CONVENIENCE_FISH_GUIDE = {
-  title: "How to turn fish fingers, fishcakes and scampi into better weeknight dinners",
-  seoTitle: "Fish finger, fishcake and scampi dinner ideas | DinnerByDesign",
-  description: "Practical ways to turn fish fingers, fishcakes, scampi, goujons and breaded fillets into varied weeknight dinners, with sides, pack-use ideas and label guidance.",
-  publishedAt: "2026-07-28",
-  reviewedAt: "2026-07-28",
-  nextReviewAt: "2027-01-28",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find dinner ideas using fish fingers, fishcakes, scampi, goujons and breaded fillets",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-28",
-  editorialNotes: "Provides dinner formats without fixed product cooking times and distinguishes scampi from white fish.",
-  internalLinks: [
-    "/recipes",
-    "/guides/how-to-build-a-traybake",
-    "/guides/9-ways-with-sausages",
-    "/food-costs/make-low-cost-dinners-more-interesting",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-safety",
-    "/recipe-methodology",
-    "/signin"
-  ],
-  disclosures: [
-    "allergen_and_product",
-    "storage_and_cooking",
-    "source_timing"
-  ],
-  sources: [
-    {
-      label: "NHS: Fish and shellfish",
-      url: "https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/"
-    },
-    {
-      label: "Food Standards Agency: Allergen guidance for food businesses",
-      url: "https://www.food.gov.uk/business-guidance/allergen-guidance-for-food-businesses"
-    },
-    {
-      label: "Birds Eye: Cod fish fingers",
-      url: "https://www.birdseye.co.uk/range/frozen-fish/fish-fingers/26-cod-fish-fingers"
-    },
-    {
-      label: "Tesco: Cod fishcakes",
-      url: "https://www.tesco.com/shop/en-GB/products/291845420"
-    },
-    {
-      label: "Tesco: Haddock goujons",
-      url: "https://www.tesco.com/shop/en-GB/products/271284352"
-    },
-    {
-      label: "Tesco: Young's breaded cod fillets",
-      url: "https://www.tesco.com/shop/en-GB/products/323156114"
-    },
-    {
-      label: "Whitby Seafoods: Wholetail scampi",
-      url: "https://www.whitby-seafoods.com/product/frozen/whole-tail-scampi-frozen-200g.html"
-    },
-    {
-      label: "Whitby Seafoods: Scampi FAQ",
-      url: "https://www.whitby-seafoods.com/faq/"
-    },
-    {
-      label: "Good Food: Fish finger recipes",
-      url: "https://www.bbcgoodfood.com/recipes/collection/fish-finger-recipes"
-    },
-    {
-      label: "Birds Eye: How to cook frozen fish",
-      url: "https://www.birdseye.co.uk/recipes/frozen-food-cooking-tips/how-to-cook-frozen-fish"
-    }
-  ],
-  faqs: [
-    {
-      question: "What can I serve with fish fingers instead of chips?",
-      answer: "Wraps, sandwiches and tacos all work well, adding vegetables and a simple sauce rather than a second helping of potato."
-    },
-    {
-      question: "What vegetables go well with fishcakes?",
-      answer: "Greens, green beans, spinach and roasted tomatoes all pair well, particularly since many fishcakes already contain potato."
-    },
-    {
-      question: "What can I make with frozen scampi?",
-      answer: "Tacos, rice bowls and lighter chip-shop-style plates all suit scampi, with slaw, peas or a lemon dressing alongside."
-    },
-    {
-      question: "Do fishcakes need potatoes on the side?",
-      answer: "Not necessarily. Check the ingredient list first, since many fishcakes already contain a substantial amount of potato."
-    },
-    {
-      question: "Is scampi fish or shellfish?",
-      answer: "Shellfish. Scampi is made from langoustine, a crustacean, rather than white fish. Some products use whole tails and others use formed pieces, so check the description on the pack."
-    },
-    {
-      question: "Can fish fingers count as a portion of fish?",
-      answer: "Fish fingers contain fish, but whether a serving is equivalent to one NHS portion depends on the amount of fish in the product and how many are served. The NHS describes a portion as around 140g, so check the pack rather than relying on the number of fingers."
-    }
-  ]
-};
-
-// src/content/tinnedFishGuide.ts
-var TINNED_FISH_GUIDE_PATH = "/guides/tinned-fish-recipes-tuna-salmon-sardines";
-var TINNED_FISH_GUIDE = {
-  title: "Tinned fish recipes: easy dinner ideas with tuna, salmon, sardines and more",
-  seoTitle: "Tinned fish recipes and dinner ideas | DinnerByDesign",
-  description: "Practical tinned fish recipes and dinner ideas using tuna, salmon, sardines, pilchards, mackerel, crab, mussels, cockles and winkles.",
-  publishedAt: "2026-07-28",
-  reviewedAt: "2026-07-28",
-  nextReviewAt: "2027-01-28",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find practical dinner ideas using tinned fish and preserved seafood",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-28",
-  editorialNotes: "Separates fish, crustacean and mollusc products; uses no fixed product timings or unsupported health comparisons.",
-  internalLinks: [
-    "/recipes",
-    "/guides/fish-finger-fishcake-scampi-dinner-ideas",
-    "/food-costs/cooking-with-pulses-on-a-budget",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-safety",
-    "/recipe-methodology",
-    "/signin"
-  ],
-  disclosures: [
-    "allergen_and_product",
-    "storage_and_cooking",
-    "source_timing"
-  ],
-  sources: [
-    {
-      label: "NHS: Fish and shellfish",
-      url: "https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/"
-    },
-    {
-      label: "Food Standards Agency: Allergen guidance",
-      url: "https://www.gov.uk/government/publications/allergen-guidance-for-food-businesses"
-    },
-    {
-      label: "Food Standards Agency: Canned food safety",
-      url: "https://www.food.gov.uk/print/pdf/node/4286"
-    },
-    {
-      label: "Princes: Canned tuna range",
-      url: "https://www.princes.co.uk/product-categories/tuna-chunks/"
-    },
-    {
-      label: "UK legislation archive: Preserved sardine marketing standards",
-      url: "https://www.legislation.gov.uk/eur/1989/2136/pdfs/eur_19892136_2003-07-01_en.pdf"
-    }
-  ],
-  faqs: [
-    {
-      question: "Does tinned tuna count as oily fish?",
-      answer: "No. NHS guidance says that neither fresh nor tinned tuna counts as oily fish."
-    },
-    {
-      question: "Are sardines and pilchards the same fish?",
-      answer: "The names overlap, but the answer depends on the product. Preserved sardines and sardine-type products can come from several related species, so read the species and description on the label rather than relying on size."
-    },
-    {
-      question: "Can you eat the bones in tinned salmon or sardines?",
-      answer: "Yes. The NHS lists the soft bones in tinned salmon, sardines and pilchards as edible and notes that they provide calcium and phosphorus. They can still be removed if preferred."
-    },
-    {
-      question: "Should I drain tinned fish?",
-      answer: "It depends on the dish and the packing liquid. Drain brine when it would make the dish too salty; keep some tomato sauce when it forms part of the recipe. Check whether the nutrition panel is given for the drained product."
-    },
-    {
-      question: "Are anchovies the same as sardines?",
-      answer: "No. They are different fish and have different flavours and uses, even though both are sold in small tins or jars."
-    },
-    {
-      question: "Can tinned mackerel replace fresh mackerel?",
-      answer: "Sometimes. The texture, salt and sauce can change the dish, so it works better in recipes that welcome those differences than as an automatic swap."
-    },
-    {
-      question: "Can leftovers stay in the opened tin?",
-      answer: "No. Transfer them to a covered container, refrigerate them and follow the storage period on the manufacturer\u2019s label."
-    }
   ]
 };
 
@@ -186769,6 +186577,396 @@ var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD = {
   }
 };
 
+// src/content/tinnedFishGuide.ts
+var TINNED_FISH_GUIDE_PATH = "/guides/tinned-fish-recipes-tuna-salmon-sardines";
+var TINNED_FISH_GUIDE = {
+  title: "Tinned fish recipes: easy dinner ideas with tuna, salmon, sardines and more",
+  seoTitle: "Tinned fish recipes and dinner ideas | DinnerByDesign",
+  description: "Practical tinned fish recipes and dinner ideas using tuna, salmon, sardines, pilchards, mackerel, crab, mussels, cockles and winkles.",
+  publishedAt: "2026-07-28",
+  reviewedAt: "2026-07-28",
+  nextReviewAt: "2027-01-28",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find practical dinner ideas using tinned fish and preserved seafood",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-28",
+  editorialNotes: "Separates fish, crustacean and mollusc products; uses no fixed product timings or unsupported health comparisons.",
+  internalLinks: [
+    "/recipes",
+    "/guides/fish-finger-fishcake-scampi-dinner-ideas",
+    "/food-costs/cooking-with-pulses-on-a-budget",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-safety",
+    "/recipe-methodology",
+    "/signin"
+  ],
+  disclosures: [
+    "allergen_and_product",
+    "storage_and_cooking",
+    "source_timing"
+  ],
+  sources: [
+    {
+      label: "NHS: Fish and shellfish",
+      url: "https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/"
+    },
+    {
+      label: "Food Standards Agency: Allergen guidance",
+      url: "https://www.gov.uk/government/publications/allergen-guidance-for-food-businesses"
+    },
+    {
+      label: "Food Standards Agency: Canned food safety",
+      url: "https://www.food.gov.uk/print/pdf/node/4286"
+    },
+    {
+      label: "Princes: Canned tuna range",
+      url: "https://www.princes.co.uk/product-categories/tuna-chunks/"
+    },
+    {
+      label: "UK legislation archive: Preserved sardine marketing standards",
+      url: "https://www.legislation.gov.uk/eur/1989/2136/pdfs/eur_19892136_2003-07-01_en.pdf"
+    }
+  ],
+  faqs: [
+    {
+      question: "Does tinned tuna count as oily fish?",
+      answer: "No. NHS guidance says that neither fresh nor tinned tuna counts as oily fish."
+    },
+    {
+      question: "Are sardines and pilchards the same fish?",
+      answer: "The names overlap, but the answer depends on the product. Preserved sardines and sardine-type products can come from several related species, so read the species and description on the label rather than relying on size."
+    },
+    {
+      question: "Can you eat the bones in tinned salmon or sardines?",
+      answer: "Yes. The NHS lists the soft bones in tinned salmon, sardines and pilchards as edible and notes that they provide calcium and phosphorus. They can still be removed if preferred."
+    },
+    {
+      question: "Should I drain tinned fish?",
+      answer: "It depends on the dish and the packing liquid. Drain brine when it would make the dish too salty; keep some tomato sauce when it forms part of the recipe. Check whether the nutrition panel is given for the drained product."
+    },
+    {
+      question: "Are anchovies the same as sardines?",
+      answer: "No. They are different fish and have different flavours and uses, even though both are sold in small tins or jars."
+    },
+    {
+      question: "Can tinned mackerel replace fresh mackerel?",
+      answer: "Sometimes. The texture, salt and sauce can change the dish, so it works better in recipes that welcome those differences than as an automatic swap."
+    },
+    {
+      question: "Can leftovers stay in the opened tin?",
+      answer: "No. Transfer them to a covered container, refrigerate them and follow the storage period on the manufacturer\u2019s label."
+    }
+  ]
+};
+var TINNED_FISH_GUIDE_OPENING_HTML = `<section><h2>Quick answer</h2><p><em>A tin of tuna, salmon, sardines or mackerel can do more than fill a sandwich. Add a carbohydrate, something fresh or frozen from the vegetable drawer, and one strong flavouring, and the cupboard tin becomes the starting point for dinner.</em></p><p>The detail on the label matters. Packing liquid, drained weight, salt, bones and allergens vary between products, even when the name on the front looks similar. Use these ideas as combinations rather than fixed recipes, then follow the pack and any tested recipe for preparation and cooking.</p></section>
+<section><h2>Tinned fish and seafood at a glance</h2><div class="guide-table-wrap"><table><thead><tr><th>Product</th><th>Often sold in</th><th>Good dinner partners</th><th>Check the label for</th></tr></thead><tbody><tr><td>Tuna</td><td>Spring water, brine or oil</td><td>White beans, pasta, rice, jacket potatoes, sweetcorn, lemon, chilli</td><td>Drained weight, salt and packing liquid</td></tr><tr><td>Salmon</td><td>Red or pink salmon; liquids vary</td><td>Potatoes, rice, pasta, peas, leeks, lemon, dill, capers</td><td>Skin and soft edible bones; drained weight</td></tr><tr><td>Sardines and pilchards</td><td>Oil, brine or tomato sauce</td><td>Toast, pasta, potatoes, tomatoes, peppers, lemon, parsley</td><td>Species and product wording; soft edible bones</td></tr><tr><td>Mackerel</td><td>Oil, brine or flavoured sauce</td><td>Potatoes, rice, pasta, beetroot, tomato, mustard, lemon</td><td>Salt, sauce ingredients and drained weight</td></tr><tr><td>Crab</td><td>Brine or dressed products</td><td>Pasta, rice, bread, cucumber, spring onion, chilli, lime</td><td>Crustacean allergen and any added ingredients</td></tr><tr><td>Mussels</td><td>Brine, oil or sauce</td><td>Pasta, rice, bread, tomato, garlic, parsley, chilli</td><td>Mollusc allergen and sauce ingredients</td></tr><tr><td>Cockles and winkles</td><td>Often jarred in vinegar or brine</td><td>Bread, potatoes, rice, salads, spring onion, white pepper</td><td>Mollusc allergen, storage instructions and vinegar</td></tr></tbody></table></div></section>`;
+var TINNED_FISH_GUIDE_IDEAS_HTML = `<section><h2>Tuna</h2><p>Tuna is sold in spring water, brine and oil. Each behaves a little differently once drained, so choose by looking at the full dish rather than treating the tins as interchangeable. Oil-packed tuna can bring some of its own richness; tuna in spring water or brine often needs a dressing, tomatoes or another moist ingredient.</p><h3>Tonno e fagioli</h3><p>Mix drained tuna with white beans, red onion, parsley, lemon and olive oil. The beans make the dish more substantial, while the sharp dressing keeps the tuna from feeling heavy.</p><h3>Tuna Caesar-style salad</h3><p>Add tuna to crisp lettuce, croutons and a Caesar-style dressing. Calling it Caesar-style makes the variation clear and leaves room to adjust the dressing for eggs, anchovies, milk or other allergens.</p><h3>Pasta, jacket potatoes and rice bowls</h3><p>Try tuna with capers and parsley in pasta, with sweetcorn and yoghurt on a jacket potato, or in a rice bowl with spring onion, cucumber and chilli. These combinations also make good use of small amounts of vegetables already in the fridge.</p></section>
+<section><h2>Salmon</h2><p>Tinned salmon flakes easily and suits dishes where the fish is mixed through rather than left in large pieces. Some tins contain skin and small bones. The NHS notes that the soft bones in tinned salmon can be eaten and provide calcium and phosphorus, though they can be removed if the texture is unwelcome.</p><h3>Fishcakes</h3><p>Combine drained salmon with mashed potato, herbs and a binder such as beaten egg. Quantities and cooking instructions belong in a tested recipe, particularly when raw egg is used.</p><h3>Creamy pasta</h3><p>Fold flaked salmon through pasta with cr\xE8me fra\xEEche, lemon, dill and peas. Add the salmon near the end so it stays in flakes rather than disappearing into the sauce.</p><h3>Kedgeree-style rice</h3><p>Rice, curry spices, boiled egg and tinned salmon make a useful kedgeree-style dish. The description matters here: traditional kedgeree is commonly made with smoked fish.</p><h3>Chowder</h3><p>Potato, leek, milk and salmon make a straightforward chowder. Taste before adding salt, especially if the fish was packed in brine.</p></section>
+<section><h2>Sardines and pilchards</h2><p>The names overlap in everyday use, but the label is the safest guide to the species and product in front of you. Preserved sardines and sardine-type products can be made from several related species, while UK products labelled pilchards are often sold in tomato sauce. Size alone is not a dependable way to tell one tin from another.</p><h3>Tomato pasta</h3><p>Sardines or pilchards in tomato sauce can be folded through pasta with onion, parsley and lemon. Check the sauce before seasoning because salt and sugar vary by product.</p><h3>Toast and beans</h3><p>Mash sardines onto toast with lemon and black pepper, or serve them with white beans or baked beans. A spoonful of chopped tomato or cucumber cuts through an oil-packed tin.</p><h3>Warm potato salad</h3><p>New potatoes, sardines, green beans and a mustard dressing make a fuller potato salad. Keep the fish in pieces and fold it through last.</p></section>
+<section><h2>Mackerel</h2><p>Tinned mackerel has a pronounced flavour, especially when it comes in tomato, mustard or pepper sauce. That makes it useful with ingredients that can stand up to it, including beetroot, horseradish, pickled vegetables and sharp dressings.</p><h3>P\xE2t\xE9 and toast</h3><p>Blend drained mackerel with cream cheese, lemon and black pepper, then serve with toast and a crisp salad. Check both the fish and cheese labels for allergens and salt.</p><h3>Warm potato salad</h3><p>Pair flaked mackerel with warm potatoes, beetroot and watercress. Mustard or horseradish adds enough sharpness without hiding the fish.</p><h3>Rice bowls and pasta</h3><p>Use mackerel with rice and pickled vegetables, or fold it through pasta with lemon, chilli and tomatoes. A flavoured tin may already provide most of the sauce.</p></section>`;
+var TINNED_FISH_GUIDE_CLOSING_HTML = `<section><h2>Tinned and jarred shellfish</h2><p>Crab, mussels, cockles and winkles need their own treatment because they fall into different allergen categories from fish. They are also sold in different formats. Crab and mussels may be tinned, while cockles and winkles are often jarred in vinegar or brine.</p><h3>Crab</h3><p>Stir crab through pasta or rice with spring onion, chilli and lime. White and brown crab meat have different flavours, so check which the tin contains before choosing the other ingredients.</p><h3>Mussels</h3><p>Use tinned mussels with tomato, garlic and pasta, or serve them on toast with parsley and lemon. If they come in a flavoured sauce, read the label before adding more salt or fat.</p><h3>Cockles and winkles</h3><p>Their briny or vinegary flavour works best as an accent. Add a small spoonful to potato salad, rice or toast, then taste before adding more vinegar or seasoning.</p></section>
+<section><h2>Anchovies as a flavouring</h2><p>Anchovies usually make more sense as a seasoning than as the centre of dinner. Stir a small amount into tomato sauce, a dressing or pasta, then taste before adding salt. Their presence still needs to be declared as fish.</p></section>
+<section><h2>Practical handling</h2><p>A few checks make these cupboard ingredients easier to use well.</p><ul><li>Compare drained weight as well as the size of the tin. The liquid can account for a sizeable part of the stated weight.</li><li>Drain according to the dish and the label. Oil, brine and sauce affect flavour and nutrition differently.</li><li>Soft bones in tinned salmon, sardines and pilchards are edible, according to the NHS, but can be removed for texture.</li><li>If only part of a tin is used, transfer the remainder to a covered container, refrigerate it and follow the manufacturer\u2019s open-life instructions. Do not store leftovers in the opened tin.</li><li>Reject tins that are bulging, leaking or badly damaged, and follow any preparation instructions on the label.</li></ul></section>
+<section><h2>Allergens and safety</h2><p>Fish, crustaceans and molluscs are three separate regulated allergen categories. Tuna, salmon, sardines, pilchards, mackerel and anchovies are fish; crab is a crustacean; mussels, cockles and winkles are molluscs.</p><p>That classification should not be used to predict what is safe for one person. Anyone with a diagnosed or suspected allergy should follow their medical advice and check every current label. Sauces and dressings can also introduce egg, milk, mustard, sulphites or cereals containing gluten.</p></section>
+<section><h2>Nutrition framing</h2><p>The <a href="https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/">NHS recommends</a> at least two portions of fish a week, including one portion of oily fish; a portion is around 140g. Salmon, sardines, pilchards and mackerel count as oily fish. Fresh and tinned tuna do not.</p><p>The NHS gives separate limits for some people, including those who are pregnant or trying for a baby. Product-level claims still need the current nutrition panel because salt, oil, sauce and drained weight differ between tins.</p></section>
+<section><h2>Related DinnerByDesign guidance</h2><ul><li><a href="/guides/fish-finger-fishcake-scampi-dinner-ideas">Fish finger, fishcake and scampi dinner ideas</a></li><li><a href="/food-costs/cooking-with-pulses-on-a-budget">Cooking with pulses on a budget</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-safety">Food-safety guidance</a></li><li><a href="/recipe-methodology">Recipe methodology</a></li></ul></section>`;
+var TINNED_FISH_GUIDE_SECTIONS = [
+  { rawHtml: TINNED_FISH_GUIDE_OPENING_HTML },
+  { rawHtml: TINNED_FISH_GUIDE_IDEAS_HTML },
+  { rawHtml: TINNED_FISH_GUIDE_CLOSING_HTML }
+];
+var TINNED_FISH_GUIDE_RECORD = {
+  id: "tinned-fish-recipes-tuna-salmon-sardines",
+  slug: "tinned-fish-recipes-tuna-salmon-sardines",
+  path: TINNED_FISH_GUIDE_PATH,
+  canonicalPath: TINNED_FISH_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "safety-sensitive",
+  ...TINNED_FISH_GUIDE,
+  metaDescription: TINNED_FISH_GUIDE.description,
+  label: "Practical cooking guide",
+  internalLinks: TINNED_FISH_GUIDE.internalLinks.filter((path3) => path3 !== "/recipes"),
+  disclosureItems: TINNED_FISH_GUIDE_DISCLOSURES,
+  disclosureFooter: TINNED_FISH_GUIDE_DISCLOSURE_FOOTER,
+  sections: TINNED_FISH_GUIDE_SECTIONS,
+  cta: {
+    title: "Find more dinner ideas",
+    copy: "Search DinnerByDesign for ideas built around what is already in the cupboard, fridge or freezer.",
+    label: "Find a dinner",
+    href: "/signin"
+  }
+};
+
+// src/content/convenienceFishGuide.ts
+var CONVENIENCE_FISH_GUIDE_PATH = "/guides/fish-finger-fishcake-scampi-dinner-ideas";
+var CONVENIENCE_FISH_GUIDE = {
+  title: "How to turn fish fingers, fishcakes and scampi into better weeknight dinners",
+  seoTitle: "Fish finger, fishcake and scampi dinner ideas | DinnerByDesign",
+  description: "Practical ways to turn fish fingers, fishcakes, scampi, goujons and breaded fillets into varied weeknight dinners, with sides, pack-use ideas and label guidance.",
+  publishedAt: "2026-07-28",
+  reviewedAt: "2026-07-28",
+  nextReviewAt: "2027-01-28",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find dinner ideas using fish fingers, fishcakes, scampi, goujons and breaded fillets",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-28",
+  editorialNotes: "Provides dinner formats without fixed product cooking times and distinguishes scampi from white fish.",
+  internalLinks: [
+    "/recipes",
+    "/guides/how-to-build-a-traybake",
+    "/guides/9-ways-with-sausages",
+    "/food-costs/make-low-cost-dinners-more-interesting",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-safety",
+    "/recipe-methodology",
+    "/signin"
+  ],
+  disclosures: [
+    "allergen_and_product",
+    "storage_and_cooking",
+    "source_timing"
+  ],
+  sources: [
+    {
+      label: "NHS: Fish and shellfish",
+      url: "https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/"
+    },
+    {
+      label: "Food Standards Agency: Allergen guidance for food businesses",
+      url: "https://www.food.gov.uk/business-guidance/allergen-guidance-for-food-businesses"
+    },
+    {
+      label: "Birds Eye: Cod fish fingers",
+      url: "https://www.birdseye.co.uk/range/frozen-fish/fish-fingers/26-cod-fish-fingers"
+    },
+    {
+      label: "Tesco: Cod fishcakes",
+      url: "https://www.tesco.com/shop/en-GB/products/291845420"
+    },
+    {
+      label: "Tesco: Haddock goujons",
+      url: "https://www.tesco.com/shop/en-GB/products/271284352"
+    },
+    {
+      label: "Tesco: Young's breaded cod fillets",
+      url: "https://www.tesco.com/shop/en-GB/products/323156114"
+    },
+    {
+      label: "Whitby Seafoods: Wholetail scampi",
+      url: "https://www.whitby-seafoods.com/product/frozen/whole-tail-scampi-frozen-200g.html"
+    },
+    {
+      label: "Whitby Seafoods: Scampi FAQ",
+      url: "https://www.whitby-seafoods.com/faq/"
+    },
+    {
+      label: "Good Food: Fish finger recipes",
+      url: "https://www.bbcgoodfood.com/recipes/collection/fish-finger-recipes"
+    },
+    {
+      label: "Birds Eye: How to cook frozen fish",
+      url: "https://www.birdseye.co.uk/recipes/frozen-food-cooking-tips/how-to-cook-frozen-fish"
+    }
+  ],
+  faqs: [
+    {
+      question: "What can I serve with fish fingers instead of chips?",
+      answer: "Wraps, sandwiches and tacos all work well, adding vegetables and a simple sauce rather than a second helping of potato."
+    },
+    {
+      question: "What vegetables go well with fishcakes?",
+      answer: "Greens, green beans, spinach and roasted tomatoes all pair well, particularly since many fishcakes already contain potato."
+    },
+    {
+      question: "What can I make with frozen scampi?",
+      answer: "Tacos, rice bowls and lighter chip-shop-style plates all suit scampi, with slaw, peas or a lemon dressing alongside."
+    },
+    {
+      question: "Do fishcakes need potatoes on the side?",
+      answer: "Not necessarily. Check the ingredient list first, since many fishcakes already contain a substantial amount of potato."
+    },
+    {
+      question: "Is scampi fish or shellfish?",
+      answer: "Shellfish. Scampi is made from langoustine, a crustacean, rather than white fish. Some products use whole tails and others use formed pieces, so check the description on the pack."
+    },
+    {
+      question: "Can fish fingers count as a portion of fish?",
+      answer: "Fish fingers contain fish, but whether a serving is equivalent to one NHS portion depends on the amount of fish in the product and how many are served. The NHS describes a portion as around 140g, so check the pack rather than relying on the number of fingers."
+    }
+  ]
+};
+var CONVENIENCE_FISH_GUIDE_OPENING_HTML = `<section><h2>Quick answer</h2><p><em>Fish fingers, fishcakes, scampi, goujons and breaded fillets can form the basis of more than a standard chips-and-peas dinner. Use them in wraps, burgers, rice bowls, traybakes or warm salads, with vegetables and a sauce that suits the coating.</em></p><p>Cooking instructions, seafood content, allergens and serving sizes vary between products and brands. This guide suggests formats and combinations rather than fixed timings. Always follow the instructions on the pack in front of you.</p></section>
+<section><h2>Choose the product by the dinner you want</h2><p>Each product suits a slightly different style of dinner because of how it is made. A whole fillet in breadcrumbs behaves differently from a formed fishcake. Scampi is different again because it is shellfish. Start with the product in the freezer, then decide what sort of dinner it suits tonight.</p><div class="guide-table-wrap"><table><thead><tr><th>Product</th><th>Particularly useful for</th><th>Likely accompaniments</th><th>Watch for</th></tr></thead><tbody><tr><td>Fish fingers</td><td>Wraps, sandwiches and tacos</td><td>Peas, slaw, potatoes</td><td>Fish percentage and coating</td></tr><tr><td>Fishcakes</td><td>Warm salads and vegetable plates</td><td>Greens, beans, tomatoes</td><td>Some already contain substantial potato</td></tr><tr><td>Scampi</td><td>Tacos, rice bowls and lighter chip-shop plates</td><td>Slaw, peas, lemon</td><td>Crustacean; coating allergens vary</td></tr><tr><td>Goujons</td><td>Pittas, fajitas and sharing plates</td><td>Salad, corn, yogurt sauce</td><td>Whole fillet versus formed fish</td></tr><tr><td>Breaded fillets</td><td>Burgers and traybakes</td><td>Roasted vegetables, wedges</td><td>Pack cooking instructions</td></tr></tbody></table></div></section>`;
+var CONVENIENCE_FISH_GUIDE_IDEAS_HTML = `<section><h2>Fish finger dinner ideas</h2><p>Fish fingers are usually made from a whole or minced fillet in a crisp breadcrumb coating, which holds up well to being wrapped, layered or cut into pieces.</p><h3>Fish finger wraps with peas, shredded cabbage and yogurt sauce</h3><p>The soft wrap and crisp cabbage give the crumb coating something to contrast against, while a yogurt sauce adds moisture without needing a separate side. Peas can be served whole alongside or stirred through the cabbage.</p><h3>Fish finger sandwiches with lettuce, pickles and oven wedges</h3><p>A sandwich puts the coating's crunch front and centre, with pickles cutting through the richness and wedges covering the carbohydrate side of the plate.</p><h3>Fish finger tacos with sweetcorn, tomato and lime</h3><p>Warm tortillas, sweetcorn, chopped tomato and a squeeze of lime turn the same fish fingers into a dinner built around fresh, acidic flavours.</p></section>
+<section><h2>What to serve with fishcakes</h2><p>Many fishcakes already contain a substantial amount of potato. Checking the ingredient list first makes it easier to decide what the dinner needs.</p><h3>Fishcakes with garlicky greens and butter beans</h3><p>Butter beans add bulk and a little protein alongside the fishcake, while quickly cooked greens keep the plate from feeling one-note.</p><h3>Fishcakes with roasted tomatoes, green beans and mustard dressing</h3><p>Roasting concentrates the tomatoes, while mustard dressing adds the sharpness that a fishcake alone may lack.</p><h3>Fishcakes with peas, spinach and a soft egg</h3><p>A soft egg adds richness and turns the plate towards a light, warm salad rather than a traditional fish-and-two-veg dinner.</p></section>
+<section><h2>Scampi beyond chips</h2><p>Scampi is made from langoustine, a crustacean, and may use whole tails or formed pieces depending on the product. Its coating already brings richness, salt and crunch, so straightforward accompaniments tend to work well.</p><h3>Scampi tacos with cabbage slaw</h3><p>Crisp slaw adds crunch and acidity without extra cooking.</p><h3>Scampi rice bowls with peas, cucumber and lemon dressing</h3><p>Rice gives the dinner some structure, while cucumber and lemon dressing keep the combination fresh.</p><h3>Scampi with crushed potatoes, green beans and tartare-style yogurt</h3><p>A yogurt-based tartare-style sauce keeps the familiar pairing, while crushed potatoes and green beans give the plate contrast without repeating the standard chips.</p></section>
+<section><h2>Goujons and breaded fillets</h2><p>Goujons are strips of fish, whether cut from a fillet or made from formed fish, while breaded fillets are larger pieces. Check the pack for the product's cooking method and timing before building the rest of the dinner around it.</p><h3>Goujon pittas with salad and garlic yogurt</h3><p>Goujons tuck neatly into a warm pitta alongside salad and garlic yogurt.</p><h3>Breaded fish burgers with slaw and wedges</h3><p>A bun and slaw turn a breaded fillet into a burger-style dinner, with wedges covering the carbohydrate element.</p><h3>A tray of breaded fillets, tomatoes, peppers and potatoes</h3><p>These can share a tray only when the pack instructions support the same oven setting and allow everything to cook safely. If the timings differ, start the vegetables separately and add the fish at the point indicated by its pack instructions.</p></section>`;
+var CONVENIENCE_FISH_GUIDE_CLOSING_HTML = `<section><h2>Make the plate feel complete</h2><p>The same reusable formula works across all five products.</p><ol><li>Choose the fish or shellfish product.</li><li>Add one carbohydrate if the product does not already contain much potato.</li><li>Add one or two vegetables.</li><li>Finish with acidity or a simple sauce.</li></ol><p>Lemon juice, malt vinegar, pickles, yogurt and herbs, mustard dressing, tartare sauce or tomato salsa can finish the plate.</p></section>
+<section><h2>Using up opened packs</h2><ul><li>Shredded cabbage can serve tacos, wraps and slaw.</li><li>Frozen peas can accompany fishcakes or be crushed for sandwiches.</li><li>Wraps can become pittas or flatbreads in another dinner.</li><li>Yogurt can form the base of a garlic, herb or mustard sauce.</li><li>Remaining potatoes can become wedges, crushed potatoes or a traybake base.</li></ul><p>None of this guarantees a lower cost. A genuine saving would need current, dated prices and a transparent calculation.</p></section>
+<section><h2>Nutrition and product differences</h2><p>Breaded fish, fishcakes and scampi vary in seafood content, coating, salt, fat and serving size. Check the current label rather than assuming. Products made with cod, haddock or pollock are white fish and do not replace the recommended oily-fish portion.</p><p>Current <a href="https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/">NHS guidance</a> recommends at least two portions of fish a week, including one portion of oily fish. It describes a portion as around 140g. Fresh and canned tuna do not count as oily fish; neither do products based on white fish such as cod, haddock or pollock.</p><p>Individual products should not be labelled healthy or unhealthy without comparing their current nutrition panels. Formulations vary, so use the serving information and ingredients on the current pack.</p></section>
+<section><h2>Allergens and safety</h2><ul><li>Scampi is made from langoustine and is a crustacean product, rather than white fish.</li><li>Coatings may contain wheat, egg or milk.</li><li>Fishcakes and sauces may contain additional allergens.</li><li>Ingredients differ between brands, so check the current pack.</li><li>Follow the pack's cooking, storage and reheating instructions.</li><li>Check that the centre is thoroughly cooked before serving.</li></ul><p>Fish, crustaceans and molluscs are separate regulated allergen categories. The <a href="https://www.food.gov.uk/business-guidance/allergen-guidance-for-food-businesses">Food Standards Agency guidance</a> lists the 14 allergens that must be declared when used as ingredients. Anyone with a diagnosed allergy should check the label every time and follow advice from their clinician.</p></section>
+<section><h2>Related DinnerByDesign guidance</h2><ul><li><a href="/guides/how-to-build-a-traybake">How to build a traybake</a></li><li><a href="/guides/9-ways-with-sausages">Nine ways with sausages</a></li><li><a href="/food-costs/make-low-cost-dinners-more-interesting">Making low-cost dinners more interesting</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-safety">Food-safety guidance</a></li></ul></section>`;
+var CONVENIENCE_FISH_GUIDE_SECTIONS = [
+  { rawHtml: CONVENIENCE_FISH_GUIDE_OPENING_HTML },
+  { rawHtml: CONVENIENCE_FISH_GUIDE_IDEAS_HTML },
+  { rawHtml: CONVENIENCE_FISH_GUIDE_CLOSING_HTML }
+];
+var CONVENIENCE_FISH_GUIDE_RECORD = {
+  id: "fish-finger-fishcake-scampi-dinner-ideas",
+  slug: "fish-finger-fishcake-scampi-dinner-ideas",
+  path: CONVENIENCE_FISH_GUIDE_PATH,
+  canonicalPath: CONVENIENCE_FISH_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "safety-sensitive",
+  ...CONVENIENCE_FISH_GUIDE,
+  metaDescription: CONVENIENCE_FISH_GUIDE.description,
+  label: "Practical cooking guide",
+  internalLinks: CONVENIENCE_FISH_GUIDE.internalLinks.filter((path3) => path3 !== "/recipes"),
+  disclosureItems: CONVENIENCE_FISH_GUIDE_DISCLOSURES,
+  disclosureFooter: CONVENIENCE_FISH_GUIDE_DISCLOSURE_FOOTER,
+  sections: CONVENIENCE_FISH_GUIDE_SECTIONS,
+  cta: {
+    title: "Find more dinner ideas",
+    copy: "Search DinnerByDesign for ideas built around what is already in the freezer or fridge.",
+    label: "Find a dinner",
+    href: "/signin"
+  }
+};
+
+// src/content/fiveStaplesGuide.ts
+var FIVE_STAPLES_GUIDE_PATH = "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses";
+var FIVE_STAPLES_GUIDE = {
+  title: "Five dinners built around potatoes, rice, pasta, bread and pulses",
+  seoTitle: "5 dinners built around potatoes, rice, pasta, bread and pulses | DinnerByDesign",
+  description: "Five published recipes that put potatoes, rice, pasta, bread or pulses at the centre, with timings, servings, equipment, leftovers and pack-use notes.",
+  publishedAt: "2026-07-28",
+  reviewedAt: "2026-07-28",
+  nextReviewAt: "2027-07-28",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find practical dinner ideas built around potatoes, rice, pasta, bread and pulses",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-28",
+  editorialNotes: "Compares five established publisher recipes without reproducing their methods or presenting undated price claims.",
+  internalLinks: [
+    "/recipes",
+    "/food-costs/cooking-with-pulses-on-a-budget",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/five-dinners-same-ingredients",
+    "/food-costs/cooking-for-one-without-waste",
+    "/pricing-methodology",
+    "/food-safety",
+    "/recipe-methodology",
+    "/signin"
+  ],
+  disclosures: [
+    "price_comparison",
+    "allergen_and_product",
+    "storage_and_cooking",
+    "source_timing"
+  ],
+  sources: [
+    {
+      label: "Tesco Real Food: creamy leeks and chorizo sweet potatoes",
+      url: "https://realfood.tesco.com/recipes/creamy-leeks-and-chorizo-sweet-potatoes.html"
+    },
+    {
+      label: "Good Food: creamy tomato risotto",
+      url: "https://www.bbcgoodfood.com/recipes/creamy-tomato-risotto"
+    },
+    {
+      label: "delicious. magazine: speedy sun-dried tomato pasta",
+      url: "https://www.deliciousmagazine.co.uk/recipes/speedy-sun-dried-tomato-pasta/"
+    },
+    {
+      label: "Good Food: cherry tomato and ham bread and butter bake",
+      url: "https://www.bbcgoodfood.com/recipes/cherry-tomato-ham-bread-butter-bake"
+    },
+    {
+      label: "Tesco Real Food: coconut chickpea dumpling curry",
+      url: "https://realfood.tesco.com/recipes/coconut-chickpea-dumpling-curry.html"
+    },
+    {
+      label: "NHS: The Eatwell Guide",
+      url: "https://www.nhs.uk/live-well/eat-well/food-guidelines-and-food-labels/the-eatwell-guide/"
+    },
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    }
+  ],
+  faqs: [
+    {
+      question: "Which dinner is fastest?",
+      answer: "The sun-dried tomato pasta is the fastest of the five. The publisher gives five minutes of preparation and eight to twelve minutes of cooking, depending on the pasta shape."
+    },
+    {
+      question: "Which options serve four people?",
+      answer: "The creamy tomato risotto and the cherry tomato and ham bread bake both serve four as published. The other three serve two."
+    },
+    {
+      question: "Which dinners contain no meat?",
+      answer: "The tomato risotto is vegetarian. The coconut chickpea dumpling curry is vegan. Check every pack and chosen substitute if allergens or a strict dietary requirement matter."
+    },
+    {
+      question: "Can I swap in a wholegrain version?",
+      answer: "Sometimes, though wholewheat pasta, brown rice and different breads can change cooking time, liquid absorption and texture. Follow the publisher\u2019s tested ingredient list or its stated substitution advice."
+    },
+    {
+      question: "Is stale bread safe to use?",
+      answer: "Dry or stale bread can be used in the bake. Bread showing any mould should be discarded in full because growth can extend beyond the visible patch."
+    },
+    {
+      question: "Is a staple-led dinner always less expensive?",
+      answer: "No. The full ingredient list, current prices and pack sizes decide the result. Add a price only when the source, date, servings and costing method can be shown beside it."
+    }
+  ]
+};
+var FIVE_STAPLES_GUIDE_OPENING_HTML = `<section><h2>Quick answer</h2><p><em>Potatoes, rice, pasta, bread and pulses can each carry a substantial dinner when the rest of the dish supplies enough flavour, moisture and variety. Pulses have an extra role because they also contribute protein and fibre. The cheapest option depends on the complete shopping list, pack sizes and current prices.</em></p></section>
+<section><h2>Start with the ingredient that gives the dish its shape</h2><p>Dinner planning often starts with chicken, mince or fish. The potato, rice or pasta is picked afterwards, once the expensive part of the plate has already been decided. Starting with the staple changes the question. You begin with the ingredient that gives the dish its shape, then add only what it needs for flavour, moisture, vegetables and protein.</p><p>The five recipes below use familiar staples in distinct ways. Sweet potato becomes an edible shell. Risotto rice thickens its own sauce. Pasta carries a blended tomato dressing. Stale bread absorbs an egg and milk mixture. Chickpeas are shaped into dumplings, with brown rice alongside.</p><p>These are published recipes from Tesco Real Food, Good Food and delicious. magazine. Use the linked publisher page for the full ingredients, quantities and cooking method.</p></section>
+<section><h2>The five dinners at a glance</h2><div class="guide-table-wrap"><table><thead><tr><th>Staple</th><th>Published recipe</th><th>Serves</th><th>Time</th><th>Main tools</th><th>Useful when</th></tr></thead><tbody><tr><td>Sweet potato</td><td>Creamy leeks and chorizo sweet potatoes</td><td>2</td><td>30 mins</td><td>Microwave and oven</td><td>A warm dinner for two</td></tr><tr><td>Rice</td><td>Creamy tomato risotto</td><td>4</td><td>40 mins</td><td>Hob</td><td>A meat-free family dinner</td></tr><tr><td>Pasta</td><td>Speedy sun-dried tomato pasta</td><td>2</td><td>About 15 mins</td><td>Hob and food processor</td><td>The quickest option</td></tr><tr><td>Bread</td><td>Cherry tomato and ham bread and butter bake</td><td>4</td><td>50 mins</td><td>Oven</td><td>Using stale bread</td></tr><tr><td>Chickpeas and rice</td><td>Coconut chickpea dumpling curry</td><td>2</td><td>45 mins</td><td>Hob and food processor</td><td>A vegan dinner for two</td></tr></tbody></table></div><p><em>Times and servings are taken from the linked publisher pages, checked 28 July 2026.</em></p></section>
+<section><h2>Choose by the sort of evening you are having</h2><ul><li><strong>Short on time:</strong> the sun-dried tomato pasta takes about 15 minutes and serves two.</li><li><strong>Cooking for four:</strong> the tomato risotto and bread bake both serve four.</li><li><strong>Avoiding meat:</strong> the risotto is vegetarian and the chickpea curry is vegan as published.</li><li><strong>Using stale bread:</strong> the bread and butter bake turns four thick slices into the body of the dish.</li><li><strong>Planning tomorrow\u2019s lunch:</strong> Tesco describes the chickpea curry leftovers as suitable for lunch the next day, provided the rice is cooled and stored safely.</li></ul></section>`;
+var FIVE_STAPLES_GUIDE_RECIPES_HTML = `<section><h2>1. Sweet potato: creamy leeks and chorizo sweet potatoes</h2><p><strong>Publisher:</strong> <a href="https://realfood.tesco.com/recipes/creamy-leeks-and-chorizo-sweet-potatoes.html">Tesco Real Food</a> \xB7 Serves 2 \xB7 30 minutes</p><p><strong>Why the staple works:</strong> two large sweet potatoes form the base and the container. Microwaving softens the centres quickly, while a short spell in the oven gives the skins a firmer finish.</p><p><strong>What completes it:</strong> chorizo brings salt, spice and cooking fat. Leeks, garlic, cr\xE8me fra\xEEche, thyme and spinach turn those flavours into a filling rather than a separate sauce.</p><p><strong>Pack-use note:</strong> the published recipe calls for a 65g pack of diced chorizo. If the available pack is larger, plan the remainder for eggs, a tomato sauce or a second potato dinner before opening it.</p></section>
+<section><h2>2. Rice: creamy tomato risotto</h2><p><strong>Publisher:</strong> <a href="https://www.bbcgoodfood.com/recipes/creamy-tomato-risotto">Good Food</a> \xB7 Serves 4 \xB7 40 minutes</p><p><strong>Why the staple works:</strong> risotto rice absorbs the tomato-stock mixture a little at a time. Stirring releases starch, so the rice creates the creamy texture instead of sitting beneath a separate sauce.</p><p><strong>What completes it:</strong> chopped and fresh tomatoes give the dish body and sweetness. Rosemary, basil and parmesan supply the sharper flavours that plain rice would lack.</p><p><strong>Pack-use note:</strong> parmesan and fresh basil often outlast one recipe. Use the basil within the next few days, and keep the parmesan for pasta, soup or roasted vegetables.</p></section>
+<section><h2>3. Pasta: speedy sun-dried tomato pasta</h2><p><strong>Publisher:</strong> <a href="https://www.deliciousmagazine.co.uk/recipes/speedy-sun-dried-tomato-pasta/">delicious. magazine</a> \xB7 Serves 2 \xB7 About 15 minutes</p><p><strong>Why the staple works:</strong> the sauce is blended while the pasta boils, so the two jobs happen at the same time. A little pasta water loosens the sauce and helps it coat the pasta before serving.</p><p><strong>What completes it:</strong> sun-dried tomatoes, cashews, parmesan, tomato pur\xE9e and vegetable stock make a concentrated sauce. Basil and black pepper finish the dish without a long ingredient list.</p><p><strong>Pack-use note:</strong> a jar of sun-dried tomatoes usually covers more than one dinner. Keep the tomatoes under their oil and check the label for storage instructions after opening.</p></section>
+<section><h2>4. Bread: cherry tomato and ham bread and butter bake</h2><p><strong>Publisher:</strong> <a href="https://www.bbcgoodfood.com/recipes/cherry-tomato-ham-bread-butter-bake">Good Food</a> \xB7 Serves 4 \xB7 50 minutes</p><p><strong>Why the staple works:</strong> stale white bread absorbs seasoned egg and milk, then sets into the body of the bake. Bread that feels disappointing as a sandwich can work well here because dryness helps it take up the liquid.</p><p><strong>What completes it:</strong> ham, cheddar and eggs provide protein and richness. Cherry tomatoes add acidity and stop the bake from feeling too heavy.</p><p><strong>Pack-use note:</strong> plan the remaining ham and cheddar for sandwiches, baked potatoes or a second pasta dish rather than leaving two opened packs without a job.</p></section>
+<section><h2>5. Pulses: coconut chickpea dumpling curry</h2><p><strong>Publisher:</strong> <a href="https://realfood.tesco.com/recipes/coconut-chickpea-dumpling-curry.html">Tesco Real Food</a> \xB7 Serves 2 \xB7 45 minutes</p><p><strong>Why the staple works:</strong> the chickpeas are blended with onion, garlic, spice, flour and baking powder, then shaped into dumplings. They become the main texture of the curry instead of disappearing into the sauce. Brown rice provides the second staple.</p><p><strong>What completes it:</strong> chopped tomatoes, coconut milk, pepper and korma paste make a mild sauce. The recipe is vegan as published.</p><p><strong>Pack-use note:</strong> the recipe uses 200ml coconut milk, which may leave half of a standard 400ml tin. Freeze the remainder in a labelled portion if the pack permits, or use it promptly in soup, curry or porridge.</p></section>`;
+var FIVE_STAPLES_GUIDE_CLOSING_HTML = `<section><h2>How the five staples behave</h2><div class="guide-table-wrap"><table><thead><tr><th>Staple</th><th>Job in the dish</th><th>Planning point</th></tr></thead><tbody><tr><td>Potatoes</td><td>Hold a filling and provide most of the bulk</td><td>Store somewhere cool, dark and dry</td></tr><tr><td>Rice</td><td>Absorbs liquid or sits alongside a sauce</td><td>Cooked rice needs fast cooling and short refrigerated storage</td></tr><tr><td>Pasta</td><td>Carries a sauce and portions easily before cooking</td><td>Dry pasta is shelf-stable; opened sauce ingredients often need the plan</td></tr><tr><td>Bread</td><td>Absorbs liquid in a bake</td><td>Stale bread can be useful; mouldy bread must be discarded</td></tr><tr><td>Pulses</td><td>Add body, protein and fibre</td><td>Tinned pulses are quick; dried pulses need advance soaking or cooking where specified</td></tr></tbody></table></div></section>
+<section><h2>A note on price and nutrition</h2><p>A staple-led dinner is not automatically the cheapest choice. Chorizo, parmesan, cashews or fresh herbs can change the cost quickly. A proper comparison needs a dated shopping basket, the retailer and region, the number of servings, and a clear split between full-pack checkout cost and the value of the quantity used.</p><p>The <a href="https://www.nhs.uk/live-well/eat-well/food-guidelines-and-food-labels/the-eatwell-guide/">NHS Eatwell Guide</a> places starchy foods at just over a third of overall food intake and recommends higher-fibre or wholegrain versions where practical. That balance applies across a day or week. One dinner does not need to reproduce the whole guide.</p><p>Pulses sit across two useful roles in this article. Chickpeas contain carbohydrate, yet they also contribute protein and fibre. That gives the curry a different nutritional shape from a dish built mainly around potatoes, rice, pasta or bread.</p></section>
+<section><h2>Leftovers and rice safety</h2><p>The Food Standards Agency says to cool cooked rice as quickly as possible, ideally within one hour, keep it refrigerated for no more than one day before reheating, and reheat it only once until steaming hot throughout. Read the <a href="https://www.gov.uk/government/publications/home-food-fact-checker">current official guidance</a>.</p><p>For the other dishes, follow the storage instructions on the publisher page and ingredient packs. Cool leftovers promptly and use them within the stated period.</p></section>
+<section><h2>Related DinnerByDesign guidance</h2><ul><li><a href="/food-costs/cooking-with-pulses-on-a-budget">Cooking with pulses</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-costs/five-dinners-same-ingredients">Using complete packs across several dinners</a></li><li><a href="/food-costs/cooking-for-one-without-waste">Cooking for one</a></li><li><a href="/pricing-methodology">Pricing methodology</a></li></ul></section>`;
+var FIVE_STAPLES_GUIDE_SECTIONS = [
+  { rawHtml: FIVE_STAPLES_GUIDE_OPENING_HTML },
+  { rawHtml: FIVE_STAPLES_GUIDE_RECIPES_HTML },
+  { rawHtml: FIVE_STAPLES_GUIDE_CLOSING_HTML }
+];
+var FIVE_STAPLES_GUIDE_RECORD = {
+  id: "dinners-built-around-potatoes-rice-pasta-bread-pulses",
+  slug: "dinners-built-around-potatoes-rice-pasta-bread-pulses",
+  path: FIVE_STAPLES_GUIDE_PATH,
+  canonicalPath: FIVE_STAPLES_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "safety-sensitive",
+  ...FIVE_STAPLES_GUIDE,
+  metaDescription: FIVE_STAPLES_GUIDE.description,
+  label: "Practical cooking guide",
+  internalLinks: FIVE_STAPLES_GUIDE.internalLinks.filter((path3) => path3 !== "/recipes"),
+  disclosureItems: FIVE_STAPLES_GUIDE_DISCLOSURES,
+  disclosureFooter: FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER,
+  sections: FIVE_STAPLES_GUIDE_SECTIONS,
+  cta: {
+    title: "Find a dinner for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn one of these staple-led ideas into a plan for your household.",
+    label: "Find a dinner",
+    href: "/signin"
+  }
+};
+
 // src/content/publicGuideRegistry.ts
 var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
@@ -186781,6 +186979,9 @@ var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD,
   WHOLE_CHICKEN_VALUE_GUIDE_RECORD,
+  TINNED_FISH_GUIDE_RECORD,
+  CONVENIENCE_FISH_GUIDE_RECORD,
+  FIVE_STAPLES_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD
 ];
@@ -186803,48 +187004,6 @@ var publicGuideRecordToArticle = (guide) => ({
 });
 var PUBLIC_ARTICLES = [
   ...PUBLISHED_PUBLIC_GUIDE_RECORDS.map(publicGuideRecordToArticle),
-  {
-    title: TINNED_FISH_GUIDE.title,
-    path: TINNED_FISH_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: TINNED_FISH_GUIDE.pageFamily,
-    primarySearchIntent: TINNED_FISH_GUIDE.primarySearchIntent,
-    indexingStatus: TINNED_FISH_GUIDE.indexingStatus,
-    publishedAt: TINNED_FISH_GUIDE.publishedAt,
-    reviewedAt: TINNED_FISH_GUIDE.reviewedAt,
-    contentReviewedAt: TINNED_FISH_GUIDE.contentReviewedAt,
-    internalLinks: [...TINNED_FISH_GUIDE.internalLinks],
-    disclosures: [...TINNED_FISH_GUIDE.disclosures],
-    status: "published"
-  },
-  {
-    title: CONVENIENCE_FISH_GUIDE.title,
-    path: CONVENIENCE_FISH_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: CONVENIENCE_FISH_GUIDE.pageFamily,
-    primarySearchIntent: CONVENIENCE_FISH_GUIDE.primarySearchIntent,
-    indexingStatus: CONVENIENCE_FISH_GUIDE.indexingStatus,
-    publishedAt: CONVENIENCE_FISH_GUIDE.publishedAt,
-    reviewedAt: CONVENIENCE_FISH_GUIDE.reviewedAt,
-    contentReviewedAt: CONVENIENCE_FISH_GUIDE.contentReviewedAt,
-    internalLinks: [...CONVENIENCE_FISH_GUIDE.internalLinks],
-    disclosures: [...CONVENIENCE_FISH_GUIDE.disclosures],
-    status: "published"
-  },
-  {
-    title: FIVE_STAPLES_GUIDE.title,
-    path: FIVE_STAPLES_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: FIVE_STAPLES_GUIDE.pageFamily,
-    primarySearchIntent: FIVE_STAPLES_GUIDE.primarySearchIntent,
-    indexingStatus: FIVE_STAPLES_GUIDE.indexingStatus,
-    publishedAt: FIVE_STAPLES_GUIDE.publishedAt,
-    reviewedAt: FIVE_STAPLES_GUIDE.reviewedAt,
-    contentReviewedAt: FIVE_STAPLES_GUIDE.contentReviewedAt,
-    internalLinks: [...FIVE_STAPLES_GUIDE.internalLinks],
-    disclosures: [...FIVE_STAPLES_GUIDE.disclosures],
-    status: "published"
-  },
   {
     title: CHICKEN_THIGH_COST_GUIDE.title,
     path: CHICKEN_THIGH_COST_GUIDE_PATH,

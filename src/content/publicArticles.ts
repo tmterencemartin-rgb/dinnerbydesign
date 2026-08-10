@@ -11,9 +11,6 @@ import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDi
 import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGuide';
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
 import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
-import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide';
-import { CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH } from './convenienceFishGuide';
-import { TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH } from './tinnedFishGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './publicGuideRegistry';
 import type { PublicGuideRecord } from './publicGuideModel';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
@@ -50,48 +47,6 @@ const publicGuideRecordToArticle = (guide: PublicGuideRecord): PublicArticleLink
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
   ...PUBLISHED_PUBLIC_GUIDE_RECORDS.map(publicGuideRecordToArticle),
-  {
-    title: TINNED_FISH_GUIDE.title,
-    path: TINNED_FISH_GUIDE_PATH,
-    category: 'Practical cooking guide',
-    pageFamily: TINNED_FISH_GUIDE.pageFamily,
-    primarySearchIntent: TINNED_FISH_GUIDE.primarySearchIntent,
-    indexingStatus: TINNED_FISH_GUIDE.indexingStatus,
-    publishedAt: TINNED_FISH_GUIDE.publishedAt,
-    reviewedAt: TINNED_FISH_GUIDE.reviewedAt,
-    contentReviewedAt: TINNED_FISH_GUIDE.contentReviewedAt,
-    internalLinks: [...TINNED_FISH_GUIDE.internalLinks],
-    disclosures: [...TINNED_FISH_GUIDE.disclosures],
-    status: 'published',
-  },
-  {
-    title: CONVENIENCE_FISH_GUIDE.title,
-    path: CONVENIENCE_FISH_GUIDE_PATH,
-    category: 'Practical cooking guide',
-    pageFamily: CONVENIENCE_FISH_GUIDE.pageFamily,
-    primarySearchIntent: CONVENIENCE_FISH_GUIDE.primarySearchIntent,
-    indexingStatus: CONVENIENCE_FISH_GUIDE.indexingStatus,
-    publishedAt: CONVENIENCE_FISH_GUIDE.publishedAt,
-    reviewedAt: CONVENIENCE_FISH_GUIDE.reviewedAt,
-    contentReviewedAt: CONVENIENCE_FISH_GUIDE.contentReviewedAt,
-    internalLinks: [...CONVENIENCE_FISH_GUIDE.internalLinks],
-    disclosures: [...CONVENIENCE_FISH_GUIDE.disclosures],
-    status: 'published',
-  },
-  {
-    title: FIVE_STAPLES_GUIDE.title,
-    path: FIVE_STAPLES_GUIDE_PATH,
-    category: 'Practical cooking guide',
-    pageFamily: FIVE_STAPLES_GUIDE.pageFamily,
-    primarySearchIntent: FIVE_STAPLES_GUIDE.primarySearchIntent,
-    indexingStatus: FIVE_STAPLES_GUIDE.indexingStatus,
-    publishedAt: FIVE_STAPLES_GUIDE.publishedAt,
-    reviewedAt: FIVE_STAPLES_GUIDE.reviewedAt,
-    contentReviewedAt: FIVE_STAPLES_GUIDE.contentReviewedAt,
-    internalLinks: [...FIVE_STAPLES_GUIDE.internalLinks],
-    disclosures: [...FIVE_STAPLES_GUIDE.disclosures],
-    status: 'published',
-  },
   {
     title: CHICKEN_THIGH_COST_GUIDE.title,
     path: CHICKEN_THIGH_COST_GUIDE_PATH,

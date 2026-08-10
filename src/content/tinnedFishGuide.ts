@@ -2,9 +2,13 @@ import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
   TINNED_FISH_GUIDE_DISCLOSURES,
   TINNED_FISH_GUIDE_DISCLOSURE_FOOTER,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const TINNED_FISH_GUIDE_PATH = '/guides/tinned-fish-recipes-tuna-salmon-sardines';
 
@@ -104,53 +108,39 @@ export const TINNED_FISH_GUIDE_CLOSING_HTML = `<section><h2>Tinned and jarred sh
 <section><h2>Nutrition framing</h2><p>The <a href="https://www.nhs.uk/live-well/eat-well/food-types/fish-and-shellfish-nutrition/">NHS recommends</a> at least two portions of fish a week, including one portion of oily fish; a portion is around 140g. Salmon, sardines, pilchards and mackerel count as oily fish. Fresh and tinned tuna do not.</p><p>The NHS gives separate limits for some people, including those who are pregnant or trying for a baby. Product-level claims still need the current nutrition panel because salt, oil, sauce and drained weight differ between tins.</p></section>
 <section><h2>Related DinnerByDesign guidance</h2><ul><li><a href="/guides/fish-finger-fishcake-scampi-dinner-ideas">Fish finger, fishcake and scampi dinner ideas</a></li><li><a href="/food-costs/cooking-with-pulses-on-a-budget">Cooking with pulses on a budget</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-safety">Food-safety guidance</a></li><li><a href="/recipe-methodology">Recipe methodology</a></li></ul></section>`;
 
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+export const TINNED_FISH_GUIDE_SECTIONS: PublicGuideSection[] = [
+  { rawHtml: TINNED_FISH_GUIDE_OPENING_HTML },
+  { rawHtml: TINNED_FISH_GUIDE_IDEAS_HTML },
+  { rawHtml: TINNED_FISH_GUIDE_CLOSING_HTML },
+];
+
+export const TINNED_FISH_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'tinned-fish-recipes-tuna-salmon-sardines',
+  slug: 'tinned-fish-recipes-tuna-salmon-sardines',
+  path: TINNED_FISH_GUIDE_PATH,
+  canonicalPath: TINNED_FISH_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'safety-sensitive',
+  ...TINNED_FISH_GUIDE,
+  metaDescription: TINNED_FISH_GUIDE.description,
+  label: 'Practical cooking guide',
+  internalLinks: TINNED_FISH_GUIDE.internalLinks.filter(path => path !== '/recipes'),
+  disclosureItems: TINNED_FISH_GUIDE_DISCLOSURES,
+  disclosureFooter: TINNED_FISH_GUIDE_DISCLOSURE_FOOTER,
+  sections: TINNED_FISH_GUIDE_SECTIONS,
+  cta: {
+    title: 'Find more dinner ideas',
+    copy: 'Search DinnerByDesign for ideas built around what is already in the cupboard, fridge or freezer.',
+    label: 'Find a dinner',
+    href: '/signin',
+  },
+};
 
 export function getTinnedFishGuideJsonLd() {
-  const guide = TINNED_FISH_GUIDE;
-  const url = `https://dinnerbydesign.app${TINNED_FISH_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: guide.faqs.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Recipes and cooking ideas', item: 'https://dinnerbydesign.app/recipes' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(TINNED_FISH_GUIDE_RECORD);
 }
 
 export function renderTinnedFishGuideInitialHtml() {
-  const guide = TINNED_FISH_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(TINNED_FISH_GUIDE_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(TINNED_FISH_GUIDE_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/recipes">Recipes and cooking ideas</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 28 July 2026 · Last reviewed 28 July 2026</p><article>${TINNED_FISH_GUIDE_OPENING_HTML}${TINNED_FISH_GUIDE_IDEAS_HTML}${disclosures}${TINNED_FISH_GUIDE_CLOSING_HTML}<section><h2>Questions and answers</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find more dinner ideas</h2><p>Search DinnerByDesign for ideas built around what is already in the cupboard, fridge or freezer.</p><p><a href="/signin">Find a dinner</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(TINNED_FISH_GUIDE_RECORD);
 }

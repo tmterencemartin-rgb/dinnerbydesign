@@ -111,24 +111,6 @@ import {
   getChickenThighCostGuideJsonLd,
   renderChickenThighCostGuideInitialHtml,
 } from '../src/content/chickenThighCostGuide';
-import {
-  FIVE_STAPLES_GUIDE,
-  FIVE_STAPLES_GUIDE_PATH,
-  getFiveStaplesGuideJsonLd,
-  renderFiveStaplesGuideInitialHtml,
-} from '../src/content/fiveStaplesGuide';
-import {
-  CONVENIENCE_FISH_GUIDE,
-  CONVENIENCE_FISH_GUIDE_PATH,
-  getConvenienceFishGuideJsonLd,
-  renderConvenienceFishGuideInitialHtml,
-} from '../src/content/convenienceFishGuide';
-import {
-  TINNED_FISH_GUIDE,
-  TINNED_FISH_GUIDE_PATH,
-  getTinnedFishGuideJsonLd,
-  renderTinnedFishGuideInitialHtml,
-} from '../src/content/tinnedFishGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from '../src/content/publicGuideRegistry';
 import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from '../src/content/publicGuideModel';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
@@ -557,27 +539,6 @@ await generateEditorialGuide(
   CHICKEN_THIGH_COST_GUIDE_PATH,
   renderChickenThighCostGuideInitialHtml,
   getChickenThighCostGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  FIVE_STAPLES_GUIDE,
-  FIVE_STAPLES_GUIDE_PATH,
-  renderFiveStaplesGuideInitialHtml,
-  getFiveStaplesGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  CONVENIENCE_FISH_GUIDE,
-  CONVENIENCE_FISH_GUIDE_PATH,
-  renderConvenienceFishGuideInitialHtml,
-  getConvenienceFishGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  TINNED_FISH_GUIDE,
-  TINNED_FISH_GUIDE_PATH,
-  renderTinnedFishGuideInitialHtml,
-  getTinnedFishGuideJsonLd,
 );
 
 if (!PUBLIC_LIBRARY_PATH) throw new Error('Public guide library path is not configured.');

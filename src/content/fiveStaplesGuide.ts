@@ -2,9 +2,13 @@ import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
   FIVE_STAPLES_GUIDE_DISCLOSURES,
   FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const FIVE_STAPLES_GUIDE_PATH = '/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses';
 
@@ -112,53 +116,39 @@ export const FIVE_STAPLES_GUIDE_CLOSING_HTML = `<section><h2>How the five staple
 <section><h2>Leftovers and rice safety</h2><p>The Food Standards Agency says to cool cooked rice as quickly as possible, ideally within one hour, keep it refrigerated for no more than one day before reheating, and reheat it only once until steaming hot throughout. Read the <a href="https://www.gov.uk/government/publications/home-food-fact-checker">current official guidance</a>.</p><p>For the other dishes, follow the storage instructions on the publisher page and ingredient packs. Cool leftovers promptly and use them within the stated period.</p></section>
 <section><h2>Related DinnerByDesign guidance</h2><ul><li><a href="/food-costs/cooking-with-pulses-on-a-budget">Cooking with pulses</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-costs/five-dinners-same-ingredients">Using complete packs across several dinners</a></li><li><a href="/food-costs/cooking-for-one-without-waste">Cooking for one</a></li><li><a href="/pricing-methodology">Pricing methodology</a></li></ul></section>`;
 
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+export const FIVE_STAPLES_GUIDE_SECTIONS: PublicGuideSection[] = [
+  { rawHtml: FIVE_STAPLES_GUIDE_OPENING_HTML },
+  { rawHtml: FIVE_STAPLES_GUIDE_RECIPES_HTML },
+  { rawHtml: FIVE_STAPLES_GUIDE_CLOSING_HTML },
+];
+
+export const FIVE_STAPLES_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'dinners-built-around-potatoes-rice-pasta-bread-pulses',
+  slug: 'dinners-built-around-potatoes-rice-pasta-bread-pulses',
+  path: FIVE_STAPLES_GUIDE_PATH,
+  canonicalPath: FIVE_STAPLES_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'safety-sensitive',
+  ...FIVE_STAPLES_GUIDE,
+  metaDescription: FIVE_STAPLES_GUIDE.description,
+  label: 'Practical cooking guide',
+  internalLinks: FIVE_STAPLES_GUIDE.internalLinks.filter(path => path !== '/recipes'),
+  disclosureItems: FIVE_STAPLES_GUIDE_DISCLOSURES,
+  disclosureFooter: FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER,
+  sections: FIVE_STAPLES_GUIDE_SECTIONS,
+  cta: {
+    title: 'Find a dinner for tonight',
+    copy: 'Search DinnerByDesign by ingredient, time or dietary preference and turn one of these staple-led ideas into a plan for your household.',
+    label: 'Find a dinner',
+    href: '/signin',
+  },
+};
 
 export function getFiveStaplesGuideJsonLd() {
-  const guide = FIVE_STAPLES_GUIDE;
-  const url = `https://dinnerbydesign.app${FIVE_STAPLES_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: guide.faqs.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Recipes and cooking ideas', item: 'https://dinnerbydesign.app/recipes' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(FIVE_STAPLES_GUIDE_RECORD);
 }
 
 export function renderFiveStaplesGuideInitialHtml() {
-  const guide = FIVE_STAPLES_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(FIVE_STAPLES_GUIDE_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/recipes">Recipes and cooking ideas</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 28 July 2026 · Last reviewed 28 July 2026</p><article>${FIVE_STAPLES_GUIDE_OPENING_HTML}${FIVE_STAPLES_GUIDE_RECIPES_HTML}${disclosures}${FIVE_STAPLES_GUIDE_CLOSING_HTML}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find a dinner for tonight</h2><p>Search DinnerByDesign by ingredient, time or dietary preference and turn one of these staple-led ideas into a plan for your household.</p><p><a href="/signin">Find a dinner</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(FIVE_STAPLES_GUIDE_RECORD);
 }

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   FIVE_STAPLES_GUIDE,
   FIVE_STAPLES_GUIDE_PATH,
+  FIVE_STAPLES_GUIDE_RECORD,
   getFiveStaplesGuideJsonLd,
   renderFiveStaplesGuideInitialHtml,
 } from './fiveStaplesGuide';
@@ -15,7 +16,7 @@ describe('five staples public guide', () => {
     expect(html).toContain('Food Standards Agency');
     expect(html.match(/href="\/signin"/g)).toHaveLength(1);
     FIVE_STAPLES_GUIDE.faqs.forEach(faq => expect(html).toContain(`<h3>${faq.question}</h3>`));
-    FIVE_STAPLES_GUIDE.internalLinks
+    FIVE_STAPLES_GUIDE_RECORD.internalLinks
       .filter(path => path !== FIVE_STAPLES_GUIDE_PATH && path !== '/signin')
       .forEach(path => expect(html).toContain(`href="${path}`));
   });

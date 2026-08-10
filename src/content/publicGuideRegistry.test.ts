@@ -36,6 +36,15 @@ import {
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH,
 } from './nineBudgetDinnersWithRiceGuide';
 import {
+  TINNED_FISH_GUIDE_PATH,
+} from './tinnedFishGuide';
+import {
+  CONVENIENCE_FISH_GUIDE_PATH,
+} from './convenienceFishGuide';
+import {
+  FIVE_STAPLES_GUIDE_PATH,
+} from './fiveStaplesGuide';
+import {
   PUBLIC_GUIDE_RECORDS,
   PUBLISHED_PUBLIC_GUIDE_RECORDS,
   getPublicGuideRecordByPath,
@@ -56,6 +65,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH);
     expect(paths).toContain(WHOLE_CHICKEN_VALUE_GUIDE_PATH);
+    expect(paths).toContain(TINNED_FISH_GUIDE_PATH);
+    expect(paths).toContain(CONVENIENCE_FISH_GUIDE_PATH);
+    expect(paths).toContain(FIVE_STAPLES_GUIDE_PATH);
     expect(new Set(paths).size).toBe(paths.length);
   });
 
@@ -83,6 +95,9 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH)?.title).toBe('Nine budget-friendly dinners with eggs');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH)?.title).toBe('Nine budget dinners with tinned vegetables');
     expect(getPublicGuideRecordByPath(WHOLE_CHICKEN_VALUE_GUIDE_PATH)?.title).toBe('Is a whole chicken better value than chicken pieces?');
+    expect(getPublicGuideRecordByPath(TINNED_FISH_GUIDE_PATH)?.title).toBe('Tinned fish recipes: easy dinner ideas with tuna, salmon, sardines and more');
+    expect(getPublicGuideRecordByPath(CONVENIENCE_FISH_GUIDE_PATH)?.title).toBe('How to turn fish fingers, fishcakes and scampi into better weeknight dinners');
+    expect(getPublicGuideRecordByPath(FIVE_STAPLES_GUIDE_PATH)?.title).toBe('Five dinners built around potatoes, rice, pasta, bread and pulses');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH)?.title).toBe('Nine budget dinners with potatoes');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH)?.title).toBe('Nine budget dinners with rice');
   });

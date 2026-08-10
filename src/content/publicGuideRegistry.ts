@@ -34,6 +34,15 @@ import {
 import {
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
 } from './nineBudgetDinnersWithRiceGuide';
+import {
+  TINNED_FISH_GUIDE_RECORD,
+} from './tinnedFishGuide';
+import {
+  CONVENIENCE_FISH_GUIDE_RECORD,
+} from './convenienceFishGuide';
+import {
+  FIVE_STAPLES_GUIDE_RECORD,
+} from './fiveStaplesGuide';
 import type { PublicGuideRecord } from './publicGuideModel';
 
 export const PUBLIC_GUIDE_RECORDS = [
@@ -47,6 +56,9 @@ export const PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD,
   WHOLE_CHICKEN_VALUE_GUIDE_RECORD,
+  TINNED_FISH_GUIDE_RECORD,
+  CONVENIENCE_FISH_GUIDE_RECORD,
+  FIVE_STAPLES_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
 ] satisfies PublicGuideRecord[];

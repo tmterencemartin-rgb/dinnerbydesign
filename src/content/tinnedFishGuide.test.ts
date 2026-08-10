@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   TINNED_FISH_GUIDE,
   TINNED_FISH_GUIDE_PATH,
+  TINNED_FISH_GUIDE_RECORD,
   getTinnedFishGuideJsonLd,
   renderTinnedFishGuideInitialHtml,
 } from './tinnedFishGuide';
@@ -12,7 +13,7 @@ describe('tinned fish guide', () => {
     expect(html).toContain(`<h1>${TINNED_FISH_GUIDE.title}</h1>`);
     expect(html).toContain('Tonno e fagioli');
     expect(html).toContain('Tinned and jarred shellfish');
-    expect(html).toContain('Questions and answers');
+    expect(html).toContain('Frequently asked questions');
     expect(html).toContain('Sources');
     expect(html).not.toContain('Production notes');
     expect(html.match(/href="\/signin"/g)).toHaveLength(1);
@@ -25,7 +26,7 @@ describe('tinned fish guide', () => {
       'source_timing',
     ]);
     const html = renderTinnedFishGuideInitialHtml();
-    TINNED_FISH_GUIDE.internalLinks
+    TINNED_FISH_GUIDE_RECORD.internalLinks
       .filter(path => path !== TINNED_FISH_GUIDE_PATH && path !== '/signin')
       .forEach(path => expect(html).toContain(`href="${path}`));
   });

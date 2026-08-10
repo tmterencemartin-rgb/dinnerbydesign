@@ -27,7 +27,8 @@ export interface PublicGuideFaq {
 
 export interface PublicGuideSection {
   title?: string;
-  paragraphs: string[];
+  paragraphs?: string[];
+  rawHtml?: string;
   source?: PublicGuideLink & { details?: string };
   relatedLink?: PublicGuideLink;
 }
@@ -132,10 +133,11 @@ export function getPublicGuideJsonLd(guide: PublicGuideRecord) {
 
 export function renderPublicGuideInitialHtml(guide: PublicGuideRecord) {
   const sections = guide.sections.map(section => {
+    if (section.rawHtml) return section.rawHtml;
     const source = section.source
       ? `<p><strong>Source:</strong> <a href="${escapeGuideHtml(section.source.url)}">${escapeGuideHtml(section.source.label)}</a>${section.source.details ? ` &middot; ${escapeGuideHtml(section.source.details)}` : ''}</p>`
       : '';
-    return `<section>${section.title ? `<h2>${escapeGuideHtml(section.title)}</h2>` : ''}${source}${section.paragraphs.map(paragraph => `<p>${escapeGuideHtml(paragraph).replace(/\n/g, '<br />')}</p>`).join('')}${section.relatedLink ? `<p>Related guide: <a href="${escapeGuideHtml(section.relatedLink.url)}">${escapeGuideHtml(section.relatedLink.label)}</a></p>` : ''}</section>`;
+    return `<section>${section.title ? `<h2>${escapeGuideHtml(section.title)}</h2>` : ''}${source}${(section.paragraphs ?? []).map(paragraph => `<p>${escapeGuideHtml(paragraph).replace(/\n/g, '<br />')}</p>`).join('')}${section.relatedLink ? `<p>Related guide: <a href="${escapeGuideHtml(section.relatedLink.url)}">${escapeGuideHtml(section.relatedLink.label)}</a></p>` : ''}</section>`;
   }).join('');
   const faqs = guide.faqs.map(faq => `<section><h3>${escapeGuideHtml(faq.question)}</h3><p>${escapeGuideHtml(faq.answer)}</p></section>`).join('');
   const sources = guide.sources.map(source => `<li><a href="${escapeGuideHtml(source.url)}">${escapeGuideHtml(source.label)}</a></li>`).join('');
