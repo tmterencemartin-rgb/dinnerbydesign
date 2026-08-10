@@ -10,9 +10,10 @@ describe('5 A Day guide publishing data', () => {
     FIVE_A_DAY_GUIDE.sources.forEach(source => expect(html).toContain(`href="${source.url}"`));
   });
 
-  it('uses matching Article and breadcrumb structured data', () => {
+  it('uses matching Article, FAQ and breadcrumb structured data', () => {
     const jsonLd = getFiveADayGuideJsonLd();
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${FIVE_A_DAY_GUIDE_PATH}`);
-    expect(jsonLd['@graph'][1].itemListElement[2].item).toBe(`https://dinnerbydesign.app${FIVE_A_DAY_GUIDE_PATH}`);
+    expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
+    expect(jsonLd['@graph'][2].itemListElement[2].item).toBe(`https://dinnerbydesign.app${FIVE_A_DAY_GUIDE_PATH}`);
   });
 });

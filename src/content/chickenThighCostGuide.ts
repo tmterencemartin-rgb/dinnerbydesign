@@ -7,6 +7,11 @@ import {
   renderProgrammaticDisclosureFooterInitialHtml,
   renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+} from './publicGuideModel';
 
 export const CHICKEN_THIGH_COST_GUIDE_PATH = '/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates';
 
@@ -210,7 +215,19 @@ const GUIDE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   ],
 };
 
+const GUIDE_DISCLOSURES_FOR_RECORD = CHICKEN_THIGH_COST_GUIDE.disclosures.map(key => {
+  const disclosure = GUIDE_DISCLOSURES.find(item => item.key === key);
+  if (!disclosure) throw new Error(`Missing chicken thigh disclosure for ${key}`);
+  return disclosure;
+});
+
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+
+const extractArticleSections = (initialHtml: string) => {
+  const match = initialHtml.match(/<article>([\s\S]*?)<\/article>/);
+  if (!match) throw new Error('Chicken thigh cost guide HTML is missing article content.');
+  return match[1];
+};
 
 const renderCostTable = (recipe: ComparedRecipe) => {
   const rows = recipe.rows.map(([category, estimate]) => `<tr><td>${escapeHtml(category)}</td><td>${escapeHtml(estimate)}</td></tr>`).join('');
@@ -218,56 +235,10 @@ const renderCostTable = (recipe: ComparedRecipe) => {
 };
 
 export function getChickenThighCostGuideJsonLd() {
-  const guide = CHICKEN_THIGH_COST_GUIDE;
-  const url = `https://dinnerbydesign.app${CHICKEN_THIGH_COST_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'ItemList',
-        '@id': `${url}#recipes`,
-        numberOfItems: CHICKEN_THIGH_COMPARED_RECIPES.length,
-        itemListElement: CHICKEN_THIGH_COMPARED_RECIPES.map((recipe, index) => ({
-          '@type': 'ListItem',
-          position: index + 1,
-          name: recipe.title,
-          url: recipe.url,
-        })),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: CHICKEN_THIGH_COST_FAQS.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Recipes and cooking ideas', item: 'https://dinnerbydesign.app/recipes' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(CHICKEN_THIGH_COST_GUIDE_RECORD);
 }
 
-export function renderChickenThighCostGuideInitialHtml() {
+function renderChickenThighCostGuideLegacyInitialHtml() {
   const guide = CHICKEN_THIGH_COST_GUIDE;
   const recipes = CHICKEN_THIGH_COMPARED_RECIPES.map((recipe, index) => `
     <section>
@@ -319,4 +290,46 @@ export function renderChickenThighCostGuideInitialHtml() {
     <section><h2>Sources</h2><ul>${sources}</ul></section>
     ${footer}
   </article><section><h2>Compare recipes with your own budget</h2><p>Use DinnerByDesign to search for recipes that fit your ingredients, preferences and available time.</p><p><a href="/signin">Find a recipe</a></p></section></main></div>`;
+}
+
+export const CHICKEN_THIGH_COST_GUIDE_RECORD = {
+  id: 'five-chicken-thigh-recipes-for-four-aldi-cost-estimates',
+  slug: '5-chicken-thigh-recipes-for-four-aldi-cost-estimates',
+  path: CHICKEN_THIGH_COST_GUIDE_PATH,
+  canonicalPath: CHICKEN_THIGH_COST_GUIDE_PATH,
+  category: 'recipes',
+  reviewSensitivity: 'price-sensitive',
+  ...CHICKEN_THIGH_COST_GUIDE,
+  metaDescription: CHICKEN_THIGH_COST_GUIDE.description,
+  label: 'Recipe cost comparison',
+  disclosureItems: GUIDE_DISCLOSURES_FOR_RECORD,
+  disclosureFooter: GUIDE_FOOTER,
+  sections: [{ rawHtml: extractArticleSections(renderChickenThighCostGuideLegacyInitialHtml()) }],
+  faqs: CHICKEN_THIGH_COST_FAQS,
+  cta: {
+    title: 'Compare recipes with your own budget',
+    copy: 'Use DinnerByDesign to search for recipes that fit your ingredients, preferences and available time.',
+    label: 'Find a recipe',
+    href: '/signin',
+  },
+  jsonLdGraphItems: [
+    {
+      '@type': 'ItemList',
+      '@id': `https://dinnerbydesign.app${CHICKEN_THIGH_COST_GUIDE_PATH}#recipes`,
+      numberOfItems: CHICKEN_THIGH_COMPARED_RECIPES.length,
+      itemListElement: CHICKEN_THIGH_COMPARED_RECIPES.map((recipe, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: recipe.title,
+        url: recipe.url,
+      })),
+    },
+  ],
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false,
+} satisfies PublicGuideRecord;
+
+export function renderChickenThighCostGuideInitialHtml() {
+  return renderPublicGuideInitialHtml(CHICKEN_THIGH_COST_GUIDE_RECORD);
 }

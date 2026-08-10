@@ -5,6 +5,11 @@ import {
   renderProgrammaticDisclosureFooterInitialHtml,
   renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+} from './publicGuideModel';
 
 export const HOME_COOKED_READY_MADE_GUIDE_PATH = '/guides/home-cooked-or-ready-made-dinners';
 
@@ -164,46 +169,22 @@ export const HOME_COOKED_READY_MADE_FAQS = [
 ];
 
 export function getHomeCookedReadyMadeGuideJsonLd() {
-  const guide = HOME_COOKED_READY_MADE_GUIDE;
-  const url = `https://dinnerbydesign.app${HOME_COOKED_READY_MADE_GUIDE_PATH}`;
-
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: HOME_COOKED_READY_MADE_FAQS.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(HOME_COOKED_READY_MADE_GUIDE_RECORD);
 }
 
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+
+const HOME_COOKED_READY_MADE_DISCLOSURES_FOR_RECORD = HOME_COOKED_READY_MADE_GUIDE.disclosures.map(key => {
+  const disclosure = HOME_COOKED_READY_MADE_DISCLOSURES.find(item => item.key === key);
+  if (!disclosure) throw new Error(`Missing home-cooked ready-made disclosure for ${key}`);
+  return disclosure;
+});
+
+const extractArticleSections = (initialHtml: string) => {
+  const match = initialHtml.match(/<article>([\s\S]*?)<\/article>/);
+  if (!match) throw new Error('Home-cooked or ready-made guide HTML is missing article content.');
+  return match[1];
+};
 
 const renderSection = (section: HomeCookedReadyMadeSection) => {
   const heading = section.title ? `<h2>${escapeHtml(section.title)}</h2>` : '';
@@ -214,7 +195,7 @@ const renderSection = (section: HomeCookedReadyMadeSection) => {
   return `<section>${heading}<p>${escapeHtml(firstParagraph)}</p>${bullets}${remainingParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</section>`;
 };
 
-export function renderHomeCookedReadyMadeGuideInitialHtml() {
+function renderHomeCookedReadyMadeGuideLegacyInitialHtml() {
   const guide = HOME_COOKED_READY_MADE_GUIDE;
   const sectionHtml = HOME_COOKED_READY_MADE_SECTIONS.map(renderSection);
   const disclosures = renderProgrammaticDisclosuresInitialHtml(HOME_COOKED_READY_MADE_DISCLOSURES);
@@ -223,4 +204,34 @@ export function renderHomeCookedReadyMadeGuideInitialHtml() {
   const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
 
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Practical cooking and nutrition guide</nav><p>Practical cooking and nutrition guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 24 July 2026 · Last reviewed 24 July 2026</p><article>${sectionHtml.slice(0, 3).join('')}${disclosures}${sectionHtml.slice(3).join('')}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Related guidance</h2><p><a href="/food-costs/make-low-cost-dinners-more-interesting">See how to make low-cost dinners more interesting</a>.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find the option that fits tonight</h2><p>Search home-cooked recipes or ready-made supermarket options around your time, budget and preferences.</p><p><a href="/signin">Find a dinner</a> · <a href="/guides">Browse all guides</a></p></section></main></div>`;
+}
+
+export const HOME_COOKED_READY_MADE_GUIDE_RECORD = {
+  id: 'home-cooked-or-ready-made-dinners',
+  slug: 'home-cooked-or-ready-made-dinners',
+  path: HOME_COOKED_READY_MADE_GUIDE_PATH,
+  canonicalPath: HOME_COOKED_READY_MADE_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'standard',
+  ...HOME_COOKED_READY_MADE_GUIDE,
+  metaDescription: HOME_COOKED_READY_MADE_GUIDE.description,
+  label: 'Practical cooking and nutrition guide',
+  disclosureItems: HOME_COOKED_READY_MADE_DISCLOSURES_FOR_RECORD,
+  disclosureFooter: HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER,
+  sections: [{ rawHtml: extractArticleSections(renderHomeCookedReadyMadeGuideLegacyInitialHtml()) }],
+  faqs: HOME_COOKED_READY_MADE_FAQS,
+  cta: {
+    title: 'Find the option that fits tonight',
+    copy: 'Search home-cooked recipes or ready-made supermarket options around your time, budget and preferences.',
+    label: 'Find a dinner',
+    href: '/signin',
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false,
+} satisfies PublicGuideRecord;
+
+export function renderHomeCookedReadyMadeGuideInitialHtml() {
+  return renderPublicGuideInitialHtml(HOME_COOKED_READY_MADE_GUIDE_RECORD);
 }

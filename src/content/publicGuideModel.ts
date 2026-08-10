@@ -71,6 +71,7 @@ export interface PublicGuideRecord {
   faqs: PublicGuideFaq[];
   sections: PublicGuideSection[];
   cta: PublicGuideCta;
+  jsonLdGraphItems?: Array<Record<string, any>>;
   autoRenderDisclosures?: boolean;
   autoRenderFaqs?: boolean;
   autoRenderSources?: boolean;
@@ -114,6 +115,7 @@ export function getPublicGuideJsonLd(guide: PublicGuideRecord) {
       mainEntityOfPage: url,
       citation: guide.sources.map(source => source.url),
     },
+    ...(guide.jsonLdGraphItems ?? []),
     ...(guide.faqs.length > 0 ? [{
       '@type': 'FAQPage',
       '@id': `${url}#faq`,

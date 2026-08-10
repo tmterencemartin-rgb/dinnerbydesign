@@ -18963,8 +18963,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml10;
-    function escapeHtml10(string) {
+    module2.exports = escapeHtml13;
+    function escapeHtml13(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -19095,13 +19095,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml10 = require_escape_html();
+    var escapeHtml13 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message2) {
-      var body = escapeHtml10(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml13(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -23043,7 +23043,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml10 = require_escape_html();
+    var escapeHtml13 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -23096,7 +23096,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml10(msg));
+      var doc = createHtmlDocument("Error", escapeHtml13(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -23196,7 +23196,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml10(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml13(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23600,7 +23600,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml10 = require_escape_html();
+    var escapeHtml13 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23939,7 +23939,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml10(address);
+          var u = escapeHtml13(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -24067,7 +24067,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml10 = require_escape_html();
+    var escapeHtml13 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -24153,7 +24153,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml10(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml13(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -183882,6 +183882,18 @@ var SHARED_INGREDIENTS_SAFETY_DISCLOSURES = [
     body: "Food Standards Agency cooking, chilling, freezing and defrosting guidance was reviewed on 23 July 2026. Follow the cited sources for later updates."
   }
 ];
+var FIVE_A_DAY_DISCLOSURES = [
+  {
+    key: "serving_assumption",
+    title: "Portion calculation",
+    body: "The NHS adult reference is 80g for one portion of ordinary fresh, frozen or tinned fruit and vegetables. Children need different amounts, and pur\xE9es, dried produce, juice, beans and pulses follow separate rules. The worked calculation is illustrative rather than a result from a specific DinnerByDesign recipe."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "NHS and British Heart Foundation guidance was reviewed on 24 July 2026. Follow the cited sources for later updates."
+  }
+];
 var LOW_COST_DINNERS_DISCLOSURES = [
   {
     key: "price_comparison",
@@ -183892,6 +183904,33 @@ var LOW_COST_DINNERS_DISCLOSURES = [
     key: "allergen_and_product",
     title: "Ingredients and product labels",
     body: "Soy sauce, miso, hard cheese, yoghurt, nuts, seeds, stock and ready-made seasonings can contain common allergens or substantial salt. Check every label for the people eating the dinner and use a suitable alternative where needed."
+  }
+];
+var HOME_COOKED_READY_MADE_DISCLOSURES = [
+  {
+    key: "serving_assumption",
+    title: "Pack size and portions",
+    body: "A manufacturer-defined serving is predictable, but it is not a personalised recommendation. Appetite, age, activity and any individual dietary advice may change what is suitable."
+  },
+  {
+    key: "price_comparison",
+    title: "How to read the cost comparison",
+    body: "The cited UK study compared cost per 100g and did not include cooking energy or the value of household time. Pack sizes, ingredient reuse, equipment and what goes unused can change the answer for an individual household."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Product labels",
+    body: "Check the complete nutrition panel, ingredient list, allergens and serving information. A front-of-pack claim such as high protein or under 500 calories describes one feature rather than the quality or suitability of the whole dish."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and reheating",
+    body: "Follow use-by dates, storage directions and preparation instructions on the pack. For leftovers, follow current Food Standards Agency guidance and reheat only once until steaming hot throughout."
+  },
+  {
+    key: "source_timing",
+    title: "Evidence review",
+    body: "The research and official guidance were reviewed on 24 July 2026. Product formulations and labelling guidance can change, so check the cited sources and the current pack."
   }
 ];
 var PULSES_COST_DISCLOSURES = [
@@ -184109,6 +184148,13 @@ var SHARED_INGREDIENTS_DISCLOSURE_FOOTER = {
     { href: "/food-safety", label: "Storage and cooking safety" }
   ]
 };
+var FIVE_A_DAY_DISCLOSURE_FOOTER = {
+  body: "This guide explains general UK 5 A Day guidance. It does not replace individual advice from a registered healthcare professional.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/nutrition-methodology", label: "Nutrition estimate methodology" }
+  ]
+};
 var LOW_COST_DINNERS_DISCLOSURE_FOOTER = {
   body: "This guide offers flexible cooking ideas rather than fixed recipes or guaranteed savings. Ingredient prices, pack sizes, availability and product information vary.",
   links: [
@@ -184116,6 +184162,15 @@ var LOW_COST_DINNERS_DISCLOSURE_FOOTER = {
     { href: "/pricing-methodology", label: "Pricing methodology" },
     { href: "/food-safety", label: "Food safety guidance" },
     { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER = {
+  body: "This is a general comparison, not an assessment of every recipe or supermarket product. Individual nutritional needs, prices, ingredients and serving sizes vary.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/nutrition-methodology", label: "Nutrition estimate methodology" },
+    { href: "/food-safety", label: "Food safety guidance" },
+    { href: "/pricing-methodology", label: "Pricing methodology" }
   ]
 };
 var PULSES_DISCLOSURE_FOOTER = {
@@ -184635,116 +184690,6 @@ function renderFamilyDinnersForFourInitialHtml() {
   const disclosures = renderProgrammaticDisclosuresInitialHtml(FAMILY_DINNERS_FOR_FOUR_DISCLOSURES);
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/dinner-plans">Affordable dinner plans</a> / ${escapeHtml4(plan.shortTitle)}</nav><p>Affordable family dinner plan</p><h1>${escapeHtml4(plan.title)}</h1><p>${escapeHtml4(plan.description)}</p><p>By ${escapeHtml4(plan.editorialOwner)} \xB7 Published and reviewed 26 July 2026 \xB7 Prices checked 26 July 2026</p>${plan.introduction.map((item) => `<p>${escapeHtml4(item)}</p>`).join("")}<section aria-label="Plan summary"><h2>Plan summary</h2><p>Five dinners, four servings each, 20 servings in total.</p><p>Complete-pack checkout cost: ${money(plan.expectedCheckoutCost)}.</p><p>Estimated ingredient value used: ${money(plan.estimatedIngredientCost)}, or ${money(plan.averageCostPerServing)} per serving.</p></section>${disclosures}<section><h2>The five dinners</h2>${recipes}</section><section><h2>One coordinated shopping basket</h2><p>Pack cost is the full price paid at checkout. Value used estimates the share consumed by this plan.</p>${basket}<p><strong>Totals: pack cost ${money(plan.expectedCheckoutCost)}, value used ${money(plan.estimatedIngredientCost)}.</strong></p></section><section><h2>How the basket is coordinated</h2>${list(plan.coordination)}</section><section><h2>What remains after Friday</h2>${list(plan.remainders)}</section><section><h2>Preparation across the week</h2>${list(plan.preparation)}</section><section><h2>Substitutions</h2>${list(plan.substitutions)}</section><section><h2>How the figures were calculated</h2>${plan.methodology.map((item) => `<p>${escapeHtml4(item)}</p>`).join("")}</section><section><h2>Questions and answers</h2>${faqs}</section><section><h2>Related reading</h2><p><a href="/dinner-plans">Affordable dinner plans</a>, <a href="/dinner-plans/5-dinners-for-2-under-40">five dinners for two under \xA340</a>, <a href="/food-costs/five-dinners-same-ingredients">five dinners using the same ingredients</a>, <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a>, <a href="/food-costs/fresh-or-frozen">fresh or frozen ingredients</a>, <a href="/pricing-methodology">pricing methodology</a> and <a href="/recipe-methodology">recipe methodology</a>.</p><p><a href="https://www.food.gov.uk/safety-hygiene/cooking-your-food">Food Standards Agency cooking guidance</a> and <a href="https://www.nhs.uk/healthier-families/recipes/">NHS Healthier Families recipes</a>.</p></section>${renderProgrammaticDisclosureFooterInitialHtml()}<p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
 }
-
-// src/content/fiveADayGuide.ts
-var FIVE_A_DAY_GUIDE_PATH = "/guides/do-vegetables-in-dishes-count-towards-5-a-day";
-var FIVE_A_DAY_GUIDE = {
-  title: "Do vegetables in dishes count towards your 5 A Day?",
-  seoTitle: "Vegetables in dishes and your 5 A Day | DinnerByDesign",
-  description: "Find out how vegetables in Bolognese, paella, chilli and other dishes count towards your 5 A Day, including portions and the effect of cooking.",
-  publishedAt: "2026-07-24",
-  reviewedAt: "2026-07-24",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Nutrition guide",
-  primarySearchIntent: "Understand whether vegetables cooked into a dish count towards 5 A Day and how portions should be calculated",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-24",
-  editorialNotes: "Keep the portion rules aligned with current NHS guidance. The worked calculation is illustrative and does not represent a specific DinnerByDesign recipe.",
-  internalLinks: ["/guides", "/nutrition-methodology", "/signin"],
-  disclosures: ["serving_assumption", "source_timing"],
-  sources: [
-    { label: "NHS: 5 A Day, what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
-    { label: "NHS: 5 A Day portion sizes", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/portion-sizes/" },
-    { label: "NHS: Why 5 A Day?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/why-5-a-day/" },
-    { label: "British Heart Foundation: What counts as 5-a-day?", url: "https://www.bhf.org.uk/informationsupport/heart-matters-magazine/nutrition/5-a-day/what-counts-as-5-a-day" },
-    { label: "American Journal of Clinical Nutrition: Lycopene bioavailability study", url: "https://doi.org/10.1093/ajcn/66.1.116" }
-  ]
-};
-
-// src/content/homeCookedReadyMadeGuide.ts
-var HOME_COOKED_READY_MADE_GUIDE_PATH = "/guides/home-cooked-or-ready-made-dinners";
-var HOME_COOKED_READY_MADE_GUIDE = {
-  title: "Home-cooked or ready-made? The honest comparison",
-  seoTitle: "Home-cooked vs ready-made dinners: an honest comparison | DinnerByDesign",
-  description: "Compare home-cooked and ready-made dinners on cost, portions, ingredient waste, nutrition labels, safety and everyday effort.",
-  publishedAt: "2026-07-24",
-  reviewedAt: "2026-07-24",
-  nextReviewAt: "2027-07-24",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking and nutrition guide",
-  primarySearchIntent: "Compare home-cooked and ready-made dinners beyond convenience, including portions, waste, labels, nutrition, cost and safety",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-24",
-  editorialNotes: "Evidence-led comparison. Keep conclusions product-specific and avoid presenting either option as universally better.",
-  internalLinks: ["/guides", "/food-costs/make-low-cost-dinners-more-interesting", "/nutrition-methodology", "/food-safety", "/pricing-methodology", "/signin"],
-  disclosures: ["price_comparison", "serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    {
-      label: "Public Health Nutrition: UK comparison of ready-made and home-cooked dishes",
-      url: "https://doi.org/10.1017/S1368980023000034"
-    },
-    {
-      label: "GOV.UK: Food labelling, giving food information to consumers",
-      url: "https://www.gov.uk/guidance/food-labelling-giving-food-information-to-consumers"
-    },
-    {
-      label: "Institute for Fiscal Studies: Product reformulation and dietary salt intake",
-      url: "https://ifs.org.uk/articles/product-reformulation-effective-reducing-dietary-salt-intake"
-    },
-    {
-      label: "Food Standards Agency: Cooking and reheating food safely",
-      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
-    }
-  ]
-};
-
-// src/content/chickenThighCostGuide.ts
-var CHICKEN_THIGH_COST_GUIDE_PATH = "/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates";
-var CHICKEN_THIGH_COST_GUIDE = {
-  title: "Five chicken thigh recipes for four with Aldi cost estimates",
-  seoTitle: "Five Chicken Thigh Recipes for Four with Aldi Cost Estimates | DinnerByDesign",
-  description: "Compare five established chicken thigh recipes for four using Aldi UK cost estimates, including ingredient value, full-pack cost and price per serving.",
-  publishedAt: "2026-07-27",
-  reviewedAt: "2026-07-27",
-  nextReviewAt: "2026-10-27",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Recipe cost comparison",
-  primarySearchIntent: "Compare chicken thigh recipes for four by estimated Aldi ingredient and full-pack cost",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-27",
-  editorialNotes: "Curated external recipes with original methods retained by their publishers. DinnerByDesign supplies cost and practical-use analysis only.",
-  internalLinks: ["/recipes", "/pricing-methodology", "/recipe-methodology", "/food-safety", "/signin"],
-  disclosures: ["price_estimate", "price_comparison", "serving_assumption", "source_timing", "storage_and_cooking", "allergen_and_product"],
-  status: "published",
-  sources: [
-    { label: "Tesco Real Food: Easy chicken traybake", url: "https://realfood.tesco.com/recipes/easy-chicken-traybake.html" },
-    { label: "Aldi: Chicken Proven\xE7al and vegetable stew", url: "https://www.aldi.co.uk/recipes/courses/mains/chicken-provencal-and-vegetable-stew" },
-    { label: "Aldi: One Pot at Home Chicken", url: "https://www.aldi.co.uk/recipes/courses/mains/one-pot-at-home-chicken" },
-    { label: "Sainsbury\u2019s Magazine: Quick chicken and lentil curry", url: "https://www.sainsburysmagazine.co.uk/recipes/curries/easy-chicken-and-lentil-curry" },
-    { label: "delicious. magazine: Quick chicken noodles", url: "https://www.deliciousmagazine.co.uk/recipes/quick-chicken-noodles/" },
-    { label: "Aldi: Ashfields chicken thighs", url: "https://www.aldi.co.uk/product/ashfields-chicken-thighs-000000000000382103" },
-    { label: "Aldi: Ashfields chicken thigh fillets", url: "https://www.aldi.co.uk/product/ashfields-chicken-thigh-fillets-000000000000416054" },
-    { label: "Aldi: Ashfields chicken breast fillets", url: "https://www.aldi.co.uk/product/ashfields-chicken-breast-fillets-000000000000383730" },
-    { label: "Aldi: Nature\u2019s Pick brown onions", url: "https://www.aldi.co.uk/product/nature-s-pick-brown-onions-000000000000339777" },
-    { label: "Aldi: Nature\u2019s Pick British baking potatoes", url: "https://www.aldi.co.uk/product/nature-s-pick-british-baking-potatoes-000000000000339757" },
-    { label: "Aldi: Nature\u2019s Pick carrots", url: "https://www.aldi.co.uk/product/nature-s-pick-carrots-000000000000339791" },
-    { label: "Aldi: Nature\u2019s Pick mixed peppers", url: "https://www.aldi.co.uk/product/nature-s-pick-mixed-peppers-000000000000275392" },
-    { label: "Aldi: Four Seasons garden peas", url: "https://www.aldi.co.uk/product/four-seasons-garden-peas-000000000000366805" },
-    { label: "Aldi: Everyday Essentials chopped tomatoes", url: "https://www.aldi.co.uk/product/everyday-essentials-chopped-tomatoes-in-tomato-juice-000000000000278702" },
-    { label: "Aldi: Worldwide Foods basmati rice", url: "https://www.aldi.co.uk/product/worldwide-foods-basmati-rice-000000000000262344" },
-    { label: "Aldi: Solesta sunflower oil", url: "https://www.aldi.co.uk/product/solesta-sunflower-oil-000000000000198481" },
-    { label: "Aldi: Solesta olive oil", url: "https://www.aldi.co.uk/product/solesta-olive-oil-000000000000511100" },
-    { label: "Aldi: Nature\u2019s Pick courgettes", url: "https://www.aldi.co.uk/product/nature-s-pick-courgettes-000000000000339808" },
-    { label: "Aldi: Worldwide Foods red lentils", url: "https://www.aldi.co.uk/product/worldwide-foods-red-lentils-000000000000336258" },
-    { label: "Aldi: Ready, Set\u2026Cook! medium curry powder", url: "https://www.aldi.co.uk/product/ready-set-cook-medium-curry-powder-000000000336690001" },
-    { label: "Aldi: Nature\u2019s Pick red onions", url: "https://www.aldi.co.uk/product/nature-s-pick-red-onions-000000000000339914" },
-    { label: "Aldi: Nature\u2019s Pick garlic", url: "https://www.aldi.co.uk/product/nature-s-pick-garlic-000000000000273810" },
-    { label: "Aldi: Everyday Essentials wonky lemons", url: "https://www.aldi.co.uk/product/everyday-essentials-wonky-lemons-000000000000268496" },
-    { label: "Aldi: Nature\u2019s Pick limes", url: "https://www.aldi.co.uk/product/nature-s-pick-limes-000000000000285988" },
-    { label: "Aldi: Bramwells peri-peri seasoning", url: "https://www.aldi.co.uk/product/bramwells-peri-peri-seasoning-000000000337370007" },
-    { label: "Aldi: Bramwells medium peri-peri sauce and marinade", url: "https://www.aldi.co.uk/product/bramwells-medium-peri-peri-sauce-marinade-000000000337375001" }
-  ]
-};
 
 // src/content/nineBudgetDinnersWithSavouryPiesGuide.ts
 var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH = "/guides/nine-budget-dinners-with-savoury-pies";
@@ -186257,6 +186202,569 @@ var WHOLE_CHICKEN_VALUE_GUIDE_RECORD = {
   }
 };
 
+// src/content/fiveADayGuide.ts
+var FIVE_A_DAY_GUIDE_PATH = "/guides/do-vegetables-in-dishes-count-towards-5-a-day";
+var FIVE_A_DAY_GUIDE = {
+  title: "Do vegetables in dishes count towards your 5 A Day?",
+  seoTitle: "Vegetables in dishes and your 5 A Day | DinnerByDesign",
+  description: "Find out how vegetables in Bolognese, paella, chilli and other dishes count towards your 5 A Day, including portions and the effect of cooking.",
+  publishedAt: "2026-07-24",
+  reviewedAt: "2026-07-24",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Nutrition guide",
+  primarySearchIntent: "Understand whether vegetables cooked into a dish count towards 5 A Day and how portions should be calculated",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-24",
+  editorialNotes: "Keep the portion rules aligned with current NHS guidance. The worked calculation is illustrative and does not represent a specific DinnerByDesign recipe.",
+  internalLinks: ["/guides", "/nutrition-methodology", "/signin"],
+  disclosures: ["serving_assumption", "source_timing"],
+  sources: [
+    { label: "NHS: 5 A Day, what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
+    { label: "NHS: 5 A Day portion sizes", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/portion-sizes/" },
+    { label: "NHS: Why 5 A Day?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/why-5-a-day/" },
+    { label: "British Heart Foundation: What counts as 5-a-day?", url: "https://www.bhf.org.uk/informationsupport/heart-matters-magazine/nutrition/5-a-day/what-counts-as-5-a-day" },
+    { label: "American Journal of Clinical Nutrition: Lycopene bioavailability study", url: "https://doi.org/10.1093/ajcn/66.1.116" }
+  ]
+};
+var escapeHtml5 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var extractArticleSections = (initialHtml) => {
+  const match2 = initialHtml.match(/<article>([\s\S]*?)<\/article>/);
+  if (!match2) throw new Error("5 A Day guide HTML is missing article content.");
+  return match2[1];
+};
+function renderFiveADayGuideLegacyInitialHtml() {
+  const guide = FIVE_A_DAY_GUIDE;
+  const disclosures = renderProgrammaticDisclosuresInitialHtml(FIVE_A_DAY_DISCLOSURES);
+  const footer = renderProgrammaticDisclosureFooterInitialHtml(FIVE_A_DAY_DISCLOSURE_FOOTER);
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml5(source.url)}">${escapeHtml5(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Nutrition guide</nav><p>Nutrition guide</p><h1>${escapeHtml5(guide.title)}</h1><p>${escapeHtml5(guide.description)}</p><p>By ${escapeHtml5(guide.editorialOwner)} \xB7 Published 24 July 2026 \xB7 Last reviewed 24 July 2026</p><article><section><p>Onion, carrot, celery and tomato go into the pan for a Bolognese. Four vegetables, and a natural assumption follows: that is four portions of your 5 A Day, sorted. It is not quite that simple, though the vegetables are not wasted either.</p><p>They still count. Cooking, mixing and serving vegetables inside a dish does not cancel them out. What changes is the maths, not the eligibility.</p></section><section><h2>Vegetables cooked into a dish still count</h2><p>The NHS is direct on this point: fruit and vegetables do not have to be eaten on their own to count, and they do not have to be fresh. Frozen, tinned and dried varieties are all eligible, and so are vegetables cooked into soups, stews, curries and pasta sauces.</p><p>That covers much of what a UK household cooks on a weeknight. A chilli made with tinned tomatoes and kidney beans, a paella built on peppers and peas, or a curry base of onion and garlic can all contribute. Cooking a vegetable into a sauce does not remove it from the count.</p><p>Base ingredients people may overlook can contribute too. Onion counts when enough reaches the plate. Concentrated tomato pur\xE9e follows a different calculation from fresh tomato, with one heaped tablespoon counting as a portion.</p></section><section><h2>Variety and portion count are not the same thing</h2><p>This is where the confusion usually starts. Four vegetable varieties in a recipe reads as four portions, but a portion is a quantity, not a headcount of ingredients.</p><p>An adult portion is roughly 80g of eligible vegetable, and it has to reach the plate. A Bolognese made with onion, carrot, celery and tomato may deliver only one or two full portions per serving once the total vegetable weight is divided across everyone eating it. The dish contains four varieties. It is unlikely to contain four portions.</p><p>Potatoes are a separate case and worth flagging early. They are classed as a starchy food by the NHS, not a vegetable, so they do not count towards the total, however they are cooked.</p></section><section><h2>Working out what a dinner is actually giving you</h2><p>For ordinary fresh, frozen or tinned vegetables, the calculation is straightforward once the ingredient weights are known. Pur\xE9es, dried produce, beans and pulses each follow their own rule instead. Add up the eligible vegetable weight in the full recipe, divide by the number of servings, then divide that figure by 80.</p><ul><li>800g eligible vegetables in the pot</li><li>Recipe serves four</li><li>200g vegetables per serving</li><li>200 \xF7 80 = roughly 2.5 portions per serving</li></ul><p>Treat that as an estimate rather than a fixed figure. Trimming, ingredient swaps and how generously a dish is served can all move the number up or down. A recipe listing four vegetables and a recipe delivering four portions on the plate are two different things, and the gap between them is usually where people overestimate.</p></section>${disclosures}<section><h2>Does cooking reduce the benefit?</h2><p>Some vitamins are heat-sensitive, and prolonged cooking does reduce levels of certain ones, vitamin C among them. That is a real trade-off, not a reason to write off cooked vegetables generally.</p><p>Cooking can also improve access to certain nutrients. The clearest evidence is for tomatoes: a controlled trial found that lycopene from tomato paste was substantially more available to the body than the same dose from fresh tomato, when both were eaten alongside a source of fat. That finding is specific to tomatoes and to this comparison. It is not a general rule that cooking improves nutrient absorption across vegetables.</p><p>Tinned, frozen and dried forms can all contribute, though not always by the same rule. Tinned and frozen vegetables match fresh weight for weight. Dried fruit is measured differently, at 30g rather than 80g. Beans and pulses can count only once per day, however much of them you eat.</p></section><section><h2>Getting more from dinners you already cook</h2><p>Reaching a higher portion count rarely means changing what is on the menu. Smaller adjustments to a recipe already in rotation tend to move the number more than switching to something new.</p><p>Bulking a Bolognese or chilli with extra tinned tomatoes or added vegetables such as mushrooms and peppers raises the total vegetable weight without changing the dish. Beans and pulses are a partial exception: a second tin adds volume and fibre, but it does not add a second portion, since beans and pulses can count only once per day.</p><p>The ratio of sauce to servings matters too. Stretching a sauce from four servings to six leaves each serving at about two-thirds of its original amount. The drop still reduces what each person gets.</p></section><section><h2>The short version</h2><p>A dish with several vegetable ingredients is not the same as a dish with several portions. Cooking does not disqualify a vegetable from the 5 A Day count, and tinned, frozen and dried forms can all contribute, though each follows its own rule rather than one shared 80g calculation. What determines the portion figure is weight per serving, not the number of vegetables listed. Working that out, even roughly, is a better guide than counting ingredients on the packet.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Put the vegetables you have to use</h2><p>Tell DinnerByDesign what needs using, along with your time, budget and preferences, and find a dinner that fits.</p><p><a href="/signin">Find a dinner</a></p></section></main></div>`;
+}
+var FIVE_A_DAY_GUIDE_RECORD = {
+  id: "do-vegetables-in-dishes-count-towards-5-a-day",
+  slug: "do-vegetables-in-dishes-count-towards-5-a-day",
+  path: FIVE_A_DAY_GUIDE_PATH,
+  canonicalPath: FIVE_A_DAY_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...FIVE_A_DAY_GUIDE,
+  metaDescription: FIVE_A_DAY_GUIDE.description,
+  label: "Nutrition guide",
+  nextReviewAt: "2027-07-24",
+  disclosureItems: FIVE_A_DAY_DISCLOSURES,
+  disclosureFooter: FIVE_A_DAY_DISCLOSURE_FOOTER,
+  sections: [{ rawHtml: extractArticleSections(renderFiveADayGuideLegacyInitialHtml()) }],
+  faqs: [
+    {
+      question: "Do vegetables cooked into sauces count towards 5 A Day?",
+      answer: "Yes. Vegetables can count when they are cooked into sauces, soups, stews, curries and similar dishes, as long as enough eligible vegetable reaches the serving."
+    },
+    {
+      question: "Does one vegetable ingredient mean one portion?",
+      answer: "No. A portion is based on quantity, not the number of different vegetables listed. For most fresh, frozen or tinned vegetables, an adult portion is about 80g."
+    },
+    {
+      question: "Do potatoes count towards 5 A Day?",
+      answer: "No. The NHS treats potatoes as a starchy food rather than a vegetable for 5 A Day counting."
+    }
+  ],
+  cta: {
+    title: "Put the vegetables you have to use",
+    copy: "Tell DinnerByDesign what needs using, along with your time, budget and preferences, and find a dinner that fits.",
+    label: "Find a dinner",
+    href: "/signin"
+  },
+  autoRenderDisclosures: false,
+  autoRenderSources: false
+};
+
+// src/content/homeCookedReadyMadeGuide.ts
+var HOME_COOKED_READY_MADE_GUIDE_PATH = "/guides/home-cooked-or-ready-made-dinners";
+var HOME_COOKED_READY_MADE_GUIDE = {
+  title: "Home-cooked or ready-made? The honest comparison",
+  seoTitle: "Home-cooked vs ready-made dinners: an honest comparison | DinnerByDesign",
+  description: "Compare home-cooked and ready-made dinners on cost, portions, ingredient waste, nutrition labels, safety and everyday effort.",
+  publishedAt: "2026-07-24",
+  reviewedAt: "2026-07-24",
+  nextReviewAt: "2027-07-24",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking and nutrition guide",
+  primarySearchIntent: "Compare home-cooked and ready-made dinners beyond convenience, including portions, waste, labels, nutrition, cost and safety",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-24",
+  editorialNotes: "Evidence-led comparison. Keep conclusions product-specific and avoid presenting either option as universally better.",
+  internalLinks: ["/guides", "/food-costs/make-low-cost-dinners-more-interesting", "/nutrition-methodology", "/food-safety", "/pricing-methodology", "/signin"],
+  disclosures: ["price_comparison", "serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Public Health Nutrition: UK comparison of ready-made and home-cooked dishes",
+      url: "https://doi.org/10.1017/S1368980023000034"
+    },
+    {
+      label: "GOV.UK: Food labelling, giving food information to consumers",
+      url: "https://www.gov.uk/guidance/food-labelling-giving-food-information-to-consumers"
+    },
+    {
+      label: "Institute for Fiscal Studies: Product reformulation and dietary salt intake",
+      url: "https://ifs.org.uk/articles/product-reformulation-effective-reducing-dietary-salt-intake"
+    },
+    {
+      label: "Food Standards Agency: Cooking and reheating food safely",
+      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
+    }
+  ]
+};
+var HOME_COOKED_READY_MADE_SECTIONS = [
+  {
+    paragraphs: [
+      "It's a common assumption: cooking from scratch is always the better choice, and ready-made is what you fall back on when time or energy runs short. The comparison looks different once portion size, ingredient waste, cooking energy and someone's actual circumstances are counted alongside taste and cost.",
+      "Neither option wins in every situation. Ready-made dinners offer predictable quantities, clear on-pack information and no leftover ingredients from that particular dish. Home cooking generally gives more control over vegetables, fibre and seasoning, and the available UK evidence suggests it's usually less expensive and can have a lower environmental impact. But that answer shifts once cooking energy, unused ingredients and the value of someone's time are factored in."
+    ]
+  },
+  {
+    title: "Where ready-made genuinely helps",
+    paragraphs: [
+      "A ready-made dish is sized once, by the manufacturer, and doesn't need judging by eye. That single fact explains most of its real advantages:",
+      "This matters more for some households than others. A one-person household, someone with an irregular schedule, or anyone managing limited time or energy can find these advantages genuinely useful, not just convenient. That said, a manufacturer's serving size is a standard figure, not necessarily the right amount for a particular appetite."
+    ],
+    bullets: [
+      "A predictable pack and serving size, rather than an estimate",
+      "No half-used onion, herbs, cream or specialist sauce left over from that dish",
+      "Clear calorie and nutrient information printed on the pack",
+      "Consistent preparation instructions every time",
+      "Very little preparation or washing up",
+      "Accessibility for anyone short on time, energy, equipment or cooking confidence"
+    ]
+  },
+  {
+    title: "The limits of those advantages",
+    paragraphs: [
+      "Those advantages have edges. A fixed pack can still be too large for one person or too small for two. Packaging itself creates a different form of waste, even when the ingredients inside are used in full. Storage and reheating instructions still need following properly for the dish to be safe to eat.",
+      "Nutrition declarations are useful, but they're average values rather than a measurement of the exact dish in front of you. Front-of-pack claims such as 'high protein' or 'under 500 calories' usually highlight one attractive figure, not the nutritional quality of the whole dish."
+    ]
+  },
+  {
+    title: "Where home cooking tends to perform better",
+    paragraphs: [
+      "Home cooking tends to offer more control over salt, added sugar, fat and portion size, along with more scope to add vegetables, pulses and wholegrain ingredients. A recipe can be adjusted around a dietary preference in a way a fixed product can't. Ingredients also tend to work out cheaper on average, provided the full pack gets used rather than part of it going to waste, and batch cooking or scaling up for a family is usually easier.",
+      "None of that makes home cooking automatically inexpensive or nutritious. A homemade creamy pasta bake can still carry more salt, saturated fat or calories than a carefully chosen supermarket alternative. The advantage depends on the recipe actually cooked, not on the fact that it was cooked at home."
+    ]
+  },
+  {
+    title: "What the UK research found",
+    paragraphs: [
+      "A 2023 UK study from the Rowett Institute at the University of Aberdeen compared fifty-four chilled or frozen ready-made dishes against their home-cooked equivalents, using UK national dietary survey data. A few findings are worth knowing directly, rather than assuming:",
+      "The study didn't fully account for cooking costs, the time and effort of cooking, or differences in serving size between a ready-made pack and a home-cooked portion. It's also a comparison of this specific dataset, not a verdict on every ultra-processed dish or every home-cooked equivalent. Broader concerns about heavily processed food are a separate discussion from what this particular study measured."
+    ],
+    bullets: [
+      "Ready-made versions contained significantly more free sugar overall.",
+      "The researchers did not find a significant difference in salt or fat content between the two.",
+      "Ready-made versions generally cost more per 100g.",
+      "Animal-based dishes had higher emissions than plant-based ones, whether ready-made or home-cooked.",
+      "Animal-based ready-made dishes cooked in an oven produced the highest emissions and were the most expensive of everything compared."
+    ]
+  },
+  {
+    title: "Has reformulation narrowed the difference?",
+    paragraphs: [
+      "Manufacturers have reduced salt and altered formulations across several UK product categories over the past two decades. Analysis of UK grocery purchases found a measurable decline in average salt content, and that the decline was driven by manufacturers reformulating products rather than by people choosing different ones. That's a genuine improvement, but it doesn't mean every current ready-made range now matches home cooking nutritionally. The practical approach is to judge the actual product in front of you rather than a claim printed on the front of the pack."
+    ]
+  },
+  {
+    title: "A practical decision guide",
+    paragraphs: ["A few realistic situations help make the choice less abstract:"],
+    bullets: [
+      "Cooking for one with an unpredictable week: a single ready-made dish may prevent more waste than a part-used set of ingredients.",
+      "Cooking for a family: home cooking will often provide better value and easier serving flexibility.",
+      "Monitoring calories, protein or salt: a labelled pack can be easier to record accurately than an unweighed recipe.",
+      "Trying to cut salt or add more vegetables: home cooking usually gives more control.",
+      "Short on energy: whichever option gets a proper dinner eaten is the sensible one on that particular day.",
+      "Using the same ingredients across several dinners: home cooking becomes considerably more economical once full packs are used rather than partly wasted."
+    ]
+  },
+  {
+    title: "The useful middle ground",
+    paragraphs: ["This doesn't have to be an either-or decision. A few small combinations get some of the benefit of both:"],
+    bullets: [
+      "Add frozen vegetables to a ready-made curry.",
+      "Serve a ready-made lasagne with a side salad or peas.",
+      "Use a prepared sauce, but add your own vegetables and protein.",
+      "Freeze spare portions of a home-cooked dish individually, so they behave like a ready-made option later in the week.",
+      "Choose frozen chopped vegetables and herbs to cut down on the ingredient waste that home cooking can otherwise create."
+    ]
+  },
+  {
+    title: "Conclusion",
+    paragraphs: [
+      "Ready-made dinners tend to win on effort, predictability and straightforward labelling. Home cooking usually offers more control and often better value, particularly when ingredients are fully used rather than left to spoil. The better choice depends on the specific product, the specific recipe, the household cooking it, and what's actually likely to be eaten rather than wasted."
+    ]
+  }
+];
+var HOME_COOKED_READY_MADE_FAQS = [
+  {
+    question: "Are ready-made dinners always less healthy?",
+    answer: "Not always. UK research comparing fifty-four ready-made dishes with home-cooked equivalents found significantly more free sugar in the ready-made versions, but no significant difference in salt or fat. Nutritional quality depends on the specific product, not the category as a whole."
+  },
+  {
+    question: "Are the calories on packaged food exact?",
+    answer: "No. Nutrition declarations are mandatory on most prepacked food in Great Britain, but the figures are average values that allow for natural variation, not an exact measurement of the individual pack in your hand."
+  },
+  {
+    question: "Is home cooking always cheaper?",
+    answer: "Usually, but not automatically. It tends to work out cheaper when ingredients are bought in full packs and actually used, rather than partly wasted. Cooking energy, equipment and the time involved aren't part of most straightforward cost comparisons."
+  },
+  {
+    question: "Which option creates less food waste?",
+    answer: "It depends what's being measured. Ready-made avoids the leftover ingredients that a single home-cooked dish can create, but it introduces its own packaging waste. Freezing spare home-cooked portions individually can reduce ingredient waste, particularly when reusable containers are used."
+  },
+  {
+    question: "Are ready-made dishes safer than home-cooked ones?",
+    answer: "Not inherently. Ready-made dishes come with standardised preparation instructions, but they still need to be stored and heated correctly to be safe, just as a home-cooked dish does."
+  },
+  {
+    question: "How can I make a ready-made dinner more balanced?",
+    answer: "Frozen vegetables, a side salad or extra protein are straightforward additions that can round out a ready-made dish without much extra effort."
+  }
+];
+var escapeHtml6 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var HOME_COOKED_READY_MADE_DISCLOSURES_FOR_RECORD = HOME_COOKED_READY_MADE_GUIDE.disclosures.map((key) => {
+  const disclosure = HOME_COOKED_READY_MADE_DISCLOSURES.find((item) => item.key === key);
+  if (!disclosure) throw new Error(`Missing home-cooked ready-made disclosure for ${key}`);
+  return disclosure;
+});
+var extractArticleSections2 = (initialHtml) => {
+  const match2 = initialHtml.match(/<article>([\s\S]*?)<\/article>/);
+  if (!match2) throw new Error("Home-cooked or ready-made guide HTML is missing article content.");
+  return match2[1];
+};
+var renderSection = (section) => {
+  const heading = section.title ? `<h2>${escapeHtml6(section.title)}</h2>` : "";
+  const [firstParagraph, ...remainingParagraphs] = section.paragraphs;
+  const bullets = section.bullets?.length ? `<ul>${section.bullets.map((item) => `<li>${escapeHtml6(item)}</li>`).join("")}</ul>` : "";
+  return `<section>${heading}<p>${escapeHtml6(firstParagraph)}</p>${bullets}${remainingParagraphs.map((paragraph) => `<p>${escapeHtml6(paragraph)}</p>`).join("")}</section>`;
+};
+function renderHomeCookedReadyMadeGuideLegacyInitialHtml() {
+  const guide = HOME_COOKED_READY_MADE_GUIDE;
+  const sectionHtml = HOME_COOKED_READY_MADE_SECTIONS.map(renderSection);
+  const disclosures = renderProgrammaticDisclosuresInitialHtml(HOME_COOKED_READY_MADE_DISCLOSURES);
+  const footer = renderProgrammaticDisclosureFooterInitialHtml(HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER);
+  const faqs = HOME_COOKED_READY_MADE_FAQS.map((faq) => `<section><h3>${escapeHtml6(faq.question)}</h3><p>${escapeHtml6(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml6(source.url)}">${escapeHtml6(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Practical cooking and nutrition guide</nav><p>Practical cooking and nutrition guide</p><h1>${escapeHtml6(guide.title)}</h1><p>${escapeHtml6(guide.description)}</p><p>By ${escapeHtml6(guide.editorialOwner)} \xB7 Published 24 July 2026 \xB7 Last reviewed 24 July 2026</p><article>${sectionHtml.slice(0, 3).join("")}${disclosures}${sectionHtml.slice(3).join("")}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Related guidance</h2><p><a href="/food-costs/make-low-cost-dinners-more-interesting">See how to make low-cost dinners more interesting</a>.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find the option that fits tonight</h2><p>Search home-cooked recipes or ready-made supermarket options around your time, budget and preferences.</p><p><a href="/signin">Find a dinner</a> \xB7 <a href="/guides">Browse all guides</a></p></section></main></div>`;
+}
+var HOME_COOKED_READY_MADE_GUIDE_RECORD = {
+  id: "home-cooked-or-ready-made-dinners",
+  slug: "home-cooked-or-ready-made-dinners",
+  path: HOME_COOKED_READY_MADE_GUIDE_PATH,
+  canonicalPath: HOME_COOKED_READY_MADE_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...HOME_COOKED_READY_MADE_GUIDE,
+  metaDescription: HOME_COOKED_READY_MADE_GUIDE.description,
+  label: "Practical cooking and nutrition guide",
+  disclosureItems: HOME_COOKED_READY_MADE_DISCLOSURES_FOR_RECORD,
+  disclosureFooter: HOME_COOKED_READY_MADE_DISCLOSURE_FOOTER,
+  sections: [{ rawHtml: extractArticleSections2(renderHomeCookedReadyMadeGuideLegacyInitialHtml()) }],
+  faqs: HOME_COOKED_READY_MADE_FAQS,
+  cta: {
+    title: "Find the option that fits tonight",
+    copy: "Search home-cooked recipes or ready-made supermarket options around your time, budget and preferences.",
+    label: "Find a dinner",
+    href: "/signin"
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false
+};
+
+// src/content/chickenThighCostGuide.ts
+var CHICKEN_THIGH_COST_GUIDE_PATH = "/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates";
+var CHICKEN_THIGH_COST_GUIDE = {
+  title: "Five chicken thigh recipes for four with Aldi cost estimates",
+  seoTitle: "Five Chicken Thigh Recipes for Four with Aldi Cost Estimates | DinnerByDesign",
+  description: "Compare five established chicken thigh recipes for four using Aldi UK cost estimates, including ingredient value, full-pack cost and price per serving.",
+  publishedAt: "2026-07-27",
+  reviewedAt: "2026-07-27",
+  nextReviewAt: "2026-10-27",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Recipe cost comparison",
+  primarySearchIntent: "Compare chicken thigh recipes for four by estimated Aldi ingredient and full-pack cost",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-27",
+  editorialNotes: "Curated external recipes with original methods retained by their publishers. DinnerByDesign supplies cost and practical-use analysis only.",
+  internalLinks: ["/recipes", "/pricing-methodology", "/recipe-methodology", "/food-safety", "/signin"],
+  disclosures: ["price_estimate", "price_comparison", "serving_assumption", "source_timing", "storage_and_cooking", "allergen_and_product"],
+  status: "published",
+  sources: [
+    { label: "Tesco Real Food: Easy chicken traybake", url: "https://realfood.tesco.com/recipes/easy-chicken-traybake.html" },
+    { label: "Aldi: Chicken Proven\xE7al and vegetable stew", url: "https://www.aldi.co.uk/recipes/courses/mains/chicken-provencal-and-vegetable-stew" },
+    { label: "Aldi: One Pot at Home Chicken", url: "https://www.aldi.co.uk/recipes/courses/mains/one-pot-at-home-chicken" },
+    { label: "Sainsbury\u2019s Magazine: Quick chicken and lentil curry", url: "https://www.sainsburysmagazine.co.uk/recipes/curries/easy-chicken-and-lentil-curry" },
+    { label: "delicious. magazine: Quick chicken noodles", url: "https://www.deliciousmagazine.co.uk/recipes/quick-chicken-noodles/" },
+    { label: "Aldi: Ashfields chicken thighs", url: "https://www.aldi.co.uk/product/ashfields-chicken-thighs-000000000000382103" },
+    { label: "Aldi: Ashfields chicken thigh fillets", url: "https://www.aldi.co.uk/product/ashfields-chicken-thigh-fillets-000000000000416054" },
+    { label: "Aldi: Ashfields chicken breast fillets", url: "https://www.aldi.co.uk/product/ashfields-chicken-breast-fillets-000000000000383730" },
+    { label: "Aldi: Nature\u2019s Pick brown onions", url: "https://www.aldi.co.uk/product/nature-s-pick-brown-onions-000000000000339777" },
+    { label: "Aldi: Nature\u2019s Pick British baking potatoes", url: "https://www.aldi.co.uk/product/nature-s-pick-british-baking-potatoes-000000000000339757" },
+    { label: "Aldi: Nature\u2019s Pick carrots", url: "https://www.aldi.co.uk/product/nature-s-pick-carrots-000000000000339791" },
+    { label: "Aldi: Nature\u2019s Pick mixed peppers", url: "https://www.aldi.co.uk/product/nature-s-pick-mixed-peppers-000000000000275392" },
+    { label: "Aldi: Four Seasons garden peas", url: "https://www.aldi.co.uk/product/four-seasons-garden-peas-000000000000366805" },
+    { label: "Aldi: Everyday Essentials chopped tomatoes", url: "https://www.aldi.co.uk/product/everyday-essentials-chopped-tomatoes-in-tomato-juice-000000000000278702" },
+    { label: "Aldi: Worldwide Foods basmati rice", url: "https://www.aldi.co.uk/product/worldwide-foods-basmati-rice-000000000000262344" },
+    { label: "Aldi: Solesta sunflower oil", url: "https://www.aldi.co.uk/product/solesta-sunflower-oil-000000000000198481" },
+    { label: "Aldi: Solesta olive oil", url: "https://www.aldi.co.uk/product/solesta-olive-oil-000000000000511100" },
+    { label: "Aldi: Nature\u2019s Pick courgettes", url: "https://www.aldi.co.uk/product/nature-s-pick-courgettes-000000000000339808" },
+    { label: "Aldi: Worldwide Foods red lentils", url: "https://www.aldi.co.uk/product/worldwide-foods-red-lentils-000000000000336258" },
+    { label: "Aldi: Ready, Set\u2026Cook! medium curry powder", url: "https://www.aldi.co.uk/product/ready-set-cook-medium-curry-powder-000000000336690001" },
+    { label: "Aldi: Nature\u2019s Pick red onions", url: "https://www.aldi.co.uk/product/nature-s-pick-red-onions-000000000000339914" },
+    { label: "Aldi: Nature\u2019s Pick garlic", url: "https://www.aldi.co.uk/product/nature-s-pick-garlic-000000000000273810" },
+    { label: "Aldi: Everyday Essentials wonky lemons", url: "https://www.aldi.co.uk/product/everyday-essentials-wonky-lemons-000000000000268496" },
+    { label: "Aldi: Nature\u2019s Pick limes", url: "https://www.aldi.co.uk/product/nature-s-pick-limes-000000000000285988" },
+    { label: "Aldi: Bramwells peri-peri seasoning", url: "https://www.aldi.co.uk/product/bramwells-peri-peri-seasoning-000000000337370007" },
+    { label: "Aldi: Bramwells medium peri-peri sauce and marinade", url: "https://www.aldi.co.uk/product/bramwells-medium-peri-peri-sauce-marinade-000000000337375001" }
+  ]
+};
+var CHICKEN_THIGH_COMPARED_RECIPES = [
+  {
+    title: "Easy chicken traybake",
+    publisher: "Tesco Real Food",
+    url: "https://realfood.tesco.com/recipes/easy-chicken-traybake.html",
+    serves: "4",
+    timing: "5 minutes preparation, 1 hour cooking",
+    ingredientValue: "\xA35.61\u2013\xA35.87",
+    perServing: "\xA31.40\u2013\xA31.47",
+    fullPack: "\xA310.60\u2013\xA311.10",
+    rows: [["Chicken", "\xA32.24"], ["Vegetables and fruit", "\xA32.03"], ["Carbohydrate", "\xA30.60"], ["Other ingredients", "\xA30.74\u2013\xA31.00"]],
+    description: "A single-tray combination of chicken thighs, potatoes, peppers, onion, courgette and Greek-style salad cheese. It is the longest-cooking option here, but most of that time is hands-off.",
+    practicalNote: "Best for a low-effort oven dinner when hands-on time needs to stay short. Some courgette, salad cheese and a spare pepper should remain for a stir-fry, omelette, salad or scrambled eggs. Tesco also suggests white potatoes as a substitution.",
+    uncertainty: "The Greek-style salad cheese price was not available to verify, so it contributes to the range."
+  },
+  {
+    title: "Chicken Proven\xE7al and vegetable stew",
+    publisher: "Aldi",
+    url: "https://www.aldi.co.uk/recipes/courses/mains/chicken-provencal-and-vegetable-stew",
+    serves: "4",
+    timing: "20 minutes preparation, 40 minutes cooking",
+    ingredientValue: "\xA34.39\u2013\xA34.45",
+    perServing: "\xA31.10\u2013\xA31.11",
+    fullPack: "\xA38.10\u2013\xA38.45",
+    rows: [["Chicken", "\xA32.99"], ["Vegetables", "\xA30.83"], ["Carbohydrate", "\xA30.40"], ["Other ingredients", "\xA30.17\u2013\xA30.23"]],
+    description: "A one-pot stew of chicken thighs, potatoes, carrots, onion and tinned tomatoes. It has the lowest estimated ingredient value and checkout range in this comparison.",
+    practicalNote: "Best for a colder evening using ingredients that store for a while. Spare onions and carrots keep well and can form the base of soup, another traybake or another stew.",
+    uncertainty: "Paprika was unverified and the chicken stock cube page showed no current price."
+  },
+  {
+    title: "One Pot at Home Chicken",
+    publisher: "Aldi",
+    url: "https://www.aldi.co.uk/recipes/courses/mains/one-pot-at-home-chicken",
+    serves: "4",
+    timing: "15 minutes preparation, 35 minutes cooking",
+    ingredientValue: "\xA38.19\u2013\xA38.41",
+    perServing: "\xA32.05\u2013\xA32.10",
+    fullPack: "\xA317.97\u2013\xA319.32",
+    rows: [["Chicken", "\xA34.39"], ["Vegetables", "\xA31.02"], ["Carbohydrate", "\xA30.73"], ["Other ingredients", "\xA32.05\u2013\xA32.27"]],
+    description: "A boneless-thigh option with rice, vegetables and a broader seasoning list. Its estimated ingredient value is higher than the other four, while the one-pot format may still appeal when washing-up is the deciding factor.",
+    practicalNote: "Best when a complete, well-seasoned dinner from familiar supermarket ingredients appeals. The remaining spices and stock pots keep well; fresh coriander is better used within a few days. The 80ml olive oil is included in ingredient value but its complete pack is excluded from checkout cost.",
+    uncertainty: "Paprika, oregano, dried chilli flakes and fresh coriander were unverified. Tomato pur\xE9e and the chicken stock pot had no current price."
+  },
+  {
+    title: "Quick chicken and lentil curry",
+    publisher: "Sainsbury\u2019s Magazine",
+    url: "https://www.sainsburysmagazine.co.uk/recipes/curries/easy-chicken-and-lentil-curry",
+    serves: "4",
+    timing: "10 minutes preparation, 30 minutes total",
+    ingredientValue: "\xA35.52\u2013\xA35.77",
+    perServing: "\xA31.38\u2013\xA31.44",
+    fullPack: "\xA310.71\u2013\xA311.36",
+    rows: [["Chicken", "\xA33.66"], ["Vegetables", "\xA30.82\u2013\xA31.00"], ["Carbohydrate", "\xA30.65"], ["Other ingredients", "\xA30.39\u2013\xA30.46"]],
+    description: "The shortest stated total time in the group. Red lentils add substance alongside the chicken, and the curry powder keeps the seasoning list compact.",
+    practicalNote: "Best when time is short and a curry is wanted. Spare lentils keep for months, while the yoghurt and spinach can move into a marinade, another curry or pasta.",
+    uncertainty: "Fresh spinach and low-fat natural yoghurt were unverified, and the chicken stock cube page showed no current price."
+  },
+  {
+    title: "Quick chicken noodles",
+    publisher: "delicious. magazine",
+    url: "https://www.deliciousmagazine.co.uk/recipes/quick-chicken-noodles/",
+    serves: "4",
+    timing: "25 minutes hands-on time",
+    ingredientValue: "\xA35.82\u2013\xA36.62",
+    perServing: "\xA31.46\u2013\xA31.66",
+    fullPack: "\xA39.91\u2013\xA311.51",
+    rows: [["Chicken", "\xA33.66"], ["Vegetables", "\xA31.41\u2013\xA31.91"], ["Carbohydrate", "\xA30.57\u2013\xA30.77"], ["Other ingredients", "\xA30.18\u2013\xA30.28"]],
+    description: "A lighter, quicker-looking option using chicken, noodles and crisp vegetables. The recipe calls for four chicken thighs; the estimate assumes about 500g of boneless thigh fillets.",
+    practicalNote: "Best for a warm-weather or quick evening when a salad-style dish appeals. Optional herbs, peanuts and spring onions are excluded. Fish sauce, sugar and unused rice noodles can carry into another dinner.",
+    uncertainty: "Cucumber, fresh chilli, dried rice noodles or vermicelli, fish sauce and caster sugar were unverified."
+  }
+];
+var CHICKEN_THIGH_COST_FAQS = [
+  {
+    question: "Are chicken thighs cheaper than chicken breasts?",
+    answer: "Often, but not always. At the Aldi prices checked on 27 July 2026, bone-in thighs cost substantially less per kilogram than chicken breast fillets. Promotions, pack sizes and the amount of bone or skin can change the useful comparison."
+  },
+  {
+    question: "Are bone-in chicken thighs cheaper than boneless thigh fillets?",
+    answer: "They usually have a lower shelf price per kilogram. Boneless fillets may be easier to prepare and can suit quicker recipes, so the better choice depends on time, edible yield and the dish."
+  },
+  {
+    question: "Did DinnerByDesign create or test these recipes?",
+    answer: "No. Each recipe belongs to the named publisher. DinnerByDesign has not developed, reproduced or kitchen-tested the recipes; use the publisher\u2019s page for quantities, timings and method."
+  },
+  {
+    question: "Why are the Aldi cost estimates shown as ranges?",
+    answer: "Twelve ingredients could not be verified with a current Aldi online price, while three more were confirmed unavailable with no price displayed. Low and high working values keep that uncertainty visible instead of presenting a false single figure."
+  },
+  {
+    question: "What is the difference between ingredient value and full-pack cost?",
+    answer: "Ingredient value estimates the share of each pack used in the recipe. Full-pack cost estimates what you might pay when buying the required packs from scratch, with the stated cupboard assumptions. Neither figure includes cooking energy."
+  }
+];
+var GUIDE_DISCLOSURES = [
+  {
+    key: "price_estimate",
+    title: "About these estimates",
+    body: "Prices were checked on Aldi UK on 27 July 2026. Ingredient value estimates only the quantities used; full-pack cost estimates the packs needed when starting from scratch, subject to the cupboard assumptions shown. Cooking energy is excluded."
+  },
+  {
+    key: "price_comparison",
+    title: "Why every cost is a range",
+    body: "Twelve ingredients could not be verified with a current online price. Three more, chicken stock cubes, chicken stock pots and tomato pur\xE9e, were checked directly and showed no price because they were unavailable. Working low and high values are used for all fifteen."
+  },
+  {
+    key: "serving_assumption",
+    title: "Serving assumption",
+    body: "Every comparison uses the publisher\u2019s four-serving recipe. Appetite, portion size, substitutions and additional sides may change the quantities required."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Recipes and products can contain regulated allergens, including milk, fish, gluten, soya, nuts or celery. Check the original recipe and every current product label before cooking."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Cooking and storage",
+    body: "Follow the original publisher\u2019s method, the chicken pack instructions and current Food Standards Agency guidance. Keep raw chicken separate and cook it thoroughly until steaming hot throughout."
+  },
+  {
+    key: "source_timing",
+    title: "Editorial and price review",
+    body: "Recipe pages, product pages and cost calculations were reviewed on 27 July 2026. Retailer prices, pack sizes, promotions and availability can change."
+  }
+];
+var GUIDE_FOOTER = {
+  body: "DinnerByDesign selected established recipes for comparison and added cost, substitution, occasion and waste-use analysis. It did not write, reproduce or kitchen-test the recipes. Use the original publisher for quantities, timings and method.",
+  links: [
+    { href: "/recipes", label: "Recipes and cooking ideas" },
+    { href: "/pricing-methodology", label: "How prices are calculated" },
+    { href: "/recipe-methodology", label: "How dinners are selected" },
+    { href: "/food-safety", label: "Food safety" }
+  ]
+};
+var GUIDE_DISCLOSURES_FOR_RECORD = CHICKEN_THIGH_COST_GUIDE.disclosures.map((key) => {
+  const disclosure = GUIDE_DISCLOSURES.find((item) => item.key === key);
+  if (!disclosure) throw new Error(`Missing chicken thigh disclosure for ${key}`);
+  return disclosure;
+});
+var escapeHtml7 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var extractArticleSections3 = (initialHtml) => {
+  const match2 = initialHtml.match(/<article>([\s\S]*?)<\/article>/);
+  if (!match2) throw new Error("Chicken thigh cost guide HTML is missing article content.");
+  return match2[1];
+};
+var renderCostTable = (recipe) => {
+  const rows = recipe.rows.map(([category, estimate]) => `<tr><td>${escapeHtml7(category)}</td><td>${escapeHtml7(estimate)}</td></tr>`).join("");
+  return `<div class="guide-table-wrap"><table><thead><tr><th>Cost group</th><th>Estimated ingredient value</th></tr></thead><tbody>${rows}<tr><th>Total ingredient value</th><th>${escapeHtml7(recipe.ingredientValue)}</th></tr><tr><td>Estimated cost per serving</td><td>${escapeHtml7(recipe.perServing)}</td></tr><tr><td>Estimated full-pack cost</td><td>${escapeHtml7(recipe.fullPack)}</td></tr></tbody></table></div>`;
+};
+function renderChickenThighCostGuideLegacyInitialHtml() {
+  const guide = CHICKEN_THIGH_COST_GUIDE;
+  const recipes = CHICKEN_THIGH_COMPARED_RECIPES.map((recipe, index) => `
+    <section>
+      <h2>${index + 1}. ${escapeHtml7(recipe.publisher)}: ${escapeHtml7(recipe.title)}</h2>
+      <p><strong>Serves:</strong> ${escapeHtml7(recipe.serves)} \xB7 <strong>Publisher\u2019s timing:</strong> ${escapeHtml7(recipe.timing)}</p>
+      <p>${escapeHtml7(recipe.description)}</p>
+      ${renderCostTable(recipe)}
+      <p><strong>Which occasion suits it:</strong> ${escapeHtml7(recipe.practicalNote)}</p>
+      <p><strong>Price uncertainty:</strong> ${escapeHtml7(recipe.uncertainty)}</p>
+      <p><a href="${escapeHtml7(recipe.url)}">See the original ${escapeHtml7(recipe.publisher)} recipe for quantities and method</a></p>
+    </section>
+  `).join("");
+  const faqs = CHICKEN_THIGH_COST_FAQS.map((faq) => `<section><h3>${escapeHtml7(faq.question)}</h3><p>${escapeHtml7(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml7(source.url)}">${escapeHtml7(source.label)}</a></li>`).join("");
+  const disclosures = renderProgrammaticDisclosuresInitialHtml(GUIDE_DISCLOSURES);
+  const footer = renderProgrammaticDisclosureFooterInitialHtml(GUIDE_FOOTER);
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/recipes">Recipes and cooking ideas</a> / Recipe cost comparison</nav><p>Recipe cost comparison</p><h1>${escapeHtml7(guide.title)}</h1><p>${escapeHtml7(guide.description)}</p><p>By ${escapeHtml7(guide.editorialOwner)} \xB7 Published 27 July 2026 \xB7 Last reviewed 27 July 2026</p><article>
+    <section>
+      <p>Chicken thighs are a flexible cut and, gram for gram, are often cheaper than chicken breast. That is not guaranteed everywhere: prices, pack sizes and promotions move, and bone-in and boneless packs are not identical comparisons. Thighs do, though, work across very different cooking styles, from a slow traybake to a quick noodle dinner.</p>
+      <p>These five established recipes come from Tesco, Aldi, Sainsbury\u2019s Magazine and delicious. magazine. DinnerByDesign has compared their estimated Aldi ingredient value, price per serving and full-pack cost so you can see where the differences come from.</p>
+      <p>DinnerByDesign did not develop, reproduce or kitchen-test these recipes. The complete quantities, timings and method remain on each publisher\u2019s page. Our contribution is the Aldi cost calculation, affordability comparison, substitutions, waste considerations and a view on which occasion each recipe may suit.</p>
+    </section>
+    <section>
+      <h2>Why chicken thighs can suit cost-conscious cooking</h2>
+      <p>At the Aldi prices checked, bone-in, skin-on chicken thighs cost \xA32.99 per kilogram, compared with \xA37.22 per kilogram for the referenced fresh chicken breast fillets. Boneless thigh fillets were \xA37.32 per kilogram. These figures are specific to Aldi UK on 27 July 2026; this article does not compare other retailers.</p>
+      <p>Two recipes below use bone-in thighs and three use boneless fillets. That is each publisher\u2019s choice, not something DinnerByDesign changed, and it helps explain part of the cost difference between the five.</p>
+    </section>
+    ${disclosures}
+    ${recipes}
+    <section>
+      <h2>How the five recipes compare</h2>
+      <ul>
+        <li><strong>Lowest estimated ingredient value:</strong> Aldi\u2019s Chicken Proven\xE7al and vegetable stew at \xA34.39\u2013\xA34.45, or \xA31.10\u2013\xA31.11 per serving.</li>
+        <li><strong>Lowest estimated full-pack cost:</strong> the same Aldi stew at \xA38.10\u2013\xA38.45.</li>
+        <li><strong>Shortest stated total time:</strong> Sainsbury\u2019s Magazine\u2019s curry at 30 minutes. The noodle recipe lists 25 minutes hands-on time, which is not directly comparable with total time.</li>
+        <li><strong>Best for using cupboard ingredients:</strong> the Aldi stew has the shortest supporting ingredient list.</li>
+        <li><strong>Most obvious fresh-ingredient reuse:</strong> the Tesco traybake leaves courgette, pepper and salad cheese that can move into another dinner.</li>
+      </ul>
+      <p>At the checked Aldi prices, bone-in chicken thighs were \xA32.99 per kilogram and boneless thigh fillets were \xA37.32 per kilogram. That gap helps explain why the stew estimates below the boneless-thigh options, although bone, skin and edible yield mean price per kilogram is not the whole answer.</p>
+    </section>
+    <section>
+      <h2>What could not be priced exactly</h2>
+      <p>Twelve items remained unverified: paprika, oregano, dried chilli flakes, fresh coriander, Greek-style salad cheese, fresh spinach, low-fat natural yoghurt, dried rice noodles or vermicelli, cucumber, fish sauce, caster sugar and fresh red chilli.</p>
+      <p>Three more were checked and confirmed unavailable with no price shown: chicken stock cubes, chicken stock pots and tomato pur\xE9e. The ranges on this page cover all fifteen affected prices. Verified ingredients use the Aldi prices shown on the linked product pages.</p>
+      <p>Where Aldi displayed a promotion, including courgettes and mixed peppers, the regular non-promotional price was used. Cooking oil, salt and pepper are generally treated as cupboard ingredients. The exception is the 80ml olive oil in One Pot at Home Chicken, which is included in ingredient value but not as a complete pack at checkout. Optional serving ingredients are excluded.</p>
+    </section>
+    <section><h2>Frequently asked questions</h2>${faqs}</section>
+    <section><h2>Sources</h2><ul>${sources}</ul></section>
+    ${footer}
+  </article><section><h2>Compare recipes with your own budget</h2><p>Use DinnerByDesign to search for recipes that fit your ingredients, preferences and available time.</p><p><a href="/signin">Find a recipe</a></p></section></main></div>`;
+}
+var CHICKEN_THIGH_COST_GUIDE_RECORD = {
+  id: "five-chicken-thigh-recipes-for-four-aldi-cost-estimates",
+  slug: "5-chicken-thigh-recipes-for-four-aldi-cost-estimates",
+  path: CHICKEN_THIGH_COST_GUIDE_PATH,
+  canonicalPath: CHICKEN_THIGH_COST_GUIDE_PATH,
+  category: "recipes",
+  reviewSensitivity: "price-sensitive",
+  ...CHICKEN_THIGH_COST_GUIDE,
+  metaDescription: CHICKEN_THIGH_COST_GUIDE.description,
+  label: "Recipe cost comparison",
+  disclosureItems: GUIDE_DISCLOSURES_FOR_RECORD,
+  disclosureFooter: GUIDE_FOOTER,
+  sections: [{ rawHtml: extractArticleSections3(renderChickenThighCostGuideLegacyInitialHtml()) }],
+  faqs: CHICKEN_THIGH_COST_FAQS,
+  cta: {
+    title: "Compare recipes with your own budget",
+    copy: "Use DinnerByDesign to search for recipes that fit your ingredients, preferences and available time.",
+    label: "Find a recipe",
+    href: "/signin"
+  },
+  jsonLdGraphItems: [
+    {
+      "@type": "ItemList",
+      "@id": `https://dinnerbydesign.app${CHICKEN_THIGH_COST_GUIDE_PATH}#recipes`,
+      numberOfItems: CHICKEN_THIGH_COMPARED_RECIPES.length,
+      itemListElement: CHICKEN_THIGH_COMPARED_RECIPES.map((recipe, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: recipe.title,
+        url: recipe.url
+      }))
+    }
+  ],
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false
+};
+
 // src/content/nineBudgetDinnersWithPotatoesGuide.ts
 var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH = "/guides/nine-budget-dinners-with-potatoes";
 var NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_DISCLOSURES = [
@@ -186923,9 +187431,9 @@ var PULSES_BUDGET_FAQS = [
     answer: "Yes. Cool them promptly, divide them into useful quantities and freeze them if they will not be eaten within the recommended refrigerated storage time."
   }
 ];
-var escapeHtml5 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
-var paragraphs = (items) => items.map((item) => `<p>${escapeHtml5(item)}</p>`).join("");
-var pulseUseRows = () => PULSE_USES.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml5(cell)}</td>`).join("")}</tr>`).join("");
+var escapeHtml8 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var paragraphs = (items) => items.map((item) => `<p>${escapeHtml8(item)}</p>`).join("");
+var pulseUseRows = () => PULSE_USES.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml8(cell)}</td>`).join("")}</tr>`).join("");
 var PULSES_BUDGET_GUIDE_SECTIONS = [
   {
     rawHtml: `<section>${paragraphs([
@@ -187311,8 +187819,8 @@ var GROCERY_COST_STARTING_POINTS = [
   ["Last-minute purchases", "Flexible fallback dinners"],
   ["Confusing supermarket trips", "A list generated from scheduled dinners"]
 ];
-var escapeHtml6 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
-var groceryCostStartingPointRows = () => GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml6(problem)}</th><td>${escapeHtml6(start)}</td></tr>`).join("");
+var escapeHtml9 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var groceryCostStartingPointRows = () => GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml9(problem)}</th><td>${escapeHtml9(start)}</td></tr>`).join("");
 var GROCERY_COST_OPTIONS_GUIDE_SECTIONS = [
   {
     rawHtml: "<section><p>Controlling what you spend on groceries involves more than hunting for the cheapest products on the shelf. It is really about a handful of connected decisions: planning what you will actually cook, choosing realistic quantities, coordinating ingredients across several dinners, using complete packs effectively, avoiding unnecessary waste, and having a purpose for any surplus portions.</p><p>One distinction is worth keeping in mind throughout: the value of the ingredients you use in a dinner is not the same as the cost of the complete pack you had to buy to get them. Many of the techniques below work by closing that gap, making sure more of what you pay for actually gets eaten.</p></section>",
@@ -187767,17 +188275,17 @@ var COOKING_FOR_ONE_LEFTOVERS = [
   "One pepper and two salad tomatoes remain, along with most of both onion bags and three lemons. These need ordinary follow-on uses rather than being described as zero waste.",
   "Spring onions and ginger remain in the fridge. Spaghetti, noodles, breadcrumbs, spices, vinegars and soy sauce carry forward in the cupboard."
 ];
-var escapeHtml7 = (value) => value.replace(
+var escapeHtml10 = (value) => value.replace(
   /[&<>"']/g,
   (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character
 );
-var table = (headings, rows) => `<table><thead><tr>${headings.map((heading) => `<th>${escapeHtml7(heading)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml7(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+var table = (headings, rows) => `<table><thead><tr>${headings.map((heading) => `<th>${escapeHtml10(heading)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml10(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
 function renderCookingForOnePlanInitialHtml() {
   const schedule = table(
     ["When", "Dinner", "What happens to the rest"],
     COOKING_FOR_ONE_SCHEDULE.map((item) => [item.when, item.dinner, item.destination])
   );
-  const recipes = COOKING_FOR_ONE_RECIPES.map((recipe, index) => `<section><h2>${index + 1}. ${escapeHtml7(recipe.name)}</h2><p><strong>Original recipe:</strong> <a href="${escapeHtml7(recipe.url)}">${escapeHtml7(recipe.publisher)}: ${escapeHtml7(recipe.name)}</a></p><p>${escapeHtml7(recipe.summary)}</p><p>${escapeHtml7(recipe.servingPlan)}</p><p><strong>Why it earns its place:</strong> ${escapeHtml7(recipe.basketFit)}</p></section>`).join("");
+  const recipes = COOKING_FOR_ONE_RECIPES.map((recipe, index) => `<section><h2>${index + 1}. ${escapeHtml10(recipe.name)}</h2><p><strong>Original recipe:</strong> <a href="${escapeHtml10(recipe.url)}">${escapeHtml10(recipe.publisher)}: ${escapeHtml10(recipe.name)}</a></p><p>${escapeHtml10(recipe.summary)}</p><p>${escapeHtml10(recipe.servingPlan)}</p><p><strong>Why it earns its place:</strong> ${escapeHtml10(recipe.basketFit)}</p></section>`).join("");
   const costs = table(
     ["Published dish", "Ingredient value", "Per serving"],
     [
@@ -187789,8 +188297,8 @@ function renderCookingForOnePlanInitialHtml() {
     ["Product", "Pack", "Price", "Used", "Value used"],
     COOKING_FOR_ONE_BASKET.map((item) => [item.product, item.pack, item.price, item.used, item.valueUsed])
   );
-  const assumptions = COOKING_FOR_ONE_ASSUMPTIONS.map((item) => `<li>${escapeHtml7(item)}</li>`).join("");
-  const leftovers = COOKING_FOR_ONE_LEFTOVERS.map((item) => `<li>${escapeHtml7(item)}</li>`).join("");
+  const assumptions = COOKING_FOR_ONE_ASSUMPTIONS.map((item) => `<li>${escapeHtml10(item)}</li>`).join("");
+  const leftovers = COOKING_FOR_ONE_LEFTOVERS.map((item) => `<li>${escapeHtml10(item)}</li>`).join("");
   return `<section><p>Cooking for one often becomes awkward at the shopping stage. Most recipe publishers still write for two or four people, while spinach, chicken and herbs arrive in packs that rarely match one serving. Scaling everything down can look neat on paper, but it may introduce quantities the original publisher never tested.</p><p>This plan takes a more practical route. Four established recipes are cooked at their published yield. One serving is eaten for dinner, three extra servings become named next-day lunches, and one four-serving dish supplies a second scheduled dinner plus two dated freezer portions.</p><p>The basket is coordinated to reduce waste, not eliminate it. Some food remains for later. The important part is that the perishable leftovers are visible and given a realistic destination.</p></section><section><h2>The five-dinner schedule</h2>${schedule}</section>${recipes}<section><h2>5. The freezer night</h2><p>Dinner five is one of the balsamic chicken portions frozen after dinner three. Defrost it in the fridge, use it within 24 hours of defrosting, and reheat it only once until steaming hot throughout. It is not a fifth recipe, which is precisely the point: no new shopping or preparation is needed.</p></section><section><h2>Where every serving goes</h2><p>The four published recipes provide ten servings: five scheduled dinners, three next-day lunches and two future freezer portions.</p></section><section><h2>What the basket costs</h2><p>At the prices checked on ${COOKING_FOR_ONE_PRICE_CHECK_DATE}, the estimated complete-pack checkout total is <strong>${COOKING_FOR_ONE_CHECKOUT_TOTAL}</strong> for 27 packs or items. The estimated value of the quantities used across all ten servings is <strong>${COOKING_FOR_ONE_USED_VALUE}</strong>, calculated from unrounded ingredient lines. In practical terms, a little under half of the checkout value is used in these recipes; much of the balance remains for later cooking.</p><p>Cooking oil, salt and pepper are assumed already owned and excluded from both figures. Temporary promotional reductions are not used. Aldi prices, pack sizes and availability may vary by store and can change after the check date.</p>${costs}</section><section><h2>The full Aldi basket</h2>${basket}</section><section><h2>Costing assumptions</h2><ul>${assumptions}</ul></section><section><h2>Fresh food left after the plan</h2><ul>${leftovers}</ul></section><section><h2>Food-safety note</h2><p>Cool cooked leftovers and put them in the fridge within two hours. Eat refrigerated leftovers within 48 hours or freeze them. Reheat only once and make sure food is steaming hot throughout. Once frozen food has defrosted in the fridge, use it within 24 hours.</p></section><section><h2>What DinnerByDesign did, and did not do</h2><p>DinnerByDesign selected and compared these published recipes. It did not develop or test them. Use each original publisher\u2019s page for quantities, timings and method.</p><p>DinnerByDesign\u2019s contribution is the Aldi availability check, the coordinated basket, the comparison between complete-pack checkout cost and ingredient value used, the serving destinations, and the explicit costing and leftover assumptions.</p></section>`;
 }
 
@@ -187823,13 +188331,13 @@ var UK_FOOD_COSTS_2026 = {
     { label: "IGD, June 2026 food inflation forecast", url: "https://www.igd.com/articles/igd-releases-new-food-inflation-forecast/73470" }
   ]
 };
-var escapeHtml8 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var escapeHtml11 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
 function renderUkFoodCosts2026LegacyInitialHtml() {
   const guide = UK_FOOD_COSTS_2026;
   const disclosures = renderProgrammaticDisclosuresInitialHtml(UK_FOOD_COST_CONTEXT_DISCLOSURES);
   const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml();
-  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml8(source.url)}">${escapeHtml8(source.label)}</a></li>`).join("");
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml8(guide.title)}</h1><p>${escapeHtml8(guide.description)}</p><p>By ${escapeHtml8(guide.editorialOwner)} \xB7 Published 18 July 2026 \xB7 Last reviewed 19 July 2026</p><article><section><h2>What is happening</h2><p>UK food price inflation eased through the first half of 2026. The most recent confirmed figure from the <a href="${escapeHtml8(guide.sources[0].url)}">ONS</a> is 2.2 per cent for the 12 months to May 2026, down from 3.7 per cent in April.</p><p>Two faster trackers gave an early reading for June. The <a href="${escapeHtml8(guide.sources[1].url)}">BRC</a> recorded 2.4 per cent, while <a href="${escapeHtml8(guide.sources[2].url)}">Which?</a> recorded 2.6 per cent. Their baskets and collection methods differ from the ONS, so the figures should not be treated as directly interchangeable.</p><p>The ONS is the official reference point used here. The next confirmed figure was due on 22 July 2026 when this guide was reviewed.</p></section><section><h2>What it could mean for your shopping</h2><p>National figures describe an average across the country and many kinds of shopping. They provide useful context, but they cannot predict what one household will spend. That depends on the dinners cooked, the ingredients bought and where the shopping is done.</p><p>For context, the <a href="${escapeHtml8(guide.sources[3].url)}">Food Foundation</a>'s tracked weekly shopping basket cost \xA353.51 to \xA360.24 in June 2026, up 30.6 to 38.4 per cent since April 2022.</p><p>DinnerByDesign works differently. Its estimates are built from the specific dinners, quantities and ingredient prices in a plan, not from a national average.</p></section>${disclosures}<section><h2>Why planning can make a difference</h2><ul><li>Reuse core ingredients across several dinners so less is bought and wasted.</li><li>Filter for lower-cost dinner ideas before deciding what to cook.</li><li>Use cheaper equivalent ingredients where a dinner allows it.</li><li>Work from a shopping list tied to scheduled dinners to avoid unplanned or duplicate purchases.</li></ul></section><section><h2>Ways DinnerByDesign can help</h2><p>DinnerByDesign's Low Cost filter surfaces suitable dinner ideas using lower-cost ingredients. Schedule one or more saved dinners and DinnerByDesign generates a costed shopping list, so you can review the estimate before you shop.</p><p><a href="/dinner-plans/5-dinners-for-2-under-40">Explore five dinners for two under \xA340</a> or <a href="/pricing-methodology">read how ingredient prices are calculated</a>.</p></section><section><h2>How the trackers differ</h2><ul><li><strong>ONS Consumer Prices Index:</strong> the official reference basket, published after each month ends.</li><li><strong>BRC Shop Price Index:</strong> shelf prices from major retailers, published faster but with different basket weightings.</li><li><strong>Which? tracker:</strong> around 27,000 individual product prices across major supermarkets.</li></ul><p>Different baskets, weightings and collection dates can produce different rates for the same period.</p></section><section><h2>Forecasts are not measured outcomes</h2><p>The <a href="${escapeHtml8(guide.sources[4].url)}">Food and Drink Federation</a> forecast food inflation of at least 9 per cent by the end of 2026. <a href="${escapeHtml8(guide.sources[5].url)}">IGD's June forecast</a> projected a peak of 5.5 per cent and an average of 3.7 to 4.7 per cent across 2026.</p><p>The forecasts differ because their assumptions, timing and scenarios differ. They are uncertain projections and should not be read as recorded price changes.</p></section><section><h2>Sources</h2><ul>${sources}</ul></section></article>${disclosureFooter}<p><a href="/signin">Plan my week</a></p></main></div>`;
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml11(source.url)}">${escapeHtml11(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml11(guide.title)}</h1><p>${escapeHtml11(guide.description)}</p><p>By ${escapeHtml11(guide.editorialOwner)} \xB7 Published 18 July 2026 \xB7 Last reviewed 19 July 2026</p><article><section><h2>What is happening</h2><p>UK food price inflation eased through the first half of 2026. The most recent confirmed figure from the <a href="${escapeHtml11(guide.sources[0].url)}">ONS</a> is 2.2 per cent for the 12 months to May 2026, down from 3.7 per cent in April.</p><p>Two faster trackers gave an early reading for June. The <a href="${escapeHtml11(guide.sources[1].url)}">BRC</a> recorded 2.4 per cent, while <a href="${escapeHtml11(guide.sources[2].url)}">Which?</a> recorded 2.6 per cent. Their baskets and collection methods differ from the ONS, so the figures should not be treated as directly interchangeable.</p><p>The ONS is the official reference point used here. The next confirmed figure was due on 22 July 2026 when this guide was reviewed.</p></section><section><h2>What it could mean for your shopping</h2><p>National figures describe an average across the country and many kinds of shopping. They provide useful context, but they cannot predict what one household will spend. That depends on the dinners cooked, the ingredients bought and where the shopping is done.</p><p>For context, the <a href="${escapeHtml11(guide.sources[3].url)}">Food Foundation</a>'s tracked weekly shopping basket cost \xA353.51 to \xA360.24 in June 2026, up 30.6 to 38.4 per cent since April 2022.</p><p>DinnerByDesign works differently. Its estimates are built from the specific dinners, quantities and ingredient prices in a plan, not from a national average.</p></section>${disclosures}<section><h2>Why planning can make a difference</h2><ul><li>Reuse core ingredients across several dinners so less is bought and wasted.</li><li>Filter for lower-cost dinner ideas before deciding what to cook.</li><li>Use cheaper equivalent ingredients where a dinner allows it.</li><li>Work from a shopping list tied to scheduled dinners to avoid unplanned or duplicate purchases.</li></ul></section><section><h2>Ways DinnerByDesign can help</h2><p>DinnerByDesign's Low Cost filter surfaces suitable dinner ideas using lower-cost ingredients. Schedule one or more saved dinners and DinnerByDesign generates a costed shopping list, so you can review the estimate before you shop.</p><p><a href="/dinner-plans/5-dinners-for-2-under-40">Explore five dinners for two under \xA340</a> or <a href="/pricing-methodology">read how ingredient prices are calculated</a>.</p></section><section><h2>How the trackers differ</h2><ul><li><strong>ONS Consumer Prices Index:</strong> the official reference basket, published after each month ends.</li><li><strong>BRC Shop Price Index:</strong> shelf prices from major retailers, published faster but with different basket weightings.</li><li><strong>Which? tracker:</strong> around 27,000 individual product prices across major supermarkets.</li></ul><p>Different baskets, weightings and collection dates can produce different rates for the same period.</p></section><section><h2>Forecasts are not measured outcomes</h2><p>The <a href="${escapeHtml11(guide.sources[4].url)}">Food and Drink Federation</a> forecast food inflation of at least 9 per cent by the end of 2026. <a href="${escapeHtml11(guide.sources[5].url)}">IGD's June forecast</a> projected a peak of 5.5 per cent and an average of 3.7 to 4.7 per cent across 2026.</p><p>The forecasts differ because their assumptions, timing and scenarios differ. They are uncertain projections and should not be read as recorded price changes.</p></section><section><h2>Sources</h2><ul>${sources}</ul></section></article>${disclosureFooter}<p><a href="/signin">Plan my week</a></p></main></div>`;
 }
 var UK_FOOD_COSTS_2026_GUIDE_RECORD = {
   id: "uk-food-costs-2026",
@@ -187978,9 +188486,9 @@ function renderOffalBudgetGuideInitialHtml() {
   const price = renderProgrammaticDisclosuresInitialHtml(OFFAL_PRICE_DISCLOSURES);
   const safety = renderProgrammaticDisclosuresInitialHtml(OFFAL_SAFETY_DISCLOSURES);
   const footer = renderProgrammaticDisclosureFooterInitialHtml(OFFAL_BUDGET_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml8(faq.question)}</h3><p>${escapeHtml8(faq.answer)}</p></section>`).join("");
-  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml8(source.url)}">${escapeHtml8(source.label)}</a></li>`).join("");
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml8(guide.title)}</h1><p>${escapeHtml8(guide.description)}</p><p>By ${escapeHtml8(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>Liver, kidney and heart can cost less than more familiar cuts, but they are not direct substitutes. Each brings its own flavour, texture and cooking requirement. Used thoughtfully \u2014 with onions, vegetables, grains, pulses and assertive seasonings \u2014 they can produce satisfying, characterful dinners without relying on a large quantity of meat.</p></section><section><h2>Why consider offal?</h2><p>Offal can bring meat into a dinner as a smaller, supporting element rather than the centrepiece. It is one option among several for managing ingredient spending, not something any household needs to adopt.</p></section><section><h2>Is it necessarily less expensive?</h2><p>Often, but not always. Price snapshot, 20 July 2026: Tesco listed lamb liver at \xA36.15/kg, lamb heart at \xA37.30/kg and lamb kidney at \xA38.00/kg, compared with lamb mince from \xA313.00/kg. Prices, ranges and availability change, so check the current shelf price.</p>${price}</section><section><h2>Liver, kidney and heart: how they differ</h2><ul><li><strong>Liver:</strong> soft in texture and mild to rich in flavour. Thin, evenly sized pieces cook through quickly.</li><li><strong>Kidney:</strong> firmer, with a distinct mineral flavour. It usually needs its white core trimmed and can suit quick or slow cooking.</li><li><strong>Heart:</strong> denser and leaner, closer to a muscle cut. Cook it long and slow, or slice it thinly for quick cooking.</li></ul></section><section><h2>Flavours that work well</h2><ul><li><strong>Liver:</strong> onions, sage, mustard, vinegar or sherry.</li><li><strong>Kidney:</strong> mustard, Worcestershire sauce, paprika, stock or ale.</li><li><strong>Heart:</strong> garlic, chilli, citrus or a vinegar-based marinade.</li></ul></section>${safety}<section><h2>Three approachable starting points</h2><ul><li>Thoroughly cooked lamb liver with onions, mustard and vinegar.</li><li>Kidney with root vegetables in a rich gravy.</li><li>Slow-cooked heart with garlic, smoked paprika and tomatoes.</li></ul></section><section><h2>Availability in supermarkets and butchers</h2><p>Liver and kidney are stocked fairly reliably by major UK supermarkets. Heart, tongue and tripe are less consistent, and a local butcher may be able to source and prepare them.</p></section><section><h2>Vitamin A, pregnancy and food-safety guidance</h2><p>The NHS advises against eating liver or liver products such as p\xE2t\xE9 more than once a week. Liver and liver products should be avoided during pregnancy. Follow the cited NHS and Food Standards Agency guidance.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Find offal dinners and products</h2><p>Search DinnerByDesign for liver, kidney, heart and other offal options, then compare suitable dinners and ready-made products in one place.</p></section><section><h2>Sources and further reading</h2><p>Guidance and prices reviewed 20 July 2026.</p><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Find suitable offal options</h2><p>Use DinnerByDesign to search directly or include offal in your personalised suggestions.</p><p><a href="/signin">Find offal dinners</a></p></section></main></div>`;
+  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml11(faq.question)}</h3><p>${escapeHtml11(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml11(source.url)}">${escapeHtml11(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml11(guide.title)}</h1><p>${escapeHtml11(guide.description)}</p><p>By ${escapeHtml11(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>Liver, kidney and heart can cost less than more familiar cuts, but they are not direct substitutes. Each brings its own flavour, texture and cooking requirement. Used thoughtfully \u2014 with onions, vegetables, grains, pulses and assertive seasonings \u2014 they can produce satisfying, characterful dinners without relying on a large quantity of meat.</p></section><section><h2>Why consider offal?</h2><p>Offal can bring meat into a dinner as a smaller, supporting element rather than the centrepiece. It is one option among several for managing ingredient spending, not something any household needs to adopt.</p></section><section><h2>Is it necessarily less expensive?</h2><p>Often, but not always. Price snapshot, 20 July 2026: Tesco listed lamb liver at \xA36.15/kg, lamb heart at \xA37.30/kg and lamb kidney at \xA38.00/kg, compared with lamb mince from \xA313.00/kg. Prices, ranges and availability change, so check the current shelf price.</p>${price}</section><section><h2>Liver, kidney and heart: how they differ</h2><ul><li><strong>Liver:</strong> soft in texture and mild to rich in flavour. Thin, evenly sized pieces cook through quickly.</li><li><strong>Kidney:</strong> firmer, with a distinct mineral flavour. It usually needs its white core trimmed and can suit quick or slow cooking.</li><li><strong>Heart:</strong> denser and leaner, closer to a muscle cut. Cook it long and slow, or slice it thinly for quick cooking.</li></ul></section><section><h2>Flavours that work well</h2><ul><li><strong>Liver:</strong> onions, sage, mustard, vinegar or sherry.</li><li><strong>Kidney:</strong> mustard, Worcestershire sauce, paprika, stock or ale.</li><li><strong>Heart:</strong> garlic, chilli, citrus or a vinegar-based marinade.</li></ul></section>${safety}<section><h2>Three approachable starting points</h2><ul><li>Thoroughly cooked lamb liver with onions, mustard and vinegar.</li><li>Kidney with root vegetables in a rich gravy.</li><li>Slow-cooked heart with garlic, smoked paprika and tomatoes.</li></ul></section><section><h2>Availability in supermarkets and butchers</h2><p>Liver and kidney are stocked fairly reliably by major UK supermarkets. Heart, tongue and tripe are less consistent, and a local butcher may be able to source and prepare them.</p></section><section><h2>Vitamin A, pregnancy and food-safety guidance</h2><p>The NHS advises against eating liver or liver products such as p\xE2t\xE9 more than once a week. Liver and liver products should be avoided during pregnancy. Follow the cited NHS and Food Standards Agency guidance.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Find offal dinners and products</h2><p>Search DinnerByDesign for liver, kidney, heart and other offal options, then compare suitable dinners and ready-made products in one place.</p></section><section><h2>Sources and further reading</h2><p>Guidance and prices reviewed 20 July 2026.</p><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Find suitable offal options</h2><p>Use DinnerByDesign to search directly or include offal in your personalised suggestions.</p><p><a href="/signin">Find offal dinners</a></p></section></main></div>`;
 }
 var OFFAL_BUDGET_GUIDE_RECORD = {
   id: "cooking-with-offal-on-a-budget",
@@ -188107,9 +188615,9 @@ function renderMediterraneanAffordableCookingInitialHtml() {
   const product = renderProgrammaticDisclosuresInitialHtml(MEDITERRANEAN_PRODUCT_DISCLOSURES);
   const sourceTiming = renderProgrammaticDisclosuresInitialHtml(MEDITERRANEAN_SOURCE_DISCLOSURES);
   const footer = renderProgrammaticDisclosureFooterInitialHtml(MEDITERRANEAN_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml8(faq.question)}</h3><p>${escapeHtml8(faq.answer)}</p></section>`).join("");
-  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml8(source.url)}">${escapeHtml8(source.label)}</a></li>`).join("");
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml8(guide.title)}</h1><p>${escapeHtml8(guide.description)}</p><p>By ${escapeHtml8(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>Beans, lentils, grains, vegetables and a handful of well-chosen flavourings turn up again and again across the Mediterranean's many different culinary traditions \u2014 and they are a genuinely useful starting point for a satisfying, affordable dinner. This is not a claim that Mediterranean cooking is cheap: some of its best-known ingredients, from good olive oil to fresh fish, are not. It is an argument for borrowing a handful of techniques that several of these traditions share.</p></section><section><h2>There is no single Mediterranean cuisine</h2><p>Greek, Italian, Lebanese, Spanish, Moroccan and Turkish cooking \u2014 to name just a few \u2014 are distinct culinary traditions with their own ingredients, history and character. Treating Mediterranean food as one uniform, inexpensive cuisine flattens that variety, and it is not accurate either. What is worth taking from these traditions is not a claim about their overall cost, but a set of techniques that turn up across several of them.</p></section><section><h2>Where the practical value comes from</h2><ul><li>Building a dinner around beans, lentils, grains and vegetables, rather than a large piece of meat or fish.</li><li>Using herbs, garlic, citrus, tomatoes and spices to bring flavour, rather than relying on the quantity of a costly ingredient.</li><li>Treating meat, fish or cheese as a smaller, supporting element where a dish calls for it, rather than the bulk of the plate.</li><li>Reusing bread, cooked grains, sauces and vegetables across more than one dinner.</li></ul><p>None of this is exclusive to the Mediterranean \u2014 similar techniques appear in low-cost cooking traditions worldwide \u2014 but it is a useful, well-documented set of examples to draw from.</p></section><section><h2>Affordable ingredients that carry flavour well</h2><ul><li>Dried or tinned lentils, chickpeas and beans</li><li>Onions and garlic</li><li>Tinned tomatoes</li><li>Rice, pasta, bulgur wheat and couscous</li><li>Herbs such as parsley, oregano, mint and bay</li><li>Spices such as cumin, paprika and cinnamon</li><li>Lemon</li></ul><p>These form the backbone of a satisfying dinner without needing a large quantity of any single expensive ingredient.</p></section><section><h2>Ingredients that can make the checkout more expensive</h2><p>Good-quality extra virgin olive oil, fresh fish and seafood, pine nuts, almonds, saffron and speciality cheeses can all add significantly to a shopping bill. They can still have a place \u2014 used in small quantities, saved for when you want to spend a little more, or swapped for a more accessible alternative.</p></section><section><h2>Four appetising dinner examples</h2><h3>Greek fasolada</h3><p>A hearty white bean soup, one of the best-known bean dishes in Greek cooking, made by simmering dried white beans with onion, carrot, celery and tomato, finished with a generous amount of olive oil. It is traditionally meat-free.</p><h3>Roman pasta e ceci</h3><p>A central and southern Italian dish of small pasta and chickpeas, simmered in a tomato-and-rosemary broth with garlic. The chickpea-and-pasta base needs no meat, although some Roman versions include anchovy.</p><h3>Lebanese mujadara</h3><p>A Levantine dish of lentils and rice, or bulgur wheat, built almost entirely around deeply caramelised onions, with cumin as the main spice. The version described here contains no animal-derived ingredients; check stock, packaged ingredients and accompaniments. It is found across Lebanon, Jordan and Syria.</p><h3>Spanish lentejas con chorizo</h3><p>A Spanish lentil stew with potato, carrot, onion, garlic and paprika, where a small amount of chorizo is sliced in to flavour the whole pot rather than serving as the main component.</p></section><section><h2>Reusing ingredients across several dinners</h2><p>A larger pot of cooked lentils, chickpeas or rice can be split across two or three dinners. A batch of caramelised onions can flavour a grain, a stew or a simple bean dish. A tomato-and-garlic base can work beneath pasta e ceci one night and a different bean or vegetable dinner later on.</p></section>${storage}<section><h2>UK-supermarket substitutions and how they alter the result</h2><ul><li>Tinned lentils or chickpeas are already cooked, so they can be drained and added without soaking, in place of dried.</li><li>Use a more everyday cooking oil in place of extra virgin olive oil for cooking. The dish will lose some of the fruitier, more peppery flavour that good olive oil brings, although this matters less for cooking than for a finishing drizzle.</li><li>Widely available cooking chorizo can replace a specific artisan variety. It still gives a smoky, paprika-forward flavour, although the exact taste and texture vary by brand.</li><li>A more everyday hard cheese can replace Parmesan or Pecorino for grating. This changes the flavour but still adds a savoury, salty finish.</li><li>A widely available long-grain rice may replace a specific variety, but texture, liquid requirements and cooking time can differ, so follow the pack instructions.</li></ul><p>These substitutions change the character of a dish rather than its core structure, so try the closest available alternative rather than skipping the ingredient's role entirely.</p></section>${product}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners built around beans, lentils and grains, and use the Low Cost filter alongside these techniques. Plan my week can help you schedule dinners that reuse a base sauce, cooked grain or batch of caramelised onions across more than one night.</p></section><section><h2>Sources and further reading</h2><p>The Spanish example uses a preparation reference rather than an official cultural authority and is therefore described in deliberately general terms.</p><ul>${sources}</ul></section>${sourceTiming}<section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make affordable ingredients taste good</h2><p>Use DinnerByDesign to find suitable dinners and plan ingredients across your week.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml11(faq.question)}</h3><p>${escapeHtml11(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml11(source.url)}">${escapeHtml11(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml11(guide.title)}</h1><p>${escapeHtml11(guide.description)}</p><p>By ${escapeHtml11(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>Beans, lentils, grains, vegetables and a handful of well-chosen flavourings turn up again and again across the Mediterranean's many different culinary traditions \u2014 and they are a genuinely useful starting point for a satisfying, affordable dinner. This is not a claim that Mediterranean cooking is cheap: some of its best-known ingredients, from good olive oil to fresh fish, are not. It is an argument for borrowing a handful of techniques that several of these traditions share.</p></section><section><h2>There is no single Mediterranean cuisine</h2><p>Greek, Italian, Lebanese, Spanish, Moroccan and Turkish cooking \u2014 to name just a few \u2014 are distinct culinary traditions with their own ingredients, history and character. Treating Mediterranean food as one uniform, inexpensive cuisine flattens that variety, and it is not accurate either. What is worth taking from these traditions is not a claim about their overall cost, but a set of techniques that turn up across several of them.</p></section><section><h2>Where the practical value comes from</h2><ul><li>Building a dinner around beans, lentils, grains and vegetables, rather than a large piece of meat or fish.</li><li>Using herbs, garlic, citrus, tomatoes and spices to bring flavour, rather than relying on the quantity of a costly ingredient.</li><li>Treating meat, fish or cheese as a smaller, supporting element where a dish calls for it, rather than the bulk of the plate.</li><li>Reusing bread, cooked grains, sauces and vegetables across more than one dinner.</li></ul><p>None of this is exclusive to the Mediterranean \u2014 similar techniques appear in low-cost cooking traditions worldwide \u2014 but it is a useful, well-documented set of examples to draw from.</p></section><section><h2>Affordable ingredients that carry flavour well</h2><ul><li>Dried or tinned lentils, chickpeas and beans</li><li>Onions and garlic</li><li>Tinned tomatoes</li><li>Rice, pasta, bulgur wheat and couscous</li><li>Herbs such as parsley, oregano, mint and bay</li><li>Spices such as cumin, paprika and cinnamon</li><li>Lemon</li></ul><p>These form the backbone of a satisfying dinner without needing a large quantity of any single expensive ingredient.</p></section><section><h2>Ingredients that can make the checkout more expensive</h2><p>Good-quality extra virgin olive oil, fresh fish and seafood, pine nuts, almonds, saffron and speciality cheeses can all add significantly to a shopping bill. They can still have a place \u2014 used in small quantities, saved for when you want to spend a little more, or swapped for a more accessible alternative.</p></section><section><h2>Four appetising dinner examples</h2><h3>Greek fasolada</h3><p>A hearty white bean soup, one of the best-known bean dishes in Greek cooking, made by simmering dried white beans with onion, carrot, celery and tomato, finished with a generous amount of olive oil. It is traditionally meat-free.</p><h3>Roman pasta e ceci</h3><p>A central and southern Italian dish of small pasta and chickpeas, simmered in a tomato-and-rosemary broth with garlic. The chickpea-and-pasta base needs no meat, although some Roman versions include anchovy.</p><h3>Lebanese mujadara</h3><p>A Levantine dish of lentils and rice, or bulgur wheat, built almost entirely around deeply caramelised onions, with cumin as the main spice. The version described here contains no animal-derived ingredients; check stock, packaged ingredients and accompaniments. It is found across Lebanon, Jordan and Syria.</p><h3>Spanish lentejas con chorizo</h3><p>A Spanish lentil stew with potato, carrot, onion, garlic and paprika, where a small amount of chorizo is sliced in to flavour the whole pot rather than serving as the main component.</p></section><section><h2>Reusing ingredients across several dinners</h2><p>A larger pot of cooked lentils, chickpeas or rice can be split across two or three dinners. A batch of caramelised onions can flavour a grain, a stew or a simple bean dish. A tomato-and-garlic base can work beneath pasta e ceci one night and a different bean or vegetable dinner later on.</p></section>${storage}<section><h2>UK-supermarket substitutions and how they alter the result</h2><ul><li>Tinned lentils or chickpeas are already cooked, so they can be drained and added without soaking, in place of dried.</li><li>Use a more everyday cooking oil in place of extra virgin olive oil for cooking. The dish will lose some of the fruitier, more peppery flavour that good olive oil brings, although this matters less for cooking than for a finishing drizzle.</li><li>Widely available cooking chorizo can replace a specific artisan variety. It still gives a smoky, paprika-forward flavour, although the exact taste and texture vary by brand.</li><li>A more everyday hard cheese can replace Parmesan or Pecorino for grating. This changes the flavour but still adds a savoury, salty finish.</li><li>A widely available long-grain rice may replace a specific variety, but texture, liquid requirements and cooking time can differ, so follow the pack instructions.</li></ul><p>These substitutions change the character of a dish rather than its core structure, so try the closest available alternative rather than skipping the ingredient's role entirely.</p></section>${product}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners built around beans, lentils and grains, and use the Low Cost filter alongside these techniques. Plan my week can help you schedule dinners that reuse a base sauce, cooked grain or batch of caramelised onions across more than one night.</p></section><section><h2>Sources and further reading</h2><p>The Spanish example uses a preparation reference rather than an official cultural authority and is therefore described in deliberately general terms.</p><ul>${sources}</ul></section>${sourceTiming}<section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make affordable ingredients taste good</h2><p>Use DinnerByDesign to find suitable dinners and plan ingredients across your week.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
 }
 var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE_RECORD = {
   id: "mediterranean-inspired-affordable-cooking",
@@ -188172,9 +188680,9 @@ function renderSummerStewsGuideInitialHtml() {
   const guide = SUMMER_STEWS_GUIDE;
   const disclosures = renderProgrammaticDisclosuresInitialHtml(SUMMER_STEWS_DISCLOSURES);
   const footer = renderProgrammaticDisclosureFooterInitialHtml(SUMMER_STEWS_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml8(faq.question)}</h3><p>${escapeHtml8(faq.answer)}</p></section>`).join("");
-  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml8(source.url)}">${escapeHtml8(source.label)}</a></li>`).join("");
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml8(guide.title)}</h1><p>${escapeHtml8(guide.description)}</p><p>By ${escapeHtml8(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>A summer stew is generally lighter and quicker-cooking than a winter stew, built on fresh vegetables, herbs and a lighter broth or tomato base. Ingredients go in at different stages so each one keeps an appropriate texture, rather than everything cooking down together for hours.</p><p>The financial case for cooking this way is not that summer vegetables are automatically cheap \u2014 prices and availability still vary through the season and by retailer. It is that a stew built this way is unusually good at absorbing whatever you actually have that remains safe to eat: whichever vegetables are good value that week, or already sitting in the fridge needing to be used.</p></section><section><h2>Where the practical value comes from</h2><ul><li>It accommodates whichever vegetables are currently good value or already need using, provided they remain safe to eat.</li><li>It combines vegetables with beans, lentils or grains, rather than relying on a large quantity of meat.</li><li>One tomato base, bunch of herbs or pack of vegetables can be used across several dinners.</li><li>Irregular quantities and surplus vegetables \u2014 the half pepper, the last two courgettes \u2014 become an intentional part of the dish rather than loose ends to work around.</li><li>It accepts substitutions without needing a completely different recipe.</li><li>It can be served with bread, rice or another inexpensive accompaniment when you want more volume.</li></ul></section><section><h2>Staging vegetables by cooking time</h2><p>The main technique worth knowing is that not everything needs to go into the pot at once. Onions and firmer vegetables \u2014 peppers, aubergine, carrots \u2014 go in first and cook down into the base. Courgette, leafy vegetables and other more delicate ingredients go in later, so they retain their colour, texture and freshness rather than turning soft and grey. Herbs, and any final squeeze of lemon, go in right at the end, off the heat or close to it.</p><p>This is not a rigid rule \u2014 some dinners benefit from everything cooking down together, and that is a reasonable choice too. Staging is simply a way to keep more texture and colour in the finished dish, if that is what you want from it.</p></section><section><h2>Three flexible dinner ideas</h2><p>These are presented as adaptable starting points rather than named traditional dishes \u2014 change the vegetables to whatever you have, and treat the quantities as a guide rather than a fixed recipe.</p><h3>Tomato, courgette and butter bean stew with lemon and basil</h3><p>Onion and garlic cooked down first with tinned tomatoes, then butter beans warmed through, courgette added in the last few minutes so it keeps some bite, finished with lemon juice and torn basil off the heat.</p><h3>Chicken, pepper and sweetcorn broth with smoked paprika</h3><p>A light broth built from onion, pepper and smoked paprika, with a modest amount of chicken added to flavour rather than fill the bowl, and sweetcorn stirred in towards the end so it stays sweet and crisp. Cook the chicken thoroughly until steaming hot throughout, with no pink meat remaining.</p><h3>Aubergine, chickpea and tomato stew finished with fresh herbs</h3><p>Aubergine cooked down with onion and garlic until soft, chickpeas added to warm through, tinned tomatoes providing the base, and a handful of fresh parsley or coriander stirred in just before serving.</p></section><section><h2>Reusing a base across several dinners</h2><p>A larger batch of the onion-and-tomato base from any of these can do more than one job: it is the start of tonight's stew, but it can just as easily go under some pasta, alongside a piece of fish, or into a bean dish later in the week. The same applies to a bunch of herbs or a pack of vegetables bought for one dinner \u2014 splitting it across two dinners in the same week is usually more useful than trying to use all of it in one sitting.</p></section><section><h2>Serving for extra volume</h2><p>Bread, rice, couscous or another inexpensive accompaniment is a straightforward way to add volume to a lighter stew without adding more of the more expensive ingredients. A smaller pot of stew served over rice, or with a thick slice of bread on the side, often goes further than the same stew served alone.</p></section><section><h2>Food safety for cooked stews</h2><p>These dishes can be eaten warm or a little cooler, but that should not be confused with leaving a cooked stew out at room temperature for an extended period. Current Food Standards Agency guidance is to cool cooked food and refrigerate it within two hours, eat refrigerated leftovers within 48 hours or freeze them, and reheat only once, until steaming hot all the way through.</p></section>${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners that flex around whatever vegetables you have, and use the Low Cost filter alongside these techniques. Plan my week can help schedule a base sauce, herb bunch or vegetable pack across more than one dinner, and our <a href="/food-costs/ways-to-reduce-grocery-costs">low-cost cooking techniques</a> and <a href="/food-costs/portion-planning-and-food-waste">portion-planning guides</a> cover the wider principles in more detail.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-costs/fresh-or-frozen">choose between fresh and frozen produce</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make vegetables work harder across your week</h2><p>Find suitable dinners and plan shared ingredients with DinnerByDesign.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml11(faq.question)}</h3><p>${escapeHtml11(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml11(source.url)}">${escapeHtml11(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml11(guide.title)}</h1><p>${escapeHtml11(guide.description)}</p><p>By ${escapeHtml11(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>A summer stew is generally lighter and quicker-cooking than a winter stew, built on fresh vegetables, herbs and a lighter broth or tomato base. Ingredients go in at different stages so each one keeps an appropriate texture, rather than everything cooking down together for hours.</p><p>The financial case for cooking this way is not that summer vegetables are automatically cheap \u2014 prices and availability still vary through the season and by retailer. It is that a stew built this way is unusually good at absorbing whatever you actually have that remains safe to eat: whichever vegetables are good value that week, or already sitting in the fridge needing to be used.</p></section><section><h2>Where the practical value comes from</h2><ul><li>It accommodates whichever vegetables are currently good value or already need using, provided they remain safe to eat.</li><li>It combines vegetables with beans, lentils or grains, rather than relying on a large quantity of meat.</li><li>One tomato base, bunch of herbs or pack of vegetables can be used across several dinners.</li><li>Irregular quantities and surplus vegetables \u2014 the half pepper, the last two courgettes \u2014 become an intentional part of the dish rather than loose ends to work around.</li><li>It accepts substitutions without needing a completely different recipe.</li><li>It can be served with bread, rice or another inexpensive accompaniment when you want more volume.</li></ul></section><section><h2>Staging vegetables by cooking time</h2><p>The main technique worth knowing is that not everything needs to go into the pot at once. Onions and firmer vegetables \u2014 peppers, aubergine, carrots \u2014 go in first and cook down into the base. Courgette, leafy vegetables and other more delicate ingredients go in later, so they retain their colour, texture and freshness rather than turning soft and grey. Herbs, and any final squeeze of lemon, go in right at the end, off the heat or close to it.</p><p>This is not a rigid rule \u2014 some dinners benefit from everything cooking down together, and that is a reasonable choice too. Staging is simply a way to keep more texture and colour in the finished dish, if that is what you want from it.</p></section><section><h2>Three flexible dinner ideas</h2><p>These are presented as adaptable starting points rather than named traditional dishes \u2014 change the vegetables to whatever you have, and treat the quantities as a guide rather than a fixed recipe.</p><h3>Tomato, courgette and butter bean stew with lemon and basil</h3><p>Onion and garlic cooked down first with tinned tomatoes, then butter beans warmed through, courgette added in the last few minutes so it keeps some bite, finished with lemon juice and torn basil off the heat.</p><h3>Chicken, pepper and sweetcorn broth with smoked paprika</h3><p>A light broth built from onion, pepper and smoked paprika, with a modest amount of chicken added to flavour rather than fill the bowl, and sweetcorn stirred in towards the end so it stays sweet and crisp. Cook the chicken thoroughly until steaming hot throughout, with no pink meat remaining.</p><h3>Aubergine, chickpea and tomato stew finished with fresh herbs</h3><p>Aubergine cooked down with onion and garlic until soft, chickpeas added to warm through, tinned tomatoes providing the base, and a handful of fresh parsley or coriander stirred in just before serving.</p></section><section><h2>Reusing a base across several dinners</h2><p>A larger batch of the onion-and-tomato base from any of these can do more than one job: it is the start of tonight's stew, but it can just as easily go under some pasta, alongside a piece of fish, or into a bean dish later in the week. The same applies to a bunch of herbs or a pack of vegetables bought for one dinner \u2014 splitting it across two dinners in the same week is usually more useful than trying to use all of it in one sitting.</p></section><section><h2>Serving for extra volume</h2><p>Bread, rice, couscous or another inexpensive accompaniment is a straightforward way to add volume to a lighter stew without adding more of the more expensive ingredients. A smaller pot of stew served over rice, or with a thick slice of bread on the side, often goes further than the same stew served alone.</p></section><section><h2>Food safety for cooked stews</h2><p>These dishes can be eaten warm or a little cooler, but that should not be confused with leaving a cooked stew out at room temperature for an extended period. Current Food Standards Agency guidance is to cool cooked food and refrigerate it within two hours, eat refrigerated leftovers within 48 hours or freeze them, and reheat only once, until steaming hot all the way through.</p></section>${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners that flex around whatever vegetables you have, and use the Low Cost filter alongside these techniques. Plan my week can help schedule a base sauce, herb bunch or vegetable pack across more than one dinner, and our <a href="/food-costs/ways-to-reduce-grocery-costs">low-cost cooking techniques</a> and <a href="/food-costs/portion-planning-and-food-waste">portion-planning guides</a> cover the wider principles in more detail.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-costs/fresh-or-frozen">choose between fresh and frozen produce</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make vegetables work harder across your week</h2><p>Find suitable dinners and plan shared ingredients with DinnerByDesign.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
 }
 var SUMMER_STEWS_GUIDE_RECORD = {
   id: "summer-stews-seasonal-vegetables",
@@ -188326,6 +188834,9 @@ var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD,
   WHOLE_CHICKEN_VALUE_GUIDE_RECORD,
+  FIVE_A_DAY_GUIDE_RECORD,
+  HOME_COOKED_READY_MADE_GUIDE_RECORD,
+  CHICKEN_THIGH_COST_GUIDE_RECORD,
   TINNED_FISH_GUIDE_RECORD,
   CONVENIENCE_FISH_GUIDE_RECORD,
   FIVE_STAPLES_GUIDE_RECORD,
@@ -188367,20 +188878,6 @@ var publicGuideRecordToArticle = (guide) => ({
 var PUBLIC_ARTICLES = [
   ...PUBLISHED_PUBLIC_GUIDE_RECORDS.map(publicGuideRecordToArticle),
   {
-    title: CHICKEN_THIGH_COST_GUIDE.title,
-    path: CHICKEN_THIGH_COST_GUIDE_PATH,
-    category: "Recipe cost comparison",
-    pageFamily: CHICKEN_THIGH_COST_GUIDE.pageFamily,
-    primarySearchIntent: CHICKEN_THIGH_COST_GUIDE.primarySearchIntent,
-    indexingStatus: CHICKEN_THIGH_COST_GUIDE.indexingStatus,
-    publishedAt: CHICKEN_THIGH_COST_GUIDE.publishedAt,
-    reviewedAt: CHICKEN_THIGH_COST_GUIDE.reviewedAt,
-    contentReviewedAt: CHICKEN_THIGH_COST_GUIDE.contentReviewedAt,
-    internalLinks: [...CHICKEN_THIGH_COST_GUIDE.internalLinks],
-    disclosures: [...CHICKEN_THIGH_COST_GUIDE.disclosures],
-    status: CHICKEN_THIGH_COST_GUIDE.status
-  },
-  {
     title: FAMILY_DINNERS_FOR_FOUR.title,
     path: FAMILY_DINNERS_FOR_FOUR_PATH,
     category: "Dinner plan",
@@ -188393,34 +188890,6 @@ var PUBLIC_ARTICLES = [
     internalLinks: [...FAMILY_DINNERS_FOR_FOUR.internalLinks],
     disclosures: [...FAMILY_DINNERS_FOR_FOUR.disclosures],
     status: FAMILY_DINNERS_FOR_FOUR.status
-  },
-  {
-    title: HOME_COOKED_READY_MADE_GUIDE.title,
-    path: HOME_COOKED_READY_MADE_GUIDE_PATH,
-    category: "Cooking and nutrition guide",
-    pageFamily: HOME_COOKED_READY_MADE_GUIDE.pageFamily,
-    primarySearchIntent: HOME_COOKED_READY_MADE_GUIDE.primarySearchIntent,
-    indexingStatus: HOME_COOKED_READY_MADE_GUIDE.indexingStatus,
-    publishedAt: HOME_COOKED_READY_MADE_GUIDE.publishedAt,
-    reviewedAt: HOME_COOKED_READY_MADE_GUIDE.reviewedAt,
-    contentReviewedAt: HOME_COOKED_READY_MADE_GUIDE.contentReviewedAt,
-    internalLinks: HOME_COOKED_READY_MADE_GUIDE.internalLinks,
-    disclosures: HOME_COOKED_READY_MADE_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: FIVE_A_DAY_GUIDE.title,
-    path: FIVE_A_DAY_GUIDE_PATH,
-    category: "Nutrition guide",
-    pageFamily: FIVE_A_DAY_GUIDE.pageFamily,
-    primarySearchIntent: FIVE_A_DAY_GUIDE.primarySearchIntent,
-    indexingStatus: FIVE_A_DAY_GUIDE.indexingStatus,
-    publishedAt: FIVE_A_DAY_GUIDE.publishedAt,
-    reviewedAt: FIVE_A_DAY_GUIDE.reviewedAt,
-    contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
-    internalLinks: FIVE_A_DAY_GUIDE.internalLinks,
-    disclosures: FIVE_A_DAY_GUIDE.disclosures,
-    status: "published"
   },
   {
     title: FIVE_DINNERS_FOR_TWO_UNDER_40.title,
@@ -188584,7 +189053,7 @@ var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
 var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;
 var contactAttempts = /* @__PURE__ */ new Map();
-var escapeHtml9 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+var escapeHtml12 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 function hasContactRateLimitCapacity(req) {
   const forwardedFor = req.get("x-forwarded-for");
   const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
@@ -189616,7 +190085,7 @@ function createApp() {
     if (!hasContactRateLimitCapacity(req)) {
       return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
     }
-    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml9(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml9(email)}">${escapeHtml9(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml9(message2)}</div></div>`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml12(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml12(email)}">${escapeHtml12(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml12(message2)}</div></div>`;
     try {
       const response = await sendTrackedEmail({
         to: CONTACT_RECIPIENT,

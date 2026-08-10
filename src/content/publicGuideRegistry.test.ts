@@ -30,6 +30,15 @@ import {
   WHOLE_CHICKEN_VALUE_GUIDE_PATH,
 } from './wholeChickenValueGuide';
 import {
+  FIVE_A_DAY_GUIDE_PATH,
+} from './fiveADayGuide';
+import {
+  HOME_COOKED_READY_MADE_GUIDE_PATH,
+} from './homeCookedReadyMadeGuide';
+import {
+  CHICKEN_THIGH_COST_GUIDE_PATH,
+} from './chickenThighCostGuide';
+import {
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
 } from './nineBudgetDinnersWithPotatoesGuide';
 import {
@@ -96,6 +105,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH);
     expect(paths).toContain(WHOLE_CHICKEN_VALUE_GUIDE_PATH);
+    expect(paths).toContain(FIVE_A_DAY_GUIDE_PATH);
+    expect(paths).toContain(HOME_COOKED_READY_MADE_GUIDE_PATH);
+    expect(paths).toContain(CHICKEN_THIGH_COST_GUIDE_PATH);
     expect(paths).toContain(TINNED_FISH_GUIDE_PATH);
     expect(paths).toContain(CONVENIENCE_FISH_GUIDE_PATH);
     expect(paths).toContain(FIVE_STAPLES_GUIDE_PATH);
@@ -141,6 +153,9 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH)?.title).toBe('Nine budget-friendly dinners with eggs');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH)?.title).toBe('Nine budget dinners with tinned vegetables');
     expect(getPublicGuideRecordByPath(WHOLE_CHICKEN_VALUE_GUIDE_PATH)?.title).toBe('Is a whole chicken better value than chicken pieces?');
+    expect(getPublicGuideRecordByPath(FIVE_A_DAY_GUIDE_PATH)?.title).toBe('Do vegetables in dishes count towards your 5 A Day?');
+    expect(getPublicGuideRecordByPath(HOME_COOKED_READY_MADE_GUIDE_PATH)?.title).toBe('Home-cooked or ready-made? The honest comparison');
+    expect(getPublicGuideRecordByPath(CHICKEN_THIGH_COST_GUIDE_PATH)?.title).toBe('Five chicken thigh recipes for four with Aldi cost estimates');
     expect(getPublicGuideRecordByPath(TINNED_FISH_GUIDE_PATH)?.title).toBe('Tinned fish recipes: easy dinner ideas with tuna, salmon, sardines and more');
     expect(getPublicGuideRecordByPath(CONVENIENCE_FISH_GUIDE_PATH)?.title).toBe('How to turn fish fingers, fishcakes and scampi into better weeknight dinners');
     expect(getPublicGuideRecordByPath(FIVE_STAPLES_GUIDE_PATH)?.title).toBe('Five dinners built around potatoes, rice, pasta, bread and pulses');

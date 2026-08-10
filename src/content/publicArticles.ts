@@ -1,8 +1,5 @@
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH } from './familyDinnersForFourPlan';
-import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
-import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH } from './homeCookedReadyMadeGuide';
-import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './publicGuideRegistry';
 import type { PublicGuideRecord } from './publicGuideModel';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
@@ -40,20 +37,6 @@ const publicGuideRecordToArticle = (guide: PublicGuideRecord): PublicArticleLink
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
   ...PUBLISHED_PUBLIC_GUIDE_RECORDS.map(publicGuideRecordToArticle),
   {
-    title: CHICKEN_THIGH_COST_GUIDE.title,
-    path: CHICKEN_THIGH_COST_GUIDE_PATH,
-    category: 'Recipe cost comparison',
-    pageFamily: CHICKEN_THIGH_COST_GUIDE.pageFamily,
-    primarySearchIntent: CHICKEN_THIGH_COST_GUIDE.primarySearchIntent,
-    indexingStatus: CHICKEN_THIGH_COST_GUIDE.indexingStatus,
-    publishedAt: CHICKEN_THIGH_COST_GUIDE.publishedAt,
-    reviewedAt: CHICKEN_THIGH_COST_GUIDE.reviewedAt,
-    contentReviewedAt: CHICKEN_THIGH_COST_GUIDE.contentReviewedAt,
-    internalLinks: [...CHICKEN_THIGH_COST_GUIDE.internalLinks],
-    disclosures: [...CHICKEN_THIGH_COST_GUIDE.disclosures],
-    status: CHICKEN_THIGH_COST_GUIDE.status,
-  },
-  {
     title: FAMILY_DINNERS_FOR_FOUR.title,
     path: FAMILY_DINNERS_FOR_FOUR_PATH,
     category: 'Dinner plan',
@@ -66,20 +49,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     internalLinks: [...FAMILY_DINNERS_FOR_FOUR.internalLinks],
     disclosures: [...FAMILY_DINNERS_FOR_FOUR.disclosures],
     status: FAMILY_DINNERS_FOR_FOUR.status,
-  },
-  {
-    title: HOME_COOKED_READY_MADE_GUIDE.title, path: HOME_COOKED_READY_MADE_GUIDE_PATH, category: 'Cooking and nutrition guide',
-    pageFamily: HOME_COOKED_READY_MADE_GUIDE.pageFamily, primarySearchIntent: HOME_COOKED_READY_MADE_GUIDE.primarySearchIntent,
-    indexingStatus: HOME_COOKED_READY_MADE_GUIDE.indexingStatus, publishedAt: HOME_COOKED_READY_MADE_GUIDE.publishedAt,
-    reviewedAt: HOME_COOKED_READY_MADE_GUIDE.reviewedAt, contentReviewedAt: HOME_COOKED_READY_MADE_GUIDE.contentReviewedAt,
-    internalLinks: HOME_COOKED_READY_MADE_GUIDE.internalLinks, disclosures: HOME_COOKED_READY_MADE_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: FIVE_A_DAY_GUIDE.title, path: FIVE_A_DAY_GUIDE_PATH, category: 'Nutrition guide',
-    pageFamily: FIVE_A_DAY_GUIDE.pageFamily, primarySearchIntent: FIVE_A_DAY_GUIDE.primarySearchIntent,
-    indexingStatus: FIVE_A_DAY_GUIDE.indexingStatus, publishedAt: FIVE_A_DAY_GUIDE.publishedAt,
-    reviewedAt: FIVE_A_DAY_GUIDE.reviewedAt, contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
-    internalLinks: FIVE_A_DAY_GUIDE.internalLinks, disclosures: FIVE_A_DAY_GUIDE.disclosures, status: 'published',
   },
   {
     title: FIVE_DINNERS_FOR_TWO_UNDER_40.title,
