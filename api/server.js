@@ -3802,15 +3802,15 @@ var require_dbcs_codec = __commonJS({
       this.nodeIdx = 0;
       return ret;
     };
-    function findIdx(table, val) {
-      if (table[0] > val) {
+    function findIdx(table2, val) {
+      if (table2[0] > val) {
         return -1;
       }
       var l = 0;
-      var r2 = table.length;
+      var r2 = table2.length;
       while (l < r2 - 1) {
         var mid = l + (r2 - l + 1 >> 1);
-        if (table[mid] <= val) {
+        if (table2[mid] <= val) {
           l = mid;
         } else {
           r2 = mid;
@@ -18963,8 +18963,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml8;
-    function escapeHtml8(string) {
+    module2.exports = escapeHtml9;
+    function escapeHtml9(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -19095,13 +19095,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml8 = require_escape_html();
+    var escapeHtml9 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message2) {
-      var body = escapeHtml8(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml9(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -23043,7 +23043,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml8 = require_escape_html();
+    var escapeHtml9 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -23096,7 +23096,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml8(msg));
+      var doc = createHtmlDocument("Error", escapeHtml9(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -23196,7 +23196,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml8(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml9(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23600,7 +23600,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml8 = require_escape_html();
+    var escapeHtml9 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23939,7 +23939,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml8(address);
+          var u = escapeHtml9(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -24067,7 +24067,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml8 = require_escape_html();
+    var escapeHtml9 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -24153,7 +24153,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml8(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml9(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -183636,6 +183636,67 @@ var FIVE_DINNERS_PRICE_DISCLOSURES = [
     body: "This plan provides five dinners for two people. Appetite, portion size and any additional sides may change the quantity required."
   }
 ];
+var COOKING_FOR_ONE_DISCLOSURES = [
+  {
+    key: "price_estimate",
+    title: "About these estimates",
+    body: "Aldi UK online prices were checked 27 July 2026. The \xA330.36 checkout estimate uses complete packs and ignores temporary promotional reductions. The \xA314.49 ingredient value uses the estimated quantities consumed across ten servings. Cooking oil, salt, pepper and cooking energy are excluded."
+  },
+  {
+    key: "serving_assumption",
+    title: "Serving assumption",
+    body: "Four published recipes provide ten servings: five scheduled dinners, three next-day lunches and two future freezer portions. Appetite and portion needs vary."
+  },
+  {
+    key: "source_timing",
+    title: "Prices and availability",
+    body: "Prices, pack sizes and stock can vary by Aldi store and may change after the check date. Check the current product and price before shopping."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Pasta, noodles, breadcrumbs, yogurt, stock cubes, soy sauce and other packaged ingredients vary by product and may contain allergens. Check every label before use."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and safety",
+    body: "Follow each product label and the original publisher\u2019s cooking method. Cool leftovers and refrigerate or freeze them within two hours. Reheat only once until steaming hot throughout. Defrost frozen portions in the fridge and use within 24 hours."
+  }
+];
+var PORTION_PLANNING_DISCLOSURES = [
+  {
+    key: "serving_assumption",
+    title: "Serving assumption",
+    body: "Portion sizes in this guide are illustrative. Adjust quantities to suit your household, appetite and what else is being served."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking safety",
+    body: "Freeze suitable surplus promptly and follow product labels. When reheating leftovers, reheat them only once and until steaming hot throughout. Follow current Food Standards Agency guidance."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Ingredients and allergens vary between packaged products, including curry pastes, harissa, sauces and cheese. Check individual labels."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food-safety guidance was reviewed on 20 July 2026. Follow the cited Food Standards Agency links for later updates."
+  }
+];
+var FRESH_OR_FROZEN_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow the product date and its storage, defrosting and cooking instructions. Frozen vegetables should be cooked thoroughly according to the packet instructions."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "NHS and Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited sources for later updates."
+  }
+];
 var BATCH_COOKING_DISCLOSURES = [
   {
     key: "allergen_and_product",
@@ -183832,6 +183893,29 @@ var PROGRAMMATIC_DISCLOSURE_FOOTER = {
   body: "Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.",
   links: [
     { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var COOKING_FOR_ONE_DISCLOSURE_FOOTER = {
+  body: "This costed plan uses published recipes that DinnerByDesign did not develop or test. Prices and availability are a dated Aldi UK snapshot. Check current product labels and follow each publisher\u2019s method and current food-safety guidance.",
+  links: [
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var PORTION_PLANNING_DISCLOSURE_FOOTER = {
+  body: "This guide explains a planning technique rather than prescribing fixed portions. Pack sizes, appetites, product information and storage instructions vary.",
+  links: [
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var FRESH_OR_FROZEN_DISCLOSURE_FOOTER = {
+  body: "This guide describes general tendencies rather than fixed rules. Product preparation, storage instructions and suitability for uncooked use vary, so check the packet.",
+  links: [
+    { href: "/food-safety", label: "Storage and cooking safety" },
     { href: "/recipe-methodology", label: "How dinners are selected" }
   ]
 };
@@ -184385,6 +184469,137 @@ function renderFamilyDinnersForFourInitialHtml() {
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/dinner-plans">Affordable dinner plans</a> / ${escapeHtml4(plan.shortTitle)}</nav><p>Affordable family dinner plan</p><h1>${escapeHtml4(plan.title)}</h1><p>${escapeHtml4(plan.description)}</p><p>By ${escapeHtml4(plan.editorialOwner)} \xB7 Published and reviewed 26 July 2026 \xB7 Prices checked 26 July 2026</p>${plan.introduction.map((item) => `<p>${escapeHtml4(item)}</p>`).join("")}<section aria-label="Plan summary"><h2>Plan summary</h2><p>Five dinners, four servings each, 20 servings in total.</p><p>Complete-pack checkout cost: ${money(plan.expectedCheckoutCost)}.</p><p>Estimated ingredient value used: ${money(plan.estimatedIngredientCost)}, or ${money(plan.averageCostPerServing)} per serving.</p></section>${disclosures}<section><h2>The five dinners</h2>${recipes}</section><section><h2>One coordinated shopping basket</h2><p>Pack cost is the full price paid at checkout. Value used estimates the share consumed by this plan.</p>${basket}<p><strong>Totals: pack cost ${money(plan.expectedCheckoutCost)}, value used ${money(plan.estimatedIngredientCost)}.</strong></p></section><section><h2>How the basket is coordinated</h2>${list(plan.coordination)}</section><section><h2>What remains after Friday</h2>${list(plan.remainders)}</section><section><h2>Preparation across the week</h2>${list(plan.preparation)}</section><section><h2>Substitutions</h2>${list(plan.substitutions)}</section><section><h2>How the figures were calculated</h2>${plan.methodology.map((item) => `<p>${escapeHtml4(item)}</p>`).join("")}</section><section><h2>Questions and answers</h2>${faqs}</section><section><h2>Related reading</h2><p><a href="/dinner-plans">Affordable dinner plans</a>, <a href="/dinner-plans/5-dinners-for-2-under-40">five dinners for two under \xA340</a>, <a href="/food-costs/five-dinners-same-ingredients">five dinners using the same ingredients</a>, <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a>, <a href="/food-costs/fresh-or-frozen">fresh or frozen ingredients</a>, <a href="/pricing-methodology">pricing methodology</a> and <a href="/recipe-methodology">recipe methodology</a>.</p><p><a href="https://www.food.gov.uk/safety-hygiene/cooking-your-food">Food Standards Agency cooking guidance</a> and <a href="https://www.nhs.uk/healthier-families/recipes/">NHS Healthier Families recipes</a>.</p></section>${renderProgrammaticDisclosureFooterInitialHtml()}<p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
 }
 
+// src/content/cookingForOnePlan.ts
+var COOKING_FOR_ONE_PRICE_CHECK_DATE = "27 July 2026";
+var COOKING_FOR_ONE_CHECKOUT_TOTAL = "\xA330.36";
+var COOKING_FOR_ONE_USED_VALUE = "\xA314.49";
+var COOKING_FOR_ONE_SCHEDULE = [
+  { when: "Dinner 1", dinner: "Chickpea saag", destination: "Second serving becomes lunch the next day." },
+  { when: "Dinner 2", dinner: "One-pot tomato pasta", destination: "Second serving becomes lunch the next day." },
+  { when: "Dinner 3", dinner: "One-pot balsamic chicken", destination: "Eat one serving and freeze the other three once cool." },
+  { when: "Dinner 4", dinner: "Chicken noodle soup", destination: "Second serving becomes lunch the next day." },
+  { when: "Dinner 5", dinner: "Defrosted balsamic chicken", destination: "Two dated portions remain for later." }
+];
+var COOKING_FOR_ONE_RECIPES = [
+  {
+    name: "Chickpea saag",
+    publisher: "Tesco Real Food",
+    url: "https://realfood.tesco.com/recipes/chickpea-saag.html",
+    servings: 2,
+    ingredientValue: "\xA33.77",
+    perServing: "\xA31.89",
+    summary: "This combines chickpeas, spinach, Tenderstem broccoli, onion, garlic, lemon, coriander, garam masala and a little Greek-style yogurt. It is the most vegetable-heavy dinner in the plan and uses a substantial part of the spinach pack at once.",
+    servingPlan: "Eat one serving for dinner and cool the second promptly for lunch the next day. The publisher lists naan or flatbread as optional, so neither is included in the basket or cost. A blender is needed for the spinach mixture.",
+    basketFit: "Spinach and garlic return later in the week, while the remaining yogurt and lemon have ordinary breakfast, lunch and dressing uses."
+  },
+  {
+    name: "One-pot tomato pasta",
+    publisher: "Tesco Real Food",
+    url: "https://realfood.tesco.com/recipes/one-pot-tomato-pasta.html",
+    servings: 2,
+    ingredientValue: "\xA31.30",
+    perServing: "\xA30.65",
+    summary: "This pasta uses spaghetti, chopped tomatoes, onion, garlic, dried thyme, red wine vinegar and breadcrumbs. It is a useful contrast to the chicken dishes and avoids a specialist chilled ingredient bought for one spoonful.",
+    servingPlan: "Have one serving for dinner and refrigerate the other for lunch the next day. The recipe\u2019s cooking oil is treated as already owned, alongside salt and pepper. Everything else is included in the basket.",
+    basketFit: "Onion and garlic are already open, and the remaining spaghetti, breadcrumbs, thyme and vinegar all keep well for later cooking."
+  },
+  {
+    name: "One-pot balsamic chicken",
+    publisher: "Aldi",
+    url: "https://www.aldi.co.uk/recipes/collections/family-meals/one-pot-balsamic-chicken",
+    servings: 4,
+    ingredientValue: "\xA37.17",
+    perServing: "\xA31.79",
+    summary: "This is the batch anchor. Aldi\u2019s recipe uses a pack of chicken breasts with red onion, red and yellow pepper, salad tomatoes, balsamic vinegar and spinach. For costing, \u201Cone pack\u201D is treated as Aldi\u2019s 650g Ashfields chicken breast pack because the recipe page does not state a weight.",
+    servingPlan: "Eat one serving on dinner three. Once the remaining food has cooled, divide it into three labelled containers and freeze promptly. Defrost one in the fridge for dinner five. The other two remain as dated future dinners.",
+    basketFit: "The spinach is shared with the saag. The remaining pepper and tomatoes have straightforward uses beyond this plan, while balsamic vinegar keeps for later cooking."
+  },
+  {
+    name: "Chicken noodle soup",
+    publisher: "Good Food",
+    url: "https://www.bbcgoodfood.com/recipes/chicken-noodle-soup",
+    servings: 2,
+    ingredientValue: "\xA32.25",
+    perServing: "\xA31.12",
+    summary: "This soup uses chicken breast, stock, ginger, garlic, noodles, sweetcorn, mushrooms, spring onions and soy sauce. Aldi\u2019s egg noodles are used because the publisher explicitly permits rice or wheat noodles.",
+    servingPlan: "Eat one serving for dinner and refrigerate the other for lunch the next day. Optional mint, basil and chilli are not included. The 300g chicken pack leaves about 125g raw; freeze it before the printed use-by date for another dish.",
+    basketFit: "It reuses garlic and gives the remaining ginger, spring onions, mushrooms and soy sauce straightforward future uses."
+  }
+];
+var COOKING_FOR_ONE_BASKET = [
+  { product: "Brown onions", pack: "1kg", price: "\xA30.99", used: "250g", valueUsed: "\xA30.25" },
+  { product: "British baby spinach", pack: "450g", price: "\xA31.59", used: "300g", valueUsed: "\xA31.06" },
+  { product: "Loose garlic", pack: "1 bulb", price: "\xA30.45", used: "5 cloves", valueUsed: "\xA30.28" },
+  { product: "Wonky lemons", pack: "4", price: "\xA30.89", used: "1", valueUsed: "\xA30.22" },
+  { product: "Cut coriander", pack: "30g", price: "\xA30.50", used: "30g", valueUsed: "\xA30.50" },
+  { product: "Garam masala", pack: "90g", price: "\xA30.89", used: "about 4g", valueUsed: "\xA30.04" },
+  { product: "Chickpeas", pack: "400g can", price: "\xA30.41", used: "1 can", valueUsed: "\xA30.41" },
+  { product: "Tenderstem broccoli", pack: "200g", price: "\xA31.45", used: "200g", valueUsed: "\xA31.45" },
+  { product: "Fat-free Greek-style yogurt", pack: "500g", price: "\xA30.95", used: "30g", valueUsed: "\xA30.06" },
+  { product: "Natural breadcrumbs", pack: "175g", price: "\xA30.99", used: "about 30g", valueUsed: "\xA30.17" },
+  { product: "Dried thyme", pack: "15g", price: "\xA30.65", used: "about 0.75g", valueUsed: "\xA30.03" },
+  { product: "Chopped tomatoes", pack: "400g can", price: "\xA30.43", used: "1 can", valueUsed: "\xA30.43" },
+  { product: "Red wine vinegar", pack: "500ml", price: "\xA31.65", used: "10ml", valueUsed: "\xA30.03" },
+  { product: "Spaghetti", pack: "500g", price: "\xA30.75", used: "250g", valueUsed: "\xA30.38" },
+  { product: "Chicken breast fillets", pack: "650g", price: "\xA34.69", used: "650g", valueUsed: "\xA34.69" },
+  { product: "Red onions", pack: "1kg", price: "\xA30.95", used: "250g", valueUsed: "\xA30.24" },
+  { product: "Mixed peppers", pack: "3", price: "\xA31.79", used: "2", valueUsed: "\xA31.19" },
+  { product: "Salad tomatoes", pack: "6", price: "\xA30.99", used: "4", valueUsed: "\xA30.66" },
+  { product: "Balsamic vinegar", pack: "500ml", price: "\xA31.39", used: "75ml", valueUsed: "\xA30.21" },
+  { product: "Chicken breast fillets", pack: "300g", price: "\xA32.29", used: "175g", valueUsed: "\xA31.34" },
+  { product: "Chicken stock cubes", pack: "12 cubes", price: "\xA30.69", used: "1\xBD cubes", valueUsed: "\xA30.09" },
+  { product: "Fresh ginger", pack: "130g", price: "\xA30.99", used: "about 5g", valueUsed: "\xA30.04" },
+  { product: "Egg noodles", pack: "410g", price: "\xA31.29", used: "50g", valueUsed: "\xA30.16" },
+  { product: "Sweetcorn in water", pack: "285g", price: "\xA30.55", used: "about 30g", valueUsed: "\xA30.06" },
+  { product: "Baby button mushrooms", pack: "200g", price: "\xA30.95", used: "about 60g", valueUsed: "\xA30.29" },
+  { product: "Spring onions", pack: "100g", price: "\xA30.65", used: "about 30g", valueUsed: "\xA30.20" },
+  { product: "Light soy sauce", pack: "150ml", price: "\xA30.55", used: "10ml", valueUsed: "\xA30.04" }
+];
+var COOKING_FOR_ONE_ASSUMPTIONS = [
+  "One small onion is costed at 100g and one standard onion at 150g; two red onions are costed at 250g in total.",
+  "Five garlic cloves are costed as five-eighths of one loose bulb, assuming about eight cloves per bulb. Bulb sizes vary.",
+  "Two teaspoons of garam masala are costed at about 4g; two tablespoons of yogurt at 30g.",
+  "Four tablespoons of breadcrumbs are costed at about 30g. Half a teaspoon of thyme plus a pinch is costed at about 0.75g.",
+  "One teaspoon of chopped ginger is costed at 5g; two tablespoons of sweetcorn at 30g; three mushrooms at 60g; two spring onions at 30g.",
+  "Aldi\u2019s balsamic chicken recipe says one pack of chicken breasts without a weight. The costing uses the 650g pack.",
+  "Temporary promotional reductions found during the check are not used. This makes the basket less dependent on a short-lived offer.",
+  "Recipe totals and headline figures are calculated from unrounded lines. Displayed rows may differ by a penny when added independently."
+];
+var COOKING_FOR_ONE_LEFTOVERS = [
+  "About 125g raw chicken remains from the 300g pack. Freeze it before the printed use-by date, or use it promptly according to the label.",
+  "About 150g spinach remains. Use it within the pack\u2019s storage guidance in eggs, soup, pasta or as a wilted side.",
+  "About 140g mushrooms remains. Refrigerate and plan a specific use within a few days.",
+  "About 470g yogurt remains. Keep it refrigerated and follow the use-by date; it can cover breakfasts, sauces and dressings.",
+  "One pepper and two salad tomatoes remain, along with most of both onion bags and three lemons. These need ordinary follow-on uses rather than being described as zero waste.",
+  "Spring onions and ginger remain in the fridge. Spaghetti, noodles, breadcrumbs, spices, vinegars and soy sauce carry forward in the cupboard."
+];
+var escapeHtml5 = (value) => value.replace(
+  /[&<>"']/g,
+  (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character
+);
+var table = (headings, rows) => `<table><thead><tr>${headings.map((heading) => `<th>${escapeHtml5(heading)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml5(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+function renderCookingForOnePlanInitialHtml() {
+  const schedule = table(
+    ["When", "Dinner", "What happens to the rest"],
+    COOKING_FOR_ONE_SCHEDULE.map((item) => [item.when, item.dinner, item.destination])
+  );
+  const recipes = COOKING_FOR_ONE_RECIPES.map((recipe, index) => `<section><h2>${index + 1}. ${escapeHtml5(recipe.name)}</h2><p><strong>Original recipe:</strong> <a href="${escapeHtml5(recipe.url)}">${escapeHtml5(recipe.publisher)}: ${escapeHtml5(recipe.name)}</a></p><p>${escapeHtml5(recipe.summary)}</p><p>${escapeHtml5(recipe.servingPlan)}</p><p><strong>Why it earns its place:</strong> ${escapeHtml5(recipe.basketFit)}</p></section>`).join("");
+  const costs = table(
+    ["Published dish", "Ingredient value", "Per serving"],
+    [
+      ...COOKING_FOR_ONE_RECIPES.map((recipe) => [recipe.name, recipe.ingredientValue, recipe.perServing]),
+      ["Total", COOKING_FOR_ONE_USED_VALUE, "10 servings"]
+    ]
+  );
+  const basket = table(
+    ["Product", "Pack", "Price", "Used", "Value used"],
+    COOKING_FOR_ONE_BASKET.map((item) => [item.product, item.pack, item.price, item.used, item.valueUsed])
+  );
+  const assumptions = COOKING_FOR_ONE_ASSUMPTIONS.map((item) => `<li>${escapeHtml5(item)}</li>`).join("");
+  const leftovers = COOKING_FOR_ONE_LEFTOVERS.map((item) => `<li>${escapeHtml5(item)}</li>`).join("");
+  return `<section><p>Cooking for one often becomes awkward at the shopping stage. Most recipe publishers still write for two or four people, while spinach, chicken and herbs arrive in packs that rarely match one serving. Scaling everything down can look neat on paper, but it may introduce quantities the original publisher never tested.</p><p>This plan takes a more practical route. Four established recipes are cooked at their published yield. One serving is eaten for dinner, three extra servings become named next-day lunches, and one four-serving dish supplies a second scheduled dinner plus two dated freezer portions.</p><p>The basket is coordinated to reduce waste, not eliminate it. Some food remains for later. The important part is that the perishable leftovers are visible and given a realistic destination.</p></section><section><h2>The five-dinner schedule</h2>${schedule}</section>${recipes}<section><h2>5. The freezer night</h2><p>Dinner five is one of the balsamic chicken portions frozen after dinner three. Defrost it in the fridge, use it within 24 hours of defrosting, and reheat it only once until steaming hot throughout. It is not a fifth recipe, which is precisely the point: no new shopping or preparation is needed.</p></section><section><h2>Where every serving goes</h2><p>The four published recipes provide ten servings: five scheduled dinners, three next-day lunches and two future freezer portions.</p></section><section><h2>What the basket costs</h2><p>At the prices checked on ${COOKING_FOR_ONE_PRICE_CHECK_DATE}, the estimated complete-pack checkout total is <strong>${COOKING_FOR_ONE_CHECKOUT_TOTAL}</strong> for 27 packs or items. The estimated value of the quantities used across all ten servings is <strong>${COOKING_FOR_ONE_USED_VALUE}</strong>, calculated from unrounded ingredient lines. In practical terms, a little under half of the checkout value is used in these recipes; much of the balance remains for later cooking.</p><p>Cooking oil, salt and pepper are assumed already owned and excluded from both figures. Temporary promotional reductions are not used. Aldi prices, pack sizes and availability may vary by store and can change after the check date.</p>${costs}</section><section><h2>The full Aldi basket</h2>${basket}</section><section><h2>Costing assumptions</h2><ul>${assumptions}</ul></section><section><h2>Fresh food left after the plan</h2><ul>${leftovers}</ul></section><section><h2>Food-safety note</h2><p>Cool cooked leftovers and put them in the fridge within two hours. Eat refrigerated leftovers within 48 hours or freeze them. Reheat only once and make sure food is steaming hot throughout. Once frozen food has defrosted in the fridge, use it within 24 hours.</p></section><section><h2>What DinnerByDesign did, and did not do</h2><p>DinnerByDesign selected and compared these published recipes. It did not develop or test them. Use each original publisher\u2019s page for quantities, timings and method.</p><p>DinnerByDesign\u2019s contribution is the Aldi availability check, the coordinated basket, the comparison between complete-pack checkout cost and ingredient value used, the serving destinations, and the explicit costing and leftover assumptions.</p></section>`;
+}
+
 // src/content/seoFoodCostGuides.ts
 var UK_FOOD_COSTS_2026_PATH = "/food-costs/uk-food-costs-2026";
 var UK_FOOD_COSTS_2026 = {
@@ -184441,6 +184656,41 @@ var COOKING_FOR_ONE_GUIDE = {
     { question: "Did DinnerByDesign develop or test these recipes?", answer: "No. The recipes come from Tesco Real Food, Aldi and Good Food. Follow the original publisher for quantities, timings and method. DinnerByDesign provides the basket, costing and leftover analysis." },
     { question: "What is assumed to be in the cupboard?", answer: "Cooking oil, salt and pepper are treated as already owned and excluded from the checkout and ingredient-value figures. Every other listed ingredient is costed." }
   ]
+};
+var COOKING_FOR_ONE_GUIDE_SECTIONS = [
+  {
+    rawHtml: renderCookingForOnePlanInitialHtml(),
+    disclosureItems: COOKING_FOR_ONE_DISCLOSURES
+  },
+  {
+    rawHtml: '<section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/five-dinners-same-ingredients">see how shared ingredients can become different dinners</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section>'
+  }
+];
+var COOKING_FOR_ONE_GUIDE_RECORD = {
+  id: "cooking-for-one-without-waste",
+  slug: "cooking-for-one-without-waste",
+  path: COOKING_FOR_ONE_PATH,
+  canonicalPath: COOKING_FOR_ONE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "price-sensitive",
+  ...COOKING_FOR_ONE_GUIDE,
+  nextReviewAt: "2026-08-28",
+  metaDescription: COOKING_FOR_ONE_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: [
+    ...COOKING_FOR_ONE_DISCLOSURES.slice(0, 3),
+    COOKING_FOR_ONE_DISCLOSURES[4],
+    COOKING_FOR_ONE_DISCLOSURES[3]
+  ],
+  disclosureFooter: COOKING_FOR_ONE_DISCLOSURE_FOOTER,
+  sections: COOKING_FOR_ONE_GUIDE_SECTIONS,
+  cta: {
+    title: "Make the plan fit your week",
+    copy: "Use DinnerByDesign to adapt dinner ideas around your preferences, budget and ingredients.",
+    label: "Plan dinners for one",
+    href: "/signin"
+  }
 };
 var OFFAL_BUDGET_GUIDE_PATH = "/food-costs/cooking-with-offal-on-a-budget";
 var OFFAL_BUDGET_GUIDE = {
@@ -184500,6 +184750,37 @@ var PORTION_PLANNING_GUIDE = {
     { question: "Which ingredients are most useful to portion before cooking?", answer: "More expensive ingredients such as meat, fish and cheese are worth particular attention because changing their quantity usually makes the greatest difference to the cost of a dinner." },
     { question: "How does DinnerByDesign calculate cost per portion?", answer: "Cost per portion reflects the value of the ingredients used in a dinner at the number of servings you set. It does not necessarily match your checkout total because complete packs usually have to be bought." }
   ]
+};
+var PORTION_PLANNING_GUIDE_SECTIONS = [
+  {
+    rawHtml: '<section><p>It is easy to assume that cooking more is generous and cooking less saves money. In practice, the two do not always match up. Cooking too much of an expensive ingredient can quietly push up what a dinner costs, while serving smaller portions does not automatically reduce the supermarket checkout because much of what you buy comes in a fixed pack.</p></section><section><h2>Portion planning, not portion control</h2><p>Portion planning is not about eating less. It is about deciding before you cook how many people a dinner is meant to serve and whether any extra portions have a specific purpose.</p></section><section><h2>Where portion planning makes the greatest difference</h2><p>Portion planning has the biggest effect on ingredients that cost the most, particularly meat, fish and cheese. Vegetables, pulses, grains, potatoes and a well-flavoured sauce can provide volume, texture and flavour around a smaller quantity of the priciest ingredient.</p><p>The guide to <a href="/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses">dinners built around potatoes, rice, pasta, bread and pulses</a> shows how five familiar staples can provide the structure of a complete dish.</p></section><section><h2>Why checkout costs do not always fall</h2><p>If a dinner needs 300g of mince and the smallest available pack is 500g, the full pack still has to be bought. Keep two figures separate: the value of ingredients used in the dinner and the cost of the complete packs bought. The unused part provides further value when it is used in another dinner or stored safely for later.</p></section><section><h2>When cooking extra is economical</h2><p>A larger batch can make good use of a fixed pack when the extra has a purpose before cooking begins: another dinner, a lunch or the freezer.</p></section><section><h2>How to plan portions realistically</h2><p>Realistic portions depend on who you are feeding, their appetite and what else is being served. A household of two can halve a recipe written for four or cook the full amount and earmark the extra for later.</p></section>',
+    disclosureItems: PORTION_PLANNING_DISCLOSURES
+  },
+  {
+    rawHtml: '<section><h2>Practical ways to reduce waste</h2><ul><li>Weigh or measure more expensive ingredients rather than guessing.</li><li>Divide large packs into usable portions promptly.</li><li>Freeze suitable surplus and label leftovers with the date.</li><li>Schedule shared ingredients across several dinners.</li></ul></section><section><h2>Keeping lower-cost dinners satisfying</h2><p>A smaller quantity of chicken can be shredded through spiced rice with herbs and lime. Strong cheese can be grated through a gratin. Pulses and grains take on bold flavours from curry paste, harissa or toasted spices, allowing meat, fish or cheese to add character rather than bulk.</p></section><section><h2>How DinnerByDesign helps</h2><p>DinnerByDesign lets you set servings and see an estimated cost per portion. Build a week that reuses ingredients and generate a shopping list from scheduled dinners, so complete packs are bought with a plan for using them.</p></section><section><h2>Making portion planning work</h2><p>Portion planning works best as part of a bigger picture: realistic servings, awareness of pack sizes, planned leftovers and a week of dinners that share ingredients. It is about making sure everything you buy gets used well.</p></section><section><h2>Related guidance</h2><p><a href="/dinner-plans/5-affordable-family-dinners-for-four">See a five-dinner family plan with serving and pack costs</a>, <a href="/food-costs/cooking-for-one-without-waste">plan dinners for one without waste</a>, <a href="/food-costs/ways-to-reduce-grocery-costs">explore practical ways to manage grocery costs</a>, <a href="/food-costs/batch-cooking-on-a-budget">learn when batch cooking can save money</a>, <a href="/pricing-methodology">read the pricing methodology</a> or <a href="/food-safety">review food-safety guidance</a>.</p></section>'
+  }
+];
+var PORTION_PLANNING_GUIDE_RECORD = {
+  id: "portion-planning-and-food-waste",
+  slug: "portion-planning-and-food-waste",
+  path: PORTION_PLANNING_GUIDE_PATH,
+  canonicalPath: PORTION_PLANNING_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...PORTION_PLANNING_GUIDE,
+  nextReviewAt: "2027-07-20",
+  metaDescription: PORTION_PLANNING_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: PORTION_PLANNING_DISCLOSURES,
+  disclosureFooter: PORTION_PLANNING_DISCLOSURE_FOOTER,
+  sections: PORTION_PLANNING_GUIDE_SECTIONS,
+  cta: {
+    title: "Plan portions across your week",
+    copy: "Use DinnerByDesign to set servings, coordinate ingredients and create a shopping list from scheduled dinners.",
+    label: "Plan my week",
+    href: "/signin"
+  }
 };
 var MEDITERRANEAN_AFFORDABLE_COOKING_PATH = "/food-costs/mediterranean-inspired-affordable-cooking";
 var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
@@ -184584,6 +184865,37 @@ var FRESH_OR_FROZEN_GUIDE = {
     { question: "Is fresh or frozen always the cheapest option?", answer: "No. Prices, pack sizes and the amount you will actually use vary. Compare the current pack price with how much is likely to be eaten rather than assuming one format always costs less." },
     { question: "What should I choose if I am unsure?", answer: "Choose fresh when appearance, crispness or uncooked texture matters. Choose frozen when longer storage and taking out only what you need are more useful, while checking that the product suits your intended dish." }
   ]
+};
+var FRESH_OR_FROZEN_GUIDE_SECTIONS = [
+  {
+    rawHtml: "<section><p>Fresh fruit and vegetables can be ideal when texture, appearance or immediate use matters. Frozen versions offer a longer storage window and are often washed, trimmed and portioned before freezing. Some can be cooked straight from frozen; others need to be handled according to the packet.</p><p>Neither format is automatically better or cheaper. The useful question is which one suits what you are cooking, how soon you will use it and how much is likely to be left over.</p></section><section><h2>Quick answer</h2><p>Choose fresh when crispness, appearance or uncooked texture is central to the dish. Choose frozen when longer storage, convenience and using only the amount needed matter more. The best choice varies by product and cooking method.</p></section><section><h2>Key differences</h2><table><thead><tr><th>Factor</th><th>Fresh</th><th>Frozen</th></tr></thead><tbody><tr><th>Best for</th><td>Raw or appearance-led uses, depending on the product</td><td>Cooked dishes where a softer texture is suitable</td></tr><tr><th>Texture</th><td>Often firmer when recently bought and stored well</td><td>Product-dependent; may soften or release moisture</td></tr><tr><th>Storage</th><td>Varies by product; check its condition and date</td><td>Generally longer; follow the date and storage instructions</td></tr><tr><th>Preparation</th><td>May need washing, trimming or chopping</td><td>Often prepared and portioned, but check the packet</td></tr><tr><th>Waste</th><td>Useful when the whole amount will be eaten in time</td><td>Useful when you want to remove smaller amounts and keep the rest frozen</td></tr><tr><th>Nutrition</th><td>Both fresh and frozen fruit and vegetables count towards 5 A Day; exact content varies</td><td>Neither format is universally more nutritious</td></tr></tbody></table></section><section><h2>Does freezing affect quality?</h2><p>It can. Freezing changes the structure of some fruit and vegetables, so they may be softer after defrosting or release more moisture during cooking. That may matter in a salad or a dish where a crisp finish is important, but much less in a soup, stew, sauce, pie filling or blended dish.</p><p>The effect is product-specific. Frozen peas can retain a useful colour and sweetness in cooked dishes, while frozen spinach is particularly convenient where it will be stirred into a sauce, curry or stew. Frozen berries may soften as they thaw but can still work well in compote, baking or porridge when prepared according to the packet.</p></section><section><h2>Is frozen produce as nutritious as fresh?</h2><p>Both fresh and frozen fruit and vegetables count towards your 5 A Day. Exact nutrient content varies with the product, variety, storage and cooking, so neither format should be described as universally more nutritious.</p></section><section><h2>Which is more convenient?</h2><p>Frozen produce is often washed, trimmed, chopped or portioned before sale. That can shorten preparation and lets you remove only what you need. Fresh produce can be more convenient when it will be eaten uncooked or needs no defrosting, and when its appearance or crispness matters.</p><p>If only part of a frozen pack is used, return the remainder to the freezer promptly, reseal it and follow the packet's storage instructions.</p></section><section><h2>Which can create less waste?</h2><p>Frozen produce can reduce unused leftovers because a smaller quantity can be taken from the pack while the rest stays frozen. Fresh can be equally sensible when you know the whole amount will be used while it is still suitable to eat. Buying more than you need undermines either choice.</p></section><section><h2>Best cooking uses</h2><ul><li><strong>Salads and presentation-led dishes:</strong> fresh is usually the more suitable starting point.</li><li><strong>Soups, stews, curries and pies:</strong> either can work; adjust timing and liquid for the product.</li><li><strong>Roasting and stir-frying:</strong> product-dependent, because some frozen vegetables release more moisture.</li><li><strong>Baking, compotes and porridge:</strong> frozen fruit can work well when prepared according to the packet.</li></ul></section><section><h2>When to choose fresh</h2><ul><li>You plan to use it soon.</li><li>Texture, crispness or appearance is important.</li><li>The ingredient will be served uncooked and is suitable for that use.</li><li>You know the amount bought will be used.</li></ul></section><section><h2>When to choose frozen</h2><ul><li>You want a longer storage window.</li><li>You need only a small amount at a time.</li><li>Prepared or portioned ingredients make the dish easier.</li><li>The ingredient will be cooked into a dish where a softer texture is suitable.</li></ul></section><section><h2>Verdict</h2><p>Neither format is universally better. Choose according to how soon the ingredient will be used, how it will be cooked and whether convenience, texture or reducing waste matters most for that dinner.</p></section>",
+    disclosureItems: FRESH_OR_FROZEN_DISCLOSURES
+  },
+  {
+    rawHtml: '<section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign by ingredient, then use Plan my week to place fresh and frozen options where they make most sense across the week.</p></section><section><h2>Related guidance</h2><p><a href="/dinner-plans/5-affordable-family-dinners-for-four">See how one family dinner plan uses fresh and frozen ingredients across five dinners</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce food waste</a>, <a href="/food-costs/summer-stews-seasonal-vegetables">make vegetables go further in summer stews</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section>'
+  }
+];
+var FRESH_OR_FROZEN_GUIDE_RECORD = {
+  id: "fresh-or-frozen",
+  slug: "fresh-or-frozen",
+  path: FRESH_OR_FROZEN_GUIDE_PATH,
+  canonicalPath: FRESH_OR_FROZEN_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...FRESH_OR_FROZEN_GUIDE,
+  nextReviewAt: "2027-07-21",
+  metaDescription: FRESH_OR_FROZEN_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: FRESH_OR_FROZEN_DISCLOSURES,
+  disclosureFooter: FRESH_OR_FROZEN_DISCLOSURE_FOOTER,
+  sections: FRESH_OR_FROZEN_GUIDE_SECTIONS,
+  cta: {
+    title: "Choose ingredients that suit your week",
+    copy: "Search by what you have and plan flexible dinners.",
+    label: "Plan my week",
+    href: "/signin"
+  }
 };
 var BATCH_COOKING_GUIDE_PATH = "/food-costs/batch-cooking-on-a-budget";
 var BATCH_COOKING_GUIDE = {
@@ -187047,9 +187359,9 @@ var PULSES_BUDGET_FAQS = [
     answer: "Yes. Cool them promptly, divide them into useful quantities and freeze them if they will not be eaten within the recommended refrigerated storage time."
   }
 ];
-var escapeHtml5 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
-var paragraphs = (items) => items.map((item) => `<p>${escapeHtml5(item)}</p>`).join("");
-var pulseUseRows = () => PULSE_USES.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml5(cell)}</td>`).join("")}</tr>`).join("");
+var escapeHtml6 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var paragraphs = (items) => items.map((item) => `<p>${escapeHtml6(item)}</p>`).join("");
+var pulseUseRows = () => PULSE_USES.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml6(cell)}</td>`).join("")}</tr>`).join("");
 var PULSES_BUDGET_GUIDE_SECTIONS = [
   {
     rawHtml: `<section>${paragraphs([
@@ -187435,8 +187747,8 @@ var GROCERY_COST_STARTING_POINTS = [
   ["Last-minute purchases", "Flexible fallback dinners"],
   ["Confusing supermarket trips", "A list generated from scheduled dinners"]
 ];
-var escapeHtml6 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
-var groceryCostStartingPointRows = () => GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml6(problem)}</th><td>${escapeHtml6(start)}</td></tr>`).join("");
+var escapeHtml7 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var groceryCostStartingPointRows = () => GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml7(problem)}</th><td>${escapeHtml7(start)}</td></tr>`).join("");
 var GROCERY_COST_OPTIONS_GUIDE_SECTIONS = [
   {
     rawHtml: "<section><p>Controlling what you spend on groceries involves more than hunting for the cheapest products on the shelf. It is really about a handful of connected decisions: planning what you will actually cook, choosing realistic quantities, coordinating ingredients across several dinners, using complete packs effectively, avoiding unnecessary waste, and having a purpose for any surplus portions.</p><p>One distinction is worth keeping in mind throughout: the value of the ingredients you use in a dinner is not the same as the cost of the complete pack you had to buy to get them. Many of the techniques below work by closing that gap, making sure more of what you pay for actually gets eaten.</p></section>",
@@ -187594,6 +187906,9 @@ var PUBLIC_GUIDE_RECORDS = [
   GROCERY_COST_OPTIONS_GUIDE_RECORD,
   GROCERY_COST_PREDICTION_GUIDE_RECORD,
   BATCH_COOKING_GUIDE_RECORD,
+  PORTION_PLANNING_GUIDE_RECORD,
+  FRESH_OR_FROZEN_GUIDE_RECORD,
+  COOKING_FOR_ONE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD
 ];
@@ -187701,20 +188016,6 @@ var PUBLIC_ARTICLES = [
     status: "published"
   },
   {
-    title: FRESH_OR_FROZEN_GUIDE.title,
-    path: FRESH_OR_FROZEN_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: FRESH_OR_FROZEN_GUIDE.pageFamily,
-    primarySearchIntent: FRESH_OR_FROZEN_GUIDE.primarySearchIntent,
-    indexingStatus: FRESH_OR_FROZEN_GUIDE.indexingStatus,
-    publishedAt: FRESH_OR_FROZEN_GUIDE.publishedAt,
-    reviewedAt: FRESH_OR_FROZEN_GUIDE.reviewedAt,
-    contentReviewedAt: FRESH_OR_FROZEN_GUIDE.contentReviewedAt,
-    internalLinks: FRESH_OR_FROZEN_GUIDE.internalLinks,
-    disclosures: FRESH_OR_FROZEN_GUIDE.disclosures,
-    status: "published"
-  },
-  {
     title: SUMMER_STEWS_GUIDE.title,
     path: SUMMER_STEWS_GUIDE_PATH,
     category: "Food cost guide",
@@ -187743,20 +188044,6 @@ var PUBLIC_ARTICLES = [
     status: "published"
   },
   {
-    title: PORTION_PLANNING_GUIDE.title,
-    path: PORTION_PLANNING_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: PORTION_PLANNING_GUIDE.pageFamily,
-    primarySearchIntent: PORTION_PLANNING_GUIDE.primarySearchIntent,
-    indexingStatus: PORTION_PLANNING_GUIDE.indexingStatus,
-    publishedAt: PORTION_PLANNING_GUIDE.publishedAt,
-    reviewedAt: PORTION_PLANNING_GUIDE.reviewedAt,
-    contentReviewedAt: PORTION_PLANNING_GUIDE.contentReviewedAt,
-    internalLinks: PORTION_PLANNING_GUIDE.internalLinks,
-    disclosures: PORTION_PLANNING_GUIDE.disclosures,
-    status: "published"
-  },
-  {
     title: OFFAL_BUDGET_GUIDE.title,
     path: OFFAL_BUDGET_GUIDE_PATH,
     category: "Food cost guide",
@@ -187768,20 +188055,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: OFFAL_BUDGET_GUIDE.contentReviewedAt,
     internalLinks: OFFAL_BUDGET_GUIDE.internalLinks,
     disclosures: OFFAL_BUDGET_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: COOKING_FOR_ONE_GUIDE.title,
-    path: COOKING_FOR_ONE_PATH,
-    category: "Food cost guide",
-    pageFamily: COOKING_FOR_ONE_GUIDE.pageFamily,
-    primarySearchIntent: COOKING_FOR_ONE_GUIDE.primarySearchIntent,
-    indexingStatus: COOKING_FOR_ONE_GUIDE.indexingStatus,
-    publishedAt: COOKING_FOR_ONE_GUIDE.publishedAt,
-    reviewedAt: COOKING_FOR_ONE_GUIDE.reviewedAt,
-    contentReviewedAt: COOKING_FOR_ONE_GUIDE.contentReviewedAt,
-    internalLinks: COOKING_FOR_ONE_GUIDE.internalLinks,
-    disclosures: COOKING_FOR_ONE_GUIDE.disclosures,
     status: "published"
   },
   {
@@ -187960,7 +188233,7 @@ var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
 var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;
 var contactAttempts = /* @__PURE__ */ new Map();
-var escapeHtml7 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+var escapeHtml8 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 function hasContactRateLimitCapacity(req) {
   const forwardedFor = req.get("x-forwarded-for");
   const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
@@ -188992,7 +189265,7 @@ function createApp() {
     if (!hasContactRateLimitCapacity(req)) {
       return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
     }
-    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml7(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml7(email)}">${escapeHtml7(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml7(message2)}</div></div>`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml8(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml8(email)}">${escapeHtml8(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml8(message2)}</div></div>`;
     try {
       const response = await sendTrackedEmail({
         to: CONTACT_RECIPIENT,

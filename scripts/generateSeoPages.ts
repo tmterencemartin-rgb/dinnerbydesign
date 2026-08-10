@@ -13,32 +13,20 @@ import {
   renderFamilyDinnersForFourInitialHtml,
 } from '../src/content/familyDinnersForFourPlan';
 import {
-  COOKING_FOR_ONE_GUIDE,
-  COOKING_FOR_ONE_PATH,
-  FRESH_OR_FROZEN_GUIDE,
-  FRESH_OR_FROZEN_GUIDE_PATH,
   MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE,
   MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
   OFFAL_BUDGET_GUIDE,
   OFFAL_BUDGET_GUIDE_PATH,
-  PORTION_PLANNING_GUIDE,
-  PORTION_PLANNING_GUIDE_PATH,
   SUMMER_STEWS_GUIDE,
   SUMMER_STEWS_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
-  getCookingForOneJsonLd,
-  getFreshOrFrozenGuideJsonLd,
   getMediterraneanAffordableCookingJsonLd,
   getOffalBudgetGuideJsonLd,
-  getPortionPlanningGuideJsonLd,
   getSummerStewsGuideJsonLd,
   getUkFoodCosts2026JsonLd,
-  renderCookingForOneInitialHtml,
-  renderFreshOrFrozenGuideInitialHtml,
   renderMediterraneanAffordableCookingInitialHtml,
   renderOffalBudgetGuideInitialHtml,
-  renderPortionPlanningGuideInitialHtml,
   renderSummerStewsGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
 } from '../src/content/seoFoodCostGuides';
@@ -192,30 +180,6 @@ await fs.mkdir(guideOutputDir, { recursive: true });
 await fs.writeFile(path.join(guideOutputDir, 'index.html'), guideHtml, 'utf8');
 console.log(`Generated ${UK_FOOD_COSTS_2026_PATH}/index.html`);
 
-const cookingForOneCanonicalUrl = `https://dinnerbydesign.app${COOKING_FOR_ONE_PATH}`;
-let cookingForOneHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${COOKING_FOR_ONE_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${COOKING_FOR_ONE_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${cookingForOneCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${cookingForOneCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${COOKING_FOR_ONE_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${COOKING_FOR_ONE_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${COOKING_FOR_ONE_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${COOKING_FOR_ONE_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderCookingForOneInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getCookingForOneJsonLd())}</script>\n</head>`);
-
-if (!cookingForOneHtml.includes(`<h1>${COOKING_FOR_ONE_GUIDE.title}</h1>`) || !cookingForOneHtml.includes(`href="${cookingForOneCanonicalUrl}"`)) {
-  throw new Error('Cooking-for-one guide generation failed its content or canonical check.');
-}
-
-const cookingForOneOutputDir = path.join(distRoot, COOKING_FOR_ONE_PATH.slice(1));
-await fs.mkdir(cookingForOneOutputDir, { recursive: true });
-await fs.writeFile(path.join(cookingForOneOutputDir, 'index.html'), cookingForOneHtml, 'utf8');
-console.log(`Generated ${COOKING_FOR_ONE_PATH}/index.html`);
-
 const offalCanonicalUrl = `https://dinnerbydesign.app${OFFAL_BUDGET_GUIDE_PATH}`;
 let offalHtml = sourceHtml
   .replace(/<title>.*?<\/title>/, `<title>${OFFAL_BUDGET_GUIDE.seoTitle}</title>`)
@@ -236,26 +200,6 @@ const offalOutputDir = path.join(distRoot, OFFAL_BUDGET_GUIDE_PATH.slice(1));
 await fs.mkdir(offalOutputDir, { recursive: true });
 await fs.writeFile(path.join(offalOutputDir, 'index.html'), offalHtml, 'utf8');
 console.log(`Generated ${OFFAL_BUDGET_GUIDE_PATH}/index.html`);
-
-const portionCanonicalUrl = `https://dinnerbydesign.app${PORTION_PLANNING_GUIDE_PATH}`;
-let portionHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${PORTION_PLANNING_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${PORTION_PLANNING_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${portionCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${portionCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${PORTION_PLANNING_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${PORTION_PLANNING_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${PORTION_PLANNING_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${PORTION_PLANNING_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderPortionPlanningGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getPortionPlanningGuideJsonLd())}</script>\n</head>`);
-if (!portionHtml.includes(`<h1>${PORTION_PLANNING_GUIDE.title}</h1>`) || !portionHtml.includes(`href="${portionCanonicalUrl}"`)) throw new Error('Portion-planning guide generation failed its content or canonical check.');
-const portionOutputDir = path.join(distRoot, PORTION_PLANNING_GUIDE_PATH.slice(1));
-await fs.mkdir(portionOutputDir, { recursive: true });
-await fs.writeFile(path.join(portionOutputDir, 'index.html'), portionHtml, 'utf8');
-console.log(`Generated ${PORTION_PLANNING_GUIDE_PATH}/index.html`);
 
 const mediterraneanCanonicalUrl = `https://dinnerbydesign.app${MEDITERRANEAN_AFFORDABLE_COOKING_PATH}`;
 let mediterraneanHtml = sourceHtml
@@ -296,26 +240,6 @@ const summerStewsOutputDir = path.join(distRoot, SUMMER_STEWS_GUIDE_PATH.slice(1
 await fs.mkdir(summerStewsOutputDir, { recursive: true });
 await fs.writeFile(path.join(summerStewsOutputDir, 'index.html'), summerStewsHtml, 'utf8');
 console.log(`Generated ${SUMMER_STEWS_GUIDE_PATH}/index.html`);
-
-const freshOrFrozenCanonicalUrl = `https://dinnerbydesign.app${FRESH_OR_FROZEN_GUIDE_PATH}`;
-let freshOrFrozenHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${FRESH_OR_FROZEN_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${FRESH_OR_FROZEN_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${freshOrFrozenCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${freshOrFrozenCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${FRESH_OR_FROZEN_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${FRESH_OR_FROZEN_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${FRESH_OR_FROZEN_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${FRESH_OR_FROZEN_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderFreshOrFrozenGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getFreshOrFrozenGuideJsonLd())}</script>\n</head>`);
-if (!freshOrFrozenHtml.includes(`<h1>${FRESH_OR_FROZEN_GUIDE.title}</h1>`) || !freshOrFrozenHtml.includes(`href="${freshOrFrozenCanonicalUrl}"`)) throw new Error('Fresh-or-frozen guide generation failed its content or canonical check.');
-const freshOrFrozenOutputDir = path.join(distRoot, FRESH_OR_FROZEN_GUIDE_PATH.slice(1));
-await fs.mkdir(freshOrFrozenOutputDir, { recursive: true });
-await fs.writeFile(path.join(freshOrFrozenOutputDir, 'index.html'), freshOrFrozenHtml, 'utf8');
-console.log(`Generated ${FRESH_OR_FROZEN_GUIDE_PATH}/index.html`);
 
 const cheaperMeatCutsCanonicalUrl = `https://dinnerbydesign.app${CHEAPER_MEAT_CUTS_GUIDE_PATH}`;
 let cheaperMeatCutsHtml = sourceHtml

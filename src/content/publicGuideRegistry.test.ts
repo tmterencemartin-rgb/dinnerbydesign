@@ -61,6 +61,9 @@ import {
 } from './groceryCostPredictionGuide';
 import {
   BATCH_COOKING_GUIDE_PATH,
+  COOKING_FOR_ONE_PATH,
+  FRESH_OR_FROZEN_GUIDE_PATH,
+  PORTION_PLANNING_GUIDE_PATH,
 } from './seoFoodCostGuides';
 import {
   PUBLIC_GUIDE_RECORDS,
@@ -92,6 +95,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(GROCERY_COST_OPTIONS_GUIDE_PATH);
     expect(paths).toContain(GROCERY_COST_PREDICTION_GUIDE_PATH);
     expect(paths).toContain(BATCH_COOKING_GUIDE_PATH);
+    expect(paths).toContain(PORTION_PLANNING_GUIDE_PATH);
+    expect(paths).toContain(FRESH_OR_FROZEN_GUIDE_PATH);
+    expect(paths).toContain(COOKING_FOR_ONE_PATH);
     expect(new Set(paths).size).toBe(paths.length);
   });
 
@@ -128,6 +134,9 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(GROCERY_COST_OPTIONS_GUIDE_PATH)?.title).toBe('12 practical ways to reduce and manage your grocery costs');
     expect(getPublicGuideRecordByPath(GROCERY_COST_PREDICTION_GUIDE_PATH)?.title).toBe('Why is it so difficult to budget accurately for food?');
     expect(getPublicGuideRecordByPath(BATCH_COOKING_GUIDE_PATH)?.title).toBe("Batch cooking on a budget: when it saves money and when it doesn't");
+    expect(getPublicGuideRecordByPath(PORTION_PLANNING_GUIDE_PATH)?.title).toBe('How portion planning can help reduce food costs and waste');
+    expect(getPublicGuideRecordByPath(FRESH_OR_FROZEN_GUIDE_PATH)?.title).toBe('Fresh or frozen: which is better for the way you cook?');
+    expect(getPublicGuideRecordByPath(COOKING_FOR_ONE_PATH)?.title).toBe('Five dinners for one from one Aldi basket');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH)?.title).toBe('Nine budget dinners with potatoes');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH)?.title).toBe('Nine budget dinners with rice');
   });

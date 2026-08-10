@@ -295,52 +295,49 @@ export const COOKING_FOR_ONE_GUIDE = {
   ],
 };
 
+export const COOKING_FOR_ONE_GUIDE_SECTIONS: PublicGuideSection[] = [
+  {
+    rawHtml: renderCookingForOnePlanInitialHtml(),
+    disclosureItems: COOKING_FOR_ONE_DISCLOSURES,
+  },
+  {
+    rawHtml: '<section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/five-dinners-same-ingredients">see how shared ingredients can become different dinners</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section>',
+  },
+];
+
+export const COOKING_FOR_ONE_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'cooking-for-one-without-waste',
+  slug: 'cooking-for-one-without-waste',
+  path: COOKING_FOR_ONE_PATH,
+  canonicalPath: COOKING_FOR_ONE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'price-sensitive',
+  ...COOKING_FOR_ONE_GUIDE,
+  nextReviewAt: '2026-08-28',
+  metaDescription: COOKING_FOR_ONE_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: [
+    ...COOKING_FOR_ONE_DISCLOSURES.slice(0, 3),
+    COOKING_FOR_ONE_DISCLOSURES[4],
+    COOKING_FOR_ONE_DISCLOSURES[3],
+  ],
+  disclosureFooter: COOKING_FOR_ONE_DISCLOSURE_FOOTER,
+  sections: COOKING_FOR_ONE_GUIDE_SECTIONS,
+  cta: {
+    title: 'Make the plan fit your week',
+    copy: 'Use DinnerByDesign to adapt dinner ideas around your preferences, budget and ingredients.',
+    label: 'Plan dinners for one',
+    href: '/signin',
+  },
+};
+
 export function getCookingForOneJsonLd() {
-  const guide = COOKING_FOR_ONE_GUIDE;
-  const url = `https://dinnerbydesign.app${COOKING_FOR_ONE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: guide.faqs.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Food cost guides', item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(COOKING_FOR_ONE_GUIDE_RECORD);
 }
 
 export function renderCookingForOneInitialHtml() {
-  const guide = COOKING_FOR_ONE_GUIDE;
-  const plan = renderCookingForOnePlanInitialHtml();
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(COOKING_FOR_ONE_DISCLOSURES);
-  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml(COOKING_FOR_ONE_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/food-costs">Food-cost and waste guidance</a> / Cooking for one</nav><p>Costed dinner plan</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 28 July 2026</p><article>${plan}${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><p>Recipes, prices and guidance reviewed 28 July 2026. Aldi prices were checked 27 July 2026.</p><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/five-dinners-same-ingredients">see how shared ingredients can become different dinners</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${disclosureFooter}<section><h2>Make the plan fit your week</h2><p>Use DinnerByDesign to adapt dinner ideas around your preferences, budget and ingredients.</p><p><a href="/signin">Plan dinners for one</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(COOKING_FOR_ONE_GUIDE_RECORD);
 }
 
 export const OFFAL_BUDGET_GUIDE_PATH = '/food-costs/cooking-with-offal-on-a-budget';
@@ -423,22 +420,45 @@ export const PORTION_PLANNING_GUIDE = {
   ],
 };
 
+export const PORTION_PLANNING_GUIDE_SECTIONS: PublicGuideSection[] = [
+  {
+    rawHtml: '<section><p>It is easy to assume that cooking more is generous and cooking less saves money. In practice, the two do not always match up. Cooking too much of an expensive ingredient can quietly push up what a dinner costs, while serving smaller portions does not automatically reduce the supermarket checkout because much of what you buy comes in a fixed pack.</p></section><section><h2>Portion planning, not portion control</h2><p>Portion planning is not about eating less. It is about deciding before you cook how many people a dinner is meant to serve and whether any extra portions have a specific purpose.</p></section><section><h2>Where portion planning makes the greatest difference</h2><p>Portion planning has the biggest effect on ingredients that cost the most, particularly meat, fish and cheese. Vegetables, pulses, grains, potatoes and a well-flavoured sauce can provide volume, texture and flavour around a smaller quantity of the priciest ingredient.</p><p>The guide to <a href="/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses">dinners built around potatoes, rice, pasta, bread and pulses</a> shows how five familiar staples can provide the structure of a complete dish.</p></section><section><h2>Why checkout costs do not always fall</h2><p>If a dinner needs 300g of mince and the smallest available pack is 500g, the full pack still has to be bought. Keep two figures separate: the value of ingredients used in the dinner and the cost of the complete packs bought. The unused part provides further value when it is used in another dinner or stored safely for later.</p></section><section><h2>When cooking extra is economical</h2><p>A larger batch can make good use of a fixed pack when the extra has a purpose before cooking begins: another dinner, a lunch or the freezer.</p></section><section><h2>How to plan portions realistically</h2><p>Realistic portions depend on who you are feeding, their appetite and what else is being served. A household of two can halve a recipe written for four or cook the full amount and earmark the extra for later.</p></section>',
+    disclosureItems: PORTION_PLANNING_DISCLOSURES,
+  },
+  {
+    rawHtml: '<section><h2>Practical ways to reduce waste</h2><ul><li>Weigh or measure more expensive ingredients rather than guessing.</li><li>Divide large packs into usable portions promptly.</li><li>Freeze suitable surplus and label leftovers with the date.</li><li>Schedule shared ingredients across several dinners.</li></ul></section><section><h2>Keeping lower-cost dinners satisfying</h2><p>A smaller quantity of chicken can be shredded through spiced rice with herbs and lime. Strong cheese can be grated through a gratin. Pulses and grains take on bold flavours from curry paste, harissa or toasted spices, allowing meat, fish or cheese to add character rather than bulk.</p></section><section><h2>How DinnerByDesign helps</h2><p>DinnerByDesign lets you set servings and see an estimated cost per portion. Build a week that reuses ingredients and generate a shopping list from scheduled dinners, so complete packs are bought with a plan for using them.</p></section><section><h2>Making portion planning work</h2><p>Portion planning works best as part of a bigger picture: realistic servings, awareness of pack sizes, planned leftovers and a week of dinners that share ingredients. It is about making sure everything you buy gets used well.</p></section><section><h2>Related guidance</h2><p><a href="/dinner-plans/5-affordable-family-dinners-for-four">See a five-dinner family plan with serving and pack costs</a>, <a href="/food-costs/cooking-for-one-without-waste">plan dinners for one without waste</a>, <a href="/food-costs/ways-to-reduce-grocery-costs">explore practical ways to manage grocery costs</a>, <a href="/food-costs/batch-cooking-on-a-budget">learn when batch cooking can save money</a>, <a href="/pricing-methodology">read the pricing methodology</a> or <a href="/food-safety">review food-safety guidance</a>.</p></section>',
+  },
+];
+
+export const PORTION_PLANNING_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'portion-planning-and-food-waste',
+  slug: 'portion-planning-and-food-waste',
+  path: PORTION_PLANNING_GUIDE_PATH,
+  canonicalPath: PORTION_PLANNING_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'safety-sensitive',
+  ...PORTION_PLANNING_GUIDE,
+  nextReviewAt: '2027-07-20',
+  metaDescription: PORTION_PLANNING_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: PORTION_PLANNING_DISCLOSURES,
+  disclosureFooter: PORTION_PLANNING_DISCLOSURE_FOOTER,
+  sections: PORTION_PLANNING_GUIDE_SECTIONS,
+  cta: {
+    title: 'Plan portions across your week',
+    copy: 'Use DinnerByDesign to set servings, coordinate ingredients and create a shopping list from scheduled dinners.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+};
+
 export function getPortionPlanningGuideJsonLd() {
-  const guide = PORTION_PLANNING_GUIDE; const url = `https://dinnerbydesign.app${PORTION_PLANNING_GUIDE_PATH}`;
-  return { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': `${url}#article`, headline: guide.title, description: guide.description, datePublished: guide.publishedAt, dateModified: guide.reviewedAt, author: { '@type': 'Organization', name: guide.editorialOwner }, publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' }, mainEntityOfPage: url, citation: guide.sources.map(source => source.url) },
-    { '@type': 'FAQPage', mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' }, { '@type': 'ListItem', position: 2, name: 'Food cost guides', item: url }] },
-  ] };
+  return getPublicGuideJsonLd(PORTION_PLANNING_GUIDE_RECORD);
 }
 
 export function renderPortionPlanningGuideInitialHtml() {
-  const guide = PORTION_PLANNING_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(PORTION_PLANNING_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(PORTION_PLANNING_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>It is easy to assume that cooking more is generous and cooking less saves money. In practice, the two do not always match up. Cooking too much of an expensive ingredient can quietly push up what a dinner costs, while serving smaller portions does not automatically reduce the supermarket checkout because much of what you buy comes in a fixed pack.</p></section><section><h2>Portion planning, not portion control</h2><p>Portion planning is not about eating less. It is about deciding before you cook how many people a dinner is meant to serve and whether any extra portions have a specific purpose.</p></section><section><h2>Where portion planning makes the greatest difference</h2><p>Portion planning has the biggest effect on ingredients that cost the most, particularly meat, fish and cheese. Vegetables, pulses, grains, potatoes and a well-flavoured sauce can provide volume, texture and flavour around a smaller quantity of the priciest ingredient.</p><p>The guide to <a href="/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses">dinners built around potatoes, rice, pasta, bread and pulses</a> shows how five familiar staples can provide the structure of a complete dish.</p></section><section><h2>Why checkout costs do not always fall</h2><p>If a dinner needs 300g of mince and the smallest available pack is 500g, the full pack still has to be bought. Keep two figures separate: the value of ingredients used in the dinner and the cost of the complete packs bought. The unused part provides further value when it is used in another dinner or stored safely for later.</p></section><section><h2>When cooking extra is economical</h2><p>A larger batch can make good use of a fixed pack when the extra has a purpose before cooking begins: another dinner, a lunch or the freezer.</p></section><section><h2>How to plan portions realistically</h2><p>Realistic portions depend on who you are feeding, their appetite and what else is being served. A household of two can halve a recipe written for four or cook the full amount and earmark the extra for later.</p></section>${disclosures}<section><h2>Practical ways to reduce waste</h2><ul><li>Weigh or measure more expensive ingredients rather than guessing.</li><li>Divide large packs into usable portions promptly.</li><li>Freeze suitable surplus and label leftovers with the date.</li><li>Schedule shared ingredients across several dinners.</li></ul></section><section><h2>Keeping lower-cost dinners satisfying</h2><p>A smaller quantity of chicken can be shredded through spiced rice with herbs and lime. Strong cheese can be grated through a gratin. Pulses and grains take on bold flavours from curry paste, harissa or toasted spices, allowing meat, fish or cheese to add character rather than bulk.</p></section><section><h2>How DinnerByDesign helps</h2><p>DinnerByDesign lets you set servings and see an estimated cost per portion. Build a week that reuses ingredients and generate a shopping list from scheduled dinners, so complete packs are bought with a plan for using them.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Making portion planning work</h2><p>Portion planning works best as part of a bigger picture: realistic servings, awareness of pack sizes, planned leftovers and a week of dinners that share ingredients. It is about making sure everything you buy gets used well.</p></section><section><h2>Sources and further reading</h2><p>Guidance reviewed 20 July 2026.</p><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/dinner-plans/5-affordable-family-dinners-for-four">See a five-dinner family plan with serving and pack costs</a>, <a href="/food-costs/cooking-for-one-without-waste">plan dinners for one without waste</a>, <a href="/food-costs/ways-to-reduce-grocery-costs">explore practical ways to manage grocery costs</a>, <a href="/food-costs/batch-cooking-on-a-budget">learn when batch cooking can save money</a>, <a href="/pricing-methodology">read the pricing methodology</a> or <a href="/food-safety">review food-safety guidance</a>.</p></section></article>${footer}<section><h2>Plan portions across your week</h2><p>Use DinnerByDesign to set servings, coordinate ingredients and create a shopping list from scheduled dinners.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(PORTION_PLANNING_GUIDE_RECORD);
 }
 
 export const MEDITERRANEAN_AFFORDABLE_COOKING_PATH = '/food-costs/mediterranean-inspired-affordable-cooking';
@@ -571,23 +591,45 @@ export const FRESH_OR_FROZEN_GUIDE = {
   ],
 };
 
+export const FRESH_OR_FROZEN_GUIDE_SECTIONS: PublicGuideSection[] = [
+  {
+    rawHtml: '<section><p>Fresh fruit and vegetables can be ideal when texture, appearance or immediate use matters. Frozen versions offer a longer storage window and are often washed, trimmed and portioned before freezing. Some can be cooked straight from frozen; others need to be handled according to the packet.</p><p>Neither format is automatically better or cheaper. The useful question is which one suits what you are cooking, how soon you will use it and how much is likely to be left over.</p></section><section><h2>Quick answer</h2><p>Choose fresh when crispness, appearance or uncooked texture is central to the dish. Choose frozen when longer storage, convenience and using only the amount needed matter more. The best choice varies by product and cooking method.</p></section><section><h2>Key differences</h2><table><thead><tr><th>Factor</th><th>Fresh</th><th>Frozen</th></tr></thead><tbody><tr><th>Best for</th><td>Raw or appearance-led uses, depending on the product</td><td>Cooked dishes where a softer texture is suitable</td></tr><tr><th>Texture</th><td>Often firmer when recently bought and stored well</td><td>Product-dependent; may soften or release moisture</td></tr><tr><th>Storage</th><td>Varies by product; check its condition and date</td><td>Generally longer; follow the date and storage instructions</td></tr><tr><th>Preparation</th><td>May need washing, trimming or chopping</td><td>Often prepared and portioned, but check the packet</td></tr><tr><th>Waste</th><td>Useful when the whole amount will be eaten in time</td><td>Useful when you want to remove smaller amounts and keep the rest frozen</td></tr><tr><th>Nutrition</th><td>Both fresh and frozen fruit and vegetables count towards 5 A Day; exact content varies</td><td>Neither format is universally more nutritious</td></tr></tbody></table></section><section><h2>Does freezing affect quality?</h2><p>It can. Freezing changes the structure of some fruit and vegetables, so they may be softer after defrosting or release more moisture during cooking. That may matter in a salad or a dish where a crisp finish is important, but much less in a soup, stew, sauce, pie filling or blended dish.</p><p>The effect is product-specific. Frozen peas can retain a useful colour and sweetness in cooked dishes, while frozen spinach is particularly convenient where it will be stirred into a sauce, curry or stew. Frozen berries may soften as they thaw but can still work well in compote, baking or porridge when prepared according to the packet.</p></section><section><h2>Is frozen produce as nutritious as fresh?</h2><p>Both fresh and frozen fruit and vegetables count towards your 5 A Day. Exact nutrient content varies with the product, variety, storage and cooking, so neither format should be described as universally more nutritious.</p></section><section><h2>Which is more convenient?</h2><p>Frozen produce is often washed, trimmed, chopped or portioned before sale. That can shorten preparation and lets you remove only what you need. Fresh produce can be more convenient when it will be eaten uncooked or needs no defrosting, and when its appearance or crispness matters.</p><p>If only part of a frozen pack is used, return the remainder to the freezer promptly, reseal it and follow the packet\'s storage instructions.</p></section><section><h2>Which can create less waste?</h2><p>Frozen produce can reduce unused leftovers because a smaller quantity can be taken from the pack while the rest stays frozen. Fresh can be equally sensible when you know the whole amount will be used while it is still suitable to eat. Buying more than you need undermines either choice.</p></section><section><h2>Best cooking uses</h2><ul><li><strong>Salads and presentation-led dishes:</strong> fresh is usually the more suitable starting point.</li><li><strong>Soups, stews, curries and pies:</strong> either can work; adjust timing and liquid for the product.</li><li><strong>Roasting and stir-frying:</strong> product-dependent, because some frozen vegetables release more moisture.</li><li><strong>Baking, compotes and porridge:</strong> frozen fruit can work well when prepared according to the packet.</li></ul></section><section><h2>When to choose fresh</h2><ul><li>You plan to use it soon.</li><li>Texture, crispness or appearance is important.</li><li>The ingredient will be served uncooked and is suitable for that use.</li><li>You know the amount bought will be used.</li></ul></section><section><h2>When to choose frozen</h2><ul><li>You want a longer storage window.</li><li>You need only a small amount at a time.</li><li>Prepared or portioned ingredients make the dish easier.</li><li>The ingredient will be cooked into a dish where a softer texture is suitable.</li></ul></section><section><h2>Verdict</h2><p>Neither format is universally better. Choose according to how soon the ingredient will be used, how it will be cooked and whether convenience, texture or reducing waste matters most for that dinner.</p></section>',
+    disclosureItems: FRESH_OR_FROZEN_DISCLOSURES,
+  },
+  {
+    rawHtml: '<section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign by ingredient, then use Plan my week to place fresh and frozen options where they make most sense across the week.</p></section><section><h2>Related guidance</h2><p><a href="/dinner-plans/5-affordable-family-dinners-for-four">See how one family dinner plan uses fresh and frozen ingredients across five dinners</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce food waste</a>, <a href="/food-costs/summer-stews-seasonal-vegetables">make vegetables go further in summer stews</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section>',
+  },
+];
+
+export const FRESH_OR_FROZEN_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'fresh-or-frozen',
+  slug: 'fresh-or-frozen',
+  path: FRESH_OR_FROZEN_GUIDE_PATH,
+  canonicalPath: FRESH_OR_FROZEN_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'safety-sensitive',
+  ...FRESH_OR_FROZEN_GUIDE,
+  nextReviewAt: '2027-07-21',
+  metaDescription: FRESH_OR_FROZEN_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: FRESH_OR_FROZEN_DISCLOSURES,
+  disclosureFooter: FRESH_OR_FROZEN_DISCLOSURE_FOOTER,
+  sections: FRESH_OR_FROZEN_GUIDE_SECTIONS,
+  cta: {
+    title: 'Choose ingredients that suit your week',
+    copy: 'Search by what you have and plan flexible dinners.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+};
+
 export function getFreshOrFrozenGuideJsonLd() {
-  const guide = FRESH_OR_FROZEN_GUIDE;
-  const url = `https://dinnerbydesign.app${FRESH_OR_FROZEN_GUIDE_PATH}`;
-  return { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': `${url}#article`, headline: guide.title, description: guide.description, datePublished: guide.publishedAt, dateModified: guide.reviewedAt, author: { '@type': 'Organization', name: guide.editorialOwner }, publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' }, mainEntityOfPage: url, citation: guide.sources.map(source => source.url) },
-    { '@type': 'FAQPage', mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' }, { '@type': 'ListItem', position: 2, name: 'Food cost guides', item: url }] },
-  ] };
+  return getPublicGuideJsonLd(FRESH_OR_FROZEN_GUIDE_RECORD);
 }
 
 export function renderFreshOrFrozenGuideInitialHtml() {
-  const guide = FRESH_OR_FROZEN_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(FRESH_OR_FROZEN_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(FRESH_OR_FROZEN_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 21 July 2026 · Last reviewed 21 July 2026</p><article><section><p>Fresh fruit and vegetables can be ideal when texture, appearance or immediate use matters. Frozen versions offer a longer storage window and are often washed, trimmed and portioned before freezing. Some can be cooked straight from frozen; others need to be handled according to the packet.</p><p>Neither format is automatically better or cheaper. The useful question is which one suits what you are cooking, how soon you will use it and how much is likely to be left over.</p></section><section><h2>Quick answer</h2><p>Choose fresh when crispness, appearance or uncooked texture is central to the dish. Choose frozen when longer storage, convenience and using only the amount needed matter more. The best choice varies by product and cooking method.</p></section><section><h2>Key differences</h2><table><thead><tr><th>Factor</th><th>Fresh</th><th>Frozen</th></tr></thead><tbody><tr><th>Best for</th><td>Raw or appearance-led uses, depending on the product</td><td>Cooked dishes where a softer texture is suitable</td></tr><tr><th>Texture</th><td>Often firmer when recently bought and stored well</td><td>Product-dependent; may soften or release moisture</td></tr><tr><th>Storage</th><td>Varies by product; check its condition and date</td><td>Generally longer; follow the date and storage instructions</td></tr><tr><th>Preparation</th><td>May need washing, trimming or chopping</td><td>Often prepared and portioned, but check the packet</td></tr><tr><th>Waste</th><td>Useful when the whole amount will be eaten in time</td><td>Useful when you want to remove smaller amounts and keep the rest frozen</td></tr><tr><th>Nutrition</th><td>Both fresh and frozen fruit and vegetables count towards 5 A Day; exact content varies</td><td>Neither format is universally more nutritious</td></tr></tbody></table></section><section><h2>Does freezing affect quality?</h2><p>It can. Freezing changes the structure of some fruit and vegetables, so they may be softer after defrosting or release more moisture during cooking. That may matter in a salad or a dish where a crisp finish is important, but much less in a soup, stew, sauce, pie filling or blended dish.</p><p>The effect is product-specific. Frozen peas can retain a useful colour and sweetness in cooked dishes, while frozen spinach is particularly convenient where it will be stirred into a sauce, curry or stew. Frozen berries may soften as they thaw but can still work well in compote, baking or porridge when prepared according to the packet.</p></section><section><h2>Is frozen produce as nutritious as fresh?</h2><p>Both fresh and frozen fruit and vegetables count towards your 5 A Day. Exact nutrient content varies with the product, variety, storage and cooking, so neither format should be described as universally more nutritious.</p></section><section><h2>Which is more convenient?</h2><p>Frozen produce is often washed, trimmed, chopped or portioned before sale. That can shorten preparation and lets you remove only what you need. Fresh produce can be more convenient when it will be eaten uncooked or needs no defrosting, and when its appearance or crispness matters.</p><p>If only part of a frozen pack is used, return the remainder to the freezer promptly, reseal it and follow the packet's storage instructions.</p></section><section><h2>Which can create less waste?</h2><p>Frozen produce can reduce unused leftovers because a smaller quantity can be taken from the pack while the rest stays frozen. Fresh can be equally sensible when you know the whole amount will be used while it is still suitable to eat. Buying more than you need undermines either choice.</p></section><section><h2>Best cooking uses</h2><ul><li><strong>Salads and presentation-led dishes:</strong> fresh is usually the more suitable starting point.</li><li><strong>Soups, stews, curries and pies:</strong> either can work; adjust timing and liquid for the product.</li><li><strong>Roasting and stir-frying:</strong> product-dependent, because some frozen vegetables release more moisture.</li><li><strong>Baking, compotes and porridge:</strong> frozen fruit can work well when prepared according to the packet.</li></ul></section><section><h2>When to choose fresh</h2><ul><li>You plan to use it soon.</li><li>Texture, crispness or appearance is important.</li><li>The ingredient will be served uncooked and is suitable for that use.</li><li>You know the amount bought will be used.</li></ul></section><section><h2>When to choose frozen</h2><ul><li>You want a longer storage window.</li><li>You need only a small amount at a time.</li><li>Prepared or portioned ingredients make the dish easier.</li><li>The ingredient will be cooked into a dish where a softer texture is suitable.</li></ul></section><section><h2>Verdict</h2><p>Neither format is universally better. Choose according to how soon the ingredient will be used, how it will be cooked and whether convenience, texture or reducing waste matters most for that dinner.</p></section>${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign by ingredient, then use Plan my week to place fresh and frozen options where they make most sense across the week.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/dinner-plans/5-affordable-family-dinners-for-four">See how one family dinner plan uses fresh and frozen ingredients across five dinners</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce food waste</a>, <a href="/food-costs/summer-stews-seasonal-vegetables">make vegetables go further in summer stews</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Choose ingredients that suit your week</h2><p>Search by what you have and plan flexible dinners.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(FRESH_OR_FROZEN_GUIDE_RECORD);
 }
 
 export const BATCH_COOKING_GUIDE_PATH = '/food-costs/batch-cooking-on-a-budget';

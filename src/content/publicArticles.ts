@@ -1,4 +1,4 @@
-import { COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
+import { MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH } from './familyDinnersForFourPlan';
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
@@ -99,13 +99,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks, disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures, status: 'published',
   },
   {
-    title: FRESH_OR_FROZEN_GUIDE.title, path: FRESH_OR_FROZEN_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: FRESH_OR_FROZEN_GUIDE.pageFamily, primarySearchIntent: FRESH_OR_FROZEN_GUIDE.primarySearchIntent,
-    indexingStatus: FRESH_OR_FROZEN_GUIDE.indexingStatus, publishedAt: FRESH_OR_FROZEN_GUIDE.publishedAt,
-    reviewedAt: FRESH_OR_FROZEN_GUIDE.reviewedAt, contentReviewedAt: FRESH_OR_FROZEN_GUIDE.contentReviewedAt,
-    internalLinks: FRESH_OR_FROZEN_GUIDE.internalLinks, disclosures: FRESH_OR_FROZEN_GUIDE.disclosures, status: 'published',
-  },
-  {
     title: SUMMER_STEWS_GUIDE.title, path: SUMMER_STEWS_GUIDE_PATH, category: 'Food cost guide',
     pageFamily: SUMMER_STEWS_GUIDE.pageFamily, primarySearchIntent: SUMMER_STEWS_GUIDE.primarySearchIntent,
     indexingStatus: SUMMER_STEWS_GUIDE.indexingStatus, publishedAt: SUMMER_STEWS_GUIDE.publishedAt,
@@ -120,13 +113,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     internalLinks: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.internalLinks, disclosures: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.disclosures, status: 'published',
   },
   {
-    title: PORTION_PLANNING_GUIDE.title, path: PORTION_PLANNING_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: PORTION_PLANNING_GUIDE.pageFamily, primarySearchIntent: PORTION_PLANNING_GUIDE.primarySearchIntent,
-    indexingStatus: PORTION_PLANNING_GUIDE.indexingStatus, publishedAt: PORTION_PLANNING_GUIDE.publishedAt,
-    reviewedAt: PORTION_PLANNING_GUIDE.reviewedAt, contentReviewedAt: PORTION_PLANNING_GUIDE.contentReviewedAt,
-    internalLinks: PORTION_PLANNING_GUIDE.internalLinks, disclosures: PORTION_PLANNING_GUIDE.disclosures, status: 'published',
-  },
-  {
     title: OFFAL_BUDGET_GUIDE.title,
     path: OFFAL_BUDGET_GUIDE_PATH,
     category: 'Food cost guide',
@@ -138,20 +124,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     contentReviewedAt: OFFAL_BUDGET_GUIDE.contentReviewedAt,
     internalLinks: OFFAL_BUDGET_GUIDE.internalLinks,
     disclosures: OFFAL_BUDGET_GUIDE.disclosures,
-    status: 'published',
-  },
-  {
-    title: COOKING_FOR_ONE_GUIDE.title,
-    path: COOKING_FOR_ONE_PATH,
-    category: 'Food cost guide',
-    pageFamily: COOKING_FOR_ONE_GUIDE.pageFamily,
-    primarySearchIntent: COOKING_FOR_ONE_GUIDE.primarySearchIntent,
-    indexingStatus: COOKING_FOR_ONE_GUIDE.indexingStatus,
-    publishedAt: COOKING_FOR_ONE_GUIDE.publishedAt,
-    reviewedAt: COOKING_FOR_ONE_GUIDE.reviewedAt,
-    contentReviewedAt: COOKING_FOR_ONE_GUIDE.contentReviewedAt,
-    internalLinks: COOKING_FOR_ONE_GUIDE.internalLinks,
-    disclosures: COOKING_FOR_ONE_GUIDE.disclosures,
     status: 'published',
   },
   {
