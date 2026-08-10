@@ -22,10 +22,9 @@ import { NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE, NINE_BUDGET_FRIENDLY_DINN
 import { NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE, NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH } from './nineBudgetDinnersWithTinnedVegetablesGuide';
 import { WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH } from './wholeChickenValueGuide';
 import { BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH } from './bubbleAndSqueakBudgetDinnersGuide';
-import { NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE, NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH } from './nineBudgetDinnersWithPotatoesGuide';
-import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH } from './nineBudgetDinnersWithRiceGuide';
 import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH } from './meatStretchingGuide';
-import { NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE, NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH } from './nineBudgetDinnersWithSavouryPiesGuide';
+import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './publicGuideRegistry';
+import type { PublicGuideRecord } from './publicGuideModel';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 
 export interface PublicArticleLink {
@@ -43,17 +42,24 @@ export interface PublicArticleLink {
   status: 'published' | 'draft' | 'retired';
 }
 
+const publicGuideRecordToArticle = (guide: PublicGuideRecord): PublicArticleLink => ({
+  title: guide.title,
+  path: guide.path,
+  category: guide.label,
+  pageFamily: guide.pageFamily,
+  primarySearchIntent: guide.primarySearchIntent,
+  indexingStatus: guide.indexingStatus,
+  publishedAt: guide.publishedAt,
+  reviewedAt: guide.reviewedAt,
+  contentReviewedAt: guide.contentReviewedAt,
+  internalLinks: [...guide.internalLinks],
+  disclosures: [...guide.disclosures],
+  status: 'published',
+});
+
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
-  { title: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, category: 'Practical cooking guide', pageFamily: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE.disclosures, status: 'published' },
+  ...PUBLISHED_PUBLIC_GUIDE_RECORDS.map(publicGuideRecordToArticle),
   { title: MEAT_STRETCHING_GUIDE.title, path: MEAT_STRETCHING_GUIDE_PATH, category: 'Practical cooking guide', pageFamily: MEAT_STRETCHING_GUIDE.pageFamily, primarySearchIntent: MEAT_STRETCHING_GUIDE.primarySearchIntent, indexingStatus: MEAT_STRETCHING_GUIDE.indexingStatus, publishedAt: MEAT_STRETCHING_GUIDE.publishedAt, reviewedAt: MEAT_STRETCHING_GUIDE.reviewedAt, contentReviewedAt: MEAT_STRETCHING_GUIDE.contentReviewedAt, internalLinks: MEAT_STRETCHING_GUIDE.internalLinks, disclosures: MEAT_STRETCHING_GUIDE.disclosures, status: 'published' },
-  { title: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, category: 'Practical cooking guide', pageFamily: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.primarySearchIntent, indexingStatus: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.publishedAt, reviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.contentReviewedAt, internalLinks: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_RICE_GUIDE.disclosures, status: 'published' },
-  {
-    title: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.primarySearchIntent,
-    indexingStatus: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.publishedAt,
-    reviewedAt: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.contentReviewedAt,
-    internalLinks: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE.disclosures, status: 'published',
-  },
   {
     title: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.title, path: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH, category: 'Practical cooking guide',
     pageFamily: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.pageFamily, primarySearchIntent: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.primarySearchIntent,

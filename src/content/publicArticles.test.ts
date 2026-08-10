@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { PUBLIC_LIBRARY_LAUNCH_THRESHOLD, PUBLIC_LIBRARY_PATH, PUBLISHED_ARTICLES, PUBLIC_ARTICLES, isUnknownPublicArticlePath } from './publicArticles';
+import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './publicGuideRegistry';
 import { PUBLIC_PAGE_REDIRECTS, getPublicPageRedirect } from './publicRedirects';
 
 describe('public article registry', () => {
@@ -18,6 +19,19 @@ describe('public article registry', () => {
   it('excludes non-published entries from the admin list', () => {
     expect(PUBLISHED_ARTICLES.every(article => article.status === 'published')).toBe(true);
     expect(PUBLISHED_ARTICLES.length).toBeLessThanOrEqual(PUBLIC_ARTICLES.length);
+  });
+
+  it('surfaces migrated guide records in the public article list', () => {
+    PUBLISHED_PUBLIC_GUIDE_RECORDS.forEach(guide => {
+      const article = PUBLISHED_ARTICLES.find(item => item.path === guide.path);
+      expect(article).toEqual(expect.objectContaining({
+        title: guide.title,
+        category: guide.label,
+        pageFamily: guide.pageFamily,
+        primarySearchIntent: guide.primarySearchIntent,
+        contentReviewedAt: guide.contentReviewedAt,
+      }));
+    });
   });
 
   it('identifies unpublished paths in protected public page families', () => {
