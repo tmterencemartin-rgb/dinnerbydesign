@@ -110,6 +110,40 @@ const ViewLoading = () => (
   </div>
 );
 
+const GUEST_VISIBLE_VIEWS = new Set<AppView>([
+  'home',
+  'landing',
+  'pricing-methodology',
+  'food-safety',
+  'recipe-methodology',
+  'nutrition-methodology',
+  'privacy',
+  'terms',
+  'signin',
+  'success',
+  'guides',
+  'five-a-day-guide',
+  'home-cooked-ready-made-guide',
+  'cheap-finishing-touches-guide',
+  'low-cost-dinners-guide',
+  'meal-plan-five-for-two-under-40',
+  'food-costs-uk-2026',
+  'food-costs-lower-cost-cuts',
+  'food-costs-cheaper-meat-cuts',
+  'food-costs-shared-ingredients',
+  'food-costs-complete-packs',
+  'food-costs-low-cost-cooking-techniques',
+  'food-costs-cooking-for-one',
+  'food-costs-offal-budget',
+  'food-costs-portion-planning',
+  'food-costs-mediterranean-affordable-cooking',
+  'food-costs-summer-stews',
+  'food-costs-fresh-or-frozen',
+  'food-costs-batch-cooking',
+  'food-costs-grocery-cost-options',
+  'food-costs-grocery-prediction',
+]);
+
 const AppContent = () => {
   const {
     user,
@@ -466,6 +500,28 @@ const AppContent = () => {
 
   // Auto redirect guest user away from protected views to landing
   const isGuest = !user || user.isAnonymous;
+  const openPlannerFromGuide = () => {
+    if (isGuest) {
+      safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
+      setView('signin');
+      return;
+    }
+    setView('planner');
+  };
+
+  const openSearchFromGuide = () => {
+    if (isGuest) {
+      setView('signin');
+      return;
+    }
+    setView('home');
+  };
+
+  const openFiveForTwoPlan = () => {
+    safeStorage.session.setItem(AFFORDABILITY_PLANNER_PRESET_KEY, JSON.stringify({ dinnerCount: 5, budget: '40', servings: 2, minimiseCost: true, reuseIngredients: true }));
+    openPlannerFromGuide();
+  };
+
   React.useEffect(() => {
     if (!isAuthReady || isGuest) return;
     const preloadTimer = window.setTimeout(() => {
@@ -479,7 +535,7 @@ const AppContent = () => {
   }, [isAuthReady, isGuest]);
 
   React.useEffect(() => {
-    if (isGuest && view !== 'home' && (view as string) !== 'landing' && view !== 'pricing-methodology' && view !== 'food-safety' && view !== 'recipe-methodology' && view !== 'nutrition-methodology' && view !== 'privacy' && view !== 'terms' && view !== 'signin' && view !== 'success' && view !== 'guides' && view !== 'five-a-day-guide' && view !== 'home-cooked-ready-made-guide' && view !== 'cheap-finishing-touches-guide' && view !== 'low-cost-dinners-guide' && view !== 'meal-plan-five-for-two-under-40' && view !== 'food-costs-uk-2026' && view !== 'food-costs-lower-cost-cuts' && view !== 'food-costs-cheaper-meat-cuts' && view !== 'food-costs-shared-ingredients' && view !== 'food-costs-complete-packs' && view !== 'food-costs-low-cost-cooking-techniques' && view !== 'food-costs-cooking-for-one' && view !== 'food-costs-offal-budget' && view !== 'food-costs-portion-planning' && view !== 'food-costs-mediterranean-affordable-cooking' && view !== 'food-costs-summer-stews' && view !== 'food-costs-fresh-or-frozen' && view !== 'food-costs-batch-cooking' && view !== 'food-costs-grocery-cost-options' && view !== 'food-costs-grocery-prediction') {
+    if (isGuest && !GUEST_VISIBLE_VIEWS.has(view)) {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
       if (isFromEmail) {
@@ -594,232 +650,32 @@ const AppContent = () => {
     return <NutritionMethodologyView setView={setView} />;
   }
 
-  if (view === 'meal-plan-five-for-two-under-40') {
-    return <SeoMealPlanView onPersonalise={() => {
-      safeStorage.session.setItem(AFFORDABILITY_PLANNER_PRESET_KEY, JSON.stringify({ dinnerCount: 5, budget: '40', servings: 2, minimiseCost: true, reuseIngredients: true }));
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
+  const publicGuideView = ({
+    'meal-plan-five-for-two-under-40': <SeoMealPlanView onPersonalise={openFiveForTwoPlan} />,
+    'food-costs-uk-2026': <FoodCostGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-lower-cost-cuts': <LowerCostCutsGuideView onFindDinners={openPlannerFromGuide} />,
+    'food-costs-cheaper-meat-cuts': <CheaperMeatCutsGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-shared-ingredients': <SharedIngredientsGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-complete-packs': <CompletePacksGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-low-cost-cooking-techniques': <LowCostCookingTechniquesGuideView onFindDinners={openPlannerFromGuide} />,
+    'food-costs-cooking-for-one': <CookingForOneGuideView onPlanDinners={openPlannerFromGuide} />,
+    'food-costs-offal-budget': <OffalBudgetGuideView onFindDinners={openPlannerFromGuide} />,
+    'food-costs-portion-planning': <PortionPlanningGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-mediterranean-affordable-cooking': <MediterraneanAffordableCookingGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-summer-stews': <SummerStewsGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-fresh-or-frozen': <FreshOrFrozenGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-batch-cooking': <BatchCookingGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-grocery-cost-options': <GroceryCostOptionsGuideView onPlanWeek={openPlannerFromGuide} />,
+    'food-costs-grocery-prediction': <GroceryCostPredictionGuideView onPlanWeek={openPlannerFromGuide} />,
+    guides: <GuidesLibraryView onPlanWeek={openPlannerFromGuide} />,
+    'five-a-day-guide': <FiveADayGuideView onFindDinner={openSearchFromGuide} />,
+    'home-cooked-ready-made-guide': <HomeCookedReadyMadeGuideView onFindDinner={openSearchFromGuide} />,
+    'cheap-finishing-touches-guide': <CheapFinishingTouchesGuideView onFindDinner={openSearchFromGuide} />,
+    'low-cost-dinners-guide': <LowCostDinnersGuideView onFindDinner={openSearchFromGuide} />,
+  } satisfies Partial<Record<AppView, React.ReactNode>>)[view];
 
-  if (view === 'food-costs-uk-2026') {
-    return <FoodCostGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-lower-cost-cuts') {
-    return <LowerCostCutsGuideView onFindDinners={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-cheaper-meat-cuts') {
-    return <CheaperMeatCutsGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-shared-ingredients') {
-    return <SharedIngredientsGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-complete-packs') {
-    return <CompletePacksGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-low-cost-cooking-techniques') {
-    return <LowCostCookingTechniquesGuideView onFindDinners={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-cooking-for-one') {
-    return <CookingForOneGuideView onPlanDinners={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-offal-budget') {
-    return <OffalBudgetGuideView onFindDinners={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-portion-planning') {
-    return <PortionPlanningGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-mediterranean-affordable-cooking') {
-    return <MediterraneanAffordableCookingGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-summer-stews') {
-    return <SummerStewsGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-fresh-or-frozen') {
-    return <FreshOrFrozenGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-batch-cooking') {
-    return <BatchCookingGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-grocery-cost-options') {
-    return <GroceryCostOptionsGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'food-costs-grocery-prediction') {
-    return <GroceryCostPredictionGuideView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'guides') {
-    return <GuidesLibraryView onPlanWeek={() => {
-      if (isGuest) {
-        safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
-        setView('signin');
-        return;
-      }
-      setView('planner');
-    }} />;
-  }
-
-  if (view === 'five-a-day-guide') {
-    return <FiveADayGuideView onFindDinner={() => {
-      if (isGuest) {
-        setView('signin');
-        return;
-      }
-      setView('home');
-    }} />;
-  }
-
-  if (view === 'home-cooked-ready-made-guide') {
-    return <HomeCookedReadyMadeGuideView onFindDinner={() => {
-      if (isGuest) {
-        setView('signin');
-        return;
-      }
-      setView('home');
-    }} />;
-  }
-
-  if (view === 'cheap-finishing-touches-guide') {
-    return <CheapFinishingTouchesGuideView onFindDinner={() => {
-      if (isGuest) {
-        setView('signin');
-        return;
-      }
-      setView('home');
-    }} />;
-  }
-
-  if (view === 'low-cost-dinners-guide') {
-    return <LowCostDinnersGuideView onFindDinner={() => {
-      if (isGuest) {
-        setView('signin');
-        return;
-      }
-      setView('home');
-    }} />;
+  if (publicGuideView) {
+    return publicGuideView;
   }
 
   if (view === 'success') {
