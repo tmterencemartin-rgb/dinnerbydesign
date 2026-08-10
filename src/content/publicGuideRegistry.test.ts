@@ -3,6 +3,15 @@ import {
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH,
 } from './nineBudgetDinnersWithSavouryPiesGuide';
 import {
+  MINCE_BUDGET_DINNERS_GUIDE_PATH,
+} from './minceBudgetDinnersGuide';
+import {
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
+} from './nineBudgetDinnersThreeCuisinesGuide';
+import {
+  SAUSAGE_WAYS_GUIDE_PATH,
+} from './sausageWaysGuide';
+import {
   BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
 } from './bubbleAndSqueakBudgetDinnersGuide';
 import {
@@ -38,6 +47,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
+    expect(paths).toContain(MINCE_BUDGET_DINNERS_GUIDE_PATH);
+    expect(paths).toContain(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH);
+    expect(paths).toContain(SAUSAGE_WAYS_GUIDE_PATH);
     expect(paths).toContain(BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH);
     expect(paths).toContain(MEAT_STRETCHING_GUIDE_PATH);
     expect(paths).toContain(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH);
@@ -62,6 +74,9 @@ describe('public guide registry', () => {
   it('looks up guides by public path', () => {
     const guide = getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
     expect(guide?.title).toBe('Nine budget dinners with savoury pies');
+    expect(getPublicGuideRecordByPath(MINCE_BUDGET_DINNERS_GUIDE_PATH)?.title).toBe('9 budget dinners with beef or pork mince');
+    expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH)?.title).toBe('Nine budget dinners from three cuisines: Indian, Mexican and Egyptian');
+    expect(getPublicGuideRecordByPath(SAUSAGE_WAYS_GUIDE_PATH)?.title).toBe('9 ways with sausages for easy everyday dinners');
     expect(getPublicGuideRecordByPath(BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH)?.title).toBe('Nine budget dinners built around bubble and squeak');
     expect(getPublicGuideRecordByPath(MEAT_STRETCHING_GUIDE_PATH)?.title).toBe('Seven ways to make meat go further with beans, lentils and mushrooms');
     expect(getPublicGuideRecordByPath(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH)?.title).toBe('9 budget dinners with leftover roast chicken');

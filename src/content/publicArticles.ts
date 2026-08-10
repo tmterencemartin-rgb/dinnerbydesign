@@ -10,13 +10,10 @@ import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH } from 
 import { LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH } from './lowCostDinnersGuide';
 import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGuide';
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
-import { SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH } from './sausageWaysGuide';
-import { MINCE_BUDGET_DINNERS_GUIDE, MINCE_BUDGET_DINNERS_GUIDE_PATH } from './minceBudgetDinnersGuide';
 import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
 import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide';
 import { CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH } from './convenienceFishGuide';
 import { TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH } from './tinnedFishGuide';
-import { NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH } from './nineBudgetDinnersThreeCuisinesGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './publicGuideRegistry';
 import type { PublicGuideRecord } from './publicGuideModel';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
@@ -122,27 +119,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     internalLinks: [...FAMILY_DINNERS_FOR_FOUR.internalLinks],
     disclosures: [...FAMILY_DINNERS_FOR_FOUR.disclosures],
     status: FAMILY_DINNERS_FOR_FOUR.status,
-  },
-  {
-    title: SAUSAGE_WAYS_GUIDE.title, path: SAUSAGE_WAYS_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: SAUSAGE_WAYS_GUIDE.pageFamily, primarySearchIntent: SAUSAGE_WAYS_GUIDE.primarySearchIntent,
-    indexingStatus: SAUSAGE_WAYS_GUIDE.indexingStatus, publishedAt: SAUSAGE_WAYS_GUIDE.publishedAt,
-    reviewedAt: SAUSAGE_WAYS_GUIDE.reviewedAt, contentReviewedAt: SAUSAGE_WAYS_GUIDE.contentReviewedAt,
-    internalLinks: SAUSAGE_WAYS_GUIDE.internalLinks, disclosures: SAUSAGE_WAYS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: MINCE_BUDGET_DINNERS_GUIDE.title, path: MINCE_BUDGET_DINNERS_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: MINCE_BUDGET_DINNERS_GUIDE.pageFamily, primarySearchIntent: MINCE_BUDGET_DINNERS_GUIDE.primarySearchIntent,
-    indexingStatus: MINCE_BUDGET_DINNERS_GUIDE.indexingStatus, publishedAt: MINCE_BUDGET_DINNERS_GUIDE.publishedAt,
-    reviewedAt: MINCE_BUDGET_DINNERS_GUIDE.reviewedAt, contentReviewedAt: MINCE_BUDGET_DINNERS_GUIDE.contentReviewedAt,
-    internalLinks: MINCE_BUDGET_DINNERS_GUIDE.internalLinks, disclosures: MINCE_BUDGET_DINNERS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.title, path: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.primarySearchIntent,
-    indexingStatus: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.publishedAt,
-    reviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.contentReviewedAt,
-    internalLinks: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.disclosures, status: 'published',
   },
   {
     title: TRAYBAKE_GUIDE.title, path: TRAYBAKE_GUIDE_PATH, category: 'Practical cooking guide',

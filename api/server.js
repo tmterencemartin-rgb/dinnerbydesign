@@ -183636,11 +183636,41 @@ var FIVE_DINNERS_PRICE_DISCLOSURES = [
     body: "This plan provides five dinners for two people. Appetite, portion size and any additional sides may change the quantity required."
   }
 ];
+var SAUSAGE_GUIDE_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "How to read the price example",
+    body: "The two Tesco products show how pack size and range can change the shelf price and unit price. They are examples, not a ranking of quality or value. Prices and availability vary."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow the pack instructions and use-by date. Cook sausages thoroughly, keep raw and cooked products separate, refrigerate leftovers promptly and follow the rice guidance in this article."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Sausages, stock, mustard, bread, yoghurt and prepared sauces vary by product and may contain allergens. Check every label, including vegetarian alternatives."
+  },
+  {
+    key: "source_timing",
+    title: "Price and guidance review",
+    body: "Product prices and official food-safety guidance were checked 25 July 2026. Follow the cited product pages and official guidance for later information."
+  }
+];
 var PROGRAMMATIC_DISCLOSURE_FOOTER = {
   body: "Prices, availability and product information may change after publication. Costs are estimates based on the assumptions shown on each page.",
   links: [
     { href: "/pricing-methodology", label: "Pricing methodology" },
     { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var SAUSAGE_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers flexible dinner ideas rather than complete recipes. Product prices, pack sizes, ingredients, cooking instructions and allergens vary.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "How prices are calculated" },
+    { href: "/food-safety", label: "Food safety" }
   ]
 };
 var escapeHtml2 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
@@ -184703,72 +184733,6 @@ var TRAYBAKE_GUIDE = {
   ]
 };
 
-// src/content/sausageWaysGuide.ts
-var SAUSAGE_WAYS_GUIDE_PATH = "/guides/9-ways-with-sausages";
-var SAUSAGE_WAYS_GUIDE = {
-  title: "9 ways with sausages for easy everyday dinners",
-  seoTitle: "9 easy ways with sausages for everyday dinners | DinnerByDesign",
-  description: "Nine practical ways to turn a pack of sausages into varied, affordable dinners, from traybakes and pasta to flatbreads, fried rice and hash.",
-  publishedAt: "2026-07-25",
-  reviewedAt: "2026-07-25",
-  nextReviewAt: "2027-07-25",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find simple and varied everyday dinner ideas using sausages",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-25",
-  editorialNotes: "One canonical inspiration guide with nine distinct ideas and one handoff to ordinary DinnerByDesign search.",
-  internalLinks: ["/guides", "/guides/how-to-build-a-traybake", "/food-costs/cooking-with-pulses-on-a-budget", "/signin"],
-  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    {
-      label: "Tesco Groceries: Tesco British Pork Sausages 8 Pack 454G",
-      url: "https://www.tesco.com/shop/en-GB/products/261879050"
-    },
-    {
-      label: "Tesco Groceries: Tesco Finest 6 Pork Sausages 400G",
-      url: "https://www.tesco.com/shop/en-GB/products/280002982"
-    },
-    {
-      label: "Food Standards Agency: Home food fact checker",
-      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
-    },
-    {
-      label: "Food Standards Agency: Cooking your food",
-      url: "https://www.gov.uk/government/publications/cooking-your-food"
-    }
-  ]
-};
-
-// src/content/minceBudgetDinnersGuide.ts
-var MINCE_BUDGET_DINNERS_GUIDE_PATH = "/guides/9-budget-dinners-with-beef-or-pork-mince";
-var MINCE_BUDGET_DINNERS_GUIDE = {
-  title: "9 budget dinners with beef or pork mince",
-  seoTitle: "9 Budget Dinners With Beef or Pork Mince | DinnerByDesign",
-  description: "Nine practical dinner ideas using beef or pork mince, with ways to stretch portions, use up everyday ingredients and keep weeknight cooking simple.",
-  publishedAt: "2026-08-06",
-  reviewedAt: "2026-08-06",
-  nextReviewAt: "2027-08-06",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find budget dinner ideas using beef mince or pork mince",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-06",
-  editorialNotes: "One canonical ingredient-led guide with nine distinct mince dinner ideas and one handoff to ordinary DinnerByDesign search.",
-  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/signin"],
-  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: Home food fact checker",
-      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
-    },
-    {
-      label: "Food Standards Agency: Cooking your food",
-      url: "https://www.gov.uk/government/publications/cooking-your-food"
-    }
-  ]
-};
-
 // src/content/chickenThighCostGuide.ts
 var CHICKEN_THIGH_COST_GUIDE_PATH = "/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates";
 var CHICKEN_THIGH_COST_GUIDE = {
@@ -185090,57 +185054,6 @@ var TINNED_FISH_GUIDE = {
   ]
 };
 
-// src/content/nineBudgetDinnersThreeCuisinesGuide.ts
-var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH = "/guides/nine-budget-dinners-three-cuisines";
-var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE = {
-  title: "Nine budget dinners from three cuisines: Indian, Mexican and Egyptian",
-  seoTitle: "Nine budget dinners from three cuisines: Indian, Mexican and Egyptian | DinnerByDesign",
-  description: "Nine varied budget dinners inspired by Indian, Mexican and Egyptian cooking, using overlapping ingredients and practical UK supermarket substitutions.",
-  publishedAt: "2026-08-06",
-  reviewedAt: "2026-08-06",
-  nextReviewAt: "2026-09-06",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find varied budget dinner ideas inspired by Indian, Mexican and Egyptian cooking",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-06",
-  editorialNotes: "One canonical guide showing how an overlapping shopping list can produce varied dinners inspired by three cuisines, with transparent Tesco guide prices and food-safety guidance.",
-  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/food-costs/five-dinners-same-ingredients", "/pricing-methodology", "/food-safety", "/signin"],
-  disclosures: ["price_estimate", "price_comparison", "serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: Cooking your food",
-      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
-    },
-    {
-      label: "Food Standards Agency: Home food fact checker",
-      url: "https://www.food.gov.uk/safety-hygiene/home-food-fact-checker"
-    }
-  ],
-  faqs: [
-    {
-      question: "Can budget cooking still produce varied dinners?",
-      answer: "Yes. The nine examples use overlapping ingredients but change the spice mix, texture and way the dinner is served. Dal, tacos, ful medames and koshari do not eat alike even when they share onions, pulses, rice or tomatoes."
-    },
-    {
-      question: "What ingredients are used most often?",
-      answer: "Onions and garlic form the base of nearly all nine dinners. Tinned tomatoes, rice, pulses, potatoes, eggs and a small group of spices also recur across the list."
-    },
-    {
-      question: "Are these traditional versions of the dishes?",
-      answer: "No. They are home-style or inspired adaptations for a UK cupboard. The guide identifies where a substitution or simplified method changes the dish rather than presenting it as a definitive version."
-    },
-    {
-      question: "How should cooked rice be stored?",
-      answer: "Cool cooked rice as quickly as possible, ideally within one hour, then cover and refrigerate it. Use it within 24 hours, reheat it only once and make sure it is steaming hot throughout before serving."
-    },
-    {
-      question: "Do the price figures include every ingredient?",
-      answer: "They cover the main ingredients listed for each dinner. Oil and salt are assumed to be in the cupboard, while rice, bread and tortillas are included only where the dinner fact line says so. The named products and price-check date are set out in the costing methodology."
-    }
-  ]
-};
-
 // src/content/nineBudgetDinnersWithSavouryPiesGuide.ts
 var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH = "/guides/nine-budget-dinners-with-savoury-pies";
 var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_DISCLOSURES = [
@@ -185254,6 +185167,575 @@ var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD = {
     title: "Find dinners for tonight",
     copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
     label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/minceBudgetDinnersGuide.ts
+var MINCE_BUDGET_DINNERS_GUIDE_PATH = "/guides/9-budget-dinners-with-beef-or-pork-mince";
+var MINCE_BUDGET_DINNERS_GUIDE_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "A note on budget wording",
+    body: "This guide does not use live retailer prices or promise a fixed saving. Current pack size, fat percentage, retailer, promotion status and ingredients already at home all affect the final cost."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and reheating",
+    body: "Follow product labels, chill leftovers promptly and reheat cooked mince dishes until steaming hot throughout. Rice needs particular care, so follow current Food Standards Agency guidance when cooling and reheating it."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Stock, sauces, pasta, wraps, breadcrumbs, oats, cheese and prepared seasonings vary by product and may contain allergens. Check labels for everyone eating the dinner."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food-safety guidance and editorial claims were reviewed 6 August 2026. Follow the cited Food Standards Agency pages for later updates."
+  }
+];
+var MINCE_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers flexible dinner ideas rather than complete recipes. Product prices, pack sizes, ingredients, cooking instructions and allergens vary.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "How prices are calculated" },
+    { href: "/food-safety", label: "Food safety" }
+  ]
+};
+var MINCE_BUDGET_DINNERS_GUIDE = {
+  title: "9 budget dinners with beef or pork mince",
+  seoTitle: "9 Budget Dinners With Beef or Pork Mince | DinnerByDesign",
+  description: "Nine practical dinner ideas using beef or pork mince, with ways to stretch portions, use up everyday ingredients and keep weeknight cooking simple.",
+  publishedAt: "2026-08-06",
+  reviewedAt: "2026-08-06",
+  nextReviewAt: "2027-08-06",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using beef mince or pork mince",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-06",
+  editorialNotes: "One canonical ingredient-led guide with nine distinct mince dinner ideas and one handoff to ordinary DinnerByDesign search.",
+  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food"
+    }
+  ]
+};
+var MINCE_BUDGET_DINNERS_GUIDE_SECTIONS = [
+  {
+    paragraphs: [
+      "Mince is one of the more useful things to keep in, whether it's beef, pork or a mix of the two. It cooks quickly, picks up whatever flavour you're going for, and stretches a long way once it's paired with something starchy or a tin of pulses. Below are nine ways to use it across the week that don't all collapse into the same tomato-and-pasta idea."
+    ]
+  },
+  {
+    title: "Mince and bean chilli with rice or baked potatoes",
+    paragraphs: [
+      "Beef mince holds its shape well under chilli spicing, which is likely why it's the usual choice here, though pork mince works too if that's what you've got in. A tin of kidney beans or black beans adds bulk without adding much to the bill, and the dish is forgiving enough to take whatever vegetables need using up, such as a diced pepper, a grated carrot, or half a bag of frozen sweetcorn. Serve over rice or split between a couple of baked potatoes, with soured cream or grated cheese if there's some in the fridge. Chilli freezes well, so a bigger batch cooked on a Sunday can cover a midweek dinner with little extra effort. Swapping in a drained tin of lentils for part of the mince stretches it further without changing much about how it eats."
+    ]
+  },
+  {
+    title: "Pork mince noodles with cabbage, carrot and soy",
+    paragraphs: [
+      "Pork mince suits this one because it cooks fast and takes on soy, ginger and garlic without much persuasion. Shredded cabbage and grated carrot bulk the dish out at low cost and add a bit of crunch, and frozen stir-fry vegetables are a fair substitute when fresh ones aren't to hand. Straight noodles or rice noodles both work, and this is a dinner that's genuinely quicker to cook than a takeaway is to arrive. Leftovers reheat reasonably well in a pan with a splash of water, though the noodles will soften further. Beef mince can stand in if pork isn't available, though the flavour leans a little richer."
+    ]
+  },
+  {
+    title: "Cottage pie with extra lentils or frozen mixed veg",
+    paragraphs: [
+      "Beef mince is the traditional choice for cottage pie. A beef-pork mix can work when you want the filling to stretch further. Stirring in a tin of green lentils or a bag of frozen mixed vegetables stretches it considerably more and doesn't stand out once it's under the mash. This is a good batch-cooking candidate: the filling freezes on its own, or the whole assembled pie can go in the freezer before baking. A simpler mash on top, roughly mashed rather than whipped smooth, still does the job."
+    ]
+  },
+  {
+    title: "Mince pasta bake with tomato sauce and grated cheese",
+    paragraphs: [
+      "This is the dish most people already associate with mince, so the aim here is to make it stretch rather than reinvent it. A tin of chopped tomatoes, a squeeze of tomato puree and a grated carrot or courgette bulk the sauce without much fuss, and dried pasta shapes such as penne or fusilli hold sauce better than spaghetti in a bake. Topping with grated cheese and a short spell under the grill gives a bit of texture without much extra spend. Any leftover sauce freezes well on its own, separate from the pasta, which keeps it more useful later on."
+    ]
+  },
+  {
+    title: "Beef mince tacos or wraps with beans and salad",
+    paragraphs: [
+      "Beef mince browned with a basic spice mix of cumin, paprika and a little chilli powder covers most of what a shop-bought taco seasoning does. A tin of black beans, refried or otherwise, makes the filling more substantial, and shredded lettuce, a chopped tomato or a spoon of salsa rounds it out. Wraps or hard shells both work, and this is one of the quicker dinners on this list from fridge to table. Leftover filling keeps for a day or two and works equally well spooned over rice the next night rather than reheated in a wrap."
+    ]
+  },
+  {
+    title: "Pork mince meatballs with pasta or mash",
+    paragraphs: [
+      "Pork mince makes a softer, slightly fattier meatball than beef, which is usually an advantage rather than a drawback here. Mixing in a handful of oats or breadcrumbs and a beaten egg helps them hold together and quietly increases the yield. They sit well in a tomato sauce over pasta, or alongside mash and a green vegetable for something closer to a Sunday-dinner feel. Meatballs freeze cleanly either raw or cooked, so doubling the mixture and freezing half is a reasonable use of the extra ten minutes it takes to roll them."
+    ]
+  },
+  {
+    title: "Mince and potato hash with a fried egg",
+    paragraphs: [
+      "This one is closer to a fridge-clearing dinner than a planned one, and that's part of its appeal. Diced potato, browned mince and an onion cooked down together in one pan make a filling dish without much washing-up, and a fried egg on top turns it into something that feels more finished than it is. Frozen diced onion or ready-diced potato can save a bit of time on a weeknight. Either beef or pork mince works, and leftover roast potatoes are a reasonable substitute for raw diced ones if there are some going spare."
+    ]
+  },
+  {
+    title: "Stuffed peppers with mince, rice and tomato",
+    paragraphs: [
+      "Peppers vary in price through the year, so this is one to use when peppers are good value rather than a weekly staple, but it stretches mince well when they are. Cooked rice mixed with browned mince, a little tomato and some herbs fills the halved peppers, which then bake until soft. A tin of chopped tomatoes poured around the peppers in the dish doubles as a light sauce. This dinner also works with courgettes halved lengthways if peppers are pricier that week, and any extra filling freezes on its own for using another way later."
+    ]
+  },
+  {
+    title: "Mince ragu stretched with lentils, mushrooms or grated carrot",
+    paragraphs: [
+      "A ragu built slowly with a tin of tomatoes, a splash of stock and a good hour on a low heat gets more flavour out of a modest amount of mince than a quick fry ever will. Mushrooms, finely chopped, add a savoury depth that appears to make the mince go further without anyone missing the extra meat, and grated carrot or a tin of green lentils does something similar for texture and bulk. This is a good dinner to cook in a larger batch, since ragu tends to taste better the next day and freezes well in portions. Beef mince is the more traditional choice, though pork works fine if that's what's in."
+    ]
+  },
+  {
+    title: "A note on cost",
+    paragraphs: [
+      "Beef mince, pork mince and mixed mince can move around in price depending on the shop, the fat percentage, the pack size and what's on promotion. It is worth checking the current pack and unit prices rather than building a whole dinner plan around a fixed rule. Where a specific saving is mentioned elsewhere on the site, it will be dated and tied to a particular price check rather than presented as a permanent figure."
+    ]
+  }
+];
+var MINCE_BUDGET_DINNERS_GUIDE_FAQS = [
+  {
+    question: "Can I use beef and pork mince in the same dinners?",
+    answer: "Often, yes. Beef mince usually gives a deeper flavour, while pork mince can be softer and slightly richer. The swap works best in chilli, noodles, meatballs, hash and ragu. For cottage pie, beef is the more traditional choice."
+  },
+  {
+    question: "How do I make mince stretch further?",
+    answer: "Pair it with beans, lentils, rice, pasta, potatoes or vegetables that need using up. The mince then seasons the whole dinner instead of sitting as the only main ingredient on the plate."
+  },
+  {
+    question: "Can cooked mince dishes be frozen?",
+    answer: "Many cooked mince dishes freeze well, including chilli, ragu, meatballs and cottage pie filling. Cool them promptly, freeze in useful portions and reheat until steaming hot all the way through."
+  },
+  {
+    question: "Are these full recipes?",
+    answer: "No. These are flexible dinner ideas to help you decide what to cook. Use DinnerByDesign search when you want recipes matched to your time, budget and preferences."
+  }
+];
+var MINCE_BUDGET_DINNERS_GUIDE_RECORD = {
+  id: "9-budget-dinners-with-beef-or-pork-mince",
+  slug: "9-budget-dinners-with-beef-or-pork-mince",
+  path: MINCE_BUDGET_DINNERS_GUIDE_PATH,
+  canonicalPath: MINCE_BUDGET_DINNERS_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "safety-sensitive",
+  ...MINCE_BUDGET_DINNERS_GUIDE,
+  metaDescription: MINCE_BUDGET_DINNERS_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: MINCE_BUDGET_DINNERS_GUIDE_DISCLOSURES,
+  disclosureFooter: MINCE_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER,
+  sections: MINCE_BUDGET_DINNERS_GUIDE_SECTIONS,
+  faqs: MINCE_BUDGET_DINNERS_GUIDE_FAQS,
+  cta: {
+    title: "Find mince recipes for dinner",
+    copy: "Search DinnerByDesign for beef or pork mince recipes that suit your time, budget and preferences.",
+    label: "Find mince recipes",
+    href: "/signin"
+  }
+};
+
+// src/content/nineBudgetDinnersThreeCuisinesGuide.ts
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH = "/guides/nine-budget-dinners-three-cuisines";
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_DISCLOSURES = [
+  {
+    key: "price_estimate",
+    title: "About these estimates",
+    body: "Guide prices are estimates based on named Tesco products and pack sizes checked online on 6 August 2026. They cover the main ingredients only and use the stated serving assumptions. Retailer, regional and availability differences, offers, pack sizes and ingredients already at home change the result."
+  },
+  {
+    key: "price_comparison",
+    title: "How to read the price examples",
+    body: "The per-serving figures are guide calculations, not fixed costs or a ranking of the three cuisines. They distinguish the value of the ingredients used from the packs you may need to buy, and exclude oil and salt assumed to be in the cupboard."
+  },
+  {
+    key: "serving_assumption",
+    title: "Serving assumption",
+    body: "Figures are based on four servings unless the dinner fact line says otherwise. Rice served alongside the dal and bean chilli is assumed at 75g dry rice per person; bread and other sides are included only where stated."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and reheating",
+    body: "Follow current Food Standards Agency guidance when cooling, storing and reheating cooked rice and other leftovers. Rice needs particularly prompt cooling and should be reheated only once until steaming hot throughout."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Tortillas, flatbreads, stock, spices, curry powder, garam masala, eggs and other packaged ingredients vary by product and may contain allergens. Check labels and choose ingredients suitable for everyone eating the dinner."
+  },
+  {
+    key: "source_timing",
+    title: "Price and guidance review",
+    body: "The Tesco price examples and Food Standards Agency guidance were checked on 6 August 2026. Prices, availability and official guidance can change, so follow the cited sources for later information."
+  }
+];
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers flexible dinner ideas rather than complete recipes. Product prices, pack sizes, ingredients, cooking instructions, storage advice and allergens vary.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "How prices are calculated" },
+    { href: "/food-safety", label: "Food safety" }
+  ]
+};
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE = {
+  title: "Nine budget dinners from three cuisines: Indian, Mexican and Egyptian",
+  seoTitle: "Nine budget dinners from three cuisines: Indian, Mexican and Egyptian | DinnerByDesign",
+  description: "Nine varied budget dinners inspired by Indian, Mexican and Egyptian cooking, using overlapping ingredients and practical UK supermarket substitutions.",
+  publishedAt: "2026-08-06",
+  reviewedAt: "2026-08-06",
+  nextReviewAt: "2026-09-06",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find varied budget dinner ideas inspired by Indian, Mexican and Egyptian cooking",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-06",
+  editorialNotes: "One canonical guide showing how an overlapping shopping list can produce varied dinners inspired by three cuisines, with transparent Tesco guide prices and food-safety guidance.",
+  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/food-costs/five-dinners-same-ingredients", "/pricing-methodology", "/food-safety", "/signin"],
+  disclosures: ["price_estimate", "price_comparison", "serving_assumption", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
+    },
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.food.gov.uk/safety-hygiene/home-food-fact-checker"
+    }
+  ],
+  faqs: [
+    {
+      question: "Can budget cooking still produce varied dinners?",
+      answer: "Yes. The nine examples use overlapping ingredients but change the spice mix, texture and way the dinner is served. Dal, tacos, ful medames and koshari do not eat alike even when they share onions, pulses, rice or tomatoes."
+    },
+    {
+      question: "What ingredients are used most often?",
+      answer: "Onions and garlic form the base of nearly all nine dinners. Tinned tomatoes, rice, pulses, potatoes, eggs and a small group of spices also recur across the list."
+    },
+    {
+      question: "Are these traditional versions of the dishes?",
+      answer: "No. They are home-style or inspired adaptations for a UK cupboard. The guide identifies where a substitution or simplified method changes the dish rather than presenting it as a definitive version."
+    },
+    {
+      question: "How should cooked rice be stored?",
+      answer: "Cool cooked rice as quickly as possible, ideally within one hour, then cover and refrigerate it. Use it within 24 hours, reheat it only once and make sure it is steaming hot throughout before serving."
+    },
+    {
+      question: "Do the price figures include every ingredient?",
+      answer: "They cover the main ingredients listed for each dinner. Oil and salt are assumed to be in the cupboard, while rice, bread and tortillas are included only where the dinner fact line says so. The named products and price-check date are set out in the costing methodology."
+    }
+  ]
+};
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_SECTIONS = [
+  {
+    paragraphs: [
+      "Keeping food costs down does not have to mean eating the same few dishes on repeat. An overlapping shopping list of tinned pulses, rice, potatoes, eggs, vegetables and a handful of everyday spices can still produce dinners that taste genuinely different across the week. This guide sets out nine such dinners: three home-style Indian dinners, three Mexican-inspired dinners and three Egyptian-inspired dinners, built from ingredients most UK supermarkets already stock. None is presented as the definitive version of a national dish. Each is adapted for a UK cupboard, with substitutions suggested where an ingredient may be harder to find and the adaptation explained in the text.",
+      "The aim is variety without a long shopping list. Onions, garlic, tinned tomatoes, tinned pulses, rice, eggs and a small spice collection cover most of what follows. The section on making these ingredients go further sets out what a full run of all nine actually uses, and what that means for the packs you would need to buy."
+    ]
+  },
+  {
+    title: "Cuisines",
+    paragraphs: []
+  },
+  {
+    title: "Budget Indian dinners",
+    paragraphs: ["Three dinners built on lentils, chickpeas and vegetables, spiced simply rather than from a long ingredient list."]
+  },
+  {
+    title: "1. Home-style dal with rice or flatbreads",
+    paragraphs: [
+      "Serves 4 \xB7 about 35 minutes \xB7 around 35p per serving before rice or bread",
+      "200g red split lentils, 1 onion, 2 garlic cloves, thumb-sized piece of ginger, \xBD x 400g tin tomatoes, 1 tsp each cumin and turmeric",
+      "To cook: soften the onion and garlic in a little oil over a medium hob heat for 3 to 4 minutes, stir in the ginger, cumin and turmeric for a minute, then add the lentils and tomatoes with about 600ml water. Simmer uncovered for 20 to 25 minutes, stirring occasionally, until the lentils have broken down and the dal is thick enough to coat the back of a spoon.",
+      "This is a simple dal, red split lentils simmered until soft with onion, garlic and a little grated or frozen ginger. Dal has many regional variations, and this one uses a single lentil rather than a mix. Yellow split peas can be used instead of red lentils, and jarred or frozen chopped ginger and garlic are practical swaps for fresh. The dal can be made a day ahead, since the flavour rounds out overnight, and it freezes well in portions for a couple of months. Extra dal makes a good base for a vegetable soup, or can be stirred through cooked rice for a quick second dinner."
+    ]
+  },
+  {
+    title: "2. Chana masala with rice or flatbreads",
+    paragraphs: [
+      "Serves 4 \xB7 about 30 minutes \xB7 around 35p per serving before rice or bread",
+      "2 x 400g tins chickpeas, drained, 1 onion, 2 garlic cloves, 400g tin tomatoes, 1 tsp each cumin and ground coriander, 1 tsp garam masala or curry powder",
+      "To cook: fry the onion and garlic in oil over a medium hob heat until soft, about 5 minutes, then add the spices and cook for a further minute. Stir in the tomatoes and chickpeas with a splash of water and simmer for 15 to 20 minutes, until the sauce has thickened and coats the chickpeas rather than pooling around them.",
+      "Chana masala is a home-style chickpea curry from North India, with tinned chickpeas simmered in a spiced onion and tomato sauce until they take on the flavour. Tinned butter beans can be used in place of chickpeas, and shop-bought curry powder covers most of what garam masala adds if it is not already in the cupboard, though the result tends to read as flatter rather than equivalent. The tomato and onion base can be made ahead and the chickpeas stirred in when reheating. The finished dish freezes well. Keep unfrozen leftovers in the fridge and eat within 48 hours. Leftovers are good spooned into a wrap or over a jacket potato, rather than served the same way twice."
+    ]
+  },
+  {
+    title: "3. Aloo gobi-inspired potato and vegetable dish",
+    paragraphs: [
+      "Serves 4 \xB7 about 35 minutes \xB7 around 45p per serving, using a whole cauliflower",
+      "600g potatoes, 1 cauliflower (or 450g frozen cauliflower florets), 1 onion, 2 garlic cloves, 1 tsp turmeric, 1 tsp cumin or mustard seed",
+      "To cook: fry the onion and garlic in oil over a medium hob heat for 3 to 4 minutes, stir in the turmeric and cumin or mustard seed, then add the potato and cauliflower with a small splash of water. Cover and cook for 20 to 25 minutes, stirring occasionally, until the potato is tender when tested with a knife and lightly golden at the edges.",
+      "A simplified take on aloo gobi, diced potato and cauliflower cooked slowly with turmeric and cumin, or mustard seed if there is some in, until tender. Frozen cauliflower florets work as well as fresh here, and any other vegetable that needs using up, such as peas or green beans, can go in alongside. The potato can be parboiled in advance to shorten the final cooking time. Unlike the other two Indian dinners here, this one suits the fridge better than the freezer, since potato can turn watery once frozen and thawed, but it reheats well if eaten within 48 hours. Any extra is a useful base to bulk out with a tin of chickpeas for a slightly different dinner later in the week."
+    ]
+  },
+  {
+    title: "Budget Mexican-inspired dinners",
+    paragraphs: ["Three dinners that lean on tinned beans, potatoes and eggs, spiced with cumin, paprika and chilli rather than a long list of specialist ingredients."]
+  },
+  {
+    title: "4. Bean chilli with rice",
+    paragraphs: [
+      "Serves 4 \xB7 about 35 minutes \xB7 around 35p per serving with kidney beans, or around 40p with black beans, before rice",
+      "2 x 400g tins kidney or black beans, drained, 1 onion, 2 garlic cloves, 400g tin tomatoes, 1 tsp cumin, 1 tsp paprika, \xBD tsp chilli powder",
+      "To cook: fry the onion and garlic in oil over a medium hob heat until soft, about 5 minutes, stir in the spices for a minute, then add the tomatoes and beans. Simmer uncovered for 20 to 25 minutes, until the sauce has thickened and reduced by about a third.",
+      "A home-style bean chilli, tinned kidney or black beans simmered in a warmly spiced tomato sauce with onion and garlic. Any tinned bean works here, and a spoonful of smoked paprika is a good addition if it is to hand. The chilli freezes and reheats very well, and the spicing tends to settle and round out if it is left overnight and reheated the next day. Refrigerate and use within 48 hours if it is not being frozen. Leftovers are just as good over a baked potato or spooned into a tortilla as a taco filling, rather than reheated exactly the same way twice."
+    ]
+  },
+  {
+    title: "5. Potato and bean tacos",
+    paragraphs: [
+      "Serves 4, two tacos each \xB7 about 35 minutes \xB7 around 45p per serving, tortillas included",
+      "500g potatoes, 400g tin kidney beans, drained, 1 onion, 1 tsp cumin, 1 tsp paprika, 8 tortillas",
+      "To cook: soften the diced onion in oil over a medium hob heat for 3 to 4 minutes, then add the diced potato and fry over medium-high heat for 12 to 15 minutes, turning occasionally, until golden and cooked through. Stir in the spices and beans for a final 2 to 3 minutes to warm through. Warm the tortillas in a dry pan or a low oven for a couple of minutes before filling.",
+      "Diced potato, onion and tinned beans, fried until golden and spiced with cumin and paprika, folded into warmed tortillas with whatever salad or salsa is to hand. A soft flatbread can be used instead of a tortilla, and any tinned bean can replace the kidney beans specified, though black beans cost a little more per tin than kidney beans do. The potato and bean filling can be cooked in advance and reheated in a dry pan before serving, which makes this a sensible option for a night with limited time. Extra filling is just as good spooned over rice or piled onto a jacket potato as it is folded into another tortilla."
+    ]
+  },
+  {
+    title: "6. Mexican-style eggs with beans and tortillas",
+    paragraphs: [
+      "Serves 4 \xB7 about 25 minutes \xB7 around 70p per serving, tortillas included",
+      "4 eggs, 400g tin tomatoes, 400g tin black beans, drained, 1 onion, 2 garlic cloves, 1 tsp cumin, 8 tortillas",
+      "To cook: simmer the onion, garlic, tomatoes, cumin and beans in a pan over a medium hob heat for 10 to 12 minutes, until thickened, then set aside and keep warm. Fry or gently poach the eggs separately until the white is set and the yolk is still soft, then build each plate on a warmed tortilla.",
+      "A stove-top take on huevos rancheros, with a fried egg on a tortilla and sauce spooned over rather than the egg poached directly in the sauce, which is closer to how the dish is commonly served than a fully poached version would be. Chilli flakes can replace fresh chilli, and any tinned bean can be used in place of black beans. The bean and tomato base can be made in advance and kept in the fridge for up to 48 hours, with the eggs cooked fresh when reheating, since eggs are best cooked just before serving rather than reheated from cold. This sits among the pricier dinners here, since eggs and a full pack of tortillas both go into the cost, but any leftover sauce on its own freezes well and can be reheated with fresh eggs added on another night."
+    ]
+  },
+  {
+    title: "Budget Egyptian-inspired dinners",
+    paragraphs: ["Three dinners that draw on tinned pulses, rice and eggs, common ingredients in Egyptian home cooking and easy to adapt for a UK cupboard."]
+  },
+  {
+    title: "7. Ful medames with bread and salad",
+    paragraphs: [
+      "Serves 4 \xB7 about 20 minutes \xB7 around 60p per serving before bread",
+      "2 x 300g tins broad (fava) beans, drained, 2 garlic cloves, \xBD lemon, 1 tsp cumin, olive oil, 1 salad tomato and \xBC cucumber, sliced",
+      "To cook: warm the beans through in a pan over a low to medium hob heat for 5 to 8 minutes, then drain, keeping a little of the liquid back. Roughly mash with a fork, garlic, lemon juice, cumin and olive oil, loosening with the reserved liquid if it seems dry.",
+      "A practical version of ful medames, a widely eaten Egyptian dish of stewed fava beans, mashed with garlic, lemon juice, cumin and a little olive oil, served with flatbread and a simple tomato and cucumber salad. Fava beans cost more per tin than most other tinned pulses in this guide, which is most of why this dinner is pricier than the others despite the short ingredient list. Tinned butter beans are a workable alternative where fava beans are harder to find, and bottled lemon juice can be used instead of fresh, though both move the dish away from the version most commonly eaten in Egypt rather than standing in for it exactly. The mash keeps for up to two days in the fridge, covered, and the flavour holds up well over that time, so it is a sensible thing to make slightly ahead. Extra ful is good the next day as a sandwich filling or spread over a jacket potato."
+    ]
+  },
+  {
+    title: "8. Koshari-inspired rice, lentils and pasta",
+    paragraphs: [
+      "Serves 4 \xB7 about 45 minutes \xB7 around 45p per serving",
+      "150g rice, 100g brown or red lentils, 100g small pasta, 400g tin chickpeas, drained, 400g tin tomatoes, 1 onion, 2 garlic cloves, 1 tsp cumin, splash of vinegar",
+      "To cook: cook the rice, lentils and pasta separately until tender, following pack instructions for the rice and pasta and allowing about 20 to 25 minutes for brown or red lentils. Meanwhile, fry the onion and garlic in oil over a medium hob heat, add the tomatoes, cumin and a splash of vinegar, and simmer for 10 minutes to make the sauce, stirring the chickpeas through it for the final few minutes to warm through. Layer the rice, lentils, pasta and chickpea sauce in a bowl to serve.",
+      "Koshari is a well-known Egyptian dish combining rice, lentils, pasta and chickpeas, served with a spiced, vinegar-sharpened tomato sauce. Chickpeas are a standard part of koshari rather than an optional extra, so this version keeps them in rather than treating them as a stretch ingredient. Red split lentils cook faster than the brown or green lentils used traditionally and can stand in for them, though they break down more readily and change the texture of the finished dish rather than replicating it. The rice, lentils, pasta and chickpeas can each be cooked ahead and combined just before serving, which spreads the cooking out over less rushed pockets of time, and this is one of the better dinners here for making in a larger batch. Because it contains rice, leftovers should follow the rice guidance below: cool them quickly, refrigerate and eat within 24 hours, reheating only once, with an extra spoonful of the tomato sauce to loosen everything back up."
+    ]
+  },
+  {
+    title: "9. Egyptian-inspired tomato and pepper eggs",
+    paragraphs: [
+      "Serves 4 \xB7 about 20 minutes \xB7 around 70p per serving before bread",
+      "4 eggs, 400g tin tomatoes, 2 peppers (or 300g frozen sliced peppers), 1 onion, 2 garlic cloves, 1 tsp cumin, 1 tsp paprika",
+      "To cook: soften the onion, garlic and peppers in oil over a medium hob heat for 6 to 8 minutes, add the tomatoes and spices, and simmer for 10 minutes until slightly reduced. Make small wells in the sauce, crack in the eggs, cover the pan and cook for 5 to 8 minutes until the whites are set and the yolks are as firm as you prefer.",
+      "Eggs cooked into a spiced tomato and pepper sauce until just set, in a style found across Egyptian home cooking as well as elsewhere in the region, served with bread for mopping up the sauce. This version adds peppers, which are not always part of simpler Egyptian tomato and egg dishes, so it sits closer to a shared regional style than to one specific traditional recipe. A bag of frozen sliced peppers can be used instead of fresh, and chilli flakes stand in for fresh chilli if extra heat is wanted. The tomato and pepper sauce can be made ahead and kept in the fridge for up to 48 hours, with the eggs added fresh when it is reheated. Any leftover sauce on its own freezes well, ready for eggs to be added on a night when there is little time to cook from scratch."
+    ]
+  },
+  {
+    title: "A note on rice and leftovers",
+    paragraphs: [
+      "Two of these dinners, the dal and the bean chilli, are often served with rice, and rice is a central part of the koshari itself. The Food Standards Agency's food safety guidance covers rice specifically, separately from its general advice on leftovers: cool cooked rice as quickly as possible, ideally within one hour, then cover it, refrigerate it and use it within 24 hours. Rice should only be reheated once and should be steaming hot throughout before serving. Other leftovers should be cooled and refrigerated within two hours, eaten within 48 hours or frozen. Rice needs closer attention to cooling time than most other leftovers, which is why the guidance treats it separately.",
+      "Sources: Food Standards Agency, Cooking your food, and the rice guidance in the Home food fact checker."
+    ]
+  },
+  {
+    title: "Making budget ingredients go further",
+    paragraphs: [
+      "A handful of ingredients turn up again and again across these nine dinners. Onions and garlic form the base of nearly all of them. Tinned tomatoes appear in six of the nine, in full or half tins. Rice supports the dal, the bean chilli and the koshari. Pulses, tinned or dried, give bulk and protein to seven of the nine: tinned chickpeas or beans in six of them, and dried red split lentils in two. Eggs cover two of the dishes, and flatbreads or tortillas turn up wherever a dinner is designed for scooping or wrapping rather than eating with a fork.",
+      "Across the nine dinners, the ingredients actually used add up to 8 onions, 16 garlic cloves, 5\xBD tins of tomatoes, 3 tins of chickpeas, 4 tins of kidney or black beans, 2 tins of broad (fava) beans, 300g dried red split lentils, 1.1kg potatoes, 8 eggs, 16 tortillas, 1 cauliflower, 2 peppers and 100g small pasta. Buying to that exactly is not realistic, since tins, packs and loose vegetables come in fixed sizes, so the shopping list runs a little ahead of what gets used:",
+      "6 x 400g tins tomatoes, to cover 5\xBD used (a half tin left over)\n3 x 400g tins chickpeas and 4 x 400g tins kidney or black beans (2 for the bean chilli, 1 for the tacos, 1 for the eggs), bought exactly to the tin\n2 x 300g tins broad (fava) beans for the ful medames, bought exactly to the tin\n1 x 500g pack dried red split lentils, to cover 300g used across the dal and the koshari\n2 garlic bulbs, to cover 16 cloves needed (roughly 2 cloves spare)\n1 x 2kg pack potatoes, to cover 1.1kg used\n2 x 6-packs eggs, to cover 8 used (4 spare)\n2 x 8-packs tortillas, used exactly\n1 cauliflower, 1 x 3-pack peppers (1 spare), 1 x 500g pack small pasta (400g spare)",
+      "Rice and bread are not included in the per-serving figures above except where stated. Where the dal and the bean chilli are served with rice, this guide assumes a standard 75g dry rice per person, or 300g for four servings; across those two dinners plus the 150g used directly in the koshari, that comes to 750g of rice, from a single 1kg pack. Flatbread, naan or pitta served alongside the dal, the ful medames or the Egyptian-inspired eggs is costed separately by whatever bread is chosen, and is not included above.",
+      "On seasoning, cumin does more work across this list than anything else, appearing in some form in all three cuisines. A basic set of ground cumin, ground coriander, paprika and chilli powder or flakes covers most of what these nine dinners need, and none of them assumes a full spice cupboard is already sitting in the kitchen. Garam masala adds something distinct to the chana masala, but shop-bought curry powder is a practical stand-in, and smoked paprika is worth adding to the bean chilli if it is to hand rather than something the recipe already assumes."
+    ]
+  },
+  {
+    title: "Costing methodology",
+    paragraphs: [
+      "Guide prices are named against a specific Tesco product and pack, checked online on 6 August 2026. Where the lowest-priced widely available line was out of stock at the time of checking, the next lowest-priced in-stock line is used instead.",
+      "Tesco Red Split Lentils 500G: \xA32.10 (\xA34.20/kg)\nGrower's Harvest Long Grain Rice 1Kg: \xA30.52 (\xA30.52/kg)\nGrower's Harvest Chopped Tomatoes 400G: \xA30.43\nTesco Chickpeas In Water 400G: \xA30.41\nGrower's Harvest Red Kidney Beans In Water 400G: \xA30.33\nTesco Black Beans 400G: \xA30.46\nTesco Broad Beans In Water 300G: \xA30.90\nTesco 6 Mixed Weight Barn Eggs 268g: \xA31.00\nH.W. Nevills Plain White Tortilla Wraps 8 Pack: \xA30.99\nTesco All Rounder Potatoes 2Kg: \xA31.32 (\xA30.66/kg)\nTesco Cauliflower Each: \xA31.15\nTesco Sweet Peppers 500G (3-pack): \xA32.10, around 70p per pepper\nTesco Fusilli Pasta 500G: \xA30.75 (\xA31.50/kg)\nTesco Brown Onions Loose: \xA30.99/kg, around 15p per onion\nTesco Large Garlic (1 bulb, around 9 cloves): \xA30.40, around 9p for 2 cloves\nTesco Whole Cucumber Each: \xA30.89\nTesco Lemon Each: \xA30.37\nTesco Root Ginger Loose: \xA35.50/kg, around 14p for a thumb-sized piece\nTesco Classic Round Tomatoes 6 Pack: \xA30.99, around 16p per tomato",
+      "A splash of vinegar in the koshari, from a bottle otherwise kept in the cupboard, works out at under 1p and is not itemised separately. Figures are per serving, based on four servings per dish unless the fact line says otherwise, and cover the main ingredients only. Oil and salt are assumed to already be in the cupboard and are not costed. Rice, bread or tortillas served alongside a dinner are included in the figure only where the fact line says so, and the rice assumption is set out above. Prices vary by retailer, pack size, offers and stock availability, so these are guide figures rather than a fixed cost, and are worth rechecking close to publication."
+    ]
+  },
+  {
+    title: "How the nine dinners compare",
+    paragraphs: [
+      "Despite the overlap in ingredients, these nine dinners do not taste or eat alike. The dal is soft and mellow, built for spooning over rice. The chana masala and the aloo gobi-inspired dish both lean toward warming spice, one saucy and one drier, with the potato dish holding its shape rather than breaking down. The bean chilli is warmly spiced and thick, closer in texture to a stew, while the potato and bean tacos are designed for eating with the hands, and the Mexican-style eggs sit somewhere between the two, a fried egg and a spooned sauce meant to be scooped up with tortilla rather than piled onto a plate. The ful medames is mashed and spreadable, eaten cool or just warm rather than hot from the pan, koshari is a layered, textured dish that mixes soft rice and lentils with bite from the pasta and chickpeas, and the Egyptian-inspired eggs are closer in style to the Mexican version but carry a different balance of spice, leaning on pepper and cumin rather than chilli heat."
+    ]
+  }
+];
+var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD = {
+  id: "nine-budget-dinners-three-cuisines",
+  slug: "nine-budget-dinners-three-cuisines",
+  path: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "price-sensitive",
+  ...NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
+  metaDescription: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_SECTIONS,
+  cta: {
+    title: "Find dinners for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
+    label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/sausageWaysGuide.ts
+var SAUSAGE_WAYS_GUIDE_PATH = "/guides/9-ways-with-sausages";
+var SAUSAGE_WAYS_GUIDE = {
+  title: "9 ways with sausages for easy everyday dinners",
+  seoTitle: "9 easy ways with sausages for everyday dinners | DinnerByDesign",
+  description: "Nine practical ways to turn a pack of sausages into varied, affordable dinners, from traybakes and pasta to flatbreads, fried rice and hash.",
+  publishedAt: "2026-07-25",
+  reviewedAt: "2026-07-25",
+  nextReviewAt: "2027-07-25",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find simple and varied everyday dinner ideas using sausages",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-25",
+  editorialNotes: "One canonical inspiration guide with nine distinct ideas and one handoff to ordinary DinnerByDesign search.",
+  internalLinks: ["/guides", "/guides/how-to-build-a-traybake", "/food-costs/cooking-with-pulses-on-a-budget", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Tesco Groceries: Tesco British Pork Sausages 8 Pack 454G",
+      url: "https://www.tesco.com/shop/en-GB/products/261879050"
+    },
+    {
+      label: "Tesco Groceries: Tesco Finest 6 Pork Sausages 400G",
+      url: "https://www.tesco.com/shop/en-GB/products/280002982"
+    },
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food"
+    }
+  ]
+};
+var SAUSAGE_WAYS_GUIDE_SECTIONS = [
+  {
+    paragraphs: [
+      "There's a pack of sausages in the fridge, and nobody's especially keen on the usual sausage and mash again. It's easy to see why sausages end up there in the first place: they're straightforward to cook, widely liked, and a reasonable thing to reach for when there isn't much time or inspiration to spare. The trouble is that the same pack tends to become the same dinner, on repeat, until it doesn't feel worth buying again.",
+      "The usual dinner isn't the only option, though. Sausages don't have to be cooked and served whole. Sliced, crumbled out of their skins, or roasted alongside other ingredients, the same pack can point in genuinely different directions. Most of the ideas below work with pork, chicken or vegetarian sausages, though cooking times and a few of the techniques will vary, so it's worth checking the pack."
+    ]
+  },
+  {
+    title: "Sausage, apple and mustard traybake",
+    paragraphs: [
+      "Everything goes on one tray: wedges of potato, red onion and eating apple, with a spoonful of mustard stirred through the oil before it all goes in. The apple softens and turns slightly sweet as it roasts, which sits well against the mustard and the sausages' own seasoning. Once the tray's in the oven there's very little else to do until it comes out, which makes this one of the more hands-off ideas here for a weeknight."
+    ]
+  },
+  {
+    title: "Sausage and tomato pasta",
+    paragraphs: [
+      "Take the meat out of the skins and break it into a tomato sauce, the way you might with mince. Sausages are already seasoned with herbs and spices, so this style of sauce usually needs less extra seasoning than a plain mince ragu would. Four or five sausages, broken up this way, will comfortably sauce a pack of pasta for several people, which is useful to know if the fridge only has a partly used pack to work with."
+    ]
+  },
+  {
+    title: "Sausage, bean and vegetable stew",
+    paragraphs: [
+      "Sliced or whole sausages simmer in a stew with tinned beans, tinned tomatoes and whatever vegetables need using up, fresh or frozen. The beans and vegetables carry a good share of the dish, so a modest number of sausages stretches further here than it would served on its own. It suits a stocked cupboard and a half-empty vegetable drawer particularly well."
+    ]
+  },
+  {
+    title: "Sausage fried rice",
+    paragraphs: [
+      "Slice cooked sausages and stir them through leftover rice with frozen peas, sweetcorn or whatever vegetables are around, plus a beaten egg stirred through towards the end. This one only works safely with rice that's been cooled and stored properly; see the food safety note below for what that involves."
+    ]
+  },
+  {
+    title: "Sausage and lentil casserole",
+    paragraphs: [
+      "Red lentils are the easiest choice because they soften into the sauce and help thicken it. Green or brown lentils work too, but they keep their shape and usually take longer. Either way, lentils make a smaller number of sausages go further while keeping the dinner filling."
+    ]
+  },
+  {
+    title: "Sausage flatbreads",
+    paragraphs: [
+      "Cooked sausages, sliced or split open, sit in a warmed flatbread with salad, a spoonful of yoghurt and something with a bit of sharpness: pickled onion, chopped herbs or a squeeze of lemon all work. This is a fresher way to eat sausages than most of the other ideas here, and a useful one when the rest of the fridge doesn't offer much beyond salad and yoghurt."
+    ]
+  },
+  {
+    title: "Sausage and pepper frittata",
+    paragraphs: [
+      "Leftover cooked sausages, sliced, go into a frittata with peppers and any small amounts of vegetables that aren't quite enough on their own for anything else. It's a good use for both a couple of leftover sausages and the odd half pepper or handful of spinach sitting in the fridge, and it works just as well served warm as it does cold the next day, which suits a packed lunch."
+    ]
+  },
+  {
+    title: "Sausage meatballs",
+    paragraphs: [
+      "Take the meat out of the skins, roll it into balls and cook them in a tomato sauce rather than serving the sausages whole. Because the meat is already seasoned, there's usually little need to add much beyond what's already in the sausage, which saves a step compared with making meatballs from plain mince and taste-testing the seasoning as you go."
+    ]
+  },
+  {
+    title: "Sausage and potato hash",
+    paragraphs: [
+      "A pan of diced potato, onion and sliced sausage, fried until the potato is properly browned and any other vegetables that need using are worked in. It uses up both leftover cooked sausages and the last of a bag of potatoes without much fuss, and holds up well finished with a fried egg on top."
+    ]
+  },
+  {
+    title: "Making a pack go further",
+    paragraphs: [
+      "Sausages vary a good deal in price depending on meat content, brand and pack size, so it isn't accurate to call them cheap as a rule. As one example, checked on Tesco's website on 25 July 2026, Tesco British Pork Sausages 8 Pack (454g) cost \xA31.79 (\xA33.94 per kg), while Tesco Finest 6 Pork Sausages (400g) cost \xA33.30 for a smaller pack (\xA38.25 per kg). Prices like these are examples rather than a fixed rule, and it's worth checking pack and unit prices against each other when deciding what to buy.",
+      "What tends to make sausages cost-effective isn't the price on the pack, but how far their flavour is spread. A tomato pasta sauce made with four crumbled sausages can serve more people than four sausages presented whole on a plate, because the meat is seasoning the whole dish rather than making up the entire portion. The same idea applies to the bean stew, the lentil casserole and the hash."
+    ]
+  },
+  {
+    title: "A note on food safety",
+    paragraphs: [
+      "Cook sausages according to the pack instructions, keep raw and cooked sausages separate, and cool and refrigerate leftovers promptly, reheating them until steaming hot all the way through.",
+      "Rice needs a little more care. Cool cooked rice quickly, ideally within an hour, keep it in the fridge for no more than a day, and reheat it only once until steaming hot throughout. Rice left at room temperature for too long may become unsafe, and reheating does not necessarily put that right."
+    ]
+  },
+  {
+    title: "In short",
+    paragraphs: [
+      "None of this needs unfamiliar ingredients or a shopping trip beyond the usual list. A pack of sausages that would otherwise become the same dinner twice in a fortnight can go nine different directions just by changing how it's used: sliced instead of whole, crumbled into a sauce, or paired with something fresher. Sometimes variety comes less from what's in the fridge and more from what's done with it."
+    ]
+  }
+];
+var SAUSAGE_WAYS_GUIDE_FAQS = [
+  {
+    question: "Can sausages be cooked from frozen?",
+    answer: "Many can, but not all. Check the pack first and allow extra time where necessary. They should be cooked thoroughly and steaming hot all the way through, with no pink meat inside."
+  },
+  {
+    question: "How long do cooked sausages keep?",
+    answer: "Cooled and refrigerated promptly, cooked sausages are best eaten within two days, or frozen if that's not going to happen."
+  },
+  {
+    question: "Which of these ideas work with vegetarian sausages?",
+    answer: "Most of them, though not every vegetarian sausage comes in a casing that peels away and crumbles the way a pork sausage does. Some are softer or already loose-textured, so they may suit slicing better than crumbling. Check the product before using it for the pasta or meatball ideas."
+  }
+];
+var SAUSAGE_WAYS_GUIDE_RECORD = {
+  id: "9-ways-with-sausages",
+  slug: "9-ways-with-sausages",
+  path: SAUSAGE_WAYS_GUIDE_PATH,
+  canonicalPath: SAUSAGE_WAYS_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "price-sensitive",
+  ...SAUSAGE_WAYS_GUIDE,
+  metaDescription: SAUSAGE_WAYS_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: SAUSAGE_GUIDE_DISCLOSURES,
+  disclosureFooter: SAUSAGE_GUIDE_DISCLOSURE_FOOTER,
+  sections: SAUSAGE_WAYS_GUIDE_SECTIONS,
+  faqs: SAUSAGE_WAYS_GUIDE_FAQS,
+  cta: {
+    title: "Find sausage recipes for dinner",
+    copy: "Search DinnerByDesign for sausage recipes that suit your time, budget and preferences.",
+    label: "Find sausage recipes",
     href: "/signin"
   }
 };
@@ -186290,6 +186772,9 @@ var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD = {
 // src/content/publicGuideRegistry.ts
 var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
+  MINCE_BUDGET_DINNERS_GUIDE_RECORD,
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD,
+  SAUSAGE_WAYS_GUIDE_RECORD,
   BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_RECORD,
   MEAT_STRETCHING_GUIDE_RECORD,
   LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD,
@@ -186387,48 +186872,6 @@ var PUBLIC_ARTICLES = [
     internalLinks: [...FAMILY_DINNERS_FOR_FOUR.internalLinks],
     disclosures: [...FAMILY_DINNERS_FOR_FOUR.disclosures],
     status: FAMILY_DINNERS_FOR_FOUR.status
-  },
-  {
-    title: SAUSAGE_WAYS_GUIDE.title,
-    path: SAUSAGE_WAYS_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: SAUSAGE_WAYS_GUIDE.pageFamily,
-    primarySearchIntent: SAUSAGE_WAYS_GUIDE.primarySearchIntent,
-    indexingStatus: SAUSAGE_WAYS_GUIDE.indexingStatus,
-    publishedAt: SAUSAGE_WAYS_GUIDE.publishedAt,
-    reviewedAt: SAUSAGE_WAYS_GUIDE.reviewedAt,
-    contentReviewedAt: SAUSAGE_WAYS_GUIDE.contentReviewedAt,
-    internalLinks: SAUSAGE_WAYS_GUIDE.internalLinks,
-    disclosures: SAUSAGE_WAYS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: MINCE_BUDGET_DINNERS_GUIDE.title,
-    path: MINCE_BUDGET_DINNERS_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: MINCE_BUDGET_DINNERS_GUIDE.pageFamily,
-    primarySearchIntent: MINCE_BUDGET_DINNERS_GUIDE.primarySearchIntent,
-    indexingStatus: MINCE_BUDGET_DINNERS_GUIDE.indexingStatus,
-    publishedAt: MINCE_BUDGET_DINNERS_GUIDE.publishedAt,
-    reviewedAt: MINCE_BUDGET_DINNERS_GUIDE.reviewedAt,
-    contentReviewedAt: MINCE_BUDGET_DINNERS_GUIDE.contentReviewedAt,
-    internalLinks: MINCE_BUDGET_DINNERS_GUIDE.internalLinks,
-    disclosures: MINCE_BUDGET_DINNERS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.title,
-    path: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.pageFamily,
-    primarySearchIntent: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.primarySearchIntent,
-    indexingStatus: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.indexingStatus,
-    publishedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.publishedAt,
-    reviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.reviewedAt,
-    contentReviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.contentReviewedAt,
-    internalLinks: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.internalLinks,
-    disclosures: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.disclosures,
-    status: "published"
   },
   {
     title: TRAYBAKE_GUIDE.title,

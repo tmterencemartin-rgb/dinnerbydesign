@@ -2,9 +2,13 @@ import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
   SAUSAGE_GUIDE_DISCLOSURES,
   SAUSAGE_GUIDE_DISCLOSURE_FOOTER,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const SAUSAGE_WAYS_GUIDE_PATH = '/guides/9-ways-with-sausages';
 
@@ -43,12 +47,7 @@ export const SAUSAGE_WAYS_GUIDE = {
   ],
 };
 
-export interface SausageWaysGuideSection {
-  title?: string;
-  paragraphs: string[];
-}
-
-export const SAUSAGE_WAYS_GUIDE_SECTIONS: SausageWaysGuideSection[] = [
+export const SAUSAGE_WAYS_GUIDE_SECTIONS: PublicGuideSection[] = [
   {
     paragraphs: [
       "There's a pack of sausages in the fridge, and nobody's especially keen on the usual sausage and mash again. It's easy to see why sausages end up there in the first place: they're straightforward to cook, widely liked, and a reasonable thing to reach for when there isn't much time or inspiration to spare. The trouble is that the same pack tends to become the same dinner, on repeat, until it doesn't feel worth buying again.",
@@ -147,56 +146,32 @@ export const SAUSAGE_WAYS_GUIDE_FAQS = [
 ];
 
 export function getSausageWaysGuideJsonLd() {
-  const guide = SAUSAGE_WAYS_GUIDE;
-  const url = `https://dinnerbydesign.app${SAUSAGE_WAYS_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: SAUSAGE_WAYS_GUIDE_FAQS.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(SAUSAGE_WAYS_GUIDE_RECORD);
 }
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderSausageWaysGuideInitialHtml() {
-  const guide = SAUSAGE_WAYS_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(SAUSAGE_GUIDE_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(SAUSAGE_GUIDE_DISCLOSURE_FOOTER);
-  const sections = SAUSAGE_WAYS_GUIDE_SECTIONS.map(section => {
-    const heading = section.title ? `<h2>${escapeHtml(section.title)}</h2>` : '';
-    return `<section>${heading}${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</section>`;
-  }).join('');
-  const faqs = SAUSAGE_WAYS_GUIDE_FAQS.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 25 July 2026 · Last reviewed 25 July 2026</p><article>${sections}${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find sausage recipes for dinner</h2><p>Search DinnerByDesign for sausage recipes that suit your time, budget and preferences.</p><p><a href="/signin">Find sausage recipes</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(SAUSAGE_WAYS_GUIDE_RECORD);
 }
+
+export const SAUSAGE_WAYS_GUIDE_RECORD: PublicGuideRecord = {
+  id: '9-ways-with-sausages',
+  slug: '9-ways-with-sausages',
+  path: SAUSAGE_WAYS_GUIDE_PATH,
+  canonicalPath: SAUSAGE_WAYS_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'price-sensitive',
+  ...SAUSAGE_WAYS_GUIDE,
+  metaDescription: SAUSAGE_WAYS_GUIDE.description,
+  label: 'Practical cooking guide',
+  disclosureItems: SAUSAGE_GUIDE_DISCLOSURES,
+  disclosureFooter: SAUSAGE_GUIDE_DISCLOSURE_FOOTER,
+  sections: SAUSAGE_WAYS_GUIDE_SECTIONS,
+  faqs: SAUSAGE_WAYS_GUIDE_FAQS,
+  cta: {
+    title: 'Find sausage recipes for dinner',
+    copy: 'Search DinnerByDesign for sausage recipes that suit your time, budget and preferences.',
+    label: 'Find sausage recipes',
+    href: '/signin',
+  },
+};

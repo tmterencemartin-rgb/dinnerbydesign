@@ -106,18 +106,6 @@ import {
   renderTraybakeGuideInitialHtml,
 } from '../src/content/traybakeGuide';
 import {
-  SAUSAGE_WAYS_GUIDE,
-  SAUSAGE_WAYS_GUIDE_PATH,
-  getSausageWaysGuideJsonLd,
-  renderSausageWaysGuideInitialHtml,
-} from '../src/content/sausageWaysGuide';
-import {
-  MINCE_BUDGET_DINNERS_GUIDE,
-  MINCE_BUDGET_DINNERS_GUIDE_PATH,
-  getMinceBudgetDinnersGuideJsonLd,
-  renderMinceBudgetDinnersGuideInitialHtml,
-} from '../src/content/minceBudgetDinnersGuide';
-import {
   CHICKEN_THIGH_COST_GUIDE,
   CHICKEN_THIGH_COST_GUIDE_PATH,
   getChickenThighCostGuideJsonLd,
@@ -141,12 +129,6 @@ import {
   getTinnedFishGuideJsonLd,
   renderTinnedFishGuideInitialHtml,
 } from '../src/content/tinnedFishGuide';
-import {
-  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
-  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
-  getNineBudgetDinnersThreeCuisinesGuideJsonLd,
-  renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
-} from '../src/content/nineBudgetDinnersThreeCuisinesGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from '../src/content/publicGuideRegistry';
 import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from '../src/content/publicGuideModel';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
@@ -559,27 +541,6 @@ await generateEditorialGuide(
   TRAYBAKE_GUIDE_PATH,
   renderTraybakeGuideInitialHtml,
   getTraybakeGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  SAUSAGE_WAYS_GUIDE,
-  SAUSAGE_WAYS_GUIDE_PATH,
-  renderSausageWaysGuideInitialHtml,
-  getSausageWaysGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  MINCE_BUDGET_DINNERS_GUIDE,
-  MINCE_BUDGET_DINNERS_GUIDE_PATH,
-  renderMinceBudgetDinnersGuideInitialHtml,
-  getMinceBudgetDinnersGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
-  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
-  renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
-  getNineBudgetDinnersThreeCuisinesGuideJsonLd,
 );
 
 for (const guideRecord of PUBLISHED_PUBLIC_GUIDE_RECORDS) {
