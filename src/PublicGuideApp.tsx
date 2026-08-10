@@ -68,98 +68,15 @@ import {
   getPublicPathwayJsonLd,
 } from './content/publicPathways';
 import {
-  FIVE_A_DAY_GUIDE,
-  FIVE_A_DAY_GUIDE_PATH,
-  getFiveADayGuideJsonLd,
-} from './content/fiveADayGuide';
+  PublicEditorialGuideView,
+} from './components/views/PublicEditorialGuideView';
+import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './content/publicGuideRegistry';
 import {
-  HOME_COOKED_READY_MADE_GUIDE,
-  HOME_COOKED_READY_MADE_GUIDE_PATH,
-  getHomeCookedReadyMadeGuideJsonLd,
-} from './content/homeCookedReadyMadeGuide';
-import {
-  LOW_COST_DINNERS_GUIDE,
-  LOW_COST_DINNERS_GUIDE_PATH,
-  getLowCostDinnersGuideJsonLd,
-} from './content/lowCostDinnersGuide';
-import {
-  PULSES_BUDGET_GUIDE,
-  PULSES_BUDGET_GUIDE_PATH,
-  getPulsesBudgetGuideJsonLd,
-} from './content/pulsesBudgetGuide';
-import {
-  TRAYBAKE_GUIDE,
-  TRAYBAKE_GUIDE_PATH,
-  getTraybakeGuideJsonLd,
-} from './content/traybakeGuide';
-import {
-  SAUSAGE_WAYS_GUIDE,
-  SAUSAGE_WAYS_GUIDE_PATH,
-  getSausageWaysGuideJsonLd,
-} from './content/sausageWaysGuide';
-import {
-  MINCE_BUDGET_DINNERS_GUIDE,
-  MINCE_BUDGET_DINNERS_GUIDE_PATH,
-  getMinceBudgetDinnersGuideJsonLd,
-} from './content/minceBudgetDinnersGuide';
-import {
-  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
-  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
-  getLeftoverRoastChickenBudgetDinnersGuideJsonLd,
-} from './content/leftoverRoastChickenBudgetDinnersGuide';
-import {
-  CHICKEN_THIGH_COST_GUIDE,
-  CHICKEN_THIGH_COST_GUIDE_PATH,
-  getChickenThighCostGuideJsonLd,
-} from './content/chickenThighCostGuide';
-import {
-  FIVE_STAPLES_GUIDE,
-  FIVE_STAPLES_GUIDE_PATH,
-  getFiveStaplesGuideJsonLd,
-} from './content/fiveStaplesGuide';
-import {
-  CONVENIENCE_FISH_GUIDE,
-  CONVENIENCE_FISH_GUIDE_PATH,
-  getConvenienceFishGuideJsonLd,
-} from './content/convenienceFishGuide';
-import {
-  TINNED_FISH_GUIDE,
-  TINNED_FISH_GUIDE_PATH,
-  getTinnedFishGuideJsonLd,
-} from './content/tinnedFishGuide';
-import {
-  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
-  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
-  getNineBudgetDinnersThreeCuisinesGuideJsonLd,
-} from './content/nineBudgetDinnersThreeCuisinesGuide';
-import {
-  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE,
-  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
-  getNineBudgetFriendlyDinnersWithEggsGuideJsonLd,
-} from './content/nineBudgetFriendlyDinnersWithEggsGuide';
-import {
-  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE,
-  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
-  getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
-} from './content/nineBudgetDinnersWithTinnedVegetablesGuide';
-import {
-  WHOLE_CHICKEN_VALUE_GUIDE,
-  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
-  getWholeChickenValueGuideJsonLd,
-} from './content/wholeChickenValueGuide';
-import {
-  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
-  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
-  getBubbleAndSqueakBudgetDinnersGuideJsonLd,
-} from './content/bubbleAndSqueakBudgetDinnersGuide';
-import {
-  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE,
-  NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
-  getNineBudgetDinnersWithPotatoesGuideJsonLd,
-} from './content/nineBudgetDinnersWithPotatoesGuide';
-import { NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd } from './content/nineBudgetDinnersWithRiceGuide';
-import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd } from './content/meatStretchingGuide';
-import { NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE, NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, getNineBudgetDinnersWithSavouryPiesGuideJsonLd } from './content/nineBudgetDinnersWithSavouryPiesGuide';
+  getPublicGuideJsonLd,
+  getPublicGuidePublishedLabel,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+} from './content/publicGuideModel';
 
 const SeoMealPlanView = React.lazy(() => import('./components/views/SeoMealPlanView').then(module => ({ default: module.SeoMealPlanView })));
 const FamilyDinnersForFourView = React.lazy(() => import('./components/views/FamilyDinnersForFourView').then(module => ({ default: module.FamilyDinnersForFourView })));
@@ -177,27 +94,6 @@ const GroceryCostOptionsGuideView = React.lazy(() => import('./components/views/
 const GroceryCostPredictionGuideView = React.lazy(() => import('./components/views/GroceryCostPredictionGuideView').then(module => ({ default: module.GroceryCostPredictionGuideView })));
 const GuidesLibraryView = React.lazy(() => import('./components/views/GuidesLibraryView').then(module => ({ default: module.GuidesLibraryView })));
 const PublicPathwayView = React.lazy(() => import('./components/views/PublicPathwayView').then(module => ({ default: module.PublicPathwayView })));
-const FiveADayGuideView = React.lazy(() => import('./components/views/FiveADayGuideView').then(module => ({ default: module.FiveADayGuideView })));
-const HomeCookedReadyMadeGuideView = React.lazy(() => import('./components/views/HomeCookedReadyMadeGuideView').then(module => ({ default: module.HomeCookedReadyMadeGuideView })));
-const LowCostDinnersGuideView = React.lazy(() => import('./components/views/LowCostDinnersGuideView').then(module => ({ default: module.LowCostDinnersGuideView })));
-const PulsesBudgetGuideView = React.lazy(() => import('./components/views/PulsesBudgetGuideView').then(module => ({ default: module.PulsesBudgetGuideView })));
-const TraybakeGuideView = React.lazy(() => import('./components/views/TraybakeGuideView').then(module => ({ default: module.TraybakeGuideView })));
-const SausageWaysGuideView = React.lazy(() => import('./components/views/SausageWaysGuideView').then(module => ({ default: module.SausageWaysGuideView })));
-const MinceBudgetDinnersGuideView = React.lazy(() => import('./components/views/MinceBudgetDinnersGuideView').then(module => ({ default: module.MinceBudgetDinnersGuideView })));
-const LeftoverRoastChickenBudgetDinnersGuideView = React.lazy(() => import('./components/views/LeftoverRoastChickenBudgetDinnersGuideView').then(module => ({ default: module.LeftoverRoastChickenBudgetDinnersGuideView })));
-const ChickenThighCostGuideView = React.lazy(() => import('./components/views/ChickenThighCostGuideView').then(module => ({ default: module.ChickenThighCostGuideView })));
-const FiveStaplesGuideView = React.lazy(() => import('./components/views/FiveStaplesGuideView').then(module => ({ default: module.FiveStaplesGuideView })));
-const ConvenienceFishGuideView = React.lazy(() => import('./components/views/ConvenienceFishGuideView').then(module => ({ default: module.ConvenienceFishGuideView })));
-const TinnedFishGuideView = React.lazy(() => import('./components/views/TinnedFishGuideView').then(module => ({ default: module.TinnedFishGuideView })));
-const NineBudgetDinnersThreeCuisinesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersThreeCuisinesGuideView').then(module => ({ default: module.NineBudgetDinnersThreeCuisinesGuideView })));
-const NineBudgetFriendlyDinnersWithEggsGuideView = React.lazy(() => import('./components/views/NineBudgetFriendlyDinnersWithEggsGuideView').then(module => ({ default: module.NineBudgetFriendlyDinnersWithEggsGuideView })));
-const NineBudgetDinnersWithTinnedVegetablesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithTinnedVegetablesGuideView').then(module => ({ default: module.NineBudgetDinnersWithTinnedVegetablesGuideView })));
-const WholeChickenValueGuideView = React.lazy(() => import('./components/views/WholeChickenValueGuideView').then(module => ({ default: module.WholeChickenValueGuideView })));
-const BubbleAndSqueakBudgetDinnersGuideView = React.lazy(() => import('./components/views/BubbleAndSqueakBudgetDinnersGuideView').then(module => ({ default: module.BubbleAndSqueakBudgetDinnersGuideView })));
-const NineBudgetDinnersWithPotatoesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithPotatoesGuideView').then(module => ({ default: module.NineBudgetDinnersWithPotatoesGuideView })));
-const NineBudgetDinnersWithRiceGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithRiceGuideView').then(module => ({ default: module.NineBudgetDinnersWithRiceGuideView })));
-const MeatStretchingGuideView = React.lazy(() => import('./components/views/MeatStretchingGuideView').then(module => ({ default: module.MeatStretchingGuideView })));
-const NineBudgetDinnersWithSavouryPiesGuideView = React.lazy(() => import('./components/views/NineBudgetDinnersWithSavouryPiesGuideView').then(module => ({ default: module.NineBudgetDinnersWithSavouryPiesGuideView })));
 const ContactView = React.lazy(() => import('./components/views/ContactView').then(module => ({ default: module.ContactView })));
 
 type SeoConfig = {
@@ -223,6 +119,39 @@ const guideSeo = (
   canonicalPath,
   jsonLd,
 });
+
+const getPublicGuideAction = (
+  guide: PublicGuideRecord,
+  actions: { plan: () => void; search: () => void },
+) => {
+  const ctaText = `${guide.cta.title} ${guide.cta.label}`.toLowerCase();
+  return guide.category === 'dinner-plans' || ctaText.includes('plan') ? actions.plan : actions.search;
+};
+
+const PUBLIC_GUIDE_RECORD_ROUTES = PUBLISHED_PUBLIC_GUIDE_RECORDS.reduce<Record<string, PublicRoute>>((routes, guide) => {
+  routes[guide.path] = {
+    seo: {
+      title: guide.seoTitle,
+      description: guide.metaDescription || guide.description,
+      canonicalPath: guide.canonicalPath,
+      jsonLd: getPublicGuideJsonLd(guide),
+      noIndex: guide.indexingStatus === 'noindex',
+    },
+    render: actions => (
+      <PublicEditorialGuideView
+        guide={guide}
+        label={guide.label}
+        publishedLabel={getPublicGuidePublishedLabel(guide)}
+        renderInitialHtml={() => renderPublicGuideInitialHtml(guide)}
+        ctaTitle={guide.cta.title}
+        ctaCopy={guide.cta.copy}
+        ctaLabel={guide.cta.label}
+        onCta={getPublicGuideAction(guide, actions)}
+      />
+    ),
+  };
+  return routes;
+}, {});
 
 const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   '/contact': {
@@ -253,6 +182,7 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
     };
     return routes;
   }, {}),
+  ...PUBLIC_GUIDE_RECORD_ROUTES,
   [FIVE_DINNERS_FOR_TWO_UNDER_40_PATH]: {
     seo: {
       title: FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle,
@@ -328,81 +258,6 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
     },
     render: ({ plan }) => <GuidesLibraryView onPlanWeek={plan} />,
   },
-  [FIVE_A_DAY_GUIDE_PATH]: {
-    seo: guideSeo(FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH, getFiveADayGuideJsonLd()),
-    render: ({ search }) => <FiveADayGuideView onFindDinner={search} />,
-  },
-  [HOME_COOKED_READY_MADE_GUIDE_PATH]: {
-    seo: guideSeo(HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH, getHomeCookedReadyMadeGuideJsonLd()),
-    render: ({ search }) => <HomeCookedReadyMadeGuideView onFindDinner={search} />,
-  },
-  [LOW_COST_DINNERS_GUIDE_PATH]: {
-    seo: guideSeo(LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH, getLowCostDinnersGuideJsonLd()),
-    render: ({ search }) => <LowCostDinnersGuideView onFindDinner={search} />,
-  },
-  [PULSES_BUDGET_GUIDE_PATH]: {
-    seo: guideSeo(PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH, getPulsesBudgetGuideJsonLd()),
-    render: ({ search }) => <PulsesBudgetGuideView onFindDinners={search} />,
-  },
-  [TRAYBAKE_GUIDE_PATH]: {
-    seo: guideSeo(TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH, getTraybakeGuideJsonLd()),
-    render: ({ search }) => <TraybakeGuideView onFindDinners={search} />,
-  },
-  [SAUSAGE_WAYS_GUIDE_PATH]: {
-    seo: guideSeo(SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH, getSausageWaysGuideJsonLd()),
-    render: ({ search }) => <SausageWaysGuideView onFindDinners={search} />,
-  },
-  [MINCE_BUDGET_DINNERS_GUIDE_PATH]: {
-    seo: guideSeo(MINCE_BUDGET_DINNERS_GUIDE, MINCE_BUDGET_DINNERS_GUIDE_PATH, getMinceBudgetDinnersGuideJsonLd()),
-    render: ({ search }) => <MinceBudgetDinnersGuideView onFindDinners={search} />,
-  },
-  [LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH]: {
-    seo: guideSeo(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE, LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH, getLeftoverRoastChickenBudgetDinnersGuideJsonLd()),
-    render: ({ search }) => <LeftoverRoastChickenBudgetDinnersGuideView onFindDinners={search} />,
-  },
-  [CHICKEN_THIGH_COST_GUIDE_PATH]: {
-    seo: guideSeo(CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH, getChickenThighCostGuideJsonLd()),
-    render: ({ search }) => <ChickenThighCostGuideView onFindRecipes={search} />,
-  },
-  [FIVE_STAPLES_GUIDE_PATH]: {
-    seo: guideSeo(FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH, getFiveStaplesGuideJsonLd()),
-    render: ({ search }) => <FiveStaplesGuideView onFindDinners={search} />,
-  },
-  [CONVENIENCE_FISH_GUIDE_PATH]: {
-    seo: guideSeo(CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH, getConvenienceFishGuideJsonLd()),
-    render: ({ search }) => <ConvenienceFishGuideView onFindDinners={search} />,
-  },
-  [TINNED_FISH_GUIDE_PATH]: {
-    seo: guideSeo(TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH, getTinnedFishGuideJsonLd()),
-    render: ({ search }) => <TinnedFishGuideView onFindDinners={search} />,
-  },
-  [NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH]: {
-    seo: guideSeo(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH, getNineBudgetDinnersThreeCuisinesGuideJsonLd()),
-    render: ({ search }) => <NineBudgetDinnersThreeCuisinesGuideView onFindDinners={search} />,
-  },
-  [NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH]: {
-    seo: guideSeo(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE, NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH, getNineBudgetFriendlyDinnersWithEggsGuideJsonLd()),
-    render: ({ search }) => <NineBudgetFriendlyDinnersWithEggsGuideView onFindDinners={search} />,
-  },
-  [NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH]: {
-    seo: guideSeo(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE, NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH, getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd()),
-    render: ({ search }) => <NineBudgetDinnersWithTinnedVegetablesGuideView onFindDinners={search} />,
-  },
-  [WHOLE_CHICKEN_VALUE_GUIDE_PATH]: {
-    seo: guideSeo(WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH, getWholeChickenValueGuideJsonLd()),
-    render: ({ search }) => <WholeChickenValueGuideView onFindDinners={search} />,
-  },
-  [BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH]: {
-    seo: guideSeo(BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH, getBubbleAndSqueakBudgetDinnersGuideJsonLd()),
-    render: ({ search }) => <BubbleAndSqueakBudgetDinnersGuideView onFindDinners={search} />,
-  },
-  [NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH]: {
-    seo: guideSeo(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE, NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH, getNineBudgetDinnersWithPotatoesGuideJsonLd()),
-    render: ({ search }) => <NineBudgetDinnersWithPotatoesGuideView onFindDinners={search} />,
-  },
-  [NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH]: { seo: guideSeo(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE, NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH, getNineBudgetDinnersWithRiceGuideJsonLd()), render: ({ search }) => <NineBudgetDinnersWithRiceGuideView onFindDinners={search} /> },
-  [MEAT_STRETCHING_GUIDE_PATH]: { seo: guideSeo(MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd()), render: ({ search }) => <MeatStretchingGuideView onFindDinners={search} /> },
-  [NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH]: { seo: guideSeo(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE, NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH, getNineBudgetDinnersWithSavouryPiesGuideJsonLd()), render: ({ search }) => <NineBudgetDinnersWithSavouryPiesGuideView onFindDinners={search} /> },
 };
 
 const normalisePath = (pathName: string) =>
