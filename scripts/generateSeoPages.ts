@@ -1,18 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {
-  FIVE_DINNERS_FOR_TWO_UNDER_40,
-  FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
-  getFiveDinnersForTwoJsonLd,
-  renderFiveDinnersForTwoInitialHtml,
-} from '../src/content/seoMealPlans';
-import {
-  FAMILY_DINNERS_FOR_FOUR,
-  FAMILY_DINNERS_FOR_FOUR_PATH,
-  getFamilyDinnersForFourJsonLd,
-  renderFamilyDinnersForFourInitialHtml,
-} from '../src/content/familyDinnersForFourPlan';
-import {
   PUBLIC_GUIDE_LIBRARY,
   getPublicGuideLibraryJsonLd,
   renderPublicGuideLibraryInitialHtml,
@@ -73,40 +61,6 @@ const generateEditorialGuide = async (
   await fs.writeFile(path.join(outputDir, 'index.html'), guideHtml, 'utf8');
   console.log(`Generated ${guidePath}/index.html`);
 };
-const canonicalUrl = `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`;
-const title = FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle;
-const description = 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.';
-
-let html = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${canonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${canonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${title}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${title}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderFiveDinnersForTwoInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getFiveDinnersForTwoJsonLd())}</script>\n</head>`);
-
-if (!html.includes(`<h1>${FIVE_DINNERS_FOR_TWO_UNDER_40.title}</h1>`) || !html.includes(`href="${canonicalUrl}"`)) {
-  throw new Error('SEO page generation failed its content or canonical check.');
-}
-
-const outputDir = path.join(distRoot, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH.slice(1));
-await fs.mkdir(outputDir, { recursive: true });
-await fs.writeFile(path.join(outputDir, 'index.html'), html, 'utf8');
-console.log(`Generated ${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}/index.html`);
-
-await generateEditorialGuide(
-  FAMILY_DINNERS_FOR_FOUR,
-  FAMILY_DINNERS_FOR_FOUR_PATH,
-  renderFamilyDinnersForFourInitialHtml,
-  getFamilyDinnersForFourJsonLd,
-);
-
 for (const guideRecord of PUBLISHED_PUBLIC_GUIDE_RECORDS) {
   await generateEditorialGuide(
     guideRecord,

@@ -27,14 +27,16 @@ describe('family dinners for four publishing data', () => {
     expect(FAMILY_DINNERS_FOR_FOUR_PATH).toBe('/dinner-plans/5-affordable-family-dinners-for-four');
     const jsonLd = getFamilyDinnersForFourJsonLd();
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual([
+      'Article',
       'CollectionPage',
       'ItemList',
-      'BreadcrumbList',
       'FAQPage',
+      'BreadcrumbList',
     ]);
-    expect(jsonLd['@graph'][0]).toMatchObject({
+    expect(jsonLd['@graph']).toContainEqual(expect.objectContaining({
+      '@type': 'CollectionPage',
       url: `https://dinnerbydesign.app${FAMILY_DINNERS_FOR_FOUR_PATH}`,
-    });
+    }));
   });
 
   it('puts recipes, costs, disclosures and links in initial HTML', () => {

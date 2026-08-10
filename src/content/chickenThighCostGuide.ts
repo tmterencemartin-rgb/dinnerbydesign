@@ -304,6 +304,7 @@ export const CHICKEN_THIGH_COST_GUIDE_RECORD = {
   label: 'Recipe cost comparison',
   disclosureItems: GUIDE_DISCLOSURES_FOR_RECORD,
   disclosureFooter: GUIDE_FOOTER,
+  breadcrumbRoot: { label: 'Recipes and cooking ideas', url: '/recipes' },
   sections: [{ rawHtml: extractArticleSections(renderChickenThighCostGuideLegacyInitialHtml()) }],
   faqs: CHICKEN_THIGH_COST_FAQS,
   cta: {

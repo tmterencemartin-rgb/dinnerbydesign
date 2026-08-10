@@ -3,6 +3,12 @@ import {
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH,
 } from './nineBudgetDinnersWithSavouryPiesGuide';
 import {
+  FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
+} from './seoMealPlans';
+import {
+  FAMILY_DINNERS_FOR_FOUR_PATH,
+} from './familyDinnersForFourPlan';
+import {
   MINCE_BUDGET_DINNERS_GUIDE_PATH,
 } from './minceBudgetDinnersGuide';
 import {
@@ -93,6 +99,8 @@ import {
 describe('public guide registry', () => {
   it('registers migrated public guides with unique paths', () => {
     const paths = PUBLIC_GUIDE_RECORDS.map(guide => guide.path);
+    expect(paths).toContain(FIVE_DINNERS_FOR_TWO_UNDER_40_PATH);
+    expect(paths).toContain(FAMILY_DINNERS_FOR_FOUR_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
@@ -142,6 +150,8 @@ describe('public guide registry', () => {
   });
 
   it('looks up guides by public path', () => {
+    expect(getPublicGuideRecordByPath(FIVE_DINNERS_FOR_TWO_UNDER_40_PATH)?.title).toBe('5 dinners for two under £40');
+    expect(getPublicGuideRecordByPath(FAMILY_DINNERS_FOR_FOUR_PATH)?.title).toBe('Five family dinners for four using one coordinated basket');
     const guide = getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
     expect(guide?.title).toBe('Nine budget dinners with savoury pies');
     expect(getPublicGuideRecordByPath(MINCE_BUDGET_DINNERS_GUIDE_PATH)?.title).toBe('9 budget dinners with beef or pork mince');

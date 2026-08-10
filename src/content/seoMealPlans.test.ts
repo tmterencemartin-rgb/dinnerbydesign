@@ -26,10 +26,17 @@ describe('SEO meal-plan publishing data', () => {
   it('uses the same canonical path in structured publishing data', () => {
     const jsonLd = getFiveDinnersForTwoJsonLd();
     expect(FIVE_DINNERS_FOR_TWO_UNDER_40_PATH).toBe('/dinner-plans/5-dinners-for-2-under-40');
-    expect(jsonLd['@graph'][0]).toMatchObject({
+    expect(jsonLd['@graph'].map(item => item['@type'])).toEqual([
+      'Article',
+      'CollectionPage',
+      'ItemList',
+      'FAQPage',
+      'BreadcrumbList',
+    ]);
+    expect(jsonLd['@graph']).toContainEqual(expect.objectContaining({
       '@type': 'CollectionPage',
       url: `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`,
-    });
+    }));
   });
 
   it('puts the auditable calculation and every FAQ in initial HTML', () => {

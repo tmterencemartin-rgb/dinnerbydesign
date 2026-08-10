@@ -1,8 +1,14 @@
 import type { ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
+  PROGRAMMATIC_DISCLOSURE_FOOTER,
   renderProgrammaticDisclosureFooterInitialHtml,
   renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+} from './publicGuideModel';
 
 export type FamilyPlanBasketCategory = 'Produce' | 'Protein' | 'Chilled' | 'Cupboard' | 'Freezer';
 
@@ -42,6 +48,11 @@ export const FAMILY_DINNERS_FOR_FOUR_DISCLOSURES: ProgrammaticDisclosureItem[] =
     key: 'serving_assumption',
     title: 'Serving assumption',
     body: 'Each recipe is written for four servings. Appetite, portion size and any additional sides may change the quantity your household needs.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Source and price timing',
+    body: 'Recipe structure, product pages and prices were reviewed on 26 July 2026. Aldi product availability, pack sizes and online prices may change after that date.',
   },
   {
     key: 'storage_and_cooking',
@@ -286,62 +297,104 @@ export const FAMILY_DINNERS_FOR_FOUR = {
 } as const;
 
 export function getFamilyDinnersForFourJsonLd() {
-  const plan = FAMILY_DINNERS_FOR_FOUR;
-  const url = `https://dinnerbydesign.app${FAMILY_DINNERS_FOR_FOUR_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'CollectionPage',
-        '@id': `${url}#page`,
-        url,
-        name: plan.title,
-        description: plan.description,
-        datePublished: plan.publishedAt,
-        dateModified: plan.reviewedAt,
-        isPartOf: { '@type': 'WebSite', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntity: { '@id': `${url}#plan` },
-      },
-      {
-        '@type': 'ItemList',
-        '@id': `${url}#plan`,
-        name: plan.shortTitle,
-        numberOfItems: plan.recipes.length,
-        itemListElement: plan.recipes.map((recipe, index) => ({
-          '@type': 'ListItem',
-          position: index + 1,
-          name: recipe.title,
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Affordable dinner plans', item: 'https://dinnerbydesign.app/dinner-plans' },
-          { '@type': 'ListItem', position: 3, name: plan.shortTitle, item: url },
-        ],
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: plan.faqs.map(item => ({
-          '@type': 'Question',
-          name: item.question,
-          acceptedAnswer: { '@type': 'Answer', text: item.answer },
-        })),
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(FAMILY_DINNERS_FOR_FOUR_GUIDE_RECORD);
 }
 
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 const money = (value: number) => `£${value.toFixed(2)}`;
 
-export function renderFamilyDinnersForFourInitialHtml() {
+const FAMILY_DINNERS_FOR_FOUR_DISCLOSURES_FOR_RECORD = FAMILY_DINNERS_FOR_FOUR.disclosures.map(key => {
+  const disclosure = FAMILY_DINNERS_FOR_FOUR_DISCLOSURES.find(item => item.key === key);
+  if (!disclosure) throw new Error(`Missing family dinners for four disclosure for ${key}`);
+  return disclosure;
+});
+
+const renderFamilyDinnersForFourArticleSections = () => {
   const plan = FAMILY_DINNERS_FOR_FOUR;
   const recipes = plan.recipes.map((recipe, index) => `<article><h3>${index + 1}. ${escapeHtml(recipe.title)}</h3><p>${escapeHtml(recipe.summary)}</p><h4>Ingredients for four</h4><ul>${recipe.ingredients.map(item => `<li>${escapeHtml(item.quantity)} ${escapeHtml(item.name)}</li>`).join('')}</ul><p>${escapeHtml(recipe.timing)}</p><ol>${recipe.method.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol><p><strong>Cost: ${money(recipe.cost)} total, ${money(recipe.perServing)} per serving.</strong></p><p><strong>Reuse:</strong> ${escapeHtml(recipe.reuse)}</p><p><strong>Allergens and substitutions:</strong> ${escapeHtml(recipe.allergens)}</p></article>`).join('');
   const basket = (['Produce', 'Protein', 'Chilled', 'Cupboard', 'Freezer'] as const).map(category => `<section><h3>${category}</h3><ul>${plan.basket.filter(item => item.category === category).map(item => `<li><strong>${escapeHtml(item.ingredient)}</strong>: ${escapeHtml(item.quantityUsed)} used; ${escapeHtml(item.referencePack)} at ${money(item.packCost)}${item.estimated ? ' estimated' : ''}; ${money(item.valueUsed)} used in ${escapeHtml(item.usedIn)}.${item.sourceUrl ? ` <a href="${escapeHtml(item.sourceUrl)}">Price source</a>.` : ''}</li>`).join('')}</ul></section>`).join('');
   const list = (items: readonly string[]) => `<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
   const faqs = plan.faqs.map(item => `<h3>${escapeHtml(item.question)}</h3><p>${escapeHtml(item.answer)}</p>`).join('');
   const disclosures = renderProgrammaticDisclosuresInitialHtml(FAMILY_DINNERS_FOR_FOUR_DISCLOSURES);
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/dinner-plans">Affordable dinner plans</a> / ${escapeHtml(plan.shortTitle)}</nav><p>Affordable family dinner plan</p><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.description)}</p><p>By ${escapeHtml(plan.editorialOwner)} · Published and reviewed 26 July 2026 · Prices checked 26 July 2026</p>${plan.introduction.map(item => `<p>${escapeHtml(item)}</p>`).join('')}<section aria-label="Plan summary"><h2>Plan summary</h2><p>Five dinners, four servings each, 20 servings in total.</p><p>Complete-pack checkout cost: ${money(plan.expectedCheckoutCost)}.</p><p>Estimated ingredient value used: ${money(plan.estimatedIngredientCost)}, or ${money(plan.averageCostPerServing)} per serving.</p></section>${disclosures}<section><h2>The five dinners</h2>${recipes}</section><section><h2>One coordinated shopping basket</h2><p>Pack cost is the full price paid at checkout. Value used estimates the share consumed by this plan.</p>${basket}<p><strong>Totals: pack cost ${money(plan.expectedCheckoutCost)}, value used ${money(plan.estimatedIngredientCost)}.</strong></p></section><section><h2>How the basket is coordinated</h2>${list(plan.coordination)}</section><section><h2>What remains after Friday</h2>${list(plan.remainders)}</section><section><h2>Preparation across the week</h2>${list(plan.preparation)}</section><section><h2>Substitutions</h2>${list(plan.substitutions)}</section><section><h2>How the figures were calculated</h2>${plan.methodology.map(item => `<p>${escapeHtml(item)}</p>`).join('')}</section><section><h2>Questions and answers</h2>${faqs}</section><section><h2>Related reading</h2><p><a href="/dinner-plans">Affordable dinner plans</a>, <a href="/dinner-plans/5-dinners-for-2-under-40">five dinners for two under £40</a>, <a href="/food-costs/five-dinners-same-ingredients">five dinners using the same ingredients</a>, <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a>, <a href="/food-costs/fresh-or-frozen">fresh or frozen ingredients</a>, <a href="/pricing-methodology">pricing methodology</a> and <a href="/recipe-methodology">recipe methodology</a>.</p><p><a href="https://www.food.gov.uk/safety-hygiene/cooking-your-food">Food Standards Agency cooking guidance</a> and <a href="https://www.nhs.uk/healthier-families/recipes/">NHS Healthier Families recipes</a>.</p></section>${renderProgrammaticDisclosureFooterInitialHtml()}<p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+  return `${plan.introduction.map(item => `<p>${escapeHtml(item)}</p>`).join('')}<section aria-label="Plan summary"><h2>Plan summary</h2><p>Five dinners, four servings each, 20 servings in total.</p><p>Complete-pack checkout cost: ${money(plan.expectedCheckoutCost)}.</p><p>Estimated ingredient value used: ${money(plan.estimatedIngredientCost)}, or ${money(plan.averageCostPerServing)} per serving.</p></section>${disclosures}<section><h2>The five dinners</h2>${recipes}</section><section><h2>One coordinated shopping basket</h2><p>Pack cost is the full price paid at checkout. Value used estimates the share consumed by this plan.</p>${basket}<p><strong>Totals: pack cost ${money(plan.expectedCheckoutCost)}, value used ${money(plan.estimatedIngredientCost)}.</strong></p></section><section><h2>How the basket is coordinated</h2>${list(plan.coordination)}</section><section><h2>What remains after Friday</h2>${list(plan.remainders)}</section><section><h2>Preparation across the week</h2>${list(plan.preparation)}</section><section><h2>Substitutions</h2>${list(plan.substitutions)}</section><section><h2>How the figures were calculated</h2>${plan.methodology.map(item => `<p>${escapeHtml(item)}</p>`).join('')}</section><section><h2>Questions and answers</h2>${faqs}</section><section><h2>Related reading</h2><p><a href="/dinner-plans">Affordable dinner plans</a>, <a href="/dinner-plans/5-dinners-for-2-under-40">five dinners for two under £40</a>, <a href="/food-costs/five-dinners-same-ingredients">five dinners using the same ingredients</a>, <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a>, <a href="/food-costs/fresh-or-frozen">fresh or frozen ingredients</a>, <a href="/pricing-methodology">pricing methodology</a> and <a href="/recipe-methodology">recipe methodology</a>.</p><p><a href="https://www.food.gov.uk/safety-hygiene/cooking-your-food">Food Standards Agency cooking guidance</a> and <a href="https://www.nhs.uk/healthier-families/recipes/">NHS Healthier Families recipes</a>.</p></section>`;
+};
+
+export const FAMILY_DINNERS_FOR_FOUR_GUIDE_RECORD = {
+  id: 'five-affordable-family-dinners-for-four',
+  slug: FAMILY_DINNERS_FOR_FOUR.slug,
+  path: FAMILY_DINNERS_FOR_FOUR_PATH,
+  canonicalPath: FAMILY_DINNERS_FOR_FOUR_PATH,
+  status: FAMILY_DINNERS_FOR_FOUR.status,
+  category: 'dinner-plans',
+  reviewSensitivity: 'price-sensitive',
+  title: FAMILY_DINNERS_FOR_FOUR.title,
+  seoTitle: FAMILY_DINNERS_FOR_FOUR.seoTitle,
+  description: FAMILY_DINNERS_FOR_FOUR.description,
+  metaDescription: FAMILY_DINNERS_FOR_FOUR.description,
+  label: 'Dinner plan',
+  publishedAt: FAMILY_DINNERS_FOR_FOUR.publishedAt,
+  reviewedAt: FAMILY_DINNERS_FOR_FOUR.reviewedAt,
+  nextReviewAt: '2026-10-26',
+  editorialOwner: FAMILY_DINNERS_FOR_FOUR.editorialOwner,
+  pageFamily: FAMILY_DINNERS_FOR_FOUR.pageFamily,
+  primarySearchIntent: FAMILY_DINNERS_FOR_FOUR.primarySearchIntent,
+  indexingStatus: FAMILY_DINNERS_FOR_FOUR.indexingStatus,
+  contentReviewedAt: FAMILY_DINNERS_FOR_FOUR.contentReviewedAt,
+  editorialNotes: 'Review Aldi reference prices, product availability, basket rounding and stated substitutions before republishing.',
+  internalLinks: [...FAMILY_DINNERS_FOR_FOUR.internalLinks],
+  disclosures: [...FAMILY_DINNERS_FOR_FOUR.disclosures],
+  disclosureItems: FAMILY_DINNERS_FOR_FOUR_DISCLOSURES_FOR_RECORD,
+  disclosureFooter: PROGRAMMATIC_DISCLOSURE_FOOTER,
+  breadcrumbRoot: { label: 'Affordable dinner plans', url: '/dinner-plans' },
+  sources: [
+    ...FAMILY_DINNERS_FOR_FOUR.basket
+      .filter((item): item is FamilyPlanBasketItem & { sourceUrl: string } => Boolean(item.sourceUrl))
+      .map(item => ({ label: `Aldi: ${item.referencePack}`, url: item.sourceUrl })),
+    { label: 'Food Standards Agency cooking guidance', url: 'https://www.food.gov.uk/safety-hygiene/cooking-your-food' },
+    { label: 'NHS Healthier Families recipes', url: 'https://www.nhs.uk/healthier-families/recipes/' },
+  ],
+  faqs: [...FAMILY_DINNERS_FOR_FOUR.faqs],
+  sections: [{ rawHtml: renderFamilyDinnersForFourArticleSections() }],
+  cta: {
+    title: 'Personalise this dinner plan',
+    copy: 'Use DinnerByDesign to adapt the week around your household size, budget and preferences.',
+    label: 'Personalise this dinner plan',
+    href: '/signin',
+  },
+  jsonLdGraphItems: [
+    {
+      '@type': 'CollectionPage',
+      '@id': `https://dinnerbydesign.app${FAMILY_DINNERS_FOR_FOUR_PATH}#page`,
+      url: `https://dinnerbydesign.app${FAMILY_DINNERS_FOR_FOUR_PATH}`,
+      name: FAMILY_DINNERS_FOR_FOUR.title,
+      description: FAMILY_DINNERS_FOR_FOUR.description,
+      datePublished: FAMILY_DINNERS_FOR_FOUR.publishedAt,
+      dateModified: FAMILY_DINNERS_FOR_FOUR.reviewedAt,
+      isPartOf: { '@type': 'WebSite', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
+      mainEntity: { '@id': `https://dinnerbydesign.app${FAMILY_DINNERS_FOR_FOUR_PATH}#plan` },
+    },
+    {
+      '@type': 'ItemList',
+      '@id': `https://dinnerbydesign.app${FAMILY_DINNERS_FOR_FOUR_PATH}#plan`,
+      name: FAMILY_DINNERS_FOR_FOUR.shortTitle,
+      numberOfItems: FAMILY_DINNERS_FOR_FOUR.recipes.length,
+      itemListElement: FAMILY_DINNERS_FOR_FOUR.recipes.map((recipe, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: recipe.title,
+      })),
+    },
+  ],
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false,
+} satisfies PublicGuideRecord;
+
+export function renderFamilyDinnersForFourInitialHtml() {
+  const plan = FAMILY_DINNERS_FOR_FOUR;
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/dinner-plans">Affordable dinner plans</a> / ${escapeHtml(plan.shortTitle)}</nav><p>Affordable family dinner plan</p><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.description)}</p><p>By ${escapeHtml(plan.editorialOwner)} · Published and reviewed 26 July 2026 · Prices checked 26 July 2026</p>${renderFamilyDinnersForFourArticleSections()}${renderProgrammaticDisclosureFooterInitialHtml()}<p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+}
+
+export function renderFamilyDinnersForFourGuideInitialHtml() {
+  return renderPublicGuideInitialHtml(FAMILY_DINNERS_FOR_FOUR_GUIDE_RECORD);
 }

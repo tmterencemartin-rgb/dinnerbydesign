@@ -67,6 +67,7 @@ export interface PublicGuideRecord {
   disclosures: ProgrammaticDisclosureKey[];
   disclosureItems: ProgrammaticDisclosureItem[];
   disclosureFooter: ProgrammaticDisclosureFooterCopy;
+  breadcrumbRoot?: PublicGuideLink;
   sources: PublicGuideSource[];
   faqs: PublicGuideFaq[];
   sections: PublicGuideSection[];
@@ -102,6 +103,10 @@ export const getPublicGuidePublishedLabel = (guide: Pick<PublicGuideRecord, 'pub
 
 export function getPublicGuideJsonLd(guide: PublicGuideRecord) {
   const url = `https://dinnerbydesign.app${guide.canonicalPath}`;
+  const breadcrumbRoot = guide.breadcrumbRoot ?? { label: 'Guides', url: '/guides' };
+  const breadcrumbRootUrl = breadcrumbRoot.url.startsWith('http')
+    ? breadcrumbRoot.url
+    : `https://dinnerbydesign.app${breadcrumbRoot.url}`;
   const graph = [
     {
       '@type': 'Article',
@@ -129,7 +134,7 @@ export function getPublicGuideJsonLd(guide: PublicGuideRecord) {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-        { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
+        { '@type': 'ListItem', position: 2, name: breadcrumbRoot.label, item: breadcrumbRootUrl },
         { '@type': 'ListItem', position: 3, name: guide.title, item: url },
       ],
     },
@@ -139,6 +144,7 @@ export function getPublicGuideJsonLd(guide: PublicGuideRecord) {
 }
 
 export function renderPublicGuideInitialHtml(guide: PublicGuideRecord) {
+  const breadcrumbRoot = guide.breadcrumbRoot ?? { label: 'Guides', url: '/guides' };
   const sectionsIncludeDisclosures = guide.sections.some(section => section.disclosureItems?.length);
   const shouldRenderDisclosures = guide.autoRenderDisclosures !== false && !sectionsIncludeDisclosures;
   const shouldRenderFaqs = guide.autoRenderFaqs !== false && guide.faqs.length > 0;
@@ -156,5 +162,5 @@ export function renderPublicGuideInitialHtml(guide: PublicGuideRecord) {
   const faqs = guide.faqs.map(faq => `<section><h3>${escapeGuideHtml(faq.question)}</h3><p>${escapeGuideHtml(faq.answer)}</p></section>`).join('');
   const sources = guide.sources.map(source => `<li><a href="${escapeGuideHtml(source.url)}">${escapeGuideHtml(source.label)}</a></li>`).join('');
 
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / ${escapeGuideHtml(guide.label)}</nav><p>${escapeGuideHtml(guide.label)}</p><h1>${escapeGuideHtml(guide.title)}</h1><p>${escapeGuideHtml(guide.description)}</p><p>By ${escapeGuideHtml(guide.editorialOwner)} &middot; ${getPublicGuidePublishedLabel(guide)}</p><article>${sections}${shouldRenderDisclosures ? renderProgrammaticDisclosuresInitialHtml(guide.disclosureItems) : ''}${shouldRenderFaqs ? `<section><h2>Frequently asked questions</h2>${faqs}</section>` : ''}${shouldRenderSources ? `<section><h2>${escapeGuideHtml(guide.sourcesTitle ?? 'Sources')}</h2><ul>${sources}</ul></section>` : ''}${renderProgrammaticDisclosureFooterInitialHtml(guide.disclosureFooter)}</article><section><h2>${escapeGuideHtml(guide.cta.title)}</h2><p>${escapeGuideHtml(guide.cta.copy)}</p><p><a href="${escapeGuideHtml(guide.cta.href)}">${escapeGuideHtml(guide.cta.label)}</a></p></section></main></div>`;
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="${escapeGuideHtml(breadcrumbRoot.url)}">${escapeGuideHtml(breadcrumbRoot.label)}</a> / ${escapeGuideHtml(guide.label)}</nav><p>${escapeGuideHtml(guide.label)}</p><h1>${escapeGuideHtml(guide.title)}</h1><p>${escapeGuideHtml(guide.description)}</p><p>By ${escapeGuideHtml(guide.editorialOwner)} &middot; ${getPublicGuidePublishedLabel(guide)}</p><article>${sections}${shouldRenderDisclosures ? renderProgrammaticDisclosuresInitialHtml(guide.disclosureItems) : ''}${shouldRenderFaqs ? `<section><h2>Frequently asked questions</h2>${faqs}</section>` : ''}${shouldRenderSources ? `<section><h2>${escapeGuideHtml(guide.sourcesTitle ?? 'Sources')}</h2><ul>${sources}</ul></section>` : ''}${renderProgrammaticDisclosureFooterInitialHtml(guide.disclosureFooter)}</article><section><h2>${escapeGuideHtml(guide.cta.title)}</h2><p>${escapeGuideHtml(guide.cta.copy)}</p><p><a href="${escapeGuideHtml(guide.cta.href)}">${escapeGuideHtml(guide.cta.label)}</a></p></section></main></div>`;
 }

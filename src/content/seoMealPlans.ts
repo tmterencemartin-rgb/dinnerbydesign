@@ -1,5 +1,10 @@
-import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
-import { FIVE_DINNERS_PRICE_DISCLOSURES, renderProgrammaticDisclosureFooterInitialHtml, renderProgrammaticDisclosuresInitialHtml } from './programmaticDisclosures';
+import type { ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
+import { FIVE_DINNERS_PRICE_DISCLOSURES, PROGRAMMATIC_DISCLOSURE_FOOTER, renderProgrammaticDisclosureFooterInitialHtml, renderProgrammaticDisclosuresInitialHtml } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+} from './publicGuideModel';
 
 export interface SeoMealPlanDinner {
   day: string;
@@ -183,25 +188,30 @@ export const FIVE_DINNERS_FOR_TWO_UNDER_40: SeoMealPlan = {
 export const FIVE_DINNERS_FOR_TWO_UNDER_40_PATH = '/dinner-plans/5-dinners-for-2-under-40';
 
 export function getFiveDinnersForTwoJsonLd() {
-  const url = `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      { '@type': 'CollectionPage', '@id': `${url}#page`, url, name: FIVE_DINNERS_FOR_TWO_UNDER_40.title, description: FIVE_DINNERS_FOR_TWO_UNDER_40.description, datePublished: FIVE_DINNERS_FOR_TWO_UNDER_40.publishedAt, dateModified: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt, isPartOf: { '@type': 'WebSite', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' }, mainEntity: { '@id': `${url}#plan` } },
-      { '@type': 'ItemList', '@id': `${url}#plan`, name: FIVE_DINNERS_FOR_TWO_UNDER_40.shortTitle, numberOfItems: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.length, itemListElement: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.map((dinner, index) => ({ '@type': 'ListItem', position: index + 1, name: dinner.title })) },
-      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' }, { '@type': 'ListItem', position: 2, name: 'Affordable dinner plans', item: url }] },
-      { '@type': 'FAQPage', mainEntity: FIVE_DINNERS_FOR_TWO_UNDER_40.faqs.map(item => ({ '@type': 'Question', name: item.question, acceptedAnswer: { '@type': 'Answer', text: item.answer } })) },
-    ],
-  };
+  return getPublicGuideJsonLd(FIVE_DINNERS_FOR_TWO_UNDER_40_GUIDE_RECORD);
 }
 
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 const formatMoney = (value: number) => `£${value.toFixed(2)}`;
 
-export function renderFiveDinnersForTwoInitialHtml() {
+const FIVE_DINNERS_FOR_TWO_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  ...FIVE_DINNERS_PRICE_DISCLOSURES,
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Product ingredients, allergens, pack sizes and substitutions vary. Check current labels before shopping or cooking, especially for sauces, stock cubes, dairy, eggs and any vegetarian swaps.',
+  },
+];
+
+const FIVE_DINNERS_FOR_TWO_DISCLOSURES_FOR_RECORD = FIVE_DINNERS_FOR_TWO_UNDER_40.disclosures.map(key => {
+  const disclosure = FIVE_DINNERS_FOR_TWO_DISCLOSURES.find(item => item.key === key);
+  if (!disclosure) throw new Error(`Missing five dinners for two disclosure for ${key}`);
+  return disclosure;
+});
+
+const renderFiveDinnersForTwoArticleSections = () => {
   const plan = FIVE_DINNERS_FOR_TWO_UNDER_40;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(FIVE_DINNERS_PRICE_DISCLOSURES);
-  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml();
+  const disclosures = renderProgrammaticDisclosuresInitialHtml(FIVE_DINNERS_FOR_TWO_DISCLOSURES);
   const dinners = plan.dinners.map(dinner => `<article><p>${escapeHtml(dinner.day)}</p><h3>${escapeHtml(dinner.title)}</h3><p>${escapeHtml(dinner.description)}</p><p>About ${dinner.totalTimeMinutes} minutes · ${formatMoney(dinner.estimatedCost)}</p><p>${escapeHtml(dinner.sharedIngredientNote)}</p></article>`).join('');
   const shared = plan.sharedIngredients.map(item => `<li><strong>${escapeHtml(item.ingredient)}:</strong> ${escapeHtml(item.uses)}</li>`).join('');
   const substitutions = plan.substitutions.map(item => `<li><strong>${escapeHtml(item.swap)}</strong> ${escapeHtml(item.effect)}</li>`).join('');
@@ -213,5 +223,80 @@ export function renderFiveDinnersForTwoInitialHtml() {
   const preparation = plan.preparationAdvice.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const leftovers = plan.leftoverGuidance.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const faqs = plan.faqs.map(item => `<h3>${escapeHtml(item.question)}</h3><p>${escapeHtml(item.answer)}</p>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.description)}</p><p>By ${escapeHtml(plan.editorialOwner)} · Published 18 July 2026 · Content reviewed 19 July 2026 · Prices checked 18 July 2026</p><section><h2>A practical £40 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}, about ${formatMoney(plan.estimatedIngredientCost / 10)} per portion.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p></section>${disclosures}<section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>Complete shopping list and cost calculation</h2><p>The checkout column represents complete reference packs. The value-used column apportions only the quantity used across these ten portions. Adding the listed packs gives ${formatMoney(plan.expectedCheckoutCost)}; adding the value used gives ${formatMoney(plan.estimatedIngredientCost)}.</p>${shoppingList}</section><section><h2>Preparation and leftovers</h2><h3>Prepare once, use again</h3><ul>${preparation}</ul><h3>What remains after the week</h3><ul>${leftovers}</ul></section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under £40</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026">understand the wider UK food-cost picture</a>.</p></section><section><h2>Questions about this £40 plan</h2>${faqs}</section>${disclosureFooter}<p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+  return `<section><h2>A practical £40 week, not five separate shopping lists</h2>${introduction}</section><section aria-label="Plan summary"><h2>Plan summary</h2><p>Dinner target: ${formatMoney(plan.budgetTarget)} for five dinners for two.</p><p>Estimated ingredients: ${formatMoney(plan.estimatedIngredientCost)}, about ${formatMoney(plan.estimatedIngredientCost / 10)} per portion.</p><p>Expected checkout: ${formatMoney(plan.expectedCheckoutCost)} using full reference packs.</p></section>${disclosures}<section><h2>The five-night dinner plan</h2>${dinners}</section><section><h2>Complete shopping list and cost calculation</h2><p>The checkout column represents complete reference packs. The value-used column apportions only the quantity used across these ten portions. Adding the listed packs gives ${formatMoney(plan.expectedCheckoutCost)}; adding the value used gives ${formatMoney(plan.estimatedIngredientCost)}.</p>${shoppingList}</section><section><h2>Preparation and leftovers</h2><h3>Prepare once, use again</h3><ul>${preparation}</ul><h3>What remains after the week</h3><ul>${leftovers}</ul></section><section><h2>The shopping strategy behind the week</h2>${strategy}</section><section><h2>How we kept the plan under £40</h2><ul>${principles}</ul></section><section><h2>How ingredients are reused</h2><ul>${shared}</ul></section><section><h2>Practical substitutions</h2><ul>${substitutions}</ul></section><section><h2>Make the plan work in different circumstances</h2>${scenarios}</section><section><h2>How this plan was selected</h2><p>The plan repeats useful ingredients across five different dinners to reduce disconnected purchases and food waste. It is not guaranteed to be the mathematically cheapest possible basket.</p><p><a href="/pricing-methodology">Read the ingredient-pricing methodology</a>, <a href="/recipe-methodology">see how dinners are selected</a> or <a href="/food-costs/uk-food-costs-2026">understand the wider UK food-cost picture</a>.</p></section><section><h2>Questions about this £40 plan</h2>${faqs}</section>`;
+};
+
+export const FIVE_DINNERS_FOR_TWO_UNDER_40_GUIDE_RECORD = {
+  id: 'five-dinners-for-two-under-40',
+  slug: FIVE_DINNERS_FOR_TWO_UNDER_40.slug,
+  path: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
+  canonicalPath: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
+  status: FIVE_DINNERS_FOR_TWO_UNDER_40.status,
+  category: 'dinner-plans',
+  reviewSensitivity: 'price-sensitive',
+  title: FIVE_DINNERS_FOR_TWO_UNDER_40.title,
+  seoTitle: FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle,
+  description: FIVE_DINNERS_FOR_TWO_UNDER_40.description,
+  metaDescription: 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.',
+  label: 'Dinner plan',
+  publishedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.publishedAt,
+  reviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt,
+  nextReviewAt: '2026-10-18',
+  editorialOwner: FIVE_DINNERS_FOR_TWO_UNDER_40.editorialOwner,
+  pageFamily: FIVE_DINNERS_FOR_TWO_UNDER_40.pageFamily,
+  primarySearchIntent: FIVE_DINNERS_FOR_TWO_UNDER_40.primarySearchIntent,
+  indexingStatus: FIVE_DINNERS_FOR_TWO_UNDER_40.indexingStatus,
+  contentReviewedAt: FIVE_DINNERS_FOR_TWO_UNDER_40.contentReviewedAt,
+  editorialNotes: FIVE_DINNERS_FOR_TWO_UNDER_40.editorialNotes,
+  internalLinks: [...FIVE_DINNERS_FOR_TWO_UNDER_40.internalLinks],
+  disclosures: [...FIVE_DINNERS_FOR_TWO_UNDER_40.disclosures],
+  disclosureItems: FIVE_DINNERS_FOR_TWO_DISCLOSURES_FOR_RECORD,
+  disclosureFooter: PROGRAMMATIC_DISCLOSURE_FOOTER,
+  breadcrumbRoot: { label: 'Affordable dinner plans', url: '/dinner-plans' },
+  sources: [
+    { label: 'DinnerByDesign pricing methodology', url: 'https://dinnerbydesign.app/pricing-methodology' },
+    { label: 'DinnerByDesign recipe methodology', url: 'https://dinnerbydesign.app/recipe-methodology' },
+    { label: 'UK food-cost context', url: 'https://dinnerbydesign.app/food-costs/uk-food-costs-2026' },
+  ],
+  faqs: FIVE_DINNERS_FOR_TWO_UNDER_40.faqs,
+  sections: [{ rawHtml: renderFiveDinnersForTwoArticleSections() }],
+  cta: {
+    title: 'Personalise this dinner plan',
+    copy: 'Use DinnerByDesign to adjust the week around your household, ingredients, budget and preferences.',
+    label: 'Personalise this dinner plan',
+    href: '/signin',
+  },
+  jsonLdGraphItems: [
+    {
+      '@type': 'CollectionPage',
+      '@id': `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}#page`,
+      url: `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}`,
+      name: FIVE_DINNERS_FOR_TWO_UNDER_40.title,
+      description: FIVE_DINNERS_FOR_TWO_UNDER_40.description,
+      datePublished: FIVE_DINNERS_FOR_TWO_UNDER_40.publishedAt,
+      dateModified: FIVE_DINNERS_FOR_TWO_UNDER_40.reviewedAt,
+      isPartOf: { '@type': 'WebSite', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
+      mainEntity: { '@id': `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}#plan` },
+    },
+    {
+      '@type': 'ItemList',
+      '@id': `https://dinnerbydesign.app${FIVE_DINNERS_FOR_TWO_UNDER_40_PATH}#plan`,
+      name: FIVE_DINNERS_FOR_TWO_UNDER_40.shortTitle,
+      numberOfItems: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.length,
+      itemListElement: FIVE_DINNERS_FOR_TWO_UNDER_40.dinners.map((dinner, index) => ({ '@type': 'ListItem', position: index + 1, name: dinner.title })),
+    },
+  ],
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false,
+} satisfies PublicGuideRecord;
+
+export function renderFiveDinnersForTwoInitialHtml() {
+  const plan = FIVE_DINNERS_FOR_TWO_UNDER_40;
+  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml();
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Affordable dinner plans</nav><p>Affordable weekly dinner plan</p><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.description)}</p><p>By ${escapeHtml(plan.editorialOwner)} · Published 18 July 2026 · Content reviewed 19 July 2026 · Prices checked 18 July 2026</p>${renderFiveDinnersForTwoArticleSections()}${disclosureFooter}<p><a href="/signin">Personalise this dinner plan</a></p></main></div>`;
+}
+
+export function renderFiveDinnersForTwoGuideInitialHtml() {
+  return renderPublicGuideInitialHtml(FIVE_DINNERS_FOR_TWO_UNDER_40_GUIDE_RECORD);
 }

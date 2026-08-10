@@ -2,6 +2,12 @@ import {
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
 } from './nineBudgetDinnersWithSavouryPiesGuide';
 import {
+  FIVE_DINNERS_FOR_TWO_UNDER_40_GUIDE_RECORD,
+} from './seoMealPlans';
+import {
+  FAMILY_DINNERS_FOR_FOUR_GUIDE_RECORD,
+} from './familyDinnersForFourPlan';
+import {
   MINCE_BUDGET_DINNERS_GUIDE_RECORD,
 } from './minceBudgetDinnersGuide';
 import {
@@ -86,6 +92,8 @@ import {
 import type { PublicGuideRecord } from './publicGuideModel';
 
 export const PUBLIC_GUIDE_RECORDS = [
+  FIVE_DINNERS_FOR_TWO_UNDER_40_GUIDE_RECORD,
+  FAMILY_DINNERS_FOR_FOUR_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
   MINCE_BUDGET_DINNERS_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD,
