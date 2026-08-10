@@ -52,6 +52,15 @@ import {
 import {
   LOW_COST_DINNERS_GUIDE_RECORD,
 } from './lowCostDinnersGuide';
+import {
+  GROCERY_COST_OPTIONS_GUIDE_RECORD,
+} from './groceryCostOptionsGuide';
+import {
+  GROCERY_COST_PREDICTION_GUIDE_RECORD,
+} from './groceryCostPredictionGuide';
+import {
+  BATCH_COOKING_GUIDE_RECORD,
+} from './seoFoodCostGuides';
 import type { PublicGuideRecord } from './publicGuideModel';
 
 export const PUBLIC_GUIDE_RECORDS = [
@@ -71,6 +80,9 @@ export const PUBLIC_GUIDE_RECORDS = [
   PULSES_BUDGET_GUIDE_RECORD,
   TRAYBAKE_GUIDE_RECORD,
   LOW_COST_DINNERS_GUIDE_RECORD,
+  GROCERY_COST_OPTIONS_GUIDE_RECORD,
+  GROCERY_COST_PREDICTION_GUIDE_RECORD,
+  BATCH_COOKING_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
 ] satisfies PublicGuideRecord[];

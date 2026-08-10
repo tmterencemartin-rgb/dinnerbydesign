@@ -2,9 +2,13 @@ import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
   GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER,
   GROCERY_COST_OPTIONS_DISCLOSURES,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const GROCERY_COST_OPTIONS_GUIDE_PATH = '/food-costs/ways-to-reduce-grocery-costs';
 
@@ -64,53 +68,18 @@ export const GROCERY_COST_STARTING_POINTS = [
   ['Confusing supermarket trips', 'A list generated from scheduled dinners'],
 ] as const;
 
-export function getGroceryCostOptionsGuideJsonLd() {
-  const guide = GROCERY_COST_OPTIONS_GUIDE;
-  const url = `https://dinnerbydesign.app${GROCERY_COST_OPTIONS_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
-}
-
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
-export function renderGroceryCostOptionsGuideInitialHtml() {
-  const guide = GROCERY_COST_OPTIONS_GUIDE;
-  const costDisclosure = renderProgrammaticDisclosuresInitialHtml(GROCERY_COST_OPTIONS_DISCLOSURES.slice(0, 1));
-  const safetyDisclosures = renderProgrammaticDisclosuresInitialHtml(GROCERY_COST_OPTIONS_DISCLOSURES.slice(1, 3));
-  const reviewDisclosure = renderProgrammaticDisclosuresInitialHtml(GROCERY_COST_OPTIONS_DISCLOSURES.slice(3));
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER);
-  const rows = GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml(problem)}</th><td>${escapeHtml(start)}</td></tr>`).join('');
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
+const groceryCostStartingPointRows = () =>
+  GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml(problem)}</th><td>${escapeHtml(start)}</td></tr>`).join('');
 
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 21 July 2026 · Last reviewed 26 July 2026</p><article><section><p>Controlling what you spend on groceries involves more than hunting for the cheapest products on the shelf. It is really about a handful of connected decisions: planning what you will actually cook, choosing realistic quantities, coordinating ingredients across several dinners, using complete packs effectively, avoiding unnecessary waste, and having a purpose for any surplus portions.</p><p>One distinction is worth keeping in mind throughout: the value of the ingredients you use in a dinner is not the same as the cost of the complete pack you had to buy to get them. Many of the techniques below work by closing that gap, making sure more of what you pay for actually gets eaten.</p></section>${costDisclosure}<section><h2>Quick answer</h2><p>The most effective approach is usually a combination of realistic portion planning, coordinated ingredients, flexible lower-cost products and a clear purpose for everything you buy. No single technique works for every household. The best starting point depends on whether your main problem is waste, expensive ingredients, lack of time or unpredictable weekly spending.</p></section>
+export const GROCERY_COST_OPTIONS_GUIDE_SECTIONS: PublicGuideSection[] = [
+  {
+    rawHtml: '<section><p>Controlling what you spend on groceries involves more than hunting for the cheapest products on the shelf. It is really about a handful of connected decisions: planning what you will actually cook, choosing realistic quantities, coordinating ingredients across several dinners, using complete packs effectively, avoiding unnecessary waste, and having a purpose for any surplus portions.</p><p>One distinction is worth keeping in mind throughout: the value of the ingredients you use in a dinner is not the same as the cost of the complete pack you had to buy to get them. Many of the techniques below work by closing that gap, making sure more of what you pay for actually gets eaten.</p></section>',
+    disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES.slice(0, 1),
+  },
+  {
+    rawHtml: `<section><h2>Quick answer</h2><p>The most effective approach is usually a combination of realistic portion planning, coordinated ingredients, flexible lower-cost products and a clear purpose for everything you buy. No single technique works for every household. The best starting point depends on whether your main problem is waste, expensive ingredients, lack of time or unpredictable weekly spending.</p></section>
 <section><h2>1. Plan several dinners together</h2><p>Choosing three or four dinners at a time, built around a budget and a small set of shared ingredients, cuts down on the disconnected purchases that quietly push up a weekly shop. It is worth keeping this flexible rather than rigid — a plan that can absorb a changed evening or a swapped dinner is more useful than one that falls apart the first time your week does not go to schedule.</p><p>Our <a href="/food-costs/uk-food-costs-2026">guide to UK food costs</a> looks at where grocery spending typically goes in more detail. The <a href="/dinner-plans/5-affordable-family-dinners-for-four">five-dinner family plan using one coordinated basket</a> shows complete-pack and ingredient-used costs for four people, while <a href="/dinner-plans/5-dinners-for-2-under-40">5 dinners for 2 under £40</a> provides a smaller-household example. The guide to <a href="/food-costs/five-dinners-same-ingredients">five dinners using the same ingredients</a> explains the underlying approach.</p></section>
 <section><h2>2. Plan realistic portions</h2><p>Portion planning is not about automatically serving less — it is about deciding how many people a dinner needs to serve, and what any extra portions are for. This matters at the checkout too: using only part of a pack does not reduce what you paid for it unless the rest gets used later, whether that is another dinner, a lunch, or the freezer.</p><p>Household size affects this more than anything else. Our guide to <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a> covers the general principles, and <a href="/food-costs/cooking-for-one-without-waste">cooking for one without waste</a> looks specifically at adjusting for a smaller household.</p></section>
 <section><h2>3. Batch-cook with a purpose</h2><p>Cooking a larger quantity only helps when every portion has somewhere to go: another dinner, the fridge for prompt use, the freezer for later, or a flexible base you can finish differently each time. Batch cooking without a plan for the extra is not a saving — it is just a bigger version of the same risk.</p><p>Our guide to <a href="/food-costs/batch-cooking-on-a-budget">batch cooking on a budget</a> looks at when it helps and when it does not.</p></section>
@@ -120,10 +89,46 @@ export function renderGroceryCostOptionsGuideInitialHtml() {
 <section><h2>7. Decide when fresh or frozen is more practical</h2><p>Fresh and frozen each suit different dinners — shelf life, convenience, texture, preparation and how likely something is to go to waste all vary by ingredient and how you are planning to cook it. Neither format is always the better choice; it depends on how soon the ingredient will be used and how you intend to cook it. Our <a href="/food-costs/fresh-or-frozen">fresh or frozen guide</a> covers this in more detail.</p></section>
 <section><h2>8. Use seasonal and flexible dinner formats</h2><p>Stews, tray bakes, soups and adaptable sauces are naturally good at absorbing whatever vegetables are available, already in the fridge, or simply need using. <a href="/food-costs/summer-stews-seasonal-vegetables">Summer stews</a> are a good example of this — light, quick-cooking dinners that flex around what you have without feeling like an afterthought.</p></section>
 <section><h2>9. Give complete packs more than one purpose</h2><p>A single ingredient bought for one dinner can often do more than one job across the week. Peppers might go into a spiced rice dish, a stew and a tray bake; a tub of yoghurt into a sauce one night and a dressing another; a bag of spinach into a pasta dish and a curry-inspired dinner; a plainly cooked batch of chicken finished with a different set of flavours each time. This is not about building a rigid weekly menu. It is about noticing where one purchase can quietly cover several dinners. Our guide to <a href="/food-costs/five-dinners-same-ingredients">planning five dinners around shared ingredients and complete packs</a> shows the approach in practice.</p></section>
-<section><h2>10. Start with ingredients already available</h2><p>Before choosing what to cook, it is worth checking the cupboard, fridge and freezer first. Prioritise opened products and ingredients that need using soon, while continuing to follow use-by dates and storage instructions.</p></section>${safetyDisclosures}<section><h2>11. Keep flexible fallback dinners available</h2><p>A small collection of dependable dinners — built from eggs, rice, pasta, frozen vegetables, pulses or tinned tomatoes — reduces the chance of an expensive last-minute decision on a night when nothing has been planned. These do not have to be an afterthought: a well-seasoned baked egg dish or a good tomato pasta can be just as appetising as anything else in the week&apos;s plan.</p></section>
+<section><h2>10. Start with ingredients already available</h2><p>Before choosing what to cook, it is worth checking the cupboard, fridge and freezer first. Prioritise opened products and ingredients that need using soon, while continuing to follow use-by dates and storage instructions.</p></section>`,
+    disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES.slice(1, 3),
+  },
+  {
+    rawHtml: `<section><h2>11. Keep flexible fallback dinners available</h2><p>A small collection of dependable dinners — built from eggs, rice, pasta, frozen vegetables, pulses or tinned tomatoes — reduces the chance of an expensive last-minute decision on a night when nothing has been planned. These do not have to be an afterthought: a well-seasoned baked egg dish or a good tomato pasta can be just as appetising as anything else in the week&apos;s plan.</p></section>
 <section><h2>12. Build the shopping list from scheduled dinners</h2><p>A shopping list that follows your dinner plan, rather than the other way around, naturally accounts for household servings, ingredients shared between dinners, complete pack sizes, and what is already available at home. This is where planning, portioning and pack awareness come together into one practical step, and it is the point where DinnerByDesign can help most directly — generating a shopping list from the dinners you have actually scheduled.</p></section>
-<section><h2>Where should you start?</h2><table><thead><tr><th>If the main problem is...</th><th>A useful place to start</th></tr></thead><tbody>${rows}</tbody></table></section>
+<section><h2>Where should you start?</h2><table><thead><tr><th>If the main problem is...</th><th>A useful place to start</th></tr></thead><tbody>${groceryCostStartingPointRows()}</tbody></table></section>
 <section><h2>Bringing it together</h2><p>These techniques work best in combination, and you do not need to adopt all twelve at once.</p><p>Portion planning becomes more useful when dinners share ingredients. Batch cooking works better when every portion has a purpose. Fresh and frozen choices become easier when the week is already planned. Choose the combination that gives your household greater control.</p></section>
-<section><h2>Frequently asked questions</h2>${faqs}</section>
-<section><h2>Sources and further reading</h2><ul>${sources}</ul></section>${reviewDisclosure}</article>${footer}<section><h2>Put these ideas into practice</h2><p>Build a week of dinners around your household, budget and available time, then generate a shopping list from the dinners you schedule.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+`,
+    disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES.slice(3),
+  },
+];
+
+export const GROCERY_COST_OPTIONS_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'ways-to-reduce-grocery-costs',
+  slug: 'ways-to-reduce-grocery-costs',
+  path: GROCERY_COST_OPTIONS_GUIDE_PATH,
+  canonicalPath: GROCERY_COST_OPTIONS_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'price-sensitive',
+  ...GROCERY_COST_OPTIONS_GUIDE,
+  nextReviewAt: '2027-07-26',
+  metaDescription: GROCERY_COST_OPTIONS_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES,
+  disclosureFooter: GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER,
+  sections: GROCERY_COST_OPTIONS_GUIDE_SECTIONS,
+  cta: {
+    title: 'Put these ideas into practice',
+    copy: 'Build a week of dinners around your household, budget and available time, then generate a shopping list from the dinners you schedule.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+};
+
+export function getGroceryCostOptionsGuideJsonLd() {
+  return getPublicGuideJsonLd(GROCERY_COST_OPTIONS_GUIDE_RECORD);
+}
+
+export function renderGroceryCostOptionsGuideInitialHtml() {
+  return renderPublicGuideInitialHtml(GROCERY_COST_OPTIONS_GUIDE_RECORD);
 }

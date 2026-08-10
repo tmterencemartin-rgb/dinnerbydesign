@@ -2,9 +2,13 @@ import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
   GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER,
   GROCERY_COST_PREDICTION_DISCLOSURES,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const GROCERY_COST_PREDICTION_GUIDE_PATH = '/food-costs/why-grocery-costs-are-hard-to-predict';
 
@@ -67,42 +71,39 @@ export const GROCERY_COST_PREDICTION_AFTER_SAFETY_HTML = `<section><h2>Why estim
 <section><h2>How DinnerByDesign approaches this</h2><p>Costs in DinnerByDesign are presented as estimates, with the assumptions behind them kept visible rather than hidden. Ingredient value is shown separately from complete-pack cost, and household servings are taken into account. Ingredients can be shared across the dinners you schedule, and shopping-list estimates can account for what you've already got. Price information carries a review date, and pack sizes or product availability can still change the final total — the app doesn't promise an exact checkout figure, for the same reasons set out above. Our <a href="/pricing-methodology">pricing methodology</a> explains the underlying approach in more detail.</p></section>
 <section><h2>Verdict</h2><p><em>Households can't know every final product, price, pack size or substitution when they set a food budget. That makes predicting the checkout total exactly very difficult, even after a carefully planned week. The answer isn't to abandon budgeting — it's to use transparent estimates, plan several dinners together, account for complete packs, and leave room for ordinary changes. Better information can't remove every uncertainty, but it can give you considerably more control.</em></p></section>`;
 
+export const GROCERY_COST_PREDICTION_GUIDE_SECTIONS: PublicGuideSection[] = [
+  { rawHtml: GROCERY_COST_PREDICTION_OPENING_HTML, disclosureItems: GROCERY_COST_PREDICTION_DISCLOSURES.slice(0, 1) },
+  { rawHtml: GROCERY_COST_PREDICTION_BEFORE_SAFETY_HTML, disclosureItems: GROCERY_COST_PREDICTION_DISCLOSURES.slice(1) },
+  { rawHtml: GROCERY_COST_PREDICTION_AFTER_SAFETY_HTML },
+];
+
+export const GROCERY_COST_PREDICTION_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'why-grocery-costs-are-hard-to-predict',
+  slug: 'why-grocery-costs-are-hard-to-predict',
+  path: GROCERY_COST_PREDICTION_GUIDE_PATH,
+  canonicalPath: GROCERY_COST_PREDICTION_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'price-sensitive',
+  ...GROCERY_COST_PREDICTION_GUIDE,
+  nextReviewAt: '2027-07-21',
+  metaDescription: GROCERY_COST_PREDICTION_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: GROCERY_COST_PREDICTION_DISCLOSURES,
+  disclosureFooter: GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER,
+  sections: GROCERY_COST_PREDICTION_GUIDE_SECTIONS,
+  cta: {
+    title: 'Plan with greater visibility',
+    copy: 'Build a week around your household, budget and available time, then see how complete packs, shared ingredients and scheduled dinners affect your shopping list.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+};
+
 export function getGroceryCostPredictionGuideJsonLd() {
-  const guide = GROCERY_COST_PREDICTION_GUIDE;
-  const url = `https://dinnerbydesign.app${GROCERY_COST_PREDICTION_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article', '@id': `${url}#article`, headline: guide.title, description: guide.description,
-        datePublished: guide.publishedAt, dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url, citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })),
-      },
-      {
-        '@type': 'BreadcrumbList', itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(GROCERY_COST_PREDICTION_GUIDE_RECORD);
 }
 
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
-
 export function renderGroceryCostPredictionGuideInitialHtml() {
-  const guide = GROCERY_COST_PREDICTION_GUIDE;
-  const costDisclosure = renderProgrammaticDisclosuresInitialHtml(GROCERY_COST_PREDICTION_DISCLOSURES.slice(0, 1));
-  const safetyDisclosures = renderProgrammaticDisclosuresInitialHtml(GROCERY_COST_PREDICTION_DISCLOSURES.slice(1));
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 21 July 2026 · Last reviewed 21 July 2026</p><article>${GROCERY_COST_PREDICTION_OPENING_HTML}${costDisclosure}${GROCERY_COST_PREDICTION_BEFORE_SAFETY_HTML}${safetyDisclosures}${GROCERY_COST_PREDICTION_AFTER_SAFETY_HTML}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section></article>${footer}<section><h2>Plan with greater visibility</h2><p>Build a week around your household, budget and available time, then see how complete packs, shared ingredients and scheduled dinners affect your shopping list.</p><p><a href="/signin">Plan my week</a> · <a href="/guides">Browse all guides</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(GROCERY_COST_PREDICTION_GUIDE_RECORD);
 }

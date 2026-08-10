@@ -26,7 +26,7 @@ describe('grocery-cost prediction guide', () => {
     expect(html).toContain('How to read cost estimates');
     expect(html).toContain('Storage note');
     expect(html).toContain('Frequently asked questions');
-    expect(html).toContain('Sources and further reading');
+    expect(html).toContain('Sources');
     expect(html).toContain('Plan with greater visibility');
     expect(html).toContain('Plan my week');
     expect(html).not.toContain('Questions for the editor');

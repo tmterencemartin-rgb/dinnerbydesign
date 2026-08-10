@@ -13,8 +13,6 @@ import {
   renderFamilyDinnersForFourInitialHtml,
 } from '../src/content/familyDinnersForFourPlan';
 import {
-  BATCH_COOKING_GUIDE,
-  BATCH_COOKING_GUIDE_PATH,
   COOKING_FOR_ONE_GUIDE,
   COOKING_FOR_ONE_PATH,
   FRESH_OR_FROZEN_GUIDE,
@@ -29,7 +27,6 @@ import {
   SUMMER_STEWS_GUIDE_PATH,
   UK_FOOD_COSTS_2026,
   UK_FOOD_COSTS_2026_PATH,
-  getBatchCookingGuideJsonLd,
   getCookingForOneJsonLd,
   getFreshOrFrozenGuideJsonLd,
   getMediterraneanAffordableCookingJsonLd,
@@ -44,20 +41,7 @@ import {
   renderPortionPlanningGuideInitialHtml,
   renderSummerStewsGuideInitialHtml,
   renderUkFoodCosts2026InitialHtml,
-  renderBatchCookingGuideInitialHtml,
 } from '../src/content/seoFoodCostGuides';
-import {
-  GROCERY_COST_OPTIONS_GUIDE,
-  GROCERY_COST_OPTIONS_GUIDE_PATH,
-  getGroceryCostOptionsGuideJsonLd,
-  renderGroceryCostOptionsGuideInitialHtml,
-} from '../src/content/groceryCostOptionsGuide';
-import {
-  GROCERY_COST_PREDICTION_GUIDE,
-  GROCERY_COST_PREDICTION_GUIDE_PATH,
-  getGroceryCostPredictionGuideJsonLd,
-  renderGroceryCostPredictionGuideInitialHtml,
-} from '../src/content/groceryCostPredictionGuide';
 import {
   CHEAPER_MEAT_CUTS_GUIDE,
   CHEAPER_MEAT_CUTS_GUIDE_PATH,
@@ -332,66 +316,6 @@ const freshOrFrozenOutputDir = path.join(distRoot, FRESH_OR_FROZEN_GUIDE_PATH.sl
 await fs.mkdir(freshOrFrozenOutputDir, { recursive: true });
 await fs.writeFile(path.join(freshOrFrozenOutputDir, 'index.html'), freshOrFrozenHtml, 'utf8');
 console.log(`Generated ${FRESH_OR_FROZEN_GUIDE_PATH}/index.html`);
-
-const batchCookingCanonicalUrl = `https://dinnerbydesign.app${BATCH_COOKING_GUIDE_PATH}`;
-let batchCookingHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${BATCH_COOKING_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${BATCH_COOKING_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${batchCookingCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${batchCookingCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${BATCH_COOKING_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${BATCH_COOKING_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${BATCH_COOKING_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${BATCH_COOKING_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderBatchCookingGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getBatchCookingGuideJsonLd())}</script>\n</head>`);
-if (!batchCookingHtml.includes(`<h1>${BATCH_COOKING_GUIDE.title.replace("'", '&#039;')}</h1>`) || !batchCookingHtml.includes(`href="${batchCookingCanonicalUrl}"`)) throw new Error('Batch-cooking guide generation failed its content or canonical check.');
-const batchCookingOutputDir = path.join(distRoot, BATCH_COOKING_GUIDE_PATH.slice(1));
-await fs.mkdir(batchCookingOutputDir, { recursive: true });
-await fs.writeFile(path.join(batchCookingOutputDir, 'index.html'), batchCookingHtml, 'utf8');
-console.log(`Generated ${BATCH_COOKING_GUIDE_PATH}/index.html`);
-
-const groceryCostOptionsCanonicalUrl = `https://dinnerbydesign.app${GROCERY_COST_OPTIONS_GUIDE_PATH}`;
-let groceryCostOptionsHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${GROCERY_COST_OPTIONS_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${GROCERY_COST_OPTIONS_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${groceryCostOptionsCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${groceryCostOptionsCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${GROCERY_COST_OPTIONS_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${GROCERY_COST_OPTIONS_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${GROCERY_COST_OPTIONS_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${GROCERY_COST_OPTIONS_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderGroceryCostOptionsGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getGroceryCostOptionsGuideJsonLd())}</script>\n</head>`);
-if (!groceryCostOptionsHtml.includes(`<h1>${GROCERY_COST_OPTIONS_GUIDE.title}</h1>`) || !groceryCostOptionsHtml.includes(`href="${groceryCostOptionsCanonicalUrl}"`)) throw new Error('Grocery-cost options guide generation failed its content or canonical check.');
-const groceryCostOptionsOutputDir = path.join(distRoot, GROCERY_COST_OPTIONS_GUIDE_PATH.slice(1));
-await fs.mkdir(groceryCostOptionsOutputDir, { recursive: true });
-await fs.writeFile(path.join(groceryCostOptionsOutputDir, 'index.html'), groceryCostOptionsHtml, 'utf8');
-console.log(`Generated ${GROCERY_COST_OPTIONS_GUIDE_PATH}/index.html`);
-
-const groceryCostPredictionCanonicalUrl = `https://dinnerbydesign.app${GROCERY_COST_PREDICTION_GUIDE_PATH}`;
-let groceryCostPredictionHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${GROCERY_COST_PREDICTION_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${GROCERY_COST_PREDICTION_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${groceryCostPredictionCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${groceryCostPredictionCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${GROCERY_COST_PREDICTION_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${GROCERY_COST_PREDICTION_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${GROCERY_COST_PREDICTION_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${GROCERY_COST_PREDICTION_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderGroceryCostPredictionGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getGroceryCostPredictionGuideJsonLd())}</script>\n</head>`);
-if (!groceryCostPredictionHtml.includes(`<h1>${GROCERY_COST_PREDICTION_GUIDE.title}</h1>`) || !groceryCostPredictionHtml.includes(`href="${groceryCostPredictionCanonicalUrl}"`)) throw new Error('Grocery-cost prediction guide generation failed its content or canonical check.');
-const groceryCostPredictionOutputDir = path.join(distRoot, GROCERY_COST_PREDICTION_GUIDE_PATH.slice(1));
-await fs.mkdir(groceryCostPredictionOutputDir, { recursive: true });
-await fs.writeFile(path.join(groceryCostPredictionOutputDir, 'index.html'), groceryCostPredictionHtml, 'utf8');
-console.log(`Generated ${GROCERY_COST_PREDICTION_GUIDE_PATH}/index.html`);
 
 const cheaperMeatCutsCanonicalUrl = `https://dinnerbydesign.app${CHEAPER_MEAT_CUTS_GUIDE_PATH}`;
 let cheaperMeatCutsHtml = sourceHtml

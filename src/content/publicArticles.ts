@@ -1,8 +1,6 @@
-import { BATCH_COOKING_GUIDE, BATCH_COOKING_GUIDE_PATH, COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
+import { COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH } from './familyDinnersForFourPlan';
-import { GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH } from './groceryCostOptionsGuide';
-import { GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH } from './groceryCostPredictionGuide';
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
 import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './sharedIngredientsGuide';
 import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
@@ -99,27 +97,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: CHEAPER_MEAT_CUTS_GUIDE.indexingStatus, publishedAt: CHEAPER_MEAT_CUTS_GUIDE.publishedAt,
     reviewedAt: CHEAPER_MEAT_CUTS_GUIDE.reviewedAt, contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
     internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks, disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: GROCERY_COST_PREDICTION_GUIDE.title, path: GROCERY_COST_PREDICTION_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: GROCERY_COST_PREDICTION_GUIDE.pageFamily, primarySearchIntent: GROCERY_COST_PREDICTION_GUIDE.primarySearchIntent,
-    indexingStatus: GROCERY_COST_PREDICTION_GUIDE.indexingStatus, publishedAt: GROCERY_COST_PREDICTION_GUIDE.publishedAt,
-    reviewedAt: GROCERY_COST_PREDICTION_GUIDE.reviewedAt, contentReviewedAt: GROCERY_COST_PREDICTION_GUIDE.contentReviewedAt,
-    internalLinks: GROCERY_COST_PREDICTION_GUIDE.internalLinks, disclosures: GROCERY_COST_PREDICTION_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: GROCERY_COST_OPTIONS_GUIDE.title, path: GROCERY_COST_OPTIONS_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: GROCERY_COST_OPTIONS_GUIDE.pageFamily, primarySearchIntent: GROCERY_COST_OPTIONS_GUIDE.primarySearchIntent,
-    indexingStatus: GROCERY_COST_OPTIONS_GUIDE.indexingStatus, publishedAt: GROCERY_COST_OPTIONS_GUIDE.publishedAt,
-    reviewedAt: GROCERY_COST_OPTIONS_GUIDE.reviewedAt, contentReviewedAt: GROCERY_COST_OPTIONS_GUIDE.contentReviewedAt,
-    internalLinks: GROCERY_COST_OPTIONS_GUIDE.internalLinks, disclosures: GROCERY_COST_OPTIONS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: BATCH_COOKING_GUIDE.title, path: BATCH_COOKING_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: BATCH_COOKING_GUIDE.pageFamily, primarySearchIntent: BATCH_COOKING_GUIDE.primarySearchIntent,
-    indexingStatus: BATCH_COOKING_GUIDE.indexingStatus, publishedAt: BATCH_COOKING_GUIDE.publishedAt,
-    reviewedAt: BATCH_COOKING_GUIDE.reviewedAt, contentReviewedAt: BATCH_COOKING_GUIDE.contentReviewedAt,
-    internalLinks: BATCH_COOKING_GUIDE.internalLinks, disclosures: BATCH_COOKING_GUIDE.disclosures, status: 'published',
   },
   {
     title: FRESH_OR_FROZEN_GUIDE.title, path: FRESH_OR_FROZEN_GUIDE_PATH, category: 'Food cost guide',

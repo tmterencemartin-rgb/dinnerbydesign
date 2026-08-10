@@ -18963,8 +18963,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml7;
-    function escapeHtml7(string) {
+    module2.exports = escapeHtml8;
+    function escapeHtml8(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -19095,13 +19095,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml7 = require_escape_html();
+    var escapeHtml8 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message2) {
-      var body = escapeHtml7(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml8(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -23043,7 +23043,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml7 = require_escape_html();
+    var escapeHtml8 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -23096,7 +23096,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml7(msg));
+      var doc = createHtmlDocument("Error", escapeHtml8(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -23196,7 +23196,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml7(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml8(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23600,7 +23600,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml7 = require_escape_html();
+    var escapeHtml8 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23939,7 +23939,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml7(address);
+          var u = escapeHtml8(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -24067,7 +24067,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml7 = require_escape_html();
+    var escapeHtml8 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -24153,7 +24153,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml7(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml8(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -183636,6 +183636,62 @@ var FIVE_DINNERS_PRICE_DISCLOSURES = [
     body: "This plan provides five dinners for two people. Appetite, portion size and any additional sides may change the quantity required."
   }
 ];
+var BATCH_COOKING_DISCLOSURES = [
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Standard pasta, tortillas and flatbreads commonly contain wheat. Products and alternative versions vary, so check labels for allergens and dietary suitability."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow current Food Standards Agency guidance on cooling, refrigerating, freezing and reheating cooked food, including the specific guidance on cooked rice."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited sources for later updates."
+  }
+];
+var GROCERY_COST_OPTIONS_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "A note on cost",
+    body: "Grocery costs vary with household needs, products, retailers, pack sizes and location. These techniques can improve planning and ingredient use, but none of them guarantees a specific saving."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and product labels",
+    body: "Check product labels for allergens, storage instructions and suitability."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Food safety",
+    body: "Follow current Food Standards Agency guidance when cooling, storing, freezing or reheating food."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited sources for later updates."
+  }
+];
+var GROCERY_COST_PREDICTION_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "How to read cost estimates",
+    body: "Prices and availability vary by retailer, location, product and date. Estimates are not guaranteed checkout totals, and complete-pack cost may exceed the value of the ingredients used. Promotional and loyalty prices may also have eligibility conditions."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage note",
+    body: "Follow current Food Standards Agency guidance when chilling, freezing, defrosting or reheating food."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited source for later updates."
+  }
+];
 var LOW_COST_DINNERS_DISCLOSURES = [
   {
     key: "price_comparison",
@@ -183777,6 +183833,29 @@ var PROGRAMMATIC_DISCLOSURE_FOOTER = {
   links: [
     { href: "/pricing-methodology", label: "Pricing methodology" },
     { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var BATCH_COOKING_DISCLOSURE_FOOTER = {
+  body: "Batch-cooking results vary with ingredients, portion sizes, available storage and how every portion is used. Check product labels and follow current food-safety guidance.",
+  links: [
+    { href: "/food-safety", label: "Storage and cooking safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER = {
+  body: "These are practical starting points rather than guaranteed savings. Grocery costs, pack sizes, ingredient needs and storage options vary by household.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" }
+  ]
+};
+var GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER = {
+  body: "Grocery estimates can improve visibility and control, but products, prices, pack sizes, substitutions and ingredients already at home vary by household and shop.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" }
   ]
 };
 var LOW_COST_DINNERS_DISCLOSURE_FOOTER = {
@@ -184533,95 +184612,30 @@ var BATCH_COOKING_GUIDE = {
     { question: "How should cooked portions be labelled and stored?", answer: "Label each portion with the dish and date. Refrigerate what you will eat within 48 hours and freeze the rest promptly. Cooked rice should be refrigerated for no more than a day before reheating, or frozen sooner." }
   ]
 };
-
-// src/content/groceryCostOptionsGuide.ts
-var GROCERY_COST_OPTIONS_GUIDE_PATH = "/food-costs/ways-to-reduce-grocery-costs";
-var GROCERY_COST_OPTIONS_GUIDE = {
-  title: "12 practical ways to reduce and manage your grocery costs",
-  seoTitle: "12 ways to manage grocery costs | DinnerByDesign",
-  description: "Explore 12 practical ways to manage grocery costs, use ingredients more effectively and reduce avoidable food waste.",
-  publishedAt: "2026-07-21",
-  reviewedAt: "2026-07-26",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Find practical ways to manage grocery spending, use ingredients effectively and reduce avoidable food waste",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-26",
-  editorialNotes: "Cornerstone guide incorporating the former low-cost cooking-techniques material. Keep its methods aligned with the detailed guides and recheck cited sources whenever the review date changes.",
-  internalLinks: [
-    "/guides",
-    "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses",
-    "/food-costs/uk-food-costs-2026",
-    "/dinner-plans/5-affordable-family-dinners-for-four",
-    "/dinner-plans/5-dinners-for-2-under-40",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-costs/cooking-for-one-without-waste",
-    "/food-costs/batch-cooking-on-a-budget",
-    "/food-costs/mediterranean-inspired-affordable-cooking",
-    "/food-costs/cooking-with-cheaper-cuts-of-meat",
-    "/food-costs/cooking-with-offal-on-a-budget",
-    "/food-costs/fresh-or-frozen",
-    "/food-costs/summer-stews-seasonal-vegetables",
-    "/food-costs/five-dinners-same-ingredients"
-  ],
-  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
-  sources: [
-    { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" },
-    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely" },
-    { label: "UNESCO: Koshary, daily-life dish and associated practices", url: "https://ich.unesco.org/en/RL/koshary-daily-life-dish-and-practices-associated-with-it-02278" },
-    { label: "Visit Tuscany: Ribollita", url: "https://www.visittuscany.com/en/recipes/reboiled-soup-a.k.a.-ribollita-recipe/" }
-  ],
-  faqs: [
-    { question: "What is the best way to start reducing grocery costs?", answer: "Start with whichever problem affects you most \u2014 waste, expensive ingredients, lack of time or unpredictable spending \u2014 and use the comparison table to find the matching technique, rather than trying to change everything at once." },
-    { question: "Does cooking from scratch always cost less?", answer: "Not necessarily. It often helps, but the saving depends on using the ingredients you buy, choosing suitable quantities and not letting complete packs go to waste. Cooking from scratch with a lot of leftover, unused ingredients can cost more than a simpler shop." },
-    { question: "How can I reduce waste when supermarkets sell complete packs?", answer: "Plan dinners that share ingredients, so a partly used pack has a second destination already in mind, and keep a few flexible fallback dinners ready for anything left over that does not fit a specific plan." },
-    { question: "Is batch cooking always economical?", answer: "No. It only helps when every portion has a purpose. A large batch cooked without a plan for the extra can end up wasted rather than saving anything." },
-    { question: "Are frozen ingredients always cheaper than fresh?", answer: "No. Prices vary by product, retailer and season. Frozen ingredients can help reduce waste because you use only what you need, but that is a different benefit from being guaranteed cheaper." },
-    { question: "How can DinnerByDesign help manage grocery spending?", answer: "You can build a week of dinners around your household, budget and available time, then generate a shopping list from the dinners you have scheduled \u2014 bringing planning, portioning and pack awareness together in one place." }
-  ]
-};
-
-// src/content/groceryCostPredictionGuide.ts
-var GROCERY_COST_PREDICTION_GUIDE_PATH = "/food-costs/why-grocery-costs-are-hard-to-predict";
-var GROCERY_COST_PREDICTION_GUIDE = {
-  title: "Why is it so difficult to budget accurately for food?",
-  seoTitle: "Why grocery costs are so difficult to predict accurately | DinnerByDesign",
-  description: "Why an exact grocery total is so hard to predict, and how transparent estimates and better planning can still give you more control.",
-  publishedAt: "2026-07-21",
-  reviewedAt: "2026-07-21",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Understand why grocery costs are difficult to predict and how practical budgeting can still provide greater control",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-21",
-  editorialNotes: "Transparency guide about household budgeting uncertainty. Keep the distinction between ingredient value, complete-pack cost and additional shopping cost aligned with the pricing methodology.",
-  internalLinks: [
-    "/pricing-methodology",
-    "/food-costs/ways-to-reduce-grocery-costs",
-    "/food-costs/uk-food-costs-2026",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-costs/batch-cooking-on-a-budget",
-    "/food-costs/fresh-or-frozen",
-    "/dinner-plans/5-dinners-for-2-under-40",
-    "/guides"
-  ],
-  disclosures: ["price_comparison", "storage_and_cooking", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
-      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
-    }
-  ],
-  faqs: [
-    { question: "Why is my supermarket total higher than the combined recipe costs?", answer: "Usually because you are paying for complete packs, not just the quantities each recipe uses, and because prices, promotions or availability may have shifted since the estimate was made." },
-    { question: "Can I predict my grocery spending exactly?", answer: "Not reliably. Too many details \u2014 stock, pack sizes, promotions and substitutions \u2014 are unknown when you plan. You can get a realistic estimate, not a guaranteed figure." },
-    { question: "What is the difference between ingredient value and complete-pack cost?", answer: "Ingredient value is what the quantity used in a dinner is roughly worth. Complete-pack cost is what you actually pay for the pack it came from, which is often more." },
-    { question: "Should cupboard ingredients be treated as free?", answer: "Not quite. They do not add to this week\u2019s shop, but they will need replacing eventually, so they still carry a longer-term cost." },
-    { question: "Why do supermarket substitutions affect a weekly budget?", answer: "A substitution \u2014 a different brand, a larger pack, fresh instead of frozen \u2014 can change both what you pay now and what is left over for later in the week." },
-    { question: "How much flexibility should I leave in a food budget?", answer: "Enough to absorb an ordinary change of plan \u2014 a postponed dinner, an extra guest or a rushed evening \u2014 without the whole week\u2019s budget falling apart." },
-    { question: "Are grocery cost estimates still useful?", answer: "Yes. They help you compare dinners, spot expensive ingredients and coordinate a week, even though they cannot guarantee the final total." },
-    { question: "How does DinnerByDesign help households manage spending?", answer: "By showing ingredient value and complete-pack cost separately, accounting for servings and shared ingredients, and being clear that every figure is an estimate rather than a guarantee." }
-  ]
+var BATCH_COOKING_GUIDE_SECTIONS = [
+  { rawHtml: `<section><h2>Quick answer</h2><p>Batch cooking can reduce what you spend on food, but quantity alone does not create a saving. Cooking a very large amount only helps if the portions are suitable, someone actually wants to eat them again, and the extra does not just disappear into the freezer. The saving comes from how the batch is planned and used, not from the size of the pot. A large batch cooked without a plan for every portion can end up costing more than cooking smaller amounts more often.</p></section><section><h2>Where the economies come from</h2><ul><li>Using complete packs of ingredients more effectively, rather than buying more than one dinner needs and using only part of it.</li><li>Buying fewer small or partially used packs across the week, since one larger cook can draw on a single set of ingredients.</li><li>Spreading preparation across several dinners, so the effort of chopping, browning or making a sauce base happens once.</li><li>Making planned use of leftovers, rather than leaving them to go off unnoticed.</li><li>Reducing reliance on expensive last-minute options \u2014 a takeaway or convenience dinner bought because nothing else was ready.</li><li>Portioning food before serving or freezing, which helps prevent oversized servings and forgotten containers.</li><li>Reusing one cooked base in different ways, so variety does not depend on buying new ingredients each time.</li></ul></section><section><h2>What makes a good batch-cooked dish</h2><p>Not every dish is worth cooking in bulk. A good candidate stores well without separating or turning watery, divides easily into individual portions, reheats successfully without drying out or losing texture, and still tastes appealing on the third or fourth time round, not just the first. Dishes built around a sauce, stew or braise tend to fit this better than anything meant to be served freshly assembled, such as a salad or a dish that relies on a just-cooked crisp texture.</p></section><section><h2>Batch cooking does not have to mean repetition</h2><p>The dinner that gets tiresome is usually the one eaten in exactly the same form four times in a row. The more useful approach is to batch-cook a base \u2014 a sauce, a cooked protein, a pot of roasted vegetables \u2014 and finish it differently each time with a different grain, spice, vegetable or side. The cooking happens once; what you eat still changes.</p></section><section><h2>Useful batch-cooking bases</h2><ul><li>Tomato and vegetable sauce</li><li>Cooked mince and vegetables</li><li>Lentil and tomato base</li><li>Roasted vegetables</li><li>Bean or chickpea stew</li><li>Cooked chicken, prepared plainly so it can go in different directions \u2014 refrigerate portions you will use within a day or two, and freeze the rest</li></ul></section><section><h2>Turning one base into different dinners</h2><p>A tomato-and-vegetable base is a good example of how far one batch can stretch. The same pot can become a herby pasta sauce one night, a smoky bean stew with tinned chickpeas or cannellini beans and a spoonful of smoked paprika another night, a gently spiced topping for a baked potato later in the week, or the sauce underneath a tray bake with whatever vegetables need using. The base does the work; a different grain, protein, spice or side changes what is actually on the plate.</p><p>A batch of cooked mince works the same way \u2014 stirred through pasta one night, spooned into a jacket potato or wrapped in a tortilla another, or added to rice with a different set of spices later in the week. A lentil and tomato base can move from a simple stew, to a sauce under a baked vegetable, to a filling alongside flatbread, without needing a fresh set of ingredients each time. If you plan to use a base later rather than within the next day or two, freeze the later portions and defrost them safely in the fridge rather than leaving them refrigerated for the whole week.</p></section><section><h2>Portioning before storage</h2><p>Dividing a batch into individual or dinner-sized portions as soon as it is cool enough to store, rather than putting the whole pot straight into one large container, makes a real difference. It is much easier to take out exactly what a dinner needs, rather than defrosting more than you intend to eat because the portions are not already the right size. It also makes forgotten containers less likely, since a labelled, sensibly sized portion is easier to plan around than an anonymous large block.</p></section><section><h2>Fridge and freezer planning</h2><p>Current Food Standards Agency guidance is to cool cooked food and refrigerate it within two hours, eat refrigerated leftovers within 48 hours or freeze them, and reheat food only once, until it is steaming hot all the way through. Freeze portions promptly once they have cooled, and label each one with the dish and date, so nothing sits unidentified at the back of the freezer until it is no longer worth eating.</p><p>Cooked rice needs particular care: cool it quickly, keep it refrigerated for no more than one day before reheating, reheat it only once, and make sure it is steaming hot throughout. If a batch of rice will not be used that quickly, freeze it promptly instead.</p></section><section><h2>When batch cooking can cost more</h2><ul><li>Overbuying ingredients because a recipe is being scaled up, rather than checking what the household will actually get through.</li><li>Adding too many special or one-off ingredients to a large batch, which increases the cost of the whole pot rather than just one dinner.</li><li>Freezing more than a household's freezer can reasonably hold well, leading to poor storage conditions or food pushed to the back and forgotten.</li><li>Preparing more portions than the household actually wants to eat, so some are thrown away rather than used.</li></ul><p>In each case, the batch itself is not the problem \u2014 the absence of a plan for every portion is.</p></section><section><h2>How DinnerByDesign can help</h2><p>Use the Batch-friendly filter to find dinners that suit cooking in bulk, and Plan my week to schedule how each portion will be used across the week \u2014 including which portions are eaten from the fridge in the next day or two, and which are frozen for later \u2014 rather than cooking a large batch without a plan for all of it. Shared-ingredient planning and the generated shopping list can help you buy complete packs with a specific use for all the ingredients, rather than ending up with a partially used ingredient left over.</p></section><section><h2>Related guidance</h2><p><a href="/food-costs/portion-planning-and-food-waste">Plan portions and reduce food waste</a>, <a href="/food-costs/ways-to-reduce-grocery-costs">explore practical ways to manage grocery costs</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section>` }
+];
+var BATCH_COOKING_GUIDE_RECORD = {
+  id: "batch-cooking-on-a-budget",
+  slug: "batch-cooking-on-a-budget",
+  path: BATCH_COOKING_GUIDE_PATH,
+  canonicalPath: BATCH_COOKING_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...BATCH_COOKING_GUIDE,
+  nextReviewAt: "2027-07-21",
+  metaDescription: BATCH_COOKING_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: BATCH_COOKING_DISCLOSURES,
+  disclosureFooter: BATCH_COOKING_DISCLOSURE_FOOTER,
+  sections: BATCH_COOKING_GUIDE_SECTIONS,
+  cta: {
+    title: "Plan every portion",
+    copy: "Find batch-friendly dinners and decide how each portion will be used.",
+    label: "Plan my week",
+    href: "/signin"
+  }
 };
 
 // src/content/cheaperMeatCutsGuide.ts
@@ -187365,6 +187379,200 @@ var LOW_COST_DINNERS_GUIDE_RECORD = {
   }
 };
 
+// src/content/groceryCostOptionsGuide.ts
+var GROCERY_COST_OPTIONS_GUIDE_PATH = "/food-costs/ways-to-reduce-grocery-costs";
+var GROCERY_COST_OPTIONS_GUIDE = {
+  title: "12 practical ways to reduce and manage your grocery costs",
+  seoTitle: "12 ways to manage grocery costs | DinnerByDesign",
+  description: "Explore 12 practical ways to manage grocery costs, use ingredients more effectively and reduce avoidable food waste.",
+  publishedAt: "2026-07-21",
+  reviewedAt: "2026-07-26",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Find practical ways to manage grocery spending, use ingredients effectively and reduce avoidable food waste",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Cornerstone guide incorporating the former low-cost cooking-techniques material. Keep its methods aligned with the detailed guides and recheck cited sources whenever the review date changes.",
+  internalLinks: [
+    "/guides",
+    "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses",
+    "/food-costs/uk-food-costs-2026",
+    "/dinner-plans/5-affordable-family-dinners-for-four",
+    "/dinner-plans/5-dinners-for-2-under-40",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/cooking-for-one-without-waste",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/mediterranean-inspired-affordable-cooking",
+    "/food-costs/cooking-with-cheaper-cuts-of-meat",
+    "/food-costs/cooking-with-offal-on-a-budget",
+    "/food-costs/fresh-or-frozen",
+    "/food-costs/summer-stews-seasonal-vegetables",
+    "/food-costs/five-dinners-same-ingredients"
+  ],
+  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    { label: "Food Standards Agency: Cooking your food", url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food" },
+    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely" },
+    { label: "UNESCO: Koshary, daily-life dish and associated practices", url: "https://ich.unesco.org/en/RL/koshary-daily-life-dish-and-practices-associated-with-it-02278" },
+    { label: "Visit Tuscany: Ribollita", url: "https://www.visittuscany.com/en/recipes/reboiled-soup-a.k.a.-ribollita-recipe/" }
+  ],
+  faqs: [
+    { question: "What is the best way to start reducing grocery costs?", answer: "Start with whichever problem affects you most \u2014 waste, expensive ingredients, lack of time or unpredictable spending \u2014 and use the comparison table to find the matching technique, rather than trying to change everything at once." },
+    { question: "Does cooking from scratch always cost less?", answer: "Not necessarily. It often helps, but the saving depends on using the ingredients you buy, choosing suitable quantities and not letting complete packs go to waste. Cooking from scratch with a lot of leftover, unused ingredients can cost more than a simpler shop." },
+    { question: "How can I reduce waste when supermarkets sell complete packs?", answer: "Plan dinners that share ingredients, so a partly used pack has a second destination already in mind, and keep a few flexible fallback dinners ready for anything left over that does not fit a specific plan." },
+    { question: "Is batch cooking always economical?", answer: "No. It only helps when every portion has a purpose. A large batch cooked without a plan for the extra can end up wasted rather than saving anything." },
+    { question: "Are frozen ingredients always cheaper than fresh?", answer: "No. Prices vary by product, retailer and season. Frozen ingredients can help reduce waste because you use only what you need, but that is a different benefit from being guaranteed cheaper." },
+    { question: "How can DinnerByDesign help manage grocery spending?", answer: "You can build a week of dinners around your household, budget and available time, then generate a shopping list from the dinners you have scheduled \u2014 bringing planning, portioning and pack awareness together in one place." }
+  ]
+};
+var GROCERY_COST_STARTING_POINTS = [
+  ["Ingredients being thrown away", "Portion planning and fresh-or-frozen choices"],
+  ["Unpredictable weekly spending", "Planning several dinners around a budget"],
+  ["Partially used packs", "Shared-ingredient planning"],
+  ["Expensive proteins", "Lower-cost cuts, eggs, pulses or offal"],
+  ["Repetitive budget cooking", "Cuisine-inspired flavours and flexible bases"],
+  ["Limited cooking time", "Purposeful batch cooking"],
+  ["Last-minute purchases", "Flexible fallback dinners"],
+  ["Confusing supermarket trips", "A list generated from scheduled dinners"]
+];
+var escapeHtml6 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var groceryCostStartingPointRows = () => GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml6(problem)}</th><td>${escapeHtml6(start)}</td></tr>`).join("");
+var GROCERY_COST_OPTIONS_GUIDE_SECTIONS = [
+  {
+    rawHtml: "<section><p>Controlling what you spend on groceries involves more than hunting for the cheapest products on the shelf. It is really about a handful of connected decisions: planning what you will actually cook, choosing realistic quantities, coordinating ingredients across several dinners, using complete packs effectively, avoiding unnecessary waste, and having a purpose for any surplus portions.</p><p>One distinction is worth keeping in mind throughout: the value of the ingredients you use in a dinner is not the same as the cost of the complete pack you had to buy to get them. Many of the techniques below work by closing that gap, making sure more of what you pay for actually gets eaten.</p></section>",
+    disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES.slice(0, 1)
+  },
+  {
+    rawHtml: `<section><h2>Quick answer</h2><p>The most effective approach is usually a combination of realistic portion planning, coordinated ingredients, flexible lower-cost products and a clear purpose for everything you buy. No single technique works for every household. The best starting point depends on whether your main problem is waste, expensive ingredients, lack of time or unpredictable weekly spending.</p></section>
+<section><h2>1. Plan several dinners together</h2><p>Choosing three or four dinners at a time, built around a budget and a small set of shared ingredients, cuts down on the disconnected purchases that quietly push up a weekly shop. It is worth keeping this flexible rather than rigid \u2014 a plan that can absorb a changed evening or a swapped dinner is more useful than one that falls apart the first time your week does not go to schedule.</p><p>Our <a href="/food-costs/uk-food-costs-2026">guide to UK food costs</a> looks at where grocery spending typically goes in more detail. The <a href="/dinner-plans/5-affordable-family-dinners-for-four">five-dinner family plan using one coordinated basket</a> shows complete-pack and ingredient-used costs for four people, while <a href="/dinner-plans/5-dinners-for-2-under-40">5 dinners for 2 under \xA340</a> provides a smaller-household example. The guide to <a href="/food-costs/five-dinners-same-ingredients">five dinners using the same ingredients</a> explains the underlying approach.</p></section>
+<section><h2>2. Plan realistic portions</h2><p>Portion planning is not about automatically serving less \u2014 it is about deciding how many people a dinner needs to serve, and what any extra portions are for. This matters at the checkout too: using only part of a pack does not reduce what you paid for it unless the rest gets used later, whether that is another dinner, a lunch, or the freezer.</p><p>Household size affects this more than anything else. Our guide to <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a> covers the general principles, and <a href="/food-costs/cooking-for-one-without-waste">cooking for one without waste</a> looks specifically at adjusting for a smaller household.</p></section>
+<section><h2>3. Batch-cook with a purpose</h2><p>Cooking a larger quantity only helps when every portion has somewhere to go: another dinner, the fridge for prompt use, the freezer for later, or a flexible base you can finish differently each time. Batch cooking without a plan for the extra is not a saving \u2014 it is just a bigger version of the same risk.</p><p>Our guide to <a href="/food-costs/batch-cooking-on-a-budget">batch cooking on a budget</a> looks at when it helps and when it does not.</p></section>
+<section><h2>4. Use lower-cost cooking techniques</h2><p>Stewing, braising, roasting, baking and building a good sauce can turn modest ingredients into a dinner with real depth of flavour and texture. Three principles are particularly useful:</p><ul><li><strong>Build around a versatile staple.</strong> Rice, pasta, bread, beans and lentils can provide the base for several different dinners.</li><li><strong>Use concentrated flavour in small quantities.</strong> A little fish sauce, soy sauce, miso, stock or spice can flavour a larger quantity of grains, noodles or vegetables. Check labels for allergens and salt.</li><li><strong>Give safe ingredients a planned further use.</strong> Dry bread that remains safe can thicken a soup; vegetables that need using soon can move into a stew, sauce or tray bake.</li></ul><p>Koshary combines rice, pasta, lentils, chickpeas, spiced tomato sauce and fried onions around inexpensive staples. Ribollita uses beans, vegetables and dry bread to make a substantial soup. These dishes come from distinct traditions and are included as examples of the techniques, not as claims that any cuisine is uniformly inexpensive.</p><p>For five published examples, see <a href="/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses">dinners built around potatoes, rice, pasta, bread and pulses</a>.</p></section>
+<section><h2>5. Explore cuisines that use inexpensive staples well</h2><p>Several culinary traditions make good use of pulses, grains, tomatoes, vegetables, herbs and spices to build a satisfying dinner without leaning on an expensive centrepiece ingredient. No cuisine is inherently cheap \u2014 the cost still depends on the specific ingredients and products you choose \u2014 but the techniques are genuinely useful. Our <a href="/food-costs/mediterranean-inspired-affordable-cooking">Mediterranean-inspired affordable cooking guide</a> explores this in practice.</p></section>
+<section><h2>6. Consider lower-cost cuts and alternative proteins</h2><p>Lower-cost meat cuts, offal, eggs, and beans, chickpeas or lentils can all bring protein to a dinner without needing a large, expensive centrepiece. Combining a smaller amount of meat with vegetables, grains or pulses often works just as well as a bigger portion on its own. See our guides to <a href="/food-costs/cooking-with-cheaper-cuts-of-meat">choosing and cooking cheaper meat cuts</a> and <a href="/food-costs/cooking-with-offal-on-a-budget">cooking with offal on a budget</a> for more detail. The most economical option will depend on the products available, the pack sizes and what your household will genuinely use.</p></section>
+<section><h2>7. Decide when fresh or frozen is more practical</h2><p>Fresh and frozen each suit different dinners \u2014 shelf life, convenience, texture, preparation and how likely something is to go to waste all vary by ingredient and how you are planning to cook it. Neither format is always the better choice; it depends on how soon the ingredient will be used and how you intend to cook it. Our <a href="/food-costs/fresh-or-frozen">fresh or frozen guide</a> covers this in more detail.</p></section>
+<section><h2>8. Use seasonal and flexible dinner formats</h2><p>Stews, tray bakes, soups and adaptable sauces are naturally good at absorbing whatever vegetables are available, already in the fridge, or simply need using. <a href="/food-costs/summer-stews-seasonal-vegetables">Summer stews</a> are a good example of this \u2014 light, quick-cooking dinners that flex around what you have without feeling like an afterthought.</p></section>
+<section><h2>9. Give complete packs more than one purpose</h2><p>A single ingredient bought for one dinner can often do more than one job across the week. Peppers might go into a spiced rice dish, a stew and a tray bake; a tub of yoghurt into a sauce one night and a dressing another; a bag of spinach into a pasta dish and a curry-inspired dinner; a plainly cooked batch of chicken finished with a different set of flavours each time. This is not about building a rigid weekly menu. It is about noticing where one purchase can quietly cover several dinners. Our guide to <a href="/food-costs/five-dinners-same-ingredients">planning five dinners around shared ingredients and complete packs</a> shows the approach in practice.</p></section>
+<section><h2>10. Start with ingredients already available</h2><p>Before choosing what to cook, it is worth checking the cupboard, fridge and freezer first. Prioritise opened products and ingredients that need using soon, while continuing to follow use-by dates and storage instructions.</p></section>`,
+    disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES.slice(1, 3)
+  },
+  {
+    rawHtml: `<section><h2>11. Keep flexible fallback dinners available</h2><p>A small collection of dependable dinners \u2014 built from eggs, rice, pasta, frozen vegetables, pulses or tinned tomatoes \u2014 reduces the chance of an expensive last-minute decision on a night when nothing has been planned. These do not have to be an afterthought: a well-seasoned baked egg dish or a good tomato pasta can be just as appetising as anything else in the week&apos;s plan.</p></section>
+<section><h2>12. Build the shopping list from scheduled dinners</h2><p>A shopping list that follows your dinner plan, rather than the other way around, naturally accounts for household servings, ingredients shared between dinners, complete pack sizes, and what is already available at home. This is where planning, portioning and pack awareness come together into one practical step, and it is the point where DinnerByDesign can help most directly \u2014 generating a shopping list from the dinners you have actually scheduled.</p></section>
+<section><h2>Where should you start?</h2><table><thead><tr><th>If the main problem is...</th><th>A useful place to start</th></tr></thead><tbody>${groceryCostStartingPointRows()}</tbody></table></section>
+<section><h2>Bringing it together</h2><p>These techniques work best in combination, and you do not need to adopt all twelve at once.</p><p>Portion planning becomes more useful when dinners share ingredients. Batch cooking works better when every portion has a purpose. Fresh and frozen choices become easier when the week is already planned. Choose the combination that gives your household greater control.</p></section>
+`,
+    disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES.slice(3)
+  }
+];
+var GROCERY_COST_OPTIONS_GUIDE_RECORD = {
+  id: "ways-to-reduce-grocery-costs",
+  slug: "ways-to-reduce-grocery-costs",
+  path: GROCERY_COST_OPTIONS_GUIDE_PATH,
+  canonicalPath: GROCERY_COST_OPTIONS_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "price-sensitive",
+  ...GROCERY_COST_OPTIONS_GUIDE,
+  nextReviewAt: "2027-07-26",
+  metaDescription: GROCERY_COST_OPTIONS_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: GROCERY_COST_OPTIONS_DISCLOSURES,
+  disclosureFooter: GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER,
+  sections: GROCERY_COST_OPTIONS_GUIDE_SECTIONS,
+  cta: {
+    title: "Put these ideas into practice",
+    copy: "Build a week of dinners around your household, budget and available time, then generate a shopping list from the dinners you schedule.",
+    label: "Plan my week",
+    href: "/signin"
+  }
+};
+
+// src/content/groceryCostPredictionGuide.ts
+var GROCERY_COST_PREDICTION_GUIDE_PATH = "/food-costs/why-grocery-costs-are-hard-to-predict";
+var GROCERY_COST_PREDICTION_GUIDE = {
+  title: "Why is it so difficult to budget accurately for food?",
+  seoTitle: "Why grocery costs are so difficult to predict accurately | DinnerByDesign",
+  description: "Why an exact grocery total is so hard to predict, and how transparent estimates and better planning can still give you more control.",
+  publishedAt: "2026-07-21",
+  reviewedAt: "2026-07-21",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Understand why grocery costs are difficult to predict and how practical budgeting can still provide greater control",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-21",
+  editorialNotes: "Transparency guide about household budgeting uncertainty. Keep the distinction between ingredient value, complete-pack cost and additional shopping cost aligned with the pricing methodology.",
+  internalLinks: [
+    "/pricing-methodology",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/food-costs/uk-food-costs-2026",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/fresh-or-frozen",
+    "/dinner-plans/5-dinners-for-2-under-40",
+    "/guides"
+  ],
+  disclosures: ["price_comparison", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
+      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
+    }
+  ],
+  faqs: [
+    { question: "Why is my supermarket total higher than the combined recipe costs?", answer: "Usually because you are paying for complete packs, not just the quantities each recipe uses, and because prices, promotions or availability may have shifted since the estimate was made." },
+    { question: "Can I predict my grocery spending exactly?", answer: "Not reliably. Too many details \u2014 stock, pack sizes, promotions and substitutions \u2014 are unknown when you plan. You can get a realistic estimate, not a guaranteed figure." },
+    { question: "What is the difference between ingredient value and complete-pack cost?", answer: "Ingredient value is what the quantity used in a dinner is roughly worth. Complete-pack cost is what you actually pay for the pack it came from, which is often more." },
+    { question: "Should cupboard ingredients be treated as free?", answer: "Not quite. They do not add to this week\u2019s shop, but they will need replacing eventually, so they still carry a longer-term cost." },
+    { question: "Why do supermarket substitutions affect a weekly budget?", answer: "A substitution \u2014 a different brand, a larger pack, fresh instead of frozen \u2014 can change both what you pay now and what is left over for later in the week." },
+    { question: "How much flexibility should I leave in a food budget?", answer: "Enough to absorb an ordinary change of plan \u2014 a postponed dinner, an extra guest or a rushed evening \u2014 without the whole week\u2019s budget falling apart." },
+    { question: "Are grocery cost estimates still useful?", answer: "Yes. They help you compare dinners, spot expensive ingredients and coordinate a week, even though they cannot guarantee the final total." },
+    { question: "How does DinnerByDesign help households manage spending?", answer: "By showing ingredient value and complete-pack cost separately, accounting for servings and shared ingredients, and being clear that every figure is an estimate rather than a guarantee." }
+  ]
+};
+var GROCERY_COST_PREDICTION_OPENING_HTML = `<section><h2>Quick answer</h2><p><em>Accurately budgeting for groceries is difficult because the final amount depends on prices, promotions, product availability, pack sizes, substitutions and what the household already has. Many of these details aren't known when the week is planned. An estimate can't guarantee the checkout total, but it can still help you set a realistic target, compare options and make better use of what you buy.</em></p></section>`;
+var GROCERY_COST_PREDICTION_BEFORE_SAFETY_HTML = `<section><h2>You have to budget before you know the final cost</h2><p>Setting a food budget means deciding what to spend before you actually know several important things: which products will be in stock, which pack sizes will be on the shelf, whether an advertised offer will still be running, whether a loyalty price applies to you, whether your usual product will need substituting, whether prices have moved since your last shop, or whether the week's plans will even go as expected.</p><p>If you've prepared a careful list and still ended up with a surprising total at the till, that's not a sign you did anything wrong. It's a fairly ordinary result of budgeting for something with this many moving parts. Our <a href="/dinner-plans/5-dinners-for-2-under-40">5 affordable dinners for two under \xA340</a> guide shows how a coordinated target can work while remaining an estimate.</p></section>
+<section><h2>A recipe's cost isn't necessarily what you pay at the checkout</h2><p>It helps to separate three different figures. The ingredient value used is what the quantities in the dinner are roughly worth. The complete-pack cost is what you actually pay for the packs those quantities came from. The additional shopping cost is what you need to spend once you've accounted for anything already in the cupboard or fridge.</p><p>A simple example: a dinner might call for two chicken breasts, but the pack in front of you contains four. You pay for the whole pack, even though the recipe only uses half of it. The remaining two breasts only deliver value to the household if they are stored safely and used later. The dinner's ingredient value can therefore be considerably lower than the amount paid at the checkout.</p></section>
+<section><h2>Pack sizes make this particularly difficult</h2><p>Recipes describe quantities; supermarkets sell products. A recipe might need 150g from a 500g pack, one tablespoon from a full bottle, a small spoonful from a whole jar of spice, half a bag of vegetables, or two items from a multipack of six. Adding up the value used across a week's recipes was never going to match the total you pay at the till, because you're not buying by the gram \u2014 you're buying by the pack.</p><p><strong>Illustrative examples:</strong> <em>The pack-size examples above are illustrative only and aren't tied to specific retailer products or prices.</em></p></section>
+<section><h2>Prices aren't fixed</h2><p>On top of all this, prices themselves move: ordinary price changes, temporary promotions, loyalty-card pricing, differences between stores or regions, online versus in-store pricing, and simple changes in what's available that week. An estimate can accurately reflect the products and prices checked on a particular date, yet still differ from what you find a few days later \u2014 that's not a fault in the estimate, just a reflection of the fact that prices continue to change.</p><p>Our guide to <a href="/food-costs/uk-food-costs-2026">why UK food costs are rising in 2026</a> provides the wider context.</p></section>
+<section><h2>Substitutions change the budget</h2><p>Plenty of ordinary moments can quietly shift what you spend: your usual own-brand product is out of stock, only a larger pack is left, you decide to buy a preferred brand instead, a fresh ingredient gets swapped for frozen (or the other way round), a dietary requirement narrows your options, or an online order arrives with a retailer's substitution. Any one of these can be small on its own, but it can affect both today's shop and what's left over for later in the week.</p></section>
+<section><h2>Similar-looking products don't always offer the same value</h2><p>Own-brand versus branded, fresh versus frozen, loose versus packaged, prepared versus unprepared, different cuts of the same meat, products that include bone, skin or liquid, different pack sizes \u2014 all of these can look like a straightforward like-for-like choice and not be one. The lowest price on the shelf isn't automatically the best value; that also depends on how much of it you'll actually use, whether it suits your household, how well it stores, and whether the rest of the pack gets eaten. Our <a href="/food-costs/fresh-or-frozen">fresh or frozen guide</a> explores one of these choices in more detail.</p></section>
+<section><h2>What's already in your cupboard complicates things further</h2><p>A recipe might call for flour, oil, herbs, spices or stock that you already have at home. That raises two different questions: what's the value of everything the dinner actually uses, and what do you need to buy for this particular shop? Treating every ingredient as a fresh purchase overstates what you need to spend this week; treating cupboard staples as free understates their real cost, since they'll eventually need replacing too.</p></section>
+<section><h2>Plans change during the week</h2><p>An evening out, an extra person at the table, a postponed dinner, an ingredient that suddenly needs using sooner than planned, a rushed evening that calls for something different, or leftover portions eaten instead of the next scheduled dinner \u2014 all of these are completely ordinary, and all of them can shift a budget that looked solid on paper. A useful budget leaves room for this rather than assuming the week will go exactly to plan.</p></section>
+<section><h2>An apparently cheap dinner can still make for a costly shop</h2><p>Low ingredient value doesn't automatically mean low cost to the household. A dinner can look inexpensive on paper and still push up the shop if it needs several new jars or bottles, a large pack with no obvious second use, something highly perishable, a product you're unlikely to buy again soon, or a quantity that doesn't suit your household size. None of this means every unused ingredient is thrown away straight away \u2014 but it's part of why a low-cost recipe doesn't always translate into a low-cost trip to the shop.</p></section>
+<section><h2>Why more price information doesn't solve everything</h2><p>Even with recent, accurate prices, someone still has to decide which supermarket product actually represents a given recipe ingredient, which brand or quality level is a fair assumption, which pack size a household would realistically buy, whether a promotional price is generally available or only to some shoppers, how to treat a product that's out of stock, and at what point a price is too old to be useful. Gathering more data narrows these judgement calls; it doesn't remove them.</p></section>
+<section><h2>What you can control</h2><p>You can't control supermarket prices, but there's a fair amount you can control:</p><ul><li>Plan several dinners together, rather than one at a time</li><li>Set a target with some flexibility built in, rather than an exact figure</li><li>Choose dinners that share ingredients</li><li>Check what's already available before you shop</li><li>Plan a use for the remainder of any complete pack</li><li>Choose realistic household servings \u2014 our <a href="/food-costs/portion-planning-and-food-waste">portion-planning guide</a> can help</li><li>Keep a few flexible fallback dinners in reserve</li><li>Use <a href="/food-costs/batch-cooking-on-a-budget">batch cooking</a> purposefully where it suits the week</li><li>Compare fresh and frozen where it makes sense to</li><li>Freeze suitable surplus ingredients or portions safely</li><li>Check the likely complete-pack cost before you shop, not just the recipe cost</li></ul><p>For further practical ideas, see <a href="/food-costs/ways-to-reduce-grocery-costs">12 practical ways to reduce and manage your grocery costs</a>.</p></section>`;
+var GROCERY_COST_PREDICTION_AFTER_SAFETY_HTML = `<section><h2>Why estimates are still worth having</h2><p>An estimate doesn't need to predict every penny to be useful. A transparent one can help you compare broadly similar dinners, spot the more expensive ingredients before you shop, understand how many people you're actually feeding, see where a complete pack changes the real cost, coordinate ingredients across the week, stay near your target, anticipate where the real shop might come in higher, and make more informed substitutions when something isn't available. A good estimate narrows the uncertainty. It doesn't remove it.</p></section>
+<section><h2>How DinnerByDesign approaches this</h2><p>Costs in DinnerByDesign are presented as estimates, with the assumptions behind them kept visible rather than hidden. Ingredient value is shown separately from complete-pack cost, and household servings are taken into account. Ingredients can be shared across the dinners you schedule, and shopping-list estimates can account for what you've already got. Price information carries a review date, and pack sizes or product availability can still change the final total \u2014 the app doesn't promise an exact checkout figure, for the same reasons set out above. Our <a href="/pricing-methodology">pricing methodology</a> explains the underlying approach in more detail.</p></section>
+<section><h2>Verdict</h2><p><em>Households can't know every final product, price, pack size or substitution when they set a food budget. That makes predicting the checkout total exactly very difficult, even after a carefully planned week. The answer isn't to abandon budgeting \u2014 it's to use transparent estimates, plan several dinners together, account for complete packs, and leave room for ordinary changes. Better information can't remove every uncertainty, but it can give you considerably more control.</em></p></section>`;
+var GROCERY_COST_PREDICTION_GUIDE_SECTIONS = [
+  { rawHtml: GROCERY_COST_PREDICTION_OPENING_HTML, disclosureItems: GROCERY_COST_PREDICTION_DISCLOSURES.slice(0, 1) },
+  { rawHtml: GROCERY_COST_PREDICTION_BEFORE_SAFETY_HTML, disclosureItems: GROCERY_COST_PREDICTION_DISCLOSURES.slice(1) },
+  { rawHtml: GROCERY_COST_PREDICTION_AFTER_SAFETY_HTML }
+];
+var GROCERY_COST_PREDICTION_GUIDE_RECORD = {
+  id: "why-grocery-costs-are-hard-to-predict",
+  slug: "why-grocery-costs-are-hard-to-predict",
+  path: GROCERY_COST_PREDICTION_GUIDE_PATH,
+  canonicalPath: GROCERY_COST_PREDICTION_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "price-sensitive",
+  ...GROCERY_COST_PREDICTION_GUIDE,
+  nextReviewAt: "2027-07-21",
+  metaDescription: GROCERY_COST_PREDICTION_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: GROCERY_COST_PREDICTION_DISCLOSURES,
+  disclosureFooter: GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER,
+  sections: GROCERY_COST_PREDICTION_GUIDE_SECTIONS,
+  cta: {
+    title: "Plan with greater visibility",
+    copy: "Build a week around your household, budget and available time, then see how complete packs, shared ingredients and scheduled dinners affect your shopping list.",
+    label: "Plan my week",
+    href: "/signin"
+  }
+};
+
 // src/content/publicGuideRegistry.ts
 var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
@@ -187383,6 +187591,9 @@ var PUBLIC_GUIDE_RECORDS = [
   PULSES_BUDGET_GUIDE_RECORD,
   TRAYBAKE_GUIDE_RECORD,
   LOW_COST_DINNERS_GUIDE_RECORD,
+  GROCERY_COST_OPTIONS_GUIDE_RECORD,
+  GROCERY_COST_PREDICTION_GUIDE_RECORD,
+  BATCH_COOKING_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD
 ];
@@ -187487,48 +187698,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
     internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks,
     disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: GROCERY_COST_PREDICTION_GUIDE.title,
-    path: GROCERY_COST_PREDICTION_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: GROCERY_COST_PREDICTION_GUIDE.pageFamily,
-    primarySearchIntent: GROCERY_COST_PREDICTION_GUIDE.primarySearchIntent,
-    indexingStatus: GROCERY_COST_PREDICTION_GUIDE.indexingStatus,
-    publishedAt: GROCERY_COST_PREDICTION_GUIDE.publishedAt,
-    reviewedAt: GROCERY_COST_PREDICTION_GUIDE.reviewedAt,
-    contentReviewedAt: GROCERY_COST_PREDICTION_GUIDE.contentReviewedAt,
-    internalLinks: GROCERY_COST_PREDICTION_GUIDE.internalLinks,
-    disclosures: GROCERY_COST_PREDICTION_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: GROCERY_COST_OPTIONS_GUIDE.title,
-    path: GROCERY_COST_OPTIONS_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: GROCERY_COST_OPTIONS_GUIDE.pageFamily,
-    primarySearchIntent: GROCERY_COST_OPTIONS_GUIDE.primarySearchIntent,
-    indexingStatus: GROCERY_COST_OPTIONS_GUIDE.indexingStatus,
-    publishedAt: GROCERY_COST_OPTIONS_GUIDE.publishedAt,
-    reviewedAt: GROCERY_COST_OPTIONS_GUIDE.reviewedAt,
-    contentReviewedAt: GROCERY_COST_OPTIONS_GUIDE.contentReviewedAt,
-    internalLinks: GROCERY_COST_OPTIONS_GUIDE.internalLinks,
-    disclosures: GROCERY_COST_OPTIONS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: BATCH_COOKING_GUIDE.title,
-    path: BATCH_COOKING_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: BATCH_COOKING_GUIDE.pageFamily,
-    primarySearchIntent: BATCH_COOKING_GUIDE.primarySearchIntent,
-    indexingStatus: BATCH_COOKING_GUIDE.indexingStatus,
-    publishedAt: BATCH_COOKING_GUIDE.publishedAt,
-    reviewedAt: BATCH_COOKING_GUIDE.reviewedAt,
-    contentReviewedAt: BATCH_COOKING_GUIDE.contentReviewedAt,
-    internalLinks: BATCH_COOKING_GUIDE.internalLinks,
-    disclosures: BATCH_COOKING_GUIDE.disclosures,
     status: "published"
   },
   {
@@ -187791,7 +187960,7 @@ var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
 var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;
 var contactAttempts = /* @__PURE__ */ new Map();
-var escapeHtml6 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+var escapeHtml7 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 function hasContactRateLimitCapacity(req) {
   const forwardedFor = req.get("x-forwarded-for");
   const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
@@ -188823,7 +188992,7 @@ function createApp() {
     if (!hasContactRateLimitCapacity(req)) {
       return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
     }
-    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml6(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml6(email)}">${escapeHtml6(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml6(message2)}</div></div>`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml7(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml7(email)}">${escapeHtml7(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml7(message2)}</div></div>`;
     try {
       const response = await sendTrackedEmail({
         to: CONTACT_RECIPIENT,

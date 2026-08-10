@@ -54,6 +54,15 @@ import {
   LOW_COST_DINNERS_GUIDE_PATH,
 } from './lowCostDinnersGuide';
 import {
+  GROCERY_COST_OPTIONS_GUIDE_PATH,
+} from './groceryCostOptionsGuide';
+import {
+  GROCERY_COST_PREDICTION_GUIDE_PATH,
+} from './groceryCostPredictionGuide';
+import {
+  BATCH_COOKING_GUIDE_PATH,
+} from './seoFoodCostGuides';
+import {
   PUBLIC_GUIDE_RECORDS,
   PUBLISHED_PUBLIC_GUIDE_RECORDS,
   getPublicGuideRecordByPath,
@@ -80,6 +89,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(PULSES_BUDGET_GUIDE_PATH);
     expect(paths).toContain(TRAYBAKE_GUIDE_PATH);
     expect(paths).toContain(LOW_COST_DINNERS_GUIDE_PATH);
+    expect(paths).toContain(GROCERY_COST_OPTIONS_GUIDE_PATH);
+    expect(paths).toContain(GROCERY_COST_PREDICTION_GUIDE_PATH);
+    expect(paths).toContain(BATCH_COOKING_GUIDE_PATH);
     expect(new Set(paths).size).toBe(paths.length);
   });
 
@@ -113,6 +125,9 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(PULSES_BUDGET_GUIDE_PATH)?.title).toBe('Cooking with lentils, beans and chickpeas on a budget');
     expect(getPublicGuideRecordByPath(TRAYBAKE_GUIDE_PATH)?.title).toBe('How to build a traybake that cooks evenly and tastes properly finished');
     expect(getPublicGuideRecordByPath(LOW_COST_DINNERS_GUIDE_PATH)?.title).toBe("Low-cost dinners don't have to be boring");
+    expect(getPublicGuideRecordByPath(GROCERY_COST_OPTIONS_GUIDE_PATH)?.title).toBe('12 practical ways to reduce and manage your grocery costs');
+    expect(getPublicGuideRecordByPath(GROCERY_COST_PREDICTION_GUIDE_PATH)?.title).toBe('Why is it so difficult to budget accurately for food?');
+    expect(getPublicGuideRecordByPath(BATCH_COOKING_GUIDE_PATH)?.title).toBe("Batch cooking on a budget: when it saves money and when it doesn't");
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH)?.title).toBe('Nine budget dinners with potatoes');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH)?.title).toBe('Nine budget dinners with rice');
   });
