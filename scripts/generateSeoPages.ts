@@ -118,12 +118,6 @@ import {
   renderMinceBudgetDinnersGuideInitialHtml,
 } from '../src/content/minceBudgetDinnersGuide';
 import {
-  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
-  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
-  getLeftoverRoastChickenBudgetDinnersGuideJsonLd,
-  renderLeftoverRoastChickenBudgetDinnersGuideInitialHtml,
-} from '../src/content/leftoverRoastChickenBudgetDinnersGuide';
-import {
   CHICKEN_THIGH_COST_GUIDE,
   CHICKEN_THIGH_COST_GUIDE_PATH,
   getChickenThighCostGuideJsonLd,
@@ -153,13 +147,6 @@ import {
   getNineBudgetDinnersThreeCuisinesGuideJsonLd,
   renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
 } from '../src/content/nineBudgetDinnersThreeCuisinesGuide';
-import {
-  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
-  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
-  getBubbleAndSqueakBudgetDinnersGuideJsonLd,
-  renderBubbleAndSqueakBudgetDinnersGuideInitialHtml,
-} from '../src/content/bubbleAndSqueakBudgetDinnersGuide';
-import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, getMeatStretchingGuideJsonLd, renderMeatStretchingGuideInitialHtml } from '../src/content/meatStretchingGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from '../src/content/publicGuideRegistry';
 import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from '../src/content/publicGuideModel';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
@@ -589,24 +576,10 @@ await generateEditorialGuide(
 );
 
 await generateEditorialGuide(
-  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
-  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
-  renderLeftoverRoastChickenBudgetDinnersGuideInitialHtml,
-  getLeftoverRoastChickenBudgetDinnersGuideJsonLd,
-);
-
-await generateEditorialGuide(
   NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
   NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
   renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
   getNineBudgetDinnersThreeCuisinesGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
-  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
-  renderBubbleAndSqueakBudgetDinnersGuideInitialHtml,
-  getBubbleAndSqueakBudgetDinnersGuideJsonLd,
 );
 
 for (const guideRecord of PUBLISHED_PUBLIC_GUIDE_RECORDS) {
@@ -617,8 +590,6 @@ for (const guideRecord of PUBLISHED_PUBLIC_GUIDE_RECORDS) {
     () => getPublicGuideJsonLd(guideRecord),
   );
 }
-
-await generateEditorialGuide(MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH, renderMeatStretchingGuideInitialHtml, getMeatStretchingGuideJsonLd);
 
 await generateEditorialGuide(
   CHICKEN_THIGH_COST_GUIDE,

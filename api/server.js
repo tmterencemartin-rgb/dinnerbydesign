@@ -184769,39 +184769,6 @@ var MINCE_BUDGET_DINNERS_GUIDE = {
   ]
 };
 
-// src/content/leftoverRoastChickenBudgetDinnersGuide.ts
-var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH = "/guides/9-budget-dinners-with-leftover-roast-chicken";
-var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE = {
-  title: "9 budget dinners with leftover roast chicken",
-  seoTitle: "9 Budget Dinners With Leftover Roast Chicken | DinnerByDesign",
-  description: "Nine practical dinner ideas for using leftover roast chicken, with ways to stretch portions, use everyday ingredients and reduce food waste.",
-  publishedAt: "2026-08-06",
-  reviewedAt: "2026-08-06",
-  nextReviewAt: "2027-08-06",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find budget dinner ideas using leftover roast chicken",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-06",
-  editorialNotes: "One canonical leftover-led guide with nine distinct roast chicken dinner ideas, food-safety guidance and one handoff to ordinary DinnerByDesign search.",
-  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/signin"],
-  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: Home food fact checker",
-      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
-    },
-    {
-      label: "Food Standards Agency: Cooking your food",
-      url: "https://www.gov.uk/government/publications/cooking-your-food"
-    },
-    {
-      label: "Food Standards Agency: Reheating leftovers until steaming hot throughout",
-      url: "https://www.food.gov.uk/research/behaviour-and-perception/not-reheating-leftovers-until-steaming-hot-throughout"
-    }
-  ]
-};
-
 // src/content/chickenThighCostGuide.ts
 var CHICKEN_THIGH_COST_GUIDE_PATH = "/recipes/5-chicken-thigh-recipes-for-four-aldi-cost-estimates";
 var CHICKEN_THIGH_COST_GUIDE = {
@@ -185174,71 +185141,6 @@ var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE = {
   ]
 };
 
-// src/content/bubbleAndSqueakBudgetDinnersGuide.ts
-var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH = "/guides/nine-budget-dinners-built-around-bubble-and-squeak";
-var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE = {
-  title: "Nine budget dinners built around bubble and squeak",
-  seoTitle: "Nine Budget Dinners Built Around Bubble and Squeak | DinnerByDesign",
-  description: "Nine practical ways to turn bubble and squeak into a varied dinner, using eggs, beans, fish, leftover chicken and cupboard ingredients.",
-  publishedAt: "2026-08-08",
-  reviewedAt: "2026-08-08",
-  nextReviewAt: "2027-08-08",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find dinner ideas built around bubble and squeak",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-08",
-  editorialNotes: "Nine clearly labelled variations on one verified bubble-and-squeak method, with one separately sourced chickpea sauce.",
-  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
-  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak" },
-    { label: "Tomato & chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry" },
-    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
-  ],
-  faqs: [
-    { question: "Can I make bubble and squeak without leftovers?", answer: "Yes. Cook potato and vegetables specifically for it, then cool them before frying. Cold potato helps the mixture hold together." },
-    { question: "What vegetables work in bubble and squeak?", answer: "Cabbage and sprouts are traditional, but cooked carrots, peas and greens can work too. Use vegetables that are safe to eat and have been stored properly." },
-    { question: "How do I stop bubble and squeak falling apart?", answer: "Use cold cooked potato, avoid overloading the pan and add a little flour, breadcrumbs or beaten egg if the mixture feels too loose." },
-    { question: "Can bubble and squeak be a dinner on its own?", answer: "Yes. Eggs, beans, fish, sausages or a sauce can turn it into a fuller dinner, depending on what is available." }
-  ]
-};
-
-// src/content/meatStretchingGuide.ts
-var MEAT_STRETCHING_GUIDE_PATH = "/guides/seven-ways-to-make-meat-go-further";
-var MEAT_STRETCHING_GUIDE = {
-  title: "Seven ways to make meat go further with beans, lentils and mushrooms",
-  seoTitle: "Seven ways to make meat go further | DinnerByDesign",
-  description: "Seven familiar dinners showing how beans, lentils and mushrooms can make a smaller amount of meat go further without making dinner feel like a compromise.",
-  publishedAt: "2026-08-09",
-  reviewedAt: "2026-08-09",
-  nextReviewAt: "2027-02-09",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Ways to make meat go further with beans, lentils and mushrooms",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-09",
-  editorialNotes: "Seven source-led dinners that distinguish published recipe methods from practical, clearly labelled adaptations.",
-  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-beef-or-pork-mince", "/guides/nine-budget-dinners-with-tinned-vegetables", "/guides/nine-budget-dinners-with-rice", "/guides/cooking-with-pulses-on-a-budget", "/food-safety", "/signin"],
-  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    { label: "Chilli con carne, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/chilli-con-carne-recipe" },
-    { label: "Cottage pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/775643/cottage-pie" },
-    { label: "Bean & sausage hotpot, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bean-and-sausage-hotpot" },
-    { label: "Fragrant chicken curry with chick peas, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/fragrant-chicken-curry-chick-peas" },
-    { label: "Spaghetti Bolognese, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/spaghetti-bolognese" },
-    { label: "Bacon & mushroom pasta, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bacon-mushroom-pasta" },
-    { label: "Beef meatballs with tomato sauce, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/beef-meatballs-with-tomato-sauce" },
-    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
-  ],
-  faqs: [
-    { question: "Can I replace all the meat with beans or lentils?", answer: "You can, but this guide is about making a smaller amount of meat cover more dinners. Start by replacing some of the meat, then adjust the seasoning and texture to suit the dish." },
-    { question: "Which lentils work best?", answer: "Green and brown lentils hold their shape in pies and sauces. Red lentils soften more, which suits chilli and tomato-based sauces." },
-    { question: "Do tinned beans need cooking first?", answer: "Tinned beans are already cooked. Drain and rinse them where the label suggests, then warm them through in the sauce or hotpot." },
-    { question: "Will mushrooms make a mince dish watery?", answer: "Finely chop them and cook them first so their moisture cooks away before they go into the sauce or filling." }
-  ]
-};
-
 // src/content/nineBudgetDinnersWithSavouryPiesGuide.ts
 var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH = "/guides/nine-budget-dinners-with-savoury-pies";
 var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_DISCLOSURES = [
@@ -185352,6 +185254,394 @@ var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD = {
     title: "Find dinners for tonight",
     copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
     label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/bubbleAndSqueakBudgetDinnersGuide.ts
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH = "/guides/nine-budget-dinners-built-around-bubble-and-squeak";
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_DISCLOSURES = [
+  { key: "price_comparison", title: "A note on budget wording", body: "This guide does not use live retailer prices or promise a fixed saving. The cost depends on what is already at home, current prices and the toppings you choose." },
+  { key: "storage_and_cooking", title: "Leftovers and food safety", body: "Cooked potato, vegetables, meat and fish need prompt cooling, suitable storage and thorough reheating. Follow current Food Standards Agency guidance and product-label instructions." },
+  { key: "allergen_and_product", title: "Ingredients and allergens", body: "Bacon, black pudding, sausages, baked beans, cheese, yoghurt, mustard, fish and prepared sauces vary by product and may contain allergens. Check labels for everyone eating the dinner." },
+  { key: "source_timing", title: "Source review", body: "The recipe and food-safety sources were checked on 8 August 2026. Follow the linked publisher and Food Standards Agency pages for later updates." }
+];
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers variations on a flexible bubble-and-squeak base rather than nine separate complete recipes. Ingredient quantities, storage advice and cooking instructions vary.",
+  links: [{ href: "/guides", label: "Browse all guides" }, { href: "/food-safety", label: "Food safety" }]
+};
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE = {
+  title: "Nine budget dinners built around bubble and squeak",
+  seoTitle: "Nine Budget Dinners Built Around Bubble and Squeak | DinnerByDesign",
+  description: "Nine practical ways to turn bubble and squeak into a varied dinner, using eggs, beans, fish, leftover chicken and cupboard ingredients.",
+  publishedAt: "2026-08-08",
+  reviewedAt: "2026-08-08",
+  nextReviewAt: "2027-08-08",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find dinner ideas built around bubble and squeak",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-08",
+  editorialNotes: "Nine clearly labelled variations on one verified bubble-and-squeak method, with one separately sourced chickpea sauce.",
+  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak" },
+    { label: "Tomato & chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Can I make bubble and squeak without leftovers?", answer: "Yes. Cook potato and vegetables specifically for it, then cool them before frying. Cold potato helps the mixture hold together." },
+    { question: "What vegetables work in bubble and squeak?", answer: "Cabbage and sprouts are traditional, but cooked carrots, peas and greens can work too. Use vegetables that are safe to eat and have been stored properly." },
+    { question: "How do I stop bubble and squeak falling apart?", answer: "Use cold cooked potato, avoid overloading the pan and add a little flour, breadcrumbs or beaten egg if the mixture feels too loose." },
+    { question: "Can bubble and squeak be a dinner on its own?", answer: "Yes. Eggs, beans, fish, sausages or a sauce can turn it into a fuller dinner, depending on what is available." }
+  ]
+};
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_SECTIONS = [
+  { paragraphs: [
+    "Bubble and squeak is cooked potato and vegetables, roughly mashed or chopped, fried until crisp and golden. It's particularly useful the day after a roast, when there's leftover mash, cabbage or sprouts sitting in the fridge, but there is no reason it has to start with leftovers; potato and vegetables cooked specifically for the purpose work just as well.",
+    "The base recipe used throughout this guide is BBC Good Food's Bubble & squeak, which fries cold leftover mashed potato with cabbage or sprouts, onion, garlic and a little bacon until crisp at the edges. It serves four, with ten minutes of preparation and twenty minutes of cooking. Everything below builds on that base with a different topping or addition."
+  ] },
+  { title: "1. Bubble and squeak with fried eggs", paragraphs: [
+    "A fried egg with a runny yolk turns a panful of crisp potato and cabbage into a dinner rather than a side dish. Break the yolk over the top and it does the work a sauce would otherwise do.",
+    "This is the base recipe with nothing added beyond the egg, so it is the one to start with if any of the others feel like too much. Frying the egg in a separate pan while the bubble and squeak finishes crisping means neither has to wait for the other."
+  ] },
+  { title: "2. Bubble and squeak with black pudding and apples or chutney", paragraphs: [
+    "Slices of black pudding fried alongside the potato cake, with a few slices of apple softened in the same pan, or a spoonful of chutney on the side to cut through the richness.",
+    "Black pudding brings a peppery depth that is a long way from the plainness of the egg version. It is entirely optional, and the base works without it. Add it only in the final few minutes to avoid it drying out."
+  ] },
+  { title: "3. Bubble and squeak with sausages and onion gravy", paragraphs: [
+    "A small number of sausages, browned and simmered briefly in onion gravy, served alongside or on top of the bubble and squeak. The gravy gives the dinner more body and a longer cooking time than the egg version.",
+    "Two or three sausages, sliced, go further across a panful of bubble and squeak than they would served whole alongside mash, which is a useful way to stretch a small pack."
+  ] },
+  { title: "4. Bubble and squeak with baked beans and cheese", paragraphs: [
+    "Tinned baked beans, warmed through and spooned generously over bubble and squeak, finished with grated cheese melted under the grill or stirred through while hot.",
+    "The beans are the bulk of the dinner alongside the potato base, making this one of the most cupboard-led versions on the list. Transfer any unused beans to a covered container and follow the tin label guidance for storage."
+  ] },
+  { title: "5. Bubble and squeak with leftover roast chicken", paragraphs: [
+    "A modest amount of cooked chicken, shredded and folded through the bubble and squeak as it fries, or piled on top once served. It uses two sets of leftovers at once: chicken and vegetables.",
+    "Cooked chicken only needs warming through, not further cooking, so add it towards the end to avoid it drying out or overcooking. The leftover roast chicken guide has more ideas if there is more meat left than one dinner can use."
+  ], relatedLink: { label: "Nine budget dinners with leftover roast chicken", url: "/guides/9-budget-dinners-with-leftover-roast-chicken" } },
+  { title: "6. Bubble and squeak with smoked fish and a poached egg", paragraphs: [
+    "Flaked smoked mackerel or smoked haddock, warmed gently and folded through or served alongside the bubble and squeak, topped with a softly poached egg. Smoked fish takes the dish away from a fry-up and towards a fish supper.",
+    "Check the pack instructions. Smoked haddock needs cooking, while some hot-smoked mackerel fillets are ready to eat or can simply be warmed through."
+  ] },
+  { title: "7. Bubble and squeak topped with a spiced tomato and chickpea sauce", paragraphs: [
+    "Spoon spiced tomato and chickpea sauce, in the style of BBC Good Food's Tomato & chickpea curry, over crisp bubble and squeak rather than serving it with rice. The sauce should sit on top and bring contrast, not smother the crisp base underneath.",
+    "This is the only dinner on the list with a spiced, saucy element rather than a fried or grilled topping, and the only one built around a separate source recipe. Making a full batch of the sauce and freezing half keeps the next version simple."
+  ] },
+  { title: "8. Bubble and squeak with mushrooms, greens and a soft egg", paragraphs: [
+    "Mushrooms fried until golden, whatever greens are to hand wilted in at the last minute, and a softly cooked egg on top. This is the most adaptable entry, useful when there are odd amounts of several vegetables rather than a full portion of any one.",
+    "Fry the mushrooms separately before adding them, rather than in with the potato from the start, to stop them making the whole pan watery."
+  ] },
+  { title: "9. Bubble and squeak cakes with a simple salad and yoghurt or mustard dressing", paragraphs: [
+    "Shape the same mixture into smaller patties rather than one large panful, then serve with a simple salad and a spoonful of yoghurt or mustard dressing rather than a hot topping.",
+    "Smaller cakes cook faster and crisp more evenly than one large cake, and the cold salad and dressing make this feel like a genuinely different dinner. A spoonful of plain yoghurt with lemon, or a little mustard loosened with oil, is enough."
+  ] },
+  { title: "Getting the base right", paragraphs: [
+    "Cold cooked potato holds together better than warm potato, so cool it in the fridge for at least an hour, or use genuine leftovers, before frying. Avoid overloading the pan: a thinner layer crisps on the outside, while a thick crowded pan tends to steam instead.",
+    "Almost any cooked vegetable works, not just cabbage: sprouts, carrots, peas and other greens can all go in. If the mixture feels too loose to hold its shape, a spoonful of flour or breadcrumbs, or a beaten egg, helps bind it. None of this requires leftovers specifically."
+  ] },
+  { title: "A note on leftovers and food safety", paragraphs: [
+    "Cooked potato, vegetables, meat and fish need proper cooling, storing and reheating to stay safe to eat. Check current Food Standards Agency guidance before building a dinner around anything that has been sitting in the fridge for more than a day or two."
+  ] },
+  { title: "A flexible base, not a rulebook", paragraphs: [
+    "Bubble and squeak works best as a starting point rather than a compulsory way to use every leftover in the fridge. The practical win is that it gives odds and ends a defined purpose, so cooked potato and vegetables are more likely to get used before they are forgotten."
+  ], relatedLink: { label: "Browse the guides library", url: "/guides" } }
+];
+var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_RECORD = {
+  id: "nine-budget-dinners-built-around-bubble-and-squeak",
+  slug: "nine-budget-dinners-built-around-bubble-and-squeak",
+  path: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
+  canonicalPath: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
+  metaDescription: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_DISCLOSURES,
+  disclosureFooter: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER,
+  sections: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_SECTIONS,
+  cta: {
+    title: "Find dinners for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
+    label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/meatStretchingGuide.ts
+var MEAT_STRETCHING_GUIDE_PATH = "/guides/seven-ways-to-make-meat-go-further";
+var MEAT_STRETCHING_GUIDE_DISCLOSURES = [
+  { key: "price_comparison", title: "A note on budget wording", body: "This guide uses no live retailer prices or fixed savings. What each dinner costs depends on current prices, the ingredients already at home and the products chosen." },
+  { key: "storage_and_cooking", title: "Storage and cooking safety", body: "Cook meat, pulses and leftovers safely. Follow the linked recipe and current Food Standards Agency guidance, as timings and storage advice vary." },
+  { key: "allergen_and_product", title: "Ingredients and allergens", body: "Beans, lentils, sausages, stock, dairy, pasta, pesto and other packaged ingredients vary by product and may contain allergens. Check labels for everyone eating the dinner." },
+  { key: "source_timing", title: "Source review", body: "The recipe and food-safety sources were checked on 9 August 2026. Follow the linked publisher page for the current ingredients, method and timings." }
+];
+var MEAT_STRETCHING_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers source-led dinner ideas rather than complete recipes. Ingredients, cooking instructions, storage advice and allergens vary between products and publishers.",
+  links: [{ href: "/guides", label: "Browse all guides" }, { href: "/food-safety", label: "Food safety" }]
+};
+var MEAT_STRETCHING_GUIDE = {
+  title: "Seven ways to make meat go further with beans, lentils and mushrooms",
+  seoTitle: "Seven ways to make meat go further | DinnerByDesign",
+  description: "Seven familiar dinners showing how beans, lentils and mushrooms can make a smaller amount of meat go further without making dinner feel like a compromise.",
+  publishedAt: "2026-08-09",
+  reviewedAt: "2026-08-09",
+  nextReviewAt: "2027-02-09",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Ways to make meat go further with beans, lentils and mushrooms",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-09",
+  editorialNotes: "Seven source-led dinners that distinguish published recipe methods from practical, clearly labelled adaptations.",
+  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-beef-or-pork-mince", "/guides/nine-budget-dinners-with-tinned-vegetables", "/guides/nine-budget-dinners-with-rice", "/guides/cooking-with-pulses-on-a-budget", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Chilli con carne, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/chilli-con-carne-recipe" },
+    { label: "Cottage pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/775643/cottage-pie" },
+    { label: "Bean & sausage hotpot, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bean-and-sausage-hotpot" },
+    { label: "Fragrant chicken curry with chick peas, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/fragrant-chicken-curry-chick-peas" },
+    { label: "Spaghetti Bolognese, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/spaghetti-bolognese" },
+    { label: "Bacon & mushroom pasta, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bacon-mushroom-pasta" },
+    { label: "Beef meatballs with tomato sauce, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/beef-meatballs-with-tomato-sauce" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Can I replace all the meat with beans or lentils?", answer: "You can, but this guide is about making a smaller amount of meat cover more dinners. Start by replacing some of the meat, then adjust the seasoning and texture to suit the dish." },
+    { question: "Which lentils work best?", answer: "Green and brown lentils hold their shape in pies and sauces. Red lentils soften more, which suits chilli and tomato-based sauces." },
+    { question: "Do tinned beans need cooking first?", answer: "Tinned beans are already cooked. Drain and rinse them where the label suggests, then warm them through in the sauce or hotpot." },
+    { question: "Will mushrooms make a mince dish watery?", answer: "Finely chop them and cook them first so their moisture cooks away before they go into the sauce or filling." }
+  ]
+};
+var MEAT_STRETCHING_GUIDE_SECTIONS = [
+  { paragraphs: [
+    "A pack of mince, a few sausages or chicken left over from a roast does not always stretch to a full dinner for the whole household on its own. Beans, lentils and mushrooms are a practical way to close that gap without turning dinner into something unfamiliar or making it feel like a compromise.",
+    "Some of these dinners already include beans, lentils or mushrooms in the published recipe. Others are familiar meat-led dishes with a suggested addition. Those are clearly marked as adaptations, rather than presented as the publisher's own method."
+  ] },
+  { title: "1. Chilli con carne, with beans doing the bulk of the work", paragraphs: [
+    "BBC Good Food's chilli con carne combines minced beef with red kidney beans in a spiced tomato sauce. The beans are part of the recipe as written, and make up a substantial share of each serving alongside the mince.",
+    "Adaptation: a handful of dried red lentils, added with the tomatoes and given time to soften, can bulk the chilli out further and thicken the sauce. This is not part of the original recipe."
+  ] },
+  { title: "2. Cottage pie, stretched with lentils and mushrooms", paragraphs: [
+    "BBC Good Food's cottage pie is a mince filling with onion, carrot and celery in a stock-based gravy, topped with potato mash and baked until golden.",
+    "Adaptation: some of the mince can be replaced with cooked green or brown lentils and finely chopped mushrooms. Cook the mushrooms first, then add them to the filling. This substitution is not part of the original recipe."
+  ] },
+  { title: "3. Sausage and bean hotpot", paragraphs: [
+    "BBC Good Food's bean and sausage hotpot browns sausages, then simmers them in tomato sauce with butter beans, mustard and a little treacle or sugar. It serves four, with five minutes of preparation and forty minutes of cooking.",
+    "Butter beans and the sauce carry most of the dish, so a modest number of sausages is enough to cover four. A second tin of beans can make the pot go further, or use another tinned bean in place of butter beans."
+  ] },
+  { title: "4. Fragrant chicken curry with chickpeas", paragraphs: [
+    "Chicken simmers in a spiced sauce, with chickpeas and coriander stirred through near the end. BBC Good Food lists four servings, with thirty to forty minutes of preparation and thirty minutes of cooking.",
+    "The chickpeas are part of the source recipe. A smaller amount of chicken can still make a full dinner once the sauce and chickpeas are taken into account. Another tinned pulse can stand in for chickpeas."
+  ] },
+  { title: "5. Spaghetti Bolognese, built with mushrooms", paragraphs: [
+    "The Food Standards Agency version combines beef mince with onion, garlic, tomatoes, mushrooms, pepper, carrot and courgette, served over spaghetti. It serves two and takes fifty minutes.",
+    "Mushrooms are part of the recipe as written, giving the sauce texture beyond the mince. Adaptation: dried red lentils added with the tomatoes soften into the sauce and make it go further. This is not part of the original recipe."
+  ] },
+  { title: "6. Bacon and mushroom pasta, with beans added", paragraphs: [
+    "BBC Good Food's bacon and mushroom pasta fries bacon and mushrooms until golden, then tosses them with pasta, pesto and creme fraiche. It is ready in under thirty minutes.",
+    "The mushrooms are already doing useful work in the dish. Adaptation: stir in a drained tin of cannellini or borlotti beans once the pasta and sauce are combined to add bulk without needing more bacon."
+  ] },
+  { title: "7. Beef meatballs with mushrooms and tomato sauce", paragraphs: [
+    "The Food Standards Agency recipe makes lean beef meatballs, then simmers them in tomato sauce with mushrooms and peppers. It serves four and takes one hour and five minutes.",
+    "The mushrooms are part of the source recipe, helping the sauce go further. Adaptation: a small amount of cooked, well-drained lentils or finely grated mushroom can be worked into the meatball mixture to use less mince per meatball. This is not part of the original recipe."
+  ] },
+  { title: "Choosing the right addition", paragraphs: [
+    "Lentils suit saucy mince dishes and pies, where they soften into the sauce. Beans suit chilli, stews and sausage dinners, where they hold their shape. Mushrooms work well in sauces, pies and pasta dishes, where their savouriness fits naturally with the meat.",
+    "Using less meat in a dinner does not mean less flavour or less variety. Chilli, curry, pasta, pie and hotpot can all still taste like themselves while leaving a little more room in the weekly shop."
+  ], relatedLink: { label: "Browse the guides library", url: "/guides" } }
+];
+var MEAT_STRETCHING_GUIDE_RECORD = {
+  id: "seven-ways-to-make-meat-go-further",
+  slug: "seven-ways-to-make-meat-go-further",
+  path: MEAT_STRETCHING_GUIDE_PATH,
+  canonicalPath: MEAT_STRETCHING_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...MEAT_STRETCHING_GUIDE,
+  metaDescription: MEAT_STRETCHING_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: MEAT_STRETCHING_GUIDE_DISCLOSURES,
+  disclosureFooter: MEAT_STRETCHING_GUIDE_DISCLOSURE_FOOTER,
+  sections: MEAT_STRETCHING_GUIDE_SECTIONS,
+  cta: {
+    title: "Find dinners for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
+    label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/leftoverRoastChickenBudgetDinnersGuide.ts
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH = "/guides/9-budget-dinners-with-leftover-roast-chicken";
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "A note on budget wording",
+    body: "This guide does not use live retailer prices or promise a fixed saving. Current pack sizes, retailer prices and ingredients already at home all affect the final cost."
+  },
+  {
+    key: "storage_and_cooking",
+    title: "Storage and reheating",
+    body: "Follow current Food Standards Agency guidance when cooling, storing and reheating leftover chicken, cooked rice and dishes made with them. Check the guidance again if your storage conditions differ."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Stock, soy sauce, wraps, pastry, yoghurt, houmous, mayonnaise, cheese and prepared seasonings vary by product and may contain allergens. Check labels for everyone eating the dinner."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food-safety guidance and editorial claims were reviewed 6 August 2026. Follow the cited Food Standards Agency pages for later updates."
+  }
+];
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers flexible dinner ideas rather than complete recipes. Ingredients, pack sizes, cooking instructions and allergens vary.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "How prices are calculated" },
+    { href: "/food-safety", label: "Food safety" }
+  ]
+};
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE = {
+  title: "9 budget dinners with leftover roast chicken",
+  seoTitle: "9 Budget Dinners With Leftover Roast Chicken | DinnerByDesign",
+  description: "Nine practical dinner ideas for using leftover roast chicken, with ways to stretch portions, use everyday ingredients and reduce food waste.",
+  publishedAt: "2026-08-06",
+  reviewedAt: "2026-08-06",
+  nextReviewAt: "2027-08-06",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using leftover roast chicken",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-06",
+  editorialNotes: "One canonical leftover-led guide with nine distinct roast chicken dinner ideas, food-safety guidance and one handoff to ordinary DinnerByDesign search.",
+  internalLinks: ["/guides", "/recipes", "/food-costs/cooking-with-pulses-on-a-budget", "/food-costs/portion-planning-and-food-waste", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Home food fact checker",
+      url: "https://www.gov.uk/government/publications/home-food-fact-checker"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food"
+    },
+    {
+      label: "Food Standards Agency: Reheating leftovers until steaming hot throughout",
+      url: "https://www.food.gov.uk/research/behaviour-and-perception/not-reheating-leftovers-until-steaming-hot-throughout"
+    }
+  ]
+};
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_SECTIONS = [
+  {
+    paragraphs: [
+      "A roast chicken rarely gets used all at once, and what's left in the fridge a day or two later is worth more than a sandwich filling. Shredded or diced, roast chicken carries flavour into soups, bakes, curries and rice dishes without much effort, and it pairs well with things already in the cupboard: potatoes, tinned tomatoes, stock, beans, yoghurt. Below are nine dinners built around that leftover chicken, each one designed to stretch it a bit further rather than just bulking out a plate."
+    ]
+  },
+  {
+    title: "Chicken fried rice",
+    paragraphs: [
+      "Fried rice is one of the quickest ways to turn a small amount of chicken into a full dinner. Cooked, cold rice fries better than fresh, so this is a natural fit for a rice portion left over from another night. Add a beaten egg, frozen peas and sweetcorn, and a splash of soy sauce, and around 150g of shredded chicken is enough for two generous portions once everything else bulks it out. A grated carrot or some finely sliced spring onion is a reasonable addition if there's some to use up. To stretch the chicken further, lean more heavily on the vegetables and treat the meat as one ingredient among several rather than the main event."
+    ]
+  },
+  {
+    title: "Chicken, leek and mushroom pie filling",
+    paragraphs: [
+      "A white sauce built from butter, flour and milk, with sliced leek and mushroom softened in first, turns a modest amount of chicken into a filling that goes a long way under pastry or mash. About 200g of diced chicken is plenty for a pie serving four, especially once the vegetables are added. Ready-rolled puff pastry keeps this simple, and a shortcrust or mashed potato topping works just as well if that's what's in. A tin of sweetcorn or a couple of handfuls of frozen peas stirred through the sauce add bulk and help the filling stretch across more portions than the chicken alone would manage."
+    ]
+  },
+  {
+    title: "Chicken and sweetcorn soup",
+    paragraphs: [
+      "This is the one to make if the chicken has dried out slightly, since a slow simmer in stock brings it back to life. Sweetcorn, whether tinned or frozen, is the main bulking ingredient here, along with a diced onion and some sliced spring onion if there's any about. Around 100g of shredded chicken is enough for a pan that serves two to three, particularly with a swirl of beaten egg stirred through at the end for extra body, in the style of a simple egg-drop soup. Rice or noodles added to the pot turn this from a starter into more of a main dinner. Any extra should be cooled promptly, covered and put in the fridge, then eaten within 48 hours or frozen for another week."
+    ]
+  },
+  {
+    title: "Chicken wraps with yoghurt, salad and pickles",
+    paragraphs: [
+      "This is the dinner for a night when there's not much appetite for cooking. Shredded chicken, a spoonful of plain yoghurt mixed with a little garlic or lemon, and whatever salad is knocking about in the fridge fill a wrap or flatbread well, and there's barely a pan to wash up afterwards. Around 80 to 100g of chicken per wrap is a reasonable amount, and a bit of pickled onion or gherkin adds the sharpness that stops the whole thing tasting flat. Swapping the yoghurt for houmous is an easy variation if that's what's open in the fridge. To stretch the chicken further, add a tin of drained chickpeas to the filling so the wrap isn't relying on meat for its bulk."
+    ]
+  },
+  {
+    title: "Chicken pasta bake",
+    paragraphs: [
+      "A tomato or white sauce poured over pasta and shredded chicken, topped with cheese and baked until bubbling, is a dependable way to use up both leftover chicken and any pasta sauce sitting in the cupboard. Around 150g of chicken is enough for a bake serving three to four once the pasta and sauce are factored in, and frozen spinach or broccoli stirred through adds colour and volume. A tin of chopped tomatoes can stand in for a jarred sauce if that's what's to hand. Bulking the pasta itself, rather than the chicken, is usually the easiest way to make this dinner go further across more portions."
+    ]
+  },
+  {
+    title: "Chicken curry with chickpeas or lentils",
+    paragraphs: [
+      "A curry built from onion, garlic, tinned tomatoes and whatever spices are in the cupboard turns a small amount of chicken into a dinner that reheats well the next day. Around 150g of shredded chicken is plenty for a curry serving three, especially once a tin of chickpeas or a handful of red lentils is added to thicken the sauce and increase the volume. Coconut milk is a reasonable swap for some of the tomato base if a creamier curry is wanted. Lentils are the more effective stretcher of the two, since they break down as they cook and thicken the sauce rather than sitting as a separate ingredient."
+    ]
+  },
+  {
+    title: "Chicken risotto",
+    paragraphs: [
+      "Risotto works from raw rice rather than leftover rice, unlike the fried rice above, so this is one to start from a bag of arborio or carnaroli rather than reaching for a cooked portion out of the fridge. Cooked slowly with stock, added a ladleful at a time, the rice gives a creamy base that carries shredded chicken well without needing much of it. Around 120g of chicken, stirred through near the end of cooking so it warms through rather than overcooks, is enough for a risotto serving two to three. Frozen peas or sweetcorn stirred in during the last few minutes add colour and bulk. A vegetable stock cube can replace chicken stock if that's what's in, and the flavour holds up reasonably well. Using a bit more rice and stock than the chicken alone would need is the simplest way to stretch this dinner across more servings."
+    ]
+  },
+  {
+    title: "Loaded baked potatoes with chicken and beans",
+    paragraphs: [
+      "A baked potato is already a filling base, so it doesn't take much chicken on top to make a proper dinner of it. For each potato, mix around 80g of shredded chicken with either a tin of beans in a light sauce, or with sweetcorn and a spoon of mayonnaise, then spoon that over the split potato. Cheese grated over the top is optional but does add to the sense of a finished plate. Baked beans are a fair swap for the tinned beans if that's what's in the cupboard, and this dinner scales easily up or down depending on how many potatoes go in the oven. Splitting the chicken across more potatoes, topped up with extra beans, is the easiest way to feed more people from the same amount of meat."
+    ]
+  },
+  {
+    title: "Chicken hash with potatoes and a fried egg",
+    paragraphs: [
+      "This is the one-pan dinner for when the fridge looks a bit bare and there's not much energy for a proper cook. Diced potato, fried until golden with an onion and the leftover chicken stirred through towards the end, comes together with barely any planning. Around 100 to 120g of chicken is enough for a hash serving two, topped with a fried egg so the yolk runs into everything underneath. Leftover roast potatoes work well here instead of raw diced ones if there are some going spare, which also cuts the cooking time considerably. Frozen diced onion is a reasonable time-saver if a fresh one isn't to hand. Adding a handful of frozen peas or sweetcorn towards the end of cooking bulks the pan out without needing more chicken."
+    ]
+  },
+  {
+    title: "A note on food safety",
+    paragraphs: [
+      "Leftover chicken should go in the fridge promptly, ideally within two hours of cooking. The Food Standards Agency advises eating leftovers within 48 hours or freezing them if that isn't going to happen. When reheating, chicken and any dish containing it should be heated until steaming hot all the way through, not just warmed, and should only be reheated once.",
+      "Rice needs its own rule, and it applies to the fried rice above rather than the risotto, since risotto is cooked fresh from raw rice each time. The Food Standards Agency advises cooling cooked rice quickly, ideally within an hour, then refrigerating it and using it within 24 hours. As with any leftover, reheat rice only once and make sure it's steaming hot all the way through before serving."
+    ]
+  }
+];
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_FAQS = [
+  {
+    question: "How long can leftover roast chicken be kept in the fridge?",
+    answer: "Cool it promptly, refrigerate it within two hours of cooking and eat it within 48 hours, or freeze it if that will not be possible. Follow current Food Standards Agency guidance if your storage conditions differ."
+  },
+  {
+    question: "Can I use leftover chicken in fried rice?",
+    answer: "Yes, but use rice that was cooled quickly, refrigerated promptly and used within 24 hours. Reheat the finished fried rice only once and make sure it is steaming hot throughout before serving."
+  },
+  {
+    question: "How can I make leftover chicken stretch further?",
+    answer: "Pair it with potatoes, pasta, rice, beans, lentils or vegetables that need using up. The chicken then adds flavour to the whole dinner rather than sitting as the only main ingredient."
+  },
+  {
+    question: "Can these leftover chicken ideas be frozen?",
+    answer: "Many can be frozen, including soup, pie filling, curry and pasta bake. Cool the dish promptly, freeze it in useful portions and reheat it until steaming hot throughout. Check rice guidance separately."
+  }
+];
+var LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD = {
+  id: "9-budget-dinners-with-leftover-roast-chicken",
+  slug: "9-budget-dinners-with-leftover-roast-chicken",
+  path: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+  canonicalPath: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "safety-sensitive",
+  ...LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
+  metaDescription: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURES,
+  disclosureFooter: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER,
+  sections: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_SECTIONS,
+  faqs: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_FAQS,
+  cta: {
+    title: "Find chicken recipes for dinner",
+    copy: "Search DinnerByDesign for chicken recipes that suit your time, budget and preferences.",
+    label: "Find chicken recipes",
     href: "/signin"
   }
 };
@@ -186000,6 +186290,9 @@ var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD = {
 // src/content/publicGuideRegistry.ts
 var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
+  BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_RECORD,
+  MEAT_STRETCHING_GUIDE_RECORD,
+  LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD,
   NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD,
   WHOLE_CHICKEN_VALUE_GUIDE_RECORD,
@@ -186025,21 +186318,6 @@ var publicGuideRecordToArticle = (guide) => ({
 });
 var PUBLIC_ARTICLES = [
   ...PUBLISHED_PUBLIC_GUIDE_RECORDS.map(publicGuideRecordToArticle),
-  { title: MEAT_STRETCHING_GUIDE.title, path: MEAT_STRETCHING_GUIDE_PATH, category: "Practical cooking guide", pageFamily: MEAT_STRETCHING_GUIDE.pageFamily, primarySearchIntent: MEAT_STRETCHING_GUIDE.primarySearchIntent, indexingStatus: MEAT_STRETCHING_GUIDE.indexingStatus, publishedAt: MEAT_STRETCHING_GUIDE.publishedAt, reviewedAt: MEAT_STRETCHING_GUIDE.reviewedAt, contentReviewedAt: MEAT_STRETCHING_GUIDE.contentReviewedAt, internalLinks: MEAT_STRETCHING_GUIDE.internalLinks, disclosures: MEAT_STRETCHING_GUIDE.disclosures, status: "published" },
-  {
-    title: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.title,
-    path: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.pageFamily,
-    primarySearchIntent: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.primarySearchIntent,
-    indexingStatus: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.indexingStatus,
-    publishedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.publishedAt,
-    reviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.reviewedAt,
-    contentReviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.contentReviewedAt,
-    internalLinks: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.internalLinks,
-    disclosures: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.disclosures,
-    status: "published"
-  },
   {
     title: TINNED_FISH_GUIDE.title,
     path: TINNED_FISH_GUIDE_PATH,
@@ -186136,20 +186414,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: MINCE_BUDGET_DINNERS_GUIDE.contentReviewedAt,
     internalLinks: MINCE_BUDGET_DINNERS_GUIDE.internalLinks,
     disclosures: MINCE_BUDGET_DINNERS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.title,
-    path: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.pageFamily,
-    primarySearchIntent: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.primarySearchIntent,
-    indexingStatus: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.indexingStatus,
-    publishedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.publishedAt,
-    reviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.reviewedAt,
-    contentReviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.contentReviewedAt,
-    internalLinks: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.internalLinks,
-    disclosures: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.disclosures,
     status: "published"
   },
   {

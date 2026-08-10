@@ -12,14 +12,11 @@ import { PULSES_BUDGET_GUIDE, PULSES_BUDGET_GUIDE_PATH } from './pulsesBudgetGui
 import { TRAYBAKE_GUIDE, TRAYBAKE_GUIDE_PATH } from './traybakeGuide';
 import { SAUSAGE_WAYS_GUIDE, SAUSAGE_WAYS_GUIDE_PATH } from './sausageWaysGuide';
 import { MINCE_BUDGET_DINNERS_GUIDE, MINCE_BUDGET_DINNERS_GUIDE_PATH } from './minceBudgetDinnersGuide';
-import { LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE, LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH } from './leftoverRoastChickenBudgetDinnersGuide';
 import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
 import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide';
 import { CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH } from './convenienceFishGuide';
 import { TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH } from './tinnedFishGuide';
 import { NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH } from './nineBudgetDinnersThreeCuisinesGuide';
-import { BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH } from './bubbleAndSqueakBudgetDinnersGuide';
-import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH } from './meatStretchingGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './publicGuideRegistry';
 import type { PublicGuideRecord } from './publicGuideModel';
 import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
@@ -56,14 +53,6 @@ const publicGuideRecordToArticle = (guide: PublicGuideRecord): PublicArticleLink
 
 export const PUBLIC_ARTICLES: PublicArticleLink[] = [
   ...PUBLISHED_PUBLIC_GUIDE_RECORDS.map(publicGuideRecordToArticle),
-  { title: MEAT_STRETCHING_GUIDE.title, path: MEAT_STRETCHING_GUIDE_PATH, category: 'Practical cooking guide', pageFamily: MEAT_STRETCHING_GUIDE.pageFamily, primarySearchIntent: MEAT_STRETCHING_GUIDE.primarySearchIntent, indexingStatus: MEAT_STRETCHING_GUIDE.indexingStatus, publishedAt: MEAT_STRETCHING_GUIDE.publishedAt, reviewedAt: MEAT_STRETCHING_GUIDE.reviewedAt, contentReviewedAt: MEAT_STRETCHING_GUIDE.contentReviewedAt, internalLinks: MEAT_STRETCHING_GUIDE.internalLinks, disclosures: MEAT_STRETCHING_GUIDE.disclosures, status: 'published' },
-  {
-    title: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.title, path: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.pageFamily, primarySearchIntent: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.primarySearchIntent,
-    indexingStatus: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.indexingStatus, publishedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.publishedAt,
-    reviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.reviewedAt, contentReviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.contentReviewedAt,
-    internalLinks: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.internalLinks, disclosures: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.disclosures, status: 'published',
-  },
   {
     title: TINNED_FISH_GUIDE.title,
     path: TINNED_FISH_GUIDE_PATH,
@@ -147,13 +136,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: MINCE_BUDGET_DINNERS_GUIDE.indexingStatus, publishedAt: MINCE_BUDGET_DINNERS_GUIDE.publishedAt,
     reviewedAt: MINCE_BUDGET_DINNERS_GUIDE.reviewedAt, contentReviewedAt: MINCE_BUDGET_DINNERS_GUIDE.contentReviewedAt,
     internalLinks: MINCE_BUDGET_DINNERS_GUIDE.internalLinks, disclosures: MINCE_BUDGET_DINNERS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.title, path: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.pageFamily, primarySearchIntent: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.primarySearchIntent,
-    indexingStatus: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.indexingStatus, publishedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.publishedAt,
-    reviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.reviewedAt, contentReviewedAt: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.contentReviewedAt,
-    internalLinks: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.internalLinks, disclosures: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.disclosures, status: 'published',
   },
   {
     title: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.title, path: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH, category: 'Practical cooking guide',

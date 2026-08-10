@@ -1,8 +1,10 @@
 import type { ProgrammaticDisclosureKey, ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem } from './programmaticDisclosures';
 import {
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
-} from './programmaticDisclosures';
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH = '/guides/9-budget-dinners-with-leftover-roast-chicken';
 
@@ -69,12 +71,7 @@ export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE = {
   ],
 };
 
-export interface LeftoverRoastChickenBudgetDinnersGuideSection {
-  title?: string;
-  paragraphs: string[];
-}
-
-export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_SECTIONS: LeftoverRoastChickenBudgetDinnersGuideSection[] = [
+export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_SECTIONS: PublicGuideSection[] = [
   {
     paragraphs: [
       "A roast chicken rarely gets used all at once, and what's left in the fridge a day or two later is worth more than a sandwich filling. Shredded or diced, roast chicken carries flavour into soups, bakes, curries and rice dishes without much effort, and it pairs well with things already in the cupboard: potatoes, tinned tomatoes, stock, beans, yoghurt. Below are nine dinners built around that leftover chicken, each one designed to stretch it a bit further rather than just bulking out a plate.",
@@ -163,56 +160,32 @@ export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_FAQS = [
 ];
 
 export function getLeftoverRoastChickenBudgetDinnersGuideJsonLd() {
-  const guide = LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE;
-  const url = `https://dinnerbydesign.app${LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_FAQS.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD);
 }
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderLeftoverRoastChickenBudgetDinnersGuideInitialHtml() {
-  const guide = LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER);
-  const sections = LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_SECTIONS.map(section => {
-    const heading = section.title ? `<h2>${escapeHtml(section.title)}</h2>` : '';
-    return `<section>${heading}${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</section>`;
-  }).join('');
-  const faqs = LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_FAQS.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 6 August 2026 · Last reviewed 6 August 2026</p><article>${sections}${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find chicken recipes for dinner</h2><p>Search DinnerByDesign for chicken recipes that suit your time, budget and preferences.</p><p><a href="/signin">Find chicken recipes</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD);
 }
+
+export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD: PublicGuideRecord = {
+  id: '9-budget-dinners-with-leftover-roast-chicken',
+  slug: '9-budget-dinners-with-leftover-roast-chicken',
+  path: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+  canonicalPath: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'safety-sensitive',
+  ...LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE,
+  metaDescription: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE.description,
+  label: 'Practical cooking guide',
+  disclosureItems: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURES,
+  disclosureFooter: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_DISCLOSURE_FOOTER,
+  sections: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_SECTIONS,
+  faqs: LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_FAQS,
+  cta: {
+    title: 'Find chicken recipes for dinner',
+    copy: 'Search DinnerByDesign for chicken recipes that suit your time, budget and preferences.',
+    label: 'Find chicken recipes',
+    href: '/signin',
+  },
+};

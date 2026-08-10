@@ -1,5 +1,10 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
-import { renderProgrammaticDisclosureFooterInitialHtml, renderProgrammaticDisclosuresInitialHtml } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const MEAT_STRETCHING_GUIDE_PATH = '/guides/seven-ways-to-make-meat-go-further';
 
@@ -44,9 +49,7 @@ export const MEAT_STRETCHING_GUIDE = {
   ],
 };
 
-interface GuideSection { title?: string; paragraphs: string[]; relatedLink?: { label: string; url: string }; }
-
-export const MEAT_STRETCHING_GUIDE_SECTIONS: GuideSection[] = [
+export const MEAT_STRETCHING_GUIDE_SECTIONS: PublicGuideSection[] = [
   { paragraphs: [
     'A pack of mince, a few sausages or chicken left over from a roast does not always stretch to a full dinner for the whole household on its own. Beans, lentils and mushrooms are a practical way to close that gap without turning dinner into something unfamiliar or making it feel like a compromise.',
     'Some of these dinners already include beans, lentils or mushrooms in the published recipe. Others are familiar meat-led dishes with a suggested addition. Those are clearly marked as adaptations, rather than presented as the publisher\'s own method.',
@@ -86,21 +89,31 @@ export const MEAT_STRETCHING_GUIDE_SECTIONS: GuideSection[] = [
 ];
 
 export function getMeatStretchingGuideJsonLd() {
-  const guide = MEAT_STRETCHING_GUIDE;
-  const url = `https://dinnerbydesign.app${MEAT_STRETCHING_GUIDE_PATH}`;
-  return { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': `${url}#article`, headline: guide.title, description: guide.description, datePublished: guide.publishedAt, dateModified: guide.reviewedAt, author: { '@type': 'Organization', name: guide.editorialOwner }, publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' }, mainEntityOfPage: url, citation: guide.sources.map(source => source.url) },
-    { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' }, { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' }, { '@type': 'ListItem', position: 3, name: guide.title, item: url }] },
-  ] };
+  return getPublicGuideJsonLd(MEAT_STRETCHING_GUIDE_RECORD);
 }
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderMeatStretchingGuideInitialHtml() {
-  const guide = MEAT_STRETCHING_GUIDE;
-  const sections = MEAT_STRETCHING_GUIDE_SECTIONS.map(section => `<section>${section.title ? `<h2>${escapeHtml(section.title)}</h2>` : ''}${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}${section.relatedLink ? `<p>Related guide: <a href="${escapeHtml(section.relatedLink.url)}">${escapeHtml(section.relatedLink.label)}</a></p>` : ''}</section>`).join('');
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 9 August 2026 · Last reviewed 9 August 2026</p><article>${sections}${renderProgrammaticDisclosuresInitialHtml(MEAT_STRETCHING_GUIDE_DISCLOSURES)}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${renderProgrammaticDisclosureFooterInitialHtml(MEAT_STRETCHING_GUIDE_DISCLOSURE_FOOTER)}</article><section><h2>Find dinners for tonight</h2><p>Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.</p><p><a href="/signin">Find dinners</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(MEAT_STRETCHING_GUIDE_RECORD);
 }
+
+export const MEAT_STRETCHING_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'seven-ways-to-make-meat-go-further',
+  slug: 'seven-ways-to-make-meat-go-further',
+  path: MEAT_STRETCHING_GUIDE_PATH,
+  canonicalPath: MEAT_STRETCHING_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'standard',
+  ...MEAT_STRETCHING_GUIDE,
+  metaDescription: MEAT_STRETCHING_GUIDE.description,
+  label: 'Practical cooking guide',
+  disclosureItems: MEAT_STRETCHING_GUIDE_DISCLOSURES,
+  disclosureFooter: MEAT_STRETCHING_GUIDE_DISCLOSURE_FOOTER,
+  sections: MEAT_STRETCHING_GUIDE_SECTIONS,
+  cta: {
+    title: 'Find dinners for tonight',
+    copy: 'Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.',
+    label: 'Find dinners',
+    href: '/signin',
+  },
+};
