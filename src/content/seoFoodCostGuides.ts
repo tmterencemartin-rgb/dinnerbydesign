@@ -40,6 +40,12 @@ export interface FoodCostGuideSource {
   url: string;
 }
 
+const extractLegacyArticleSections = (initialHtml: string) => {
+  const match = initialHtml.match(/<article>([\s\S]*?)<\/article>/);
+  if (!match) throw new Error('Legacy guide HTML is missing article content.');
+  return match[1];
+};
+
 export const UK_FOOD_COSTS_2026_PATH = '/food-costs/uk-food-costs-2026';
 
 export const UK_FOOD_COSTS_2026 = {
@@ -394,6 +400,37 @@ export function renderOffalBudgetGuideInitialHtml() {
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>Liver, kidney and heart can cost less than more familiar cuts, but they are not direct substitutes. Each brings its own flavour, texture and cooking requirement. Used thoughtfully — with onions, vegetables, grains, pulses and assertive seasonings — they can produce satisfying, characterful dinners without relying on a large quantity of meat.</p></section><section><h2>Why consider offal?</h2><p>Offal can bring meat into a dinner as a smaller, supporting element rather than the centrepiece. It is one option among several for managing ingredient spending, not something any household needs to adopt.</p></section><section><h2>Is it necessarily less expensive?</h2><p>Often, but not always. Price snapshot, 20 July 2026: Tesco listed lamb liver at £6.15/kg, lamb heart at £7.30/kg and lamb kidney at £8.00/kg, compared with lamb mince from £13.00/kg. Prices, ranges and availability change, so check the current shelf price.</p>${price}</section><section><h2>Liver, kidney and heart: how they differ</h2><ul><li><strong>Liver:</strong> soft in texture and mild to rich in flavour. Thin, evenly sized pieces cook through quickly.</li><li><strong>Kidney:</strong> firmer, with a distinct mineral flavour. It usually needs its white core trimmed and can suit quick or slow cooking.</li><li><strong>Heart:</strong> denser and leaner, closer to a muscle cut. Cook it long and slow, or slice it thinly for quick cooking.</li></ul></section><section><h2>Flavours that work well</h2><ul><li><strong>Liver:</strong> onions, sage, mustard, vinegar or sherry.</li><li><strong>Kidney:</strong> mustard, Worcestershire sauce, paprika, stock or ale.</li><li><strong>Heart:</strong> garlic, chilli, citrus or a vinegar-based marinade.</li></ul></section>${safety}<section><h2>Three approachable starting points</h2><ul><li>Thoroughly cooked lamb liver with onions, mustard and vinegar.</li><li>Kidney with root vegetables in a rich gravy.</li><li>Slow-cooked heart with garlic, smoked paprika and tomatoes.</li></ul></section><section><h2>Availability in supermarkets and butchers</h2><p>Liver and kidney are stocked fairly reliably by major UK supermarkets. Heart, tongue and tripe are less consistent, and a local butcher may be able to source and prepare them.</p></section><section><h2>Vitamin A, pregnancy and food-safety guidance</h2><p>The NHS advises against eating liver or liver products such as pâté more than once a week. Liver and liver products should be avoided during pregnancy. Follow the cited NHS and Food Standards Agency guidance.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Find offal dinners and products</h2><p>Search DinnerByDesign for liver, kidney, heart and other offal options, then compare suitable dinners and ready-made products in one place.</p></section><section><h2>Sources and further reading</h2><p>Guidance and prices reviewed 20 July 2026.</p><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Find suitable offal options</h2><p>Use DinnerByDesign to search directly or include offal in your personalised suggestions.</p><p><a href="/signin">Find offal dinners</a></p></section></main></div>`;
 }
 
+export const OFFAL_BUDGET_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'cooking-with-offal-on-a-budget',
+  slug: 'cooking-with-offal-on-a-budget',
+  path: OFFAL_BUDGET_GUIDE_PATH,
+  canonicalPath: OFFAL_BUDGET_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'safety-sensitive',
+  ...OFFAL_BUDGET_GUIDE,
+  nextReviewAt: '2027-07-20',
+  metaDescription: OFFAL_BUDGET_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: [
+    ...OFFAL_PRICE_DISCLOSURES,
+    ...OFFAL_SAFETY_DISCLOSURES,
+  ],
+  disclosureFooter: OFFAL_BUDGET_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: extractLegacyArticleSections(renderOffalBudgetGuideInitialHtml()) },
+  ],
+  cta: {
+    title: 'Find suitable offal options',
+    copy: 'Use DinnerByDesign to search directly or include offal in your personalised suggestions.',
+    label: 'Find offal dinners',
+    href: '/signin',
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false,
+};
+
 export const PORTION_PLANNING_GUIDE_PATH = '/food-costs/portion-planning-and-food-waste';
 
 export const PORTION_PLANNING_GUIDE = {
@@ -512,6 +549,38 @@ export function renderMediterraneanAffordableCookingInitialHtml() {
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>Beans, lentils, grains, vegetables and a handful of well-chosen flavourings turn up again and again across the Mediterranean's many different culinary traditions — and they are a genuinely useful starting point for a satisfying, affordable dinner. This is not a claim that Mediterranean cooking is cheap: some of its best-known ingredients, from good olive oil to fresh fish, are not. It is an argument for borrowing a handful of techniques that several of these traditions share.</p></section><section><h2>There is no single Mediterranean cuisine</h2><p>Greek, Italian, Lebanese, Spanish, Moroccan and Turkish cooking — to name just a few — are distinct culinary traditions with their own ingredients, history and character. Treating Mediterranean food as one uniform, inexpensive cuisine flattens that variety, and it is not accurate either. What is worth taking from these traditions is not a claim about their overall cost, but a set of techniques that turn up across several of them.</p></section><section><h2>Where the practical value comes from</h2><ul><li>Building a dinner around beans, lentils, grains and vegetables, rather than a large piece of meat or fish.</li><li>Using herbs, garlic, citrus, tomatoes and spices to bring flavour, rather than relying on the quantity of a costly ingredient.</li><li>Treating meat, fish or cheese as a smaller, supporting element where a dish calls for it, rather than the bulk of the plate.</li><li>Reusing bread, cooked grains, sauces and vegetables across more than one dinner.</li></ul><p>None of this is exclusive to the Mediterranean — similar techniques appear in low-cost cooking traditions worldwide — but it is a useful, well-documented set of examples to draw from.</p></section><section><h2>Affordable ingredients that carry flavour well</h2><ul><li>Dried or tinned lentils, chickpeas and beans</li><li>Onions and garlic</li><li>Tinned tomatoes</li><li>Rice, pasta, bulgur wheat and couscous</li><li>Herbs such as parsley, oregano, mint and bay</li><li>Spices such as cumin, paprika and cinnamon</li><li>Lemon</li></ul><p>These form the backbone of a satisfying dinner without needing a large quantity of any single expensive ingredient.</p></section><section><h2>Ingredients that can make the checkout more expensive</h2><p>Good-quality extra virgin olive oil, fresh fish and seafood, pine nuts, almonds, saffron and speciality cheeses can all add significantly to a shopping bill. They can still have a place — used in small quantities, saved for when you want to spend a little more, or swapped for a more accessible alternative.</p></section><section><h2>Four appetising dinner examples</h2><h3>Greek fasolada</h3><p>A hearty white bean soup, one of the best-known bean dishes in Greek cooking, made by simmering dried white beans with onion, carrot, celery and tomato, finished with a generous amount of olive oil. It is traditionally meat-free.</p><h3>Roman pasta e ceci</h3><p>A central and southern Italian dish of small pasta and chickpeas, simmered in a tomato-and-rosemary broth with garlic. The chickpea-and-pasta base needs no meat, although some Roman versions include anchovy.</p><h3>Lebanese mujadara</h3><p>A Levantine dish of lentils and rice, or bulgur wheat, built almost entirely around deeply caramelised onions, with cumin as the main spice. The version described here contains no animal-derived ingredients; check stock, packaged ingredients and accompaniments. It is found across Lebanon, Jordan and Syria.</p><h3>Spanish lentejas con chorizo</h3><p>A Spanish lentil stew with potato, carrot, onion, garlic and paprika, where a small amount of chorizo is sliced in to flavour the whole pot rather than serving as the main component.</p></section><section><h2>Reusing ingredients across several dinners</h2><p>A larger pot of cooked lentils, chickpeas or rice can be split across two or three dinners. A batch of caramelised onions can flavour a grain, a stew or a simple bean dish. A tomato-and-garlic base can work beneath pasta e ceci one night and a different bean or vegetable dinner later on.</p></section>${storage}<section><h2>UK-supermarket substitutions and how they alter the result</h2><ul><li>Tinned lentils or chickpeas are already cooked, so they can be drained and added without soaking, in place of dried.</li><li>Use a more everyday cooking oil in place of extra virgin olive oil for cooking. The dish will lose some of the fruitier, more peppery flavour that good olive oil brings, although this matters less for cooking than for a finishing drizzle.</li><li>Widely available cooking chorizo can replace a specific artisan variety. It still gives a smoky, paprika-forward flavour, although the exact taste and texture vary by brand.</li><li>A more everyday hard cheese can replace Parmesan or Pecorino for grating. This changes the flavour but still adds a savoury, salty finish.</li><li>A widely available long-grain rice may replace a specific variety, but texture, liquid requirements and cooking time can differ, so follow the pack instructions.</li></ul><p>These substitutions change the character of a dish rather than its core structure, so try the closest available alternative rather than skipping the ingredient's role entirely.</p></section>${product}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners built around beans, lentils and grains, and use the Low Cost filter alongside these techniques. Plan my week can help you schedule dinners that reuse a base sauce, cooked grain or batch of caramelised onions across more than one night.</p></section><section><h2>Sources and further reading</h2><p>The Spanish example uses a preparation reference rather than an official cultural authority and is therefore described in deliberately general terms.</p><ul>${sources}</ul></section>${sourceTiming}<section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make affordable ingredients taste good</h2><p>Use DinnerByDesign to find suitable dinners and plan ingredients across your week.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
 }
 
+export const MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'mediterranean-inspired-affordable-cooking',
+  slug: 'mediterranean-inspired-affordable-cooking',
+  path: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
+  canonicalPath: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'safety-sensitive',
+  ...MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE,
+  nextReviewAt: '2027-07-20',
+  metaDescription: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: [
+    ...MEDITERRANEAN_STORAGE_DISCLOSURES,
+    ...MEDITERRANEAN_PRODUCT_DISCLOSURES,
+    ...MEDITERRANEAN_SOURCE_DISCLOSURES,
+  ],
+  disclosureFooter: MEDITERRANEAN_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: extractLegacyArticleSections(renderMediterraneanAffordableCookingInitialHtml()) },
+  ],
+  cta: {
+    title: 'Make affordable ingredients taste good',
+    copy: 'Use DinnerByDesign to find suitable dinners and plan ingredients across your week.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false,
+};
+
 export const SUMMER_STEWS_GUIDE_PATH = '/food-costs/summer-stews-seasonal-vegetables';
 
 export const SUMMER_STEWS_GUIDE = {
@@ -561,6 +630,34 @@ export function renderSummerStewsGuideInitialHtml() {
   const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
   return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 20 July 2026 · Last reviewed 20 July 2026</p><article><section><p>A summer stew is generally lighter and quicker-cooking than a winter stew, built on fresh vegetables, herbs and a lighter broth or tomato base. Ingredients go in at different stages so each one keeps an appropriate texture, rather than everything cooking down together for hours.</p><p>The financial case for cooking this way is not that summer vegetables are automatically cheap — prices and availability still vary through the season and by retailer. It is that a stew built this way is unusually good at absorbing whatever you actually have that remains safe to eat: whichever vegetables are good value that week, or already sitting in the fridge needing to be used.</p></section><section><h2>Where the practical value comes from</h2><ul><li>It accommodates whichever vegetables are currently good value or already need using, provided they remain safe to eat.</li><li>It combines vegetables with beans, lentils or grains, rather than relying on a large quantity of meat.</li><li>One tomato base, bunch of herbs or pack of vegetables can be used across several dinners.</li><li>Irregular quantities and surplus vegetables — the half pepper, the last two courgettes — become an intentional part of the dish rather than loose ends to work around.</li><li>It accepts substitutions without needing a completely different recipe.</li><li>It can be served with bread, rice or another inexpensive accompaniment when you want more volume.</li></ul></section><section><h2>Staging vegetables by cooking time</h2><p>The main technique worth knowing is that not everything needs to go into the pot at once. Onions and firmer vegetables — peppers, aubergine, carrots — go in first and cook down into the base. Courgette, leafy vegetables and other more delicate ingredients go in later, so they retain their colour, texture and freshness rather than turning soft and grey. Herbs, and any final squeeze of lemon, go in right at the end, off the heat or close to it.</p><p>This is not a rigid rule — some dinners benefit from everything cooking down together, and that is a reasonable choice too. Staging is simply a way to keep more texture and colour in the finished dish, if that is what you want from it.</p></section><section><h2>Three flexible dinner ideas</h2><p>These are presented as adaptable starting points rather than named traditional dishes — change the vegetables to whatever you have, and treat the quantities as a guide rather than a fixed recipe.</p><h3>Tomato, courgette and butter bean stew with lemon and basil</h3><p>Onion and garlic cooked down first with tinned tomatoes, then butter beans warmed through, courgette added in the last few minutes so it keeps some bite, finished with lemon juice and torn basil off the heat.</p><h3>Chicken, pepper and sweetcorn broth with smoked paprika</h3><p>A light broth built from onion, pepper and smoked paprika, with a modest amount of chicken added to flavour rather than fill the bowl, and sweetcorn stirred in towards the end so it stays sweet and crisp. Cook the chicken thoroughly until steaming hot throughout, with no pink meat remaining.</p><h3>Aubergine, chickpea and tomato stew finished with fresh herbs</h3><p>Aubergine cooked down with onion and garlic until soft, chickpeas added to warm through, tinned tomatoes providing the base, and a handful of fresh parsley or coriander stirred in just before serving.</p></section><section><h2>Reusing a base across several dinners</h2><p>A larger batch of the onion-and-tomato base from any of these can do more than one job: it is the start of tonight's stew, but it can just as easily go under some pasta, alongside a piece of fish, or into a bean dish later in the week. The same applies to a bunch of herbs or a pack of vegetables bought for one dinner — splitting it across two dinners in the same week is usually more useful than trying to use all of it in one sitting.</p></section><section><h2>Serving for extra volume</h2><p>Bread, rice, couscous or another inexpensive accompaniment is a straightforward way to add volume to a lighter stew without adding more of the more expensive ingredients. A smaller pot of stew served over rice, or with a thick slice of bread on the side, often goes further than the same stew served alone.</p></section><section><h2>Food safety for cooked stews</h2><p>These dishes can be eaten warm or a little cooler, but that should not be confused with leaving a cooked stew out at room temperature for an extended period. Current Food Standards Agency guidance is to cool cooked food and refrigerate it within two hours, eat refrigerated leftovers within 48 hours or freeze them, and reheat only once, until steaming hot all the way through.</p></section>${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners that flex around whatever vegetables you have, and use the Low Cost filter alongside these techniques. Plan my week can help schedule a base sauce, herb bunch or vegetable pack across more than one dinner, and our <a href="/food-costs/ways-to-reduce-grocery-costs">low-cost cooking techniques</a> and <a href="/food-costs/portion-planning-and-food-waste">portion-planning guides</a> cover the wider principles in more detail.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-costs/fresh-or-frozen">choose between fresh and frozen produce</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make vegetables work harder across your week</h2><p>Find suitable dinners and plan shared ingredients with DinnerByDesign.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
 }
+
+export const SUMMER_STEWS_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'summer-stews-seasonal-vegetables',
+  slug: 'summer-stews-seasonal-vegetables',
+  path: SUMMER_STEWS_GUIDE_PATH,
+  canonicalPath: SUMMER_STEWS_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'safety-sensitive',
+  ...SUMMER_STEWS_GUIDE,
+  nextReviewAt: '2027-07-20',
+  metaDescription: SUMMER_STEWS_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: SUMMER_STEWS_DISCLOSURES,
+  disclosureFooter: SUMMER_STEWS_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: extractLegacyArticleSections(renderSummerStewsGuideInitialHtml()) },
+  ],
+  cta: {
+    title: 'Make vegetables work harder across your week',
+    copy: 'Find suitable dinners and plan shared ingredients with DinnerByDesign.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false,
+};
 
 export const FRESH_OR_FROZEN_GUIDE_PATH = '/food-costs/fresh-or-frozen';
 

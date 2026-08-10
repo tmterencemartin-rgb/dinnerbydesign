@@ -18963,8 +18963,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml9;
-    function escapeHtml9(string) {
+    module2.exports = escapeHtml10;
+    function escapeHtml10(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -19095,13 +19095,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml9 = require_escape_html();
+    var escapeHtml10 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message2) {
-      var body = escapeHtml9(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml10(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -23043,7 +23043,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml9 = require_escape_html();
+    var escapeHtml10 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -23096,7 +23096,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml9(msg));
+      var doc = createHtmlDocument("Error", escapeHtml10(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -23196,7 +23196,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml9(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml10(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23600,7 +23600,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml9 = require_escape_html();
+    var escapeHtml10 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23939,7 +23939,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml9(address);
+          var u = escapeHtml10(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -24067,7 +24067,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml9 = require_escape_html();
+    var escapeHtml10 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -24153,7 +24153,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml9(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml10(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -183663,6 +183663,35 @@ var COOKING_FOR_ONE_DISCLOSURES = [
     body: "Follow each product label and the original publisher\u2019s cooking method. Cool leftovers and refrigerate or freeze them within two hours. Reheat only once until steaming hot throughout. Defrost frozen portions in the fridge and use within 24 hours."
   }
 ];
+var OFFAL_PRICE_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "How to read this price snapshot",
+    body: "The figures compare listed shelf prices per kilogram checked 20 July 2026. They do not compare complete-pack checkout cost, edible yield or the total cost of a finished dinner. Prices, ranges and availability change."
+  },
+  {
+    key: "source_timing",
+    title: "Price and guidance review",
+    body: "Retailer prices and official guidance were checked on 20 July 2026. Follow the cited retailer, Food Standards Agency and NHS links for current information."
+  }
+];
+var OFFAL_SAFETY_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking safety",
+    body: "Cook liver, kidney and other offal thoroughly until steaming hot throughout. Follow product storage instructions, use-by dates and current Food Standards Agency guidance."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Worcestershire sauce commonly contains fish, mustard is an allergen, ale usually contains gluten, and sherry may contain sulphites. Stock and prepared sauces vary by product, so check every label."
+  },
+  {
+    key: "serving_assumption",
+    title: "Serving assumption",
+    body: "Quantities are not fixed in this guide. Adjust them to your appetite and to the dinner you are building around them."
+  }
+];
 var PORTION_PLANNING_DISCLOSURES = [
   {
     key: "serving_assumption",
@@ -183683,6 +183712,44 @@ var PORTION_PLANNING_DISCLOSURES = [
     key: "source_timing",
     title: "Guidance review",
     body: "Food-safety guidance was reviewed on 20 July 2026. Follow the cited Food Standards Agency links for later updates."
+  }
+];
+var MEDITERRANEAN_STORAGE_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Cool cooked rice quickly, ideally within an hour, refrigerate it for no more than one day before reheating, and reheat it only once. If it will not be used that quickly, freeze planned portions promptly."
+  }
+];
+var MEDITERRANEAN_PRODUCT_DISCLOSURES = [
+  {
+    key: "allergen_and_product",
+    title: "Allergens and product labels",
+    body: "Pasta and bulgur wheat contain gluten; anchovies contain fish; feta, Parmesan, Pecorino and yogurt contain milk. Almonds are a regulated nut allergen. Pine nuts can also cause allergic reactions, although they are not one of the UK's 14 regulated allergens. Chorizo, wine and packaged products vary, so check every label."
+  }
+];
+var MEDITERRANEAN_SOURCE_DISCLOSURES = [
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Cultural references, food-safety guidance and allergen guidance were reviewed on 20 July 2026. Follow the cited sources for later updates."
+  }
+];
+var SUMMER_STEWS_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow current Food Standards Agency guidance on cooling, refrigerating and reheating cooked dishes. Cook chicken thoroughly until steaming hot throughout, with no pink meat remaining."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Bread usually contains gluten. Stock, broth and other packaged ingredients vary by product and may contain allergens, so check every label."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food-safety guidance was reviewed on 20 July 2026. Follow the cited Food Standards Agency guidance for later updates."
   }
 ];
 var FRESH_OR_FROZEN_DISCLOSURES = [
@@ -183904,10 +183971,32 @@ var COOKING_FOR_ONE_DISCLOSURE_FOOTER = {
     { href: "/recipe-methodology", label: "How dinners are selected" }
   ]
 };
+var OFFAL_BUDGET_DISCLOSURE_FOOTER = {
+  body: "Offal prices, ranges, availability and product information vary. Check current shelf prices and labels, and follow current NHS and Food Standards Agency guidance.",
+  links: [
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
 var PORTION_PLANNING_DISCLOSURE_FOOTER = {
   body: "This guide explains a planning technique rather than prescribing fixed portions. Pack sizes, appetites, product information and storage instructions vary.",
   links: [
     { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var MEDITERRANEAN_DISCLOSURE_FOOTER = {
+  body: "This guide draws practical techniques from several distinct culinary traditions. Ingredient availability, product information and allergens vary, so check labels and follow current storage and cooking guidance.",
+  links: [
+    { href: "/food-safety", label: "Storage and cooking safety" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var SUMMER_STEWS_DISCLOSURE_FOOTER = {
+  body: "This guide offers flexible dinner ideas rather than fixed recipes. Ingredient availability, product information, allergens and storage instructions vary, so check labels and follow current food-safety guidance.",
+  links: [
     { href: "/food-safety", label: "Storage and cooking safety" },
     { href: "/recipe-methodology", label: "How dinners are selected" }
   ]
@@ -184601,6 +184690,11 @@ function renderCookingForOnePlanInitialHtml() {
 }
 
 // src/content/seoFoodCostGuides.ts
+var extractLegacyArticleSections = (initialHtml) => {
+  const match2 = initialHtml.match(/<article>([\s\S]*?)<\/article>/);
+  if (!match2) throw new Error("Legacy guide HTML is missing article content.");
+  return match2[1];
+};
 var UK_FOOD_COSTS_2026_PATH = "/food-costs/uk-food-costs-2026";
 var UK_FOOD_COSTS_2026 = {
   title: "Why UK food costs are rising in 2026 \u2014 and what it means for your shopping",
@@ -184624,6 +184718,7 @@ var UK_FOOD_COSTS_2026 = {
     { label: "IGD, June 2026 food inflation forecast", url: "https://www.igd.com/articles/igd-releases-new-food-inflation-forecast/73470" }
   ]
 };
+var escapeHtml6 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
 var COOKING_FOR_ONE_PATH = "/food-costs/cooking-for-one-without-waste";
 var COOKING_FOR_ONE_GUIDE = {
   title: "Five dinners for one from one Aldi basket",
@@ -184724,6 +184819,45 @@ var OFFAL_BUDGET_GUIDE = {
     { question: "Can DinnerByDesign help me find offal options?", answer: "Yes. Search directly for liver, kidney, heart or other offal. You can also turn on Include offal in suggestions in Recipe preferences, or choose Offal in Plan my week for a single plan. Product availability and suitability vary." }
   ]
 };
+function renderOffalBudgetGuideInitialHtml() {
+  const guide = OFFAL_BUDGET_GUIDE;
+  const price = renderProgrammaticDisclosuresInitialHtml(OFFAL_PRICE_DISCLOSURES);
+  const safety = renderProgrammaticDisclosuresInitialHtml(OFFAL_SAFETY_DISCLOSURES);
+  const footer = renderProgrammaticDisclosureFooterInitialHtml(OFFAL_BUDGET_DISCLOSURE_FOOTER);
+  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml6(faq.question)}</h3><p>${escapeHtml6(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml6(source.url)}">${escapeHtml6(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml6(guide.title)}</h1><p>${escapeHtml6(guide.description)}</p><p>By ${escapeHtml6(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>Liver, kidney and heart can cost less than more familiar cuts, but they are not direct substitutes. Each brings its own flavour, texture and cooking requirement. Used thoughtfully \u2014 with onions, vegetables, grains, pulses and assertive seasonings \u2014 they can produce satisfying, characterful dinners without relying on a large quantity of meat.</p></section><section><h2>Why consider offal?</h2><p>Offal can bring meat into a dinner as a smaller, supporting element rather than the centrepiece. It is one option among several for managing ingredient spending, not something any household needs to adopt.</p></section><section><h2>Is it necessarily less expensive?</h2><p>Often, but not always. Price snapshot, 20 July 2026: Tesco listed lamb liver at \xA36.15/kg, lamb heart at \xA37.30/kg and lamb kidney at \xA38.00/kg, compared with lamb mince from \xA313.00/kg. Prices, ranges and availability change, so check the current shelf price.</p>${price}</section><section><h2>Liver, kidney and heart: how they differ</h2><ul><li><strong>Liver:</strong> soft in texture and mild to rich in flavour. Thin, evenly sized pieces cook through quickly.</li><li><strong>Kidney:</strong> firmer, with a distinct mineral flavour. It usually needs its white core trimmed and can suit quick or slow cooking.</li><li><strong>Heart:</strong> denser and leaner, closer to a muscle cut. Cook it long and slow, or slice it thinly for quick cooking.</li></ul></section><section><h2>Flavours that work well</h2><ul><li><strong>Liver:</strong> onions, sage, mustard, vinegar or sherry.</li><li><strong>Kidney:</strong> mustard, Worcestershire sauce, paprika, stock or ale.</li><li><strong>Heart:</strong> garlic, chilli, citrus or a vinegar-based marinade.</li></ul></section>${safety}<section><h2>Three approachable starting points</h2><ul><li>Thoroughly cooked lamb liver with onions, mustard and vinegar.</li><li>Kidney with root vegetables in a rich gravy.</li><li>Slow-cooked heart with garlic, smoked paprika and tomatoes.</li></ul></section><section><h2>Availability in supermarkets and butchers</h2><p>Liver and kidney are stocked fairly reliably by major UK supermarkets. Heart, tongue and tripe are less consistent, and a local butcher may be able to source and prepare them.</p></section><section><h2>Vitamin A, pregnancy and food-safety guidance</h2><p>The NHS advises against eating liver or liver products such as p\xE2t\xE9 more than once a week. Liver and liver products should be avoided during pregnancy. Follow the cited NHS and Food Standards Agency guidance.</p></section><section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Find offal dinners and products</h2><p>Search DinnerByDesign for liver, kidney, heart and other offal options, then compare suitable dinners and ready-made products in one place.</p></section><section><h2>Sources and further reading</h2><p>Guidance and prices reviewed 20 July 2026.</p><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/pricing-methodology">read the pricing methodology</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Find suitable offal options</h2><p>Use DinnerByDesign to search directly or include offal in your personalised suggestions.</p><p><a href="/signin">Find offal dinners</a></p></section></main></div>`;
+}
+var OFFAL_BUDGET_GUIDE_RECORD = {
+  id: "cooking-with-offal-on-a-budget",
+  slug: "cooking-with-offal-on-a-budget",
+  path: OFFAL_BUDGET_GUIDE_PATH,
+  canonicalPath: OFFAL_BUDGET_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...OFFAL_BUDGET_GUIDE,
+  nextReviewAt: "2027-07-20",
+  metaDescription: OFFAL_BUDGET_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: [
+    ...OFFAL_PRICE_DISCLOSURES,
+    ...OFFAL_SAFETY_DISCLOSURES
+  ],
+  disclosureFooter: OFFAL_BUDGET_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: extractLegacyArticleSections(renderOffalBudgetGuideInitialHtml()) }
+  ],
+  cta: {
+    title: "Find suitable offal options",
+    copy: "Use DinnerByDesign to search directly or include offal in your personalised suggestions.",
+    label: "Find offal dinners",
+    href: "/signin"
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false
+};
 var PORTION_PLANNING_GUIDE_PATH = "/food-costs/portion-planning-and-food-waste";
 var PORTION_PLANNING_GUIDE = {
   title: "How portion planning can help reduce food costs and waste",
@@ -184813,6 +184947,47 @@ var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE = {
     { question: "How can I avoid the more expensive ingredients pushing up the price?", answer: "Use them in small quantities as flavouring \u2014 a little chorizo, a modest amount of good olive oil as a finishing touch, or cheese grated rather than sliced \u2014 rather than as the bulk of the dinner." }
   ]
 };
+function renderMediterraneanAffordableCookingInitialHtml() {
+  const guide = MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE;
+  const storage = renderProgrammaticDisclosuresInitialHtml(MEDITERRANEAN_STORAGE_DISCLOSURES);
+  const product = renderProgrammaticDisclosuresInitialHtml(MEDITERRANEAN_PRODUCT_DISCLOSURES);
+  const sourceTiming = renderProgrammaticDisclosuresInitialHtml(MEDITERRANEAN_SOURCE_DISCLOSURES);
+  const footer = renderProgrammaticDisclosureFooterInitialHtml(MEDITERRANEAN_DISCLOSURE_FOOTER);
+  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml6(faq.question)}</h3><p>${escapeHtml6(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml6(source.url)}">${escapeHtml6(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml6(guide.title)}</h1><p>${escapeHtml6(guide.description)}</p><p>By ${escapeHtml6(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>Beans, lentils, grains, vegetables and a handful of well-chosen flavourings turn up again and again across the Mediterranean's many different culinary traditions \u2014 and they are a genuinely useful starting point for a satisfying, affordable dinner. This is not a claim that Mediterranean cooking is cheap: some of its best-known ingredients, from good olive oil to fresh fish, are not. It is an argument for borrowing a handful of techniques that several of these traditions share.</p></section><section><h2>There is no single Mediterranean cuisine</h2><p>Greek, Italian, Lebanese, Spanish, Moroccan and Turkish cooking \u2014 to name just a few \u2014 are distinct culinary traditions with their own ingredients, history and character. Treating Mediterranean food as one uniform, inexpensive cuisine flattens that variety, and it is not accurate either. What is worth taking from these traditions is not a claim about their overall cost, but a set of techniques that turn up across several of them.</p></section><section><h2>Where the practical value comes from</h2><ul><li>Building a dinner around beans, lentils, grains and vegetables, rather than a large piece of meat or fish.</li><li>Using herbs, garlic, citrus, tomatoes and spices to bring flavour, rather than relying on the quantity of a costly ingredient.</li><li>Treating meat, fish or cheese as a smaller, supporting element where a dish calls for it, rather than the bulk of the plate.</li><li>Reusing bread, cooked grains, sauces and vegetables across more than one dinner.</li></ul><p>None of this is exclusive to the Mediterranean \u2014 similar techniques appear in low-cost cooking traditions worldwide \u2014 but it is a useful, well-documented set of examples to draw from.</p></section><section><h2>Affordable ingredients that carry flavour well</h2><ul><li>Dried or tinned lentils, chickpeas and beans</li><li>Onions and garlic</li><li>Tinned tomatoes</li><li>Rice, pasta, bulgur wheat and couscous</li><li>Herbs such as parsley, oregano, mint and bay</li><li>Spices such as cumin, paprika and cinnamon</li><li>Lemon</li></ul><p>These form the backbone of a satisfying dinner without needing a large quantity of any single expensive ingredient.</p></section><section><h2>Ingredients that can make the checkout more expensive</h2><p>Good-quality extra virgin olive oil, fresh fish and seafood, pine nuts, almonds, saffron and speciality cheeses can all add significantly to a shopping bill. They can still have a place \u2014 used in small quantities, saved for when you want to spend a little more, or swapped for a more accessible alternative.</p></section><section><h2>Four appetising dinner examples</h2><h3>Greek fasolada</h3><p>A hearty white bean soup, one of the best-known bean dishes in Greek cooking, made by simmering dried white beans with onion, carrot, celery and tomato, finished with a generous amount of olive oil. It is traditionally meat-free.</p><h3>Roman pasta e ceci</h3><p>A central and southern Italian dish of small pasta and chickpeas, simmered in a tomato-and-rosemary broth with garlic. The chickpea-and-pasta base needs no meat, although some Roman versions include anchovy.</p><h3>Lebanese mujadara</h3><p>A Levantine dish of lentils and rice, or bulgur wheat, built almost entirely around deeply caramelised onions, with cumin as the main spice. The version described here contains no animal-derived ingredients; check stock, packaged ingredients and accompaniments. It is found across Lebanon, Jordan and Syria.</p><h3>Spanish lentejas con chorizo</h3><p>A Spanish lentil stew with potato, carrot, onion, garlic and paprika, where a small amount of chorizo is sliced in to flavour the whole pot rather than serving as the main component.</p></section><section><h2>Reusing ingredients across several dinners</h2><p>A larger pot of cooked lentils, chickpeas or rice can be split across two or three dinners. A batch of caramelised onions can flavour a grain, a stew or a simple bean dish. A tomato-and-garlic base can work beneath pasta e ceci one night and a different bean or vegetable dinner later on.</p></section>${storage}<section><h2>UK-supermarket substitutions and how they alter the result</h2><ul><li>Tinned lentils or chickpeas are already cooked, so they can be drained and added without soaking, in place of dried.</li><li>Use a more everyday cooking oil in place of extra virgin olive oil for cooking. The dish will lose some of the fruitier, more peppery flavour that good olive oil brings, although this matters less for cooking than for a finishing drizzle.</li><li>Widely available cooking chorizo can replace a specific artisan variety. It still gives a smoky, paprika-forward flavour, although the exact taste and texture vary by brand.</li><li>A more everyday hard cheese can replace Parmesan or Pecorino for grating. This changes the flavour but still adds a savoury, salty finish.</li><li>A widely available long-grain rice may replace a specific variety, but texture, liquid requirements and cooking time can differ, so follow the pack instructions.</li></ul><p>These substitutions change the character of a dish rather than its core structure, so try the closest available alternative rather than skipping the ingredient's role entirely.</p></section>${product}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners built around beans, lentils and grains, and use the Low Cost filter alongside these techniques. Plan my week can help you schedule dinners that reuse a base sauce, cooked grain or batch of caramelised onions across more than one night.</p></section><section><h2>Sources and further reading</h2><p>The Spanish example uses a preparation reference rather than an official cultural authority and is therefore described in deliberately general terms.</p><ul>${sources}</ul></section>${sourceTiming}<section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make affordable ingredients taste good</h2><p>Use DinnerByDesign to find suitable dinners and plan ingredients across your week.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+}
+var MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE_RECORD = {
+  id: "mediterranean-inspired-affordable-cooking",
+  slug: "mediterranean-inspired-affordable-cooking",
+  path: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
+  canonicalPath: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE,
+  nextReviewAt: "2027-07-20",
+  metaDescription: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: [
+    ...MEDITERRANEAN_STORAGE_DISCLOSURES,
+    ...MEDITERRANEAN_PRODUCT_DISCLOSURES,
+    ...MEDITERRANEAN_SOURCE_DISCLOSURES
+  ],
+  disclosureFooter: MEDITERRANEAN_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: extractLegacyArticleSections(renderMediterraneanAffordableCookingInitialHtml()) }
+  ],
+  cta: {
+    title: "Make affordable ingredients taste good",
+    copy: "Use DinnerByDesign to find suitable dinners and plan ingredients across your week.",
+    label: "Plan my week",
+    href: "/signin"
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false
+};
 var SUMMER_STEWS_GUIDE_PATH = "/food-costs/summer-stews-seasonal-vegetables";
 var SUMMER_STEWS_GUIDE = {
   title: "Summer stews: making vegetables go further",
@@ -184838,6 +185013,41 @@ var SUMMER_STEWS_GUIDE = {
     { question: "How long can I keep a cooked stew before eating it?", answer: "Refrigerate it within two hours of cooking, and eat it within 48 hours or freeze it. Reheat only once, until it is steaming hot throughout." },
     { question: "What if I do not have the exact vegetables listed in a recipe?", answer: "These dinners are built to accept substitution \u2014 use whichever similar vegetables are good value or already need using and remain safe to eat, adjusting cooking time for firmer or softer ingredients as needed." }
   ]
+};
+function renderSummerStewsGuideInitialHtml() {
+  const guide = SUMMER_STEWS_GUIDE;
+  const disclosures = renderProgrammaticDisclosuresInitialHtml(SUMMER_STEWS_DISCLOSURES);
+  const footer = renderProgrammaticDisclosureFooterInitialHtml(SUMMER_STEWS_DISCLOSURE_FOOTER);
+  const faqs = guide.faqs.map((faq) => `<section><h3>${escapeHtml6(faq.question)}</h3><p>${escapeHtml6(faq.answer)}</p></section>`).join("");
+  const sources = guide.sources.map((source) => `<li><a href="${escapeHtml6(source.url)}">${escapeHtml6(source.label)}</a></li>`).join("");
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml6(guide.title)}</h1><p>${escapeHtml6(guide.description)}</p><p>By ${escapeHtml6(guide.editorialOwner)} \xB7 Published 20 July 2026 \xB7 Last reviewed 20 July 2026</p><article><section><p>A summer stew is generally lighter and quicker-cooking than a winter stew, built on fresh vegetables, herbs and a lighter broth or tomato base. Ingredients go in at different stages so each one keeps an appropriate texture, rather than everything cooking down together for hours.</p><p>The financial case for cooking this way is not that summer vegetables are automatically cheap \u2014 prices and availability still vary through the season and by retailer. It is that a stew built this way is unusually good at absorbing whatever you actually have that remains safe to eat: whichever vegetables are good value that week, or already sitting in the fridge needing to be used.</p></section><section><h2>Where the practical value comes from</h2><ul><li>It accommodates whichever vegetables are currently good value or already need using, provided they remain safe to eat.</li><li>It combines vegetables with beans, lentils or grains, rather than relying on a large quantity of meat.</li><li>One tomato base, bunch of herbs or pack of vegetables can be used across several dinners.</li><li>Irregular quantities and surplus vegetables \u2014 the half pepper, the last two courgettes \u2014 become an intentional part of the dish rather than loose ends to work around.</li><li>It accepts substitutions without needing a completely different recipe.</li><li>It can be served with bread, rice or another inexpensive accompaniment when you want more volume.</li></ul></section><section><h2>Staging vegetables by cooking time</h2><p>The main technique worth knowing is that not everything needs to go into the pot at once. Onions and firmer vegetables \u2014 peppers, aubergine, carrots \u2014 go in first and cook down into the base. Courgette, leafy vegetables and other more delicate ingredients go in later, so they retain their colour, texture and freshness rather than turning soft and grey. Herbs, and any final squeeze of lemon, go in right at the end, off the heat or close to it.</p><p>This is not a rigid rule \u2014 some dinners benefit from everything cooking down together, and that is a reasonable choice too. Staging is simply a way to keep more texture and colour in the finished dish, if that is what you want from it.</p></section><section><h2>Three flexible dinner ideas</h2><p>These are presented as adaptable starting points rather than named traditional dishes \u2014 change the vegetables to whatever you have, and treat the quantities as a guide rather than a fixed recipe.</p><h3>Tomato, courgette and butter bean stew with lemon and basil</h3><p>Onion and garlic cooked down first with tinned tomatoes, then butter beans warmed through, courgette added in the last few minutes so it keeps some bite, finished with lemon juice and torn basil off the heat.</p><h3>Chicken, pepper and sweetcorn broth with smoked paprika</h3><p>A light broth built from onion, pepper and smoked paprika, with a modest amount of chicken added to flavour rather than fill the bowl, and sweetcorn stirred in towards the end so it stays sweet and crisp. Cook the chicken thoroughly until steaming hot throughout, with no pink meat remaining.</p><h3>Aubergine, chickpea and tomato stew finished with fresh herbs</h3><p>Aubergine cooked down with onion and garlic until soft, chickpeas added to warm through, tinned tomatoes providing the base, and a handful of fresh parsley or coriander stirred in just before serving.</p></section><section><h2>Reusing a base across several dinners</h2><p>A larger batch of the onion-and-tomato base from any of these can do more than one job: it is the start of tonight's stew, but it can just as easily go under some pasta, alongside a piece of fish, or into a bean dish later in the week. The same applies to a bunch of herbs or a pack of vegetables bought for one dinner \u2014 splitting it across two dinners in the same week is usually more useful than trying to use all of it in one sitting.</p></section><section><h2>Serving for extra volume</h2><p>Bread, rice, couscous or another inexpensive accompaniment is a straightforward way to add volume to a lighter stew without adding more of the more expensive ingredients. A smaller pot of stew served over rice, or with a thick slice of bread on the side, often goes further than the same stew served alone.</p></section><section><h2>Food safety for cooked stews</h2><p>These dishes can be eaten warm or a little cooler, but that should not be confused with leaving a cooked stew out at room temperature for an extended period. Current Food Standards Agency guidance is to cool cooked food and refrigerate it within two hours, eat refrigerated leftovers within 48 hours or freeze them, and reheat only once, until steaming hot all the way through.</p></section>${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>How DinnerByDesign can help</h2><p>Search DinnerByDesign for dinners that flex around whatever vegetables you have, and use the Low Cost filter alongside these techniques. Plan my week can help schedule a base sauce, herb bunch or vegetable pack across more than one dinner, and our <a href="/food-costs/ways-to-reduce-grocery-costs">low-cost cooking techniques</a> and <a href="/food-costs/portion-planning-and-food-waste">portion-planning guides</a> cover the wider principles in more detail.</p></section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section><section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/portion-planning-and-food-waste">plan portions and reduce waste</a>, <a href="/food-costs/fresh-or-frozen">choose between fresh and frozen produce</a>, <a href="/food-safety">review food-safety guidance</a> or <a href="/recipe-methodology">read how dinners are selected</a>.</p></section></article>${footer}<section><h2>Make vegetables work harder across your week</h2><p>Find suitable dinners and plan shared ingredients with DinnerByDesign.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+}
+var SUMMER_STEWS_GUIDE_RECORD = {
+  id: "summer-stews-seasonal-vegetables",
+  slug: "summer-stews-seasonal-vegetables",
+  path: SUMMER_STEWS_GUIDE_PATH,
+  canonicalPath: SUMMER_STEWS_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...SUMMER_STEWS_GUIDE,
+  nextReviewAt: "2027-07-20",
+  metaDescription: SUMMER_STEWS_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: SUMMER_STEWS_DISCLOSURES,
+  disclosureFooter: SUMMER_STEWS_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: extractLegacyArticleSections(renderSummerStewsGuideInitialHtml()) }
+  ],
+  cta: {
+    title: "Make vegetables work harder across your week",
+    copy: "Find suitable dinners and plan shared ingredients with DinnerByDesign.",
+    label: "Plan my week",
+    href: "/signin"
+  },
+  autoRenderDisclosures: false,
+  autoRenderFaqs: false,
+  autoRenderSources: false
 };
 var FRESH_OR_FROZEN_GUIDE_PATH = "/food-costs/fresh-or-frozen";
 var FRESH_OR_FROZEN_GUIDE = {
@@ -187359,9 +187569,9 @@ var PULSES_BUDGET_FAQS = [
     answer: "Yes. Cool them promptly, divide them into useful quantities and freeze them if they will not be eaten within the recommended refrigerated storage time."
   }
 ];
-var escapeHtml6 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
-var paragraphs = (items) => items.map((item) => `<p>${escapeHtml6(item)}</p>`).join("");
-var pulseUseRows = () => PULSE_USES.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml6(cell)}</td>`).join("")}</tr>`).join("");
+var escapeHtml7 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var paragraphs = (items) => items.map((item) => `<p>${escapeHtml7(item)}</p>`).join("");
+var pulseUseRows = () => PULSE_USES.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml7(cell)}</td>`).join("")}</tr>`).join("");
 var PULSES_BUDGET_GUIDE_SECTIONS = [
   {
     rawHtml: `<section>${paragraphs([
@@ -187747,8 +187957,8 @@ var GROCERY_COST_STARTING_POINTS = [
   ["Last-minute purchases", "Flexible fallback dinners"],
   ["Confusing supermarket trips", "A list generated from scheduled dinners"]
 ];
-var escapeHtml7 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
-var groceryCostStartingPointRows = () => GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml7(problem)}</th><td>${escapeHtml7(start)}</td></tr>`).join("");
+var escapeHtml8 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var groceryCostStartingPointRows = () => GROCERY_COST_STARTING_POINTS.map(([problem, start]) => `<tr><th>${escapeHtml8(problem)}</th><td>${escapeHtml8(start)}</td></tr>`).join("");
 var GROCERY_COST_OPTIONS_GUIDE_SECTIONS = [
   {
     rawHtml: "<section><p>Controlling what you spend on groceries involves more than hunting for the cheapest products on the shelf. It is really about a handful of connected decisions: planning what you will actually cook, choosing realistic quantities, coordinating ingredients across several dinners, using complete packs effectively, avoiding unnecessary waste, and having a purpose for any surplus portions.</p><p>One distinction is worth keeping in mind throughout: the value of the ingredients you use in a dinner is not the same as the cost of the complete pack you had to buy to get them. Many of the techniques below work by closing that gap, making sure more of what you pay for actually gets eaten.</p></section>",
@@ -187905,6 +188115,9 @@ var PUBLIC_GUIDE_RECORDS = [
   LOW_COST_DINNERS_GUIDE_RECORD,
   GROCERY_COST_OPTIONS_GUIDE_RECORD,
   GROCERY_COST_PREDICTION_GUIDE_RECORD,
+  OFFAL_BUDGET_GUIDE_RECORD,
+  MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE_RECORD,
+  SUMMER_STEWS_GUIDE_RECORD,
   BATCH_COOKING_GUIDE_RECORD,
   PORTION_PLANNING_GUIDE_RECORD,
   FRESH_OR_FROZEN_GUIDE_RECORD,
@@ -188013,48 +188226,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
     internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks,
     disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: SUMMER_STEWS_GUIDE.title,
-    path: SUMMER_STEWS_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: SUMMER_STEWS_GUIDE.pageFamily,
-    primarySearchIntent: SUMMER_STEWS_GUIDE.primarySearchIntent,
-    indexingStatus: SUMMER_STEWS_GUIDE.indexingStatus,
-    publishedAt: SUMMER_STEWS_GUIDE.publishedAt,
-    reviewedAt: SUMMER_STEWS_GUIDE.reviewedAt,
-    contentReviewedAt: SUMMER_STEWS_GUIDE.contentReviewedAt,
-    internalLinks: SUMMER_STEWS_GUIDE.internalLinks,
-    disclosures: SUMMER_STEWS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.title,
-    path: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
-    category: "Food cost guide",
-    pageFamily: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.pageFamily,
-    primarySearchIntent: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.primarySearchIntent,
-    indexingStatus: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.indexingStatus,
-    publishedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.publishedAt,
-    reviewedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.reviewedAt,
-    contentReviewedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.contentReviewedAt,
-    internalLinks: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.internalLinks,
-    disclosures: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: OFFAL_BUDGET_GUIDE.title,
-    path: OFFAL_BUDGET_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: OFFAL_BUDGET_GUIDE.pageFamily,
-    primarySearchIntent: OFFAL_BUDGET_GUIDE.primarySearchIntent,
-    indexingStatus: OFFAL_BUDGET_GUIDE.indexingStatus,
-    publishedAt: OFFAL_BUDGET_GUIDE.publishedAt,
-    reviewedAt: OFFAL_BUDGET_GUIDE.reviewedAt,
-    contentReviewedAt: OFFAL_BUDGET_GUIDE.contentReviewedAt,
-    internalLinks: OFFAL_BUDGET_GUIDE.internalLinks,
-    disclosures: OFFAL_BUDGET_GUIDE.disclosures,
     status: "published"
   },
   {
@@ -188233,7 +188404,7 @@ var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
 var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;
 var contactAttempts = /* @__PURE__ */ new Map();
-var escapeHtml8 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+var escapeHtml9 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 function hasContactRateLimitCapacity(req) {
   const forwardedFor = req.get("x-forwarded-for");
   const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
@@ -189265,7 +189436,7 @@ function createApp() {
     if (!hasContactRateLimitCapacity(req)) {
       return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
     }
-    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml8(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml8(email)}">${escapeHtml8(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml8(message2)}</div></div>`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml9(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml9(email)}">${escapeHtml9(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml9(message2)}</div></div>`;
     try {
       const response = await sendTrackedEmail({
         to: CONTACT_RECIPIENT,

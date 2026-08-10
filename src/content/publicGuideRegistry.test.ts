@@ -63,7 +63,10 @@ import {
   BATCH_COOKING_GUIDE_PATH,
   COOKING_FOR_ONE_PATH,
   FRESH_OR_FROZEN_GUIDE_PATH,
+  MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
+  OFFAL_BUDGET_GUIDE_PATH,
   PORTION_PLANNING_GUIDE_PATH,
+  SUMMER_STEWS_GUIDE_PATH,
 } from './seoFoodCostGuides';
 import {
   PUBLIC_GUIDE_RECORDS,
@@ -94,6 +97,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(LOW_COST_DINNERS_GUIDE_PATH);
     expect(paths).toContain(GROCERY_COST_OPTIONS_GUIDE_PATH);
     expect(paths).toContain(GROCERY_COST_PREDICTION_GUIDE_PATH);
+    expect(paths).toContain(OFFAL_BUDGET_GUIDE_PATH);
+    expect(paths).toContain(MEDITERRANEAN_AFFORDABLE_COOKING_PATH);
+    expect(paths).toContain(SUMMER_STEWS_GUIDE_PATH);
     expect(paths).toContain(BATCH_COOKING_GUIDE_PATH);
     expect(paths).toContain(PORTION_PLANNING_GUIDE_PATH);
     expect(paths).toContain(FRESH_OR_FROZEN_GUIDE_PATH);
@@ -133,6 +139,9 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(LOW_COST_DINNERS_GUIDE_PATH)?.title).toBe("Low-cost dinners don't have to be boring");
     expect(getPublicGuideRecordByPath(GROCERY_COST_OPTIONS_GUIDE_PATH)?.title).toBe('12 practical ways to reduce and manage your grocery costs');
     expect(getPublicGuideRecordByPath(GROCERY_COST_PREDICTION_GUIDE_PATH)?.title).toBe('Why is it so difficult to budget accurately for food?');
+    expect(getPublicGuideRecordByPath(OFFAL_BUDGET_GUIDE_PATH)?.title).toBe('Cooking with offal on a budget: what to buy and how to use it');
+    expect(getPublicGuideRecordByPath(MEDITERRANEAN_AFFORDABLE_COOKING_PATH)?.title).toBe('Mediterranean-inspired ways to make everyday ingredients taste good');
+    expect(getPublicGuideRecordByPath(SUMMER_STEWS_GUIDE_PATH)?.title).toBe('Summer stews: making vegetables go further');
     expect(getPublicGuideRecordByPath(BATCH_COOKING_GUIDE_PATH)?.title).toBe("Batch cooking on a budget: when it saves money and when it doesn't");
     expect(getPublicGuideRecordByPath(PORTION_PLANNING_GUIDE_PATH)?.title).toBe('How portion planning can help reduce food costs and waste');
     expect(getPublicGuideRecordByPath(FRESH_OR_FROZEN_GUIDE_PATH)?.title).toBe('Fresh or frozen: which is better for the way you cook?');

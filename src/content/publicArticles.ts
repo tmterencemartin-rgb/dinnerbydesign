@@ -1,4 +1,4 @@
-import { MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
+import { UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH } from './familyDinnersForFourPlan';
 import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
@@ -97,34 +97,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: CHEAPER_MEAT_CUTS_GUIDE.indexingStatus, publishedAt: CHEAPER_MEAT_CUTS_GUIDE.publishedAt,
     reviewedAt: CHEAPER_MEAT_CUTS_GUIDE.reviewedAt, contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
     internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks, disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: SUMMER_STEWS_GUIDE.title, path: SUMMER_STEWS_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: SUMMER_STEWS_GUIDE.pageFamily, primarySearchIntent: SUMMER_STEWS_GUIDE.primarySearchIntent,
-    indexingStatus: SUMMER_STEWS_GUIDE.indexingStatus, publishedAt: SUMMER_STEWS_GUIDE.publishedAt,
-    reviewedAt: SUMMER_STEWS_GUIDE.reviewedAt, contentReviewedAt: SUMMER_STEWS_GUIDE.contentReviewedAt,
-    internalLinks: SUMMER_STEWS_GUIDE.internalLinks, disclosures: SUMMER_STEWS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.title, path: MEDITERRANEAN_AFFORDABLE_COOKING_PATH, category: 'Food cost guide',
-    pageFamily: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.pageFamily, primarySearchIntent: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.primarySearchIntent,
-    indexingStatus: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.indexingStatus, publishedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.publishedAt,
-    reviewedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.reviewedAt, contentReviewedAt: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.contentReviewedAt,
-    internalLinks: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.internalLinks, disclosures: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: OFFAL_BUDGET_GUIDE.title,
-    path: OFFAL_BUDGET_GUIDE_PATH,
-    category: 'Food cost guide',
-    pageFamily: OFFAL_BUDGET_GUIDE.pageFamily,
-    primarySearchIntent: OFFAL_BUDGET_GUIDE.primarySearchIntent,
-    indexingStatus: OFFAL_BUDGET_GUIDE.indexingStatus,
-    publishedAt: OFFAL_BUDGET_GUIDE.publishedAt,
-    reviewedAt: OFFAL_BUDGET_GUIDE.reviewedAt,
-    contentReviewedAt: OFFAL_BUDGET_GUIDE.contentReviewedAt,
-    internalLinks: OFFAL_BUDGET_GUIDE.internalLinks,
-    disclosures: OFFAL_BUDGET_GUIDE.disclosures,
-    status: 'published',
   },
   {
     title: UK_FOOD_COSTS_2026.title,
