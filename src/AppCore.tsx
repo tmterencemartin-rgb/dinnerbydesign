@@ -5,7 +5,7 @@ import { Layout } from './components/Layout';
 import { useSearch } from './hooks/useSearch';
 import { getContradictionWarning, renderErrorMessage } from './lib/uiUtils';
 import { AuthLoading, AuthError, AuthSyncing, AuthSignIn } from './components/AuthScreens';
-import { useSeo } from './hooks/useSeo';
+import { useSeo, type SeoConfig } from './hooks/useSeo';
 
 // Views
 const HomeView = React.lazy(() => import('./components/views/HomeView').then(module => ({ default: module.HomeView })));
@@ -144,6 +144,56 @@ const GUEST_VISIBLE_VIEWS = new Set<AppView>([
   'food-costs-grocery-prediction',
 ]);
 
+const guideSeoConfig = (
+  guide: { seoTitle: string; description: string },
+  canonicalPath: string,
+  jsonLd: object,
+): SeoConfig => ({
+  title: guide.seoTitle,
+  description: guide.description,
+  canonicalPath,
+  jsonLd,
+});
+
+const PUBLIC_GUIDE_SEO_CONFIGS = {
+  'meal-plan-five-for-two-under-40': () => ({
+    title: FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle,
+    description: 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.',
+    canonicalPath: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
+    jsonLd: getFiveDinnersForTwoJsonLd(),
+  }),
+  'food-costs-uk-2026': () => ({
+    title: `${UK_FOOD_COSTS_2026.title} | DinnerByDesign`,
+    description: UK_FOOD_COSTS_2026.description,
+    canonicalPath: UK_FOOD_COSTS_2026_PATH,
+    jsonLd: getUkFoodCosts2026JsonLd(),
+  }),
+  'food-costs-lower-cost-cuts': () => guideSeoConfig(LOWER_COST_CUTS_GUIDE, LOWER_COST_CUTS_PATH, getLowerCostCutsJsonLd()),
+  'food-costs-cheaper-meat-cuts': () => guideSeoConfig(CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH, getCheaperMeatCutsGuideJsonLd()),
+  'food-costs-shared-ingredients': () => guideSeoConfig(SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH, getSharedIngredientsGuideJsonLd()),
+  'food-costs-complete-packs': () => guideSeoConfig(COMPLETE_PACKS_GUIDE, COMPLETE_PACKS_GUIDE_PATH, getCompletePacksGuideJsonLd()),
+  'food-costs-low-cost-cooking-techniques': () => guideSeoConfig(LOW_COST_COOKING_TECHNIQUES_GUIDE, LOW_COST_COOKING_TECHNIQUES_PATH, getLowCostCookingTechniquesJsonLd()),
+  'food-costs-cooking-for-one': () => guideSeoConfig(COOKING_FOR_ONE_GUIDE, COOKING_FOR_ONE_PATH, getCookingForOneJsonLd()),
+  'food-costs-offal-budget': () => guideSeoConfig(OFFAL_BUDGET_GUIDE, OFFAL_BUDGET_GUIDE_PATH, getOffalBudgetGuideJsonLd()),
+  'food-costs-portion-planning': () => guideSeoConfig(PORTION_PLANNING_GUIDE, PORTION_PLANNING_GUIDE_PATH, getPortionPlanningGuideJsonLd()),
+  'food-costs-mediterranean-affordable-cooking': () => guideSeoConfig(MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE, MEDITERRANEAN_AFFORDABLE_COOKING_PATH, getMediterraneanAffordableCookingJsonLd()),
+  'food-costs-summer-stews': () => guideSeoConfig(SUMMER_STEWS_GUIDE, SUMMER_STEWS_GUIDE_PATH, getSummerStewsGuideJsonLd()),
+  'food-costs-fresh-or-frozen': () => guideSeoConfig(FRESH_OR_FROZEN_GUIDE, FRESH_OR_FROZEN_GUIDE_PATH, getFreshOrFrozenGuideJsonLd()),
+  'food-costs-batch-cooking': () => guideSeoConfig(BATCH_COOKING_GUIDE, BATCH_COOKING_GUIDE_PATH, getBatchCookingGuideJsonLd()),
+  'food-costs-grocery-cost-options': () => guideSeoConfig(GROCERY_COST_OPTIONS_GUIDE, GROCERY_COST_OPTIONS_GUIDE_PATH, getGroceryCostOptionsGuideJsonLd()),
+  'food-costs-grocery-prediction': () => guideSeoConfig(GROCERY_COST_PREDICTION_GUIDE, GROCERY_COST_PREDICTION_GUIDE_PATH, getGroceryCostPredictionGuideJsonLd()),
+  guides: () => ({
+    title: PUBLIC_GUIDE_LIBRARY.seoTitle,
+    description: PUBLIC_GUIDE_LIBRARY.description,
+    canonicalPath: PUBLIC_LIBRARY_PATH || '/guides',
+    jsonLd: getPublicGuideLibraryJsonLd(),
+  }),
+  'five-a-day-guide': () => guideSeoConfig(FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH, getFiveADayGuideJsonLd()),
+  'home-cooked-ready-made-guide': () => guideSeoConfig(HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH, getHomeCookedReadyMadeGuideJsonLd()),
+  'cheap-finishing-touches-guide': () => guideSeoConfig(CHEAP_FINISHING_TOUCHES_GUIDE, CHEAP_FINISHING_TOUCHES_GUIDE_PATH, getCheapFinishingTouchesGuideJsonLd()),
+  'low-cost-dinners-guide': () => guideSeoConfig(LOW_COST_DINNERS_GUIDE, LOW_COST_DINNERS_GUIDE_PATH, getLowCostDinnersGuideJsonLd()),
+} satisfies Partial<Record<AppView, () => SeoConfig>>;
+
 const AppContent = () => {
   const {
     user,
@@ -160,6 +210,9 @@ const AppContent = () => {
   } = useAuth();
 
   const seoConfig = React.useMemo(() => {
+    const publicGuideSeo = PUBLIC_GUIDE_SEO_CONFIGS[view]?.();
+    if (publicGuideSeo) return publicGuideSeo;
+
     switch (view) {
       case 'planner':
         return {
@@ -238,153 +291,6 @@ const AppContent = () => {
           description: 'DinnerByDesign Administration and Management.',
           canonicalPath: '/admin',
           noIndex: true
-        };
-      case 'meal-plan-five-for-two-under-40':
-        return {
-          title: FIVE_DINNERS_FOR_TWO_UNDER_40.seoTitle,
-          description: 'Five affordable UK dinners for two under a £40 target, with shared ingredients, full-pack checkout estimates and practical substitutions.',
-          canonicalPath: FIVE_DINNERS_FOR_TWO_UNDER_40_PATH,
-          jsonLd: getFiveDinnersForTwoJsonLd()
-        };
-      case 'food-costs-uk-2026':
-        return {
-          title: `${UK_FOOD_COSTS_2026.title} | DinnerByDesign`,
-          description: UK_FOOD_COSTS_2026.description,
-          canonicalPath: UK_FOOD_COSTS_2026_PATH,
-          jsonLd: getUkFoodCosts2026JsonLd()
-        };
-      case 'food-costs-lower-cost-cuts':
-        return {
-          title: LOWER_COST_CUTS_GUIDE.seoTitle,
-          description: LOWER_COST_CUTS_GUIDE.description,
-          canonicalPath: LOWER_COST_CUTS_PATH,
-          jsonLd: getLowerCostCutsJsonLd()
-        };
-      case 'food-costs-cheaper-meat-cuts':
-        return {
-          title: CHEAPER_MEAT_CUTS_GUIDE.seoTitle,
-          description: CHEAPER_MEAT_CUTS_GUIDE.description,
-          canonicalPath: CHEAPER_MEAT_CUTS_GUIDE_PATH,
-          jsonLd: getCheaperMeatCutsGuideJsonLd()
-        };
-      case 'food-costs-shared-ingredients':
-        return {
-          title: SHARED_INGREDIENTS_GUIDE.seoTitle,
-          description: SHARED_INGREDIENTS_GUIDE.description,
-          canonicalPath: SHARED_INGREDIENTS_GUIDE_PATH,
-          jsonLd: getSharedIngredientsGuideJsonLd()
-        };
-      case 'food-costs-complete-packs':
-        return {
-          title: COMPLETE_PACKS_GUIDE.seoTitle,
-          description: COMPLETE_PACKS_GUIDE.description,
-          canonicalPath: COMPLETE_PACKS_GUIDE_PATH,
-          jsonLd: getCompletePacksGuideJsonLd()
-        };
-      case 'food-costs-low-cost-cooking-techniques':
-        return {
-          title: LOW_COST_COOKING_TECHNIQUES_GUIDE.seoTitle,
-          description: LOW_COST_COOKING_TECHNIQUES_GUIDE.description,
-          canonicalPath: LOW_COST_COOKING_TECHNIQUES_PATH,
-          jsonLd: getLowCostCookingTechniquesJsonLd()
-        };
-      case 'food-costs-cooking-for-one':
-        return {
-          title: COOKING_FOR_ONE_GUIDE.seoTitle,
-          description: COOKING_FOR_ONE_GUIDE.description,
-          canonicalPath: COOKING_FOR_ONE_PATH,
-          jsonLd: getCookingForOneJsonLd()
-        };
-      case 'food-costs-offal-budget':
-        return {
-          title: OFFAL_BUDGET_GUIDE.seoTitle,
-          description: OFFAL_BUDGET_GUIDE.description,
-          canonicalPath: OFFAL_BUDGET_GUIDE_PATH,
-          jsonLd: getOffalBudgetGuideJsonLd()
-        };
-      case 'food-costs-portion-planning':
-        return {
-          title: PORTION_PLANNING_GUIDE.seoTitle,
-          description: PORTION_PLANNING_GUIDE.description,
-          canonicalPath: PORTION_PLANNING_GUIDE_PATH,
-          jsonLd: getPortionPlanningGuideJsonLd()
-        };
-      case 'food-costs-mediterranean-affordable-cooking':
-        return {
-          title: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.seoTitle,
-          description: MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE.description,
-          canonicalPath: MEDITERRANEAN_AFFORDABLE_COOKING_PATH,
-          jsonLd: getMediterraneanAffordableCookingJsonLd()
-        };
-      case 'food-costs-summer-stews':
-        return {
-          title: SUMMER_STEWS_GUIDE.seoTitle,
-          description: SUMMER_STEWS_GUIDE.description,
-          canonicalPath: SUMMER_STEWS_GUIDE_PATH,
-          jsonLd: getSummerStewsGuideJsonLd()
-        };
-      case 'food-costs-fresh-or-frozen':
-        return {
-          title: FRESH_OR_FROZEN_GUIDE.seoTitle,
-          description: FRESH_OR_FROZEN_GUIDE.description,
-          canonicalPath: FRESH_OR_FROZEN_GUIDE_PATH,
-          jsonLd: getFreshOrFrozenGuideJsonLd()
-        };
-      case 'food-costs-batch-cooking':
-        return {
-          title: BATCH_COOKING_GUIDE.seoTitle,
-          description: BATCH_COOKING_GUIDE.description,
-          canonicalPath: BATCH_COOKING_GUIDE_PATH,
-          jsonLd: getBatchCookingGuideJsonLd()
-        };
-      case 'food-costs-grocery-cost-options':
-        return {
-          title: GROCERY_COST_OPTIONS_GUIDE.seoTitle,
-          description: GROCERY_COST_OPTIONS_GUIDE.description,
-          canonicalPath: GROCERY_COST_OPTIONS_GUIDE_PATH,
-          jsonLd: getGroceryCostOptionsGuideJsonLd()
-        };
-      case 'food-costs-grocery-prediction':
-        return {
-          title: GROCERY_COST_PREDICTION_GUIDE.seoTitle,
-          description: GROCERY_COST_PREDICTION_GUIDE.description,
-          canonicalPath: GROCERY_COST_PREDICTION_GUIDE_PATH,
-          jsonLd: getGroceryCostPredictionGuideJsonLd()
-        };
-      case 'guides':
-        return {
-          title: PUBLIC_GUIDE_LIBRARY.seoTitle,
-          description: PUBLIC_GUIDE_LIBRARY.description,
-          canonicalPath: PUBLIC_LIBRARY_PATH || '/guides',
-          jsonLd: getPublicGuideLibraryJsonLd()
-        };
-      case 'five-a-day-guide':
-        return {
-          title: FIVE_A_DAY_GUIDE.seoTitle,
-          description: FIVE_A_DAY_GUIDE.description,
-          canonicalPath: FIVE_A_DAY_GUIDE_PATH,
-          jsonLd: getFiveADayGuideJsonLd()
-        };
-      case 'home-cooked-ready-made-guide':
-        return {
-          title: HOME_COOKED_READY_MADE_GUIDE.seoTitle,
-          description: HOME_COOKED_READY_MADE_GUIDE.description,
-          canonicalPath: HOME_COOKED_READY_MADE_GUIDE_PATH,
-          jsonLd: getHomeCookedReadyMadeGuideJsonLd()
-        };
-      case 'cheap-finishing-touches-guide':
-        return {
-          title: CHEAP_FINISHING_TOUCHES_GUIDE.seoTitle,
-          description: CHEAP_FINISHING_TOUCHES_GUIDE.description,
-          canonicalPath: CHEAP_FINISHING_TOUCHES_GUIDE_PATH,
-          jsonLd: getCheapFinishingTouchesGuideJsonLd()
-        };
-      case 'low-cost-dinners-guide':
-        return {
-          title: LOW_COST_DINNERS_GUIDE.seoTitle,
-          description: LOW_COST_DINNERS_GUIDE.description,
-          canonicalPath: LOW_COST_DINNERS_GUIDE_PATH,
-          jsonLd: getLowCostDinnersGuideJsonLd()
         };
       case 'home':
       case 'landing':
