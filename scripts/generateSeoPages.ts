@@ -88,31 +88,13 @@ import {
   renderHomeCookedReadyMadeGuideInitialHtml,
 } from '../src/content/homeCookedReadyMadeGuide';
 import {
-  LOW_COST_DINNERS_GUIDE,
-  LOW_COST_DINNERS_GUIDE_PATH,
-  getLowCostDinnersGuideJsonLd,
-  renderLowCostDinnersGuideInitialHtml,
-} from '../src/content/lowCostDinnersGuide';
-import {
-  PULSES_BUDGET_GUIDE,
-  PULSES_BUDGET_GUIDE_PATH,
-  getPulsesBudgetGuideJsonLd,
-  renderPulsesBudgetGuideInitialHtml,
-} from '../src/content/pulsesBudgetGuide';
-import {
-  TRAYBAKE_GUIDE,
-  TRAYBAKE_GUIDE_PATH,
-  getTraybakeGuideJsonLd,
-  renderTraybakeGuideInitialHtml,
-} from '../src/content/traybakeGuide';
-import {
   CHICKEN_THIGH_COST_GUIDE,
   CHICKEN_THIGH_COST_GUIDE_PATH,
   getChickenThighCostGuideJsonLd,
   renderChickenThighCostGuideInitialHtml,
 } from '../src/content/chickenThighCostGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from '../src/content/publicGuideRegistry';
-import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from '../src/content/publicGuideModel';
+import { escapeGuideHtml, getPublicGuideJsonLd, renderPublicGuideInitialHtml } from '../src/content/publicGuideModel';
 import { PUBLIC_LIBRARY_PATH } from '../src/content/publicArticles';
 import {
   PUBLIC_PATHWAYS,
@@ -158,7 +140,7 @@ const generateEditorialGuide = async (
     .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(initialHtml))
     .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getJsonLd())}</script>\n</head>`);
 
-  if (!guideHtml.includes(`<h1>${guide.title}</h1>`) || !guideHtml.includes(`href="${canonical}"`)) {
+  if (!guideHtml.includes(`<h1>${escapeGuideHtml(guide.title)}</h1>`) || !guideHtml.includes(`href="${canonical}"`)) {
     throw new Error(`${guidePath} generation failed its content or canonical check.`);
   }
 
@@ -490,40 +472,6 @@ const homeCookedReadyMadeOutputDir = path.join(distRoot, HOME_COOKED_READY_MADE_
 await fs.mkdir(homeCookedReadyMadeOutputDir, { recursive: true });
 await fs.writeFile(path.join(homeCookedReadyMadeOutputDir, 'index.html'), homeCookedReadyMadeHtml, 'utf8');
 console.log(`Generated ${HOME_COOKED_READY_MADE_GUIDE_PATH}/index.html`);
-
-const lowCostDinnersCanonicalUrl = `https://dinnerbydesign.app${LOW_COST_DINNERS_GUIDE_PATH}`;
-let lowCostDinnersHtml = sourceHtml
-  .replace(/<title>.*?<\/title>/, `<title>${LOW_COST_DINNERS_GUIDE.seoTitle}</title>`)
-  .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${LOW_COST_DINNERS_GUIDE.description}" />`)
-  .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
-  .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${lowCostDinnersCanonicalUrl}" />`)
-  .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${lowCostDinnersCanonicalUrl}" />`)
-  .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${LOW_COST_DINNERS_GUIDE.seoTitle}" />`)
-  .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${LOW_COST_DINNERS_GUIDE.description}" />`)
-  .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${LOW_COST_DINNERS_GUIDE.seoTitle}" />`)
-  .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${LOW_COST_DINNERS_GUIDE.description}" />`)
-  .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
-  .replace(/<div id="root">[\s\S]*?<\/div>/, hideInitialSeoContentWhenJavaScriptRuns(renderLowCostDinnersGuideInitialHtml()))
-  .replace('</head>', `<script type="application/ld+json" data-seo-jsonld="true">${JSON.stringify(getLowCostDinnersGuideJsonLd())}</script>\n</head>`);
-if (!lowCostDinnersHtml.includes('<h1>Low-cost dinners don&#039;t have to be boring</h1>') || !lowCostDinnersHtml.includes(`href="${lowCostDinnersCanonicalUrl}"`)) throw new Error('Low-cost-dinners guide generation failed its content or canonical check.');
-const lowCostDinnersOutputDir = path.join(distRoot, LOW_COST_DINNERS_GUIDE_PATH.slice(1));
-await fs.mkdir(lowCostDinnersOutputDir, { recursive: true });
-await fs.writeFile(path.join(lowCostDinnersOutputDir, 'index.html'), lowCostDinnersHtml, 'utf8');
-console.log(`Generated ${LOW_COST_DINNERS_GUIDE_PATH}/index.html`);
-
-await generateEditorialGuide(
-  PULSES_BUDGET_GUIDE,
-  PULSES_BUDGET_GUIDE_PATH,
-  renderPulsesBudgetGuideInitialHtml,
-  getPulsesBudgetGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  TRAYBAKE_GUIDE,
-  TRAYBAKE_GUIDE_PATH,
-  renderTraybakeGuideInitialHtml,
-  getTraybakeGuideJsonLd,
-);
 
 for (const guideRecord of PUBLISHED_PUBLIC_GUIDE_RECORDS) {
   await generateEditorialGuide(

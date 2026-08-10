@@ -18963,8 +18963,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports2, module2) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module2.exports = escapeHtml6;
-    function escapeHtml6(string) {
+    module2.exports = escapeHtml7;
+    function escapeHtml7(string) {
       var str = "" + string;
       var match2 = matchHtmlRegExp.exec(str);
       if (!match2) {
@@ -19095,13 +19095,13 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml6 = require_escape_html();
+    var escapeHtml7 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message2) {
-      var body = escapeHtml6(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+      var body = escapeHtml7(message2).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module2.exports = finalhandler;
@@ -23043,7 +23043,7 @@ var require_send = __commonJS({
     var createError = require_http_errors();
     var debug = require_src()("send");
     var encodeUrl = require_encodeurl();
-    var escapeHtml6 = require_escape_html();
+    var escapeHtml7 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = require("fs");
@@ -23096,7 +23096,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml6(msg));
+      var doc = createHtmlDocument("Error", escapeHtml7(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -23196,7 +23196,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml6(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml7(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23600,7 +23600,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate3 = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml6 = require_escape_html();
+    var escapeHtml7 = require_escape_html();
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
@@ -23939,7 +23939,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml6(address);
+          var u = escapeHtml7(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -24067,7 +24067,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports2, module2) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml6 = require_escape_html();
+    var escapeHtml7 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = require("path").resolve;
     var send = require_send();
@@ -24153,7 +24153,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml6(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml7(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -183636,6 +183636,64 @@ var FIVE_DINNERS_PRICE_DISCLOSURES = [
     body: "This plan provides five dinners for two people. Appetite, portion size and any additional sides may change the quantity required."
   }
 ];
+var LOW_COST_DINNERS_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "A note on cost",
+    body: "These techniques can help make a small set of ingredients feel more varied, but they do not guarantee a lower shopping total. Current prices, pack sizes, what is already at home and what goes unused all affect the result."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and product labels",
+    body: "Soy sauce, miso, hard cheese, yoghurt, nuts, seeds, stock and ready-made seasonings can contain common allergens or substantial salt. Check every label for the people eating the dinner and use a suitable alternative where needed."
+  }
+];
+var PULSES_COST_DISCLOSURES = [
+  {
+    key: "price_estimate",
+    title: "About these estimates",
+    body: "Ingredient and energy figures are illustrative estimates based on products and energy rates checked 25 July 2026. Actual cost depends on the product, tariff, appliance, pan and cooking method."
+  },
+  {
+    key: "price_comparison",
+    title: "How to use the comparison",
+    body: "Compare cooked or drained quantities rather than shelf prices alone. Promotions, loyalty prices, pack sizes and availability change, so check the current unit price before buying."
+  },
+  {
+    key: "source_timing",
+    title: "Price and guidance review",
+    body: "Product prices, Ofgem rates and official guidance were checked 25 July 2026. Follow the cited sources for later information."
+  }
+];
+var PULSES_SAFETY_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow the packet instructions for soaking and cooking dried pulses. Dried red kidney beans need particular care. Refrigerate cooked food promptly and follow the cited Food Standards Agency guidance."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Stock, miso, hard cheese, yoghurt, sauces and flavoured pulse products vary by brand and may contain allergens. Check every label."
+  }
+];
+var TRAYBAKE_SAFETY_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Cooking safely",
+    body: "Cooking time varies by ingredient size, cut and oven. Follow product instructions and use the Food Standards Agency checks described in this guide, particularly for chicken and fish."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Harissa, curry paste, stock, yoghurt and cheese vary by product and may contain allergens. Check labels and choose ingredients suitable for everyone eating the dinner."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food-safety guidance was reviewed 25 July 2026. Follow the cited Food Standards Agency page for later updates."
+  }
+];
 var SAUSAGE_GUIDE_DISCLOSURES = [
   {
     key: "price_comparison",
@@ -183719,6 +183777,30 @@ var PROGRAMMATIC_DISCLOSURE_FOOTER = {
   links: [
     { href: "/pricing-methodology", label: "Pricing methodology" },
     { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var LOW_COST_DINNERS_DISCLOSURE_FOOTER = {
+  body: "This guide offers flexible cooking ideas rather than fixed recipes or guaranteed savings. Ingredient prices, pack sizes, availability and product information vary.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Food safety guidance" },
+    { href: "/recipe-methodology", label: "How dinners are selected" }
+  ]
+};
+var PULSES_DISCLOSURE_FOOTER = {
+  body: "This guide provides general cooking, cost and storage information. Product prices, energy tariffs, pack instructions and individual dietary needs vary.",
+  links: [
+    { href: "/pricing-methodology", label: "How prices are calculated" },
+    { href: "/food-safety", label: "Food safety" },
+    { href: "/guides", label: "Browse all guides" }
+  ]
+};
+var TRAYBAKE_DISCLOSURE_FOOTER = {
+  body: "This guide provides general cooking guidance. Ingredient size, oven performance, product instructions and individual dietary needs vary.",
+  links: [
+    { href: "/food-safety", label: "Food safety" },
+    { href: "/guides", label: "Browse all guides" }
   ]
 };
 var SAUSAGE_GUIDE_DISCLOSURE_FOOTER = {
@@ -184721,94 +184803,6 @@ var HOME_COOKED_READY_MADE_GUIDE = {
     },
     {
       label: "Food Standards Agency: Cooking and reheating food safely",
-      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
-    }
-  ]
-};
-
-// src/content/lowCostDinnersGuide.ts
-var LOW_COST_DINNERS_GUIDE_PATH = "/food-costs/make-low-cost-dinners-more-interesting";
-var LOW_COST_DINNERS_GUIDE = {
-  title: "Low-cost dinners don't have to be boring",
-  seoTitle: "How to make low-cost dinners more interesting | DinnerByDesign",
-  description: "Practical ways to make affordable dinners more varied and satisfying using seasoning, texture, cooking methods and low-cost finishing touches.",
-  publishedAt: "2026-07-24",
-  reviewedAt: "2026-07-26",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Find practical ways to make low-cost dinners more varied and enjoyable without expanding the shopping list",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-26",
-  editorialNotes: "Consolidated flavour, texture, cooking-method and finishing-touch guide with no specific cost or savings figures. Review annually, next due 26 July 2027.",
-  internalLinks: [
-    "/guides",
-    "/food-costs/ways-to-reduce-grocery-costs",
-    "/food-costs/five-dinners-same-ingredients",
-    "/guides/home-cooked-or-ready-made-dinners",
-    "/pricing-methodology",
-    "/signin"
-  ],
-  disclosures: ["price_comparison", "allergen_and_product"]
-};
-
-// src/content/pulsesBudgetGuide.ts
-var PULSES_BUDGET_GUIDE_PATH = "/food-costs/cooking-with-pulses-on-a-budget";
-var PULSES_BUDGET_GUIDE = {
-  title: "Cooking with lentils, beans and chickpeas on a budget",
-  seoTitle: "Cooking with lentils, beans and chickpeas on a budget | DinnerByDesign",
-  description: "Compare dried and tinned pulses, choose the right variety for the dish and use lentils, beans and chickpeas without making dinner feel like a compromise.",
-  publishedAt: "2026-07-25",
-  reviewedAt: "2026-07-25",
-  nextReviewAt: "2027-01-25",
-  priceReviewedAt: "2026-07-25",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Learn how to buy and cook lentils, beans and chickpeas economically",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-25",
-  editorialNotes: "Price examples are a dated Tesco snapshot. Cooked yield and hob-use figures are explicitly presented as approximations.",
-  internalLinks: [
-    "/guides",
-    "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses",
-    "/food-costs/make-low-cost-dinners-more-interesting",
-    "/food-costs/five-dinners-same-ingredients",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-costs/fresh-or-frozen",
-    "/pricing-methodology",
-    "/food-safety",
-    "/signin"
-  ],
-  disclosures: ["price_estimate", "price_comparison", "source_timing", "storage_and_cooking", "allergen_and_product"],
-  sources: [
-    { label: "NHS: 5 A Day, what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
-    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
-    { label: "Food Standards Agency: Natural toxins factsheet", url: "https://acss.food.gov.uk/sites/default/files/natural-toxins-factsheet.pdf" },
-    { label: "Ofgem: Energy price cap unit rates and standing charges", url: "https://www.ofgem.gov.uk/information-consumers/energy-advice-households/energy-price-cap-unit-rates-and-standing-charges" },
-    { label: "Tesco Groceries: Laila Chickpeas 2kg", url: "https://www.tesco.com/shop/en-GB/products/310108624" },
-    { label: "Tesco Groceries: Lentils, grains and pulses", url: "https://www.tesco.com/groceries/en-GB/shop/food-cupboard/dried-pasta-rice-noodles-and-cous-cous/lentils-grains-and-pulses" }
-  ]
-};
-
-// src/content/traybakeGuide.ts
-var TRAYBAKE_GUIDE_PATH = "/guides/how-to-build-a-traybake";
-var TRAYBAKE_GUIDE = {
-  title: "How to build a traybake that cooks evenly and tastes properly finished",
-  seoTitle: "How to build a traybake that cooks evenly | DinnerByDesign",
-  description: "Tray size, staged cooking and a proper finish: the method behind a traybake that browns instead of steams. Search traybake dinners on DinnerByDesign.",
-  publishedAt: "2026-07-25",
-  reviewedAt: "2026-07-25",
-  nextReviewAt: "2027-07-25",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Learn how to build a traybake that browns well and finishes cooking at the same time",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-25",
-  editorialNotes: "One canonical technique guide with a single handoff to ordinary DinnerByDesign search. No indexable filter pages.",
-  internalLinks: ["/guides", "/food-safety", "/signin"],
-  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: Cooking your food",
       url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
     }
   ]
@@ -186967,6 +186961,410 @@ var FIVE_STAPLES_GUIDE_RECORD = {
   }
 };
 
+// src/content/pulsesBudgetGuide.ts
+var PULSES_BUDGET_GUIDE_PATH = "/food-costs/cooking-with-pulses-on-a-budget";
+var PULSES_BUDGET_GUIDE = {
+  title: "Cooking with lentils, beans and chickpeas on a budget",
+  seoTitle: "Cooking with lentils, beans and chickpeas on a budget | DinnerByDesign",
+  description: "Compare dried and tinned pulses, choose the right variety for the dish and use lentils, beans and chickpeas without making dinner feel like a compromise.",
+  publishedAt: "2026-07-25",
+  reviewedAt: "2026-07-25",
+  nextReviewAt: "2027-01-25",
+  priceReviewedAt: "2026-07-25",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Learn how to buy and cook lentils, beans and chickpeas economically",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-25",
+  editorialNotes: "Price examples are a dated Tesco snapshot. Cooked yield and hob-use figures are explicitly presented as approximations.",
+  internalLinks: [
+    "/guides",
+    "/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses",
+    "/food-costs/make-low-cost-dinners-more-interesting",
+    "/food-costs/five-dinners-same-ingredients",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/fresh-or-frozen",
+    "/pricing-methodology",
+    "/food-safety",
+    "/signin"
+  ],
+  disclosures: ["price_estimate", "price_comparison", "source_timing", "storage_and_cooking", "allergen_and_product"],
+  sources: [
+    { label: "NHS: 5 A Day, what counts?", url: "https://www.nhs.uk/live-well/eat-well/5-a-day/5-a-day-what-counts/" },
+    { label: "Food Standards Agency: How to chill, freeze and defrost food safely", url: "https://www.food.gov.uk/safety-hygiene/how-to-chill-freeze-and-defrost-food-safely" },
+    { label: "Food Standards Agency: Natural toxins factsheet", url: "https://acss.food.gov.uk/sites/default/files/natural-toxins-factsheet.pdf" },
+    { label: "Ofgem: Energy price cap unit rates and standing charges", url: "https://www.ofgem.gov.uk/information-consumers/energy-advice-households/energy-price-cap-unit-rates-and-standing-charges" },
+    { label: "Tesco Groceries: Laila Chickpeas 2kg", url: "https://www.tesco.com/shop/en-GB/products/310108624" },
+    { label: "Tesco Groceries: Lentils, grains and pulses", url: "https://www.tesco.com/groceries/en-GB/shop/food-cupboard/dried-pasta-rice-noodles-and-cous-cous/lentils-grains-and-pulses" }
+  ]
+};
+var PULSE_USES = [
+  ["Red lentils", "Dhal, soup, curry, tomato sauce", "Thickens and softens into the sauce"],
+  ["Green or brown lentils", "Stews, salads, pies", "Firmer texture and substance"],
+  ["Chickpeas", "Curries, traybakes, salads, hummus", "Mild flavour and a distinct bite"],
+  ["Cannellini beans", "Soups, tomato dishes, mash", "Creamy texture"],
+  ["Butter beans", "Stews, bakes, crushed toppings", "Large, soft and substantial"],
+  ["Kidney beans", "Chilli and rice dishes", "Firm texture and familiar flavour"],
+  ["Black beans", "Chilli, rice bowls, fillings", "Earthier flavour and darker colour"]
+];
+var PULSES_BUDGET_FAQS = [
+  {
+    question: "Are dried pulses always cheaper than tinned?",
+    answer: "No. Dried lentils are often economical because they cook quickly, but chickpeas take longer. Product price, cooked yield, hob type and cooking time all affect the comparison."
+  },
+  {
+    question: "Which pulse is easiest to add to a sauce?",
+    answer: "Red lentils soften into a sauce and can thicken it. Chickpeas and most beans keep more of their shape and give the dish a distinct bite."
+  },
+  {
+    question: "How can pulses stretch a meat-based dinner?",
+    answer: "Start by replacing about a third of the meat with lentils or beans, then adjust the liquid and seasoning. The dish will change, but the result can still feel balanced and satisfying."
+  },
+  {
+    question: "Do beans, lentils and chickpeas count towards 5 A Day?",
+    answer: "Yes, but they count as a maximum of one portion a day, however much you eat or however many varieties you combine. An adult portion is about 80g."
+  },
+  {
+    question: "Do dried kidney beans need special preparation?",
+    answer: "Yes. Follow the packet instructions. Food Standards Agency guidance says dried red kidney beans should be soaked for at least 12 hours and boiled vigorously for at least 10 minutes in fresh water."
+  },
+  {
+    question: "Can cooked pulses be frozen?",
+    answer: "Yes. Cool them promptly, divide them into useful quantities and freeze them if they will not be eaten within the recommended refrigerated storage time."
+  }
+];
+var escapeHtml5 = (value) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character] || character);
+var paragraphs = (items) => items.map((item) => `<p>${escapeHtml5(item)}</p>`).join("");
+var pulseUseRows = () => PULSE_USES.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml5(cell)}</td>`).join("")}</tr>`).join("");
+var PULSES_BUDGET_GUIDE_SECTIONS = [
+  {
+    rawHtml: `<section>${paragraphs([
+      "A tin of chickpeas often sits in the cupboard for months. Someone buys a bag of red lentils meaning to use it, then reaches for pasta instead because they're not sure what to do with it. Pulses have a reputation for being cheap and worthy rather than something to actually look forward to eating.",
+      "That reputation is only partly deserved. Lentils, beans and chickpeas are inexpensive, keep for a long time and work across a wide range of cooking styles. They can replace some of the meat in a dish or stand as the main ingredient in their own right. Used well, they reduce the cost of a dinner without making it feel like a compromise.",
+      "Used badly, they do the opposite. A handful of underseasoned lentils tipped into a sauce to bulk it out tends to taste exactly like that: bulk. Some people don't get on with the texture of pulses at all, however they're cooked. This guide is about giving pulses a clear job in a dish, flavour, texture or substance, rather than treating them as padding."
+    ])}</section>`
+  },
+  {
+    rawHtml: `<section><h2>Dried or tinned: which is better value?</h2>${paragraphs([
+      "The shelf price alone isn't a fair comparison. Dried pulses need cooking, which carries an energy cost and changes the weight considerably between dry and cooked. Tinned pulses are sold with a drained weight lower than the tin's total weight. A fair comparison has to account for both, and prices vary enough between brands and pack sizes that one product shouldn't stand in for the whole category.",
+      "Take chickpeas. On Tesco's website, Natco dried chickpeas cost \xA31.50 for 500g (\xA33.00 per kg) at the standard price, checked 25 July 2026. Laila dried chickpeas, sold in a larger 2kg bag, list at a \xA34.00 regular price (\xA32.00 per kg), with a lower \xA32.90 Clubcard price available to loyalty scheme members on the same date. Brand and pack size make a real difference here, so it's worth checking the unit price on the shelf rather than assuming one product represents the category.",
+      "Once soaked and simmered, dried chickpeas typically yield around two to two and a half times their dry weight, a widely used kitchen conversion rather than an exact figure. So 100g of dried chickpeas, costing roughly 20p to 30p depending on brand, produces somewhere in the region of 220 to 250g cooked, a similar amount to the drained contents of a standard tin.",
+      "Energy cost is harder to pin down precisely, since it depends on the hob, the pan and how low the heat is once the pan is simmering rather than boiling. As a rough guide, published UK hob running-cost estimates suggest a small ring simmering on gas uses somewhere in the region of 1 to 1.3 kWh per hour, and an electric ring nearer 1 to 1.5 kWh per hour, since electric rings cycle on and off around a set temperature rather than reducing output as smoothly as a gas flame lowered by hand. At Ofgem's Q3 2026 price cap rates (7.33p per kWh for gas, 26.11p per kWh for electricity, effective from 1 July 2026), roughly 90 minutes of mostly-simmering cooking works out at somewhere between 10p and 15p on gas, or 40p to 60p on electric. These are estimates built on assumed appliance output rather than a measurement of this specific dish, and the real figure will vary with the hob and pan used.",
+      "Put together, a batch of dried chickpeas comparable to one tin costs roughly 30p to 45p on a gas hob, or 60p to 90p on an electric hob, once the ingredient and energy estimates are combined. A budget-range tin of chickpeas costs around 41 to 45p for 400g, of which roughly 240g is drained chickpeas once the liquid is poured off. On gas, dried and tinned chickpeas land in a similar range. On an electric hob, the tin is the more reliably cheaper option once energy is accounted for.",
+      "Lentils are simpler to cost. Tesco own-brand dried red lentils cost around \xA32.60 per kg, checked the same date. They need no soaking and cook in around 25 minutes, so using the same rough energy assumptions, the cooking cost falls to somewhere in the region of 3p to 5p on gas, or 10p to 15p on electric. Using these assumptions, dried lentils are likely to remain cheaper than the tinned products checked, even with cooking energy included, though promotions, tariffs and different appliances could narrow that gap. The cooked yield follows a similar ratio to chickpeas.",
+      "None of this means dried pulses are the wrong choice. It means the saving depends on the pulse, the brand, the hob and how much of the bag gets used, rather than on the shelf price alone.",
+      "Convenience still matters, separately from cost. A tin can be opened and used within minutes. Cooking from dried takes planning: chickpeas need soaking the night before, and even a modest batch takes over an hour of largely unattended simmering. That doesn't mean the whole bag has to go in at once; measuring out only what's needed for one dinner avoids ending up with more cooked pulses than the household will use.",
+      "The cheapest price per gram isn't always the cheapest outcome for a particular household, once cooked yield and energy are factored in. Lentils tend to reward buying dried. Chickpeas are closer to a toss-up and depend heavily on brand and hob type, and tinned is often the simpler choice unless there's a plan to use a full batch across more than one dinner."
+    ])}</section>`,
+    disclosureItems: PULSES_COST_DISCLOSURES
+  },
+  {
+    rawHtml: `<section><h2>Choosing the right pulse for the dish</h2><p>Pulses are not interchangeable. Red lentils collapse into a sauce; chickpeas hold their shape and bite. Picking the wrong one changes a dish more than many cooks expect.</p><div class="guide-table-wrap"><table><thead><tr><th>Pulse</th><th>Suitable uses</th><th>What it contributes</th></tr></thead><tbody>${pulseUseRows()}</tbody></table></div><p>As a rough guide, reach for red lentils when a dish needs thickening, and for chickpeas, cannellini or butter beans when it needs something to bite into.</p></section>`
+  },
+  {
+    rawHtml: `<section><h2>Stretching meat-based dinners</h2>${paragraphs([
+      "Lentils or beans can reduce the amount of meat needed in a bolognese-style sauce, chilli, cottage pie, sausage casserole or chicken stew. This works best when the pulses go in early enough to take on the flavour of the dish, in a modest proportion relative to the meat.",
+      "The honest version is that pulses do change a dish. A cottage pie built around equal parts lentils and mince looks and tastes different from one made with mince alone. That is not necessarily a problem, but it is worth trying a modest ratio first, perhaps replacing a third of the meat, and adjusting liquid and seasoning from there."
+    ])}</section>`
+  },
+  {
+    rawHtml: `<section><h2>Making pulse-based dinners taste satisfying</h2>${paragraphs([
+      "Underseasoning is likely to be part of why people go off pulses, though texture plays a role too. Build flavour from onion, garlic and spices early. Finish with lemon, lime or vinegar to cut through earthiness. Add savoury depth with stock, miso or hard cheese. Contrast the soft texture with a green vegetable, toasted seeds or crisp roasted chickpeas. Fresh herbs or yoghurt can lift a dish that has tasted flat through the middle of cooking."
+    ])}</section>`
+  },
+  {
+    rawHtml: `<section><h2>Getting more than one dinner from a pack</h2>${paragraphs([
+      "A single tin or bag of pulses rarely needs to disappear into one dish. Chickpeas, for instance, can move across a week: a chickpea and vegetable curry, crushed chickpeas on toast with lemon and herbs, then roasted chickpeas added to a tray of vegetables.",
+      "Lentils can do something similar: worked into a tomato and mince sauce one night, turned into a lentil and vegetable soup the next, then served spiced with rice and yoghurt later in the week.",
+      "Opened tins should be stored, covered, in the fridge according to the instructions on the label. Tesco's own tinned chickpeas, for example, specify moving any unused contents into a covered container, refrigerating, and using within three days. Once lentils or chickpeas have been cooked from dried, or made into a sauce or soup at home, the general Food Standards Agency guidance for cooked food applies instead: eat within two days of cooking, or freeze. These are two different situations rather than conflicting advice: one is manufacturer guidance for an opened, unheated product, the other is general guidance for food cooked in your own kitchen.",
+      "Cooked batches of dried pulses freeze well once cooled, which is often more useful than a bag that's produced more than the household will get through in that time."
+    ])}<p>The guide to <a href="/guides/dinners-built-around-potatoes-rice-pasta-bread-pulses">dinners built around potatoes, rice, pasta, bread and pulses</a> includes a chickpea dumpling curry alongside four other staple-led ideas.</p></section>`
+  },
+  {
+    rawHtml: `<section><h2>Food safety</h2>${paragraphs([
+      "Dried pulses should be prepared according to the instructions on the packet, particularly soaking and cooking times, since these vary by type and brand. Dried kidney beans need particular care. According to the Food Standards Agency's natural toxins factsheet, dried red kidney beans contain natural toxins called lectins, which can cause stomach ache and vomiting; these are destroyed if the beans are soaked for at least 12 hours and then boiled vigorously for at least 10 minutes in fresh water. Tinned kidney beans have already been through this process as part of canning and can be used without further treatment.",
+      "Tinned pulses are already cooked as part of the canning process, which is part of why they're convenient. Once a tin is opened, any unused contents should be moved into a separate container and refrigerated rather than left in the tin.",
+      "For anything cooked at home, a pot of lentils, a batch of soaked and boiled chickpeas, general Food Standards Agency guidance applies: cool food as quickly as reasonably possible and get it into the fridge within two hours of cooking, rather than leaving it to cool on the side for longer. Once refrigerated, leftovers are best eaten within two days, or frozen if that's not realistic. Don't rely on smell to judge whether something's still fine to eat; use dates and storage instructions instead."
+    ])}</section>`,
+    disclosureItems: PULSES_SAFETY_DISCLOSURES
+  },
+  {
+    rawHtml: `<section><h2>Nutrition and 5 A Day</h2>${paragraphs([
+      "Beans, lentils and chickpeas count towards 5 A Day, but only as one portion, however much you eat or however many types you combine. A portion is 80g, roughly three heaped tablespoons, according to NHS guidance checked 25 July 2026.",
+      "Pulses are a useful source of fibre and protein, and a reasonable way to eat less meat across a week without a household feeling short-changed. They are not a direct nutritional substitute for meat in every respect, and treating them as one is not necessary to get value from using them."
+    ])}</section>`
+  },
+  {
+    rawHtml: `<section><h2>When pulses may not be the best choice</h2>${paragraphs([
+      "Pulses don't suit every dinner or every household. Some people find beans and lentils cause digestive discomfort, particularly in large amounts or when eaten more often than the gut is used to. Texture is a genuine sticking point for some cooks, however well the dish is seasoned. Dried varieties need planning ahead, which doesn't always fit around a working week. Some tinned or flavoured pulse products carry more salt than a home-cooked version, so it's worth checking the label where that matters. And buying an unfamiliar variety for a single recipe can undo any saving if the rest of the bag goes unused.",
+      "Where any of that applies, it's reasonable to start with a familiar dish, a chilli or a bolognese-style sauce, rather than a pulse-led curry from scratch, and build up from there."
+    ])}</section>`
+  },
+  {
+    rawHtml: `<section><h2>In short</h2>${paragraphs([
+      "Pulses offer good value when they suit the dish, are seasoned properly and are bought in a form the household will actually use. A cheap bag of chickpeas sitting untouched in the cupboard is not a saving; it is just a bag of chickpeas."
+    ])}</section>`
+  },
+  {
+    rawHtml: "<section><h2>Sources and further reading</h2><p>Prices and guidance checked 25 July 2026. Cooked-yield ratios and hob-energy use are kitchen and industry approximations and vary by product, appliance and method.</p></section>"
+  },
+  {
+    rawHtml: '<section><h2>Related guides</h2><ul><li><a href="/food-costs/make-low-cost-dinners-more-interesting">Make low-cost dinners more interesting</a></li><li><a href="/food-costs/five-dinners-same-ingredients">Plan five dinners around shared ingredients and complete packs</a></li><li><a href="/food-costs/portion-planning-and-food-waste">Portion planning and food waste</a></li><li><a href="/food-costs/fresh-or-frozen">Fresh or frozen: which suits the way you cook?</a></li><li><a href="/pricing-methodology">How DinnerByDesign calculates ingredient prices</a></li></ul></section>'
+  }
+];
+var PULSES_BUDGET_GUIDE_RECORD = {
+  id: "cooking-with-pulses-on-a-budget",
+  slug: "cooking-with-pulses-on-a-budget",
+  path: PULSES_BUDGET_GUIDE_PATH,
+  canonicalPath: PULSES_BUDGET_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "price-sensitive",
+  ...PULSES_BUDGET_GUIDE,
+  metaDescription: PULSES_BUDGET_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: [...PULSES_COST_DISCLOSURES, ...PULSES_SAFETY_DISCLOSURES],
+  disclosureFooter: PULSES_DISCLOSURE_FOOTER,
+  sections: PULSES_BUDGET_GUIDE_SECTIONS,
+  faqs: PULSES_BUDGET_FAQS,
+  cta: {
+    title: "Find a dinner built around pulses",
+    copy: "Search DinnerByDesign for dinners using lentils, beans or chickpeas.",
+    label: "Find pulse-based dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/traybakeGuide.ts
+var TRAYBAKE_GUIDE_PATH = "/guides/how-to-build-a-traybake";
+var TRAYBAKE_GUIDE = {
+  title: "How to build a traybake that cooks evenly and tastes properly finished",
+  seoTitle: "How to build a traybake that cooks evenly | DinnerByDesign",
+  description: "Tray size, staged cooking and a proper finish: the method behind a traybake that browns instead of steams. Search traybake dinners on DinnerByDesign.",
+  publishedAt: "2026-07-25",
+  reviewedAt: "2026-07-25",
+  nextReviewAt: "2027-07-25",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Learn how to build a traybake that browns well and finishes cooking at the same time",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-25",
+  editorialNotes: "One canonical technique guide with a single handoff to ordinary DinnerByDesign search. No indexable filter pages.",
+  internalLinks: ["/guides", "/food-safety", "/signin"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food"
+    }
+  ]
+};
+var TRAYBAKE_GUIDE_SECTIONS = [
+  {
+    paragraphs: [
+      "A traybake is easy to get onto a plate and easy to get wrong. Everything goes onto one tray, into one oven, and comes out looking like a dinner. Whether it tastes like one, and whether it's actually cooked through, has usually been decided before anything went in the oven.",
+      "Most disappointing traybakes come down to a small number of avoidable choices: too much crammed onto one tray, ingredients cut to different sizes and added all at once regardless of how quickly they cook, and nothing added once it comes out. None of that takes extra time to fix. It takes doing things in a different order."
+    ]
+  },
+  {
+    title: "1. Choose a tray large enough to leave space between ingredients",
+    paragraphs: [
+      "Overcrowding is probably the most common reason a traybake disappoints. When ingredients are packed close together, the moisture they release turns into steam with nowhere to go, and instead of browning, everything softens and stews in its own liquid. If the tray looks full before anything's gone in, use a bigger one or a second tray. Ingredients should sit in close to a single layer, with visible gaps between them, not stacked or touching edge to edge."
+    ]
+  },
+  {
+    title: "2. Select a base that can tolerate the longest cooking time",
+    paragraphs: [
+      "The ingredient that takes longest to cook, usually a potato, a piece of squash, or another dense vegetable, goes in first and effectively sets the length of time the tray spends in the oven. Larger or thickly cut potatoes take noticeably longer than small ones, and may need a head start in the oven on their own before anything else goes in, rather than assuming any potato counts as the base regardless of size. Everything else is added or timed relative to that base, rather than cooked alongside it for the same length of time regardless of what it actually needs."
+    ]
+  },
+  {
+    title: "3. Cut ingredients to match how quickly they cook",
+    paragraphs: [
+      "Consistency matters most within an ingredient, not necessarily across all of them. Potatoes cut to a similar size cook at a similar rate; cut unevenly, some pieces will be done while others are still raw in the middle. A piece of potato and a piece of pepper were never going to cook in the same time regardless of how neatly they're cut, which is part of why staging matters more than trying to make every ingredient on the tray the same size."
+    ]
+  },
+  {
+    title: "4. Add quicker ingredients in stages",
+    paragraphs: [
+      "A raw potato and a piece of fish don't belong in the oven for the same length of time, and no amount of clever cutting changes that. The base goes in first. Ingredients that cook faster, peppers, cherry tomatoes, delicate fish, quick-cooking greens, go in partway through, timed so everything finishes together rather than starting together. This is the single biggest fix for an unevenly cooked traybake, and it costs nothing beyond opening the oven door once or twice.",
+      "Watery vegetables need a bit more thought within this. Courgettes, mushrooms and tomatoes all release a lot of liquid as they cook, which can undo a well-spaced tray by flooding the base of it late on. Salting courgette slices for ten minutes beforehand and patting them dry removes some of that liquid before it reaches the tray. Mushrooms are better handled differently: giving them a bit more space than other ingredients and roasting them uncovered lets the liquid they release evaporate rather than pool, without needing to salt them first. Tomatoes are usually fine left as they are, since their liquid is often meant to become part of the dish, but it's worth knowing which ingredients are contributing moisture on purpose and which are doing it by accident."
+    ]
+  },
+  {
+    title: "5. Finish with something the oven never touched",
+    paragraphs: [
+      "The element that separates a considered traybake from an assembled one is usually added after the tray comes out, not before it goes in. Fresh herbs, a spoonful of yoghurt, crumbled cheese, toasted seeds, or a squeeze of lemon each add contrast, brightness or texture that sustained oven heat tends to flatten out.",
+      "Acid is worth treating on its own terms rather than folding it in with spice. A spoonful of harissa or curry paste stirred through before roasting has time to cook into everything else and mellow, which is usually the effect wanted. Lemon and vinegar behave differently: roasted alongside everything else, much of their brightness cooks off, leaving a general sourness rather than the fresh lift a squeeze of lemon gives at the table. Where a dish wants that lift, adding the acid after cooking rather than before tends to get closer to it.",
+      "Seasoning is worth checking twice for a related reason. Salt and spice can taste right on raw ingredients and still read as underseasoned once roasted, partly because some of the moisture carrying that seasoning cooks away, and partly because roasting changes how strongly other flavours come through. That isn't true of every dish, but tasting and adjusting once the tray comes out catches problems that seasoning only at the start sometimes misses."
+    ]
+  },
+  {
+    title: "Three traybakes that use this method",
+    paragraphs: []
+  },
+  {
+    title: "Chicken thighs, potatoes and peppers",
+    paragraphs: [
+      "Potatoes as the base, cut to an even size and started first with oil and seasoning; larger chunks or whole baby potatoes benefit from ten to fifteen minutes in the oven on their own before anything else goes in. Bone-in, skin-on chicken thighs go in alongside the potatoes once they've had that head start, since the two then need a similar length of time. Peppers, cut into large pieces so they don't disappear, go in around twenty minutes before the end. Finish with lemon squeezed over at the table rather than before cooking, and parsley if there's some to hand."
+    ]
+  },
+  {
+    title: "Chickpeas, squash and harissa",
+    paragraphs: [
+      "Squash as the base, cut into wedges rather than small cubes so it holds its shape through the full cooking time. A spoonful of harissa mixed with oil goes over the squash from the start, giving it time to cook in properly. Drained tinned chickpeas go in for the final fifteen minutes or so, since they're already cooked and only need warming through and a little colour, not the full time in the oven. Finish with yoghurt loosened with a splash of water and drizzled over, plus coriander if available."
+    ]
+  },
+  {
+    title: "Fish, tomatoes and courgettes, with the fish added later",
+    paragraphs: [
+      "Cherry tomatoes and courgette, salted and patted dry beforehand given how much water courgette releases, go in first, since they need longer in the oven than the fish will. A firm white fish fillet, or salmon, goes in for the final part of cooking only. Fish is done when the flesh turns opaque and flakes easily with a fork; overcooking it by even a few minutes undoes the point of adding it last."
+    ]
+  },
+  {
+    title: "A note on food safety",
+    paragraphs: [
+      "Cooking times for chicken and fish vary too much by cut, thickness and oven to give one number that works for every traybake. For chicken, the Food Standards Agency's guidance is to check with a food thermometer that the thickest part has reached 70\xB0C for at least 2 minutes, or an equivalent combination such as 75\xB0C for 30 seconds. Without a thermometer, cut into the thickest part and check that the juices run clear, there's no pink meat left, and it's steaming hot all the way through. For fish, cook until the flesh turns opaque and separates easily with a fork. When in doubt, particularly with chicken, it's better to give it a few more minutes than to guess."
+    ]
+  },
+  {
+    title: "In short",
+    paragraphs: [
+      "None of this makes a traybake more complicated to cook, just more deliberate about the order things happen in. A tray with room to spare, a base that can take the time, additions staged to match how quickly they cook, and something added at the end that the oven never touched: that's most of the difference between a traybake that tastes assembled and one that tastes considered."
+    ]
+  }
+];
+var TRAYBAKE_GUIDE_FAQS = [
+  {
+    question: "Why does a traybake steam instead of brown?",
+    answer: "The tray is usually overcrowded or contains several ingredients releasing liquid at once. Use a larger tray or a second tray and leave visible space between ingredients."
+  },
+  {
+    question: "Which ingredient should go into a traybake first?",
+    answer: "Start with the ingredient that needs the longest cooking time, often potato, squash or another dense vegetable. Add quicker ingredients later."
+  },
+  {
+    question: "Should fish go into a traybake at the beginning?",
+    answer: "Usually not. Add fish for the final part of cooking so it finishes with the vegetables without becoming dry."
+  },
+  {
+    question: "How do I know chicken in a traybake is safely cooked?",
+    answer: "Check that the thickest part reaches 70\xB0C for 2 minutes, or 75\xB0C for 30 seconds. If you do not have a thermometer, check that it is steaming hot throughout, with no pink meat and clear juices."
+  },
+  {
+    question: "What should I add after a traybake comes out of the oven?",
+    answer: "Try fresh herbs, yoghurt, crumbled cheese, toasted seeds, lemon juice or vinegar. Choose one that adds freshness, acidity, creaminess or texture."
+  }
+];
+var TRAYBAKE_GUIDE_RECORD = {
+  id: "how-to-build-a-traybake",
+  slug: "how-to-build-a-traybake",
+  path: TRAYBAKE_GUIDE_PATH,
+  canonicalPath: TRAYBAKE_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "safety-sensitive",
+  ...TRAYBAKE_GUIDE,
+  metaDescription: TRAYBAKE_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: TRAYBAKE_SAFETY_DISCLOSURES,
+  disclosureFooter: TRAYBAKE_DISCLOSURE_FOOTER,
+  sections: TRAYBAKE_GUIDE_SECTIONS,
+  faqs: TRAYBAKE_GUIDE_FAQS,
+  cta: {
+    title: "Find a traybake for tonight",
+    copy: "Search DinnerByDesign for traybake dinners, filtered by what is already in your kitchen or by cost.",
+    label: "Search traybake dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/lowCostDinnersGuide.ts
+var LOW_COST_DINNERS_GUIDE_PATH = "/food-costs/make-low-cost-dinners-more-interesting";
+var LOW_COST_DINNERS_GUIDE = {
+  title: "Low-cost dinners don't have to be boring",
+  seoTitle: "How to make low-cost dinners more interesting | DinnerByDesign",
+  description: "Practical ways to make affordable dinners more varied and satisfying using seasoning, texture, cooking methods and low-cost finishing touches.",
+  publishedAt: "2026-07-24",
+  reviewedAt: "2026-07-26",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Find practical ways to make low-cost dinners more varied and enjoyable without expanding the shopping list",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Consolidated flavour, texture, cooking-method and finishing-touch guide with no specific cost or savings figures. Review annually, next due 26 July 2027.",
+  internalLinks: [
+    "/guides",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/food-costs/five-dinners-same-ingredients",
+    "/guides/home-cooked-or-ready-made-dinners",
+    "/pricing-methodology",
+    "/signin"
+  ],
+  disclosures: ["price_comparison", "allergen_and_product"],
+  sources: [
+    { label: "DinnerByDesign pricing methodology", url: "https://dinnerbydesign.app/pricing-methodology" },
+    { label: "DinnerByDesign recipe methodology", url: "https://dinnerbydesign.app/recipe-methodology" }
+  ]
+};
+var LOW_COST_DINNERS_GUIDE_FAQS = [
+  {
+    question: "How can low-cost dinners feel less repetitive?",
+    answer: "Keep the main ingredients familiar, then change one detail: seasoning, texture, cooking method or finish."
+  },
+  {
+    question: "Do I need a larger shopping list to add variety?",
+    answer: "Not always. A small set of flavour-builders, such as mustard, curry powder, vinegar, garlic or chilli flakes, can shift the same base ingredients in different directions."
+  },
+  {
+    question: "Are ready-made options a step down?",
+    answer: "No. They can be the sensible choice when they reduce waste, suit a smaller household or make dinner easier on a difficult evening."
+  },
+  {
+    question: "Does sharing ingredients across several dinners always save money?",
+    answer: "No. Pack size, what goes unused and current retailer pricing all affect the real cost."
+  }
+];
+var LOW_COST_DINNERS_GUIDE_SECTIONS = [
+  { rawHtml: "<section><p>Cutting the cost of dinner can bring a nagging worry: that the dinners ahead are going to be a long run of plain pasta, unseasoned lentils and baked beans on toast. If every budget dish tastes roughly the same, saving money quickly stops feeling worth it.</p><p>That repetition often isn't caused by the ingredients. It's caused by using them the same way every time. Beans, lentils, eggs, potatoes, tinned tomatoes and cheaper cuts of meat aren't dull by nature. They're starting points, and what happens after they go in the basket is where the variety actually comes from.</p></section>" },
+  { rawHtml: "<section><h2>Affordable ingredients are not inherently dull</h2><p>Lentils can turn into a dhal one night, a tomato-based pasta sauce the next, and spiced patties after that. Eggs move just as easily between a frittata, a shakshuka or a vegetable fried rice. None of these are lesser versions of a more expensive dish. They're different dishes that happen to share a starting ingredient.</p><p>Tinned tomatoes work the same way. The same tin can underpin a simple pasta sauce, a shakshuka, a chilli or a curry base, and each can taste quite different despite sharing a shelf-stable ingredient that's usually inexpensive. The variety comes from what's added around it, not from buying something different every week.</p></section>" },
+  { rawHtml: "<section><h2>Build flavour inexpensively</h2><p>A short list of flavour-builders does most of the work here, and there's no need to own all of them at once, or to restock every one every week. One spice blend, one acidic ingredient and one savoury seasoning will already shift a dish a long way from its last outing.</p><ul><li>Mustard</li><li>Curry powder</li><li>Smoked paprika</li><li>Dried herbs</li><li>Chilli flakes</li><li>Soy sauce</li><li>Vinegar or lemon juice</li><li>Garlic</li><li>Stock</li></ul><p>It is worth tasting as you go, particularly with stock, soy sauce and other salty seasonings. It's easy to oversalt a dish by adding several of these on top of each other without checking first.</p></section>" },
+  { rawHtml: "<section><h2>Change the cooking method</h2><p>The same vegetable behaves differently depending on how it's cooked. Roasted cabbage picks up browned, slightly sweet edges that boiled cabbage never gets. Chickpeas can go soft into a curry or crisp up in the oven for a completely different texture. Potatoes can become wedges, mash, a r\xF6sti or a pie topping without a single change to the shopping list.</p><p>These changes often require no new main ingredients. The point is to treat cooking method as another variable, alongside seasoning, rather than defaulting to the same pan and the same timing every time. Vegetables roasted quickly at a high temperature can taste quite different from the same vegetables simmered gently in a stew, even when the shopping list is identical.</p></section>" },
+  { rawHtml: "<section><h2>Add texture and contrast</h2><p>Budget dishes can start to feel monotonous when everything on the plate has the same soft texture. A small contrasting element often makes more difference than adding another costly ingredient.</p><ul><li>Toasted breadcrumbs</li><li>Crisp fried onions</li><li>Shredded raw vegetables</li><li>Pickled onions</li><li>Seeds</li><li>A spoonful of yoghurt</li><li>Fresh herbs, when affordable</li><li>A squeeze of lemon</li></ul><p>A bowl of dhal, for example, changes considerably with a spoonful of yoghurt and a scattering of toasted seeds on top, even though the dhal itself hasn't changed at all. The same logic applies to soups, stews and anything else that tends to come out uniformly soft.</p></section>" },
+  { rawHtml: "<section><h2>Work out what is actually missing</h2><p>A finishing touch works best when it solves a particular problem rather than adding more ingredients at random. Taste first, then choose one adjustment:</p><ul><li><strong>Tastes flat:</strong> try a little lemon juice or vinegar.</li><li><strong>Feels heavy:</strong> add acidity, herbs or pickles.</li><li><strong>Too soft:</strong> add toasted crumbs, seeds or crisp onions.</li><li><strong>Lacks depth:</strong> try a small amount of soy sauce, miso or hard cheese.</li><li><strong>Familiar but dull:</strong> add chilli, smoked paprika or a fresh herb.</li><li><strong>Too hot:</strong> finish with yoghurt.</li></ul><p>Start small, taste again and only make a second adjustment if the dish still needs it. Cost per use matters here as much as shelf price. A jar used across many dinners may offer better value than a fresh ingredient bought for one dish and left unused.</p></section>" },
+  {
+    rawHtml: "<section><h2>Reuse ingredients without repeating the same dinner</h2><p>Shopping for a small set of ingredients that reappear across several dishes can bring costs down while still giving some variety. Peppers, onions and tinned tomatoes, for instance, can turn up in:</p><ul><li>A smoky bean chilli</li><li>A vegetable paella</li><li>A tomato and pepper pasta sauce</li></ul><p>The ingredients overlap, but the seasoning, texture and format change from one dinner to the next. It is worth noting that a shared ingredient list doesn't automatically guarantee a saving; pack size, what goes unused and current retailer pricing all affect the real cost.</p></section>",
+    disclosureItems: LOW_COST_DINNERS_DISCLOSURES
+  },
+  { rawHtml: "<section><h2>Give familiar dishes one deliberate change</h2><p>None of this means reinventing every dinner from scratch. Most households already have two or three low-cost dishes on repeat, and the quickest way to see a difference is to leave the dish alone and change one detail around it. Sometimes one small, deliberate change to something already in rotation is enough:</p><ul><li>Add mustard and crisp breadcrumbs to cauliflower cheese.</li><li>Turn leftover chilli into stuffed potatoes.</li><li>Add roasted carrots and warm spices to lentil soup.</li><li>Finish tomato pasta with toasted crumbs and lemon zest.</li><li>Add shredded cabbage and a sharp dressing beside sausages and mash.</li></ul><p>Each of these keeps the original shopping list intact. The change is in the detail added on top, which is usually enough to make a familiar dish feel worth cooking again.</p></section>" },
+  { rawHtml: `<section><h2>A note on effort and cost</h2><p>It's worth being honest that none of this is effortless for everyone. Time, energy, equipment, food prices and access to a decent supermarket vary a great deal between households, and low-cost cooking asks more of some people than others.</p><p>Ready-made options aren't a step down from this either; they can be the sensible choice, particularly when they cut down on waste or suit a smaller household better than cooking from scratch. <a href="/guides/home-cooked-or-ready-made-dinners">Compare the two approaches in more detail</a>.</p></section>` },
+  { rawHtml: "<section><h2>Where to start</h2><p>Affordable cooking tends to stick as a habit when it still gives people something to look forward to. Variety doesn't need a bigger shopping list. It needs a change to how the same ingredients are seasoned, cooked or finished.</p><p>This week, try picking one low-cost dish already in rotation and changing a single thing about it: the seasoning, the cooking method, the texture, or the finish.</p></section>" },
+  { rawHtml: '<section><h2>Related guidance</h2><p><a href="/food-costs/ways-to-reduce-grocery-costs">Explore practical ways to manage grocery costs</a>, <a href="/food-costs/five-dinners-same-ingredients">see how shared ingredients can become five different dinners</a> or <a href="/pricing-methodology">read how DinnerByDesign calculates ingredient costs</a>.</p></section>' }
+];
+var LOW_COST_DINNERS_GUIDE_RECORD = {
+  id: "make-low-cost-dinners-more-interesting",
+  slug: "make-low-cost-dinners-more-interesting",
+  path: LOW_COST_DINNERS_GUIDE_PATH,
+  canonicalPath: LOW_COST_DINNERS_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "price-sensitive",
+  ...LOW_COST_DINNERS_GUIDE,
+  nextReviewAt: "2027-07-26",
+  metaDescription: LOW_COST_DINNERS_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: LOW_COST_DINNERS_DISCLOSURES,
+  disclosureFooter: LOW_COST_DINNERS_DISCLOSURE_FOOTER,
+  sections: LOW_COST_DINNERS_GUIDE_SECTIONS,
+  faqs: LOW_COST_DINNERS_GUIDE_FAQS,
+  cta: {
+    title: "Make familiar ingredients feel less predictable",
+    copy: "Tell DinnerByDesign what you already have, your budget and your preferences, and find a dinner that gives those ingredients a different direction.",
+    label: "Find a dinner",
+    href: "/signin"
+  }
+};
+
 // src/content/publicGuideRegistry.ts
 var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
@@ -186982,6 +187380,9 @@ var PUBLIC_GUIDE_RECORDS = [
   TINNED_FISH_GUIDE_RECORD,
   CONVENIENCE_FISH_GUIDE_RECORD,
   FIVE_STAPLES_GUIDE_RECORD,
+  PULSES_BUDGET_GUIDE_RECORD,
+  TRAYBAKE_GUIDE_RECORD,
+  LOW_COST_DINNERS_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD
 ];
@@ -187033,34 +187434,6 @@ var PUBLIC_ARTICLES = [
     status: FAMILY_DINNERS_FOR_FOUR.status
   },
   {
-    title: TRAYBAKE_GUIDE.title,
-    path: TRAYBAKE_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: TRAYBAKE_GUIDE.pageFamily,
-    primarySearchIntent: TRAYBAKE_GUIDE.primarySearchIntent,
-    indexingStatus: TRAYBAKE_GUIDE.indexingStatus,
-    publishedAt: TRAYBAKE_GUIDE.publishedAt,
-    reviewedAt: TRAYBAKE_GUIDE.reviewedAt,
-    contentReviewedAt: TRAYBAKE_GUIDE.contentReviewedAt,
-    internalLinks: TRAYBAKE_GUIDE.internalLinks,
-    disclosures: TRAYBAKE_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: PULSES_BUDGET_GUIDE.title,
-    path: PULSES_BUDGET_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: PULSES_BUDGET_GUIDE.pageFamily,
-    primarySearchIntent: PULSES_BUDGET_GUIDE.primarySearchIntent,
-    indexingStatus: PULSES_BUDGET_GUIDE.indexingStatus,
-    publishedAt: PULSES_BUDGET_GUIDE.publishedAt,
-    reviewedAt: PULSES_BUDGET_GUIDE.reviewedAt,
-    contentReviewedAt: PULSES_BUDGET_GUIDE.contentReviewedAt,
-    internalLinks: PULSES_BUDGET_GUIDE.internalLinks,
-    disclosures: PULSES_BUDGET_GUIDE.disclosures,
-    status: "published"
-  },
-  {
     title: HOME_COOKED_READY_MADE_GUIDE.title,
     path: HOME_COOKED_READY_MADE_GUIDE_PATH,
     category: "Cooking and nutrition guide",
@@ -187072,20 +187445,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: HOME_COOKED_READY_MADE_GUIDE.contentReviewedAt,
     internalLinks: HOME_COOKED_READY_MADE_GUIDE.internalLinks,
     disclosures: HOME_COOKED_READY_MADE_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: LOW_COST_DINNERS_GUIDE.title,
-    path: LOW_COST_DINNERS_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: LOW_COST_DINNERS_GUIDE.pageFamily,
-    primarySearchIntent: LOW_COST_DINNERS_GUIDE.primarySearchIntent,
-    indexingStatus: LOW_COST_DINNERS_GUIDE.indexingStatus,
-    publishedAt: LOW_COST_DINNERS_GUIDE.publishedAt,
-    reviewedAt: LOW_COST_DINNERS_GUIDE.reviewedAt,
-    contentReviewedAt: LOW_COST_DINNERS_GUIDE.contentReviewedAt,
-    internalLinks: LOW_COST_DINNERS_GUIDE.internalLinks,
-    disclosures: LOW_COST_DINNERS_GUIDE.disclosures,
     status: "published"
   },
   {
@@ -187432,7 +187791,7 @@ var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
 var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;
 var contactAttempts = /* @__PURE__ */ new Map();
-var escapeHtml5 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+var escapeHtml6 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 function hasContactRateLimitCapacity(req) {
   const forwardedFor = req.get("x-forwarded-for");
   const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
@@ -188464,7 +188823,7 @@ function createApp() {
     if (!hasContactRateLimitCapacity(req)) {
       return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
     }
-    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml5(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml5(email)}">${escapeHtml5(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml5(message2)}</div></div>`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml6(name)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml6(email)}">${escapeHtml6(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml6(message2)}</div></div>`;
     try {
       const response = await sendTrackedEmail({
         to: CONTACT_RECIPIENT,

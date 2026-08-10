@@ -45,6 +45,15 @@ import {
   FIVE_STAPLES_GUIDE_PATH,
 } from './fiveStaplesGuide';
 import {
+  PULSES_BUDGET_GUIDE_PATH,
+} from './pulsesBudgetGuide';
+import {
+  TRAYBAKE_GUIDE_PATH,
+} from './traybakeGuide';
+import {
+  LOW_COST_DINNERS_GUIDE_PATH,
+} from './lowCostDinnersGuide';
+import {
   PUBLIC_GUIDE_RECORDS,
   PUBLISHED_PUBLIC_GUIDE_RECORDS,
   getPublicGuideRecordByPath,
@@ -68,6 +77,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(TINNED_FISH_GUIDE_PATH);
     expect(paths).toContain(CONVENIENCE_FISH_GUIDE_PATH);
     expect(paths).toContain(FIVE_STAPLES_GUIDE_PATH);
+    expect(paths).toContain(PULSES_BUDGET_GUIDE_PATH);
+    expect(paths).toContain(TRAYBAKE_GUIDE_PATH);
+    expect(paths).toContain(LOW_COST_DINNERS_GUIDE_PATH);
     expect(new Set(paths).size).toBe(paths.length);
   });
 
@@ -98,6 +110,9 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(TINNED_FISH_GUIDE_PATH)?.title).toBe('Tinned fish recipes: easy dinner ideas with tuna, salmon, sardines and more');
     expect(getPublicGuideRecordByPath(CONVENIENCE_FISH_GUIDE_PATH)?.title).toBe('How to turn fish fingers, fishcakes and scampi into better weeknight dinners');
     expect(getPublicGuideRecordByPath(FIVE_STAPLES_GUIDE_PATH)?.title).toBe('Five dinners built around potatoes, rice, pasta, bread and pulses');
+    expect(getPublicGuideRecordByPath(PULSES_BUDGET_GUIDE_PATH)?.title).toBe('Cooking with lentils, beans and chickpeas on a budget');
+    expect(getPublicGuideRecordByPath(TRAYBAKE_GUIDE_PATH)?.title).toBe('How to build a traybake that cooks evenly and tastes properly finished');
+    expect(getPublicGuideRecordByPath(LOW_COST_DINNERS_GUIDE_PATH)?.title).toBe("Low-cost dinners don't have to be boring");
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH)?.title).toBe('Nine budget dinners with potatoes');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH)?.title).toBe('Nine budget dinners with rice');
   });

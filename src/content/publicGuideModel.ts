@@ -29,6 +29,7 @@ export interface PublicGuideSection {
   title?: string;
   paragraphs?: string[];
   rawHtml?: string;
+  disclosureItems?: ProgrammaticDisclosureItem[];
   source?: PublicGuideLink & { details?: string };
   relatedLink?: PublicGuideLink;
 }
@@ -132,15 +133,19 @@ export function getPublicGuideJsonLd(guide: PublicGuideRecord) {
 }
 
 export function renderPublicGuideInitialHtml(guide: PublicGuideRecord) {
+  const sectionsIncludeDisclosures = guide.sections.some(section => section.disclosureItems?.length);
   const sections = guide.sections.map(section => {
-    if (section.rawHtml) return section.rawHtml;
+    const disclosures = section.disclosureItems?.length
+      ? renderProgrammaticDisclosuresInitialHtml(section.disclosureItems)
+      : '';
+    if (section.rawHtml) return `${section.rawHtml}${disclosures}`;
     const source = section.source
       ? `<p><strong>Source:</strong> <a href="${escapeGuideHtml(section.source.url)}">${escapeGuideHtml(section.source.label)}</a>${section.source.details ? ` &middot; ${escapeGuideHtml(section.source.details)}` : ''}</p>`
       : '';
-    return `<section>${section.title ? `<h2>${escapeGuideHtml(section.title)}</h2>` : ''}${source}${(section.paragraphs ?? []).map(paragraph => `<p>${escapeGuideHtml(paragraph).replace(/\n/g, '<br />')}</p>`).join('')}${section.relatedLink ? `<p>Related guide: <a href="${escapeGuideHtml(section.relatedLink.url)}">${escapeGuideHtml(section.relatedLink.label)}</a></p>` : ''}</section>`;
+    return `<section>${section.title ? `<h2>${escapeGuideHtml(section.title)}</h2>` : ''}${source}${(section.paragraphs ?? []).map(paragraph => `<p>${escapeGuideHtml(paragraph).replace(/\n/g, '<br />')}</p>`).join('')}${section.relatedLink ? `<p>Related guide: <a href="${escapeGuideHtml(section.relatedLink.url)}">${escapeGuideHtml(section.relatedLink.label)}</a></p>` : ''}</section>${disclosures}`;
   }).join('');
   const faqs = guide.faqs.map(faq => `<section><h3>${escapeGuideHtml(faq.question)}</h3><p>${escapeGuideHtml(faq.answer)}</p></section>`).join('');
   const sources = guide.sources.map(source => `<li><a href="${escapeGuideHtml(source.url)}">${escapeGuideHtml(source.label)}</a></li>`).join('');
 
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / ${escapeGuideHtml(guide.label)}</nav><p>${escapeGuideHtml(guide.label)}</p><h1>${escapeGuideHtml(guide.title)}</h1><p>${escapeGuideHtml(guide.description)}</p><p>By ${escapeGuideHtml(guide.editorialOwner)} &middot; ${getPublicGuidePublishedLabel(guide)}</p><article>${sections}${renderProgrammaticDisclosuresInitialHtml(guide.disclosureItems)}${guide.faqs.length > 0 ? `<section><h2>Frequently asked questions</h2>${faqs}</section>` : ''}<section><h2>Sources</h2><ul>${sources}</ul></section>${renderProgrammaticDisclosureFooterInitialHtml(guide.disclosureFooter)}</article><section><h2>${escapeGuideHtml(guide.cta.title)}</h2><p>${escapeGuideHtml(guide.cta.copy)}</p><p><a href="${escapeGuideHtml(guide.cta.href)}">${escapeGuideHtml(guide.cta.label)}</a></p></section></main></div>`;
+  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / ${escapeGuideHtml(guide.label)}</nav><p>${escapeGuideHtml(guide.label)}</p><h1>${escapeGuideHtml(guide.title)}</h1><p>${escapeGuideHtml(guide.description)}</p><p>By ${escapeGuideHtml(guide.editorialOwner)} &middot; ${getPublicGuidePublishedLabel(guide)}</p><article>${sections}${sectionsIncludeDisclosures ? '' : renderProgrammaticDisclosuresInitialHtml(guide.disclosureItems)}${guide.faqs.length > 0 ? `<section><h2>Frequently asked questions</h2>${faqs}</section>` : ''}<section><h2>Sources</h2><ul>${sources}</ul></section>${renderProgrammaticDisclosureFooterInitialHtml(guide.disclosureFooter)}</article><section><h2>${escapeGuideHtml(guide.cta.title)}</h2><p>${escapeGuideHtml(guide.cta.copy)}</p><p><a href="${escapeGuideHtml(guide.cta.href)}">${escapeGuideHtml(guide.cta.label)}</a></p></section></main></div>`;
 }

@@ -2,9 +2,13 @@ import type { ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
   TRAYBAKE_DISCLOSURE_FOOTER,
   TRAYBAKE_SAFETY_DISCLOSURES,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const TRAYBAKE_GUIDE_PATH = '/guides/how-to-build-a-traybake';
 
@@ -31,12 +35,7 @@ export const TRAYBAKE_GUIDE = {
   ],
 };
 
-export interface TraybakeGuideSection {
-  title?: string;
-  paragraphs: string[];
-}
-
-export const TRAYBAKE_GUIDE_SECTIONS: TraybakeGuideSection[] = [
+export const TRAYBAKE_GUIDE_SECTIONS: PublicGuideSection[] = [
   {
     paragraphs: [
       "A traybake is easy to get onto a plate and easy to get wrong. Everything goes onto one tray, into one oven, and comes out looking like a dinner. Whether it tastes like one, and whether it's actually cooked through, has usually been decided before anything went in the oven.",
@@ -135,57 +134,33 @@ export const TRAYBAKE_GUIDE_FAQS = [
   },
 ];
 
+export const TRAYBAKE_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'how-to-build-a-traybake',
+  slug: 'how-to-build-a-traybake',
+  path: TRAYBAKE_GUIDE_PATH,
+  canonicalPath: TRAYBAKE_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'safety-sensitive',
+  ...TRAYBAKE_GUIDE,
+  metaDescription: TRAYBAKE_GUIDE.description,
+  label: 'Practical cooking guide',
+  disclosureItems: TRAYBAKE_SAFETY_DISCLOSURES,
+  disclosureFooter: TRAYBAKE_DISCLOSURE_FOOTER,
+  sections: TRAYBAKE_GUIDE_SECTIONS,
+  faqs: TRAYBAKE_GUIDE_FAQS,
+  cta: {
+    title: 'Find a traybake for tonight',
+    copy: 'Search DinnerByDesign for traybake dinners, filtered by what is already in your kitchen or by cost.',
+    label: 'Search traybake dinners',
+    href: '/signin',
+  },
+};
+
 export function getTraybakeGuideJsonLd() {
-  const guide = TRAYBAKE_GUIDE;
-  const url = `https://dinnerbydesign.app${TRAYBAKE_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: TRAYBAKE_GUIDE_FAQS.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(TRAYBAKE_GUIDE_RECORD);
 }
 
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
-
 export function renderTraybakeGuideInitialHtml() {
-  const guide = TRAYBAKE_GUIDE;
-  const safety = renderProgrammaticDisclosuresInitialHtml(TRAYBAKE_SAFETY_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(TRAYBAKE_DISCLOSURE_FOOTER);
-  const sections = TRAYBAKE_GUIDE_SECTIONS.map(section => {
-    const heading = section.title ? `<h2>${escapeHtml(section.title)}</h2>` : '';
-    return `<section>${heading}${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</section>`;
-  }).join('');
-  const faqs = TRAYBAKE_GUIDE_FAQS.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 25 July 2026 · Last reviewed 25 July 2026</p><article>${sections}${safety}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Source</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find a traybake for tonight</h2><p>Search DinnerByDesign for traybake dinners, filtered by what is already in your kitchen or by cost.</p><p><a href="/signin">Search traybake dinners</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(TRAYBAKE_GUIDE_RECORD);
 }

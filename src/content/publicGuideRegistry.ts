@@ -43,6 +43,15 @@ import {
 import {
   FIVE_STAPLES_GUIDE_RECORD,
 } from './fiveStaplesGuide';
+import {
+  PULSES_BUDGET_GUIDE_RECORD,
+} from './pulsesBudgetGuide';
+import {
+  TRAYBAKE_GUIDE_RECORD,
+} from './traybakeGuide';
+import {
+  LOW_COST_DINNERS_GUIDE_RECORD,
+} from './lowCostDinnersGuide';
 import type { PublicGuideRecord } from './publicGuideModel';
 
 export const PUBLIC_GUIDE_RECORDS = [
@@ -59,6 +68,9 @@ export const PUBLIC_GUIDE_RECORDS = [
   TINNED_FISH_GUIDE_RECORD,
   CONVENIENCE_FISH_GUIDE_RECORD,
   FIVE_STAPLES_GUIDE_RECORD,
+  PULSES_BUDGET_GUIDE_RECORD,
+  TRAYBAKE_GUIDE_RECORD,
+  LOW_COST_DINNERS_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
 ] satisfies PublicGuideRecord[];
