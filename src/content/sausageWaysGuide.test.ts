@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from './publicGuideModel';
 import {
   SAUSAGE_WAYS_GUIDE,
   SAUSAGE_WAYS_GUIDE_FAQS,
   SAUSAGE_WAYS_GUIDE_PATH,
-  getSausageWaysGuideJsonLd,
-  renderSausageWaysGuideInitialHtml,
+  SAUSAGE_WAYS_GUIDE_RECORD,
 } from './sausageWaysGuide';
 
 describe('sausage ways public guide', () => {
   it('renders the complete article, disclosures, FAQs, sources and one search handoff', () => {
-    const html = renderSausageWaysGuideInitialHtml();
+    const html = renderPublicGuideInitialHtml(SAUSAGE_WAYS_GUIDE_RECORD);
     expect(html).toContain(`<h1>${SAUSAGE_WAYS_GUIDE.title}</h1>`);
     expect(html).toContain('Sausage, apple and mustard traybake');
     expect(html).toContain('Sausage and potato hash');
@@ -22,7 +22,7 @@ describe('sausage ways public guide', () => {
   });
 
   it('publishes article, FAQ and breadcrumb structured data', () => {
-    const jsonLd = getSausageWaysGuideJsonLd();
+    const jsonLd = getPublicGuideJsonLd(SAUSAGE_WAYS_GUIDE_RECORD);
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${SAUSAGE_WAYS_GUIDE_PATH}`);
     expect(jsonLd['@graph'][1].mainEntity).toHaveLength(SAUSAGE_WAYS_GUIDE_FAQS.length);

@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from './publicGuideModel';
 import {
   NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE,
   NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
-  getNineBudgetDinnersThreeCuisinesGuideJsonLd,
-  renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
+  NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD,
 } from './nineBudgetDinnersThreeCuisinesGuide';
 
 describe('nine budget dinners from three cuisines public guide', () => {
   it('renders the approved article, disclosures, FAQs, sources and search handoff', () => {
-    const html = renderNineBudgetDinnersThreeCuisinesGuideInitialHtml();
+    const html = renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD);
     expect(html).toContain(`<h1>${NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.title}</h1>`);
     expect(html).toContain('1. Home-style dal with rice or flatbreads');
     expect(html).toContain('8. Koshari-inspired rice, lentils and pasta');
@@ -23,7 +23,7 @@ describe('nine budget dinners from three cuisines public guide', () => {
   });
 
   it('publishes article, FAQ and breadcrumb structured data', () => {
-    const jsonLd = getNineBudgetDinnersThreeCuisinesGuideJsonLd();
+    const jsonLd = getPublicGuideJsonLd(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD);
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH}`);
     expect(jsonLd['@graph'][1].mainEntity).toHaveLength(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.faqs.length);

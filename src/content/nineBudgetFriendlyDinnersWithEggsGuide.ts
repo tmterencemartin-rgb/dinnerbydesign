@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -205,14 +203,6 @@ export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS: PublicGuideS
     ],
   },
 ];
-
-export function getNineBudgetFriendlyDinnersWithEggsGuideJsonLd() {
-  return getPublicGuideJsonLd(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD);
-}
-
-export function renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD);
-}
 
 export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD: PublicGuideRecord = {
   id: 'nine-budget-friendly-dinners-with-eggs',

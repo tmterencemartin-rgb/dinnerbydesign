@@ -4,8 +4,6 @@ import {
   TRAYBAKE_SAFETY_DISCLOSURES,
 } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -156,11 +154,3 @@ export const TRAYBAKE_GUIDE_RECORD: PublicGuideRecord = {
     href: '/signin',
   },
 };
-
-export function getTraybakeGuideJsonLd() {
-  return getPublicGuideJsonLd(TRAYBAKE_GUIDE_RECORD);
-}
-
-export function renderTraybakeGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(TRAYBAKE_GUIDE_RECORD);
-}

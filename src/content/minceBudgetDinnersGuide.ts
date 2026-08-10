@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureKey, ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -153,14 +151,6 @@ export const MINCE_BUDGET_DINNERS_GUIDE_FAQS = [
     answer: 'No. These are flexible dinner ideas to help you decide what to cook. Use DinnerByDesign search when you want recipes matched to your time, budget and preferences.',
   },
 ];
-
-export function getMinceBudgetDinnersGuideJsonLd() {
-  return getPublicGuideJsonLd(MINCE_BUDGET_DINNERS_GUIDE_RECORD);
-}
-
-export function renderMinceBudgetDinnersGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(MINCE_BUDGET_DINNERS_GUIDE_RECORD);
-}
 
 export const MINCE_BUDGET_DINNERS_GUIDE_RECORD: PublicGuideRecord = {
   id: '9-budget-dinners-with-beef-or-pork-mince',

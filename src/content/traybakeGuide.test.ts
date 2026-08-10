@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from './publicGuideModel';
 import {
   TRAYBAKE_GUIDE,
   TRAYBAKE_GUIDE_FAQS,
   TRAYBAKE_GUIDE_PATH,
-  getTraybakeGuideJsonLd,
-  renderTraybakeGuideInitialHtml,
+  TRAYBAKE_GUIDE_RECORD,
 } from './traybakeGuide';
 
 describe('traybake public guide', () => {
   it('renders complete crawler-visible content with one search handoff', () => {
-    const html = renderTraybakeGuideInitialHtml();
+    const html = renderPublicGuideInitialHtml(TRAYBAKE_GUIDE_RECORD);
     expect(html).toContain(`<h1>${TRAYBAKE_GUIDE.title}</h1>`);
     expect(html).toContain('Choose a tray large enough');
     expect(html).toContain('75°C for 30 seconds');
@@ -21,7 +21,7 @@ describe('traybake public guide', () => {
   });
 
   it('publishes article, FAQ and breadcrumb structured data', () => {
-    const jsonLd = getTraybakeGuideJsonLd();
+    const jsonLd = getPublicGuideJsonLd(TRAYBAKE_GUIDE_RECORD);
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${TRAYBAKE_GUIDE_PATH}`);
     expect(jsonLd['@graph'][1].mainEntity).toHaveLength(TRAYBAKE_GUIDE_FAQS.length);

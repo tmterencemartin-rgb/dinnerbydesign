@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -80,14 +78,6 @@ export const WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS: PublicGuideSection[] = [
     'For dinners built around meat that is already cooked, the leftover roast chicken guide picks up from there. This guide is about the buying decision itself; that one is about what to do with what is left over.',
   ], relatedLink: { label: 'Nine budget dinners with leftover roast chicken', url: '/guides/9-budget-dinners-with-leftover-roast-chicken' } },
 ];
-
-export function getWholeChickenValueGuideJsonLd() {
-  return getPublicGuideJsonLd(WHOLE_CHICKEN_VALUE_GUIDE_RECORD);
-}
-
-export function renderWholeChickenValueGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(WHOLE_CHICKEN_VALUE_GUIDE_RECORD);
-}
 
 export const WHOLE_CHICKEN_VALUE_GUIDE_RECORD: PublicGuideRecord = {
   id: 'is-a-whole-chicken-better-value-than-chicken-pieces',

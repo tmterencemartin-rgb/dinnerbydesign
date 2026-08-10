@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -126,11 +124,3 @@ export const NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD: PublicGuideReco
     href: '/signin',
   },
 };
-
-export function getNineBudgetDinnersWithSavouryPiesGuideJsonLd() {
-  return getPublicGuideJsonLd(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD);
-}
-
-export function renderNineBudgetDinnersWithSavouryPiesGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD);
-}

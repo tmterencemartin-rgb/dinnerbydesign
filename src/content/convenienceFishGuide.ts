@@ -4,8 +4,6 @@ import {
   CONVENIENCE_FISH_GUIDE_DISCLOSURE_FOOTER,
 } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -152,11 +150,3 @@ export const CONVENIENCE_FISH_GUIDE_RECORD: PublicGuideRecord = {
     href: '/signin',
   },
 };
-
-export function getConvenienceFishGuideJsonLd() {
-  return getPublicGuideJsonLd(CONVENIENCE_FISH_GUIDE_RECORD);
-}
-
-export function renderConvenienceFishGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(CONVENIENCE_FISH_GUIDE_RECORD);
-}

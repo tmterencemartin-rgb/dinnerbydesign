@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -105,14 +103,6 @@ export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS: PublicGu
     'Rotating stock and using the oldest tins first keeps things moving. Tinned vegetables in sauce or brine can carry more salt than fresh or frozen, so check the label where a dish is already well seasoned, and drain and rinse beans or pulses if that suits the product and recipe. Fresh and frozen vegetables still have their place in a weekly shop. The point of keeping a few tins in reserve is flexibility, not a rule about which is best.',
   ] },
 ];
-
-export function getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd() {
-  return getPublicGuideJsonLd(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD);
-}
-
-export function renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD);
-}
 
 export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD: PublicGuideRecord = {
   id: 'nine-budget-dinners-with-tinned-vegetables',

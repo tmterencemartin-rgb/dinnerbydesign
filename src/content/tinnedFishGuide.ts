@@ -4,8 +4,6 @@ import {
   TINNED_FISH_GUIDE_DISCLOSURE_FOOTER,
 } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -136,11 +134,3 @@ export const TINNED_FISH_GUIDE_RECORD: PublicGuideRecord = {
     href: '/signin',
   },
 };
-
-export function getTinnedFishGuideJsonLd() {
-  return getPublicGuideJsonLd(TINNED_FISH_GUIDE_RECORD);
-}
-
-export function renderTinnedFishGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(TINNED_FISH_GUIDE_RECORD);
-}

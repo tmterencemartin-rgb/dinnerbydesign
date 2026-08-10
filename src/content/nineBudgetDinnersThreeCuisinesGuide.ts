@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -235,14 +233,6 @@ export const NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_SECTIONS: PublicGuideSecti
     ],
   },
 ];
-
-export function getNineBudgetDinnersThreeCuisinesGuideJsonLd() {
-  return getPublicGuideJsonLd(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD);
-}
-
-export function renderNineBudgetDinnersThreeCuisinesGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD);
-}
 
 export const NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_RECORD: PublicGuideRecord = {
   id: 'nine-budget-dinners-three-cuisines',

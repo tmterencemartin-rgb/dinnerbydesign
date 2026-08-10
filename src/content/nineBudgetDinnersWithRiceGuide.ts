@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -68,14 +66,6 @@ export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_SECTIONS: PublicGuideSection[] 
     'A limited shop does not have to mean a repetitive one. Rice can become a curry, risotto, stuffed pepper, smoky one-pot dish or a bake, each with a different flavour and texture.',
   ], relatedLink: { label: 'Browse the guides library', url: '/guides' } },
 ];
-
-export function getNineBudgetDinnersWithRiceGuideJsonLd() {
-  return getPublicGuideJsonLd(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD);
-}
-
-export function renderNineBudgetDinnersWithRiceGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD);
-}
 
 export const NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD: PublicGuideRecord = {
   id: 'nine-budget-dinners-with-rice',

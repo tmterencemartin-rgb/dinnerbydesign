@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from './publicGuideModel';
 import {
   NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE,
   NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
-  getNineBudgetFriendlyDinnersWithEggsGuideJsonLd,
-  renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml,
+  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD,
 } from './nineBudgetFriendlyDinnersWithEggsGuide';
 
 describe('nine budget-friendly dinners with eggs public guide', () => {
   it('renders the approved article, disclosures, FAQs, sources and search handoff', () => {
-    const html = renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml();
+    const html = renderPublicGuideInitialHtml(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD);
     expect(html).toContain(`<h1>${NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.title}</h1>`);
     expect(html).toContain('1. Shakshuka');
     expect(html).toContain('9. Beans-and-greens pasta with fried eggs');
@@ -23,7 +23,7 @@ describe('nine budget-friendly dinners with eggs public guide', () => {
   });
 
   it('publishes article, FAQ and breadcrumb structured data', () => {
-    const jsonLd = getNineBudgetFriendlyDinnersWithEggsGuideJsonLd();
+    const jsonLd = getPublicGuideJsonLd(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD);
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH}`);
     expect(jsonLd['@graph'][1].mainEntity).toHaveLength(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.faqs.length);

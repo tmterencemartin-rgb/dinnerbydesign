@@ -5,8 +5,6 @@ import {
   PULSES_SAFETY_DISCLOSURES,
 } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -190,11 +188,3 @@ export const PULSES_BUDGET_GUIDE_RECORD: PublicGuideRecord = {
     href: '/signin',
   },
 };
-
-export function getPulsesBudgetGuideJsonLd() {
-  return getPublicGuideJsonLd(PULSES_BUDGET_GUIDE_RECORD);
-}
-
-export function renderPulsesBudgetGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(PULSES_BUDGET_GUIDE_RECORD);
-}

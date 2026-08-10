@@ -1,15 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from './publicGuideModel';
 import {
   FIVE_STAPLES_GUIDE,
   FIVE_STAPLES_GUIDE_PATH,
   FIVE_STAPLES_GUIDE_RECORD,
-  getFiveStaplesGuideJsonLd,
-  renderFiveStaplesGuideInitialHtml,
 } from './fiveStaplesGuide';
 
 describe('five staples public guide', () => {
   it('renders the complete article and one account handoff', () => {
-    const html = renderFiveStaplesGuideInitialHtml();
+    const html = renderPublicGuideInitialHtml(FIVE_STAPLES_GUIDE_RECORD);
     expect(html).toContain(`<h1>${FIVE_STAPLES_GUIDE.title}</h1>`);
     expect(html).toContain('The five dinners at a glance');
     expect(html).toContain('Coconut chickpea dumpling curry');
@@ -22,7 +21,7 @@ describe('five staples public guide', () => {
   });
 
   it('publishes article, FAQ and breadcrumb structured data', () => {
-    const jsonLd = getFiveStaplesGuideJsonLd();
+    const jsonLd = getPublicGuideJsonLd(FIVE_STAPLES_GUIDE_RECORD);
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${FIVE_STAPLES_GUIDE_PATH}`);
     expect(jsonLd['@graph'][1].mainEntity).toHaveLength(FIVE_STAPLES_GUIDE.faqs.length);

@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -87,14 +85,6 @@ export const MEAT_STRETCHING_GUIDE_SECTIONS: PublicGuideSection[] = [
     'Using less meat in a dinner does not mean less flavour or less variety. Chilli, curry, pasta, pie and hotpot can all still taste like themselves while leaving a little more room in the weekly shop.',
   ], relatedLink: { label: 'Browse the guides library', url: '/guides' } },
 ];
-
-export function getMeatStretchingGuideJsonLd() {
-  return getPublicGuideJsonLd(MEAT_STRETCHING_GUIDE_RECORD);
-}
-
-export function renderMeatStretchingGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(MEAT_STRETCHING_GUIDE_RECORD);
-}
 
 export const MEAT_STRETCHING_GUIDE_RECORD: PublicGuideRecord = {
   id: 'seven-ways-to-make-meat-go-further',

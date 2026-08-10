@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -99,14 +97,6 @@ export const NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_SECTIONS: PublicGuideSectio
     'A bag of potatoes does not need to dictate a week of familiar dinners. It can turn up in a curry, soup, pie or fry-up, alongside whatever tinned, frozen or fresh ingredients happen to be around.',
   ], relatedLink: { label: 'Browse the guides library', url: '/guides' } },
 ];
-
-export function getNineBudgetDinnersWithPotatoesGuideJsonLd() {
-  return getPublicGuideJsonLd(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD);
-}
-
-export function renderNineBudgetDinnersWithPotatoesGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD);
-}
 
 export const NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD: PublicGuideRecord = {
   id: 'nine-budget-dinners-with-potatoes',

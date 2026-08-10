@@ -8,8 +8,6 @@ import {
   renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
 } from './publicGuideModel';
 
@@ -234,10 +232,6 @@ const renderCostTable = (recipe: ComparedRecipe) => {
   return `<div class="guide-table-wrap"><table><thead><tr><th>Cost group</th><th>Estimated ingredient value</th></tr></thead><tbody>${rows}<tr><th>Total ingredient value</th><th>${escapeHtml(recipe.ingredientValue)}</th></tr><tr><td>Estimated cost per serving</td><td>${escapeHtml(recipe.perServing)}</td></tr><tr><td>Estimated full-pack cost</td><td>${escapeHtml(recipe.fullPack)}</td></tr></tbody></table></div>`;
 };
 
-export function getChickenThighCostGuideJsonLd() {
-  return getPublicGuideJsonLd(CHICKEN_THIGH_COST_GUIDE_RECORD);
-}
-
 function renderChickenThighCostGuideLegacyInitialHtml() {
   const guide = CHICKEN_THIGH_COST_GUIDE;
   const recipes = CHICKEN_THIGH_COMPARED_RECIPES.map((recipe, index) => `
@@ -330,7 +324,3 @@ export const CHICKEN_THIGH_COST_GUIDE_RECORD = {
   autoRenderFaqs: false,
   autoRenderSources: false,
 } satisfies PublicGuideRecord;
-
-export function renderChickenThighCostGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(CHICKEN_THIGH_COST_GUIDE_RECORD);
-}

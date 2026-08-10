@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -96,14 +94,6 @@ export const BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_SECTIONS: PublicGuideSection
     'Bubble and squeak works best as a starting point rather than a compulsory way to use every leftover in the fridge. The practical win is that it gives odds and ends a defined purpose, so cooked potato and vegetables are more likely to get used before they are forgotten.',
   ], relatedLink: { label: 'Browse the guides library', url: '/guides' } },
 ];
-
-export function getBubbleAndSqueakBudgetDinnersGuideJsonLd() {
-  return getPublicGuideJsonLd(BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_RECORD);
-}
-
-export function renderBubbleAndSqueakBudgetDinnersGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_RECORD);
-}
 
 export const BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_RECORD: PublicGuideRecord = {
   id: 'nine-budget-dinners-built-around-bubble-and-squeak',

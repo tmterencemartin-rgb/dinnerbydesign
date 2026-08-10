@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH, getWholeChickenValueGuideJsonLd, renderWholeChickenValueGuideInitialHtml } from './wholeChickenValueGuide';
+import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from './publicGuideModel';
+import {
+  WHOLE_CHICKEN_VALUE_GUIDE,
+  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  WHOLE_CHICKEN_VALUE_GUIDE_RECORD,
+} from './wholeChickenValueGuide';
 
 describe('whole chicken value public guide', () => {
   it('renders the approved article, sources, internal guide and search handoff', () => {
-    const html = renderWholeChickenValueGuideInitialHtml();
+    const html = renderPublicGuideInitialHtml(WHOLE_CHICKEN_VALUE_GUIDE_RECORD);
     expect(html).toContain(`<h1>${WHOLE_CHICKEN_VALUE_GUIDE.title}</h1>`);
     expect(html).toContain('What a whole chicken gives you');
     expect(html).toContain('How to compare fairly in the shop');
@@ -14,7 +19,7 @@ describe('whole chicken value public guide', () => {
   });
 
   it('publishes article, FAQ and breadcrumb structured data', () => {
-    const jsonLd = getWholeChickenValueGuideJsonLd();
+    const jsonLd = getPublicGuideJsonLd(WHOLE_CHICKEN_VALUE_GUIDE_RECORD);
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${WHOLE_CHICKEN_VALUE_GUIDE_PATH}`);
   });

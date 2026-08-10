@@ -4,8 +4,6 @@ import {
   FIVE_STAPLES_GUIDE_DISCLOSURE_FOOTER,
 } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -144,11 +142,3 @@ export const FIVE_STAPLES_GUIDE_RECORD: PublicGuideRecord = {
     href: '/signin',
   },
 };
-
-export function getFiveStaplesGuideJsonLd() {
-  return getPublicGuideJsonLd(FIVE_STAPLES_GUIDE_RECORD);
-}
-
-export function renderFiveStaplesGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(FIVE_STAPLES_GUIDE_RECORD);
-}

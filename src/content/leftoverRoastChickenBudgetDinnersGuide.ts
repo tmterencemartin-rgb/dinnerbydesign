@@ -1,7 +1,5 @@
 import type { ProgrammaticDisclosureKey, ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -158,14 +156,6 @@ export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_FAQS = [
     answer: 'Many can be frozen, including soup, pie filling, curry and pasta bake. Cool the dish promptly, freeze it in useful portions and reheat it until steaming hot throughout. Check rice guidance separately.',
   },
 ];
-
-export function getLeftoverRoastChickenBudgetDinnersGuideJsonLd() {
-  return getPublicGuideJsonLd(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD);
-}
-
-export function renderLeftoverRoastChickenBudgetDinnersGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD);
-}
 
 export const LEFTOVER_ROAST_CHICKEN_BUDGET_DINNERS_GUIDE_RECORD: PublicGuideRecord = {
   id: '9-budget-dinners-with-leftover-roast-chicken',

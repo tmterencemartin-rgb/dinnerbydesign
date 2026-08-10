@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { getPublicGuideJsonLd, renderPublicGuideInitialHtml } from './publicGuideModel';
 import {
   MINCE_BUDGET_DINNERS_GUIDE,
   MINCE_BUDGET_DINNERS_GUIDE_FAQS,
   MINCE_BUDGET_DINNERS_GUIDE_PATH,
-  getMinceBudgetDinnersGuideJsonLd,
-  renderMinceBudgetDinnersGuideInitialHtml,
+  MINCE_BUDGET_DINNERS_GUIDE_RECORD,
 } from './minceBudgetDinnersGuide';
 
 describe('mince budget dinners public guide', () => {
   it('renders the complete article, disclosures, FAQs, sources and one search handoff', () => {
-    const html = renderMinceBudgetDinnersGuideInitialHtml();
+    const html = renderPublicGuideInitialHtml(MINCE_BUDGET_DINNERS_GUIDE_RECORD);
     expect(html).toContain(`<h1>${MINCE_BUDGET_DINNERS_GUIDE.title}</h1>`);
     expect(html).toContain('Mince and bean chilli with rice or baked potatoes');
     expect(html).toContain('Mince ragu stretched with lentils, mushrooms or grated carrot');
@@ -23,7 +23,7 @@ describe('mince budget dinners public guide', () => {
   });
 
   it('publishes article, FAQ and breadcrumb structured data', () => {
-    const jsonLd = getMinceBudgetDinnersGuideJsonLd();
+    const jsonLd = getPublicGuideJsonLd(MINCE_BUDGET_DINNERS_GUIDE_RECORD);
     expect(jsonLd['@graph'].map(item => item['@type'])).toEqual(['Article', 'FAQPage', 'BreadcrumbList']);
     expect(jsonLd['@graph'][0].mainEntityOfPage).toBe(`https://dinnerbydesign.app${MINCE_BUDGET_DINNERS_GUIDE_PATH}`);
     expect(jsonLd['@graph'][1].mainEntity).toHaveLength(MINCE_BUDGET_DINNERS_GUIDE_FAQS.length);

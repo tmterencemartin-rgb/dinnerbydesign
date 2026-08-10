@@ -4,8 +4,6 @@ import {
   SAUSAGE_GUIDE_DISCLOSURE_FOOTER,
 } from './programmaticDisclosures';
 import {
-  getPublicGuideJsonLd,
-  renderPublicGuideInitialHtml,
   type PublicGuideRecord,
   type PublicGuideSection,
 } from './publicGuideModel';
@@ -144,14 +142,6 @@ export const SAUSAGE_WAYS_GUIDE_FAQS = [
     answer: 'Most of them, though not every vegetarian sausage comes in a casing that peels away and crumbles the way a pork sausage does. Some are softer or already loose-textured, so they may suit slicing better than crumbling. Check the product before using it for the pasta or meatball ideas.',
   },
 ];
-
-export function getSausageWaysGuideJsonLd() {
-  return getPublicGuideJsonLd(SAUSAGE_WAYS_GUIDE_RECORD);
-}
-
-export function renderSausageWaysGuideInitialHtml() {
-  return renderPublicGuideInitialHtml(SAUSAGE_WAYS_GUIDE_RECORD);
-}
 
 export const SAUSAGE_WAYS_GUIDE_RECORD: PublicGuideRecord = {
   id: '9-ways-with-sausages',
