@@ -38,6 +38,7 @@ import { db, auth, handleFirestoreError } from '../firebase';
 import { getApiUrl } from '../lib/api';
 import { isConfirmedEmailDelivery } from '../lib/emailDelivery';
 import { isNativeApp, isNativeTestBuild } from '../lib/platform';
+import { getAppViewFromPublicPath, isQueryParamAppView } from '../lib/appViewRoutes';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { 
   UserProfile, 
@@ -357,43 +358,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
     const viewParam = params?.get('view') as AppView | null;
 
-    if (viewParam && ['home', 'settings', 'planner', 'shopping', 'pricing-methodology', 'food-safety', 'recipe-methodology', 'nutrition-methodology', 'privacy', 'terms', 'admin', 'success', 'signin', 'landing'].includes(viewParam)) {
+    if (isQueryParamAppView(viewParam)) {
       return viewParam;
     }
 
-    if (location === '/privacy') return 'privacy';
-    if (location === '/terms') return 'terms';
-    if (location === '/settings') return 'settings';
-    if (location === '/planner') return 'planner';
-    if (location === '/shopping') return 'shopping';
-    if (location === '/pricing-methodology') return 'pricing-methodology';
-    if (location === '/food-safety') return 'food-safety';
-    if (location === '/recipe-methodology') return 'recipe-methodology';
-    if (location === '/nutrition-methodology') return 'nutrition-methodology';
-    if (location === '/success') return 'success';
-    if (location === '/signin' || location.startsWith('/signin?')) return 'signin';
-    if (location === '/admin') return 'admin';
-    if (location === '/dinner-plans/5-dinners-for-2-under-40') return 'meal-plan-five-for-two-under-40';
-    if (location === '/food-costs/uk-food-costs-2026') return 'food-costs-uk-2026';
-    if (location === '/food-costs/cooking-for-four-with-lower-cost-cuts') return 'food-costs-lower-cost-cuts';
-    if (location === '/food-costs/cooking-with-cheaper-cuts-of-meat') return 'food-costs-cheaper-meat-cuts';
-    if (location === '/food-costs/five-dinners-same-ingredients') return 'food-costs-shared-ingredients';
-    if (location === '/food-costs/how-to-use-complete-packs') return 'food-costs-complete-packs';
-    if (location === '/food-costs/low-cost-cooking-techniques') return 'food-costs-low-cost-cooking-techniques';
-    if (location === '/food-costs/cooking-for-one-without-waste') return 'food-costs-cooking-for-one';
-    if (location === '/food-costs/cooking-with-offal-on-a-budget') return 'food-costs-offal-budget';
-    if (location === '/food-costs/portion-planning-and-food-waste') return 'food-costs-portion-planning';
-    if (location === '/food-costs/mediterranean-inspired-affordable-cooking') return 'food-costs-mediterranean-affordable-cooking';
-    if (location === '/food-costs/summer-stews-seasonal-vegetables') return 'food-costs-summer-stews';
-    if (location === '/food-costs/fresh-or-frozen') return 'food-costs-fresh-or-frozen';
-    if (location === '/food-costs/batch-cooking-on-a-budget') return 'food-costs-batch-cooking';
-    if (location === '/food-costs/ways-to-reduce-grocery-costs') return 'food-costs-grocery-cost-options';
-    if (location === '/food-costs/why-grocery-costs-are-hard-to-predict') return 'food-costs-grocery-prediction';
-    if (location === '/guides') return 'guides';
-    if (location === '/guides/do-vegetables-in-dishes-count-towards-5-a-day') return 'five-a-day-guide';
-    if (location === '/guides/home-cooked-or-ready-made-dinners') return 'home-cooked-ready-made-guide';
-    if (location === '/food-costs/cheap-finishing-touches') return 'cheap-finishing-touches-guide';
-    if (location === '/food-costs/make-low-cost-dinners-more-interesting') return 'low-cost-dinners-guide';
+    const publicPathView = getAppViewFromPublicPath(location);
+    if (publicPathView) return publicPathView;
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';
