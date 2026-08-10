@@ -96,7 +96,7 @@ const GuidesLibraryView = React.lazy(() => import('./components/views/GuidesLibr
 const PublicPathwayView = React.lazy(() => import('./components/views/PublicPathwayView').then(module => ({ default: module.PublicPathwayView })));
 const ContactView = React.lazy(() => import('./components/views/ContactView').then(module => ({ default: module.ContactView })));
 
-type SeoConfig = {
+export type SeoConfig = {
   title: string;
   description: string;
   canonicalPath: string;
@@ -104,7 +104,7 @@ type SeoConfig = {
   noIndex?: boolean;
 };
 
-type PublicRoute = {
+export type PublicRoute = {
   seo: SeoConfig;
   render: (actions: { plan: () => void; search: () => void }) => React.ReactNode;
 };
@@ -153,7 +153,7 @@ const PUBLIC_GUIDE_RECORD_ROUTES = PUBLISHED_PUBLIC_GUIDE_RECORDS.reduce<Record<
   return routes;
 }, {});
 
-const PUBLIC_ROUTES: Record<string, PublicRoute> = {
+export const PUBLIC_ROUTES: Record<string, PublicRoute> = {
   '/contact': {
     seo: {
       title: 'Contact DinnerByDesign',
@@ -263,16 +263,24 @@ const PUBLIC_ROUTES: Record<string, PublicRoute> = {
 const normalisePath = (pathName: string) =>
   pathName.length > 1 ? pathName.replace(/\/+$/, '') : pathName;
 
-const PublicGuideApp = () => {
-  const path = normalisePath(window.location.pathname);
-  const route = PUBLIC_ROUTES[path];
+export const getPublicRoute = (pathName: string) =>
+  PUBLIC_ROUTES[normalisePath(pathName)];
 
-  useSeo(route?.seo || {
+export const getPublicRouteSeo = (pathName: string): SeoConfig => {
+  const path = normalisePath(pathName);
+  return getPublicRoute(path)?.seo || {
     title: 'Guide not found | DinnerByDesign',
     description: 'The requested DinnerByDesign guide could not be found.',
     canonicalPath: path,
     noIndex: true,
-  });
+  };
+};
+
+const PublicGuideApp = () => {
+  const path = normalisePath(window.location.pathname);
+  const route = getPublicRoute(path);
+
+  useSeo(getPublicRouteSeo(path));
 
   const plan = React.useCallback(() => {
     safeStorage.session.setItem(AFFORDABILITY_PLANNER_PENDING_KEY, 'true');
