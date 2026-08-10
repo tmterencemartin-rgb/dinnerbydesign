@@ -60,6 +60,12 @@ import {
   GROCERY_COST_PREDICTION_GUIDE_PATH,
 } from './groceryCostPredictionGuide';
 import {
+  CHEAPER_MEAT_CUTS_GUIDE_PATH,
+} from './cheaperMeatCutsGuide';
+import {
+  SHARED_INGREDIENTS_GUIDE_PATH,
+} from './sharedIngredientsGuide';
+import {
   BATCH_COOKING_GUIDE_PATH,
   COOKING_FOR_ONE_PATH,
   FRESH_OR_FROZEN_GUIDE_PATH,
@@ -97,6 +103,8 @@ describe('public guide registry', () => {
     expect(paths).toContain(LOW_COST_DINNERS_GUIDE_PATH);
     expect(paths).toContain(GROCERY_COST_OPTIONS_GUIDE_PATH);
     expect(paths).toContain(GROCERY_COST_PREDICTION_GUIDE_PATH);
+    expect(paths).toContain(CHEAPER_MEAT_CUTS_GUIDE_PATH);
+    expect(paths).toContain(SHARED_INGREDIENTS_GUIDE_PATH);
     expect(paths).toContain(OFFAL_BUDGET_GUIDE_PATH);
     expect(paths).toContain(MEDITERRANEAN_AFFORDABLE_COOKING_PATH);
     expect(paths).toContain(SUMMER_STEWS_GUIDE_PATH);
@@ -139,6 +147,8 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(LOW_COST_DINNERS_GUIDE_PATH)?.title).toBe("Low-cost dinners don't have to be boring");
     expect(getPublicGuideRecordByPath(GROCERY_COST_OPTIONS_GUIDE_PATH)?.title).toBe('12 practical ways to reduce and manage your grocery costs');
     expect(getPublicGuideRecordByPath(GROCERY_COST_PREDICTION_GUIDE_PATH)?.title).toBe('Why is it so difficult to budget accurately for food?');
+    expect(getPublicGuideRecordByPath(CHEAPER_MEAT_CUTS_GUIDE_PATH)?.title).toBe('Cooking with cheaper cuts of meat: what to buy and how to use it');
+    expect(getPublicGuideRecordByPath(SHARED_INGREDIENTS_GUIDE_PATH)?.title).toBe('How to plan five dinners around shared ingredients and complete packs');
     expect(getPublicGuideRecordByPath(OFFAL_BUDGET_GUIDE_PATH)?.title).toBe('Cooking with offal on a budget: what to buy and how to use it');
     expect(getPublicGuideRecordByPath(MEDITERRANEAN_AFFORDABLE_COOKING_PATH)?.title).toBe('Mediterranean-inspired ways to make everyday ingredients taste good');
     expect(getPublicGuideRecordByPath(SUMMER_STEWS_GUIDE_PATH)?.title).toBe('Summer stews: making vegetables go further');

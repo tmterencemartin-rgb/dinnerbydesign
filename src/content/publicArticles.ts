@@ -1,8 +1,6 @@
 import { UK_FOOD_COSTS_2026, UK_FOOD_COSTS_2026_PATH } from './seoFoodCostGuides';
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH } from './seoMealPlans';
 import { FAMILY_DINNERS_FOR_FOUR, FAMILY_DINNERS_FOR_FOUR_PATH } from './familyDinnersForFourPlan';
-import { CHEAPER_MEAT_CUTS_GUIDE, CHEAPER_MEAT_CUTS_GUIDE_PATH } from './cheaperMeatCutsGuide';
-import { SHARED_INGREDIENTS_GUIDE, SHARED_INGREDIENTS_GUIDE_PATH } from './sharedIngredientsGuide';
 import { FIVE_A_DAY_GUIDE, FIVE_A_DAY_GUIDE_PATH } from './fiveADayGuide';
 import { HOME_COOKED_READY_MADE_GUIDE, HOME_COOKED_READY_MADE_GUIDE_PATH } from './homeCookedReadyMadeGuide';
 import { CHICKEN_THIGH_COST_GUIDE, CHICKEN_THIGH_COST_GUIDE_PATH } from './chickenThighCostGuide';
@@ -83,20 +81,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: FIVE_A_DAY_GUIDE.indexingStatus, publishedAt: FIVE_A_DAY_GUIDE.publishedAt,
     reviewedAt: FIVE_A_DAY_GUIDE.reviewedAt, contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
     internalLinks: FIVE_A_DAY_GUIDE.internalLinks, disclosures: FIVE_A_DAY_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: SHARED_INGREDIENTS_GUIDE.title, path: SHARED_INGREDIENTS_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: SHARED_INGREDIENTS_GUIDE.pageFamily, primarySearchIntent: SHARED_INGREDIENTS_GUIDE.primarySearchIntent,
-    indexingStatus: SHARED_INGREDIENTS_GUIDE.indexingStatus, publishedAt: SHARED_INGREDIENTS_GUIDE.publishedAt,
-    reviewedAt: SHARED_INGREDIENTS_GUIDE.reviewedAt, contentReviewedAt: SHARED_INGREDIENTS_GUIDE.contentReviewedAt,
-    internalLinks: SHARED_INGREDIENTS_GUIDE.internalLinks, disclosures: SHARED_INGREDIENTS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: CHEAPER_MEAT_CUTS_GUIDE.title, path: CHEAPER_MEAT_CUTS_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: CHEAPER_MEAT_CUTS_GUIDE.pageFamily, primarySearchIntent: CHEAPER_MEAT_CUTS_GUIDE.primarySearchIntent,
-    indexingStatus: CHEAPER_MEAT_CUTS_GUIDE.indexingStatus, publishedAt: CHEAPER_MEAT_CUTS_GUIDE.publishedAt,
-    reviewedAt: CHEAPER_MEAT_CUTS_GUIDE.reviewedAt, contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
-    internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks, disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures, status: 'published',
   },
   {
     title: UK_FOOD_COSTS_2026.title,

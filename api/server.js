@@ -183820,6 +183820,61 @@ var GROCERY_COST_PREDICTION_DISCLOSURES = [
     body: "Food Standards Agency guidance was reviewed on 20 July 2026. Follow the cited source for later updates."
   }
 ];
+var CHEAPER_MEAT_CUTS_COST_DISCLOSURES = [
+  {
+    key: "price_comparison",
+    title: "How to use this guide",
+    body: "This guide does not rank cuts or use live retailer prices. Prices, pack sizes and availability vary, and a lower pack or kilogram price does not automatically mean a lower cost per serving once bone, trimming and cooking time are considered."
+  }
+];
+var CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES = [
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Marinades, spice blends, stock products and prepared sauces vary by brand and can contain allergens, so check every product label before use."
+  }
+];
+var CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow product cooking and storage instructions. Make sure chicken and turkey are steaming hot throughout, with no pink meat remaining and juices running clear. Follow current Food Standards Agency guidance when cooling, refrigerating, freezing, defrosting and reheating cooked meat."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food Standards Agency cooking and storage guidance was reviewed on 22 July 2026. Follow the cited sources for later updates."
+  }
+];
+var SHARED_INGREDIENTS_PLANNING_DISCLOSURES = [
+  {
+    key: "serving_assumption",
+    title: "Serving assumption",
+    body: "The five dinner descriptions assume two adults. Adjust quantities for your household and compare the available pack sizes before buying."
+  },
+  {
+    key: "price_comparison",
+    title: "A note on cost",
+    body: "Using shared ingredients can reduce part-used packs, but it does not guarantee a lower checkout total. Pack sizes, current prices, cupboard ingredients and how much the household uses all affect the outcome."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and product labels",
+    body: "Check labels on tinned products, seasonings and any substitutions for allergens, storage instructions and suitability."
+  }
+];
+var SHARED_INGREDIENTS_SAFETY_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking",
+    body: "Follow the chicken packaging and current Food Standards Agency guidance. Keep raw chicken separate, cook it thoroughly, cool and refrigerate leftovers promptly, and reheat them only once until steaming hot throughout."
+  },
+  {
+    key: "source_timing",
+    title: "Guidance review",
+    body: "Food Standards Agency cooking, chilling, freezing and defrosting guidance was reviewed on 23 July 2026. Follow the cited sources for later updates."
+  }
+];
 var LOW_COST_DINNERS_DISCLOSURES = [
   {
     key: "price_comparison",
@@ -184025,6 +184080,22 @@ var GROCERY_COST_OPTIONS_DISCLOSURE_FOOTER = {
 };
 var GROCERY_COST_PREDICTION_DISCLOSURE_FOOTER = {
   body: "Grocery estimates can improve visibility and control, but products, prices, pack sizes, substitutions and ingredients already at home vary by household and shop.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" }
+  ]
+};
+var CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER = {
+  body: "Prices, pack sizes, usable quantities, cooking time and availability vary. Compare the pack in front of you, check product labels and follow current food-safety guidance.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/pricing-methodology", label: "Pricing methodology" },
+    { href: "/food-safety", label: "Storage and cooking safety" }
+  ]
+};
+var SHARED_INGREDIENTS_DISCLOSURE_FOOTER = {
+  body: "This guide illustrates one shared-ingredient planning approach rather than fixed recipes or guaranteed savings. Adjust quantities, check product labels and follow current food-safety guidance.",
   links: [
     { href: "/guides", label: "Browse all guides" },
     { href: "/pricing-methodology", label: "Pricing methodology" },
@@ -185158,128 +185229,6 @@ var BATCH_COOKING_GUIDE_RECORD = {
     label: "Plan my week",
     href: "/signin"
   }
-};
-
-// src/content/cheaperMeatCutsGuide.ts
-var CHEAPER_MEAT_CUTS_GUIDE_PATH = "/food-costs/cooking-with-cheaper-cuts-of-meat";
-var CHEAPER_MEAT_CUTS_GUIDE = {
-  title: "Cooking with cheaper cuts of meat: what to buy and how to use it",
-  seoTitle: "Cooking with cheaper cuts of meat | DinnerByDesign",
-  description: "Compare and cook beef shin, braising steak, chicken thighs, pork shoulder and turkey thighs, including usable quantity and cost per serving.",
-  publishedAt: "2026-07-22",
-  reviewedAt: "2026-07-26",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Choose and cook lower-cost meat cuts using methods that suit their texture, usable quantity and available time",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-26",
-  editorialNotes: "Consolidated method and four-serving comparison guide rather than a live price ranking. Recheck Food Standards Agency cooking and storage guidance before changing the review date.",
-  internalLinks: [
-    "/pricing-methodology",
-    "/food-costs/why-grocery-costs-are-hard-to-predict",
-    "/food-costs/batch-cooking-on-a-budget",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-costs/cooking-with-offal-on-a-budget",
-    "/food-costs/ways-to-reduce-grocery-costs",
-    "/guides"
-  ],
-  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: Cooking your food",
-      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
-    },
-    {
-      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
-      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
-    }
-  ],
-  faqs: [
-    {
-      question: "Are cheaper cuts always cheaper per serving?",
-      answer: "Not always. Bone weight, trimming and cooking losses can reduce the usable meat you get, so it is worth considering cost per serving rather than price per pack or kilogram."
-    },
-    {
-      question: "Which cheaper cut is easiest for a beginner?",
-      answer: "Boneless chicken thighs are a reasonable starting point. They are forgiving to cook and work in a wide range of everyday dinners."
-    },
-    {
-      question: "Can chicken thighs replace chicken breast?",
-      answer: "Often, particularly in curries, casseroles and traybakes. The texture and cooking time differ slightly, so adjust the method rather than assume a direct swap."
-    },
-    {
-      question: "Does slow cooking use too much energy to save money?",
-      answer: "It depends on the appliance, cooking duration and energy tariff. There is no single answer, so consider how the cut will actually be cooked rather than assuming every slowly cooked dish will cost less overall."
-    },
-    {
-      question: "Can cooked meat be frozen?",
-      answer: "Yes. Cool, portion and store it safely, following current Food Standards Agency guidance and the product instructions."
-    }
-  ]
-};
-
-// src/content/sharedIngredientsGuide.ts
-var SHARED_INGREDIENTS_GUIDE_PATH = "/food-costs/five-dinners-same-ingredients";
-var SHARED_INGREDIENTS_GUIDE = {
-  title: "How to plan five dinners around shared ingredients and complete packs",
-  seoTitle: "Five dinners using shared ingredients and complete packs | DinnerByDesign",
-  description: "See how chicken thighs, potatoes, peppers, onions and tinned tomatoes can become five different dinners, with practical plans for complete packs.",
-  publishedAt: "2026-07-23",
-  reviewedAt: "2026-07-26",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Plan five different dinners around shared ingredients and complete packs to reduce disconnected purchases and part-used packs",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-07-26",
-  editorialNotes: "Consolidated shared-ingredient and complete-pack planning guide for two adults. Keep the five dinners distinct by method, texture and seasoning, and recheck Food Standards Agency guidance before changing the review date.",
-  internalLinks: [
-    "/dinner-plans/5-affordable-family-dinners-for-four",
-    "/food-costs/cooking-with-cheaper-cuts-of-meat",
-    "/food-costs/ways-to-reduce-grocery-costs",
-    "/food-costs/portion-planning-and-food-waste",
-    "/food-costs/batch-cooking-on-a-budget",
-    "/food-costs/why-grocery-costs-are-hard-to-predict",
-    "/guides",
-    "/pricing-methodology",
-    "/food-safety"
-  ],
-  disclosures: ["serving_assumption", "price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
-  sources: [
-    {
-      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
-      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
-    },
-    {
-      label: "Food Standards Agency: Cooking your food",
-      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
-    }
-  ],
-  faqs: [
-    {
-      question: "Do all five dinners use every core ingredient?",
-      answer: "Yes. Chicken thighs, potatoes, peppers, onions and tinned tomatoes appear in every dinner, but the cooking method, texture and seasoning change."
-    },
-    {
-      question: "Does repeating ingredients mean repeating the same dinner?",
-      answer: "It should not. Roasting, braising, pan cooking, stuffing and layering create different textures and presentations even when the shopping basket stays the same."
-    },
-    {
-      question: "Will buying one larger pack always cost less?",
-      answer: "No. Compare the pack price, the quantity and how much your household will genuinely use. The benefit comes from using what you buy, not simply choosing a larger pack."
-    },
-    {
-      question: "Should I prepare all five dinners at once?",
-      answer: "Not necessarily. Portion and label the chicken, but prepare vegetables only for the next one or two dinners so they retain more of their texture and freshness."
-    },
-    {
-      question: "Should I cook a complete pack at once?",
-      answer: "Not necessarily. Dividing a pack before cooking may preserve more flexibility than cooking everything at once. Follow the pack instructions, label anything frozen and decide how each portion will be used."
-    },
-    {
-      question: "Can I adapt the basket for a larger household?",
-      answer: "Yes. The examples assume two adults, so increase the quantities to suit your household and check that the available pack sizes still make sense for the plan."
-    }
-  ]
 };
 
 // src/content/fiveADayGuide.ts
@@ -188095,6 +188044,220 @@ var GROCERY_COST_PREDICTION_GUIDE_RECORD = {
   }
 };
 
+// src/content/cheaperMeatCutsGuide.ts
+var CHEAPER_MEAT_CUTS_GUIDE_PATH = "/food-costs/cooking-with-cheaper-cuts-of-meat";
+var CHEAPER_MEAT_CUTS_GUIDE = {
+  title: "Cooking with cheaper cuts of meat: what to buy and how to use it",
+  seoTitle: "Cooking with cheaper cuts of meat | DinnerByDesign",
+  description: "Compare and cook beef shin, braising steak, chicken thighs, pork shoulder and turkey thighs, including usable quantity and cost per serving.",
+  publishedAt: "2026-07-22",
+  reviewedAt: "2026-07-26",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Choose and cook lower-cost meat cuts using methods that suit their texture, usable quantity and available time",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Consolidated method and four-serving comparison guide rather than a live price ranking. Recheck Food Standards Agency cooking and storage guidance before changing the review date.",
+  internalLinks: [
+    "/pricing-methodology",
+    "/food-costs/why-grocery-costs-are-hard-to-predict",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/cooking-with-offal-on-a-budget",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/guides"
+  ],
+  disclosures: ["price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
+    },
+    {
+      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
+      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
+    }
+  ],
+  faqs: [
+    {
+      question: "Are cheaper cuts always cheaper per serving?",
+      answer: "Not always. Bone weight, trimming and cooking losses can reduce the usable meat you get, so it is worth considering cost per serving rather than price per pack or kilogram."
+    },
+    {
+      question: "Which cheaper cut is easiest for a beginner?",
+      answer: "Boneless chicken thighs are a reasonable starting point. They are forgiving to cook and work in a wide range of everyday dinners."
+    },
+    {
+      question: "Can chicken thighs replace chicken breast?",
+      answer: "Often, particularly in curries, casseroles and traybakes. The texture and cooking time differ slightly, so adjust the method rather than assume a direct swap."
+    },
+    {
+      question: "Does slow cooking use too much energy to save money?",
+      answer: "It depends on the appliance, cooking duration and energy tariff. There is no single answer, so consider how the cut will actually be cooked rather than assuming every slowly cooked dish will cost less overall."
+    },
+    {
+      question: "Can cooked meat be frozen?",
+      answer: "Yes. Cool, portion and store it safely, following current Food Standards Agency guidance and the product instructions."
+    }
+  ]
+};
+var CHEAPER_MEAT_CUTS_OPENING_HTML = `<section><h2>Quick answer</h2><p><em>Beef shin, braising steak, chicken thighs and drumsticks, pork shoulder and turkey thighs can be useful alternatives to more familiar cuts. Some need longer, gentler cooking; others can be roasted or cooked in one pan. The best choice depends on the pack price, the amount of usable meat, the cooking time and what you plan to do with the leftovers. Cheaper does not have to mean dull. These cuts often bring plenty of flavour and work particularly well with spices, herbs, tomatoes, pulses and seasonal vegetables.</em></p></section>
+<section><h2>Why are some cuts cheaper?</h2><p>A few ordinary factors explain the price difference: more connective tissue that needs longer cooking to soften, bones, skin or visible fat that reduce the usable meat in the pack, less consumer demand than convenient cuts such as chicken breast, and the usual effects of retailer, pack size, promotion and time of year.</p><p>A lower price per pack or kilogram does not automatically mean a lower cost per serving. Bone weight, trimming, longer cooking energy and what you serve alongside it all affect the real value of a dinner. Our guide to <a href="/pricing-methodology">how prices are calculated</a> explains this distinction in more depth.</p><p><strong>Prices and availability:</strong> <em>Prices and availability vary between retailers, packs and dates. The comparisons in this guide are general rather than tied to a specific shop or price. Our guide to <a href="/food-costs/why-grocery-costs-are-hard-to-predict">why grocery costs are difficult to predict</a> looks at this in more detail.</em></p></section>
+<section><h2>How to compare cuts for four servings</h2><p>Start with the current pack price, then estimate how many of your household&apos;s usual servings the usable meat will provide after accounting for bone, skin, trimming and cooking loss. Compare cuts on the same date and include any extra stock, marinade or ingredients required by the cooking method.</p><p><strong>Illustrative calculation:</strong> if a pack costs \xA36.00 and provides four servings, its calculated cost is \xA31.50 per serving. This is arithmetic rather than a current retailer price. Replace both figures with the pack and serving information in front of you.</p><p>Cooking time matters as well. Beef shin and pork shoulder may need several hours, while boneless chicken thighs are usually quicker. Energy cost depends on the appliance, temperature, duration and tariff, so a lower shelf price does not guarantee a lower overall cost.</p></section>`;
+var CHEAPER_MEAT_CUTS_DETAILS_HTML = `<section><h2>At a glance</h2><div class="guide-table-wrap"><table><thead><tr><th>Cut</th><th>Character</th><th>Best methods</th><th>Time</th><th>Good for</th></tr></thead><tbody><tr><td>Beef shin</td><td>Deep flavour; becomes tender slowly</td><td>Braising, slow cooking</td><td>Longer</td><td>Stews, rag\xF9-style sauces, pies</td></tr><tr><td>Braising steak</td><td>Rich and versatile</td><td>Casseroles, braising</td><td>Longer</td><td>Tomato-based dishes, pies, shredded beef</td></tr><tr><td>Chicken thighs</td><td>Juicy and forgiving</td><td>Roasting, traybakes, casseroles</td><td>Moderate</td><td>Curries, rice dishes, one-pan dinners</td></tr><tr><td>Chicken drumsticks</td><td>Flavourful and bone-in</td><td>Roasting, braising</td><td>Moderate</td><td>Traybakes, spiced chicken, tomato dishes</td></tr><tr><td>Pork shoulder</td><td>Rich; suits larger batches</td><td>Slow roasting, braising</td><td>Longer</td><td>Shredded pork, stews, fillings</td></tr><tr><td>Turkey thighs</td><td>Full-flavoured and substantial</td><td>Roasting, braising</td><td>Moderate to long</td><td>Curries, casseroles, shredded turkey</td></tr></tbody></table></div><p><strong>Cooking times and safety:</strong> <em>Timings above are general guidance, not exact instructions for every pack. Always follow the cooking instructions on the product you have bought.</em></p></section>
+<section><h2>Beef shin</h2><p>Beef shin comes from a hard-working part of the animal, which is exactly why it needs slow, gentle cooking. Connective tissue that would stay tough after a quick sear breaks down over time into something rich and tender. Onions, carrots, tomatoes, mushrooms, bay, thyme and warming spices such as cinnamon or allspice all suit it well, in a classic stew, a rag\xF9-style sauce or a pie filling. A smaller quantity goes a long way stirred through beans, lentils or plenty of root vegetables, rather than needing to be the bulk of the dish.</p><p>It can be less convenient than braising steak when you are short on time. It often needs trimming, and the cooking time is genuinely long, so it suits a day when something can be left cooking rather than a rushed evening.</p></section>
+<section><h2>Braising steak</h2><p>Braising steak is usually quicker to prepare than shin, making it a practical choice for casseroles, pie fillings and sauces left to cook gently. Browning the meat first can add depth of flavour, but it is a nice-to-have rather than essential \u2014 skip it on a busier evening and the dish will still work. Root vegetables, beans or lentils stretch the dish further. Pre-diced packs are convenient, but a larger piece cut yourself can sometimes offer better value. Compare the pack in front of you rather than assuming either is automatically the better buy.</p></section>
+<section><h2>Chicken thighs and drumsticks</h2><p>Thighs and drumsticks behave a little differently. Boneless thighs give more usable meat for the pack weight, and they are generally more forgiving than chicken breast, tending to stay juicy during roasting, braising and casserole cooking. They suit curries, casseroles, traybakes and rice-based dinners well.</p><p>Drumsticks are usually bone-in, so part of the pack weight is not meat you will eat. That matters when working out portions. They roast and braise well and hold their own in a traybake or tomato-based dish. Skin-on or skinless is a matter of preference and the dish, rather than one being clearly better.</p><p>A few flavour directions worth trying: lemon and oregano, tomato and paprika, ginger and garlic, or a milder spice blend with peppers and rice.</p></section>`;
+var CHEAPER_MEAT_CUTS_PLANNING_HTML = `<section><h2>Pork shoulder</h2><p>Pork shoulder suits slow cooking for the same reason as beef shin \u2014 connective tissue and fat that reward a long, gentle cook, becoming tender and easy to shred rather than staying firm. Buying a whole joint rather than smaller pieces can offer good value, but only if your household will genuinely get through it. A large joint is only useful if it gets eaten, either at one sitting or across more than one dinner with a plan for the rest. Our guide to <a href="/food-costs/batch-cooking-on-a-budget">batch cooking on a budget</a> covers that approach in more detail.</p><p>A roast dinner, shredded pork in flatbreads or a filling for baked potatoes are all reasonable directions. Trim excess fat if you prefer; some of the fat melts during cooking and adds flavour.</p></section>
+<section><h2>Turkey thighs</h2><p>Turkey thigh is the least familiar of these cuts, but worth getting to know. It is darker and generally fuller-flavoured than turkey breast, suiting casseroles, curries and roasting methods that give the darker meat enough time to become tender. Availability varies considerably between retailers and individual stores, so turkey thighs may not be as dependable an everyday option as chicken thighs.</p><p>Bone-in and boneless versions need different serving assumptions, since bone weight is not usable meat. Compare the specific pack in front of you rather than assuming turkey thigh will always be cheaper than chicken \u2014 that varies by retailer and by week.</p></section>
+<section><h2>Choosing the right cut for the time you have</h2><ul><li><strong>Need something relatively quick:</strong> boneless chicken thighs</li><li><strong>Happy to leave something cooking:</strong> beef shin, braising steak or pork shoulder</li><li><strong>Want a traybake:</strong> thighs or drumsticks</li><li><strong>Cooking a larger batch:</strong> pork shoulder, braising steak or turkey thigh</li><li><strong>Need predictable portions:</strong> boneless cuts are usually easier to divide evenly</li><li><strong>Want deeper flavour from a smaller quantity:</strong> slow-cooked beef or pork alongside pulses and vegetables</li></ul><p>\u201CQuick\u201D is relative here and should not come at the expense of cooking something safely and thoroughly.</p></section>
+<section><h2>Making cheaper cuts go further</h2><p>Our guide to <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a> covers the general principles behind this list in more detail.</p><ul><li>Cook a larger quantity only when there is a definite plan for all of it.</li><li>Pair meat with beans, lentils, potatoes, rice or seasonal vegetables, rather than serving it alone.</li><li>Reuse the cooked meat in a genuinely different second dinner, not the same dish twice.</li><li>Portion leftovers before refrigerating or freezing them.</li><li>Label frozen portions with the dish and the date.</li><li>Use bones and skin for stock if you would like to \u2014 it is a nice extra, not something you need to do.</li><li>Weigh up cooking energy and total preparation time alongside the shelf price, not instead of it.</li></ul><p>Pork shoulder is a good example: served with potatoes one evening, then shredded into a tomato and bean dish later in the week, the same joint covers two distinctly different dinners.</p></section>`;
+var CHEAPER_MEAT_CUTS_CLOSING_HTML = `<section><h2>When a cheaper cut may not be better value</h2><ul><li>A large pack or joint that will not realistically get used.</li><li>A high proportion of bone or trimming for what you actually need.</li><li>Several hours of cooking for a small quantity of usable meat.</li><li>A cut your household does not particularly enjoy, however good the price.</li><li>Extra ingredients bought specially for just one dish.</li><li>A promotion that week making a different cut cheaper instead.</li></ul><p>None of this makes these cuts a poor choice. It is simply why cheaper and better value are not always the same thing.</p></section>
+<section><h2>Verdict</h2><p><em>Cheaper cuts can offer good value when they suit the dish, the cooking time and the household. Chicken thighs are useful for everyday flexibility, while beef shin, braising steak, pork shoulder and turkey thighs come into their own when there is time for slower cooking. Compare the actual pack, account for bones and trimming, and decide how any extra cooked meat will be used. The best-value cut is usually the one that becomes dinners people will genuinely eat.</em></p></section>
+<section><h2>Related guides</h2><p><a href="/food-costs/cooking-with-offal-on-a-budget">Cooking with offal on a budget</a> covers a related but distinct subject. For the wider principles behind this guide, see <a href="/food-costs/ways-to-reduce-grocery-costs">12 practical ways to reduce grocery costs</a> and <a href="/food-costs/batch-cooking-on-a-budget">when batch cooking can offer useful value</a>.</p></section>`;
+var CHEAPER_MEAT_CUTS_GUIDE_RECORD = {
+  id: "cooking-with-cheaper-cuts-of-meat",
+  slug: "cooking-with-cheaper-cuts-of-meat",
+  path: CHEAPER_MEAT_CUTS_GUIDE_PATH,
+  canonicalPath: CHEAPER_MEAT_CUTS_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...CHEAPER_MEAT_CUTS_GUIDE,
+  nextReviewAt: "2027-07-26",
+  metaDescription: CHEAPER_MEAT_CUTS_GUIDE.description,
+  label: "Food cost guide",
+  sourcesTitle: "Sources and further reading",
+  disclosureItems: [
+    ...CHEAPER_MEAT_CUTS_COST_DISCLOSURES,
+    ...CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES,
+    ...CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES
+  ],
+  disclosureFooter: CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: CHEAPER_MEAT_CUTS_OPENING_HTML, disclosureItems: CHEAPER_MEAT_CUTS_COST_DISCLOSURES },
+    { rawHtml: CHEAPER_MEAT_CUTS_DETAILS_HTML, disclosureItems: CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES },
+    { rawHtml: CHEAPER_MEAT_CUTS_PLANNING_HTML, disclosureItems: CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES },
+    { rawHtml: CHEAPER_MEAT_CUTS_CLOSING_HTML }
+  ],
+  cta: {
+    title: "Plan with these cuts in mind",
+    copy: "Build a week of dinners around your household, budget and available time, and see how a cut such as pork shoulder or braising steak can support more than one dinner.",
+    label: "Plan my week",
+    href: "/signin"
+  }
+};
+
+// src/content/sharedIngredientsGuide.ts
+var SHARED_INGREDIENTS_GUIDE_PATH = "/food-costs/five-dinners-same-ingredients";
+var SHARED_INGREDIENTS_GUIDE = {
+  title: "How to plan five dinners around shared ingredients and complete packs",
+  seoTitle: "Five dinners using shared ingredients and complete packs | DinnerByDesign",
+  description: "See how chicken thighs, potatoes, peppers, onions and tinned tomatoes can become five different dinners, with practical plans for complete packs.",
+  publishedAt: "2026-07-23",
+  reviewedAt: "2026-07-26",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Plan five different dinners around shared ingredients and complete packs to reduce disconnected purchases and part-used packs",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-07-26",
+  editorialNotes: "Consolidated shared-ingredient and complete-pack planning guide for two adults. Keep the five dinners distinct by method, texture and seasoning, and recheck Food Standards Agency guidance before changing the review date.",
+  internalLinks: [
+    "/dinner-plans/5-affordable-family-dinners-for-four",
+    "/food-costs/cooking-with-cheaper-cuts-of-meat",
+    "/food-costs/ways-to-reduce-grocery-costs",
+    "/food-costs/portion-planning-and-food-waste",
+    "/food-costs/batch-cooking-on-a-budget",
+    "/food-costs/why-grocery-costs-are-hard-to-predict",
+    "/guides",
+    "/pricing-methodology",
+    "/food-safety"
+  ],
+  disclosures: ["serving_assumption", "price_comparison", "allergen_and_product", "storage_and_cooking", "source_timing"],
+  sources: [
+    {
+      label: "Food Standards Agency: How to chill, freeze and defrost food safely",
+      url: "https://www.gov.uk/government/publications/how-to-chill-freeze-and-defrost-food-safely/how-to-chill-freeze-and-defrost-food-safely"
+    },
+    {
+      label: "Food Standards Agency: Cooking your food",
+      url: "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food"
+    }
+  ],
+  faqs: [
+    {
+      question: "Do all five dinners use every core ingredient?",
+      answer: "Yes. Chicken thighs, potatoes, peppers, onions and tinned tomatoes appear in every dinner, but the cooking method, texture and seasoning change."
+    },
+    {
+      question: "Does repeating ingredients mean repeating the same dinner?",
+      answer: "It should not. Roasting, braising, pan cooking, stuffing and layering create different textures and presentations even when the shopping basket stays the same."
+    },
+    {
+      question: "Will buying one larger pack always cost less?",
+      answer: "No. Compare the pack price, the quantity and how much your household will genuinely use. The benefit comes from using what you buy, not simply choosing a larger pack."
+    },
+    {
+      question: "Should I prepare all five dinners at once?",
+      answer: "Not necessarily. Portion and label the chicken, but prepare vegetables only for the next one or two dinners so they retain more of their texture and freshness."
+    },
+    {
+      question: "Should I cook a complete pack at once?",
+      answer: "Not necessarily. Dividing a pack before cooking may preserve more flexibility than cooking everything at once. Follow the pack instructions, label anything frozen and decide how each portion will be used."
+    },
+    {
+      question: "Can I adapt the basket for a larger household?",
+      answer: "Yes. The examples assume two adults, so increase the quantities to suit your household and check that the available pack sizes still make sense for the plan."
+    }
+  ]
+};
+var SHARED_INGREDIENTS_OPENING_HTML = `<section><p>Five unrelated dinners can create five separate ingredient lists, and by Thursday, a fridge drawer holding half a bag of peppers and an onion with no obvious purpose. One way round this is to keep the core ingredients steady and change what you do with them.</p></section>
+<section><h2>Quick answer</h2><p><em>The same five ingredients can produce five genuinely different dinners if the cooking method, texture and seasoning change each time. Chicken thighs, potatoes, peppers, onions and tinned tomatoes can be roasted, braised, crisped, stuffed or layered into a bake, each with its own herbs and spices. A few cupboard ingredients, including oil, salt, pepper and a chosen set of herbs or spices, are still needed alongside the five core ingredients.</em></p></section>
+<section><h2>The five-ingredient basket</h2><p>This basket works because every item tolerates more than one cooking method.</p><ul><li><strong>Chicken thighs:</strong> roast, braise, shred or dice, as covered in <a href="/food-costs/cooking-with-cheaper-cuts-of-meat">cooking with cheaper cuts of meat</a>.</li><li><strong>Potatoes:</strong> crush, roast or fry.</li><li><strong>Peppers:</strong> roast whole, slice for a relish, or hollow out for stuffing.</li><li><strong>Onions:</strong> a base note in all five dinners, softened or caramelised depending on the dish.</li><li><strong>Tinned tomatoes:</strong> a sauce base, a relish, or a light braising liquid.</li></ul><p>Coordinating pack sizes across the five dinners can shorten the shopping list and reduce the number of part-used packs left over, as discussed in <a href="/food-costs/ways-to-reduce-grocery-costs">12 practical ways to reduce and manage grocery costs</a>, though the right quantities depend on household size and on what pack sizes are available. Two adults is the assumption used for the dinner descriptions below, in line with <a href="/food-costs/portion-planning-and-food-waste">portion planning and food waste</a>; larger households will need to scale the amounts.</p></section>`;
+var SHARED_INGREDIENTS_DINNERS_HTML = `<section><h2>How the five dinners remain different</h2><div class="guide-table-wrap"><table><thead><tr><th>Dinner</th><th>Main method</th><th>Dominant texture</th><th>Character</th></tr></thead><tbody><tr><td>Tray bake</td><td>Roasting</td><td>Crisp and caramelised</td><td>Smoky</td></tr><tr><td>Braise</td><td>Gentle braising</td><td>Soft and sauce-led</td><td>Rich and savoury</td></tr><tr><td>Hash</td><td>Pan cooking</td><td>Crisp and chopped</td><td>Quick and informal</td></tr><tr><td>Stuffed peppers</td><td>Baking</td><td>Structured and filled</td><td>Colourful and composed</td></tr><tr><td>Layered bake</td><td>Baking, layered</td><td>Crisp-topped, soft beneath</td><td>Warm and hearty</td></tr></tbody></table></div></section>
+<section><h2>The five dinners</h2><h3>1. Smoky chicken, pepper and potato tray bake</h3><p>Chicken thighs, sliced peppers, onion wedges and quartered potatoes go into one tray, with tinned tomatoes spooned underneath to form a rough sauce as everything roasts. Smoked paprika and a splash of oil are the main cupboard additions. The result is crisp-edged, slightly caramelised at the corners, and largely hands-off once it is in the oven.</p><h3>2. Tomato-braised chicken with peppers and crushed potatoes</h3><p>Here the same five ingredients go into a pan rather than a tray. Chicken, onion and peppers are softened first, then simmered gently in the tinned tomatoes until the sauce thickens and the chicken is tender enough to break apart with a fork. Potatoes are boiled and roughly crushed rather than roasted. Bay leaf, thyme or a pinch of dried oregano suit this one. It is softer and more sauce-led than the tray bake, closer to a stew than a roast.</p><h3>3. Chicken and potato hash with pepper and tomato relish</h3><p>Diced potatoes are fried until crisp, then shredded cooked chicken and softened onion are worked through the pan. Peppers and tinned tomatoes are cooked down separately into a warm, chunky relish spooned over the top rather than mixed in. Paprika or a little chilli flake works well. The contrast between the crisp hash and the loose relish is what separates this from the braise: it is quicker to put together and better suited to a busy evening.</p><h3>4. Chicken-stuffed peppers with tomato-roasted potatoes</h3><p>Halved peppers are filled with a mixture of chopped cooked chicken, softened onion and cooked, diced potato, then baked until the filling is hot through and the pepper has softened at the edges. A separate batch of potatoes is roasted alongside in a tomato sauce made from the tin. Dried oregano or basil suits the filling. Because the ingredients are composed into a filled, baked dish rather than mixed loosely in a pan, this feels more structured and composed than the tray bake or hash, even though the shopping list has not changed.</p><h3>5. Chicken, pepper and tomato bake with a crisp potato topping</h3><p>Onions and peppers are softened, then chopped cooked chicken is added and the tinned tomatoes reduced down into a thick filling. This is topped with crushed or roughly mashed potato and baked until the top develops crisp, browned edges. Where the braise stays soft and sauce-led throughout, this one has a clear textural contrast: a firm, crisp top over a soft, savoury filling. Rosemary suits the topping.</p></section>`;
+var SHARED_INGREDIENTS_PACKS_HTML = `<section><h2>Plan for complete packs, not only recipe quantities</h2><p>A recipe may call for three chicken thighs when the available pack contains six, or one pepper when they are sold in a multipack. The ingredient value used in one dinner is not the same as the complete-pack cost paid at the checkout. The difference becomes easier to manage when every remainder has a realistic destination before shopping begins.</p><p>For this five-dinner example, divide the chicken into the portions needed across the week, assign each pepper and onion to a dinner, and check whether the potato and tomato quantities match the packs available. A larger pack only offers useful value when the household will genuinely use it.</p><p>For a fully costed example, see <a href="/dinner-plans/5-affordable-family-dinners-for-four">five affordable family dinners for four using one coordinated basket</a>. It shows the complete-pack checkout cost, the ingredient value used and what remains after the week.</p></section>
+<section><h2>Complete-pack planning examples</h2><div class="guide-table-wrap"><table><thead><tr><th>Pack or ingredient</th><th>First use</th><th>Planned further use</th><th>Practical action</th></tr></thead><tbody><tr><td>Chicken thighs</td><td>Tray bake</td><td>Braise, hash or layered bake</td><td>Divide, label and store safely</td></tr><tr><td>Peppers</td><td>Roasted dinner</td><td>Relish, stuffing or braise</td><td>Assign each pepper before shopping</td></tr><tr><td>Potatoes</td><td>Roasted</td><td>Crushed, fried or used as a topping</td><td>Match the bag size to all five dinners</td></tr><tr><td>Tinned tomatoes</td><td>Tray-bake sauce</td><td>Braising liquid, relish or filling</td><td>Choose tins that reconcile with the plan</td></tr><tr><td>Fresh herbs or yoghurt</td><td>Seasoning or finish</td><td>A different finish later in the week</td><td>Check opened-product instructions</td></tr></tbody></table></div></section>
+<section><h2>Five practical ways to handle a pack</h2><ul><li><strong>Use it across genuinely different dinners.</strong> Change the seasoning, method or texture so the second use does not feel like a repeat.</li><li><strong>Divide and freeze suitable ingredients promptly.</strong> Follow the product label and current food-safety guidance.</li><li><strong>Prepare a flexible component.</strong> A tomato base or roasted vegetables can take a different direction later in the week.</li><li><strong>Choose loose, frozen or smaller formats where practical.</strong> A lower unit price is not useful when the remainder is unlikely to be eaten.</li><li><strong>Adjust the plan to the available pack.</strong> Sometimes changing a dinner is simpler than forcing an unwanted remainder into the week.</li></ul><p>Complete-pack planning is a habit, not a demand to use every last item regardless of appetite, storage space or changed plans. A smaller pack at a higher unit price may still be the sensible choice when it avoids waste.</p></section>`;
+var SHARED_INGREDIENTS_PLANNING_HTML = `<section><h2>One coordinated preparation session</h2><p>Rather than preparing all five dinners&apos; worth of ingredients in one sitting, the groundwork can be split sensibly:</p><ul><li>divide and label the chicken portions for each dinner;</li><li>freeze any portions that will not be used before their use-by date;</li><li>identify which vegetables belong to which dinner;</li><li>prepare vegetables for the first one or two dinners only, rather than all five, as set out in <a href="/food-costs/batch-cooking-on-a-budget">batch cooking on a budget</a>;</li><li>keep raw chicken separate from vegetables and any ready-to-eat ingredients throughout.</li></ul><p>Preparing all the vegetables at once may save a little time initially, but it can reduce their texture and freshness later in the week. Prepare only what will be used shortly and keep it covered and refrigerated.</p></section>
+<section><h2>Scheduling and storage</h2><p>Follow the storage instructions and use-by date on the chicken packaging. Keep raw chicken covered at the bottom of the fridge, separate from cooked and ready-to-eat ingredients. Portions that will not be used before the use-by date should be frozen in time. Defrost chicken in the fridge and cook it within 24 hours of defrosting; do not refreeze it raw once thawed.</p><p>Cook chicken until it is steaming hot throughout, with no pink meat and clear juices. Cooked leftovers should be cooled and refrigerated within two hours, then eaten within 48 hours or frozen. Reheat leftovers only once, and make sure they are steaming hot throughout.</p></section>`;
+var SHARED_INGREDIENTS_CLOSING_HTML = `<section><h2>Does using the same ingredients reduce costs?</h2><p>Not necessarily. Coordinating one basket across five dinners can reduce the number of part-used packs left in the fridge, which is where a lot of ingredients quietly go to waste. But the checkout total depends on pack sizes, on how much of each pack is actually used, and on what is already sitting in the cupboard, as explained in <a href="/food-costs/why-grocery-costs-are-hard-to-predict">why grocery costs are difficult to predict</a>. Buying one larger tray does not automatically reduce the cost per serving. Compare the pack price, the quantity and how much the household will genuinely use. The saving, where it exists, tends to come from using what is bought rather than from any five-ingredient trick.</p></section>
+<section><h2>When this approach works well</h2><p>This style of planning suits households that want a shorter shopping list, do not mind repeating ingredients as long as the dinners look and taste different, and have a reasonable set of herbs and spices already in the cupboard. It also depends on having enough fridge or freezer space to store portioned ingredients safely across the week, and on being willing to plan several dinners at once rather than deciding dinner by dinner.</p></section>
+<section><h2>When it may not work</h2><p>It is less useful where one household member dislikes chicken, peppers or tinned tomatoes, since the whole basket rests on those five ingredients pulling their weight across every dinner. Households with significantly different dietary needs from one dinner to the next may find the approach adds complexity rather than removing it. And if the basket ends up needing several new sauces, spice blends or specialist ingredients to make the five dinners feel distinct, much of the point of a shared shopping list is lost.</p></section>
+<section><h2>Verdict</h2><p><em>Repeat the basket, not the dinner. The five dinners above show how far cooking method, texture and seasoning can stretch the same five ingredients, but the approach only earns its keep if every dinner still feels worth eating, and every ingredient bought actually gets used.</em></p></section>`;
+var SHARED_INGREDIENTS_GUIDE_RECORD = {
+  id: "five-dinners-same-ingredients",
+  slug: "five-dinners-same-ingredients",
+  path: SHARED_INGREDIENTS_GUIDE_PATH,
+  canonicalPath: SHARED_INGREDIENTS_GUIDE_PATH,
+  status: "published",
+  category: "food-costs",
+  reviewSensitivity: "safety-sensitive",
+  ...SHARED_INGREDIENTS_GUIDE,
+  nextReviewAt: "2027-07-26",
+  metaDescription: SHARED_INGREDIENTS_GUIDE.description,
+  label: "Food cost guide",
+  sourcesTitle: "Sources and further reading",
+  disclosureItems: [
+    ...SHARED_INGREDIENTS_PLANNING_DISCLOSURES,
+    ...SHARED_INGREDIENTS_SAFETY_DISCLOSURES
+  ],
+  disclosureFooter: SHARED_INGREDIENTS_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: SHARED_INGREDIENTS_OPENING_HTML, disclosureItems: SHARED_INGREDIENTS_PLANNING_DISCLOSURES },
+    { rawHtml: SHARED_INGREDIENTS_DINNERS_HTML },
+    { rawHtml: SHARED_INGREDIENTS_PACKS_HTML },
+    { rawHtml: SHARED_INGREDIENTS_PLANNING_HTML, disclosureItems: SHARED_INGREDIENTS_SAFETY_DISCLOSURES },
+    { rawHtml: SHARED_INGREDIENTS_CLOSING_HTML }
+  ],
+  cta: {
+    title: "Plan your week",
+    copy: "DinnerByDesign can build several dinners around your household, budget and available time, while looking for opportunities to reuse ingredients across the week.",
+    label: "Plan my week",
+    href: "/signin"
+  }
+};
+
 // src/content/publicGuideRegistry.ts
 var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
@@ -188115,6 +188278,8 @@ var PUBLIC_GUIDE_RECORDS = [
   LOW_COST_DINNERS_GUIDE_RECORD,
   GROCERY_COST_OPTIONS_GUIDE_RECORD,
   GROCERY_COST_PREDICTION_GUIDE_RECORD,
+  CHEAPER_MEAT_CUTS_GUIDE_RECORD,
+  SHARED_INGREDIENTS_GUIDE_RECORD,
   OFFAL_BUDGET_GUIDE_RECORD,
   MEDITERRANEAN_AFFORDABLE_COOKING_GUIDE_RECORD,
   SUMMER_STEWS_GUIDE_RECORD,
@@ -188198,34 +188363,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: FIVE_A_DAY_GUIDE.contentReviewedAt,
     internalLinks: FIVE_A_DAY_GUIDE.internalLinks,
     disclosures: FIVE_A_DAY_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: SHARED_INGREDIENTS_GUIDE.title,
-    path: SHARED_INGREDIENTS_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: SHARED_INGREDIENTS_GUIDE.pageFamily,
-    primarySearchIntent: SHARED_INGREDIENTS_GUIDE.primarySearchIntent,
-    indexingStatus: SHARED_INGREDIENTS_GUIDE.indexingStatus,
-    publishedAt: SHARED_INGREDIENTS_GUIDE.publishedAt,
-    reviewedAt: SHARED_INGREDIENTS_GUIDE.reviewedAt,
-    contentReviewedAt: SHARED_INGREDIENTS_GUIDE.contentReviewedAt,
-    internalLinks: SHARED_INGREDIENTS_GUIDE.internalLinks,
-    disclosures: SHARED_INGREDIENTS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: CHEAPER_MEAT_CUTS_GUIDE.title,
-    path: CHEAPER_MEAT_CUTS_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: CHEAPER_MEAT_CUTS_GUIDE.pageFamily,
-    primarySearchIntent: CHEAPER_MEAT_CUTS_GUIDE.primarySearchIntent,
-    indexingStatus: CHEAPER_MEAT_CUTS_GUIDE.indexingStatus,
-    publishedAt: CHEAPER_MEAT_CUTS_GUIDE.publishedAt,
-    reviewedAt: CHEAPER_MEAT_CUTS_GUIDE.reviewedAt,
-    contentReviewedAt: CHEAPER_MEAT_CUTS_GUIDE.contentReviewedAt,
-    internalLinks: CHEAPER_MEAT_CUTS_GUIDE.internalLinks,
-    disclosures: CHEAPER_MEAT_CUTS_GUIDE.disclosures,
     status: "published"
   },
   {

@@ -3,9 +3,12 @@ import {
   SHARED_INGREDIENTS_DISCLOSURE_FOOTER,
   SHARED_INGREDIENTS_PLANNING_DISCLOSURES,
   SHARED_INGREDIENTS_SAFETY_DISCLOSURES,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+} from './publicGuideModel';
 
 export const SHARED_INGREDIENTS_GUIDE_PATH = '/food-costs/five-dinners-same-ingredients';
 
@@ -90,52 +93,43 @@ export const SHARED_INGREDIENTS_CLOSING_HTML = `<section><h2>Does using the same
 <section><h2>When it may not work</h2><p>It is less useful where one household member dislikes chicken, peppers or tinned tomatoes, since the whole basket rests on those five ingredients pulling their weight across every dinner. Households with significantly different dietary needs from one dinner to the next may find the approach adds complexity rather than removing it. And if the basket ends up needing several new sauces, spice blends or specialist ingredients to make the five dinners feel distinct, much of the point of a shared shopping list is lost.</p></section>
 <section><h2>Verdict</h2><p><em>Repeat the basket, not the dinner. The five dinners above show how far cooking method, texture and seasoning can stretch the same five ingredients, but the approach only earns its keep if every dinner still feels worth eating, and every ingredient bought actually gets used.</em></p></section>`;
 
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+export const SHARED_INGREDIENTS_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'five-dinners-same-ingredients',
+  slug: 'five-dinners-same-ingredients',
+  path: SHARED_INGREDIENTS_GUIDE_PATH,
+  canonicalPath: SHARED_INGREDIENTS_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'safety-sensitive',
+  ...SHARED_INGREDIENTS_GUIDE,
+  nextReviewAt: '2027-07-26',
+  metaDescription: SHARED_INGREDIENTS_GUIDE.description,
+  label: 'Food cost guide',
+  sourcesTitle: 'Sources and further reading',
+  disclosureItems: [
+    ...SHARED_INGREDIENTS_PLANNING_DISCLOSURES,
+    ...SHARED_INGREDIENTS_SAFETY_DISCLOSURES,
+  ],
+  disclosureFooter: SHARED_INGREDIENTS_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: SHARED_INGREDIENTS_OPENING_HTML, disclosureItems: SHARED_INGREDIENTS_PLANNING_DISCLOSURES },
+    { rawHtml: SHARED_INGREDIENTS_DINNERS_HTML },
+    { rawHtml: SHARED_INGREDIENTS_PACKS_HTML },
+    { rawHtml: SHARED_INGREDIENTS_PLANNING_HTML, disclosureItems: SHARED_INGREDIENTS_SAFETY_DISCLOSURES },
+    { rawHtml: SHARED_INGREDIENTS_CLOSING_HTML },
+  ],
+  cta: {
+    title: 'Plan your week',
+    copy: 'DinnerByDesign can build several dinners around your household, budget and available time, while looking for opportunities to reuse ingredients across the week.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+};
 
 export function getSharedIngredientsGuideJsonLd() {
-  const guide = SHARED_INGREDIENTS_GUIDE;
-  const url = `https://dinnerbydesign.app${SHARED_INGREDIENTS_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: guide.faqs.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(SHARED_INGREDIENTS_GUIDE_RECORD);
 }
 
 export function renderSharedIngredientsGuideInitialHtml() {
-  const guide = SHARED_INGREDIENTS_GUIDE;
-  const planningDisclosures = renderProgrammaticDisclosuresInitialHtml(SHARED_INGREDIENTS_PLANNING_DISCLOSURES);
-  const safetyDisclosures = renderProgrammaticDisclosuresInitialHtml(SHARED_INGREDIENTS_SAFETY_DISCLOSURES);
-  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml(SHARED_INGREDIENTS_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 23 July 2026 · Last reviewed 26 July 2026</p><article>${SHARED_INGREDIENTS_OPENING_HTML}${planningDisclosures}${SHARED_INGREDIENTS_DINNERS_HTML}${SHARED_INGREDIENTS_PACKS_HTML}${SHARED_INGREDIENTS_PLANNING_HTML}${safetyDisclosures}${SHARED_INGREDIENTS_CLOSING_HTML}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section></article>${disclosureFooter}<section><h2>Plan your week</h2><p>DinnerByDesign can build several dinners around your household, budget and available time, while looking for opportunities to reuse ingredients across the week.</p><p><a href="/signin">Plan my week</a> · <a href="/guides">Browse all guides</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(SHARED_INGREDIENTS_GUIDE_RECORD);
 }

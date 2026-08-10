@@ -4,9 +4,12 @@ import {
   CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER,
   CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES,
   CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES,
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
 } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+} from './publicGuideModel';
 
 export const CHEAPER_MEAT_CUTS_GUIDE_PATH = '/food-costs/cooking-with-cheaper-cuts-of-meat';
 
@@ -84,53 +87,43 @@ export const CHEAPER_MEAT_CUTS_CLOSING_HTML = `<section><h2>When a cheaper cut m
 <section><h2>Verdict</h2><p><em>Cheaper cuts can offer good value when they suit the dish, the cooking time and the household. Chicken thighs are useful for everyday flexibility, while beef shin, braising steak, pork shoulder and turkey thighs come into their own when there is time for slower cooking. Compare the actual pack, account for bones and trimming, and decide how any extra cooked meat will be used. The best-value cut is usually the one that becomes dinners people will genuinely eat.</em></p></section>
 <section><h2>Related guides</h2><p><a href="/food-costs/cooking-with-offal-on-a-budget">Cooking with offal on a budget</a> covers a related but distinct subject. For the wider principles behind this guide, see <a href="/food-costs/ways-to-reduce-grocery-costs">12 practical ways to reduce grocery costs</a> and <a href="/food-costs/batch-cooking-on-a-budget">when batch cooking can offer useful value</a>.</p></section>`;
 
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+export const CHEAPER_MEAT_CUTS_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'cooking-with-cheaper-cuts-of-meat',
+  slug: 'cooking-with-cheaper-cuts-of-meat',
+  path: CHEAPER_MEAT_CUTS_GUIDE_PATH,
+  canonicalPath: CHEAPER_MEAT_CUTS_GUIDE_PATH,
+  status: 'published',
+  category: 'food-costs',
+  reviewSensitivity: 'safety-sensitive',
+  ...CHEAPER_MEAT_CUTS_GUIDE,
+  nextReviewAt: '2027-07-26',
+  metaDescription: CHEAPER_MEAT_CUTS_GUIDE.description,
+  label: 'Food cost guide',
+  sourcesTitle: 'Sources and further reading',
+  disclosureItems: [
+    ...CHEAPER_MEAT_CUTS_COST_DISCLOSURES,
+    ...CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES,
+    ...CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES,
+  ],
+  disclosureFooter: CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER,
+  sections: [
+    { rawHtml: CHEAPER_MEAT_CUTS_OPENING_HTML, disclosureItems: CHEAPER_MEAT_CUTS_COST_DISCLOSURES },
+    { rawHtml: CHEAPER_MEAT_CUTS_DETAILS_HTML, disclosureItems: CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES },
+    { rawHtml: CHEAPER_MEAT_CUTS_PLANNING_HTML, disclosureItems: CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES },
+    { rawHtml: CHEAPER_MEAT_CUTS_CLOSING_HTML },
+  ],
+  cta: {
+    title: 'Plan with these cuts in mind',
+    copy: 'Build a week of dinners around your household, budget and available time, and see how a cut such as pork shoulder or braising steak can support more than one dinner.',
+    label: 'Plan my week',
+    href: '/signin',
+  },
+};
 
 export function getCheaperMeatCutsGuideJsonLd() {
-  const guide = CHEAPER_MEAT_CUTS_GUIDE;
-  const url = `https://dinnerbydesign.app${CHEAPER_MEAT_CUTS_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: guide.faqs.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(CHEAPER_MEAT_CUTS_GUIDE_RECORD);
 }
 
 export function renderCheaperMeatCutsGuideInitialHtml() {
-  const guide = CHEAPER_MEAT_CUTS_GUIDE;
-  const costDisclosures = renderProgrammaticDisclosuresInitialHtml(CHEAPER_MEAT_CUTS_COST_DISCLOSURES);
-  const productDisclosures = renderProgrammaticDisclosuresInitialHtml(CHEAPER_MEAT_CUTS_PRODUCT_DISCLOSURES);
-  const safetyDisclosures = renderProgrammaticDisclosuresInitialHtml(CHEAPER_MEAT_CUTS_SAFETY_DISCLOSURES);
-  const disclosureFooter = renderProgrammaticDisclosureFooterInitialHtml(CHEAPER_MEAT_CUTS_DISCLOSURE_FOOTER);
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Food cost guides</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 22 July 2026 · Last reviewed 26 July 2026</p><article>${CHEAPER_MEAT_CUTS_OPENING_HTML}${costDisclosures}${CHEAPER_MEAT_CUTS_DETAILS_HTML}${productDisclosures}${CHEAPER_MEAT_CUTS_PLANNING_HTML}${safetyDisclosures}${CHEAPER_MEAT_CUTS_CLOSING_HTML}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources and further reading</h2><ul>${sources}</ul></section></article>${disclosureFooter}<section><h2>Plan with these cuts in mind</h2><p>Build a week of dinners around your household, budget and available time, and see how a cut such as pork shoulder or braising steak can support more than one dinner.</p><p><a href="/signin">Plan my week</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(CHEAPER_MEAT_CUTS_GUIDE_RECORD);
 }
