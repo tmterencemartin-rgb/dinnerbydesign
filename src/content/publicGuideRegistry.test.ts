@@ -3,6 +3,15 @@ import {
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH,
 } from './nineBudgetDinnersWithSavouryPiesGuide';
 import {
+  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
+} from './nineBudgetFriendlyDinnersWithEggsGuide';
+import {
+  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+} from './nineBudgetDinnersWithTinnedVegetablesGuide';
+import {
+  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+} from './wholeChickenValueGuide';
+import {
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
 } from './nineBudgetDinnersWithPotatoesGuide';
 import {
@@ -20,6 +29,9 @@ describe('public guide registry', () => {
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
+    expect(paths).toContain(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH);
+    expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH);
+    expect(paths).toContain(WHOLE_CHICKEN_VALUE_GUIDE_PATH);
     expect(new Set(paths).size).toBe(paths.length);
   });
 
@@ -38,6 +50,9 @@ describe('public guide registry', () => {
   it('looks up guides by public path', () => {
     const guide = getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
     expect(guide?.title).toBe('Nine budget dinners with savoury pies');
+    expect(getPublicGuideRecordByPath(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH)?.title).toBe('Nine budget-friendly dinners with eggs');
+    expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH)?.title).toBe('Nine budget dinners with tinned vegetables');
+    expect(getPublicGuideRecordByPath(WHOLE_CHICKEN_VALUE_GUIDE_PATH)?.title).toBe('Is a whole chicken better value than chicken pieces?');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH)?.title).toBe('Nine budget dinners with potatoes');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH)?.title).toBe('Nine budget dinners with rice');
   });

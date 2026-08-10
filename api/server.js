@@ -185174,126 +185174,6 @@ var NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE = {
   ]
 };
 
-// src/content/nineBudgetFriendlyDinnersWithEggsGuide.ts
-var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH = "/guides/nine-budget-friendly-dinners-with-eggs";
-var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE = {
-  title: "Nine budget-friendly dinners with eggs",
-  seoTitle: "Nine budget-friendly dinners with eggs | DinnerByDesign",
-  description: "Nine varied budget-friendly dinners with eggs, rice, potatoes, beans, pasta and vegetables, using established recipe sources and practical leftovers advice.",
-  publishedAt: "2026-08-07",
-  reviewedAt: "2026-08-07",
-  nextReviewAt: "2026-09-07",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find varied budget-friendly dinner ideas using eggs",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-07",
-  editorialNotes: "Nine source-led dinner ideas showing how eggs can support varied, budget-friendly cooking while helping use up rice, potatoes, vegetables and leftovers.",
-  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-dinners-three-cuisines", "/guides/9-ways-with-sausages", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
-  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka" },
-    { label: "Easy egg-fried rice, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-fried-rice" },
-    { label: "Spanish tortilla, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/spanish-tortilla" },
-    { label: "Quick veg and soft cheese frittata, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/quick-veg-soft-cheese-frittata" },
-    { label: "Egg curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-curry" },
-    { label: "One-pan eggs with tomatoes, peppers & yogurt, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/turkish-one-pan-eggs-peppers-menemen" },
-    { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak" },
-    { label: "Potato hash with greens, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/potato-hash-with-greens" },
-    { label: "Beans-and-Greens Pasta with Fried Eggs, Food Network Kitchen", url: "https://www.foodnetwork.com/fnk/recipes/beans-and-greens-pasta-with-fried-eggs-9840292" },
-    { label: "Food Standards Agency: Rice", url: "https://www.food.gov.uk/print/pdf/node/4286" }
-  ],
-  faqs: [
-    {
-      question: "Can eggs make a filling budget-friendly dinner?",
-      answer: "Yes. Eggs add protein to inexpensive ingredients such as rice, potatoes, beans, pasta and vegetables, while the recipes use different spices, textures and cooking methods to keep the dinners varied."
-    },
-    {
-      question: "Which of these egg dinners are best for using leftovers?",
-      answer: "Egg-fried rice uses cooked rice, bubble and squeak uses leftover mashed potato and cooked vegetables, and the frittata is useful for small amounts of several vegetables. The shakshuka-style sauces can also use tomatoes and peppers that are starting to soften."
-    },
-    {
-      question: "Can I substitute ingredients in these egg dinners?",
-      answer: "Yes, within reason. Frozen vegetables can replace fresh ones, tinned beans can usually replace another tinned bean, and ordinary spaghetti can replace chickpea spaghetti in the pasta dish. The article identifies where a substitution changes the original source recipe."
-    },
-    {
-      question: "How should cooked rice be stored?",
-      answer: "Cool cooked rice as quickly as possible, ideally within one hour, then cover and refrigerate it. Use it within 24 hours, reheat it only once and make sure it is steaming hot throughout before serving."
-    },
-    {
-      question: "Are these complete recipes?",
-      answer: "No. They are source-led dinner ideas and practical notes that point to the established recipe for the full method, ingredients and timings. Follow the linked source recipe and its current instructions when cooking."
-    }
-  ]
-};
-
-// src/content/nineBudgetDinnersWithTinnedVegetablesGuide.ts
-var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH = "/guides/nine-budget-dinners-with-tinned-vegetables";
-var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE = {
-  title: "Nine budget dinners with tinned vegetables",
-  seoTitle: "Nine budget dinners with tinned vegetables | DinnerByDesign",
-  description: "Nine varied dinners using tinned vegetables, beans and potatoes, with established recipe sources and practical ideas for using what is already in the cupboard.",
-  publishedAt: "2026-08-07",
-  reviewedAt: "2026-08-07",
-  nextReviewAt: "2026-09-07",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Practical cooking guide",
-  primarySearchIntent: "Find budget dinner ideas using tinned vegetables",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-07",
-  editorialNotes: "Nine source-led dinners showing how tinned vegetables, beans and potatoes can support varied cooking with a useful cupboard back-up.",
-  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-friendly-dinners-with-eggs", "/guides/nine-budget-dinners-three-cuisines", "/guides/9-ways-with-sausages", "/food-safety", "/signin"],
-  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
-  sources: [
-    { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka" },
-    { label: "Easy tuna pasta bake, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/easy-tuna-pasta-bake" },
-    { label: "Vegetable and bean chilli, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/vegetable-bean-chilli" },
-    { label: "Easy fish pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie" },
-    { label: "Tomato and chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry" },
-    { label: "Dum Aloo Potato Curry, Krumpli", url: "https://www.krumpli.co.uk/dum-aloo-curry/" },
-    { label: "Bean and sausage hotpot, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bean-and-sausage-hotpot" },
-    { label: "Refried bean quesadillas, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/refried-bean-quesadillas" },
-    { label: "Sweetcorn fritters with eggs and black bean salsa, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/sweetcorn-fritters-eggs-black-bean-salsa" }
-  ],
-  faqs: [
-    { question: "Which tinned vegetables are most useful for dinner?", answer: "Chopped tomatoes, sweetcorn, peas and potatoes are useful cupboard staples. Beans and chickpeas are pulses rather than vegetables, but they are equally useful in a cupboard and work alongside the tinned vegetables in several of these dinners." },
-    { question: "Can tinned potatoes be used in a dinner?", answer: "Yes. The dum aloo potato curry linked in this guide gives instructions for using tinned new potatoes as an alternative to boiling and peeling fresh ones." },
-    { question: "Are tinned vegetables better than fresh or frozen?", answer: "No. Fresh, frozen and tinned vegetables all have a place. Tins are useful because they keep for months and can provide a back-up when the fridge is running low." },
-    { question: "How can I avoid wasting tins?", answer: "Keep a small rotating stock, buy a couple of extras as part of an ordinary shop and use the oldest tins first. This makes it less likely that unopened tins disappear at the back of the cupboard." },
-    { question: "Are these complete recipes?", answer: "No. They are source-led dinner ideas with practical notes. Use the linked publisher recipe for its full ingredient list, method, timings and current instructions." }
-  ]
-};
-
-// src/content/wholeChickenValueGuide.ts
-var WHOLE_CHICKEN_VALUE_GUIDE_PATH = "/guides/is-a-whole-chicken-better-value-than-chicken-pieces";
-var WHOLE_CHICKEN_VALUE_GUIDE = {
-  title: "Is a whole chicken better value than chicken pieces?",
-  seoTitle: "Is a Whole Chicken Better Value Than Chicken Pieces? | DinnerByDesign",
-  description: "A practical guide to comparing a whole chicken with chicken pieces, including how to use the cuts, whether to joint it and when pre-cut chicken makes more sense.",
-  publishedAt: "2026-08-08",
-  reviewedAt: "2026-08-08",
-  nextReviewAt: "2027-08-08",
-  editorialOwner: "DinnerByDesign editorial team",
-  pageFamily: "Food cost guide",
-  primarySearchIntent: "Decide whether a whole chicken is better value than chicken pieces",
-  indexingStatus: "index",
-  contentReviewedAt: "2026-08-08",
-  editorialNotes: "A source-led buying guide that distinguishes whole-chicken planning from using leftover roast chicken.",
-  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
-  disclosures: ["price_comparison", "storage_and_cooking", "source_timing"],
-  sources: [
-    { label: "How to joint a raw chicken, BBC Good Food", url: "https://www.bbcgoodfood.com/videos/techniques/how-joint-raw-chicken-video" },
-    { label: "JFC Jamie's fried chicken, Jamie Oliver", url: "https://www.jamieoliver.com/recipes/chicken/jfc-jamie-s-fried-chicken/" },
-    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
-  ],
-  faqs: [
-    { question: "Is a whole chicken always cheaper than chicken pieces?", answer: "No. A whole chicken can offer good value when its cuts and carcass will be used, but current prices, freezer space and the parts your household prefers all matter." },
-    { question: "Do I need to joint a whole chicken?", answer: "No. Roasting it whole and dividing the cooked meat afterwards can work just as well. Jointing is useful when different cuts will be cooked in different dinners." },
-    { question: "What can I do with a chicken carcass?", answer: "Use it to make stock or soup if that fits your cooking. If it will not be used, include that honestly when deciding whether a whole chicken represents value." },
-    { question: "When are chicken pieces the better choice?", answer: "Pieces can make more sense for cooking for one, limited freezer space, a dinner needing one particular cut, or anyone who would rather not handle a whole raw bird." }
-  ]
-};
-
 // src/content/bubbleAndSqueakBudgetDinnersGuide.ts
 var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH = "/guides/nine-budget-dinners-built-around-bubble-and-squeak";
 var BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE = {
@@ -185472,6 +185352,443 @@ var NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD = {
     title: "Find dinners for tonight",
     copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
     label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/nineBudgetFriendlyDinnersWithEggsGuide.ts
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH = "/guides/nine-budget-friendly-dinners-with-eggs";
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURES = [
+  {
+    key: "storage_and_cooking",
+    title: "Storage and cooking safety",
+    body: "Follow current Food Standards Agency guidance when cooling, storing and reheating cooked rice and other leftovers. Rice needs particularly prompt cooling and should be reheated only once until steaming hot throughout."
+  },
+  {
+    key: "allergen_and_product",
+    title: "Ingredients and allergens",
+    body: "Eggs, pasta, bread, tortillas, stock, Parmesan, yogurt and other packaged ingredients vary by product and may contain allergens. Check labels and choose ingredients suitable for everyone eating the dinner."
+  },
+  {
+    key: "source_timing",
+    title: "Source and guidance review",
+    body: "The recipe pages and Food Standards Agency guidance were checked on 7 August 2026. Recipe details, product ingredients and official guidance can change, so follow the cited sources for later information."
+  }
+];
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers flexible dinner ideas rather than complete recipes. Ingredients, cooking instructions, storage advice and allergens vary between products and sources.",
+  links: [
+    { href: "/guides", label: "Browse all guides" },
+    { href: "/food-safety", label: "Food safety" }
+  ]
+};
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE = {
+  title: "Nine budget-friendly dinners with eggs",
+  seoTitle: "Nine budget-friendly dinners with eggs | DinnerByDesign",
+  description: "Nine varied budget-friendly dinners with eggs, rice, potatoes, beans, pasta and vegetables, using established recipe sources and practical leftovers advice.",
+  publishedAt: "2026-08-07",
+  reviewedAt: "2026-08-07",
+  nextReviewAt: "2026-09-07",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find varied budget-friendly dinner ideas using eggs",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-07",
+  editorialNotes: "Nine source-led dinner ideas showing how eggs can support varied, budget-friendly cooking while helping use up rice, potatoes, vegetables and leftovers.",
+  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-dinners-three-cuisines", "/guides/9-ways-with-sausages", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka" },
+    { label: "Easy egg-fried rice, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-fried-rice" },
+    { label: "Spanish tortilla, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/spanish-tortilla" },
+    { label: "Quick veg and soft cheese frittata, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/quick-veg-soft-cheese-frittata" },
+    { label: "Egg curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-curry" },
+    { label: "One-pan eggs with tomatoes, peppers & yogurt, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/turkish-one-pan-eggs-peppers-menemen" },
+    { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak" },
+    { label: "Potato hash with greens, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/potato-hash-with-greens" },
+    { label: "Beans-and-Greens Pasta with Fried Eggs, Food Network Kitchen", url: "https://www.foodnetwork.com/fnk/recipes/beans-and-greens-pasta-with-fried-eggs-9840292" },
+    { label: "Food Standards Agency: Rice", url: "https://www.food.gov.uk/print/pdf/node/4286" }
+  ],
+  faqs: [
+    {
+      question: "Can eggs make a filling budget-friendly dinner?",
+      answer: "Yes. Eggs add protein to inexpensive ingredients such as rice, potatoes, beans, pasta and vegetables, while the recipes use different spices, textures and cooking methods to keep the dinners varied."
+    },
+    {
+      question: "Which of these egg dinners are best for using leftovers?",
+      answer: "Egg-fried rice uses cooked rice, bubble and squeak uses leftover mashed potato and cooked vegetables, and the frittata is useful for small amounts of several vegetables. The shakshuka-style sauces can also use tomatoes and peppers that are starting to soften."
+    },
+    {
+      question: "Can I substitute ingredients in these egg dinners?",
+      answer: "Yes, within reason. Frozen vegetables can replace fresh ones, tinned beans can usually replace another tinned bean, and ordinary spaghetti can replace chickpea spaghetti in the pasta dish. The article identifies where a substitution changes the original source recipe."
+    },
+    {
+      question: "How should cooked rice be stored?",
+      answer: "Cool cooked rice as quickly as possible, ideally within one hour, then cover and refrigerate it. Use it within 24 hours, reheat it only once and make sure it is steaming hot throughout before serving."
+    },
+    {
+      question: "Are these complete recipes?",
+      answer: "No. They are source-led dinner ideas and practical notes that point to the established recipe for the full method, ingredients and timings. Follow the linked source recipe and its current instructions when cooking."
+    }
+  ]
+};
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS = [
+  {
+    paragraphs: [
+      "Eggs are one of the few ingredients that make a genuine case for themselves on cost, versatility and speed all at once. A box of six is affordable for the protein it delivers, keeps for weeks in the fridge, and turns rice, potatoes, vegetables, beans and pasta into a finished dinner rather than a pile of leftovers. That makes eggs a useful starting point for anyone trying to keep grocery spending under control without falling back on the same two or three dishes on repeat.",
+      "This is a guide to nine budget-friendly dinners with eggs, each taken from an established recipe source rather than presented as anything original. None of them assumes a big shop or a long ingredient list. Between them, they cover rice, potatoes, beans, pasta and a handful of vegetables, which means most of the store-cupboard basics already at the back of the cupboard have somewhere to go. The aim is affordable egg recipes that still feel like proper dinners: budget family dinners built around leftover ingredients, not a fallback when the fridge is bare."
+    ]
+  },
+  {
+    title: "1. Shakshuka",
+    paragraphs: [
+      "Eggs baked in a spiced tomato sauce of onion, chilli, coriander and cherry tomatoes, a dish with roots across North Africa and the Middle East and a longstanding fixture on BBC Good Food.",
+      "The sauce is built from onion, tinned or cherry tomatoes and a little chilli, all inexpensive and long-keeping, with the eggs turning a side sauce into a full dinner. It scales up easily by adding an extra egg or two per additional person.",
+      "Onion, chilli, coriander, cherry tomatoes and eggs. A pepper can stand in for the chilli, parsley can replace the coriander, and a pinch of paprika is a reasonable way to add warmth if the chilli is left out. Tinned tomatoes can replace cherry tomatoes outside of summer.",
+      "A good way to use up tomatoes that are starting to soften, since they cook down into the sauce rather than needing to look presentable. The sauce alone freezes well, ready for eggs to be added fresh another night.",
+      "The sauce can be made ahead and reheated; add and cook the eggs fresh just before serving, since eggs are best cooked close to the point of eating rather than reheated from cold."
+    ],
+    source: { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka", details: "Serves 2 \xB7 Prep 5 mins \xB7 Cook 20 mins" }
+  },
+  {
+    title: "2. Easy egg-fried rice",
+    paragraphs: [
+      "A quick stir-fry of rice, egg and onion, seasoned to taste, and one of the more direct ways to turn cooked rice into a dinner in its own right.",
+      "It is built around rice and eggs rather than meat or fish, so a bag of rice and a box of eggs cover most of the cost. Cooking extra rice for an earlier dinner means a second one later in the week costs very little more.",
+      "Long grain rice, vegetable oil, onion, eggs and spring onions to serve. Frozen peas, sweetcorn or diced carrot are common, inexpensive additions if there are vegetables that need using up.",
+      "This is a genuine leftovers dish rather than one that merely tolerates them. Cold, day-old rice fries better than freshly cooked rice, and small amounts of odd vegetables can go in alongside it.",
+      "Rice should be cooled and refrigerated quickly after cooking, then used within 24 hours and reheated only once. The Food Standards Agency's rice-specific food safety guidance recommends cooling rice quickly and using it within one day."
+    ],
+    source: { label: "Easy egg-fried rice, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-fried-rice", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 10 mins" }
+  },
+  {
+    title: "3. Spanish tortilla",
+    paragraphs: [
+      "A thick potato and onion omelette, cooked slowly in a covered pan until the base and edges are golden and the middle is just set, served warm or at room temperature.",
+      "Potatoes and onions are two of the lower-cost vegetables on a UK shopping list, and the dish scales easily to whatever quantity of potato is in the cupboard.",
+      "Potatoes, onion, garlic, eggs and olive oil. Any leftover cooked potato from a previous dinner can be used instead of cooking a fresh batch, cutting the cooking time down considerably.",
+      "A practical way to use up potatoes that are past their best for roasting or mashing, and it keeps well, so a larger tortilla can cover more than one dinner across the week.",
+      "Cooking the potato and onion gently, covered, before the eggs go in is what gives the tortilla its texture; rushing this stage with high heat tends to brown the potato rather than soften it."
+    ],
+    source: { label: "Spanish tortilla, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/spanish-tortilla", details: "Serves 4 \xB7 Prep 30 mins \xB7 Cook 50 mins" }
+  },
+  {
+    title: "4. Quick veg and soft cheese frittata",
+    paragraphs: [
+      "An open-faced omelette finished under the grill, built around courgette, sweetcorn, spinach and lardons or bacon, and softened with spoonfuls of soft cheese.",
+      "Eight eggs and a small amount of bacon or lardons go a long way once padded out with courgette, sweetcorn and spinach, so the dish feeds four without needing a larger amount of meat.",
+      "Eight eggs, lardons or bacon, courgettes, sweetcorn, spinach and soft cheese. The bacon or lardons can be left out for a vegetarian version, with the vegetable content adjusted to make up the difference, though this moves the dish away from the recipe as written.",
+      "This is the dish to reach for when there are small amounts of several vegetables rather than a full portion of any one, since a frittata can absorb odd quantities without the dish looking thrown together.",
+      "Starting the frittata on the hob and finishing it under the grill avoids the need to turn it, and a cast-iron or other ovenproof pan makes this easier."
+    ],
+    source: { label: "Quick veg and soft cheese frittata, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/quick-veg-soft-cheese-frittata", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 20 mins" }
+  },
+  {
+    title: "5. Egg curry",
+    paragraphs: [
+      "Hard-boiled eggs served on a spiced curry sauce of onion, beans, spinach, tomatoes and coconut milk, closer to a bean and vegetable curry topped with eggs than a classic Indian egg curry, but a good example of how far a few eggs can stretch when paired with rice or flatbread.",
+      "Beans, tinned tomatoes and a handful of spinach make a substantial sauce, with the eggs adding protein rather than being the main cost of the dish.",
+      "Onion, curry paste, tinned beans, spinach, tinned tomatoes, coconut milk and hard-boiled eggs. A milder curry paste or powder suits those who prefer less heat, and any tinned bean can be used.",
+      "The sauce freezes well on its own, so a batch can be split, with fresh eggs boiled and added when the second portion is reheated. It is also a good way to use spinach that is starting to wilt.",
+      "Boiling the eggs while the sauce simmers means both are ready at the same time, rather than one holding up the other."
+    ],
+    source: { label: "Egg curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/egg-curry", details: "Serves 2 \xB7 Prep 10 mins" }
+  },
+  {
+    title: "6. One-pan eggs with tomatoes, peppers and yogurt (menemen-inspired)",
+    paragraphs: [
+      "BBC Good Food's own title for this recipe is One-pan eggs with tomatoes, peppers & yogurt, described on the page as inspired by menemen rather than presented as a direct version of it. It is a soft, cooked-down mixture of tomato and pepper with small wells made in the sauce, eggs cracked into the wells and cooked in pockets rather than stirred through, finished with a spoonful of yogurt. This is closer to shakshuka's method than to the more scrambled, mixed-through style traditionally associated with menemen.",
+      "It shares most of its ingredients with shakshuka, which makes it a natural second dinner from the same shopping list, without repeating the same dish.",
+      "Onion, green pepper, tomatoes, eggs and yogurt to finish, with chilli or paprika for warmth. Tinned tomatoes can be used in place of fresh outside of summer, and any colour of pepper works.",
+      "A good home for tomatoes and peppers that are a little too soft to serve raw, since they cook down fully into the sauce rather than needing to hold their shape.",
+      "Space the wells evenly so each egg has enough sauce around it, and keep the heat gentle once the eggs go in, since they continue cooking in the residual heat after the pan comes off the hob."
+    ],
+    source: { label: "One-pan eggs with tomatoes, peppers & yogurt, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/turkish-one-pan-eggs-peppers-menemen", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 25 mins" }
+  },
+  {
+    title: "7. Bubble and squeak, adapted with a fried egg",
+    paragraphs: [
+      "BBC Good Food's bubble and squeak recipe includes bacon: leftover mashed potato fried with cabbage or sprouts, onion, garlic and chopped bacon until golden and crisp at the edges. The fried egg on top in this guide is a further adaptation, not part of the source recipe, added to turn a side dish into a full dinner.",
+      "The base is designed specifically around leftovers rather than fresh ingredients bought for the dish, so the potato and vegetables cost nothing extra, and only a small amount of bacon and the added egg are new ingredients.",
+      "Cold leftover mashed potato, leftover boiled cabbage or sprouts, onion, garlic and bacon, fried in butter or dripping, with a fried egg added on top. The bacon can be left out for a vegetarian version, and any leftover cooked vegetable can be worked in alongside the potato and cabbage.",
+      "This is one of the clearest examples in the list of a dinner built specifically to use up what is already in the fridge, particularly after a roast dinner, rather than one that simply happens to keep well.",
+      "Pressing the mixture down and leaving it to fry undisturbed for a few minutes is what gives it a crisp base; stirring too often keeps it soft rather than golden."
+    ],
+    source: { label: "Bubble & squeak, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bubble-squeak", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 20 mins" }
+  },
+  {
+    title: "8. Potato hash with greens",
+    paragraphs: [
+      "Diced potato fried with onion and pepper, seasoned with paprika and tarragon, finished with wilted spinach and topped with a poached egg, cooked in the same pan the potatoes were boiled in.",
+      "Potatoes, onion and pepper are all lower-cost vegetables, and the egg on top turns what would otherwise be a side dish into a complete dinner without adding meat or fish.",
+      "Potatoes, onion, pepper, paprika, tarragon, spinach and eggs. A tin of beans stirred through is a reasonable way to add bulk and stretch the dish further, though it is not part of the recipe as written.",
+      "A practical way to use up potatoes, pepper and the last of a bag of spinach before it wilts past the point of being useful.",
+      "Poaching the eggs in the reserved potato water, once it is back to a gentle simmer, saves boiling a separate pan."
+    ],
+    source: { label: "Potato hash with greens, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/potato-hash-with-greens", details: "Serves 2 \xB7 Prep 10 mins \xB7 Cook 40 mins" }
+  },
+  {
+    title: "9. Beans-and-greens pasta with fried eggs",
+    paragraphs: [
+      "Chickpea spaghetti tossed with chickpeas, spinach and a lemony broth, topped with a fried egg and crisp Parmesan frico chips made by melting spoonfuls of grated Parmesan in the pan until browned. Ordinary spaghetti is a reasonable substitute for the chickpea spaghetti specified, at some cost to the extra protein and fibre it adds.",
+      "Chickpeas and spinach make up most of the dish, with pasta as the base, so the egg on top adds protein and richness without the dish needing meat or a large amount of cheese.",
+      "Chickpea spaghetti, olive oil, onion, garlic, chickpeas, vegetable broth, spinach, lemon, eggs and Parmesan for the frico. Ordinary spaghetti or another pasta shape can replace the chickpea spaghetti, any tinned bean can replace the chickpeas, and a vegetable stock cube dissolved in water is a reasonable stand-in for shop-bought broth.",
+      "A reliable way to use up the last of a bag of spinach and the heel of a lemon or a block of Parmesan too small to grate for anything else.",
+      "Frying the eggs separately keeps the yolk in control, so it can be broken over the pasta at the table rather than cooked through in the pan. The Parmesan frico is made by spooning small rounds of grated cheese into a dry pan and cooking until the edges brown and crisp."
+    ],
+    source: { label: "Beans-and-Greens Pasta with Fried Eggs, Food Network Kitchen", url: "https://www.foodnetwork.com/fnk/recipes/beans-and-greens-pasta-with-fried-eggs-9840292", details: "Serves 4 \xB7 Total 40 mins" }
+  },
+  {
+    title: "Variety, flexibility and reducing waste",
+    paragraphs: [
+      "These nine dinners share a single ingredient but do not share a single flavour, texture or cuisine, which is the point of building a week's cooking around eggs rather than around one recipe repeated with small changes. Between them, they use up leftover rice, cooked potato, softening tomatoes and peppers, the last of a bag of spinach, and whatever is left in the fridge after a roast dinner, so eggs end up doing double duty: they are the dinner in their own right, and they are also what makes it worth keeping other ingredients on hand rather than letting them go to waste.",
+      "None of this depends on unusual ingredients or a big weekly shop. A box of eggs, a few tins, some rice or pasta and whatever vegetables are already in the fridge cover most of what is here, which is really the argument for budget cooking with eggs in the first place: not a fallback when money is tight, but a genuinely useful starting point for a varied week of dinners."
+    ]
+  },
+  {
+    title: "A note on rice safety",
+    paragraphs: [
+      "The egg-fried rice and the koshari-inspired pasta and rice dish both rely on cooked rice, so the Food Standards Agency's rice-specific guidance matters here. Cool cooked rice quickly, refrigerate it and use it within 24 hours. Reheat it only once and make sure it is steaming hot throughout before serving."
+    ]
+  }
+];
+var NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD = {
+  id: "nine-budget-friendly-dinners-with-eggs",
+  slug: "nine-budget-friendly-dinners-with-eggs",
+  path: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE,
+  metaDescription: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS,
+  cta: {
+    title: "Find dinners for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
+    label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/nineBudgetDinnersWithTinnedVegetablesGuide.ts
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH = "/guides/nine-budget-dinners-with-tinned-vegetables";
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURES = [
+  { key: "storage_and_cooking", title: "Storage and cooking safety", body: "Follow the source recipe and current Food Standards Agency guidance when cooling, storing, freezing and reheating cooked dinners. Instructions and storage advice vary by recipe and product." },
+  { key: "allergen_and_product", title: "Ingredients and allergens", body: "Tinned vegetables, beans, fish, cheese, stock, tortillas and other packaged ingredients vary by product and may contain allergens. Check labels and choose ingredients suitable for everyone eating the dinner." },
+  { key: "source_timing", title: "Source review", body: "The recipe pages were checked on 7 August 2026. Recipe details, ingredients, instructions and timings can change, so follow the linked publisher page when cooking." }
+];
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide offers source-led dinner ideas rather than complete recipes. Ingredients, cooking instructions, storage advice and allergens vary between products and sources.",
+  links: [{ href: "/guides", label: "Browse all guides" }, { href: "/food-safety", label: "Food safety" }]
+};
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE = {
+  title: "Nine budget dinners with tinned vegetables",
+  seoTitle: "Nine budget dinners with tinned vegetables | DinnerByDesign",
+  description: "Nine varied dinners using tinned vegetables, beans and potatoes, with established recipe sources and practical ideas for using what is already in the cupboard.",
+  publishedAt: "2026-08-07",
+  reviewedAt: "2026-08-07",
+  nextReviewAt: "2026-09-07",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Practical cooking guide",
+  primarySearchIntent: "Find budget dinner ideas using tinned vegetables",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-07",
+  editorialNotes: "Nine source-led dinners showing how tinned vegetables, beans and potatoes can support varied cooking with a useful cupboard back-up.",
+  internalLinks: ["/guides", "/recipes", "/guides/nine-budget-friendly-dinners-with-eggs", "/guides/nine-budget-dinners-three-cuisines", "/guides/9-ways-with-sausages", "/food-safety", "/signin"],
+  disclosures: ["storage_and_cooking", "allergen_and_product", "source_timing"],
+  sources: [
+    { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka" },
+    { label: "Easy tuna pasta bake, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/easy-tuna-pasta-bake" },
+    { label: "Vegetable and bean chilli, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/vegetable-bean-chilli" },
+    { label: "Easy fish pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie" },
+    { label: "Tomato and chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry" },
+    { label: "Dum Aloo Potato Curry, Krumpli", url: "https://www.krumpli.co.uk/dum-aloo-curry/" },
+    { label: "Bean and sausage hotpot, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bean-and-sausage-hotpot" },
+    { label: "Refried bean quesadillas, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/refried-bean-quesadillas" },
+    { label: "Sweetcorn fritters with eggs and black bean salsa, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/sweetcorn-fritters-eggs-black-bean-salsa" }
+  ],
+  faqs: [
+    { question: "Which tinned vegetables are most useful for dinner?", answer: "Chopped tomatoes, sweetcorn, peas and potatoes are useful cupboard staples. Beans and chickpeas are pulses rather than vegetables, but they are equally useful in a cupboard and work alongside the tinned vegetables in several of these dinners." },
+    { question: "Can tinned potatoes be used in a dinner?", answer: "Yes. The dum aloo potato curry linked in this guide gives instructions for using tinned new potatoes as an alternative to boiling and peeling fresh ones." },
+    { question: "Are tinned vegetables better than fresh or frozen?", answer: "No. Fresh, frozen and tinned vegetables all have a place. Tins are useful because they keep for months and can provide a back-up when the fridge is running low." },
+    { question: "How can I avoid wasting tins?", answer: "Keep a small rotating stock, buy a couple of extras as part of an ordinary shop and use the oldest tins first. This makes it less likely that unopened tins disappear at the back of the cupboard." },
+    { question: "Are these complete recipes?", answer: "No. They are source-led dinner ideas with practical notes. Use the linked publisher recipe for its full ingredient list, method, timings and current instructions." }
+  ]
+};
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS = [
+  { paragraphs: [
+    "Grocery bills have made a lot of households more careful about what goes in the trolley, and tinned vegetables are one of the simplest ways to keep costs down without cooking the same three dinners on repeat. They are not a replacement for fresh or frozen vegetables, which still earn their place for texture, flavour and variety. What tins offer is a back-up: something in the cupboard that keeps for months, does not wilt or spoil if the week gets away from you, and turns pasta, rice, potatoes, eggs, pulses or a small amount of meat or fish into a proper dinner even when the fridge is running low.",
+    "This guide sets out nine dinners built around tinned vegetables, each taken from an established recipe publisher. Tinned tomatoes, sweetcorn, peas, beans and potatoes all turn up here, paired with everyday cupboard staples. None depends on a long fresh-ingredient list, and none is presented as the only or best way to cook the dish, just a workable one for a week when a full shop has not happened."
+  ] },
+  { title: "1. Shakshuka", source: { label: "Shakshuka, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/shakshuka", details: "Serves 2 \xB7 Prep 5 mins \xB7 Cook 20 mins" }, paragraphs: [
+    "Eggs baked in a spiced tomato sauce of onion, chilli, coriander and tomatoes, finished at the table straight from the pan.",
+    "Tomatoes form the base of the sauce, either from a tin or from cherry tomatoes as the source recipe specifies. A pepper and a pinch of paprika are reasonable substitutes if fresh chilli and coriander are not to hand.",
+    "It is a useful way to cook tomatoes that are starting to soften. The sauce can be prepared ahead, with eggs added fresh when it is time to cook."
+  ] },
+  { title: "2. Easy tuna pasta bake", source: { label: "Easy tuna pasta bake, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/easy-tuna-pasta-bake", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 20 mins" }, paragraphs: [
+    "Pasta stirred through a cheese sauce with tuna, peas and sweetcorn, topped with grated cheddar and finished under the grill until golden.",
+    "Sweetcorn, alongside peas, gives the bake colour and bite against the pasta and sauce. Any small pasta shape works in place of the one specified, and a tin of salmon is a straightforward swap for tuna.",
+    "The full quantity is useful for a smaller household too, as the source recipe gives clear instructions for serving a larger dish."
+  ] },
+  { title: "3. Vegetable and bean chilli", source: { label: "Vegetable and bean chilli, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/vegetable-bean-chilli", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 30 to 35 mins" }, paragraphs: [
+    "A chilli of courgette, peppers, red lentils and tomatoes, with sweetcorn and butter beans stirred through towards the end of cooking.",
+    "Tinned tomatoes form the sauce, with tinned sweetcorn and butter beans added later so they keep some texture. Any tinned bean works in place of butter beans, and courgette can be swapped for another vegetable that needs using up.",
+    "The recipe is a useful batch-cooking option, with the source providing the full method and storage advice."
+  ] },
+  { title: "4. Easy fish pie", source: { label: "Easy fish pie, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie", details: "Serves 6 to 8 \xB7 Prep 15 mins \xB7 Cook 45 mins" }, paragraphs: [
+    "A creamy fish pie mix bound in a cheese sauce with mustard and chives, finished with sweetcorn and peas, topped with mash and grated cheddar, and baked until golden.",
+    "Sweetcorn and peas add colour and a contrast in texture to the soft fish and sauce. Frozen versions of both work just as well as tinned, which gives the dish some flexibility.",
+    "A bag of frozen fish pie mix is handy for a night when fresh fish was not part of the shop. Follow the source recipe for its preparation and serving advice."
+  ] },
+  { title: "5. Tomato and chickpea curry", source: { label: "Tomato and chickpea curry, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/tomato-chickpea-curry", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 45 mins" }, paragraphs: [
+    "Chickpeas warmed through in a spiced tomato and coconut milk sauce, finished with coriander and served with rice.",
+    "Tinned tomatoes and chickpeas do most of the work, needing little beyond onion, garlic, coconut milk and spices to become a full sauce. Any tinned pulse can stand in for chickpeas.",
+    "It is a good one to cook ahead when the week is likely to be busy. Follow the source for its method and storage instructions."
+  ] },
+  { title: "6. Dum aloo potato curry", source: { label: "Dum Aloo Potato Curry, Krumpli", url: "https://www.krumpli.co.uk/dum-aloo-curry/", details: "Serves 2 \xB7 Prep 5 mins \xB7 Cook 1 hr 15 mins" }, paragraphs: [
+    "A North Indian and Bangladeshi potato curry, with new potatoes fried in ghee then simmered in a spiced tomato gravy thickened with cashew nuts and finished with cream.",
+    "The recipe explicitly builds in tinned new potatoes as an alternative to boiling and peeling fresh ones, with instructions given for both. Using tinned potatoes removes the boiling and peeling stage.",
+    "The sauce can be made ahead and the potatoes added when reheating. The publisher gives further make-ahead advice on the recipe page."
+  ] },
+  { title: "7. Bean and sausage hotpot", source: { label: "Bean and sausage hotpot, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/bean-and-sausage-hotpot", details: "Serves 4 \xB7 Prep 5 mins \xB7 Cook 40 mins" }, paragraphs: [
+    "Sausages browned and simmered in a tomato sauce with tinned butter beans, a little treacle or sugar and mustard, served with rice or crusty bread.",
+    "Tinned butter beans and a tomato-based sauce carry most of the dish, with the sausages providing flavour and substance. Any tinned bean can be used in place of butter beans.",
+    "Adding a second tin is one way to stretch the dish when there are more people to feed."
+  ] },
+  { title: "8. Refried bean quesadillas", source: { label: "Refried bean quesadillas, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/refried-bean-quesadillas", details: "Serves 4 \xB7 Prep 10 mins \xB7 Cook 20 mins" }, paragraphs: [
+    "Tortillas filled with refried beans, cheese and coriander, folded and fried until crisp and melted through, then served with salsa and sour cream.",
+    "Tinned beans are mashed with onion, garlic and spices to make the filling, needing little more than cheese and a tortilla to become a dinner. Sweetcorn or leftover cooked vegetables can be added to the filling to bulk it out.",
+    "Keep any unused filling according to the source guidance, ready for a second batch."
+  ] },
+  { title: "9. Sweetcorn fritters with eggs and black bean salsa", source: { label: "Sweetcorn fritters with eggs and black bean salsa, BBC Good Food", url: "https://www.bbcgoodfood.com/recipes/sweetcorn-fritters-eggs-black-bean-salsa", details: "Serves 4 \xB7 Makes 8 fritters \xB7 Prep 10 mins \xB7 Cook 20 mins" }, paragraphs: [
+    "Baked fritters of tinned sweetcorn, onion and pepper, topped with poached eggs and a salsa of tomato, black beans, lime and coriander.",
+    "Tinned sweetcorn is central to the fritters, with tinned black beans forming the base of the salsa. The source recipe makes eight fritters and gives a way to serve half on the day and the rest later.",
+    "That makes it a useful example of how one tin of sweetcorn can support more than one dinner without cooking the same thing twice."
+  ] },
+  { title: "A note on the cupboard", paragraphs: [
+    "A small, rotating stock of tins covers most of what these nine dinners need: chopped tomatoes, sweetcorn, peas, beans, chickpeas and potatoes are the ones that turn up most often, alongside tinned fish if it is eaten in the household. Buying a couple of extras on a normal shop, rather than a large stockpile all at once, makes it easier to use them before the ones at the back of the cupboard are forgotten.",
+    "Rotating stock and using the oldest tins first keeps things moving. Tinned vegetables in sauce or brine can carry more salt than fresh or frozen, so check the label where a dish is already well seasoned, and drain and rinse beans or pulses if that suits the product and recipe. Fresh and frozen vegetables still have their place in a weekly shop. The point of keeping a few tins in reserve is flexibility, not a rule about which is best."
+  ] }
+];
+var NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD = {
+  id: "nine-budget-dinners-with-tinned-vegetables",
+  slug: "nine-budget-dinners-with-tinned-vegetables",
+  path: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE,
+  metaDescription: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.description,
+  label: "Practical cooking guide",
+  disclosureItems: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS,
+  cta: {
+    title: "Find dinners for tonight",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.",
+    label: "Find dinners",
+    href: "/signin"
+  }
+};
+
+// src/content/wholeChickenValueGuide.ts
+var WHOLE_CHICKEN_VALUE_GUIDE_PATH = "/guides/is-a-whole-chicken-better-value-than-chicken-pieces";
+var WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURES = [
+  { key: "price_comparison", title: "A note on value", body: "This guide does not use live retailer prices or promise a fixed saving. Compare the current price per kilogram, what you will use and any storage you need before deciding." },
+  { key: "storage_and_cooking", title: "Raw chicken and storage", body: "Follow the product label, use-by date and current Food Standards Agency guidance when handling, freezing, defrosting and cooking chicken." },
+  { key: "source_timing", title: "Source review", body: "The jointing and food-safety sources were checked on 8 August 2026. Follow the linked publisher or Food Standards Agency page for later updates." }
+];
+var WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURE_FOOTER = {
+  body: "This guide explains a shopping and cooking choice. Chicken size, price, storage space and the parts your household will use all vary.",
+  links: [{ href: "/guides", label: "Browse all guides" }, { href: "/food-safety", label: "Food safety" }]
+};
+var WHOLE_CHICKEN_VALUE_GUIDE = {
+  title: "Is a whole chicken better value than chicken pieces?",
+  seoTitle: "Is a Whole Chicken Better Value Than Chicken Pieces? | DinnerByDesign",
+  description: "A practical guide to comparing a whole chicken with chicken pieces, including how to use the cuts, whether to joint it and when pre-cut chicken makes more sense.",
+  publishedAt: "2026-08-08",
+  reviewedAt: "2026-08-08",
+  nextReviewAt: "2027-08-08",
+  editorialOwner: "DinnerByDesign editorial team",
+  pageFamily: "Food cost guide",
+  primarySearchIntent: "Decide whether a whole chicken is better value than chicken pieces",
+  indexingStatus: "index",
+  contentReviewedAt: "2026-08-08",
+  editorialNotes: "A source-led buying guide that distinguishes whole-chicken planning from using leftover roast chicken.",
+  internalLinks: ["/guides", "/recipes", "/guides/9-budget-dinners-with-leftover-roast-chicken", "/food-safety", "/signin"],
+  disclosures: ["price_comparison", "storage_and_cooking", "source_timing"],
+  sources: [
+    { label: "How to joint a raw chicken, BBC Good Food", url: "https://www.bbcgoodfood.com/videos/techniques/how-joint-raw-chicken-video" },
+    { label: "JFC Jamie's fried chicken, Jamie Oliver", url: "https://www.jamieoliver.com/recipes/chicken/jfc-jamie-s-fried-chicken/" },
+    { label: "Cooking your food, Food Standards Agency", url: "https://www.food.gov.uk/safety-hygiene/cooking-your-food" }
+  ],
+  faqs: [
+    { question: "Is a whole chicken always cheaper than chicken pieces?", answer: "No. A whole chicken can offer good value when its cuts and carcass will be used, but current prices, freezer space and the parts your household prefers all matter." },
+    { question: "Do I need to joint a whole chicken?", answer: "No. Roasting it whole and dividing the cooked meat afterwards can work just as well. Jointing is useful when different cuts will be cooked in different dinners." },
+    { question: "What can I do with a chicken carcass?", answer: "Use it to make stock or soup if that fits your cooking. If it will not be used, include that honestly when deciding whether a whole chicken represents value." },
+    { question: "When are chicken pieces the better choice?", answer: "Pieces can make more sense for cooking for one, limited freezer space, a dinner needing one particular cut, or anyone who would rather not handle a whole raw bird." }
+  ]
+};
+var WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS = [
+  { paragraphs: [
+    "Stand at the chicken counter for long enough and the choice repeats itself every week: a whole bird sitting next to trays of breasts, thighs and drumsticks, sometimes at a lower price per kilogram but asking more of you in return. It's tempting to treat the whole chicken as the automatically cheaper option, but that only holds if the price per kilogram and the portions you'll actually use both stack up. A whole bird that ends up half-used in the freezer isn't better value than a tray of thighs bought for a specific dinner and eaten in full.",
+    "The short answer is that a whole chicken can offer good value, but only when it's used across more than one dinner. That depends less on the price tag and more on storage space, freezer habits and whether jointing or roasting a whole bird is something the household is willing to do."
+  ] },
+  { title: "What a whole chicken gives you", paragraphs: [
+    "A typical whole chicken breaks down into two breasts, two thighs, two drumsticks, two wings and a carcass useful for stock or soup. The exact size and number of portions varies by bird and by how it is divided.",
+    "Buying pieces means paying for exactly the cut wanted and nothing else. Buying whole means paying for all of it at once, including parts that take more planning to use well, such as the carcass and wings. Whether that is a good trade depends on what happens to those parts after the shop.",
+    "Bird sizes vary enough that it is worth checking the weight on the label rather than assuming. A smaller chicken suits a household eating lightly or wanting less to store; a larger one gives more scope for splitting across dinners, provided there is freezer space to match."
+  ] },
+  { title: "Three ways to use it", paragraphs: [
+    "There is no fixed plan, and a single chicken will not stretch to a guaranteed number of dinners in every household. These are examples of how the different parts tend to get used rather than a formula.",
+    "Roast the whole bird with vegetables for one dinner, then carve and store whatever is not eaten. Use cooked shredded meat from a roast, or raw breast and thigh meat cooked separately, in a dinner built around rice, pasta or a curry-style sauce later in the week. Simmer the carcass and any smaller scraps into stock, soup or a casserole.",
+    "Some households get three distinct dinners out of one chicken this way; others get two, or one dinner plus stock in the freezer for later. What matters more than the exact count is whether the parts get used within a sensible timeframe rather than sitting at the back of the freezer indefinitely."
+  ] },
+  { title: "Roast whole or joint it first?", paragraphs: [
+    "Roasting the bird whole is the simplest approach: cook it, carve it, and divide or freeze whatever is not eaten straight away. This suits anyone who wants one dinner now and does not mind sorting the rest afterwards.",
+    "Jointing before cooking gives more flexibility, as breasts, thighs, drumsticks and wings can be used in different dinners across the week. It does mean handling raw poultry directly, which some people would rather avoid.",
+    "Jointing is entirely optional. For anyone who does want to learn, BBC Good Food has a video guide and Jamie Oliver includes step-by-step jointing tips in the linked chicken recipe below."
+  ] },
+  { title: "Handling, freezing and cooking chicken", paragraphs: [
+    "Keep raw chicken and its utensils separate from food that will be eaten raw, wash hands after handling it, and cook poultry all the way through. The Food Standards Agency gives current cooking guidance.",
+    "Freezing is what makes splitting a chicken across several dinners realistic. Portions can be frozen raw after jointing, or cooked after a roast. Label them with the date and defrost in the fridge before cooking. Without a plan to freeze at least some of it, a whole chicken tends to get eaten in one or two sittings, narrowing the value gap with buying pieces."
+  ] },
+  { title: "When pre-cut chicken may make more sense", paragraphs: [
+    "A whole chicken is not automatically the better choice. Cooking for one makes a whole bird harder to use before it needs freezing or eating up, and limited freezer space makes it difficult to store parts that will not be cooked immediately.",
+    "Some people are simply less comfortable handling raw whole poultry than a packaged cut, and that is a reasonable preference. Sometimes a dinner calls for one particular cut, in which case buying it directly is more straightforward. Convenience has a value of its own, even when it is not the lowest option per kilogram."
+  ] },
+  { title: "How to compare fairly in the shop", paragraphs: [
+    "Compare the price per kilogram, not only the total on the label, since pack sizes differ and a whole bird can have a larger total price. Think honestly about how much of the bird will actually get used, not only the parts that sound appealing.",
+    "Check use-by dates and freezer space before committing to a bigger bird than the household can get through. Decide in advance whether the carcass and wings are likely to become stock, or whether they will sit in the freezer unused. There is no shame in choosing pieces if stock-making does not fit the week."
+  ] },
+  { title: "Verdict", paragraphs: [
+    "A whole chicken can make the weekly shop go further, but only when there is a reasonably realistic plan for the parts, not just the roast dinner. Bought with no particular plan, it can just as easily become another ingredient that goes unused.",
+    "For dinners built around meat that is already cooked, the leftover roast chicken guide picks up from there. This guide is about the buying decision itself; that one is about what to do with what is left over."
+  ], relatedLink: { label: "Nine budget dinners with leftover roast chicken", url: "/guides/9-budget-dinners-with-leftover-roast-chicken" } }
+];
+var WHOLE_CHICKEN_VALUE_GUIDE_RECORD = {
+  id: "is-a-whole-chicken-better-value-than-chicken-pieces",
+  slug: "is-a-whole-chicken-better-value-than-chicken-pieces",
+  path: WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  canonicalPath: WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  status: "published",
+  category: "guides",
+  reviewSensitivity: "standard",
+  ...WHOLE_CHICKEN_VALUE_GUIDE,
+  metaDescription: WHOLE_CHICKEN_VALUE_GUIDE.description,
+  label: "Food cost guide",
+  disclosureItems: WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURES,
+  disclosureFooter: WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURE_FOOTER,
+  sections: WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS,
+  cta: {
+    title: "Find chicken recipes for dinner",
+    copy: "Search DinnerByDesign by ingredient, time or dietary preference and find a recipe that suits your household.",
+    label: "Find chicken recipes",
     href: "/signin"
   }
 };
@@ -185683,6 +186000,9 @@ var NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD = {
 // src/content/publicGuideRegistry.ts
 var PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_RECORD,
+  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD,
+  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD,
+  WHOLE_CHICKEN_VALUE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD
 ];
@@ -185718,20 +186038,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.contentReviewedAt,
     internalLinks: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.internalLinks,
     disclosures: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: WHOLE_CHICKEN_VALUE_GUIDE.title,
-    path: WHOLE_CHICKEN_VALUE_GUIDE_PATH,
-    category: "Food cost guide",
-    pageFamily: WHOLE_CHICKEN_VALUE_GUIDE.pageFamily,
-    primarySearchIntent: WHOLE_CHICKEN_VALUE_GUIDE.primarySearchIntent,
-    indexingStatus: WHOLE_CHICKEN_VALUE_GUIDE.indexingStatus,
-    publishedAt: WHOLE_CHICKEN_VALUE_GUIDE.publishedAt,
-    reviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.reviewedAt,
-    contentReviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.contentReviewedAt,
-    internalLinks: WHOLE_CHICKEN_VALUE_GUIDE.internalLinks,
-    disclosures: WHOLE_CHICKEN_VALUE_GUIDE.disclosures,
     status: "published"
   },
   {
@@ -185858,34 +186164,6 @@ var PUBLIC_ARTICLES = [
     contentReviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.contentReviewedAt,
     internalLinks: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.internalLinks,
     disclosures: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.title,
-    path: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.pageFamily,
-    primarySearchIntent: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.primarySearchIntent,
-    indexingStatus: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.indexingStatus,
-    publishedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.publishedAt,
-    reviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.reviewedAt,
-    contentReviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.contentReviewedAt,
-    internalLinks: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.internalLinks,
-    disclosures: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.disclosures,
-    status: "published"
-  },
-  {
-    title: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.title,
-    path: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
-    category: "Practical cooking guide",
-    pageFamily: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.pageFamily,
-    primarySearchIntent: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.primarySearchIntent,
-    indexingStatus: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.indexingStatus,
-    publishedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.publishedAt,
-    reviewedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.reviewedAt,
-    contentReviewedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.contentReviewedAt,
-    internalLinks: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.internalLinks,
-    disclosures: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.disclosures,
     status: "published"
   },
   {

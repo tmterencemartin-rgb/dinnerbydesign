@@ -1,5 +1,10 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
-import { renderProgrammaticDisclosureFooterInitialHtml, renderProgrammaticDisclosuresInitialHtml } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const WHOLE_CHICKEN_VALUE_GUIDE_PATH = '/guides/is-a-whole-chicken-better-value-than-chicken-pieces';
 
@@ -38,13 +43,7 @@ export const WHOLE_CHICKEN_VALUE_GUIDE = {
   ],
 };
 
-interface GuideSection {
-  title?: string;
-  paragraphs: string[];
-  relatedLink?: { label: string; url: string };
-}
-
-export const WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS: GuideSection[] = [
+export const WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS: PublicGuideSection[] = [
   { paragraphs: [
     "Stand at the chicken counter for long enough and the choice repeats itself every week: a whole bird sitting next to trays of breasts, thighs and drumsticks, sometimes at a lower price per kilogram but asking more of you in return. It's tempting to treat the whole chicken as the automatically cheaper option, but that only holds if the price per kilogram and the portions you'll actually use both stack up. A whole bird that ends up half-used in the freezer isn't better value than a tray of thighs bought for a specific dinner and eaten in full.",
     "The short answer is that a whole chicken can offer good value, but only when it's used across more than one dinner. That depends less on the price tag and more on storage space, freezer habits and whether jointing or roasting a whole bird is something the household is willing to do.",
@@ -83,27 +82,31 @@ export const WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS: GuideSection[] = [
 ];
 
 export function getWholeChickenValueGuideJsonLd() {
-  const guide = WHOLE_CHICKEN_VALUE_GUIDE;
-  const url = `https://dinnerbydesign.app${WHOLE_CHICKEN_VALUE_GUIDE_PATH}`;
-  return { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': `${url}#article`, headline: guide.title, description: guide.description, datePublished: guide.publishedAt, dateModified: guide.reviewedAt, author: { '@type': 'Organization', name: guide.editorialOwner }, publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' }, mainEntityOfPage: url, citation: guide.sources.map(source => source.url) },
-    { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' }, { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dinnerbydesign.app/guides' }, { '@type': 'ListItem', position: 3, name: guide.title, item: url }] },
-  ] };
+  return getPublicGuideJsonLd(WHOLE_CHICKEN_VALUE_GUIDE_RECORD);
 }
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderWholeChickenValueGuideInitialHtml() {
-  const guide = WHOLE_CHICKEN_VALUE_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURE_FOOTER);
-  const sections = WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS.map(section => {
-    const heading = section.title ? `<h2>${escapeHtml(section.title)}</h2>` : '';
-    const relatedLink = section.relatedLink ? `<p>Related guide: <a href="${escapeHtml(section.relatedLink.url)}">${escapeHtml(section.relatedLink.label)}</a></p>` : '';
-    return `<section>${heading}${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}${relatedLink}</section>`;
-  }).join('');
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/guides">Guides</a> / Food cost guide</nav><p>Food cost guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 8 August 2026 · Last reviewed 8 August 2026</p><article>${sections}${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find chicken recipes for dinner</h2><p>Search DinnerByDesign by ingredient, time or dietary preference and find a recipe that suits your household.</p><p><a href="/signin">Find chicken recipes</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(WHOLE_CHICKEN_VALUE_GUIDE_RECORD);
 }
+
+export const WHOLE_CHICKEN_VALUE_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'is-a-whole-chicken-better-value-than-chicken-pieces',
+  slug: 'is-a-whole-chicken-better-value-than-chicken-pieces',
+  path: WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  canonicalPath: WHOLE_CHICKEN_VALUE_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'standard',
+  ...WHOLE_CHICKEN_VALUE_GUIDE,
+  metaDescription: WHOLE_CHICKEN_VALUE_GUIDE.description,
+  label: 'Food cost guide',
+  disclosureItems: WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURES,
+  disclosureFooter: WHOLE_CHICKEN_VALUE_GUIDE_DISCLOSURE_FOOTER,
+  sections: WHOLE_CHICKEN_VALUE_GUIDE_SECTIONS,
+  cta: {
+    title: 'Find chicken recipes for dinner',
+    copy: 'Search DinnerByDesign by ingredient, time or dietary preference and find a recipe that suits your household.',
+    label: 'Find chicken recipes',
+    href: '/signin',
+  },
+};

@@ -18,9 +18,6 @@ import { FIVE_STAPLES_GUIDE, FIVE_STAPLES_GUIDE_PATH } from './fiveStaplesGuide'
 import { CONVENIENCE_FISH_GUIDE, CONVENIENCE_FISH_GUIDE_PATH } from './convenienceFishGuide';
 import { TINNED_FISH_GUIDE, TINNED_FISH_GUIDE_PATH } from './tinnedFishGuide';
 import { NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE, NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH } from './nineBudgetDinnersThreeCuisinesGuide';
-import { NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE, NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH } from './nineBudgetFriendlyDinnersWithEggsGuide';
-import { NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE, NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH } from './nineBudgetDinnersWithTinnedVegetablesGuide';
-import { WHOLE_CHICKEN_VALUE_GUIDE, WHOLE_CHICKEN_VALUE_GUIDE_PATH } from './wholeChickenValueGuide';
 import { BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE, BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH } from './bubbleAndSqueakBudgetDinnersGuide';
 import { MEAT_STRETCHING_GUIDE, MEAT_STRETCHING_GUIDE_PATH } from './meatStretchingGuide';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './publicGuideRegistry';
@@ -66,13 +63,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.indexingStatus, publishedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.publishedAt,
     reviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.reviewedAt, contentReviewedAt: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.contentReviewedAt,
     internalLinks: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.internalLinks, disclosures: BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: WHOLE_CHICKEN_VALUE_GUIDE.title, path: WHOLE_CHICKEN_VALUE_GUIDE_PATH, category: 'Food cost guide',
-    pageFamily: WHOLE_CHICKEN_VALUE_GUIDE.pageFamily, primarySearchIntent: WHOLE_CHICKEN_VALUE_GUIDE.primarySearchIntent,
-    indexingStatus: WHOLE_CHICKEN_VALUE_GUIDE.indexingStatus, publishedAt: WHOLE_CHICKEN_VALUE_GUIDE.publishedAt,
-    reviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.reviewedAt, contentReviewedAt: WHOLE_CHICKEN_VALUE_GUIDE.contentReviewedAt,
-    internalLinks: WHOLE_CHICKEN_VALUE_GUIDE.internalLinks, disclosures: WHOLE_CHICKEN_VALUE_GUIDE.disclosures, status: 'published',
   },
   {
     title: TINNED_FISH_GUIDE.title,
@@ -171,20 +161,6 @@ export const PUBLIC_ARTICLES: PublicArticleLink[] = [
     indexingStatus: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.publishedAt,
     reviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.contentReviewedAt,
     internalLinks: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.title, path: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.primarySearchIntent,
-    indexingStatus: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.publishedAt,
-    reviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.contentReviewedAt,
-    internalLinks: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.internalLinks, disclosures: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.disclosures, status: 'published',
-  },
-  {
-    title: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.title, path: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH, category: 'Practical cooking guide',
-    pageFamily: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.pageFamily, primarySearchIntent: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.primarySearchIntent,
-    indexingStatus: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.indexingStatus, publishedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.publishedAt,
-    reviewedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.reviewedAt, contentReviewedAt: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.contentReviewedAt,
-    internalLinks: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.internalLinks, disclosures: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.disclosures, status: 'published',
   },
   {
     title: TRAYBAKE_GUIDE.title, path: TRAYBAKE_GUIDE_PATH, category: 'Practical cooking guide',

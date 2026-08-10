@@ -154,24 +154,6 @@ import {
   renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
 } from '../src/content/nineBudgetDinnersThreeCuisinesGuide';
 import {
-  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE,
-  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
-  getNineBudgetFriendlyDinnersWithEggsGuideJsonLd,
-  renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml,
-} from '../src/content/nineBudgetFriendlyDinnersWithEggsGuide';
-import {
-  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE,
-  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
-  getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
-  renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml,
-} from '../src/content/nineBudgetDinnersWithTinnedVegetablesGuide';
-import {
-  WHOLE_CHICKEN_VALUE_GUIDE,
-  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
-  getWholeChickenValueGuideJsonLd,
-  renderWholeChickenValueGuideInitialHtml,
-} from '../src/content/wholeChickenValueGuide';
-import {
   BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE,
   BUBBLE_AND_SQUEAK_BUDGET_DINNERS_GUIDE_PATH,
   getBubbleAndSqueakBudgetDinnersGuideJsonLd,
@@ -618,27 +600,6 @@ await generateEditorialGuide(
   NINE_BUDGET_DINNERS_THREE_CUISINES_GUIDE_PATH,
   renderNineBudgetDinnersThreeCuisinesGuideInitialHtml,
   getNineBudgetDinnersThreeCuisinesGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE,
-  NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
-  renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml,
-  getNineBudgetFriendlyDinnersWithEggsGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE,
-  NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
-  renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml,
-  getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd,
-);
-
-await generateEditorialGuide(
-  WHOLE_CHICKEN_VALUE_GUIDE,
-  WHOLE_CHICKEN_VALUE_GUIDE_PATH,
-  renderWholeChickenValueGuideInitialHtml,
-  getWholeChickenValueGuideJsonLd,
 );
 
 await generateEditorialGuide(

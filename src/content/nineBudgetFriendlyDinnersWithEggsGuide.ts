@@ -1,8 +1,10 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
 import {
-  renderProgrammaticDisclosureFooterInitialHtml,
-  renderProgrammaticDisclosuresInitialHtml,
-} from './programmaticDisclosures';
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH = '/guides/nine-budget-friendly-dinners-with-eggs';
 
@@ -83,13 +85,7 @@ export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE = {
   ],
 };
 
-interface EggDinnerSection {
-  title?: string;
-  paragraphs: string[];
-  source?: { label: string; url: string; details: string };
-}
-
-export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS: EggDinnerSection[] = [
+export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS: PublicGuideSection[] = [
   {
     paragraphs: [
       'Eggs are one of the few ingredients that make a genuine case for themselves on cost, versatility and speed all at once. A box of six is affordable for the protein it delivers, keeps for weeks in the fridge, and turns rice, potatoes, vegetables, beans and pasta into a finished dinner rather than a pile of leftovers. That makes eggs a useful starting point for anyone trying to keep grocery spending under control without falling back on the same two or three dishes on repeat.',
@@ -211,60 +207,31 @@ export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS: EggDinnerSec
 ];
 
 export function getNineBudgetFriendlyDinnersWithEggsGuideJsonLd() {
-  const guide = NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE;
-  const url = `https://dinnerbydesign.app${NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH}`;
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        headline: guide.title,
-        description: guide.description,
-        datePublished: guide.publishedAt,
-        dateModified: guide.reviewedAt,
-        author: { '@type': 'Organization', name: guide.editorialOwner },
-        publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' },
-        mainEntityOfPage: url,
-        citation: guide.sources.map(source => source.url),
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        mainEntity: guide.faqs.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' },
-          { '@type': 'ListItem', position: 2, name: 'Recipes and cooking ideas', item: 'https://dinnerbydesign.app/recipes' },
-          { '@type': 'ListItem', position: 3, name: guide.title, item: url },
-        ],
-      },
-    ],
-  };
+  return getPublicGuideJsonLd(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD);
 }
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderNineBudgetFriendlyDinnersWithEggsGuideInitialHtml() {
-  const guide = NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURE_FOOTER);
-  const sections = NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS.map(section => {
-    const heading = section.title ? `<h2>${escapeHtml(section.title)}</h2>` : '';
-    const paragraphs = section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br />')}</p>`).join('');
-    const source = section.source
-      ? `<p><strong>Source:</strong> <a href="${escapeHtml(section.source.url)}">${escapeHtml(section.source.label)}</a> · ${escapeHtml(section.source.details)}</p>`
-      : '';
-    return `<section>${heading}${paragraphs}${source}</section>`;
-  }).join('');
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/recipes">Recipes and cooking ideas</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 7 August 2026 · Last reviewed 7 August 2026</p><article>${sections}${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find dinners for tonight</h2><p>Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.</p><p><a href="/signin">Find dinners</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD);
 }
+
+export const NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'nine-budget-friendly-dinners-with-eggs',
+  slug: 'nine-budget-friendly-dinners-with-eggs',
+  path: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'standard',
+  ...NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE,
+  metaDescription: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE.description,
+  label: 'Practical cooking guide',
+  disclosureItems: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_FRIENDLY_DINNERS_WITH_EGGS_GUIDE_SECTIONS,
+  cta: {
+    title: 'Find dinners for tonight',
+    copy: 'Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.',
+    label: 'Find dinners',
+    href: '/signin',
+  },
+};

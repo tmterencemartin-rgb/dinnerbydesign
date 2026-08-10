@@ -1,5 +1,10 @@
 import type { ProgrammaticDisclosureFooterCopy, ProgrammaticDisclosureItem, ProgrammaticDisclosureKey } from './programmaticDisclosures';
-import { renderProgrammaticDisclosureFooterInitialHtml, renderProgrammaticDisclosuresInitialHtml } from './programmaticDisclosures';
+import {
+  getPublicGuideJsonLd,
+  renderPublicGuideInitialHtml,
+  type PublicGuideRecord,
+  type PublicGuideSection,
+} from './publicGuideModel';
 
 export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH = '/guides/nine-budget-dinners-with-tinned-vegetables';
 
@@ -45,9 +50,7 @@ export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE = {
   ],
 };
 
-interface GuideSection { title?: string; paragraphs: string[]; source?: { label: string; url: string; details: string }; }
-
-export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS: GuideSection[] = [
+export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS: PublicGuideSection[] = [
   { paragraphs: [
     'Grocery bills have made a lot of households more careful about what goes in the trolley, and tinned vegetables are one of the simplest ways to keep costs down without cooking the same three dinners on repeat. They are not a replacement for fresh or frozen vegetables, which still earn their place for texture, flavour and variety. What tins offer is a back-up: something in the cupboard that keeps for months, does not wilt or spoil if the week gets away from you, and turns pasta, rice, potatoes, eggs, pulses or a small amount of meat or fish into a proper dinner even when the fridge is running low.',
     'This guide sets out nine dinners built around tinned vegetables, each taken from an established recipe publisher. Tinned tomatoes, sweetcorn, peas, beans and potatoes all turn up here, paired with everyday cupboard staples. None depends on a long fresh-ingredient list, and none is presented as the only or best way to cook the dish, just a workable one for a week when a full shop has not happened.',
@@ -104,27 +107,31 @@ export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS: GuideSec
 ];
 
 export function getNineBudgetDinnersWithTinnedVegetablesGuideJsonLd() {
-  const guide = NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE;
-  const url = `https://dinnerbydesign.app${NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH}`;
-  return { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': `${url}#article`, headline: guide.title, description: guide.description, datePublished: guide.publishedAt, dateModified: guide.reviewedAt, author: { '@type': 'Organization', name: guide.editorialOwner }, publisher: { '@type': 'Organization', name: 'DinnerByDesign', url: 'https://dinnerbydesign.app/' }, mainEntityOfPage: url, citation: guide.sources.map(source => source.url) },
-    { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: guide.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DinnerByDesign', item: 'https://dinnerbydesign.app/' }, { '@type': 'ListItem', position: 2, name: 'Recipes and cooking ideas', item: 'https://dinnerbydesign.app/recipes' }, { '@type': 'ListItem', position: 3, name: guide.title, item: url }] },
-  ] };
+  return getPublicGuideJsonLd(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD);
 }
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
 
 export function renderNineBudgetDinnersWithTinnedVegetablesGuideInitialHtml() {
-  const guide = NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE;
-  const disclosures = renderProgrammaticDisclosuresInitialHtml(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURES);
-  const footer = renderProgrammaticDisclosureFooterInitialHtml(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURE_FOOTER);
-  const sections = NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS.map(section => {
-    const heading = section.title ? `<h2>${escapeHtml(section.title)}</h2>` : '';
-    const source = section.source ? `<p>Source: <a href="${escapeHtml(section.source.url)}">${escapeHtml(section.source.label)}</a> · ${escapeHtml(section.source.details)}</p>` : '';
-    return `<section>${heading}${source}${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</section>`;
-  }).join('');
-  const faqs = guide.faqs.map(faq => `<section><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></section>`).join('');
-  const sources = guide.sources.map(source => `<li><a href="${escapeHtml(source.url)}">${escapeHtml(source.label)}</a></li>`).join('');
-  return `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><nav aria-label="Breadcrumb"><a href="/">DinnerByDesign</a> / <a href="/recipes">Recipes and cooking ideas</a> / Practical cooking guide</nav><p>Practical cooking guide</p><h1>${escapeHtml(guide.title)}</h1><p>${escapeHtml(guide.description)}</p><p>By ${escapeHtml(guide.editorialOwner)} · Published 7 August 2026 · Last reviewed 7 August 2026</p><article>${sections}${disclosures}<section><h2>Frequently asked questions</h2>${faqs}</section><section><h2>Sources</h2><ul>${sources}</ul></section>${footer}</article><section><h2>Find dinners for tonight</h2><p>Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.</p><p><a href="/signin">Find dinners</a></p></section></main></div>`;
+  return renderPublicGuideInitialHtml(NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD);
 }
+
+export const NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_RECORD: PublicGuideRecord = {
+  id: 'nine-budget-dinners-with-tinned-vegetables',
+  slug: 'nine-budget-dinners-with-tinned-vegetables',
+  path: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+  canonicalPath: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_PATH,
+  status: 'published',
+  category: 'guides',
+  reviewSensitivity: 'standard',
+  ...NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE,
+  metaDescription: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE.description,
+  label: 'Practical cooking guide',
+  disclosureItems: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURES,
+  disclosureFooter: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_DISCLOSURE_FOOTER,
+  sections: NINE_BUDGET_DINNERS_WITH_TINNED_VEGETABLES_GUIDE_SECTIONS,
+  cta: {
+    title: 'Find dinners for tonight',
+    copy: 'Search DinnerByDesign by ingredient, time or dietary preference and turn these ideas into a plan for your household.',
+    label: 'Find dinners',
+    href: '/signin',
+  },
+};
