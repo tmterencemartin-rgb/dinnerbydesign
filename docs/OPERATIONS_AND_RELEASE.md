@@ -81,7 +81,8 @@ Then:
 3. Push to GitHub.
 4. Deploy the committed state to Vercel production.
 5. Confirm the production deployment reaches `READY`.
-6. Verify that the local commit, remote branch and deployed source are aligned.
+6. Run `npm run smoke:public` to verify the live public pages, sitemap, robots file and health endpoint.
+7. Verify that the local commit, remote branch and deployed source are aligned.
 
 ## Routine production acceptance checks
 
@@ -113,6 +114,7 @@ For a new or changed public guide:
 - Confirm the expected structured data is present.
 - Confirm the page appears in the live guide library and sitemap.
 - Check at least one relevant incoming internal link.
+- Run `npm run smoke:public` after the production deployment.
 - When the release adds a new public programmatic page, submit `https://dinnerbydesign.app/sitemap.xml` in Google Search Console after verifying its contents.
 - If an authenticated Search Console session is unavailable, record the submission as an outstanding release step.
 
