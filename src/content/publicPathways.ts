@@ -88,6 +88,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
       '/food-costs/summer-stews-seasonal-vegetables',
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/guides/do-vegetables-in-dishes-count-towards-5-a-day',
+      '/guides/fifteen-minute-dinners-everyday-supermarket-ingredients',
     ],
   },
   {

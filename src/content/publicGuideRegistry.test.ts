@@ -48,6 +48,9 @@ import {
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH,
 } from './nineBudgetDinnersWithPotatoesGuide';
 import {
+  FIFTEEN_MINUTE_DINNERS_GUIDE_PATH,
+} from './fifteenMinuteDinnersGuide';
+import {
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH,
 } from './nineBudgetDinnersWithRiceGuide';
 import {
@@ -102,6 +105,7 @@ describe('public guide registry', () => {
     expect(paths).toContain(FIVE_DINNERS_FOR_TWO_UNDER_40_PATH);
     expect(paths).toContain(FAMILY_DINNERS_FOR_FOUR_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH);
+    expect(paths).toContain(FIFTEEN_MINUTE_DINNERS_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
     expect(paths).toContain(MINCE_BUDGET_DINNERS_GUIDE_PATH);
@@ -177,6 +181,7 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(GROCERY_COST_PREDICTION_GUIDE_PATH)?.title).toBe('Why is it so difficult to budget accurately for food?');
     expect(getPublicGuideRecordByPath(CHEAPER_MEAT_CUTS_GUIDE_PATH)?.title).toBe('Cooking with cheaper cuts of meat: what to buy and how to use it');
     expect(getPublicGuideRecordByPath(SHARED_INGREDIENTS_GUIDE_PATH)?.title).toBe('How to plan five dinners around shared ingredients and complete packs');
+    expect(getPublicGuideRecordByPath(FIFTEEN_MINUTE_DINNERS_GUIDE_PATH)?.title).toBe('Fifteen-minute dinners from everyday supermarket ingredients');
     expect(getPublicGuideRecordByPath(OFFAL_BUDGET_GUIDE_PATH)?.title).toBe('Cooking with offal on a budget: what to buy and how to use it');
     expect(getPublicGuideRecordByPath(MEDITERRANEAN_AFFORDABLE_COOKING_PATH)?.title).toBe('Mediterranean-inspired ways to make everyday ingredients taste good');
     expect(getPublicGuideRecordByPath(SUMMER_STEWS_GUIDE_PATH)?.title).toBe('Summer stews: making vegetables go further');
