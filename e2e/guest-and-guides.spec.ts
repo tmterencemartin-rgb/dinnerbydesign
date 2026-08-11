@@ -43,21 +43,21 @@ test.describe('guest access', () => {
 });
 
 test.describe('public landing page', () => {
-  test('mobile demonstration shows one compact result preview', async ({ page }) => {
+  test('mobile demonstration shows the compact result preview', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 1440) >= 640, 'Mobile layout check');
 
     await page.goto('/?view=landing');
-    await expect(page.getByText('3 matches • one preview shown')).toBeVisible();
-    await expect(page.locator('#interactive-sandbox h4:visible')).toHaveCount(1);
+    await expect(page.getByText('3 matches')).toBeVisible();
+    await expect(page.locator('#interactive-sandbox h4:visible')).toHaveCount(3);
   });
 });
 
 test.describe('public guides', () => {
-  test('mobile pathways swipe horizontally and the footer is grouped', async ({ page }) => {
+  test('mobile pathways stack clearly and the footer is grouped', async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 1440) >= 640, 'Mobile layout check');
 
     await page.goto('/guides');
-    await expect(page.getByText('Swipe to explore all three pathways.')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Choose where to start' })).toBeVisible();
 
     const pathwayRow = page.getByTestId('public-pathways-row');
     const pathwayMetrics = await pathwayRow.evaluate(element => ({
@@ -67,7 +67,7 @@ test.describe('public guides', () => {
     }));
 
     expect(pathwayMetrics.cardCount).toBe(3);
-    expect(pathwayMetrics.scrollWidth).toBeGreaterThan(pathwayMetrics.clientWidth);
+    expect(pathwayMetrics.scrollWidth).toBeLessThanOrEqual(pathwayMetrics.clientWidth + 4);
 
     const footer = page.getByRole('navigation', { name: 'Footer' });
     await expect(footer.getByText('Guides', { exact: true })).toBeVisible();
@@ -77,24 +77,23 @@ test.describe('public guides', () => {
     await expect(footer.getByRole('link', { name: 'Privacy & cookies' })).toHaveAttribute('href', '/privacy');
   });
 
-  test('category links align the selected category with the viewport', async ({ page }) => {
+  test('pathway cards open their public collections', async ({ page }) => {
     await page.goto('/guides');
-    const categoryLink = page.getByRole('link', { name: 'Compare choices and nutrition' }).first();
-    await categoryLink.click();
+    const pathwayLink = page
+      .getByTestId('public-pathways-row')
+      .getByRole('link', { name: /Food-cost and waste guidance/ });
+    await pathwayLink.click();
 
-    const target = page.getByRole('heading', { name: 'Compare choices and nutrition' });
-    await expect(target).toBeVisible();
-    await expect.poll(async () => Math.round((await target.boundingBox())?.y ?? 9999)).toBeLessThanOrEqual(24);
-    await expect(page).toHaveURL(/#choices-and-nutrition$/);
+    await expect(page).toHaveURL(/\/food-costs$/);
+    await expect(page.getByRole('heading', { name: 'Food-cost and waste guidance' })).toBeVisible();
   });
 
   test('guide handoff reaches account creation and the footer uses real links', async ({ page }) => {
     await page.goto('/food-costs/fresh-or-frozen');
-    await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toContainText('Food cost guides');
+    await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toContainText('Food-cost and waste guidance');
 
-    const contact = page.getByRole('link', { name: 'terence@dinnerbydesign.app' });
-    await expect(contact).toHaveAttribute('href', 'mailto:terence@dinnerbydesign.app');
-    await expect(page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'Guides' })).toHaveAttribute('href', '/guides');
+    await expect(page.locator('a[href="mailto:terence@dinnerbydesign.app"]')).toHaveCount(1);
+    await expect(page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'Recipes and cooking ideas' })).toHaveAttribute('href', '/recipes');
 
     await page.getByRole('button', { name: /Plan my week/ }).click();
     await expect(page).toHaveURL(/\/signin$/);
