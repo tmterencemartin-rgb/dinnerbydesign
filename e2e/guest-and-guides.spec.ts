@@ -5,8 +5,8 @@ const hasAdminCredentials = Boolean(process.env.E2E_ADMIN_EMAIL && process.env.E
 
 const signInWithCredentials = async (page: Page, email: string, password: string) => {
   await page.goto('/signin?mode=signin');
-  await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Password').fill(password);
+  await page.getByRole('textbox', { name: 'Email address' }).fill(email);
+  await page.getByRole('textbox', { name: 'Password' }).fill(password);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
 };
@@ -134,7 +134,7 @@ test.describe('signed-in planning', () => {
     await expect(page).toHaveURL(/\/planner$/);
 
     await page.goto('/shopping');
-    await expect(page.getByRole('heading', { name: 'Shopping list' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Shopping list', exact: true })).toBeVisible();
     await expect(page).toHaveURL(/\/shopping$/);
   });
 

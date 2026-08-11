@@ -441,6 +441,7 @@ const AppContent = () => {
   }, [isAuthReady, isGuest]);
 
   React.useEffect(() => {
+    if (!isAuthReady) return;
     if (isGuest && !GUEST_VISIBLE_VIEWS.has(view)) {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const isFromEmail = params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';
@@ -454,7 +455,7 @@ const AppContent = () => {
     if (!isGuest && (view === 'signin' || view === 'landing')) {
       setView('home');
     }
-  }, [isGuest, view]);
+  }, [isAuthReady, isGuest, view]);
 
   React.useEffect(() => {
     if (!AFFORDABILITY_PLANNER_PILOT || isGuest) return;
