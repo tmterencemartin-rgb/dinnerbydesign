@@ -99,6 +99,25 @@ Use a fresh or private browser session where account state might hide a problem.
 - Send a test email.
 - Confirm the admin dashboard loads for an authorised administrator.
 
+### Signed-in browser checks
+
+The Playwright public and guest checks can run without credentials. Signed-in checks are skipped unless dedicated QA accounts are configured locally:
+
+```env
+E2E_USER_EMAIL=
+E2E_USER_PASSWORD=
+E2E_ADMIN_EMAIL=
+E2E_ADMIN_PASSWORD=
+```
+
+Use a standard QA user for Planner and Shopping checks. Use an authorised administrator QA account for the Admin direct-route check. Keep these values in `.env.local`; never commit them.
+
+The full save, schedule and shopping-list journey writes test data and should only run when deliberately enabled:
+
+```env
+E2E_RUN_LIVE_JOURNEY=true
+```
+
 For a release involving payments:
 
 - Start checkout.

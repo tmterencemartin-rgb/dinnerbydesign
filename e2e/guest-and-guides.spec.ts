@@ -1,4 +1,15 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+const hasUserCredentials = Boolean(process.env.E2E_USER_EMAIL && process.env.E2E_USER_PASSWORD);
+const hasAdminCredentials = Boolean(process.env.E2E_ADMIN_EMAIL && process.env.E2E_ADMIN_PASSWORD);
+
+const signInWithCredentials = async (page: Page, email: string, password: string) => {
+  await page.goto('/signin?mode=signin');
+  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
+};
 
 test.describe('guest access', () => {
   test.beforeEach(async ({ page }) => {
@@ -103,12 +114,9 @@ test.describe('public guides', () => {
 
 test.describe('signed-in planning', () => {
   test('planner opens the shopping view', async ({ page }) => {
-    test.skip(!process.env.E2E_USER_EMAIL || !process.env.E2E_USER_PASSWORD, 'Set E2E_USER_EMAIL and E2E_USER_PASSWORD to run the signed-in journey.');
+    test.skip(!hasUserCredentials, 'Set E2E_USER_EMAIL and E2E_USER_PASSWORD to run the signed-in journey.');
 
-    await page.goto('/signin?mode=signin');
-    await page.getByLabel('Email').fill(process.env.E2E_USER_EMAIL!);
-    await page.getByLabel('Password').fill(process.env.E2E_USER_PASSWORD!);
-    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+    await signInWithCredentials(page, process.env.E2E_USER_EMAIL!, process.env.E2E_USER_PASSWORD!);
 
     await page.getByRole('button', { name: 'Save & Schedule' }).click();
     await expect(page.getByRole('heading', { name: 'Save & Schedule' })).toBeVisible();
@@ -116,10 +124,33 @@ test.describe('signed-in planning', () => {
     await expect(page.getByRole('heading', { name: 'Shopping list' })).toBeVisible();
   });
 
+  test('signed-in direct routes open planner and shopping', async ({ page }) => {
+    test.skip(!hasUserCredentials, 'Set E2E_USER_EMAIL and E2E_USER_PASSWORD to run signed-in direct-route checks.');
+
+    await signInWithCredentials(page, process.env.E2E_USER_EMAIL!, process.env.E2E_USER_PASSWORD!);
+
+    await page.goto('/planner');
+    await expect(page.getByRole('heading', { name: 'Save & Schedule' })).toBeVisible();
+    await expect(page).toHaveURL(/\/planner$/);
+
+    await page.goto('/shopping');
+    await expect(page.getByRole('heading', { name: 'Shopping list' })).toBeVisible();
+    await expect(page).toHaveURL(/\/shopping$/);
+  });
+
+  test('admin direct route opens for an administrator', async ({ page }) => {
+    test.skip(!hasAdminCredentials, 'Set E2E_ADMIN_EMAIL and E2E_ADMIN_PASSWORD to run the admin direct-route check.');
+
+    await signInWithCredentials(page, process.env.E2E_ADMIN_EMAIL!, process.env.E2E_ADMIN_PASSWORD!);
+
+    await page.goto('/admin');
+    await expect(page.getByRole('heading', { name: 'Admin dashboard' })).toBeVisible();
+    await expect(page).toHaveURL(/\/admin$/);
+  });
+
   test('search, save, schedule and shopping list journey', async ({ page }) => {
     test.skip(
-      !process.env.E2E_USER_EMAIL ||
-      !process.env.E2E_USER_PASSWORD ||
+      !hasUserCredentials ||
       process.env.E2E_RUN_LIVE_JOURNEY !== 'true',
       'Set dedicated credentials and E2E_RUN_LIVE_JOURNEY=true to run the data-writing journey.'
     );
@@ -128,10 +159,7 @@ test.describe('signed-in planning', () => {
     let savedTitle = '';
 
     try {
-      await page.goto('/signin?mode=signin');
-      await page.getByLabel('Email').fill(process.env.E2E_USER_EMAIL!);
-      await page.getByLabel('Password').fill(process.env.E2E_USER_PASSWORD!);
-      await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+      await signInWithCredentials(page, process.env.E2E_USER_EMAIL!, process.env.E2E_USER_PASSWORD!);
 
       const searchInput = page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' });
       await expect(searchInput).toBeVisible();
