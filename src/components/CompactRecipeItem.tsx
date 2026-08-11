@@ -137,6 +137,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
           {onCompare && (
             <button
               type="button"
+              aria-label={`${isCompareSelected ? 'Remove from comparison' : 'Compare'} ${item.title}`}
               onClick={(e) => {
                 e.stopPropagation();
                 onCompare();

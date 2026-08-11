@@ -21,13 +21,16 @@ import { HOME_COOKED_READY_MADE_GUIDE_PATH } from '../content/homeCookedReadyMad
 import { LOW_COST_DINNERS_GUIDE_PATH } from '../content/lowCostDinnersGuide';
 import { PUBLIC_LIBRARY_PATH } from '../content/publicArticles';
 import { SHARED_INGREDIENTS_GUIDE_PATH } from '../content/sharedIngredientsGuide';
-import { getAppViewFromPublicPath, isQueryParamAppView } from './appViewRoutes';
+import { getAppViewFromLocation, getAppViewFromPublicPath, isQueryParamAppView } from './appViewRoutes';
 
 describe('app view routes', () => {
   it('maps public URLs to the app views that render them', () => {
     expect(getAppViewFromPublicPath('/privacy')).toBe('privacy');
     expect(getAppViewFromPublicPath('/terms')).toBe('terms');
     expect(getAppViewFromPublicPath('/signin?mode=signin')).toBe('signin');
+    expect(getAppViewFromPublicPath('/planner')).toBe('planner');
+    expect(getAppViewFromPublicPath('/shopping')).toBe('shopping');
+    expect(getAppViewFromPublicPath('/admin')).toBe('admin');
     expect(getAppViewFromPublicPath(`${PUBLIC_LIBRARY_PATH}/`)).toBe('guides');
     expect(getAppViewFromPublicPath(FIVE_DINNERS_FOR_TWO_UNDER_40_PATH)).toBe('meal-plan-five-for-two-under-40');
     expect(getAppViewFromPublicPath(UK_FOOD_COSTS_2026_PATH)).toBe('food-costs-uk-2026');
@@ -60,5 +63,11 @@ describe('app view routes', () => {
     expect(isQueryParamAppView('planner')).toBe(true);
     expect(isQueryParamAppView('food-costs-grocery-cost-options')).toBe(false);
     expect(isQueryParamAppView(null)).toBe(false);
+  });
+
+  it('uses explicit path routes ahead of stale view query params', () => {
+    expect(getAppViewFromLocation('/planner?view=home', 'home')).toBe('planner');
+    expect(getAppViewFromLocation('/shopping?view=home', 'home')).toBe('shopping');
+    expect(getAppViewFromLocation('/?view=planner', 'planner')).toBe('planner');
   });
 });

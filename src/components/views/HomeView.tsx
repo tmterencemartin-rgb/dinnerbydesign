@@ -1374,7 +1374,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     onClick={() => setShowCompareModal(true)}
                     className="h-8 px-3 rounded bg-gray-900 text-white disabled:bg-gray-200 disabled:text-gray-400 text-[10px] font-bold uppercase tracking-widest transition-colors"
                   >
-                    Compare
+                    Compare selected
                   </button>
                   <button
                     type="button"

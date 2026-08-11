@@ -19,7 +19,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
               Less searching. Precise matches. Dinner, decided.
             </span>
             <a 
-              href="/contact"
+              href={`mailto:${CONTACT_EMAIL}`}
               aria-label="Contact DinnerByDesign"
               className="relative z-50 block py-0.5 text-[11px] font-semibold text-accent transition-colors hover:text-accent/80 hover:underline sm:text-xs"
             >

@@ -38,7 +38,7 @@ import { db, auth, handleFirestoreError } from '../firebase';
 import { getApiUrl } from '../lib/api';
 import { isConfirmedEmailDelivery } from '../lib/emailDelivery';
 import { isNativeApp, isNativeTestBuild } from '../lib/platform';
-import { getAppViewFromPublicPath, isQueryParamAppView } from '../lib/appViewRoutes';
+import { getAppViewFromLocation } from '../lib/appViewRoutes';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { 
   UserProfile, 
@@ -355,19 +355,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const view = React.useMemo<AppView>(() => {
+    const currentPath = typeof window !== 'undefined'
+      ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+      : location;
     const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-    const viewParam = params?.get('view') as AppView | null;
-
-    if (isQueryParamAppView(viewParam)) {
-      return viewParam;
-    }
-
-    const publicPathView = getAppViewFromPublicPath(location);
-    if (publicPathView) return publicPathView;
+    const routedView = getAppViewFromLocation(currentPath || location, params?.get('view') ?? null);
+    if (routedView) return routedView;
 
     const hasStarted = safeStorage.getItem('dbd_has_started') === 'true';
     return hasStarted ? 'home' : 'landing';
   }, [location, viewNavigationTick]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const refreshViewFromBrowserLocation = () => {
+      setViewNavigationTick(tick => tick + 1);
+    };
+    window.addEventListener('popstate', refreshViewFromBrowserLocation);
+    return () => window.removeEventListener('popstate', refreshViewFromBrowserLocation);
+  }, []);
 
   const setView = (newView: AppView, newHighlight: string | null = null) => {
     if (newHighlight) setHighlightInternal(newHighlight);

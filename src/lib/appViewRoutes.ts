@@ -65,3 +65,9 @@ export const getAppViewFromPublicPath = (path: string): AppView | null =>
 
 export const isQueryParamAppView = (view: string | null): view is AppView =>
   Boolean(view && QUERY_PARAM_APP_VIEWS.has(view as AppView));
+
+export const getAppViewFromLocation = (location: string, viewParam: string | null): AppView | null => {
+  const publicPathView = getAppViewFromPublicPath(location);
+  if (publicPathView) return publicPathView;
+  return isQueryParamAppView(viewParam) ? viewParam : null;
+};

@@ -1670,20 +1670,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   )}
 
                   {archivedSavedRecipes.length > 0 && (
-                    <div className="border-t border-gray-100 pt-4">
+                    <div className="border-t border-gray-100 pt-3">
                       <button
                         type="button"
                         onClick={() => setIsRecentlyRemovedOpen(prev => !prev)}
                         aria-expanded={isRecentlyRemovedOpen}
-                        className="flex w-full items-center justify-between gap-3 px-1 text-left"
+                        className="inline-flex items-center gap-2 rounded px-1 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 transition-colors hover:text-accent"
                       >
-                        <span className="flex items-baseline gap-2">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Removed from collection</span>
-                          <span className="text-[11px] text-gray-400 font-medium">{archivedSavedRecipes.length} removed</span>
-                        </span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-accent">
-                          {isRecentlyRemovedOpen ? 'Hide' : 'Show'}
-                        </span>
+                        {isRecentlyRemovedOpen ? 'Hide removed recipes' : `Show removed recipes (${archivedSavedRecipes.length})`}
                       </button>
                       {isRecentlyRemovedOpen && (
                         <>
