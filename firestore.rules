@@ -193,8 +193,14 @@ service cloud.firestore {
              isValidEmail(data.email) &&
              data.displayName is string &&
              data.displayName.size() <= 256 &&
-             data.get('isPremium', false) == false &&
-             data.get('accessStatus', 'trial') == 'trial';
+             (
+               (isAdmin() &&
+                data.get('isPremium', false) == true &&
+                data.get('accessStatus', '') == 'paid') ||
+               (!isAdmin() &&
+                data.get('isPremium', false) == false &&
+                data.get('accessStatus', 'trial') == 'trial')
+             );
     }
 
     function isValidPreferences(d) {
