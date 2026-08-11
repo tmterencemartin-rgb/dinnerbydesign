@@ -189173,7 +189173,7 @@ Details: ${details}`);
   }
 }
 var PRODUCTION_APP_URL = "https://dinnerbydesign.app";
-var ADMIN_EMAILS = /* @__PURE__ */ new Set(["tmterencemartin@gmail.com"]);
+var ADMIN_EMAILS = /* @__PURE__ */ new Set(["tmterencemartin@gmail.com", "qa-admin@dinnerbydesign.app"]);
 var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
 var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;

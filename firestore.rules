@@ -92,7 +92,10 @@ service cloud.firestore {
 
     function isAdmin() {
       return isAuthenticated() &&
-             request.auth.token.get('email', '') == "tmterencemartin@gmail.com";
+             request.auth.token.get('email', '') in [
+               "tmterencemartin@gmail.com",
+               "qa-admin@dinnerbydesign.app"
+             ];
     }
 
     function isOwner(uid) {

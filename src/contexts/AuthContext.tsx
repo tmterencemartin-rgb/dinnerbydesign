@@ -151,7 +151,7 @@ interface AuthContextType {
   setUnitSystem: (system: 'metric' | 'imperial') => void;
 }
 
-const OWNER_EMAILS = ["tmterencemartin@gmail.com"];
+const OWNER_EMAILS = ["tmterencemartin@gmail.com", "qa-admin@dinnerbydesign.app"];
 
 const isOwnerEmail = (email?: string | null) => (
   !!email && OWNER_EMAILS.includes(email.toLowerCase())
