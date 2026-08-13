@@ -53,6 +53,9 @@ import {
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
 } from './nineBudgetDinnersWithRiceGuide';
 import {
+  FAMILY_FUSSY_EATERS_GUIDE_RECORD,
+} from './familyDinnersForFussyEatersGuide';
+import {
   TINNED_FISH_GUIDE_RECORD,
 } from './tinnedFishGuide';
 import {
@@ -131,6 +134,7 @@ export const PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_RECORD,
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
   FIFTEEN_MINUTE_DINNERS_GUIDE_RECORD,
+  FAMILY_FUSSY_EATERS_GUIDE_RECORD,
 ] satisfies PublicGuideRecord[];
 
 export const PUBLISHED_PUBLIC_GUIDE_RECORDS = PUBLIC_GUIDE_RECORDS.filter(guide => guide.status === 'published');

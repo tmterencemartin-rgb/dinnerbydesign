@@ -51,6 +51,9 @@ import {
   FIFTEEN_MINUTE_DINNERS_GUIDE_PATH,
 } from './fifteenMinuteDinnersGuide';
 import {
+  FAMILY_FUSSY_EATERS_GUIDE_PATH,
+} from './familyDinnersForFussyEatersGuide';
+import {
   NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH,
 } from './nineBudgetDinnersWithRiceGuide';
 import {
@@ -106,6 +109,7 @@ describe('public guide registry', () => {
     expect(paths).toContain(FAMILY_DINNERS_FOR_FOUR_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH);
     expect(paths).toContain(FIFTEEN_MINUTE_DINNERS_GUIDE_PATH);
+    expect(paths).toContain(FAMILY_FUSSY_EATERS_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH);
     expect(paths).toContain(NINE_BUDGET_DINNERS_WITH_SAVOURY_PIES_GUIDE_PATH);
     expect(paths).toContain(MINCE_BUDGET_DINNERS_GUIDE_PATH);
@@ -191,5 +195,6 @@ describe('public guide registry', () => {
     expect(getPublicGuideRecordByPath(COOKING_FOR_ONE_PATH)?.title).toBe('Five dinners for one from one Aldi basket');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_PATH)?.title).toBe('Nine budget dinners with potatoes');
     expect(getPublicGuideRecordByPath(NINE_BUDGET_DINNERS_WITH_RICE_GUIDE_PATH)?.title).toBe('Nine budget dinners with rice');
+    expect(getPublicGuideRecordByPath(FAMILY_FUSSY_EATERS_GUIDE_PATH)?.title).toBe('Family dinners for fussy eaters: one base, flexible finishes');
   });
 });

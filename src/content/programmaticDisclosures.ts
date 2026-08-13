@@ -249,6 +249,29 @@ export const BATCH_COOKING_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   },
 ];
 
+export const FAMILY_FUSSY_EATERS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
+  {
+    key: 'serving_assumption',
+    title: 'Serving assumption',
+    body: 'The five-use example is a planning estimate, not a tested recipe yield. Adjust the quantity and portion size for your household, appetite and the amount of base used in each dinner.',
+  },
+  {
+    key: 'storage_and_cooking',
+    title: 'Storage and safety',
+    body: 'Cool cooked food promptly, refrigerate or freeze it within two hours, eat refrigerated leftovers within 48 hours, thaw frozen portions in the fridge and reheat only once until steaming hot throughout. Follow product labels and current Food Standards Agency guidance.',
+  },
+  {
+    key: 'allergen_and_product',
+    title: 'Ingredients and allergens',
+    body: 'Stock cubes, sauces, pasta, wraps, bread, cheese and other packaged ingredients vary by product. Check every label, including when choosing a vegetarian substitute or a different brand.',
+  },
+  {
+    key: 'source_timing',
+    title: 'Guidance review',
+    body: 'Food-safety and child-feeding guidance was checked on 13 August 2026. Follow the cited sources for later updates and seek professional advice for a significant feeding, swallowing or allergy concern.',
+  },
+];
+
 export const GROCERY_COST_OPTIONS_DISCLOSURES: ProgrammaticDisclosureItem[] = [
   {
     key: 'price_comparison',
@@ -637,6 +660,14 @@ export const FRESH_OR_FROZEN_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy
 
 export const BATCH_COOKING_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
   body: 'Batch-cooking results vary with ingredients, portion sizes, available storage and how every portion is used. Check product labels and follow current food-safety guidance.',
+  links: [
+    { href: '/food-safety', label: 'Storage and cooking safety' },
+    { href: '/recipe-methodology', label: 'How dinners are selected' },
+  ],
+};
+
+export const FAMILY_FUSSY_EATERS_DISCLOSURE_FOOTER: ProgrammaticDisclosureFooterCopy = {
+  body: 'This guide is a flexible planning method, not a tested recipe or clinical feeding advice. Household needs, appetites, products and storage options vary, so adjust the example and follow current labels and guidance.',
   links: [
     { href: '/food-safety', label: 'Storage and cooking safety' },
     { href: '/recipe-methodology', label: 'How dinners are selected' },

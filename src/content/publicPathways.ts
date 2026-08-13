@@ -89,6 +89,7 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
       '/food-costs/mediterranean-inspired-affordable-cooking',
       '/guides/do-vegetables-in-dishes-count-towards-5-a-day',
       '/guides/fifteen-minute-dinners-everyday-supermarket-ingredients',
+      '/guides/family-dinners-for-fussy-eaters-one-base-flexible-finishes',
     ],
   },
   {
