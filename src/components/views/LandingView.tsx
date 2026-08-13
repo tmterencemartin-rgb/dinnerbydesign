@@ -718,7 +718,7 @@ export const LandingView: React.FC = () => {
 
               <div className="mb-3 min-h-[42px] flex flex-col justify-start">
                 <p className="text-[11.5px] font-semibold text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
-                  {billingPeriod === 'monthly' ? 'Billed monthly. Cancel anytime.' : 'Billed annually in advance (£30.00). Cancel anytime.'}
+                  Billed monthly. Cancel anytime. Pay annually to save 16%.
                 </p>
                 <p className="text-[11.5px] font-semibold text-dbd-ink-3 font-ibm-plex-mono select-none leading-relaxed">
                   No credit card required for the free trial.
