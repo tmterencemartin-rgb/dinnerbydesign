@@ -247,12 +247,12 @@ export const LandingView: React.FC = () => {
             >
               Why it's different
             </button>
-            <button 
-              onClick={() => scrollToSection('how-it-works')} 
+            <a
+              href="#how-it-works"
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
             >
               How it works
-            </button>
+            </a>
             <button 
               onClick={() => scrollToSection('pricing')} 
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
@@ -294,12 +294,13 @@ export const LandingView: React.FC = () => {
               >
                 Why it's different
               </button>
-              <button 
-                onClick={() => scrollToSection('how-it-works')} 
+              <a
+                href="#how-it-works"
+                onClick={() => setMobileMenuOpen(false)}
                 className="hover:text-dbd-accent py-2 transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
               >
                 How it works
-              </button>
+              </a>
               <button 
                 onClick={() => scrollToSection('pricing')} 
                 className="hover:text-dbd-accent py-2 transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
