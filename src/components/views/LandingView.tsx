@@ -241,12 +241,12 @@ export const LandingView: React.FC = () => {
 
           {/* Desktop Direct Links */}
           <div className="hidden md:flex items-center gap-8 font-ibm-plex-mono text-[12px] font-semibold text-dbd-ink-2">
-            <button 
-              onClick={() => scrollToSection('why-different')} 
+            <a
+              href="#why-different"
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
             >
               Why it's different
-            </button>
+            </a>
             <a
               href="#how-it-works"
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
@@ -288,12 +288,13 @@ export const LandingView: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               className="absolute top-full left-0 w-full bg-dbd-surface border-b border-dbd-rule shadow-xl py-6 px-6 flex flex-col gap-4 font-ibm-plex-mono font-semibold text-[13px] md:hidden"
             >
-              <button 
-                onClick={() => scrollToSection('why-different')} 
+              <a
+                href="#why-different"
+                onClick={() => setMobileMenuOpen(false)}
                 className="hover:text-dbd-accent py-2 transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
               >
                 Why it's different
-              </button>
+              </a>
               <a
                 href="#how-it-works"
                 onClick={() => setMobileMenuOpen(false)}
@@ -489,7 +490,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 5. WHY I BUILT DINNERBYDESIGN */}
-      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
+      <section id="why-different" className="py-16 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40 scroll-mt-nav">
         <div className="max-w-prose text-left select-none">
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-6">
             Why I built DinnerByDesign
