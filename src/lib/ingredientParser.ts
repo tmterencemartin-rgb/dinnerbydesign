@@ -37,8 +37,8 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'baby marrow': 'courgette',
       'baby marrows': 'courgette',
       
-      'bell pepper': 'pepper',
-      'bell peppers': 'pepper',
+      'bell pepper': 'bell pepper',
+      'bell peppers': 'bell pepper',
       'red peppers': 'red pepper',
       'green peppers': 'green pepper',
       'yellow peppers': 'yellow pepper',
@@ -63,11 +63,13 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'beets': 'beetroot',
       
       'chickpeas': 'chickpea',
+      'chick peas': 'chickpea',
       
       'snow pea': 'mange tout',
       'snow peas': 'mange tout',
       'sugar snap pea': 'mange tout',
       'sugar snap peas': 'mange tout',
+      'sugar snaps': 'sugar snap',
       'mange touts': 'mange tout',
       
       'shrimp': 'prawn',
@@ -92,6 +94,14 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'ground turkey': 'turkey mince',
       'turkey minced': 'turkey mince',
       'minced turkey': 'turkey mince',
+
+      'beef fillets': 'beef fillet',
+      'pork bellies': 'pork belly',
+      'lamb shanks': 'lamb shank',
+      'duck breasts': 'duck breast',
+      'tiger prawns': 'tiger prawn',
+      'king crabs': 'king crab',
+      'sea bass': 'sea bass',
       
       'tinned tomatoes': 'tinned tomato',
       'chopped tomatoes': 'chopped tomato',
@@ -134,14 +144,31 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'green lentils': 'green lentil',
       
       'beans': 'bean',
+      'butter beans': 'butter bean',
       'kidney beans': 'kidney bean',
       'black beans': 'black bean',
       'cannellini beans': 'cannellini bean',
       'haricot beans': 'haricot bean',
       'baked beans': 'baked bean',
       'green beans': 'green bean',
+      'sweet corn': 'sweetcorn',
+      'wild rice': 'wild rice',
+      'brussels sprouts': 'brussels sprout',
+      'baby corn': 'baby corn',
+      'lemon grass': 'lemongrass',
       
       'eggs': 'egg',
+      'cream cheese': 'cream cheese',
+      'sour cream': 'sour cream',
+      'goat cheese': 'goat cheese',
+      'cottage cheese': 'cottage cheese',
+      'buttermilk': 'buttermilk',
+      'passion fruit': 'passion fruit',
+      'dragon fruit': 'dragon fruit',
+      'star fruit': 'star fruit',
+      'pine nuts': 'pine nut',
+      'chest nuts': 'chestnut',
+      'macadamia nuts': 'macadamia nut',
       'lime juice': 'lime',
       'lemon juice': 'lemon',
     };
@@ -184,28 +211,62 @@ export function parseAndNormaliseIngredients(query: string): string[] {
   return results;
 }
 
-// A cautious vocabulary for short ingredient searches without commas or
-// joining words. This lets searches such as "cod potatoes" behave like
-// ingredient lists without treating ordinary dish names such as "chicken
-// curry" as strict ingredient searches.
+// Single-word ingredients used by short searches without commas or joining
+// words. Compound ingredients are kept separately below so a phrase such as
+// "butter beans" is consumed as one ingredient rather than two words.
 const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'anchovy', 'apple', 'aubergine', 'avocado', 'bacon', 'banana', 'bean',
   'beef', 'broccoli', 'cabbage', 'carrot', 'cauliflower', 'celery', 'cheese',
-  'chickpea', 'chicken', 'chilli', 'chorizo', 'cod', 'courgette', 'cucumber',
+  'chickpea', 'chicken', 'chilli', 'chorizo', 'cod', 'courgette', 'cucumber', 'duck',
   'egg', 'fish', 'flour', 'garlic', 'ginger', 'ham', 'haddock', 'kale', 'leek',
   'lentil', 'lemon', 'lime', 'mackerel', 'mushroom', 'noodle', 'oat', 'onion',
-  'pasta', 'pea', 'pepper', 'prawn', 'potato', 'pork', 'rice', 'salmon',
+  'pasta', 'pea', 'pepper', 'prawn', 'potato', 'pork', 'rice', 'salmon', 'crab', 'bass',
   'sausage', 'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato',
-  'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt'
+  'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt', 'lemongrass', 'buttermilk', 'chestnut'
 ]);
 
 const UNSEPARATED_INGREDIENT_PHRASES = new Set([
-  'green bean', 'red bean', 'kidney bean', 'black bean', 'baked bean',
-  'red pepper', 'green pepper', 'yellow pepper', 'sweet pepper',
+  // Vegetables, pulses and fruit
+  'green bean', 'red bean', 'butter bean', 'kidney bean', 'black bean', 'baked bean',
+  'cannellini bean', 'haricot bean', 'broad bean', 'fava bean', 'mixed bean',
+  'chickpea', 'sweetcorn', 'red pepper', 'green pepper', 'yellow pepper', 'bell pepper', 'sweet pepper', 'sugar snap', 'mange tout',
   'red onion', 'white onion', 'spring onion',
-  'sweet potato', 'new potato', 'roast potato',
-  'chicken breast', 'chicken thigh', 'pork mince', 'beef mince',
-  'coconut milk', 'curry paste'
+  'sweet potato', 'new potato', 'roast potato', 'garlic clove',
+  'chestnut mushroom', 'button mushroom', 'wild mushroom',
+  'chopped tomato', 'tinned tomato', 'plum tomato', 'cherry tomato', 'beef tomato', 'roma tomato',
+  // Meat, fish and seafood forms
+  'beef fillet', 'pork belly', 'chicken breast', 'lamb shank', 'duck breast',
+  'tiger prawn', 'king crab', 'sea bass',
+  'chicken thigh', 'chicken wing', 'chicken leg',
+  'pork mince', 'beef mince', 'lamb mince', 'turkey mince',
+  'pork chop', 'lamb chop', 'pork sausage',
+  'salmon fillet', 'salmon steak', 'cod fillet', 'haddock fillet', 'white fish',
+  // Pulses, grains and noodles
+  'red lentil', 'green lentil', 'wild rice', 'pearl barley', 'basmati rice', 'brown rice',
+  'long grain rice', 'egg noodle', 'rice noodle',
+  'brussels sprout', 'baby corn', 'lemongrass',
+  // Sauces, stocks, fats and other compound cupboard ingredients
+  'coconut milk', 'coconut cream', 'curry paste', 'tomato puree', 'tomato paste',
+  'fish sauce', 'soy sauce', 'oyster sauce', 'hot sauce',
+  'vegetable stock', 'chicken stock', 'beef stock', 'vegetable stock cube', 'chicken stock cube',
+  'olive oil', 'rapeseed oil', 'sesame oil', 'balsamic vinegar', 'red wine vinegar', 'white wine vinegar',
+  'double cream', 'cream cheese', 'sour cream', 'goat cheese', 'cottage cheese', 'buttermilk',
+  'passion fruit', 'dragon fruit', 'star fruit', 'pine nut', 'chestnut', 'macadamia nut'
+]);
+
+const COMPOUND_INGREDIENT_MODIFIERS = new Set([
+  'juice', 'fillet', 'fillets', 'steak', 'steaks', 'breast', 'thigh', 'wing', 'leg',
+  'chop', 'chops', 'mince', 'minced', 'sausage', 'sausages', 'paste', 'puree',
+  'sauce', 'stock', 'cube', 'oil', 'vinegar', 'cream', 'milk', 'powder',
+  'fresh', 'frozen', 'tinned', 'canned', 'cooked', 'raw', 'large', 'medium', 'small',
+  'new', 'baby', 'mashed', 'boiled', 'baked', 'roasted', 'diced', 'chopped',
+  'sliced', 'quartered', 'halved'
+]);
+
+const PREFIX_INGREDIENT_MODIFIERS = new Set([
+  'fresh', 'frozen', 'tinned', 'canned', 'cooked', 'raw', 'large', 'medium', 'small',
+  'new', 'baby', 'mashed', 'boiled', 'baked', 'roasted', 'diced', 'chopped',
+  'sliced', 'quartered', 'halved'
 ]);
 
 const parseUnseparatedIngredientList = (query: string): string[] => {
@@ -213,13 +274,27 @@ const parseUnseparatedIngredientList = (query: string): string[] => {
   const parsed: string[] = [];
 
   for (let index = 0; index < words.length;) {
-    const pair = words.slice(index, index + 2).join(' ');
-    const normalisedPair = parseAndNormaliseIngredients(pair)[0];
-    if (words.length > 2 && UNSEPARATED_INGREDIENT_PHRASES.has(normalisedPair)) {
-      parsed.push(normalisedPair);
-      index += 2;
-      continue;
+    let matchedPhrase = false;
+    const maxPhraseLength = Math.min(3, words.length - index);
+    for (let phraseLength = maxPhraseLength; phraseLength >= 2; phraseLength -= 1) {
+      const phrase = words.slice(index, index + phraseLength).join(' ');
+      const normalisedPhrase = parseAndNormaliseIngredients(phrase)[0];
+      const firstWord = words[index].toLowerCase();
+      const lastWord = words[index + phraseLength - 1].toLowerCase();
+      const modifierBody = firstWord !== lastWord && PREFIX_INGREDIENT_MODIFIERS.has(firstWord)
+        ? parseAndNormaliseIngredients(words.slice(index + 1, index + phraseLength).join(' '))[0]
+        : normalisedPhrase;
+      const isKnownCompound = UNSEPARATED_INGREDIENT_PHRASES.has(normalisedPhrase)
+        || (UNSEPARATED_INGREDIENT_TERMS.has(normalisedPhrase) && COMPOUND_INGREDIENT_MODIFIERS.has(lastWord))
+        || (firstWord !== lastWord && PREFIX_INGREDIENT_MODIFIERS.has(firstWord) && UNSEPARATED_INGREDIENT_TERMS.has(modifierBody));
+      if (isKnownCompound) {
+        parsed.push(normalisedPhrase);
+        index += phraseLength;
+        matchedPhrase = true;
+        break;
+      }
     }
+    if (matchedPhrase) continue;
 
     const normalisedWord = parseAndNormaliseIngredients(words[index])[0];
     if (!normalisedWord || !UNSEPARATED_INGREDIENT_TERMS.has(normalisedWord)) return [];
@@ -245,6 +320,7 @@ export function detectIngredientIntent(query: string): {
 
   const withoutLeadIn = lower
     .replace(/\b(what can i make with|what can i cook with|i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only)\b/gi, '')
+    .replace(/\b(?:only|just)\b/gi, ' ')
     .replace(/[?!.]/g, ' ')
     .trim();
 
@@ -291,9 +367,20 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
   tomato: new Set(['cherry', 'plum', 'beef', 'tinned', 'chopped']),
   pepper: new Set(['red', 'green', 'yellow', 'bell']),
   chicken: new Set(['breast', 'thigh', 'wing', 'leg']),
-  beef: new Set(['mince', 'steak', 'shin', 'brisket']),
-  lamb: new Set(['mince', 'chop', 'shoulder', 'leg']),
+  beef: new Set(['mince', 'steak', 'fillet', 'shin', 'brisket']),
+  lamb: new Set(['mince', 'chop', 'shoulder', 'leg', 'shank']),
   turkey: new Set(['mince', 'breast', 'thigh']),
+  duck: new Set(['breast', 'leg', 'fillet']),
+  salmon: new Set(['fillet', 'steak', 'portion', 'side']),
+  cod: new Set(['fillet', 'loin', 'steak', 'portion']),
+  haddock: new Set(['fillet', 'loin', 'portion']),
+  mackerel: new Set(['fillet', 'steak', 'portion']),
+  trout: new Set(['fillet', 'steak', 'portion']),
+  tuna: new Set(['fillet', 'steak', 'portion']),
+  sausage: new Set(['pork', 'chicken', 'beef', 'lamb', 'turkey', 'vegetarian', 'veggie', 'chipolata']),
+  prawn: new Set(['tiger', 'king']),
+  crab: new Set(['king']),
+  bass: new Set(['sea']),
 };
 
 const stripIngredientQuantity = (value: string) => value

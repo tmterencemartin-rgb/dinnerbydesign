@@ -52,6 +52,14 @@ describe('Ingredient Parser & Normalizer', () => {
     });
   });
 
+  test('detects ingredient lists with natural strict-search wording', () => {
+    expect(detectIngredientIntent('salmon and potatoes only')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['salmon', 'potato'],
+      reason: 'short-food-list'
+    });
+  });
+
   test('detects short ingredient searches without separators', () => {
     expect(detectIngredientIntent('cod potatoes')).toMatchObject({
       isIngredientLed: true,
@@ -68,8 +76,56 @@ describe('Ingredient Parser & Normalizer', () => {
     });
   });
 
+  test('detects butter beans in short searches without separators', () => {
+    expect(detectIngredientIntent('sausage butter beans')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['sausage', 'butter bean'],
+      reason: 'short-food-list'
+    });
+  });
+
+  test('detects common compound ingredient forms in short searches', () => {
+    expect(detectIngredientIntent('salmon fillets mashed potatoes')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['salmon fillet', 'mashed potato'],
+      reason: 'short-food-list'
+    });
+    expect(detectIngredientIntent('chicken coconut milk curry paste')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['chicken', 'coconut milk', 'curry paste'],
+      reason: 'short-food-list'
+    });
+  });
+
+  test('covers the supplied compound ingredient catalogue', () => {
+    const compounds: Array<[string, string]> = [
+      ['beef fillet', 'beef fillet'], ['pork belly', 'pork belly'], ['chicken breast', 'chicken breast'],
+      ['lamb shanks', 'lamb shank'], ['duck breast', 'duck breast'], ['tiger prawns', 'tiger prawn'],
+      ['king crab', 'king crab'], ['sea bass', 'sea bass'], ['butter beans', 'butter bean'],
+      ['kidney beans', 'kidney bean'], ['black beans', 'black bean'], ['chick peas', 'chickpea'],
+      ['sweet corn', 'sweetcorn'], ['wild rice', 'wild rice'], ['brown rice', 'brown rice'],
+      ['pearl barley', 'pearl barley'], ['bell peppers', 'bell pepper'], ['brussels sprouts', 'brussels sprout'],
+      ['sweet potatoes', 'sweet potato'], ['spring onions', 'spring onion'], ['cherry tomatoes', 'cherry tomato'],
+      ['sugar snaps', 'sugar snap'], ['baby corn', 'baby corn'], ['lemon grass', 'lemongrass'],
+      ['cream cheese', 'cream cheese'], ['sour cream', 'sour cream'], ['goat cheese', 'goat cheese'],
+      ['cottage cheese', 'cottage cheese'], ['olive oil', 'olive oil'], ['coconut milk', 'coconut milk'],
+      ['buttermilk', 'buttermilk'], ['heavy cream', 'double cream'], ['passion fruit', 'passion fruit'],
+      ['dragon fruit', 'dragon fruit'], ['star fruit', 'star fruit'], ['pine nuts', 'pine nut'],
+      ['chest nuts', 'chestnut'], ['macadamia nuts', 'macadamia nut']
+    ];
+
+    for (const [query, expectedIngredient] of compounds) {
+      expect(detectIngredientIntent(`${query} potato`)).toMatchObject({
+        isIngredientLed: true,
+        ingredients: [expectedIngredient, 'potato'],
+        reason: 'short-food-list'
+      });
+    }
+  });
+
   test('does not treat ordinary dish names as ingredient-led searches', () => {
     expect(detectIngredientIntent('chicken curry')).toBeNull();
+    expect(detectIngredientIntent('beef fillet curry')).toBeNull();
     expect(detectIngredientIntent('chilli')).toBeNull();
     expect(detectIngredientIntent('chilli recipe')).toBeNull();
     expect(detectIngredientIntent('Jamie Oliver pasta')).toBeNull();
@@ -111,5 +167,15 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(matchesStrictIngredientSearch({
       ingredients: ['pork chops', 'onions', 'potatoes', 'garlic']
     }, 'pork onions and potatoes')).toBe(false);
+  });
+
+  test('allows common fish and sausage forms in strict ingredient searches', () => {
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['2 salmon fillets', '500g mashed potatoes', 'oil', 'salt', 'pepper']
+    }, 'salmon and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['pork sausages', 'butter beans', 'oil', 'pepper']
+    }, 'sausage butter beans')).toBe(true);
   });
 });
