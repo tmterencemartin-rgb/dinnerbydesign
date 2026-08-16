@@ -52,6 +52,14 @@ describe('Ingredient Parser & Normalizer', () => {
     });
   });
 
+  test('detects short ingredient searches without separators', () => {
+    expect(detectIngredientIntent('cod potatoes')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['cod', 'potato'],
+      reason: 'short-food-list'
+    });
+  });
+
   test('does not treat ordinary dish names as ingredient-led searches', () => {
     expect(detectIngredientIntent('chicken curry')).toBeNull();
     expect(detectIngredientIntent('chilli')).toBeNull();

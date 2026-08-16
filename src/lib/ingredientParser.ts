@@ -184,6 +184,21 @@ export function parseAndNormaliseIngredients(query: string): string[] {
   return results;
 }
 
+// A cautious vocabulary for short ingredient searches without commas or
+// joining words. This lets searches such as "cod potatoes" behave like
+// ingredient lists without treating ordinary dish names such as "chicken
+// curry" as strict ingredient searches.
+const UNSEPARATED_INGREDIENT_TERMS = new Set([
+  'anchovy', 'apple', 'aubergine', 'avocado', 'bacon', 'banana', 'bean',
+  'beef', 'broccoli', 'cabbage', 'carrot', 'cauliflower', 'celery', 'cheese',
+  'chickpea', 'chicken', 'chilli', 'chorizo', 'cod', 'courgette', 'cucumber',
+  'egg', 'fish', 'flour', 'garlic', 'ginger', 'ham', 'haddock', 'kale', 'leek',
+  'lentil', 'lemon', 'lime', 'mackerel', 'mushroom', 'noodle', 'oat', 'onion',
+  'pasta', 'pea', 'pepper', 'prawn', 'potato', 'pork', 'rice', 'salmon',
+  'sausage', 'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato',
+  'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt'
+]);
+
 export function detectIngredientIntent(query: string): {
   isIngredientLed: boolean;
   ingredients: string[];
@@ -206,18 +221,30 @@ export function detectIngredientIntent(query: string): {
     .map(item => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, '').trim())
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
-  if (ingredients.length < 2) return null;
-
-  if (ingredientPhrases.test(trimmed)) {
+  if (ingredients.length >= 2 && ingredientPhrases.test(trimmed)) {
     return { isIngredientLed: true, ingredients, reason: 'phrase' };
   }
 
-  if (hasListPunctuation) {
+  if (ingredients.length >= 2 && hasListPunctuation) {
     return { isIngredientLed: true, ingredients, reason: 'list' };
   }
 
-  if (hasSimpleAndList && ingredients.length >= 2) {
+  if (ingredients.length >= 2 && hasSimpleAndList) {
     return { isIngredientLed: true, ingredients, reason: 'short-food-list' };
+  }
+
+  const unseparatedWords = trimmed.split(/\s+/).filter(Boolean);
+  const unseparatedIngredients = unseparatedWords.flatMap(word => parseAndNormaliseIngredients(word));
+  const isShortUnseparatedIngredientList =
+    !hasListPunctuation
+    && !ingredientPhrases.test(trimmed)
+    && unseparatedWords.length >= 2
+    && unseparatedWords.length <= 3
+    && unseparatedIngredients.length === unseparatedWords.length
+    && unseparatedIngredients.every(ingredient => UNSEPARATED_INGREDIENT_TERMS.has(ingredient));
+
+  if (isShortUnseparatedIngredientList) {
+    return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list' };
   }
 
   return null;
