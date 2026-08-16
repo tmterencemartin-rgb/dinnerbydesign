@@ -798,7 +798,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     : '';
 
   const strictIngredientLogic = strictIngredientMatch && ingredientIntent?.isIngredientLed
-    ? `\nSTRICT INGREDIENT MATCH ACTIVE:\n- Every listed ingredient must appear in every returned recipe.\n- Do not add meaningful ingredients that are not listed.\n- Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed.\n- Do not replace an exact result with a near match. If there are no exact results, return an empty items array.`
+    ? `\nSTRICT INGREDIENT MATCH ACTIVE:\n- Every listed ingredient must appear in every returned recipe.\n- Natural forms or varieties of a listed ingredient are allowed when they remain the same ingredient category (for example pork mince or pork chops for pork, red onion for onion, and new potatoes for potato).\n- Do not add meaningful ingredients that are not listed, such as garlic, cream or tomatoes when they were not requested.\n- Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed.\n- Do not replace an exact result with a near match. If there are no exact results, return an empty items array.`
     : '';
 
   const offalLogic = activeIncludeOffal
@@ -877,7 +877,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - ${strictIngredientMatch ? 'Every returned recipe must contain ALL of these listed ingredients.' : 'Always try to return recipes/dishes that contain ALL of these listed ingredients.'}
 - ${strictIngredientMatch ? 'If no exact matches exist, return zero results rather than a near match.' : 'Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible.'}
 ${strictIngredientMatch ? '- Return the complete visible ingredient list for each recipe, not a shortened summary.' : ''}
-- Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.`
+   - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.`
       : '';
 
     // Core system logic - fixed for model efficiency

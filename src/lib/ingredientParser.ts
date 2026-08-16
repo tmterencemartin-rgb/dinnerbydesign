@@ -221,19 +221,7 @@ export function detectIngredientIntent(query: string): {
     .map(item => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, '').trim())
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
-  if (ingredients.length >= 2 && ingredientPhrases.test(trimmed)) {
-    return { isIngredientLed: true, ingredients, reason: 'phrase' };
-  }
-
-  if (ingredients.length >= 2 && hasListPunctuation) {
-    return { isIngredientLed: true, ingredients, reason: 'list' };
-  }
-
-  if (ingredients.length >= 2 && hasSimpleAndList) {
-    return { isIngredientLed: true, ingredients, reason: 'short-food-list' };
-  }
-
-  const unseparatedWords = trimmed.split(/\s+/).filter(Boolean);
+  const unseparatedWords = trimmed.split(/\s+/).filter(word => !/^and$/i.test(word));
   const unseparatedIngredients = unseparatedWords.flatMap(word => parseAndNormaliseIngredients(word));
   const isShortUnseparatedIngredientList =
     !hasListPunctuation
@@ -247,11 +235,35 @@ export function detectIngredientIntent(query: string): {
     return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list' };
   }
 
+  if (ingredients.length >= 2 && ingredientPhrases.test(trimmed)) {
+    return { isIngredientLed: true, ingredients, reason: 'phrase' };
+  }
+
+  if (ingredients.length >= 2 && hasListPunctuation) {
+    return { isIngredientLed: true, ingredients, reason: 'list' };
+  }
+
+  if (ingredients.length >= 2 && hasSimpleAndList) {
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list' };
+  }
+
   return null;
 }
 
 const PANTRY_STAPLE_PATTERN = /^(?:water|salt|pepper|black pepper|white pepper|oil|olive oil|vegetable oil|sunflower oil|rapeseed oil|cooking spray|seasoning|mixed herbs?|dried herbs?|fresh herbs?|herbs?|spices?)$/i;
 const INGREDIENT_MODIFIER_PATTERN = /^(?:a|an|the|fresh|frozen|tinned|canned|dried|cooked|raw|large|medium|small|baby|new|free[- ]range|boneless|skinless|lean|smoked|unsmoked|cured|grated|chopped|diced|sliced|quartered|halved|mashed|boiled|roasted|baked|trimmed|drained)$/i;
+
+const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
+  pork: new Set(['mince', 'chop', 'loin', 'shoulder', 'belly', 'fillet', 'sausage']),
+  onion: new Set(['red', 'white', 'spring']),
+  potato: new Set(['new', 'roast']),
+  tomato: new Set(['cherry', 'plum', 'beef', 'tinned', 'chopped']),
+  pepper: new Set(['red', 'green', 'yellow', 'bell']),
+  chicken: new Set(['breast', 'thigh', 'wing', 'leg']),
+  beef: new Set(['mince', 'steak', 'shin', 'brisket']),
+  lamb: new Set(['mince', 'chop', 'shoulder', 'leg']),
+  turkey: new Set(['mince', 'breast', 'thigh']),
+};
 
 const stripIngredientQuantity = (value: string) => value
   .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, '')
@@ -286,7 +298,10 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
     index < allowedStart || index >= allowedStart + allowedWords.length
   );
 
-  return remainingWords.length === 0 || remainingWords.every(word => INGREDIENT_MODIFIER_PATTERN.test(word));
+  const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedWords.join(' ')] || new Set<string>();
+  return remainingWords.length === 0 || remainingWords.every(word =>
+    INGREDIENT_MODIFIER_PATTERN.test(word) || allowedVariantWords.has(word)
+  );
 };
 
 /**

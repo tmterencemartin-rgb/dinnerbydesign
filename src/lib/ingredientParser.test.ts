@@ -94,4 +94,14 @@ describe('Ingredient Parser & Normalizer', () => {
 
     expect(matchesStrictIngredientSearch({}, 'ham and eggs')).toBe(false);
   });
+
+  test('allows natural variants of listed ingredients but rejects new ingredients', () => {
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['pork mince', '2 red onions', 'new potatoes', 'oil', 'salt']
+    }, 'pork onions and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['pork chops', 'onions', 'potatoes', 'garlic']
+    }, 'pork onions and potatoes')).toBe(false);
+  });
 });

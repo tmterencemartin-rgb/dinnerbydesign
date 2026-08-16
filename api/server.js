@@ -177898,7 +177898,8 @@ INGREDIENT-LED SEARCH ACTIVE:
   const strictIngredientLogic = strictIngredientMatch && ingredientIntent?.isIngredientLed ? `
 STRICT INGREDIENT MATCH ACTIVE:
 - Every listed ingredient must appear in every returned recipe.
-- Do not add meaningful ingredients that are not listed.
+- Natural forms or varieties of a listed ingredient are allowed when they remain the same ingredient category (for example pork mince or pork chops for pork, red onion for onion, and new potatoes for potato).
+- Do not add meaningful ingredients that are not listed, such as garlic, cream or tomatoes when they were not requested.
 - Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed.
 - Do not replace an exact result with a near match. If there are no exact results, return an empty items array.` : "";
   const offalLogic = activeIncludeOffal ? "" : `
@@ -177951,7 +177952,7 @@ INGREDIENT PARSING & INTERPRETATION (CRITICAL):
 - ${strictIngredientMatch ? "Every returned recipe must contain ALL of these listed ingredients." : "Always try to return recipes/dishes that contain ALL of these listed ingredients."}
 - ${strictIngredientMatch ? "If no exact matches exist, return zero results rather than a near match." : "Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible."}
 ${strictIngredientMatch ? "- Return the complete visible ingredient list for each recipe, not a shortened summary." : ""}
-- Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.` : "";
+   - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.` : "";
     const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs based on the user's intent.
 Target: UK audience, Metric units, UK English spelling.
 Portion Basis: ONE adult portion.
