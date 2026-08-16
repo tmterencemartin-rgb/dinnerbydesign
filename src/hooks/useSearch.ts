@@ -741,7 +741,7 @@ export function useSearch() {
       const shouldCountGuestSearch = isGuestPreview && !options?.skipHistory;
 
       if (isGuestPreview && guestSearchCount >= GUEST_SEARCH_LIMIT) {
-        showToast("You've used your 3 free searches. Create an account to start your 7-day full-access trial.", "Create account", () => setView('signin'));
+        showToast("You've used your 3 free searches. Create an account to start your 7-day trial.", "Create account", () => setView('signin'));
         return;
       }
 
@@ -995,7 +995,7 @@ export function useSearch() {
 
     const isGuestPreview = !user || user.isAnonymous;
     if (isGuestPreview && guestSearchCount >= GUEST_SEARCH_LIMIT) {
-      showToast("You've used your 3 free searches. Create an account to start your 7-day full-access trial.", "Create account", () => setView('signin'));
+      showToast("You've used your 3 free searches. Create an account to start your 7-day trial.", "Create account", () => setView('signin'));
       return;
     }
 

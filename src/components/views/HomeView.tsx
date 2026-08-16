@@ -717,7 +717,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <div className="flex flex-col items-center justify-between gap-2 text-center sm:flex-row sm:text-left">
                   <span>
                     {isGuestSearchLimitReached
-                      ? 'You have used your 3 free searches. Create an account to start your 7-day full-access trial.'
+                      ? 'You have used your 3 free searches. Create an account to start your 7-day trial.'
                       : `${guestSearchesRemaining} free ${guestSearchesRemaining === 1 ? 'search' : 'searches'} remaining. No account needed yet.`}
                   </span>
                   <button
@@ -769,7 +769,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   Continue searching and keep your results
                 </h2>
                 <p className="mx-auto mt-2 max-w-xl text-[13px] leading-5 text-dbd-ink-3 sm:text-sm">
-                  Create an account to start your free, 7-day full-access trial. No card required.
+                  Create an account to start your free, 7-day trial. No card required.
                 </p>
                 <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <button

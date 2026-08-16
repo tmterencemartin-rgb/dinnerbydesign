@@ -244,7 +244,7 @@ describe('useSearch Hook Lifecycle', () => {
 
     expect(geminiService.generateDinnerSuggestions).not.toHaveBeenCalled();
     expect(mockShowToast).toHaveBeenCalledWith(
-      "You've used your 3 free searches. Create an account to start your 7-day full-access trial.",
+      "You've used your 3 free searches. Create an account to start your 7-day trial.",
       'Create account',
       expect.any(Function)
     );
