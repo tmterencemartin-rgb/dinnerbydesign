@@ -199,6 +199,37 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt'
 ]);
 
+const UNSEPARATED_INGREDIENT_PHRASES = new Set([
+  'green bean', 'red bean', 'kidney bean', 'black bean', 'baked bean',
+  'red pepper', 'green pepper', 'yellow pepper', 'sweet pepper',
+  'red onion', 'white onion', 'spring onion',
+  'sweet potato', 'new potato', 'roast potato',
+  'chicken breast', 'chicken thigh', 'pork mince', 'beef mince',
+  'coconut milk', 'curry paste'
+]);
+
+const parseUnseparatedIngredientList = (query: string): string[] => {
+  const words = query.split(/\s+/).filter(word => !/^and$/i.test(word));
+  const parsed: string[] = [];
+
+  for (let index = 0; index < words.length;) {
+    const pair = words.slice(index, index + 2).join(' ');
+    const normalisedPair = parseAndNormaliseIngredients(pair)[0];
+    if (words.length > 2 && UNSEPARATED_INGREDIENT_PHRASES.has(normalisedPair)) {
+      parsed.push(normalisedPair);
+      index += 2;
+      continue;
+    }
+
+    const normalisedWord = parseAndNormaliseIngredients(words[index])[0];
+    if (!normalisedWord || !UNSEPARATED_INGREDIENT_TERMS.has(normalisedWord)) return [];
+    parsed.push(normalisedWord);
+    index += 1;
+  }
+
+  return parsed;
+};
+
 export function detectIngredientIntent(query: string): {
   isIngredientLed: boolean;
   ingredients: string[];
@@ -222,14 +253,14 @@ export function detectIngredientIntent(query: string): {
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
   const unseparatedWords = trimmed.split(/\s+/).filter(word => !/^and$/i.test(word));
-  const unseparatedIngredients = unseparatedWords.flatMap(word => parseAndNormaliseIngredients(word));
+  const unseparatedIngredients = parseUnseparatedIngredientList(trimmed);
   const isShortUnseparatedIngredientList =
     !hasListPunctuation
     && !ingredientPhrases.test(trimmed)
     && unseparatedWords.length >= 2
-    && unseparatedWords.length <= 3
-    && unseparatedIngredients.length === unseparatedWords.length
-    && unseparatedIngredients.every(ingredient => UNSEPARATED_INGREDIENT_TERMS.has(ingredient));
+    && unseparatedWords.length <= 6
+    && unseparatedIngredients.length >= 2
+    && unseparatedIngredients.length <= 4;
 
   if (isShortUnseparatedIngredientList) {
     return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list' };

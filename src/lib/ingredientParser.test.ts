@@ -60,6 +60,14 @@ describe('Ingredient Parser & Normalizer', () => {
     });
   });
 
+  test('detects compound ingredients in short searches without separators', () => {
+    expect(detectIngredientIntent('chicken green beans')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['chicken', 'green bean'],
+      reason: 'short-food-list'
+    });
+  });
+
   test('does not treat ordinary dish names as ingredient-led searches', () => {
     expect(detectIngredientIntent('chicken curry')).toBeNull();
     expect(detectIngredientIntent('chilli')).toBeNull();
