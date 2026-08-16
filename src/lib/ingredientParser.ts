@@ -222,3 +222,68 @@ export function detectIngredientIntent(query: string): {
 
   return null;
 }
+
+const PANTRY_STAPLE_PATTERN = /^(?:water|salt|pepper|black pepper|white pepper|oil|olive oil|vegetable oil|sunflower oil|rapeseed oil|cooking spray|seasoning|mixed herbs?|dried herbs?|fresh herbs?|herbs?|spices?)$/i;
+const INGREDIENT_MODIFIER_PATTERN = /^(?:a|an|the|fresh|frozen|tinned|canned|dried|cooked|raw|large|medium|small|baby|new|free[- ]range|boneless|skinless|lean|smoked|unsmoked|cured|grated|chopped|diced|sliced|quartered|halved|mashed|boiled|roasted|baked|trimmed|drained)$/i;
+
+const stripIngredientQuantity = (value: string) => value
+  .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, '')
+  .replace(/\([^)]*\)/g, ' ')
+  .replace(/[•*]/g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const normaliseStrictIngredientLine = (value: string) => {
+  const stripped = stripIngredientQuantity(value);
+  const parsed = parseAndNormaliseIngredients(stripped);
+  return parsed.length > 0 ? parsed : [stripped.toLowerCase()];
+};
+
+const isPantryStaple = (value: string) => {
+  const normalised = value.trim().toLowerCase();
+  return PANTRY_STAPLE_PATTERN.test(normalised)
+    || normalised.split(/\s+/).every(word => INGREDIENT_MODIFIER_PATTERN.test(word));
+};
+
+const matchesAllowedIngredient = (value: string, allowed: string) => {
+  const valueWords = value.toLowerCase().split(/\s+/).filter(Boolean);
+  const allowedWords = allowed.toLowerCase().split(/\s+/).filter(Boolean);
+  if (valueWords.join(' ') === allowedWords.join(' ')) return true;
+
+  const allowedStart = valueWords.findIndex((_, index) =>
+    allowedWords.every((word, offset) => valueWords[index + offset] === word)
+  );
+  if (allowedStart < 0) return false;
+
+  const remainingWords = valueWords.filter((_, index) =>
+    index < allowedStart || index >= allowedStart + allowedWords.length
+  );
+
+  return remainingWords.length === 0 || remainingWords.every(word => INGREDIENT_MODIFIER_PATTERN.test(word));
+};
+
+/**
+ * Applies the Search view's strict ingredient option to generated recipe stubs.
+ * Pantry staples are allowed, but every other ingredient must be one of the
+ * ingredients listed by the user and every listed ingredient must be present.
+ */
+export function matchesStrictIngredientSearch(item: { ingredients?: string[]; totalIngredientsCount?: number }, query: string): boolean {
+  const intent = detectIngredientIntent(query);
+  if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
+
+  const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
+  if (ingredientLines.length === 0) return false;
+  if (typeof item.totalIngredientsCount === 'number' && item.totalIngredientsCount > ingredientLines.length) return false;
+
+  const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const requestedIngredients = intent.ingredients;
+
+  const includesRequested = requestedIngredients.every(requested =>
+    normalisedLines.some(line => matchesAllowedIngredient(line, requested))
+  );
+  if (!includesRequested) return false;
+
+  return normalisedLines.every(line =>
+    isPantryStaple(line) || requestedIngredients.some(requested => matchesAllowedIngredient(line, requested))
+  );
+}

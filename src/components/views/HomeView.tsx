@@ -220,6 +220,8 @@ interface HomeViewProps {
   setIsLowCost: (val: boolean) => void;
   isLeftoverMode: boolean;
   setIsLeftoverMode: (val: boolean) => void;
+  strictIngredientMatch: boolean;
+  setStrictIngredientMatch: (val: boolean) => void;
   supermarkets: string[];
   setSupermarkets: (val: string[]) => void;
   dietaryRule: string;
@@ -300,6 +302,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     isSimple, setIsSimple,
     isLowCost, setIsLowCost,
     isLeftoverMode, setIsLeftoverMode,
+    strictIngredientMatch, setStrictIngredientMatch,
     supermarkets, setSupermarkets,
     dietaryRule, setDietaryRule,
     saladPreference, setSaladPreference,
@@ -890,6 +893,25 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <p className="px-1 text-[10px] leading-4 text-gray-400">
                 Searches use automated AI processing. Do not include confidential personal information. <a href="/privacy" className="font-semibold text-dbd-accent hover:underline">Privacy</a>
               </p>
+
+              {source === 'cook' && ingredientIntent?.isIngredientLed && (
+                <label className="flex cursor-pointer items-start gap-2.5 rounded border border-dbd-rule/60 bg-white px-3 py-2.5 text-left transition-colors hover:border-dbd-ink-3/40">
+                  <input
+                    type="checkbox"
+                    checked={strictIngredientMatch}
+                    onChange={(event) => setStrictIngredientMatch(event.target.checked)}
+                    disabled={isReadOnly || isGuestSearchLimitReached}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-dbd-accent"
+                    aria-describedby="strict-ingredient-match-help"
+                  />
+                  <span className="min-w-0">
+                    <span className="block text-[11.5px] font-semibold text-dbd-ink">Use only these ingredients</span>
+                    <span id="strict-ingredient-match-help" className="mt-0.5 block text-[10.5px] leading-4 text-dbd-ink-3">
+                      Every listed ingredient must be used. Basic pantry items such as oil, salt and pepper are allowed.
+                    </span>
+                  </span>
+                </label>
+              )}
 
               {source === 'ready-made' && (
                 <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>

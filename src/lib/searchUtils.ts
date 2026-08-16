@@ -27,6 +27,16 @@ export const buildSearchParams = (
     }
   }
 
+  if (
+    overrides.strictIngredientMatch === true
+    && source === 'cook'
+    && params.ingredientIntent?.isIngredientLed
+  ) {
+    params.strictIngredientMatch = true;
+  } else {
+    delete params.strictIngredientMatch;
+  }
+
   // 1. Salad Preference
   // If not overridden, we use preference. Default to 'all' if neither exists.
   if (overrides.saladPreference === undefined) {
@@ -735,6 +745,14 @@ export const buildActiveCriteria = (
         isPermanent: false 
       });
     }
+  }
+
+  if (
+    params.strictIngredientMatch
+    && params.source === 'cook'
+    && detectIngredientIntent(params.query)?.isIngredientLed
+  ) {
+    list.push({ type: 'strictIngredientMatch', value: 'true', label: 'Use only listed ingredients' });
   }
 
   console.log('[buildActiveCriteria] END:', { listCount: list.length, listLabels: list.map(l => l.label) });

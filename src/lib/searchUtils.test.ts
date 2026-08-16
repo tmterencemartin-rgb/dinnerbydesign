@@ -60,6 +60,20 @@ describe('searchUtils', () => {
       expect(params.isLeftoverMode).toBe(true);
     });
 
+    it('keeps strict ingredient matching as a temporary cook-search option', () => {
+      const params = buildSearchParams('ham, eggs and potatoes', 'cook', mockPreferences, {
+        strictIngredientMatch: true
+      });
+
+      expect(params.strictIngredientMatch).toBe(true);
+      expect(buildSearchParams('ham curry', 'cook', mockPreferences, {
+        strictIngredientMatch: true
+      }).strictIngredientMatch).toBeUndefined();
+      expect(buildSearchParams('ham, eggs and potatoes', 'ready-made', mockPreferences, {
+        strictIngredientMatch: true
+      }).strictIngredientMatch).toBeUndefined();
+    });
+
     it('does not mark dish-name searches as ingredient-led', () => {
       const params = buildSearchParams('chicken curry', 'cook', mockPreferences);
       expect(params.ingredientIntent).toBeUndefined();
@@ -217,6 +231,20 @@ describe('searchUtils', () => {
       });
 
       expect(labels).toContain('No Eggs');
+    });
+
+    it('shows strict ingredient matching as a temporary search chip only for ingredient lists', () => {
+      expect(buildLabels({
+        query: 'ham, eggs and potatoes',
+        source: 'cook',
+        strictIngredientMatch: true
+      })).toContain('Use only listed ingredients');
+
+      expect(buildLabels({
+        query: 'ham curry',
+        source: 'cook',
+        strictIngredientMatch: true
+      })).not.toContain('Use only listed ingredients');
     });
 
     it('does not duplicate temporary chips already covered by saved preferences', () => {

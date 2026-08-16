@@ -56,6 +56,8 @@ When a user provides several ingredients:
 - treat common spelling variants as equivalent;
 - look for recipes containing all requested ingredients before relaxing the search.
 
+For an ingredient-led search, the Search view may also enable `strictIngredientMatch`. This is a temporary per-search control, not part of `UserPreferences`. When enabled, every listed ingredient must be present and every other meaningful ingredient is rejected. Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed. If the generated result data does not contain a complete ingredient list, it cannot pass the strict check.
+
 An explicit search may temporarily override a related preference only where the product rules allow it. It must not silently change the saved profile.
 
 ## Preference strength

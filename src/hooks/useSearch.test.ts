@@ -284,6 +284,46 @@ describe('useSearch Hook Lifecycle', () => {
     ]);
   });
 
+  it('filters strict ingredient searches before showing recipe cards', async () => {
+    (geminiService.generateDinnerSuggestions as any).mockResolvedValue({
+      recipes: [
+        {
+          title: 'Ham, egg and potato hash',
+          ingredients: ['ham', 'eggs', 'potatoes', 'oil'],
+          totalIngredientsCount: 4,
+          totalTime: 25,
+          cuisine: 'British'
+        },
+        {
+          title: 'Ham, egg and potato bake',
+          ingredients: ['ham', 'eggs', 'potatoes', 'onion'],
+          totalIngredientsCount: 4,
+          totalTime: 35,
+          cuisine: 'British'
+        }
+      ],
+      readyMeals: []
+    });
+
+    const { result } = renderHook(() => useSearch());
+
+    act(() => {
+      result.current.setInput('ham, eggs and potatoes');
+      result.current.setStrictIngredientMatch(true);
+    });
+
+    await act(async () => {
+      await result.current.handleGenerate();
+    });
+
+    expect(geminiService.generateDinnerSuggestions).toHaveBeenCalledWith(
+      expect.objectContaining({ strictIngredientMatch: true }),
+      undefined,
+      expect.any(AbortSignal)
+    );
+    expect(result.current.currentRecipes?.map(recipe => recipe.title)).toEqual(['Ham, egg and potato hash']);
+  });
+
   it('hides raw permission-denied provider payloads from users', async () => {
     const providerPayload = '{"error":{"code":403,"message":"Lightning dunning decision is deny for project: projects/58614176053","status":"PERMISSION_DENIED"}}';
     (geminiService.generateDinnerSuggestions as any).mockRejectedValue(

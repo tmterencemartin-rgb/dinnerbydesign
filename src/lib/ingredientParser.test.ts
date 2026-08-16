@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { detectIngredientIntent, parseAndNormaliseIngredients } from './ingredientParser';
+import { detectIngredientIntent, matchesStrictIngredientSearch, parseAndNormaliseIngredients } from './ingredientParser';
 
 describe('Ingredient Parser & Normalizer', () => {
   test('splits on commas and the word-and', () => {
@@ -57,5 +57,33 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(detectIngredientIntent('chilli')).toBeNull();
     expect(detectIngredientIntent('chilli recipe')).toBeNull();
     expect(detectIngredientIntent('Jamie Oliver pasta')).toBeNull();
+  });
+
+  test('enforces every listed ingredient and rejects meaningful extras in strict mode', () => {
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['250g ham', '2 eggs', '500g potatoes', '1 tbsp oil', 'salt', 'pepper']
+    }, 'ham, eggs and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['250g ham', '2 eggs', '500g potatoes', '1 onion']
+    }, 'ham, eggs and potatoes')).toBe(false);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['250g ham', '500g potatoes'],
+      totalIngredientsCount: 3
+    }, 'ham, eggs and potatoes')).toBe(false);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['ham', 'eggs', 'potatoes'],
+      totalIngredientsCount: 6
+    }, 'ham, eggs and potatoes')).toBe(false);
+  });
+
+  test('allows common pantry staples but rejects recipes without an ingredient list', () => {
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['ham', 'eggs', 'new potatoes', 'olive oil', 'dried herbs']
+    }, 'ham and eggs and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({}, 'ham and eggs')).toBe(false);
   });
 });

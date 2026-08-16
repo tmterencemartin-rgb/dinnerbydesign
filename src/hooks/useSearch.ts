@@ -16,6 +16,7 @@ import { generateDinnerSuggestions as performServiceSearch, generateMatchRationa
 import { getRecipeKey, isSameRecipe } from '../lib/recipeUtils';
 import { passesHardConstraints } from '../lib/dietarySafety';
 import { normaliseUserPreferences } from '../lib/preferenceUtils';
+import { detectIngredientIntent, matchesStrictIngredientSearch } from '../lib/ingredientParser';
 import { 
   buildSearchParams, 
   cleanSearchParams, 
@@ -292,6 +293,7 @@ export function useSearch() {
   const [isSimple, setIsSimple] = useState(false);
   const [isLowCost, setIsLowCost] = useState(false);
   const [isLeftoverMode, setIsLeftoverMode] = useState(false);
+  const [strictIngredientMatch, setStrictIngredientMatch] = useState(false);
   const [servings, setServings] = useState('2');
   const [allergies, setAllergies] = useState<string[]>([]);
   const [preferredSourceIds, setPreferredSourceIds] = useState<string[]>([]);
@@ -301,8 +303,15 @@ export function useSearch() {
     if (source === 'ready-made') {
       setIsLowCost(false);
       setIsLeftoverMode(false);
+      setStrictIngredientMatch(false);
     }
   }, [source]);
+
+  useEffect(() => {
+    if (source !== 'cook' || !detectIngredientIntent(input)) {
+      setStrictIngredientMatch(false);
+    }
+  }, [input, source]);
   const [dismissedTitles, setDismissedTitles] = useState<string[]>([]);
   const [isDietaryRuleSuppressed, setIsDietaryRuleSuppressed] = useState(false);
   const [suppressedPermanentKeys, setSuppressedPermanentKeys] = useState<string[]>([]);
@@ -425,11 +434,13 @@ export function useSearch() {
 
       if (accumulatedRecipes.length === 0 && accumulatedReadyMeals.length === 0) {
         setStatus('noResults');
-        const filtersActive = !!(params.dietaryRule || (activePrefs && (activePrefs as any).dietaryRule) || params.isSimple || params.isLowCost);
+        const filtersActive = !!(params.dietaryRule || (activePrefs && (activePrefs as any).dietaryRule) || params.isSimple || params.isLowCost || params.strictIngredientMatch);
         setSearchContradiction({
           type: filtersActive ? 'conflict' : 'no_results',
           content: filtersActive 
-            ? `No dishes match your current filters. This might be due to a strict dietary preference (e.g. Vegetarian only) or exclusions. Try loosening your filters or searching for something else.`
+            ? params.strictIngredientMatch
+              ? 'No exact matches used only your listed ingredients. Turn off “Use only listed ingredients” to allow a few extras.'
+              : `No dishes match your current filters. This might be due to a strict dietary preference (e.g. Vegetarian only) or exclusions. Try loosening your filters or searching for something else.`
             : `No dishes found for "${params.query || input}". Try adjusting your search term or broadening your criteria.`
         });
         if (!isAppend) {
@@ -456,6 +467,7 @@ export function useSearch() {
         let recipesWithFinalIds = accumulatedRecipes
           .filter(r => passesHardConstraints(r, effectivePrefs))
           .filter(r => !timeLimit || r.totalTime <= timeLimit)
+          .filter(r => !params.strictIngredientMatch || matchesStrictIngredientSearch(r, params.query))
           .map(r => ({
             ...r,
             id: r.id || getRecipeKey(r)
@@ -475,6 +487,7 @@ export function useSearch() {
             .filter(r => !existingTitles.has(r.title.toLowerCase().trim()))
             .filter(r => passesHardConstraints(r, effectivePrefs))
             .filter(r => !timeLimit || r.totalTime <= timeLimit)
+            .filter(r => !params.strictIngredientMatch || matchesStrictIngredientSearch(r, params.query))
             .slice(0, needed)
             .map(r => ({
               ...r,
@@ -500,7 +513,9 @@ export function useSearch() {
           setStatus('noResults');
           setSearchContradiction({
             type: 'conflict',
-            content: `No dishes match your current rules. Try broadening your search or removing an exclusion.`
+            content: params.strictIngredientMatch
+              ? 'No exact matches used only your listed ingredients. Turn off “Use only listed ingredients” to allow a few extras.'
+              : `No dishes match your current rules. Try broadening your search or removing an exclusion.`
           });
           if (!isAppend) {
             setCurrentRecipes([]);
@@ -753,6 +768,7 @@ export function useSearch() {
         religiousEthical,
         styleWellness,
         excludeIngredients: [...excludeIngredients, ...omitIngredients],
+        strictIngredientMatch,
         maxCalories: (maxCalories && !isNaN(parseInt(maxCalories))) ? parseInt(maxCalories) : (maxCalories === null ? null : undefined),
         maxTotalTime: (maxTotalTime && !isNaN(parseInt(maxTotalTime))) ? parseInt(maxTotalTime) : undefined,
         maxHeatingTime: (maxHeatingTime && !isNaN(parseInt(maxHeatingTime))) ? parseInt(maxHeatingTime) : undefined,
@@ -818,7 +834,7 @@ export function useSearch() {
     input, cuisines, dietTypes, exclusions, religiousEthical, styleWellness, 
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
-    saladPreference, allergies, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, highOmega3, highProtein, includeOffal, servings, preferredSourceIds, dismissedTitles,
+    saladPreference, allergies, isSimple, isLowCost, isLeftoverMode, strictIngredientMatch, nutritiousChoice, highOmega3, highProtein, includeOffal, servings, preferredSourceIds, dismissedTitles,
     source, profile?.preferences, addToSearchHistory, performSearch, setError, setIsGenerating, user, guestSearchCount, showToast, setView
   ]);
 
@@ -867,6 +883,7 @@ export function useSearch() {
     isSimple,
     isLowCost,
     isLeftoverMode,
+    strictIngredientMatch,
     supermarkets,
     preferredSourceIds,
     includeOffal,
@@ -896,6 +913,7 @@ export function useSearch() {
       isSimple,
       isLowCost,
       isLeftoverMode,
+      strictIngredientMatch,
       supermarkets,
       preferredSourceIds,
       includeOffal,
@@ -930,6 +948,7 @@ export function useSearch() {
       isSimple !== lastFiltersRef.current.isSimple ||
       isLowCost !== lastFiltersRef.current.isLowCost ||
       isLeftoverMode !== lastFiltersRef.current.isLeftoverMode ||
+      strictIngredientMatch !== lastFiltersRef.current.strictIngredientMatch ||
       hasArrayChanged(supermarkets, lastFiltersRef.current.supermarkets) ||
       hasArrayChanged(preferredSourceIds, lastFiltersRef.current.preferredSourceIds) ||
       includeOffal !== lastFiltersRef.current.includeOffal ||
@@ -965,6 +984,7 @@ export function useSearch() {
     isSimple,
     isLowCost,
     isLeftoverMode,
+    strictIngredientMatch,
     supermarkets,
     includeOffal,
     servings
@@ -998,6 +1018,7 @@ export function useSearch() {
         religiousEthical,
         styleWellness,
         excludeIngredients: [...excludeIngredients, ...omitIngredients],
+        strictIngredientMatch,
         maxCalories: (maxCalories && !isNaN(parseInt(maxCalories))) ? parseInt(maxCalories) : undefined,
         maxTotalTime: (maxTotalTime && !isNaN(parseInt(maxTotalTime))) ? parseInt(maxTotalTime) : undefined,
         maxHeatingTime: (maxHeatingTime && !isNaN(parseInt(maxHeatingTime))) ? parseInt(maxHeatingTime) : undefined,
@@ -1036,7 +1057,7 @@ export function useSearch() {
     cuisines, dietTypes, exclusions, religiousEthical, styleWellness, 
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
-    saladPreference, isSimple, isLowCost, isLeftoverMode, nutritiousChoice, includeOffal, servings, input, lastQuery,
+    saladPreference, isSimple, isLowCost, isLeftoverMode, strictIngredientMatch, nutritiousChoice, includeOffal, servings, input, lastQuery,
     source, profile?.preferences, performSearch, user, guestSearchCount, showToast, setView
   ]);
 
@@ -1071,6 +1092,7 @@ export function useSearch() {
     setSaladPreference(profile?.preferences?.saladPreference || 'all');
     setIsSimple(profile?.preferences?.isSimple || false);
     setIsLowCost(profile?.preferences?.isLowCost || false);
+    setStrictIngredientMatch(false);
     setServings(profile?.preferences?.servings?.toString() || '2');
 
     const targetUnderMins = profile?.preferences?.readyToEatUnderMins?.toString() || '';
@@ -1339,6 +1361,7 @@ export function useSearch() {
       saladPreference,
       isSimple,
       isLowCost,
+      strictIngredientMatch,
       nutritiousChoice,
       highOmega3,
       highProtein,
@@ -1408,6 +1431,7 @@ export function useSearch() {
     saladPreference,
     isSimple,
     isLowCost,
+    strictIngredientMatch,
     nutritiousChoice,
     highOmega3,
     highProtein,
@@ -1502,6 +1526,7 @@ export function useSearch() {
       case 'saladPreference': setSaladPreference('all'); break;
       case 'isSimple': setIsSimple(false); break;
       case 'isLowCost': setIsLowCost(false); break;
+      case 'strictIngredientMatch': setStrictIngredientMatch(false); break;
       case 'nutritiousChoice': setNutritiousChoice(false); break;
       case 'highOmega3': setHighOmega3(false); break;
       case 'highProtein': setHighProtein(false); break;
@@ -1515,7 +1540,7 @@ export function useSearch() {
     setCuisines, setCookingMethods, setSupermarkets, setDietTypes, setAllergies, setExclusions, 
     setReligiousEthical, setStyleWellness, setExcludeIngredients, setOmitIngredients, 
     setMaxCalories, setMaxTotalTime, setMaxCostPerPortion, setMaxPricePerPerson, 
-    setMaxHeatingTime, setServings, setSaladPreference, setIsSimple, setIsLowCost, setNutritiousChoice, setHighOmega3, setHighProtein, setIncludeOffal,
+    setMaxHeatingTime, setServings, setSaladPreference, setIsSimple, setIsLowCost, setStrictIngredientMatch, setNutritiousChoice, setHighOmega3, setHighProtein, setIncludeOffal,
     setIsDietaryRuleSuppressed, setSuppressedPermanentKeys
   ]);
 
@@ -1572,6 +1597,7 @@ export function useSearch() {
     isSimple, setIsSimple,
     isLowCost, setIsLowCost,
     isLeftoverMode, setIsLeftoverMode,
+    strictIngredientMatch, setStrictIngredientMatch,
     supermarkets, setSupermarkets,
     servings, setServings,
     allergies, setAllergies,

@@ -245,6 +245,7 @@ export interface SearchParams {
   isSimple?: boolean;
   isLowCost?: boolean;
   isLeftoverMode?: boolean;
+  strictIngredientMatch?: boolean;
   ingredientIntent?: {
     isIngredientLed: boolean;
     ingredients: string[];

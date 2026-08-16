@@ -691,7 +691,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   }
 
   const start = Date.now();
-  const { query, count = 3, source, excludeTitles, cuisines: targetCuisines, cuisine: legacyCuisine, isLeftoverMode, ingredientIntent } = searchParams;
+  const { query, count = 3, source, excludeTitles, cuisines: targetCuisines, cuisine: legacyCuisine, isLeftoverMode, ingredientIntent, strictIngredientMatch } = searchParams;
   const isReadyMade = source === 'ready-made';
   
   const appliedFilters: string[] = [];
@@ -797,6 +797,10 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - In the description or matchReason, briefly explain how the listed ingredients are used.`
     : '';
 
+  const strictIngredientLogic = strictIngredientMatch && ingredientIntent?.isIngredientLed
+    ? `\nSTRICT INGREDIENT MATCH ACTIVE:\n- Every listed ingredient must appear in every returned recipe.\n- Do not add meaningful ingredients that are not listed.\n- Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed.\n- Do not replace an exact result with a near match. If there are no exact results, return an empty items array.`
+    : '';
+
   const offalLogic = activeIncludeOffal
     ? ''
     : `\nOFFAL EXCLUSION (HARD):
@@ -870,8 +874,9 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - Split these on commas and the word 'and'. The independent parsed ingredients are: ${parsedIngredients.map(i => `'${i}'`).join(', ')}.
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
-- Always try to return recipes/dishes that contain ALL of these listed ingredients.
-- Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible.
+- ${strictIngredientMatch ? 'Every returned recipe must contain ALL of these listed ingredients.' : 'Always try to return recipes/dishes that contain ALL of these listed ingredients.'}
+- ${strictIngredientMatch ? 'If no exact matches exist, return zero results rather than a near match.' : 'Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible.'}
+${strictIngredientMatch ? '- Return the complete visible ingredient list for each recipe, not a shortened summary.' : ''}
 - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.`
       : '';
 
@@ -889,7 +894,7 @@ INTENT PARSING (CRITICAL):
 - BATCH COOKING CLASSIFICATION (RECIPES ONLY): Add a 'batchCooking' object for home-cooking recipes. Set suitable=true only when the recipe keeps well, reheats well, scales sensibly to extra portions, and is not texture-sensitive. Good candidates include soups, stews, curries, chilli, pasta sauces, tray bakes, casseroles, rice dishes and lentil dishes. Avoid labelling dressed salads, crispy/fried dishes, fresh fish/shellfish-heavy dishes, rare steak, and recipes that should be served immediately. Include a short reason plus storage/reheat notes when suitable=true.
 - READY-MADE KIT (READY-MADE ONLY): Add a 'readyMadeKit' object that turns the core product into a complete dinner. Include the core product title, 1-3 optional supermarket sides, and 2-3 tiny upgrades using ordinary UK items such as herbs, yoghurt, lemon, bagged salad, frozen veg, microwave rice, naan, or slaw. Upgrades must be specific to the product and cuisine: avoid repeating generic texture ideas across unrelated products, and do not default to crispy onions or grated cheese unless they clearly suit that exact dish. Toasted breadcrumbs can suit some pasta-based products, but use them sparingly and only when they genuinely improve the item. Keep upgrades fast, cheap, and realistic for a tired weekday.
 - RECIPE REALITY CHECKS (CRITICAL): Add exactly 3 "realityChecks" to every item. Each check must be practical, plain-English and specific to the item, not generic praise. Use labels such as "Hidden effort", "Shopping friction", "Weeknight fit", "Cost caution", "Leftover friendly", "Portion caution", or "Cleanup". Each check has { label, note, tone }, where tone is "positive", "caution", or "neutral". Notes must be under 110 characters and should help the user decide if this dinner is realistic tonight.
-${parsedIngredientsInstruction}
+${parsedIngredientsInstruction}${strictIngredientLogic}
 
 HARD CONSTRAINTS:
 1. Dietary: ${activeDietaryRule}
@@ -923,7 +928,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 
     // Dynamic prompt - minimal and direct
     const prompt = `Search intent: "${query}". 
-    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: MUST contain as many specified parsed ingredients (${parsedIngredients.join(', ')}) as possible. Minimise extra shopping and feature these ingredients prominently.` : ''}
+    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: ${strictIngredientMatch ? 'MUST contain every specified parsed ingredient' : 'MUST contain as many specified parsed ingredients as possible'} (${parsedIngredients.join(', ')}). Minimise extra shopping and feature these ingredients prominently.` : ''}
     ${activeSaladPref === 'main-only' ? 'Requirement: MUST be a main-course salad.' : ''}
     ${activeSaladPref === 'side-only' ? 'Requirement: MUST be a side salad.' : ''}
     ${activeSaladPref === 'none' ? 'Requirement: NO salads.' : ''}
@@ -932,7 +937,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     ${activeNutritious ? 'Priority: Nutritious.' : ''}
     ${activeHighOmega3 ? 'Priority: High Omega-3 (focus on oily fish, walnuts, chia, flaxseed).' : ''}
     ${activeHighProtein ? 'Priority: High Protein (focus on lean meats, fish, pulses, eggs).' : ''}
-    ${ingredientIntent?.isIngredientLed || isLeftoverMode ? 'Priority: Ingredient-led search. Prioritize recipes that maximize the use of these specific items and require few extra ingredients.' : ''}
+    ${ingredientIntent?.isIngredientLed || isLeftoverMode ? `Priority: Ingredient-led search. ${strictIngredientMatch ? 'Use only the listed ingredients apart from basic pantry items.' : 'Prioritize recipes that maximize the use of these specific items and require few extra ingredients.'}` : ''}
     ${activePreferredSourceNames.length > 0 ? `Requirement: Gently favour recipes from these trusted sources: ${activePreferredSourceNames.join(', ')}.` : ''}
     ${activeMaxTime ? `Must be under ${activeMaxTime} mins.` : ''}
     ${excludeTitles?.length ? `MANDATORY EXCLUSION: Do NOT suggest any of these recipes: ${excludeTitles.join(', ')}.` : ''}
