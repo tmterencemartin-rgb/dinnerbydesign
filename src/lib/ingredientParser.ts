@@ -95,8 +95,137 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'turkey minced': 'turkey mince',
       'minced turkey': 'turkey mince',
 
-      'beef fillets': 'beef fillet',
+      'streaky bacon': 'streaky bacon',
+      'back bacon': 'back bacon',
+      'smoked bacon': 'smoked bacon',
+      'unsmoked bacon': 'unsmoked bacon',
+      'bacon rashers': 'bacon rasher',
+      'rashers': 'bacon rasher',
+      'bacon lardons': 'bacon lardon',
+      'lardons': 'bacon lardon',
+      'bacon medallions': 'bacon medallion',
+      'bacon bits': 'bacon bit',
       'pork bellies': 'pork belly',
+      'pork loins': 'pork loin',
+      'pork tenderloins': 'pork tenderloin',
+      'pork shoulders': 'pork shoulder',
+      'pork legs': 'pork leg',
+      'pork chops': 'pork chop',
+      'pork steaks': 'pork steak',
+      'pork ribs': 'pork rib',
+      'pork joints': 'pork joint',
+      'pork roasting joints': 'pork roasting joint',
+      'pork fillets': 'pork fillet',
+      'pork medallions': 'pork medallion',
+      'pork tenderloin': 'pork tenderloin',
+      'pork knuckles': 'pork knuckle',
+      'pork hocks': 'pork hock',
+      'pork collars': 'pork collar',
+      'pork necks': 'pork neck',
+      'pork escalopes': 'pork escalope',
+      'pork schnitzels': 'pork schnitzel',
+      'spare ribs': 'spare rib',
+      'baby back ribs': 'baby back rib',
+      'gammon steaks': 'gammon steak',
+      'gammon joints': 'gammon joint',
+      'roast pork': 'roast pork',
+      'roasting pork': 'roasting pork',
+      'pulled pork': 'pulled pork',
+      'diced pork': 'diced pork',
+      'chicken tenderloin': 'chicken tenderloin',
+      'chicken fillets': 'chicken fillet',
+      'chicken tenderloins': 'chicken tenderloin',
+      'chicken tenders': 'chicken tender',
+      'chicken strips': 'chicken strip',
+      'chicken drumsticks': 'chicken drumstick',
+      'chicken drumettes': 'chicken drumette',
+      'chicken breast fillets': 'chicken breast fillet',
+      'chicken thigh fillets': 'chicken thigh fillet',
+      'chicken winglets': 'chicken winglet',
+      'chicken quarters': 'chicken quarter',
+      'chicken leg quarters': 'chicken leg quarter',
+      'chicken crowns': 'chicken crown',
+      'whole chickens': 'whole chicken',
+      'chicken pieces': 'chicken piece',
+      'chicken portions': 'chicken portion',
+      'chicken sausages': 'chicken sausage',
+      'chicken giblets': 'chicken giblet',
+      'chicken livers': 'chicken liver',
+      'chicken hearts': 'chicken heart',
+      'chicken necks': 'chicken neck',
+      'pot roasts': 'pot roast',
+
+      'beef fillets': 'beef fillet',
+      'beef sirloins': 'beef sirloin',
+      'sirloin steak': 'sirloin steak',
+      'sirloin steaks': 'sirloin steak',
+      'rib eye': 'ribeye',
+      'rib-eye': 'ribeye',
+      'rib eyes': 'ribeye',
+      'rib-eyes': 'ribeye',
+      'ribeyes': 'ribeye',
+      'ribeye steaks': 'ribeye steak',
+      'rib eye steak': 'ribeye steak',
+      'rib eye steaks': 'ribeye steak',
+      'beef ribeye': 'beef ribeye',
+      'beef ribeye steaks': 'beef ribeye steak',
+      'rib steaks': 'rib steak',
+      'beef rib steaks': 'beef rib steak',
+      'strip loin': 'striploin',
+      'striploin steaks': 'striploin steak',
+      'beef striploin': 'beef striploin',
+      'beef striploin steaks': 'beef striploin steak',
+      'beef rumps': 'beef rump',
+      'rump steak': 'rump steak',
+      'rump steaks': 'rump steak',
+      'beef topsides': 'beef topside',
+      'beef silversides': 'beef silverside',
+      'top rump': 'top rump',
+      'top rumps': 'top rump',
+      'thick flank': 'thick flank',
+      'thick flanks': 'thick flank',
+      'beef chucks': 'beef chuck',
+      'chuck steaks': 'chuck steak',
+      'chuck roast': 'chuck roast',
+      'chuck roasts': 'chuck roast',
+      'braising steaks': 'braising steak',
+      'stewing steaks': 'stewing steak',
+      'frying steaks': 'frying steak',
+      'minute steaks': 'minute steak',
+      'beef shins': 'beef shin',
+      'beef briskets': 'beef brisket',
+      'short ribs': 'short rib',
+      'beef short ribs': 'beef short rib',
+      'flank steaks': 'flank steak',
+      'skirt steaks': 'skirt steak',
+      'feather blades': 'featherblade',
+      'featherblade steaks': 'featherblade steak',
+      'bavette steaks': 'bavette steak',
+      'onglet steaks': 'onglet steak',
+      'flat irons': 'flat iron',
+      'flat iron steaks': 'flat iron steak',
+      'hanger steaks': 'hanger steak',
+      'beef hanger steaks': 'beef hanger steak',
+      'beef cheeks': 'beef cheek',
+      'beef oxtail': 'oxtail',
+      'oxtails': 'oxtail',
+      't bone': 't-bone',
+      't-bone steaks': 't-bone steak',
+      'porterhouse steaks': 'porterhouse steak',
+      'tomahawk steaks': 'tomahawk steak',
+      'beef medallions': 'beef medallion',
+      'diced beef': 'diced beef',
+      'stewing beef': 'stewing beef',
+      'braising beef': 'braising beef',
+      'beef joints': 'beef joint',
+      'roasting joint': 'roasting joint',
+      'roasting joints': 'roasting joint',
+      'beef roasting joint': 'beef roasting joint',
+      'topside joints': 'topside joint',
+      'silverside joints': 'silverside joint',
+      'rump joints': 'rump joint',
+      'beef tenderloin': 'beef fillet',
+      'tenderloin': 'beef fillet',
       'lamb shanks': 'lamb shank',
       'duck breasts': 'duck breast',
       'tiger prawns': 'tiger prawn',
@@ -133,7 +262,6 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'chicken wings': 'chicken wing',
       'chicken legs': 'chicken leg',
       
-      'pork chops': 'pork chop',
       'lamb chops': 'lamb chop',
       
       'sausages': 'sausage',
@@ -221,7 +349,12 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'egg', 'fish', 'flour', 'garlic', 'ginger', 'ham', 'haddock', 'kale', 'leek',
   'lentil', 'lemon', 'lime', 'mackerel', 'mushroom', 'noodle', 'oat', 'onion',
   'pasta', 'pea', 'pepper', 'prawn', 'potato', 'pork', 'rice', 'salmon', 'crab', 'bass',
-  'sausage', 'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato',
+  'sausage', 'shin', 'brisket', 'sirloin', 'ribeye', 'rump', 'topside', 'silverside', 'chuck',
+  'flank', 'skirt', 'featherblade', 'bavette', 'onglet', 'hanger', 'cheek', 'oxtail',
+  'striploin', 'porterhouse', 'tomahawk', 'medallion', 'gammon', 'pancetta', 'rasher', 'lardon',
+  'drumstick', 'drumette', 'tenderloin', 'tender', 'strip', 'quarter', 'crown', 'piece', 'portion',
+  'giblet', 'liver', 'heart', 'neck',
+  'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato',
   'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt', 'lemongrass', 'buttermilk', 'chestnut'
 ]);
 
@@ -235,9 +368,29 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   'chestnut mushroom', 'button mushroom', 'wild mushroom',
   'chopped tomato', 'tinned tomato', 'plum tomato', 'cherry tomato', 'beef tomato', 'roma tomato',
   // Meat, fish and seafood forms
-  'beef fillet', 'pork belly', 'chicken breast', 'lamb shank', 'duck breast',
+  'beef fillet', 'beef sirloin', 'sirloin steak', 'beef ribeye', 'ribeye', 'beef rump', 'rump steak',
+  'beef topside', 'beef silverside', 'top rump', 'thick flank', 'beef chuck',
+  'braising steak', 'stewing steak', 'beef shin', 'beef brisket', 'short rib', 'beef short rib',
+  'flank steak', 'skirt steak', 'featherblade', 'featherblade steak', 'bavette steak', 'onglet steak',
+  'flat iron', 'flat iron steak', 'hanger steak', 'beef cheek', 'oxtail', 'diced beef',
+  'stewing beef', 'braising beef', 'beef joint',
+  'ribeye steak', 'rib steak', 'striploin', 'striploin steak', 'beef striploin', 'beef striploin steak',
+  'chuck steak', 'chuck roast', 'frying steak', 'minute steak', 't-bone', 't-bone steak',
+  'porterhouse steak', 'tomahawk steak', 'beef hanger steak', 'beef medallion', 'roasting joint',
+  'beef roasting joint', 'topside joint', 'silverside joint', 'rump joint', 'pot roast',
+  'streaky bacon', 'back bacon', 'smoked bacon', 'unsmoked bacon', 'bacon rasher', 'bacon lardon',
+  'bacon medallion', 'bacon bit', 'pancetta',
+  'pork belly', 'pork loin', 'pork tenderloin', 'pork shoulder', 'pork leg', 'pork chop',
+  'pork steak', 'pork rib', 'pork joint', 'pork roasting joint', 'pork fillet', 'pork medallion',
+  'pork knuckle', 'pork hock', 'pork collar', 'pork neck', 'pork escalope', 'pork schnitzel',
+  'spare rib', 'baby back rib', 'gammon steak', 'gammon joint', 'roast pork', 'roasting pork',
+  'pulled pork', 'diced pork', 'chicken breast', 'lamb shank', 'duck breast',
   'tiger prawn', 'king crab', 'sea bass',
-  'chicken thigh', 'chicken wing', 'chicken leg',
+  'chicken thigh', 'chicken wing', 'chicken leg', 'chicken fillet', 'chicken tenderloin',
+  'chicken tender', 'chicken strip', 'chicken drumstick', 'chicken drumette',
+  'chicken breast fillet', 'chicken thigh fillet', 'chicken winglet', 'chicken quarter',
+  'chicken leg quarter', 'chicken crown', 'whole chicken', 'chicken piece', 'chicken portion',
+  'chicken mince', 'chicken sausage', 'chicken giblet', 'chicken liver', 'chicken heart', 'chicken neck',
   'pork mince', 'beef mince', 'lamb mince', 'turkey mince',
   'pork chop', 'lamb chop', 'pork sausage',
   'salmon fillet', 'salmon steak', 'cod fillet', 'haddock fillet', 'white fish',
@@ -256,7 +409,10 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
 
 const COMPOUND_INGREDIENT_MODIFIERS = new Set([
   'juice', 'fillet', 'fillets', 'steak', 'steaks', 'breast', 'thigh', 'wing', 'leg',
-  'chop', 'chops', 'mince', 'minced', 'sausage', 'sausages', 'paste', 'puree',
+  'chop', 'chops', 'mince', 'minced', 'sausage', 'sausages', 'tenderloin', 'tender', 'strip',
+  'drumstick', 'drumsticks', 'drumette', 'drumettes', 'quarter', 'quarters', 'crown', 'crowns',
+  'piece', 'pieces', 'portion', 'portions', 'giblet', 'giblets', 'liver', 'livers', 'heart', 'hearts',
+  'neck', 'necks', 'paste', 'puree',
   'sauce', 'stock', 'cube', 'oil', 'vinegar', 'cream', 'milk', 'powder',
   'fresh', 'frozen', 'tinned', 'canned', 'cooked', 'raw', 'large', 'medium', 'small',
   'new', 'baby', 'mashed', 'boiled', 'baked', 'roasted', 'diced', 'chopped',
@@ -361,13 +517,27 @@ const PANTRY_STAPLE_PATTERN = /^(?:water|salt|pepper|black pepper|white pepper|o
 const INGREDIENT_MODIFIER_PATTERN = /^(?:a|an|the|fresh|frozen|tinned|canned|dried|cooked|raw|large|medium|small|baby|new|free[- ]range|boneless|skinless|lean|smoked|unsmoked|cured|grated|chopped|diced|sliced|quartered|halved|mashed|boiled|roasted|baked|trimmed|drained)$/i;
 
 const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
-  pork: new Set(['mince', 'chop', 'loin', 'shoulder', 'belly', 'fillet', 'sausage']),
+  bacon: new Set(['streaky', 'back', 'smoked', 'unsmoked', 'rasher', 'lardon', 'medallion', 'bit', 'pancetta']),
+  pork: new Set([
+    'mince', 'chop', 'loin', 'tenderloin', 'shoulder', 'belly', 'leg', 'fillet', 'steak', 'rib',
+    'sausage', 'joint', 'roast', 'roasting', 'pulled', 'diced', 'knuckle', 'hock', 'collar', 'neck',
+    'escalope', 'schnitzel', 'gammon'
+  ]),
   onion: new Set(['red', 'white', 'spring']),
   potato: new Set(['new', 'roast']),
   tomato: new Set(['cherry', 'plum', 'beef', 'tinned', 'chopped']),
   pepper: new Set(['red', 'green', 'yellow', 'bell']),
-  chicken: new Set(['breast', 'thigh', 'wing', 'leg']),
-  beef: new Set(['mince', 'steak', 'fillet', 'shin', 'brisket']),
+  chicken: new Set([
+    'breast', 'thigh', 'wing', 'leg', 'fillet', 'tenderloin', 'tender', 'strip', 'drumstick', 'drumette',
+    'winglet', 'quarter', 'crown', 'whole', 'piece', 'portion', 'mince', 'sausage', 'giblet', 'liver',
+    'heart', 'neck'
+  ]),
+  beef: new Set([
+    'mince', 'steak', 'fillet', 'sirloin', 'ribeye', 'rib', 'rump', 'topside', 'silverside',
+    'top', 'thick', 'flank', 'chuck', 'braising', 'stewing', 'shin', 'brisket',
+    'short', 'skirt', 'featherblade', 'bavette', 'onglet', 'flat', 'hanger', 'cheek', 'oxtail',
+    'striploin', 'porterhouse', 'tomahawk', 'medallion', 'diced', 'joint', 'roasting', 'tenderloin'
+  ]),
   lamb: new Set(['mince', 'chop', 'shoulder', 'leg', 'shank']),
   turkey: new Set(['mince', 'breast', 'thigh']),
   duck: new Set(['breast', 'leg', 'fillet']),
@@ -382,6 +552,61 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
   crab: new Set(['king']),
   bass: new Set(['sea']),
 };
+
+const BEEF_CUT_TERMS = new Set([
+  'fillet', 'sirloin', 'rib', 'ribeye', 'ribeye steak', 'rib steak', 'striploin', 'striploin steak',
+  'rump', 'topside', 'silverside', 'top rump', 'thick flank', 'chuck', 'chuck steak', 'chuck roast',
+  'braising steak', 'stewing steak', 'frying steak', 'minute steak', 'shin', 'brisket', 'short rib',
+  'flank', 'flank steak', 'skirt', 'skirt steak', 'featherblade', 'featherblade steak',
+  'bavette', 'bavette steak', 'onglet', 'onglet steak', 'flat iron', 'flat iron steak',
+  'hanger', 'hanger steak', 'beef cheek',
+  'oxtail', 'diced beef', 'stewing beef', 'braising beef', 'beef joint',
+  'beef striploin', 'beef striploin steak',
+  'chuck roast', 'frying steak', 'minute steak', 't-bone', 't-bone steak', 'porterhouse steak',
+  'tomahawk', 'tomahawk steak', 'porterhouse', 'beef hanger steak', 'medallion', 'beef medallion', 'roasting joint',
+  'beef roasting joint', 'topside joint', 'silverside joint', 'rump joint', 'pot roast'
+]);
+
+const BEEF_CUT_VARIANT_WORDS = new Set([
+  'beef', 'steak', 'joint', 'roast', 'fillet', 'loin', 'portion', 'diced', 'braising', 'stewing',
+  'rib', 'striploin', 'porterhouse', 'tomahawk', 'medallion', 'roasting'
+]);
+
+const BACON_VARIANT_TERMS = new Set([
+  'streaky bacon', 'back bacon', 'smoked bacon', 'unsmoked bacon', 'bacon rasher', 'bacon lardon',
+  'bacon medallion', 'bacon bit', 'pancetta'
+]);
+
+const BACON_VARIANT_WORDS = new Set([
+  'bacon', 'streaky', 'back', 'smoked', 'unsmoked', 'rasher', 'lardon', 'medallion', 'bit', 'pancetta'
+]);
+
+const PORK_CUT_TERMS = new Set([
+  'pork belly', 'pork loin', 'pork tenderloin', 'pork shoulder', 'pork leg', 'pork chop', 'pork steak',
+  'pork rib', 'pork joint', 'pork roasting joint', 'pork fillet', 'pork medallion', 'pork knuckle',
+  'pork hock', 'pork collar', 'pork neck', 'pork escalope', 'pork schnitzel', 'spare rib',
+  'baby back rib', 'gammon steak', 'gammon joint', 'roast pork', 'roasting pork', 'pulled pork', 'diced pork'
+]);
+
+const PORK_CUT_VARIANT_WORDS = new Set([
+  'pork', 'mince', 'chop', 'loin', 'tenderloin', 'shoulder', 'belly', 'leg', 'fillet', 'steak', 'rib',
+  'joint', 'roast', 'roasting', 'pulled', 'diced', 'knuckle', 'hock', 'collar', 'neck', 'escalope',
+  'schnitzel', 'gammon'
+]);
+
+const CHICKEN_CUT_TERMS = new Set([
+  'chicken breast', 'chicken thigh', 'chicken wing', 'chicken leg', 'chicken fillet',
+  'chicken tenderloin', 'chicken tender', 'chicken strip', 'chicken drumstick', 'chicken drumette',
+  'chicken breast fillet', 'chicken thigh fillet', 'chicken winglet', 'chicken quarter',
+  'chicken leg quarter', 'chicken crown', 'whole chicken', 'chicken piece', 'chicken portion',
+  'chicken mince', 'chicken sausage', 'chicken giblet', 'chicken liver', 'chicken heart', 'chicken neck'
+]);
+
+const CHICKEN_CUT_VARIANT_WORDS = new Set([
+  'chicken', 'breast', 'thigh', 'wing', 'leg', 'fillet', 'tenderloin', 'tender', 'strip', 'drumstick',
+  'drumette', 'winglet', 'quarter', 'crown', 'whole', 'piece', 'portion', 'mince', 'sausage', 'giblet',
+  'liver', 'heart', 'neck'
+]);
 
 const stripIngredientQuantity = (value: string) => value
   .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, '')
@@ -416,7 +641,13 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
     index < allowedStart || index >= allowedStart + allowedWords.length
   );
 
-  const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedWords.join(' ')] || new Set<string>();
+  const allowedKey = allowedWords.join(' ');
+  const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedKey]
+    || (BEEF_CUT_TERMS.has(allowedKey) ? BEEF_CUT_VARIANT_WORDS
+      : BACON_VARIANT_TERMS.has(allowedKey) ? BACON_VARIANT_WORDS
+        : PORK_CUT_TERMS.has(allowedKey) ? PORK_CUT_VARIANT_WORDS
+          : CHICKEN_CUT_TERMS.has(allowedKey) ? CHICKEN_CUT_VARIANT_WORDS
+            : new Set<string>());
   return remainingWords.length === 0 || remainingWords.every(word =>
     INGREDIENT_MODIFIER_PATTERN.test(word) || allowedVariantWords.has(word)
   );

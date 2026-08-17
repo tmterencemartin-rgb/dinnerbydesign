@@ -123,6 +123,65 @@ describe('Ingredient Parser & Normalizer', () => {
     }
   });
 
+  test('covers common UK beef cuts in short searches', () => {
+    const beefCuts = [
+      'beef fillet', 'beef sirloin', 'sirloin steak', 'beef ribeye', 'ribeye steak', 'rib steak',
+      'striploin steak', 'beef striploin', 'beef rump',
+      'beef topside', 'beef silverside', 'top rump', 'thick flank', 'beef chuck',
+      'chuck steak', 'chuck roast', 'braising steak', 'stewing steak', 'frying steak', 'minute steak',
+      'beef shin', 'beef brisket', 'short rib',
+      'beef short rib', 'flank steak', 'skirt steak', 'featherblade', 'featherblade steak',
+      'bavette steak', 'onglet steak', 'flat iron', 'flat iron steak', 'hanger steak',
+      'beef cheek', 'oxtail', 't-bone steak', 'porterhouse steak', 'tomahawk steak',
+      'beef medallion', 'diced beef', 'stewing beef', 'braising beef', 'beef joint',
+      'roasting joint', 'beef roasting joint', 'topside joint', 'silverside joint', 'rump joint', 'pot roast'
+    ];
+
+    for (const cut of beefCuts) {
+      expect(detectIngredientIntent(`${cut} potato`)).toMatchObject({
+        isIngredientLed: true,
+        reason: 'short-food-list'
+      });
+    }
+  });
+
+  test('covers common bacon and pork variants in short searches', () => {
+    const variants = [
+      'streaky bacon', 'back bacon', 'smoked bacon', 'unsmoked bacon', 'bacon rashers',
+      'bacon lardons', 'bacon medallions', 'pancetta', 'pork belly', 'pork loin',
+      'pork tenderloin', 'pork shoulder', 'pork leg', 'pork chops', 'pork steaks',
+      'pork ribs', 'pork joint', 'pork roasting joint', 'pork fillet', 'pork medallions',
+      'pork knuckle', 'pork hock', 'pork collar', 'pork neck', 'pork escalope',
+      'pork schnitzel', 'spare ribs', 'baby back ribs', 'gammon steak', 'gammon joint',
+      'roast pork', 'roasting pork', 'pulled pork', 'diced pork'
+    ];
+
+    for (const variant of variants) {
+      expect(detectIngredientIntent(`${variant} potato`)).toMatchObject({
+        isIngredientLed: true,
+        reason: 'short-food-list'
+      });
+    }
+  });
+
+  test('covers common chicken compounds in short searches', () => {
+    const variants = [
+      'chicken breast', 'chicken breast fillet', 'chicken thigh', 'chicken thigh fillet',
+      'chicken wing', 'chicken winglet', 'chicken leg', 'chicken fillet', 'chicken tenderloin',
+      'chicken tender', 'chicken strip', 'chicken drumstick', 'chicken drumette',
+      'chicken quarter', 'chicken leg quarter', 'chicken crown', 'whole chicken',
+      'chicken piece', 'chicken portion', 'chicken mince', 'chicken sausage', 'chicken giblet',
+      'chicken liver', 'chicken heart', 'chicken neck'
+    ];
+
+    for (const variant of variants) {
+      expect(detectIngredientIntent(`${variant} potato`)).toMatchObject({
+        isIngredientLed: true,
+        reason: 'short-food-list'
+      });
+    }
+  });
+
   test('does not treat ordinary dish names as ingredient-led searches', () => {
     expect(detectIngredientIntent('chicken curry')).toBeNull();
     expect(detectIngredientIntent('beef fillet curry')).toBeNull();
@@ -177,5 +236,41 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(matchesStrictIngredientSearch({
       ingredients: ['pork sausages', 'butter beans', 'oil', 'pepper']
     }, 'sausage butter beans')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['beef sirloin steak', 'potatoes', 'oil', 'salt']
+    }, 'beef and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['sirloin steak', 'potatoes', 'oil', 'salt']
+    }, 'sirloin and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['bavette steak', 'potatoes', 'oil', 'salt']
+    }, 'bavette and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['hanger steak', 'potatoes', 'oil', 'salt']
+    }, 'hanger and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['streaky bacon', 'potatoes', 'oil', 'salt']
+    }, 'bacon and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['roast pork', 'potatoes', 'oil', 'salt']
+    }, 'pork and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['pork loin steak', 'potatoes', 'oil', 'salt']
+    }, 'pork loin and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['chicken breast fillet', 'potatoes', 'oil', 'salt']
+    }, 'chicken breast and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['chicken drumsticks', 'potatoes', 'oil', 'salt']
+    }, 'chicken and potatoes')).toBe(true);
   });
 });

@@ -48,6 +48,9 @@ When a user lists ingredients:
 - split on commas and the word `and`;
 - normalise singular and plural forms in UK English;
 - treat common spelling variants as equivalent;
+- recognise common bacon and pork variants, including streaky and back bacon, rashers, lardons, pork loin, tenderloin, shoulder, belly, leg, ribs, joints, roasting pork, pulled pork and gammon;
+- recognise common chicken compounds, including breast and thigh fillets, tenderloins, strips, drumsticks, drumettes, quarters, crowns, portions, mince, sausages and explicitly searched offal terms;
+- recognise common UK beef cuts and retail names, including fillet, sirloin, ribeye, rump, topside, silverside, chuck, brisket, shin, short rib, flank, skirt, featherblade, bavette, onglet, flat iron, hanger, oxtail, T-bone, porterhouse and tomahawk;
 - try to return recipes containing all listed ingredients before relaxing the search.
 
 ## Working repository and communication
