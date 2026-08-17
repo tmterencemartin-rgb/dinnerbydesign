@@ -943,26 +943,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              {showNotBoringSummerSaladsPrompt && !useSimplifiedGuestSearchStates && (
-                <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
-                  <div className="border-t border-gray-100 pt-2">
-                    <button
-                      type="button"
-                      onClick={handleNotBoringSummerSalads}
-                      disabled={isReadOnly || isSearching}
-                      className="block text-left disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <span className="block text-[12px] font-normal leading-snug text-dbd-accent">
-                        {NOT_BORING_SUMMER_SALADS_SEARCH_TITLE}
-                      </span>
-                      <span className="mt-0.5 block text-[11.5px] font-normal leading-relaxed text-gray-500">
-                        Fresh, substantial salads with interesting flavour combinations.
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              )}
-              
               {!useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
                   {!hasDismissedSearchOnboarding && !isSearching && (
