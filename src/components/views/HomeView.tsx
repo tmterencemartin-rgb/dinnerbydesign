@@ -1343,7 +1343,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         Search anyway
                       </button>
                     )}
-                    {contradictionWarning?.type === 'conflict' && !dietaryConflictCriterion && (
+                    {contradictionWarning?.type === 'conflict' && !dietaryConflictCriterion && !hasStrictIngredientNoResults && (
                       <button
                         onClick={() => handleGenerate(undefined, {}, undefined, { force: true })}
                         className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
