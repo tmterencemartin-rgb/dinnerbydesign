@@ -449,11 +449,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1.5 pt-0.5 text-[9.5px] font-semibold leading-tight text-dbd-accent">
-                    <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Recipe information</a>
-                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Price estimates</a>
-                    <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Nutrition estimates</a>
-                    <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Food safety</a>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 pt-0.5 text-[9.5px] font-semibold leading-tight text-dbd-accent">
+                    <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap text-left hover:underline">Recipe information</a>
+                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap text-left hover:underline">Price estimates</a>
+                    <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap text-left hover:underline">Nutrition estimates</a>
+                    <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap text-left hover:underline">Food safety</a>
                   </div>
                 </div>
 
