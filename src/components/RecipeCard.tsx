@@ -577,23 +577,20 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   />
                 </div>
 
+                {isExpanded && (
+                  <div className="hidden sm:block w-full">
+                    <RecipeRealityChecks checks={(recipe as any).realityChecks} />
+                  </div>
+                )}
+
               </div>
 
               {isExpanded && (
-                <div className="hidden sm:block space-y-3 sm:space-y-4 min-w-0">
-                  <div>
-                    <RecipeRealityChecks checks={(recipe as any).realityChecks} />
-                  </div>
-
+                <div className="hidden sm:block min-w-0">
+                  {kitPanel}
                 </div>
               )}
             </div>
-
-            {isExpanded && (
-              <div className="hidden sm:block w-full">
-                {kitPanel}
-              </div>
-            )}
 
             <div className="space-y-1 sm:space-y-3">
               {currentIngredients.length > 0 && !isExpanded && (
