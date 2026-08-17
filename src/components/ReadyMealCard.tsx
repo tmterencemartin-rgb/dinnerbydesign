@@ -376,6 +376,11 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                         Buy {packLabel}
                       </span>
                     )}
+                    {((meal.totalServings || requestedServings) > 0) && (
+                      <span className="whitespace-nowrap">
+                        Serves {meal.servingCount || meal.totalServings || requestedServings}
+                      </span>
+                    )}
                     {(meal.caloriesPerPortion || meal.calories) && (
                       <Tooltip text="Estimated calories for one adult portion. Actual values vary with ingredients, quantities and brands.">
                         <span className="cursor-help whitespace-nowrap">

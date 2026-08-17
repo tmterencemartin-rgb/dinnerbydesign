@@ -54,6 +54,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   const [isChoosingDay, setIsChoosingDay] = useState(false);
 
   const mode = (recipe as any).retailer ? 'ready-made' : 'cook';
+  const displayedServings = (recipe as any).totalServings || requestedServings;
   const cuisineLabel = recipe.cuisine || '';
   const shouldShowCuisineLabel = cuisineLabel.trim().toLowerCase() !== 'active cook';
   
@@ -432,6 +433,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         )}
                       </div>
                     )}
+                    {displayedServings > 0 && (
+                      <span className="whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
+                        Serves {displayedServings}
+                      </span>
+                    )}
                     {(recipe.totalTime || recipe.prepTime || recipe.cookTime) && (
                       <span className="whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                         {recipe.totalTime} mins
@@ -571,13 +577,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   />
                 </div>
 
-                {isExpanded && (
-                  <>
-                    <div className="hidden sm:block w-full">
-                      {kitPanel}
-                    </div>
-                  </>
-                )}
               </div>
 
               {isExpanded && (
@@ -589,6 +588,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 </div>
               )}
             </div>
+
+            {isExpanded && (
+              <div className="hidden sm:block w-full">
+                {kitPanel}
+              </div>
+            )}
+
             <div className="space-y-1 sm:space-y-3">
               {currentIngredients.length > 0 && !isExpanded && (
                 <div className="flex items-center justify-between pt-1 border-t border-gray-50 mt-1 pb-1">

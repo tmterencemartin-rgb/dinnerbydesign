@@ -179399,6 +179399,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR RECIPES (HOMEMADE): You MUST provide a "sourceUrl" and an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return. If you can attribute the recipe to a real UK source (e.g. BBC Good Food, Jamie Oliver, Tesco Real Food), use their domain or a representative search URL. If it's a generic classic, use "recipe-search" or a similar descriptive string.
+- FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
 - CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
 - BATCH COOKING CLASSIFICATION (RECIPES ONLY): Add a 'batchCooking' object for home-cooking recipes. Set suitable=true only when the recipe keeps well, reheats well, scales sensibly to extra portions, and is not texture-sensitive. Good candidates include soups, stews, curries, chilli, pasta sauces, tray bakes, casseroles, rice dishes and lentil dishes. Avoid labelling dressed salads, crispy/fried dishes, fresh fish/shellfish-heavy dishes, rare steak, and recipes that should be served immediately. Include a short reason plus storage/reheat notes when suitable=true.
 - READY-MADE KIT (READY-MADE ONLY): Add a 'readyMadeKit' object that turns the core product into a complete dinner. Include the core product title, 1-3 optional supermarket sides, and 2-3 tiny upgrades using ordinary UK items such as herbs, yoghurt, lemon, bagged salad, frozen veg, microwave rice, naan, or slaw. Upgrades must be specific to the product and cuisine: avoid repeating generic texture ideas across unrelated products, and do not default to crispy onions or grated cheese unless they clearly suit that exact dish. Toasted breadcrumbs can suit some pasta-based products, but use them sparingly and only when they genuinely improve the item. Keep upgrades fast, cheap, and realistic for a tired weekday.
@@ -179464,6 +179465,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                 description: { type: Type.STRING },
                 cuisine: { type: Type.STRING },
                 totalTime: { type: Type.NUMBER },
+                totalServings: { type: Type.NUMBER, description: "Standard number of adult portions made by the full recipe." },
                 caloriesPerPortion: { type: Type.NUMBER },
                 costPerPortion: { type: Type.STRING },
                 isVegetarian: { type: Type.BOOLEAN },
@@ -179535,7 +179537,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                   }
                 }
               },
-              required: ["title", "description", "cuisine", "totalTime", "ingredients", "sourceUrl", "totalIngredientsCount", "realityChecks", ...isReadyMade ? ["retailer"] : []]
+              required: ["title", "description", "cuisine", "totalTime", "ingredients", "sourceUrl", "totalIngredientsCount", "realityChecks", ...isReadyMade ? ["retailer"] : ["totalServings"]]
             }
           },
           budgetContradiction: {
@@ -179732,6 +179734,7 @@ ${mode === "cook" ? '- Ingredients MUST include specific quantities/units (e.g. 
 - DESCRIPTION: Synthesize the best aspects in a professional tone.
 - SOURCE URL: Explicitly provide a representative source for this recipe (domain or search url).
 - TOTAL INGREDIENTS COUNT: Provide an accurate total count of all ingredients required.
+- STANDARD SERVINGS: Provide the standard number of adult portions made by the full recipe as totalServings. Do not use the user's current shopping quantity for this field.
 ${strictDetailLogic}
 `;
     const config2 = {
@@ -179744,6 +179747,7 @@ ${strictDetailLogic}
           instructions: { type: Type.ARRAY, items: { type: Type.STRING } },
           ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
           description: { type: Type.STRING },
+          totalServings: { type: Type.NUMBER, description: "Standard number of adult portions made by the full recipe." },
           totalIngredientsCount: { type: Type.NUMBER },
           costPerPortion: { type: Type.STRING },
           caloriesPerPortion: { type: Type.NUMBER },
@@ -179787,7 +179791,7 @@ ${strictDetailLogic}
             }
           } : {}
         },
-        required: ["instructions", "ingredients", "description", "sourceUrl", "totalIngredientsCount", ...mode === "ready-made" ? ["retailer"] : []]
+        required: ["instructions", "ingredients", "description", "sourceUrl", "totalIngredientsCount", ...mode === "ready-made" ? ["retailer"] : ["totalServings"]]
       }
     };
     let lastStrictMismatch = false;

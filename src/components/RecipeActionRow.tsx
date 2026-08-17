@@ -61,6 +61,13 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
     let finalInstructions = 'instructions' in recipe && recipe.instructions ? recipe.instructions : [];
     let finalDescription = 'description' in recipe && recipe.description ? recipe.description : '';
     const mode = 'mode' in recipe ? recipe.mode : ('retailer' in recipe ? 'ready-made' : 'cook');
+    const servingCount = 'totalServings' in recipe && recipe.totalServings
+      ? recipe.totalServings
+      : 'requestedServings' in recipe && recipe.requestedServings
+        ? recipe.requestedServings
+        : 'servingCount' in recipe && recipe.servingCount
+          ? recipe.servingCount
+          : null;
 
     try {
       const expectedCount = 'totalIngredientsCount' in recipe ? recipe.totalIngredientsCount || 0 : 0;
@@ -89,30 +96,31 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
       }
 
       const html = `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-          <h1 style="color: #111; margin-bottom: 8px;">${recipe.title}</h1>
-          ${finalDescription ? `<p style="font-style: italic; color: #666; margin-bottom: 24px;">${finalDescription}</p>` : ''}
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.4; padding: 10px;">
+          <h1 style="color: #111; margin: 0 0 4px;">${recipe.title}</h1>
+          ${servingCount ? `<p style="margin: 0 0 8px; color: #555;">Serves ${servingCount}</p>` : ''}
+          ${finalDescription ? `<p style="font-style: italic; color: #666; margin: 0 0 12px;">${finalDescription}</p>` : ''}
           
-          <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 24px;">
-            <h2 style="font-size: 18px; margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px;">Ingredients</h2>
-            <ul style="padding-left: 20px;">
+          <div style="background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 12px;">
+            <h2 style="font-size: 18px; margin: 0 0 4px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Ingredients</h2>
+            <ul style="padding-left: 20px; margin: 8px 0 0;">
               ${finalIngredients?.length > 0 
-                ? finalIngredients.map(ing => `<li style="margin-bottom: 8px;">${ing}</li>`).join('') 
+                ? finalIngredients.map(ing => `<li style="margin-bottom: 4px;">${ing}</li>`).join('')
                 : '<li style="color: #999;">Check retailer for pack ingredients.</li>'}
             </ul>
           </div>
 
-          <div style="padding: 0 20px;">
-            <h2 style="font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 8px;">Instructions</h2>
-            <ol style="padding-left: 20px;">
+          <div style="padding: 0 10px;">
+            <h2 style="font-size: 18px; margin: 0 0 4px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Instructions</h2>
+            <ol style="padding-left: 20px; margin: 8px 0 0;">
               ${finalInstructions?.length > 0 
-                ? finalInstructions.map(step => `<li style="margin-bottom: 12px; line-height: 1.5;">${step}</li>`).join('') 
+                ? finalInstructions.map(step => `<li style="margin-bottom: 6px; line-height: 1.4;">${step}</li>`).join('')
                 : `<li>Follow heating instructions on packaging from ${ (recipe as ReadyMeal).retailer || 'retailer' }.</li>`}
             </ol>
           </div>
 
-          <hr style="border: 0; border-top: 1px solid #eee; margin: 32px 0;" />
-          <p style="font-size: 12px; color: #999; text-align: center;">
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 16px 0;" />
+          <p style="font-size: 12px; color: #999; text-align: center; margin: 0; line-height: 1.3;">
             Sent from DinnerByDesign — Your efficient, precise, personalised recipe search.
           </p>
         </div>
@@ -160,7 +168,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
         console.error("Email error, launching local mail fallback:", err);
       }
       try {
-        let bodyContent = `${recipe.title}\n${finalDescription ? `${finalDescription}\n` : ''}\nIngredients:\n${finalIngredients?.map(ing => `- ${ing}`).join('\n') || 'Check retailer for pack ingredients.'}\n\nInstructions:\n${finalInstructions?.map((step, index) => `${index + 1}. ${step}`).join('\n') || 'Follow heating instructions on packaging.'}\n\nSent from DinnerByDesign — ${window.location.origin}`;
+        let bodyContent = `${recipe.title}\n${servingCount ? `Serves ${servingCount}\n` : ''}${finalDescription ? `${finalDescription}\n` : ''}\nIngredients:\n${finalIngredients?.map(ing => `- ${ing}`).join('\n') || 'Check retailer for pack ingredients.'}\n\nInstructions:\n${finalInstructions?.map((step, index) => `${index + 1}. ${step}`).join('\n') || 'Follow heating instructions on packaging.'}\n\nSent from DinnerByDesign — ${window.location.origin}`;
         
         const mailtoUrl = `mailto:?subject=${encodeURIComponent(`Recipe: ${recipe.title}`)}&body=${encodeURIComponent(bodyContent)}`;
         const a = document.createElement('a');
