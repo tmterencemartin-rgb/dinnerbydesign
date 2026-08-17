@@ -923,7 +923,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
 
               <p className="px-1 text-[10px] leading-4 text-gray-400">
-                Searches use automated AI processing. Do not include confidential personal information. <a href="/privacy" className="font-semibold text-dbd-accent hover:underline">Privacy</a>
+                Search uses AI. Do not include private information. <a href="/privacy" className="font-semibold text-dbd-accent hover:underline">Privacy</a>
               </p>
 
               {source === 'ready-made' && (
