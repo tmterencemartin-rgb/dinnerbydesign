@@ -910,7 +910,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     <span className="block text-[11.5px] font-semibold text-dbd-ink">Use only these ingredients (strict)</span>
                     <span id="strict-ingredient-match-help" className="mt-0.5 block text-[10.5px] leading-4 text-dbd-ink-3">
                       {ingredientIntent?.isIngredientLed
-                        ? 'Only recipes containing these ingredients are shown. Oil, salt, pepper and basic seasoning are allowed. Garlic, herbs, lemon and other extras must also be included in your search.'
+                        ? 'Only the ingredients listed above will be used. Oil, salt, pepper and basic seasoning are allowed. Add garlic, herbs, lemon or other extras to your search if you want them included.'
                         : 'Add at least two ingredients to your search to enable this filter.'}
                     </span>
                     {strictIngredientMatch && ingredientIntent?.isIngredientLed && ingredientIntent.ingredients.length > 0 && (
