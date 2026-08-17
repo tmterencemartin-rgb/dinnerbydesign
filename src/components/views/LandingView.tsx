@@ -214,7 +214,7 @@ export const LandingView: React.FC = () => {
     : (mockReadyMadeData[sandboxQuery] || mockReadyMadeData['Leftover chicken']);
 
   return (
-    <div className="native-scroll-root bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
+    <div className="native-scroll-root flex flex-col bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
       
       {/* 1. STICKY PREMIUM NAVIGATION BAR */}
       <nav id="top-nav" className="sticky top-0 z-[1000] bg-dbd-surface/90 backdrop-blur-md border-b border-dbd-rule/60 py-4.5 px-3 sm:px-6 md:px-8">
@@ -240,7 +240,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Desktop Direct Links */}
-          <div className="hidden md:flex items-center gap-8 font-ibm-plex-mono text-[12px] font-semibold text-dbd-ink-2">
+          <div className="hidden md:flex items-center gap-6 font-ibm-plex-mono text-[12px] font-semibold text-dbd-ink-2">
             <a
               href="#why-different"
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
@@ -265,6 +265,12 @@ export const LandingView: React.FC = () => {
             >
               Explore
             </a>
+            <button
+              onClick={handleSignIn}
+              className="ml-1 border border-dbd-rule hover:border-dbd-accent hover:text-dbd-accent px-3 py-2 rounded-sm tracking-tight transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent"
+            >
+              {user && !user.isAnonymous ? 'Account' : 'Sign in'}
+            </button>
           </div>
 
           {/* Mobile Menu Action button */}
@@ -327,7 +333,7 @@ export const LandingView: React.FC = () => {
       </nav>
 
       {/* 2. HERO HEADER SECTION */}
-      <section className="relative px-6 max-w-5xl mx-auto pt-16 pb-12 sm:pt-24 sm:pb-16 text-center">
+      <section className="relative order-1 px-6 max-w-5xl mx-auto pt-12 pb-8 sm:pt-20 sm:pb-12 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold text-dbd-ink font-sans leading-[1.15] tracking-tight mb-6 max-w-4xl mx-auto">
           <span className="sm:hidden">Make the weekly shop<br />go further.</span>
           <span className="hidden sm:inline">Make the weekly shop go further.</span>
@@ -347,7 +353,7 @@ export const LandingView: React.FC = () => {
           </button>
           <button 
             onClick={() => scrollToSection('interactive-sandbox')}
-            className="w-full sm:w-auto bg-white border border-dbd-rule hover:border-dbd-accent hover:text-dbd-accent text-dbd-ink font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-8 py-4 rounded-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-transparent border border-transparent hover:border-dbd-rule hover:text-dbd-accent text-dbd-ink-2 font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-4 py-3 rounded-sm transition-all cursor-pointer flex items-center justify-center gap-2"
           >
             See how it works <ArrowDownIcon className="w-4 h-4" />
           </button>
@@ -358,15 +364,15 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 3. INTERACTIVE BROWSER PREVIEW SANDBOX */}
-      <section id="interactive-sandbox" className="py-8 px-4 sm:px-6 md:px-8">
-        <div className="max-w-4xl mx-auto">
+      <section id="interactive-sandbox" className="order-2 pt-0 pb-10 px-4 sm:px-6 md:px-8">
+        <div className="max-w-3xl mx-auto">
           
           <div className="text-center mb-5 text-[11px] font-ibm-plex-mono font-bold uppercase tracking-[0.2em] text-dbd-accent-mid select-none">
             — See It Work —
           </div>
 
           {/* Browser frame decoration */}
-          <div className="border border-dbd-rule rounded-xl bg-white shadow-2xl overflow-hidden">
+          <div className="border border-dbd-rule rounded-xl bg-white shadow-lg overflow-hidden">
             
             {/* Browser top title bar */}
             <div className="bg-dbd-surface-2 border-b border-dbd-rule/80 px-4 py-3 flex items-center gap-3">
@@ -490,7 +496,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 5. WHY I BUILT DINNERBYDESIGN */}
-      <section id="why-different" className="py-16 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40 scroll-mt-nav">
+      <section id="why-different" className="order-4 py-12 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40 scroll-mt-nav">
         <div className="max-w-prose text-left select-none">
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-6">
             Why I built DinnerByDesign
@@ -508,7 +514,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* WEEKLY SHOP SECTION */}
-      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto">
+      <section className="order-5 py-12 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto">
         <div className="max-w-prose text-left select-none">
           <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
             MADE FOR THE WEEKLY SHOP
@@ -523,7 +529,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* BUILT AROUND YOUR KITCHEN */}
-      <section className="py-16 px-6 sm:px-8 max-w-5xl mx-auto">
+      <section className="order-6 py-12 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
           <div className="md:col-span-5 select-none">
             <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
@@ -551,10 +557,10 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 6. THREE TABS FEATURE EXPLAINER GRID */}
-      <section id="how-it-works" className="py-16 bg-[#F4F1EA] border-t border-dbd-rule/40 scroll-mt-nav px-6 sm:px-8">
+      <section id="how-it-works" className="order-3 py-12 sm:py-14 bg-[#F4F1EA] border-t border-dbd-rule/40 scroll-mt-nav px-6 sm:px-8">
         <div className="max-w-5xl mx-auto">
           
-          <div className="text-center mb-12 select-none">
+          <div className="text-center mb-8 select-none">
             <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
               How It Works
             </span>
@@ -629,7 +635,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 7. SUBSCRIPTION PLANS & CONVERSION CONTAINER */}
-      <section id="pricing" className="py-10 sm:py-16 px-6 sm:px-8 max-w-5xl mx-auto scroll-mt-nav">
+      <section id="pricing" className="order-7 py-10 sm:py-16 px-6 sm:px-8 max-w-5xl mx-auto scroll-mt-nav">
         
         <div className="text-center mb-10 select-none">
           <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.25em] text-dbd-accent uppercase block mb-3">
@@ -639,7 +645,7 @@ export const LandingView: React.FC = () => {
             Create an account when DinnerByDesign earns it.
           </h3>
           <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
-            Free searches give you three tries without an account. The free trial gives you seven days of full access after sign-up, including continued searches, saved favourites, dinner planning and shopping lists.
+            Free searches give you three tries without an account. The free trial lasts seven days after sign-up, including continued searches, saved favourites, dinner planning and shopping lists.
           </p>
         </div>
 
@@ -780,7 +786,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 8. SEARCH-FOCUSED FAQ */}
-      <section className="py-10 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
+      <section className="order-8 py-10 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
         <div className="max-w-3xl mx-auto">
           <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-5">
             Common Questions
@@ -826,7 +832,7 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 9. INDEPENDENCE CLAUSE & COGNIZANT LEGAL FOOTER */}
-      <footer className="bg-[#FAF8F5] border-t border-dbd-rule pt-4 sm:pt-6 pb-4 px-6 sm:px-8">
+      <footer className="order-9 bg-[#FAF8F5] border-t border-dbd-rule pt-4 sm:pt-6 pb-4 px-6 sm:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-4 select-none">
           
           <div className="flex flex-col items-center justify-center space-y-1.5">
