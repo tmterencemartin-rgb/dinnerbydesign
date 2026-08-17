@@ -72,6 +72,12 @@ describe('Ingredient Parser & Normalizer', () => {
       ingredients: ['haddock', 'pea'],
       reason: 'short-food-list'
     });
+
+    expect(detectIngredientIntent('lamb rice')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['lamb', 'rice'],
+      reason: 'short-food-list'
+    });
   });
 
   test('detects compound ingredients in short searches without separators', () => {
@@ -188,6 +194,38 @@ describe('Ingredient Parser & Normalizer', () => {
     }
   });
 
+  test('covers common lamb compounds in short searches', () => {
+    const variants = [
+      'lamb mince', 'lamb chops', 'lamb shanks', 'lamb shoulder', 'lamb leg',
+      'lamb neck', 'lamb loin', 'lamb steak', 'lamb fillet', 'lamb rack',
+      'rack of lamb', 'lamb cutlet', 'lamb breast', 'lamb saddle', 'lamb ribs',
+      'lamb medallion', 'lamb kebab'
+    ];
+
+    for (const variant of variants) {
+      expect(detectIngredientIntent(`${variant} rice`)).toMatchObject({
+        isIngredientLed: true,
+        reason: 'short-food-list'
+      });
+    }
+  });
+
+  test('detects main ingredient families in short searches', () => {
+    const ingredients = [
+      'lamb', 'turkey', 'duck', 'venison', 'sardines', 'trout', 'scallops', 'mussels',
+      'parsnips', 'asparagus', 'pak choi', 'butternut squash', 'quinoa', 'couscous',
+      'pasta', 'spaghetti', 'coriander', 'flat-leaf parsley', 'fresh basil', 'king prawns', 'cheddar cheese',
+      'butter', 'milk', 'cheddar', 'almonds', 'walnuts', 'pumpkin seeds'
+    ];
+
+    for (const ingredient of ingredients) {
+      expect(detectIngredientIntent(`${ingredient} rice`), ingredient).toMatchObject({
+        isIngredientLed: true,
+        reason: 'short-food-list'
+      });
+    }
+  });
+
   test('does not treat ordinary dish names as ingredient-led searches', () => {
     expect(detectIngredientIntent('chicken curry')).toBeNull();
     expect(detectIngredientIntent('beef fillet curry')).toBeNull();
@@ -282,5 +320,13 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(matchesStrictIngredientSearch({
       ingredients: ['haddock fillets', 'peas', 'rice', 'oil']
     }, 'haddock peas')).toBe(false);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['lamb shoulder', 'brown rice', 'olive oil', 'salt']
+    }, 'lamb rice')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['lamb shoulder', 'brown rice', 'onion', 'olive oil']
+    }, 'lamb rice')).toBe(false);
   });
 });

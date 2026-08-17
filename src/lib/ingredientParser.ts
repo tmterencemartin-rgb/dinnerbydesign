@@ -7,6 +7,105 @@
  * - Treat plurals and spelling variants as equivalent.
  */
 
+// Main ingredient aliases shared by normalisation and the short-search catalogue.
+// Keep dish names out of this list: "lamb curry" is a dish search, not two raw ingredients.
+const MAIN_INGREDIENT_ALIAS_MAP: Record<string, string> = {
+  // Meat, poultry and game
+  'turkey breasts': 'turkey breast', 'turkey thighs': 'turkey thigh', 'turkey mince': 'turkey mince',
+  'duck legs': 'duck leg', 'duck breasts': 'duck breast', 'duck fillets': 'duck fillet',
+  'venison steaks': 'venison steak', 'venison mince': 'venison mince',
+  'rabbit legs': 'rabbit leg', 'rabbit joints': 'rabbit joint',
+  'lamb shoulders': 'lamb shoulder', 'lamb legs': 'lamb leg', 'lamb necks': 'lamb neck',
+  'lamb loins': 'lamb loin', 'lamb steaks': 'lamb steak', 'lamb fillets': 'lamb fillet',
+  'lamb racks': 'lamb rack', 'rack of lamb': 'lamb rack', 'racks of lamb': 'lamb rack',
+  'lamb cutlets': 'lamb cutlet', 'lamb breasts': 'lamb breast', 'lamb saddles': 'lamb saddle',
+  'lamb ribs': 'lamb rib', 'lamb medallions': 'lamb medallion', 'lamb kebabs': 'lamb kebab',
+  // Fish and seafood
+  'anchovies': 'anchovy', 'sardines': 'sardine', 'herrings': 'herring', 'trouts': 'trout',
+  'pollocks': 'pollock', 'plaice': 'plaice', 'hakes': 'hake', 'monkfish': 'monkfish',
+  'seabass': 'sea bass', 'sea bass fillets': 'sea bass fillet', 'salmon fillets': 'salmon fillet',
+  'cod fillets': 'cod fillet', 'haddock fillets': 'haddock fillet', 'tuna steaks': 'tuna steak',
+  'mackerel fillets': 'mackerel fillet', 'squid': 'squid', 'calamari': 'squid',
+  'scallops': 'scallop', 'mussels': 'mussel', 'oysters': 'oyster', 'lobsters': 'lobster',
+  'langoustines': 'langoustine', 'crayfish': 'crayfish', 'prawns': 'prawn',
+  // Vegetables and herbs
+  'carrots': 'carrot', 'leeks': 'leek', 'parsnips': 'parsnip', 'radishes': 'radish',
+  'turnips': 'turnip', 'swedes': 'swede', 'beetroots': 'beetroot', 'beets': 'beetroot',
+  'cabbages': 'cabbage', 'cauliflowers': 'cauliflower', 'courgettes': 'courgette',
+  'aubergines': 'aubergine', 'asparagus': 'asparagus', 'artichokes': 'artichoke',
+  'fennel bulbs': 'fennel bulb', 'celeriac': 'celeriac', 'watercress': 'watercress',
+  'rocket leaves': 'rocket', 'spring greens': 'spring green', 'green beans': 'green bean',
+  'runner beans': 'runner bean', 'broad beans': 'broad bean', 'fava beans': 'fava bean',
+  'edamame beans': 'edamame bean', 'sugar snap peas': 'sugar snap', 'snap peas': 'snap pea',
+  'pak choi': 'pak choi', 'bok choy': 'pak choi', 'spring onions': 'spring onion',
+  'shallots': 'shallot', 'red onions': 'red onion', 'white onions': 'white onion',
+  'cherry tomatoes': 'cherry tomato', 'plum tomatoes': 'plum tomato',
+  'sun-dried tomatoes': 'sun-dried tomato', 'butternut squashes': 'butternut squash',
+  'sweet potatoes': 'sweet potato', 'brussels sprouts': 'brussels sprout',
+  'coriander leaves': 'coriander', 'parsley leaves': 'parsley', 'flat leaf parsley': 'flat-leaf parsley',
+  'basil leaves': 'basil',
+  'mint leaves': 'mint', 'thyme leaves': 'thyme', 'rosemary sprigs': 'rosemary', 'chives': 'chive',
+  // Pulses, grains and starches
+  'lentils': 'lentil', 'red lentils': 'red lentil', 'green lentils': 'green lentil',
+  'chickpeas': 'chickpea', 'chick peas': 'chickpea', 'kidney beans': 'kidney bean',
+  'butter beans': 'butter bean', 'black beans': 'black bean', 'cannellini beans': 'cannellini bean',
+  'haricot beans': 'haricot bean', 'baked beans': 'baked bean', 'peas': 'pea',
+  'oats': 'oat', 'noodles': 'noodle', 'egg noodles': 'egg noodle', 'rice noodles': 'rice noodle',
+  'pearl barley': 'pearl barley', 'bulgur wheat': 'bulgur wheat', 'cous cous': 'couscous',
+  'couscous': 'couscous', 'quinoas': 'quinoa', 'polenta': 'polenta',
+  // Dairy, fats and compound cupboard ingredients
+  'butters': 'butter', 'milks': 'milk', 'greek yogurt': 'greek yoghurt', 'greek yoghurts': 'greek yoghurt',
+  'natural yogurt': 'natural yoghurt', 'plain yogurt': 'plain yoghurt', 'yogurts': 'yoghurt',
+  'yoghurts': 'yoghurt', 'creme fraiche': 'crème fraîche', 'crèmes fraîches': 'crème fraîche',
+  'cheddars': 'cheddar', 'mozzarella': 'mozzarella', 'parmesan': 'parmesan', 'fetas': 'feta',
+  'halloumi': 'halloumi', 'ricotta': 'ricotta', 'mascarpone': 'mascarpone',
+  'olive oils': 'olive oil', 'coconut milks': 'coconut milk', 'sesame oils': 'sesame oil',
+  // Fruit, nuts and seeds
+  'apples': 'apple', 'bananas': 'banana', 'oranges': 'orange', 'lemons': 'lemon', 'limes': 'lime',
+  'peaches': 'peach', 'nectarines': 'nectarine', 'plums': 'plum', 'pears': 'pear',
+  'strawberries': 'strawberry', 'raspberries': 'raspberry', 'blueberries': 'blueberry',
+  'almonds': 'almond', 'walnuts': 'walnut', 'hazelnuts': 'hazelnut', 'cashews': 'cashew',
+  'pistachios': 'pistachio', 'peanuts': 'peanut', 'pine nuts': 'pine nut',
+  'pumpkin seeds': 'pumpkin seed', 'sunflower seeds': 'sunflower seed', 'sesame seeds': 'sesame seed',
+  'chia seeds': 'chia seed', 'flax seeds': 'flax seed', 'linseeds': 'linseed'
+};
+
+const ADDITIONAL_MAIN_INGREDIENT_TERMS = [
+  'lamb', 'turkey', 'duck', 'venison', 'rabbit', 'game',
+  'sardine', 'herring', 'trout', 'pollock', 'plaice', 'hake', 'monkfish', 'anchovy',
+  'scallop', 'mussel', 'oyster', 'lobster', 'langoustine', 'crayfish', 'squid',
+  'parsnip', 'radish', 'artichoke', 'fennel', 'fennel bulb', 'celeriac', 'watercress', 'rocket',
+  'spring green', 'runner bean', 'broad bean', 'fava bean', 'edamame bean', 'snap pea', 'shallot',
+  'pak choi', 'butternut squash', 'asparagus', 'aubergine', 'courgette',
+  'coriander', 'parsley', 'basil', 'mint', 'thyme', 'rosemary', 'sage', 'oregano', 'dill', 'chive',
+  'barley', 'bulgur wheat', 'couscous', 'quinoa', 'polenta', 'oat', 'bread',
+  'pasta', 'spaghetti', 'penne', 'macaroni', 'orzo', 'gnocchi', 'tortilla', 'corn',
+  'butter', 'milk', 'cheddar', 'mozzarella', 'parmesan', 'feta', 'halloumi', 'ricotta', 'mascarpone',
+  'greek yoghurt', 'natural yoghurt', 'plain yoghurt', 'crème fraîche',
+  'orange', 'peach', 'nectarine', 'plum', 'pear', 'strawberry', 'raspberry', 'blueberry',
+  'almond', 'walnut', 'hazelnut', 'cashew', 'pistachio', 'peanut', 'pumpkin seed',
+  'sunflower seed', 'sesame seed', 'chia seed', 'flax seed', 'linseed'
+];
+
+const ADDITIONAL_COMPOUND_INGREDIENT_PHRASES = [
+  'turkey breast', 'turkey thigh', 'turkey mince', 'duck leg', 'duck breast', 'duck fillet',
+  'venison steak', 'venison mince', 'rabbit leg', 'rabbit joint', 'lamb mince', 'lamb shoulder',
+  'lamb leg', 'lamb neck', 'lamb loin', 'lamb steak', 'lamb fillet', 'lamb rack', 'lamb chop',
+  'lamb shank', 'lamb cutlet', 'lamb breast', 'lamb saddle', 'lamb rib', 'lamb medallion', 'lamb kebab',
+  'sea bass', 'sea bass fillet', 'tiger prawn', 'king prawn', 'king crab', 'salmon fillet', 'cod fillet', 'haddock fillet', 'tuna steak',
+  'mackerel fillet', 'spring green', 'runner bean', 'broad bean', 'fava bean', 'edamame bean',
+  'sugar snap', 'snap pea', 'pak choi', 'spring onion', 'red onion', 'white onion', 'cherry tomato',
+  'plum tomato', 'sun-dried tomato', 'butternut squash', 'fennel bulb', 'red cabbage', 'savoy cabbage',
+  'sweet potato', 'new potato', 'roast potato', 'red lentil', 'green lentil', 'butter bean',
+  'kidney bean', 'black bean', 'cannellini bean', 'haricot bean', 'baked bean', 'egg noodle',
+  'rice noodle', 'wild rice', 'brown rice', 'basmati rice', 'long grain rice', 'pearl barley',
+  'bulgur wheat', 'coconut milk', 'greek yoghurt', 'natural yoghurt', 'plain yoghurt', 'crème fraîche',
+  'flat-leaf parsley', 'fresh coriander', 'fresh basil', 'fresh mint', 'fresh thyme', 'fresh rosemary',
+  'cream cheese', 'goat cheese', 'cottage cheese', 'cheddar cheese', 'mozzarella cheese',
+  'parmesan cheese', 'feta cheese', 'halloumi cheese', 'ricotta cheese', 'olive oil', 'rapeseed oil', 'sesame oil',
+  'pumpkin seed', 'sunflower seed', 'sesame seed', 'chia seed', 'flax seed', 'pine nut'
+];
+
 export function parseAndNormaliseIngredients(query: string): string[] {
   if (!query || typeof query !== 'string') return [];
   
@@ -23,6 +122,7 @@ export function parseAndNormaliseIngredients(query: string): string[] {
     
     // Comprehensive spelling and vocabulary mapping to UK English and singular forms
     const vocabularyMap: Record<string, string> = {
+      ...MAIN_INGREDIENT_ALIAS_MAP,
       // US and plural variant mapping to singular UK English
       'cilantro': 'coriander',
       'cilantros': 'coriander',
@@ -226,6 +326,21 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'rump joints': 'rump joint',
       'beef tenderloin': 'beef fillet',
       'tenderloin': 'beef fillet',
+      'lamb shoulders': 'lamb shoulder',
+      'lamb legs': 'lamb leg',
+      'lamb necks': 'lamb neck',
+      'lamb loins': 'lamb loin',
+      'lamb steaks': 'lamb steak',
+      'lamb fillets': 'lamb fillet',
+      'lamb racks': 'lamb rack',
+      'rack of lamb': 'lamb rack',
+      'racks of lamb': 'lamb rack',
+      'lamb cutlets': 'lamb cutlet',
+      'lamb breasts': 'lamb breast',
+      'lamb saddles': 'lamb saddle',
+      'lamb ribs': 'lamb rib',
+      'lamb medallions': 'lamb medallion',
+      'lamb kebabs': 'lamb kebab',
       'lamb shanks': 'lamb shank',
       'duck breasts': 'duck breast',
       'tiger prawns': 'tiger prawn',
@@ -347,7 +462,7 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'anchovy', 'apple', 'aubergine', 'avocado', 'bacon', 'banana', 'bean',
   'beef', 'broccoli', 'cabbage', 'carrot', 'cauliflower', 'celery', 'cheese',
   'chickpea', 'chicken', 'chilli', 'chorizo', 'cod', 'courgette', 'cucumber', 'duck',
-  'egg', 'fish', 'flour', 'garlic', 'ginger', 'ham', 'haddock', 'kale', 'leek',
+  'egg', 'fish', 'flour', 'garlic', 'ginger', 'ham', 'haddock', 'kale', 'lamb', 'leek',
   'lentil', 'lemon', 'lime', 'mackerel', 'mushroom', 'noodle', 'oat', 'onion',
   'pasta', 'pea', 'pepper', 'prawn', 'potato', 'pork', 'rice', 'salmon', 'crab', 'bass',
   'sausage', 'shin', 'brisket', 'sirloin', 'ribeye', 'rump', 'topside', 'silverside', 'chuck',
@@ -356,7 +471,8 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'drumstick', 'drumette', 'tenderloin', 'tender', 'strip', 'quarter', 'crown', 'piece', 'portion',
   'giblet', 'liver', 'heart', 'neck',
   'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato',
-  'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt', 'lemongrass', 'buttermilk', 'chestnut'
+  'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt', 'lemongrass', 'buttermilk', 'chestnut',
+  ...ADDITIONAL_MAIN_INGREDIENT_TERMS
 ]);
 
 const UNSEPARATED_INGREDIENT_PHRASES = new Set([
@@ -385,7 +501,9 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   'pork steak', 'pork rib', 'pork joint', 'pork roasting joint', 'pork fillet', 'pork medallion',
   'pork knuckle', 'pork hock', 'pork collar', 'pork neck', 'pork escalope', 'pork schnitzel',
   'spare rib', 'baby back rib', 'gammon steak', 'gammon joint', 'roast pork', 'roasting pork',
-  'pulled pork', 'diced pork', 'chicken breast', 'lamb shank', 'duck breast',
+  'pulled pork', 'diced pork', 'chicken breast', 'lamb mince', 'lamb shank', 'lamb chop',
+  'lamb shoulder', 'lamb leg', 'lamb neck', 'lamb loin', 'lamb steak', 'lamb fillet',
+  'lamb rack', 'lamb cutlet', 'lamb breast', 'lamb saddle', 'lamb rib', 'lamb medallion', 'lamb kebab', 'duck breast',
   'tiger prawn', 'king crab', 'sea bass',
   'chicken thigh', 'chicken wing', 'chicken leg', 'chicken fillet', 'chicken tenderloin',
   'chicken tender', 'chicken strip', 'chicken drumstick', 'chicken drumette',
@@ -405,7 +523,8 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   'vegetable stock', 'chicken stock', 'beef stock', 'vegetable stock cube', 'chicken stock cube',
   'olive oil', 'rapeseed oil', 'sesame oil', 'balsamic vinegar', 'red wine vinegar', 'white wine vinegar',
   'double cream', 'cream cheese', 'sour cream', 'goat cheese', 'cottage cheese', 'buttermilk',
-  'passion fruit', 'dragon fruit', 'star fruit', 'pine nut', 'chestnut', 'macadamia nut'
+  'passion fruit', 'dragon fruit', 'star fruit', 'pine nut', 'chestnut', 'macadamia nut',
+  ...ADDITIONAL_COMPOUND_INGREDIENT_PHRASES
 ]);
 
 const COMPOUND_INGREDIENT_MODIFIERS = new Set([
@@ -539,9 +658,23 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
     'short', 'skirt', 'featherblade', 'bavette', 'onglet', 'flat', 'hanger', 'cheek', 'oxtail',
     'striploin', 'porterhouse', 'tomahawk', 'medallion', 'diced', 'joint', 'roasting', 'tenderloin'
   ]),
-  lamb: new Set(['mince', 'chop', 'shoulder', 'leg', 'shank']),
+  lamb: new Set([
+    'mince', 'chop', 'shoulder', 'leg', 'neck', 'loin', 'steak', 'fillet', 'rack', 'cutlet',
+    'breast', 'saddle', 'rib', 'medallion', 'kebab', 'shank'
+  ]),
   turkey: new Set(['mince', 'breast', 'thigh']),
   duck: new Set(['breast', 'leg', 'fillet']),
+  fish: new Set([
+    'salmon', 'cod', 'haddock', 'mackerel', 'trout', 'tuna', 'sardine', 'herring',
+    'pollock', 'plaice', 'hake', 'monkfish', 'bass', 'anchovy'
+  ]),
+  rice: new Set(['wild', 'brown', 'basmati', 'long', 'jasmine', 'bomba', 'risotto']),
+  bean: new Set(['butter', 'kidney', 'black', 'cannellini', 'haricot', 'baked', 'green', 'broad', 'fava', 'runner', 'edamame']),
+  lentil: new Set(['red', 'green', 'brown', 'black', 'puy']),
+  noodle: new Set(['egg', 'rice', 'udon', 'soba']),
+  mushroom: new Set(['chestnut', 'button', 'wild', 'portobello', 'shiitake', 'oyster']),
+  cheese: new Set(['cheddar', 'goat', 'cottage', 'cream', 'blue', 'feta', 'parmesan', 'mozzarella', 'halloumi', 'ricotta']),
+  yoghurt: new Set(['greek', 'natural', 'plain']),
   salmon: new Set(['fillet', 'steak', 'portion', 'side']),
   cod: new Set(['fillet', 'loin', 'steak', 'portion']),
   haddock: new Set(['fillet', 'loin', 'portion']),
