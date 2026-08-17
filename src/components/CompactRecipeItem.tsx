@@ -43,8 +43,8 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
 
   return (
     <div
-      className={`w-full text-left bg-white border rounded px-3 py-2.5 sm:p-4 hover:border-accent/30 hover:shadow-sm transition-all duration-200 group ${
-        isCompareSelected ? 'border-accent/50' : 'border-gray-100'
+      className={`w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-gray-50/70 transition-colors duration-200 group ${
+        isCompareSelected ? 'border-l-2 border-dbd-accent bg-dbd-accent/5 pl-[10px] sm:pl-[14px]' : 'border-l-2 border-transparent'
       }`}
     >
       <div className="flex items-center justify-between gap-2.5 sm:gap-4">

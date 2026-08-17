@@ -1417,29 +1417,31 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             )}
 
-            {source === 'cook' ? (
-              currentRecipes?.map((recipe, idx) => (
-                <CompactRecipeItem 
-                  key={recipe.id || `compact-recipe-${idx}`}
-                  item={recipe}
-                  source="cook"
-                  onClick={() => setSelectedItem(recipe)}
-                  onCompare={() => handleCompareToggle(recipe)}
-                  isCompareSelected={isCompareSelected(recipe)}
-                />
-              ))
-            ) : (
-              currentReadyMeals?.map((meal, idx) => (
-                <CompactRecipeItem 
-                  key={meal.id || `compact-meal-${idx}`}
-                  item={meal}
-                  source="ready-made"
-                  onClick={() => setSelectedItem(meal)}
-                  onCompare={() => handleCompareToggle(meal)}
-                  isCompareSelected={isCompareSelected(meal)}
-                />
-              ))
-            )}
+            <div className="border-y border-dbd-rule/70 bg-white divide-y divide-dbd-rule/70">
+              {source === 'cook' ? (
+                currentRecipes?.map((recipe, idx) => (
+                  <CompactRecipeItem
+                    key={recipe.id || `compact-recipe-${idx}`}
+                    item={recipe}
+                    source="cook"
+                    onClick={() => setSelectedItem(recipe)}
+                    onCompare={() => handleCompareToggle(recipe)}
+                    isCompareSelected={isCompareSelected(recipe)}
+                  />
+                ))
+              ) : (
+                currentReadyMeals?.map((meal, idx) => (
+                  <CompactRecipeItem
+                    key={meal.id || `compact-meal-${idx}`}
+                    item={meal}
+                    source="ready-made"
+                    onClick={() => setSelectedItem(meal)}
+                    onCompare={() => handleCompareToggle(meal)}
+                    isCompareSelected={isCompareSelected(meal)}
+                  />
+                ))
+              )}
+            </div>
 
             {hasExhaustedSearch && (
               <div className="p-3 bg-gray-50/50 border border-gray-100 rounded-lg space-y-2 mt-2 sm:mt-4">
