@@ -34,6 +34,8 @@ const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
 const GUEST_SEARCH_LIMIT = 3;
+const STRICT_INGREDIENT_NO_RESULTS_MESSAGE =
+  'No exact matches found. Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off “Use only these ingredients (strict)”.';
 
 const isBroadChilliDishQuery = (query: string) => /\b(chilli|chili)\b/i.test(query)
   && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);
@@ -439,7 +441,7 @@ export function useSearch() {
           type: filtersActive ? 'conflict' : 'no_results',
           content: filtersActive 
             ? params.strictIngredientMatch
-              ? 'No exact matches used only your listed ingredients. Turn off “Use only listed ingredients” to allow a few extras.'
+              ? STRICT_INGREDIENT_NO_RESULTS_MESSAGE
               : `No dishes match your current filters. This might be due to a strict dietary preference (e.g. Vegetarian only) or exclusions. Try loosening your filters or searching for something else.`
             : `No dishes found for "${params.query || input}". Try adjusting your search term or broadening your criteria.`
         });
@@ -514,7 +516,7 @@ export function useSearch() {
           setSearchContradiction({
             type: 'conflict',
             content: params.strictIngredientMatch
-              ? 'No exact matches used only your listed ingredients. Turn off “Use only listed ingredients” to allow a few extras.'
+              ? STRICT_INGREDIENT_NO_RESULTS_MESSAGE
               : `No dishes match your current rules. Try broadening your search or removing an exclusion.`
           });
           if (!isAppend) {

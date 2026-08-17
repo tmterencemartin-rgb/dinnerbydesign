@@ -364,7 +364,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
-  const hasPreferenceConflictNotice = !!contradictionWarning && contradictionWarning.type !== 'no_results';
+  const hasStrictIngredientNoResults = status === 'noResults'
+    && source === 'cook'
+    && strictIngredientMatch
+    && !!resultsIngredientIntent?.isIngredientLed;
+  const hasPreferenceConflictNotice = !!contradictionWarning
+    && contradictionWarning.type !== 'no_results'
+    && !hasStrictIngredientNoResults;
   const dietaryConflictCriterion = React.useMemo(
     () => activeCriteria.find(criterion => criterion.type === 'dietaryRule'),
     [activeCriteria]
@@ -901,12 +907,17 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     aria-describedby="strict-ingredient-match-help"
                   />
                   <span className="min-w-0">
-                    <span className="block text-[11.5px] font-semibold text-dbd-ink">Use only these ingredients</span>
+                    <span className="block text-[11.5px] font-semibold text-dbd-ink">Use only these ingredients (strict)</span>
                     <span id="strict-ingredient-match-help" className="mt-0.5 block text-[10.5px] leading-4 text-dbd-ink-3">
                       {ingredientIntent?.isIngredientLed
-                        ? 'Every listed ingredient must be used. Basic pantry items such as oil, salt and pepper are allowed.'
+                        ? 'Only recipes containing these ingredients are shown. Oil, salt, pepper and basic seasoning are allowed. Garlic, herbs, lemon and other extras must also be included in your search.'
                         : 'Add at least two ingredients to your search to enable this filter.'}
                     </span>
+                    {strictIngredientMatch && ingredientIntent?.isIngredientLed && ingredientIntent.ingredients.length > 0 && (
+                      <span className="mt-1.5 block border-t border-dbd-rule/50 pt-1.5 text-[10px] font-semibold leading-4 text-dbd-accent" aria-live="polite">
+                        Strict search on: {ingredientIntent.ingredients.map(sentenceCase).join(' · ')}. Unlisted ingredients are excluded.
+                      </span>
+                    )}
                   </span>
                 </label>
               )}
@@ -1110,7 +1121,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
             </AnimatePresence>
 
-            {contradictionWarning && (
+            {contradictionWarning && !hasStrictIngredientNoResults && (
               <motion.div 
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1291,9 +1302,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 
                 {!hasPreferenceConflictNotice && (
                   <div className="space-y-1.5">
-                    <h3 className="text-[16px] font-bold text-gray-900">No recipes match all selected preferences.</h3>
+                    <h3 className="text-[16px] font-bold text-gray-900">
+                      {hasStrictIngredientNoResults ? 'No exact matches found' : 'No recipes match all selected preferences.'}
+                    </h3>
                     <p className="text-[13px] text-gray-500 mx-auto leading-relaxed font-medium">
-                      Try removing one or two preferences to broaden the search.
+                      {hasStrictIngredientNoResults
+                        ? 'Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off strict search.'
+                        : 'Try removing one or two preferences to broaden the search.'}
                     </p>
                   </div>
                 )}
@@ -1336,7 +1351,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         Search anyway
                       </button>
                     )}
-                    {!hasPreferenceConflictNotice && (
+                    {hasStrictIngredientNoResults && (
+                      <button
+                        onClick={() => setStrictIngredientMatch(false)}
+                        className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
+                      >
+                        Turn off strict search
+                      </button>
+                    )}
+                    {!hasPreferenceConflictNotice && !hasStrictIngredientNoResults && (
                       <button
                         onClick={handleReset}
                         className="w-full py-3 bg-gray-900 text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-md"

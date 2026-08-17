@@ -324,6 +324,34 @@ describe('useSearch Hook Lifecycle', () => {
     expect(result.current.currentRecipes?.map(recipe => recipe.title)).toEqual(['Ham, egg and potato hash']);
   });
 
+  it('explains when strict matching removes every recipe', async () => {
+    (geminiService.generateDinnerSuggestions as any).mockResolvedValue({
+      recipes: [{
+        title: 'Chicken traybake',
+        ingredients: ['chicken thighs', 'potatoes', 'green beans', 'onion'],
+        totalIngredientsCount: 4,
+        totalTime: 45,
+        cuisine: 'British'
+      }],
+      readyMeals: []
+    });
+
+    const { result } = renderHook(() => useSearch());
+
+    act(() => {
+      result.current.setInput('chicken thighs potatoes green beans');
+      result.current.setStrictIngredientMatch(true);
+    });
+
+    await act(async () => {
+      await result.current.handleGenerate();
+    });
+
+    expect(result.current.currentRecipes).toEqual([]);
+    expect(result.current.searchContradiction?.content).toContain('unlisted ingredients');
+    expect(result.current.searchContradiction?.content).toContain('garlic, herbs or lemon');
+  });
+
   it('hides raw permission-denied provider payloads from users', async () => {
     const providerPayload = '{"error":{"code":403,"message":"Lightning dunning decision is deny for project: projects/58614176053","status":"PERMISSION_DENIED"}}';
     (geminiService.generateDinnerSuggestions as any).mockRejectedValue(
