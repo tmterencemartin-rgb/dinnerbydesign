@@ -388,7 +388,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             <div className={isExpanded ? 'grid gap-2 sm:gap-5 sm:grid-cols-[minmax(240px,0.92fr)_minmax(320px,1.08fr)] sm:items-start' : 'grid grid-cols-1 gap-3 sm:gap-5'}>
               <div className="flex flex-col gap-2 sm:gap-2.5 items-start w-full min-w-0">
                 {/* Compressed Metadata Section */}
-                <div className="w-full flex flex-col gap-1.5 sm:gap-2 px-1.5 py-1.5 sm:p-3 border-y border-gray-100 sm:border-y-0 sm:bg-gray-50/60 sm:rounded">
+                <div className="w-full flex flex-col gap-1.5 sm:gap-2 px-1.5 py-1.5 sm:px-0 sm:py-2 border-y border-gray-100 sm:border-y-0 sm:bg-gray-50/60 sm:rounded">
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-h-6 justify-start">
                     {shouldShowCuisineLabel && (
@@ -450,10 +450,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     )}
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1.5 pt-0.5 text-[9.5px] font-semibold leading-tight text-dbd-accent">
-                    <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Recipe information</a>
-                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Price estimates</a>
-                    <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Nutrition estimates</a>
-                    <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Food safety</a>
+                    <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Recipe information</a>
+                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Price estimates</a>
+                    <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Nutrition estimates</a>
+                    <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="min-w-0 break-words text-left hover:underline">Food safety</a>
                   </div>
                 </div>
 
