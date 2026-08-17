@@ -386,11 +386,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
             {/* Core Content Stack - Tightly grouped for precise spacing */}
             <div className={isExpanded ? 'grid gap-2 sm:gap-5 sm:grid-cols-[minmax(240px,0.92fr)_minmax(320px,1.08fr)] sm:items-start' : 'grid grid-cols-1 gap-3 sm:gap-5'}>
-              <div className="flex flex-col gap-1.5 sm:gap-3 items-start w-full min-w-0">
+              <div className="flex flex-col gap-2 sm:gap-2.5 items-start w-full min-w-0">
                 {/* Compressed Metadata Section */}
-                <div className="w-full flex flex-col gap-0.5 sm:gap-2 px-1.5 py-1.5 sm:p-3 border-y border-gray-100 sm:border-y-0 sm:bg-gray-50/60 sm:rounded">
+                <div className="w-full flex flex-col gap-1.5 sm:gap-2 px-1.5 py-1.5 sm:p-3 border-y border-gray-100 sm:border-y-0 sm:bg-gray-50/60 sm:rounded">
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 justify-start">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-h-6 justify-start">
                     {shouldShowCuisineLabel && (
                       <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                         {recipe.cuisine}
@@ -411,7 +411,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   </div>
                 
                 {/* Row 2: Performance Stats (Nutrition, Price, Time) */}
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 min-h-7 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
                     {(recipe.caloriesPerPortion || recipe.calories) && (
                         <Tooltip text="Estimated calories for one adult portion. Actual values vary with ingredients, quantities and brands.">
                         <span className="cursor-help whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
@@ -449,11 +449,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-[9.5px] font-semibold text-dbd-accent">
-                    <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Recipe information</a>
-                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Price estimates</a>
-                    <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="hover:underline">Nutrition estimates</a>
-                    <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="hover:underline">Food safety</a>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1.5 pt-0.5 text-[9.5px] font-semibold leading-tight text-dbd-accent">
+                    <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Recipe information</a>
+                    <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Price estimates</a>
+                    <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Nutrition estimates</a>
+                    <a href="/food-safety" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap hover:underline">Food safety</a>
                   </div>
                 </div>
 
@@ -535,7 +535,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   if (badges.length === 0) return null;
 
                   return (
-                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 justify-start">
+                    <div className="flex flex-wrap items-center gap-2 justify-start">
                       {badges}
                     </div>
                   );
