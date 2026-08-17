@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Recipe, ReadyMeal, SearchParams, UserPreferences } from "../types";
 import { getApiUrl, getApiConfig, isLocalhost } from "../lib/api";
 import { PREFERRED_SOURCES } from '../data/preferredSources';
-import { parseAndNormaliseIngredients } from '../lib/ingredientParser';
+import { detectIngredientIntent, matchesStrictIngredientSearch, parseAndNormaliseIngredients } from '../lib/ingredientParser';
 import { ACTIVE_GEMINI_MODEL } from '../config/aiModel';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
@@ -618,7 +618,12 @@ async function fetchProxySuggestions(searchParams: SearchParams, preferences?: U
   }
 }
 
-async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook' | 'ready-made'): Promise<any> {
+type RecipeEnrichmentOptions = {
+  strictIngredientMatch?: boolean;
+  query?: string;
+};
+
+async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook' | 'ready-made', options?: RecipeEnrichmentOptions): Promise<any> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 60000);
 
@@ -628,7 +633,13 @@ async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook'
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, cuisine, mode }),
+      body: JSON.stringify({
+        title,
+        cuisine,
+        mode,
+        strictIngredientMatch: options?.strictIngredientMatch === true,
+        strictQuery: options?.query || ''
+      }),
       signal: controller.signal
     });
     clearTimeout(timeoutId);
@@ -1236,15 +1247,28 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
 /**
  * Fetches full ingredients and instructions for a thin recipe stub.
  */
-export async function enrichRecipe(title: string, cuisine: string, mode: 'cook' | 'ready-made'): Promise<Partial<Recipe | ReadyMeal>> {
+export async function enrichRecipe(title: string, cuisine: string, mode: 'cook' | 'ready-made', options?: RecipeEnrichmentOptions): Promise<Partial<Recipe | ReadyMeal>> {
   const config = getApiConfig();
   
   if (isBrowser && config.mode === 'proxy') {
-    return fetchProxyEnrichment(title, cuisine, mode);
+    return fetchProxyEnrichment(title, cuisine, mode, options);
   }
 
   try {
     const modelClient = getAI();
+    const strictIntent = options?.strictIngredientMatch && mode === 'cook' && options.query
+      ? detectIngredientIntent(options.query)
+      : null;
+    const strictIngredients = strictIntent?.isIngredientLed ? strictIntent.ingredients : [];
+    const strictDetailLogic = strictIngredients.length > 0
+      ? `
+STRICT INGREDIENT DETAIL CHECK (HARD):
+- The search only allows these ingredients: ${strictIngredients.join(', ')}.
+- Every ingredient in the complete recipe must be one of those listed ingredients or a basic pantry item such as water, oil, salt, pepper or ordinary seasoning.
+- Do not add rice, potatoes, breadcrumbs, flour, butter, cream, stock, herbs, lemon or any other ingredient unless it is listed or is a permitted pantry item.
+- Include the complete ingredient list in the response. The response will be rejected if any unlisted ingredient appears.
+`
+      : '';
     const systemInstruction = `You are a professional UK culinary content generator.
 Convert the provided title and cuisine into a complete, high-quality UK ${mode === 'ready-made' ? 'supermarket product detail' : 'recipe'}.
 Units: Metric only.
@@ -1260,10 +1284,9 @@ ${mode === 'cook' ? '- Ingredients MUST include specific quantities/units (e.g. 
 - DESCRIPTION: Synthesize the best aspects in a professional tone.
 - SOURCE URL: Explicitly provide a representative source for this recipe (domain or search url).
 - TOTAL INGREDIENTS COUNT: Provide an accurate total count of all ingredients required.
+${strictDetailLogic}
 `;
 
-    const prompt = `Full detail for: "${title}" (${cuisine}). mode: ${mode}.`;
-    
     const config = {
         systemInstruction,
         temperature: 0.1,
@@ -1321,20 +1344,35 @@ ${mode === 'cook' ? '- Ingredients MUST include specific quantities/units (e.g. 
         }
     };
 
-    const response = await callGeminiWithRetry("gemini-3.5-flash", prompt, config);
+    let lastStrictMismatch = false;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const prompt = `Full detail for: "${title}" (${cuisine}). mode: ${mode}.
+${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. The only allowed non-pantry ingredients are: ${strictIngredients.join(', ')}. Review every ingredient before returning the response.` : ''}`;
+      const response = await callGeminiWithRetry("gemini-3.5-flash", prompt, config);
+      const text = response.text;
 
-    const text = response.text;
+      if (!text) {
+        throw new Error("Empty enrichment response");
+      }
 
-    if (!text) {
-      throw new Error("Empty enrichment response");
+      const parsed = JSON.parse(text);
+      if (!strictIngredients.length || matchesStrictIngredientSearch(parsed, options?.query || '')) {
+        return parsed;
+      }
+
+      lastStrictMismatch = true;
     }
 
-    return JSON.parse(text);
+    if (lastStrictMismatch) {
+      throw new Error('Recipe details did not pass the strict ingredient check.');
+    }
+
+    throw new Error("Empty enrichment response");
   } catch (error: any) {
     if (isBrowser && config.mode === 'direct') {
       console.warn("[GeminiService] Client-side Direct Enrichment failed. Seamlessly falling back to Cloud Proxy...", error);
       try {
-        return await fetchProxyEnrichment(title, cuisine, mode);
+        return await fetchProxyEnrichment(title, cuisine, mode, options);
       } catch (fallbackError: any) {
         console.error("[GeminiService] Cloud Proxy Enrichment fallback failed too:", fallbackError);
         throw fallbackError;

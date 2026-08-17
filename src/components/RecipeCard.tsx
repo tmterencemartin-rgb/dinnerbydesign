@@ -12,6 +12,7 @@ import { GuidanceNotice } from './Notices';
 import { RecipeActionRow } from './RecipeActionRow';
 import { convertIngredient } from '../lib/measurementUtils';
 import { RecipeRealityChecks } from './RecipeRealityChecks';
+import { matchesStrictIngredientSearch } from '../lib/ingredientParser';
 
 interface RecipeCardProps {
   recipe: Recipe | ReadyMeal;
@@ -27,6 +28,7 @@ interface RecipeCardProps {
   requestedServings?: number;
   initiallyExpanded?: boolean;
   isModal?: boolean;
+  strictIngredientMatch?: boolean;
 }
 
 export const RecipeCard: React.FC<RecipeCardProps> = ({ 
@@ -42,11 +44,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   query = "",
   requestedServings = 2,
   initiallyExpanded = false,
-  isModal = false
+  isModal = false,
+  strictIngredientMatch = false
 }) => {
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded);
   const [isEnriching, setIsEnriching] = useState(false);
   const [enrichedData, setEnrichedData] = useState<Partial<Recipe | ReadyMeal> | null>(null);
+  const [enrichmentError, setEnrichmentError] = useState<string | null>(null);
   const [isChoosingDay, setIsChoosingDay] = useState(false);
 
   const mode = (recipe as any).retailer ? 'ready-made' : 'cook';
@@ -250,17 +254,27 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   useEffect(() => {
     if (isExpanded && !currentInstructions?.length && !isEnriching) {
       setIsEnriching(true);
-      enrichRecipe(recipe.title, recipe.cuisine, mode)
+      enrichRecipe(recipe.title, recipe.cuisine, mode, strictIngredientMatch ? {
+        strictIngredientMatch: true,
+        query
+      } : undefined)
         .then(data => {
+          if (strictIngredientMatch && mode === 'cook' && !matchesStrictIngredientSearch(data, query)) {
+            throw new Error('Recipe details did not pass the strict ingredient check.');
+          }
           setEnrichedData(data);
+          setEnrichmentError(null);
           setIsEnriching(false);
         })
         .catch(err => {
           console.error("Enrichment failed:", err);
+          setEnrichmentError(strictIngredientMatch
+            ? 'The full ingredient list did not pass strict search, so these recipe details have been withheld.'
+            : 'Recipe details are temporarily unavailable.');
           setIsEnriching(false);
         });
     }
-  }, [isExpanded, recipe.title, recipe.cuisine, currentInstructions.length, isEnriching]);
+  }, [isExpanded, recipe.title, recipe.cuisine, currentInstructions.length, isEnriching, query, strictIngredientMatch]);
 
   const { updatePlanner, planner, removeRecipe, savedRecipes, showToast, unscheduleRecipe, addLog, unitSystem, setUnitSystem } = useAuth();
 
@@ -642,7 +656,12 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     className="overflow-hidden flex flex-col gap-0 sm:gap-4"
                   >
                     {/* Responsive side-by-side view for expanded recipe */}
-                    <div className="w-full pt-2 sm:pt-5 mt-0 sm:mt-1 border-t border-gray-100">
+                  <div className="w-full pt-2 sm:pt-5 mt-0 sm:mt-1 border-t border-gray-100">
+                      {enrichmentError && (
+                        <p role="status" className="mb-3 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-[11.5px] leading-relaxed text-amber-900">
+                          {enrichmentError}
+                        </p>
+                      )}
                       <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-x-6 lg:gap-x-12 gap-y-3 items-start">
                       {/* Left column: Ingredients */}
                       <div className="w-full h-fit pb-2 md:pb-0 flex flex-col gap-1.5 sm:gap-2.5">

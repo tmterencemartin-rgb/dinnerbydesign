@@ -1519,6 +1519,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             onClose={() => setSelectedItem(null)}
             onToggleSaved={() => handleToggleSaved(selectedItem)}
             onPlannerUpdate={(dayId) => handlePlannerUpdate(dayId, selectedItem)}
+            query={resultsQuery}
+            strictIngredientMatch={strictIngredientMatch}
           />
         )}
       </AnimatePresence>

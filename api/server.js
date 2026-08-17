@@ -177346,6 +177346,7 @@ function parseAndNormaliseIngredients(query) {
       "roma tomatoes": "roma tomato",
       "tomatoes": "tomato",
       "potatoes": "potato",
+      "peas": "pea",
       "sweet potatoes": "sweet potato",
       "new potatoes": "new potato",
       "roast potatoes": "roast potato",
@@ -177423,6 +177424,834 @@ function parseAndNormaliseIngredients(query) {
     }
   }
   return results;
+}
+var UNSEPARATED_INGREDIENT_TERMS = /* @__PURE__ */ new Set([
+  "anchovy",
+  "apple",
+  "aubergine",
+  "avocado",
+  "bacon",
+  "banana",
+  "bean",
+  "beef",
+  "broccoli",
+  "cabbage",
+  "carrot",
+  "cauliflower",
+  "celery",
+  "cheese",
+  "chickpea",
+  "chicken",
+  "chilli",
+  "chorizo",
+  "cod",
+  "courgette",
+  "cucumber",
+  "duck",
+  "egg",
+  "fish",
+  "flour",
+  "garlic",
+  "ginger",
+  "ham",
+  "haddock",
+  "kale",
+  "leek",
+  "lentil",
+  "lemon",
+  "lime",
+  "mackerel",
+  "mushroom",
+  "noodle",
+  "oat",
+  "onion",
+  "pasta",
+  "pea",
+  "pepper",
+  "prawn",
+  "potato",
+  "pork",
+  "rice",
+  "salmon",
+  "crab",
+  "bass",
+  "sausage",
+  "shin",
+  "brisket",
+  "sirloin",
+  "ribeye",
+  "rump",
+  "topside",
+  "silverside",
+  "chuck",
+  "flank",
+  "skirt",
+  "featherblade",
+  "bavette",
+  "onglet",
+  "hanger",
+  "cheek",
+  "oxtail",
+  "striploin",
+  "porterhouse",
+  "tomahawk",
+  "medallion",
+  "gammon",
+  "pancetta",
+  "rasher",
+  "lardon",
+  "drumstick",
+  "drumette",
+  "tenderloin",
+  "tender",
+  "strip",
+  "quarter",
+  "crown",
+  "piece",
+  "portion",
+  "giblet",
+  "liver",
+  "heart",
+  "neck",
+  "spinach",
+  "squash",
+  "steak",
+  "sweetcorn",
+  "tofu",
+  "tomato",
+  "tuna",
+  "turkey",
+  "turnip",
+  "yogurt",
+  "yoghurt",
+  "lemongrass",
+  "buttermilk",
+  "chestnut"
+]);
+var UNSEPARATED_INGREDIENT_PHRASES = /* @__PURE__ */ new Set([
+  // Vegetables, pulses and fruit
+  "green bean",
+  "red bean",
+  "butter bean",
+  "kidney bean",
+  "black bean",
+  "baked bean",
+  "cannellini bean",
+  "haricot bean",
+  "broad bean",
+  "fava bean",
+  "mixed bean",
+  "chickpea",
+  "sweetcorn",
+  "red pepper",
+  "green pepper",
+  "yellow pepper",
+  "bell pepper",
+  "sweet pepper",
+  "sugar snap",
+  "mange tout",
+  "red onion",
+  "white onion",
+  "spring onion",
+  "sweet potato",
+  "new potato",
+  "roast potato",
+  "garlic clove",
+  "chestnut mushroom",
+  "button mushroom",
+  "wild mushroom",
+  "chopped tomato",
+  "tinned tomato",
+  "plum tomato",
+  "cherry tomato",
+  "beef tomato",
+  "roma tomato",
+  // Meat, fish and seafood forms
+  "beef fillet",
+  "beef sirloin",
+  "sirloin steak",
+  "beef ribeye",
+  "ribeye",
+  "beef rump",
+  "rump steak",
+  "beef topside",
+  "beef silverside",
+  "top rump",
+  "thick flank",
+  "beef chuck",
+  "braising steak",
+  "stewing steak",
+  "beef shin",
+  "beef brisket",
+  "short rib",
+  "beef short rib",
+  "flank steak",
+  "skirt steak",
+  "featherblade",
+  "featherblade steak",
+  "bavette steak",
+  "onglet steak",
+  "flat iron",
+  "flat iron steak",
+  "hanger steak",
+  "beef cheek",
+  "oxtail",
+  "diced beef",
+  "stewing beef",
+  "braising beef",
+  "beef joint",
+  "ribeye steak",
+  "rib steak",
+  "striploin",
+  "striploin steak",
+  "beef striploin",
+  "beef striploin steak",
+  "chuck steak",
+  "chuck roast",
+  "frying steak",
+  "minute steak",
+  "t-bone",
+  "t-bone steak",
+  "porterhouse steak",
+  "tomahawk steak",
+  "beef hanger steak",
+  "beef medallion",
+  "roasting joint",
+  "beef roasting joint",
+  "topside joint",
+  "silverside joint",
+  "rump joint",
+  "pot roast",
+  "streaky bacon",
+  "back bacon",
+  "smoked bacon",
+  "unsmoked bacon",
+  "bacon rasher",
+  "bacon lardon",
+  "bacon medallion",
+  "bacon bit",
+  "pancetta",
+  "pork belly",
+  "pork loin",
+  "pork tenderloin",
+  "pork shoulder",
+  "pork leg",
+  "pork chop",
+  "pork steak",
+  "pork rib",
+  "pork joint",
+  "pork roasting joint",
+  "pork fillet",
+  "pork medallion",
+  "pork knuckle",
+  "pork hock",
+  "pork collar",
+  "pork neck",
+  "pork escalope",
+  "pork schnitzel",
+  "spare rib",
+  "baby back rib",
+  "gammon steak",
+  "gammon joint",
+  "roast pork",
+  "roasting pork",
+  "pulled pork",
+  "diced pork",
+  "chicken breast",
+  "lamb shank",
+  "duck breast",
+  "tiger prawn",
+  "king crab",
+  "sea bass",
+  "chicken thigh",
+  "chicken wing",
+  "chicken leg",
+  "chicken fillet",
+  "chicken tenderloin",
+  "chicken tender",
+  "chicken strip",
+  "chicken drumstick",
+  "chicken drumette",
+  "chicken breast fillet",
+  "chicken thigh fillet",
+  "chicken winglet",
+  "chicken quarter",
+  "chicken leg quarter",
+  "chicken crown",
+  "whole chicken",
+  "chicken piece",
+  "chicken portion",
+  "chicken mince",
+  "chicken sausage",
+  "chicken giblet",
+  "chicken liver",
+  "chicken heart",
+  "chicken neck",
+  "pork mince",
+  "beef mince",
+  "lamb mince",
+  "turkey mince",
+  "pork chop",
+  "lamb chop",
+  "pork sausage",
+  "salmon fillet",
+  "salmon steak",
+  "cod fillet",
+  "haddock fillet",
+  "white fish",
+  // Pulses, grains and noodles
+  "red lentil",
+  "green lentil",
+  "wild rice",
+  "pearl barley",
+  "basmati rice",
+  "brown rice",
+  "long grain rice",
+  "egg noodle",
+  "rice noodle",
+  "brussels sprout",
+  "baby corn",
+  "lemongrass",
+  // Sauces, stocks, fats and other compound cupboard ingredients
+  "coconut milk",
+  "coconut cream",
+  "curry paste",
+  "tomato puree",
+  "tomato paste",
+  "fish sauce",
+  "soy sauce",
+  "oyster sauce",
+  "hot sauce",
+  "vegetable stock",
+  "chicken stock",
+  "beef stock",
+  "vegetable stock cube",
+  "chicken stock cube",
+  "olive oil",
+  "rapeseed oil",
+  "sesame oil",
+  "balsamic vinegar",
+  "red wine vinegar",
+  "white wine vinegar",
+  "double cream",
+  "cream cheese",
+  "sour cream",
+  "goat cheese",
+  "cottage cheese",
+  "buttermilk",
+  "passion fruit",
+  "dragon fruit",
+  "star fruit",
+  "pine nut",
+  "chestnut",
+  "macadamia nut"
+]);
+var COMPOUND_INGREDIENT_MODIFIERS = /* @__PURE__ */ new Set([
+  "juice",
+  "fillet",
+  "fillets",
+  "steak",
+  "steaks",
+  "breast",
+  "thigh",
+  "wing",
+  "leg",
+  "chop",
+  "chops",
+  "mince",
+  "minced",
+  "sausage",
+  "sausages",
+  "tenderloin",
+  "tender",
+  "strip",
+  "drumstick",
+  "drumsticks",
+  "drumette",
+  "drumettes",
+  "quarter",
+  "quarters",
+  "crown",
+  "crowns",
+  "piece",
+  "pieces",
+  "portion",
+  "portions",
+  "giblet",
+  "giblets",
+  "liver",
+  "livers",
+  "heart",
+  "hearts",
+  "neck",
+  "necks",
+  "paste",
+  "puree",
+  "sauce",
+  "stock",
+  "cube",
+  "oil",
+  "vinegar",
+  "cream",
+  "milk",
+  "powder",
+  "fresh",
+  "frozen",
+  "tinned",
+  "canned",
+  "cooked",
+  "raw",
+  "large",
+  "medium",
+  "small",
+  "new",
+  "baby",
+  "mashed",
+  "boiled",
+  "baked",
+  "roasted",
+  "diced",
+  "chopped",
+  "sliced",
+  "quartered",
+  "halved"
+]);
+var PREFIX_INGREDIENT_MODIFIERS = /* @__PURE__ */ new Set([
+  "fresh",
+  "frozen",
+  "tinned",
+  "canned",
+  "cooked",
+  "raw",
+  "large",
+  "medium",
+  "small",
+  "new",
+  "baby",
+  "mashed",
+  "boiled",
+  "baked",
+  "roasted",
+  "diced",
+  "chopped",
+  "sliced",
+  "quartered",
+  "halved"
+]);
+var parseUnseparatedIngredientList = (query) => {
+  const words = query.split(/\s+/).filter((word) => !/^and$/i.test(word));
+  const parsed = [];
+  for (let index = 0; index < words.length; ) {
+    let matchedPhrase = false;
+    const maxPhraseLength = Math.min(3, words.length - index);
+    for (let phraseLength = maxPhraseLength; phraseLength >= 2; phraseLength -= 1) {
+      const phrase = words.slice(index, index + phraseLength).join(" ");
+      const normalisedPhrase = parseAndNormaliseIngredients(phrase)[0];
+      const firstWord = words[index].toLowerCase();
+      const lastWord = words[index + phraseLength - 1].toLowerCase();
+      const modifierBody = firstWord !== lastWord && PREFIX_INGREDIENT_MODIFIERS.has(firstWord) ? parseAndNormaliseIngredients(words.slice(index + 1, index + phraseLength).join(" "))[0] : normalisedPhrase;
+      const isKnownCompound = UNSEPARATED_INGREDIENT_PHRASES.has(normalisedPhrase) || UNSEPARATED_INGREDIENT_TERMS.has(normalisedPhrase) && COMPOUND_INGREDIENT_MODIFIERS.has(lastWord) || firstWord !== lastWord && PREFIX_INGREDIENT_MODIFIERS.has(firstWord) && UNSEPARATED_INGREDIENT_TERMS.has(modifierBody);
+      if (isKnownCompound) {
+        parsed.push(normalisedPhrase);
+        index += phraseLength;
+        matchedPhrase = true;
+        break;
+      }
+    }
+    if (matchedPhrase) continue;
+    const normalisedWord = parseAndNormaliseIngredients(words[index])[0];
+    if (!normalisedWord || !UNSEPARATED_INGREDIENT_TERMS.has(normalisedWord)) return [];
+    parsed.push(normalisedWord);
+    index += 1;
+  }
+  return parsed;
+};
+function detectIngredientIntent(query) {
+  const trimmed = query?.trim();
+  if (!trimmed) return null;
+  const lower2 = trimmed.toLowerCase();
+  const ingredientPhrases = /\b(i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only|what can i make with|what can i cook with)\b/i;
+  const hasListPunctuation = /[,;]/.test(trimmed);
+  const hasSimpleAndList = /\b\w+\b\s+\band\b\s+\b\w+\b/i.test(lower2) && lower2.split(/\s+/).length <= 7;
+  const withoutLeadIn = lower2.replace(/\b(what can i make with|what can i cook with|i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only)\b/gi, "").replace(/\b(?:only|just)\b/gi, " ").replace(/[?!.]/g, " ").trim();
+  const ingredients = parseAndNormaliseIngredients(withoutLeadIn || trimmed).map((item) => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, "").trim()).filter((item) => item.length > 1 && item.split(/\s+/).length <= 3);
+  const unseparatedWords = trimmed.split(/\s+/).filter((word) => !/^and$/i.test(word));
+  const unseparatedIngredients = parseUnseparatedIngredientList(trimmed);
+  const isShortUnseparatedIngredientList = !hasListPunctuation && !ingredientPhrases.test(trimmed) && unseparatedWords.length >= 2 && unseparatedWords.length <= 6 && unseparatedIngredients.length >= 2 && unseparatedIngredients.length <= 4;
+  if (isShortUnseparatedIngredientList) {
+    return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: "short-food-list" };
+  }
+  if (ingredients.length >= 2 && ingredientPhrases.test(trimmed)) {
+    return { isIngredientLed: true, ingredients, reason: "phrase" };
+  }
+  if (ingredients.length >= 2 && hasListPunctuation) {
+    return { isIngredientLed: true, ingredients, reason: "list" };
+  }
+  if (ingredients.length >= 2 && hasSimpleAndList) {
+    return { isIngredientLed: true, ingredients, reason: "short-food-list" };
+  }
+  return null;
+}
+var PANTRY_STAPLE_PATTERN = /^(?:water|salt|pepper|black pepper|white pepper|oil|olive oil|vegetable oil|sunflower oil|rapeseed oil|cooking spray|seasoning|mixed herbs?|dried herbs?|fresh herbs?|herbs?|spices?)$/i;
+var INGREDIENT_MODIFIER_PATTERN = /^(?:a|an|the|fresh|frozen|tinned|canned|dried|cooked|raw|large|medium|small|baby|new|free[- ]range|boneless|skinless|lean|smoked|unsmoked|cured|grated|chopped|diced|sliced|quartered|halved|mashed|boiled|roasted|baked|trimmed|drained)$/i;
+var INGREDIENT_VARIANT_WORDS = {
+  bacon: /* @__PURE__ */ new Set(["streaky", "back", "smoked", "unsmoked", "rasher", "lardon", "medallion", "bit", "pancetta"]),
+  pork: /* @__PURE__ */ new Set([
+    "mince",
+    "chop",
+    "loin",
+    "tenderloin",
+    "shoulder",
+    "belly",
+    "leg",
+    "fillet",
+    "steak",
+    "rib",
+    "sausage",
+    "joint",
+    "roast",
+    "roasting",
+    "pulled",
+    "diced",
+    "knuckle",
+    "hock",
+    "collar",
+    "neck",
+    "escalope",
+    "schnitzel",
+    "gammon"
+  ]),
+  onion: /* @__PURE__ */ new Set(["red", "white", "spring"]),
+  potato: /* @__PURE__ */ new Set(["new", "roast"]),
+  tomato: /* @__PURE__ */ new Set(["cherry", "plum", "beef", "tinned", "chopped"]),
+  pepper: /* @__PURE__ */ new Set(["red", "green", "yellow", "bell"]),
+  chicken: /* @__PURE__ */ new Set([
+    "breast",
+    "thigh",
+    "wing",
+    "leg",
+    "fillet",
+    "tenderloin",
+    "tender",
+    "strip",
+    "drumstick",
+    "drumette",
+    "winglet",
+    "quarter",
+    "crown",
+    "whole",
+    "piece",
+    "portion",
+    "mince",
+    "sausage",
+    "giblet",
+    "liver",
+    "heart",
+    "neck"
+  ]),
+  beef: /* @__PURE__ */ new Set([
+    "mince",
+    "steak",
+    "fillet",
+    "sirloin",
+    "ribeye",
+    "rib",
+    "rump",
+    "topside",
+    "silverside",
+    "top",
+    "thick",
+    "flank",
+    "chuck",
+    "braising",
+    "stewing",
+    "shin",
+    "brisket",
+    "short",
+    "skirt",
+    "featherblade",
+    "bavette",
+    "onglet",
+    "flat",
+    "hanger",
+    "cheek",
+    "oxtail",
+    "striploin",
+    "porterhouse",
+    "tomahawk",
+    "medallion",
+    "diced",
+    "joint",
+    "roasting",
+    "tenderloin"
+  ]),
+  lamb: /* @__PURE__ */ new Set(["mince", "chop", "shoulder", "leg", "shank"]),
+  turkey: /* @__PURE__ */ new Set(["mince", "breast", "thigh"]),
+  duck: /* @__PURE__ */ new Set(["breast", "leg", "fillet"]),
+  salmon: /* @__PURE__ */ new Set(["fillet", "steak", "portion", "side"]),
+  cod: /* @__PURE__ */ new Set(["fillet", "loin", "steak", "portion"]),
+  haddock: /* @__PURE__ */ new Set(["fillet", "loin", "portion"]),
+  mackerel: /* @__PURE__ */ new Set(["fillet", "steak", "portion"]),
+  trout: /* @__PURE__ */ new Set(["fillet", "steak", "portion"]),
+  tuna: /* @__PURE__ */ new Set(["fillet", "steak", "portion"]),
+  sausage: /* @__PURE__ */ new Set(["pork", "chicken", "beef", "lamb", "turkey", "vegetarian", "veggie", "chipolata"]),
+  prawn: /* @__PURE__ */ new Set(["tiger", "king"]),
+  crab: /* @__PURE__ */ new Set(["king"]),
+  bass: /* @__PURE__ */ new Set(["sea"])
+};
+var BEEF_CUT_TERMS = /* @__PURE__ */ new Set([
+  "fillet",
+  "sirloin",
+  "rib",
+  "ribeye",
+  "ribeye steak",
+  "rib steak",
+  "striploin",
+  "striploin steak",
+  "rump",
+  "topside",
+  "silverside",
+  "top rump",
+  "thick flank",
+  "chuck",
+  "chuck steak",
+  "chuck roast",
+  "braising steak",
+  "stewing steak",
+  "frying steak",
+  "minute steak",
+  "shin",
+  "brisket",
+  "short rib",
+  "flank",
+  "flank steak",
+  "skirt",
+  "skirt steak",
+  "featherblade",
+  "featherblade steak",
+  "bavette",
+  "bavette steak",
+  "onglet",
+  "onglet steak",
+  "flat iron",
+  "flat iron steak",
+  "hanger",
+  "hanger steak",
+  "beef cheek",
+  "oxtail",
+  "diced beef",
+  "stewing beef",
+  "braising beef",
+  "beef joint",
+  "beef striploin",
+  "beef striploin steak",
+  "chuck roast",
+  "frying steak",
+  "minute steak",
+  "t-bone",
+  "t-bone steak",
+  "porterhouse steak",
+  "tomahawk",
+  "tomahawk steak",
+  "porterhouse",
+  "beef hanger steak",
+  "medallion",
+  "beef medallion",
+  "roasting joint",
+  "beef roasting joint",
+  "topside joint",
+  "silverside joint",
+  "rump joint",
+  "pot roast"
+]);
+var BEEF_CUT_VARIANT_WORDS = /* @__PURE__ */ new Set([
+  "beef",
+  "steak",
+  "joint",
+  "roast",
+  "fillet",
+  "loin",
+  "portion",
+  "diced",
+  "braising",
+  "stewing",
+  "rib",
+  "striploin",
+  "porterhouse",
+  "tomahawk",
+  "medallion",
+  "roasting"
+]);
+var BACON_VARIANT_TERMS = /* @__PURE__ */ new Set([
+  "streaky bacon",
+  "back bacon",
+  "smoked bacon",
+  "unsmoked bacon",
+  "bacon rasher",
+  "bacon lardon",
+  "bacon medallion",
+  "bacon bit",
+  "pancetta"
+]);
+var BACON_VARIANT_WORDS = /* @__PURE__ */ new Set([
+  "bacon",
+  "streaky",
+  "back",
+  "smoked",
+  "unsmoked",
+  "rasher",
+  "lardon",
+  "medallion",
+  "bit",
+  "pancetta"
+]);
+var PORK_CUT_TERMS = /* @__PURE__ */ new Set([
+  "pork belly",
+  "pork loin",
+  "pork tenderloin",
+  "pork shoulder",
+  "pork leg",
+  "pork chop",
+  "pork steak",
+  "pork rib",
+  "pork joint",
+  "pork roasting joint",
+  "pork fillet",
+  "pork medallion",
+  "pork knuckle",
+  "pork hock",
+  "pork collar",
+  "pork neck",
+  "pork escalope",
+  "pork schnitzel",
+  "spare rib",
+  "baby back rib",
+  "gammon steak",
+  "gammon joint",
+  "roast pork",
+  "roasting pork",
+  "pulled pork",
+  "diced pork"
+]);
+var PORK_CUT_VARIANT_WORDS = /* @__PURE__ */ new Set([
+  "pork",
+  "mince",
+  "chop",
+  "loin",
+  "tenderloin",
+  "shoulder",
+  "belly",
+  "leg",
+  "fillet",
+  "steak",
+  "rib",
+  "joint",
+  "roast",
+  "roasting",
+  "pulled",
+  "diced",
+  "knuckle",
+  "hock",
+  "collar",
+  "neck",
+  "escalope",
+  "schnitzel",
+  "gammon"
+]);
+var CHICKEN_CUT_TERMS = /* @__PURE__ */ new Set([
+  "chicken breast",
+  "chicken thigh",
+  "chicken wing",
+  "chicken leg",
+  "chicken fillet",
+  "chicken tenderloin",
+  "chicken tender",
+  "chicken strip",
+  "chicken drumstick",
+  "chicken drumette",
+  "chicken breast fillet",
+  "chicken thigh fillet",
+  "chicken winglet",
+  "chicken quarter",
+  "chicken leg quarter",
+  "chicken crown",
+  "whole chicken",
+  "chicken piece",
+  "chicken portion",
+  "chicken mince",
+  "chicken sausage",
+  "chicken giblet",
+  "chicken liver",
+  "chicken heart",
+  "chicken neck"
+]);
+var CHICKEN_CUT_VARIANT_WORDS = /* @__PURE__ */ new Set([
+  "chicken",
+  "breast",
+  "thigh",
+  "wing",
+  "leg",
+  "fillet",
+  "tenderloin",
+  "tender",
+  "strip",
+  "drumstick",
+  "drumette",
+  "winglet",
+  "quarter",
+  "crown",
+  "whole",
+  "piece",
+  "portion",
+  "mince",
+  "sausage",
+  "giblet",
+  "liver",
+  "heart",
+  "neck"
+]);
+var stripIngredientQuantity = (value) => value.replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, "").replace(/\([^)]*\)/g, " ").replace(/[•*]/g, " ").replace(/\s+/g, " ").trim();
+var normaliseStrictIngredientLine = (value) => {
+  const stripped = stripIngredientQuantity(value);
+  const parsed = parseAndNormaliseIngredients(stripped);
+  return parsed.length > 0 ? parsed : [stripped.toLowerCase()];
+};
+var isPantryStaple = (value) => {
+  const normalised = value.trim().toLowerCase();
+  return PANTRY_STAPLE_PATTERN.test(normalised) || normalised.split(/\s+/).every((word) => INGREDIENT_MODIFIER_PATTERN.test(word));
+};
+var matchesAllowedIngredient = (value, allowed2) => {
+  const valueWords = value.toLowerCase().split(/\s+/).filter(Boolean);
+  const allowedWords = allowed2.toLowerCase().split(/\s+/).filter(Boolean);
+  if (valueWords.join(" ") === allowedWords.join(" ")) return true;
+  const allowedStart = valueWords.findIndex(
+    (_, index) => allowedWords.every((word, offset) => valueWords[index + offset] === word)
+  );
+  if (allowedStart < 0) return false;
+  const remainingWords = valueWords.filter(
+    (_, index) => index < allowedStart || index >= allowedStart + allowedWords.length
+  );
+  const allowedKey = allowedWords.join(" ");
+  const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedKey] || (BEEF_CUT_TERMS.has(allowedKey) ? BEEF_CUT_VARIANT_WORDS : BACON_VARIANT_TERMS.has(allowedKey) ? BACON_VARIANT_WORDS : PORK_CUT_TERMS.has(allowedKey) ? PORK_CUT_VARIANT_WORDS : CHICKEN_CUT_TERMS.has(allowedKey) ? CHICKEN_CUT_VARIANT_WORDS : /* @__PURE__ */ new Set());
+  return remainingWords.length === 0 || remainingWords.every(
+    (word) => INGREDIENT_MODIFIER_PATTERN.test(word) || allowedVariantWords.has(word)
+  );
+};
+function matchesStrictIngredientSearch(item, query) {
+  const intent = detectIngredientIntent(query);
+  if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
+  const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
+  if (ingredientLines.length === 0) return false;
+  if (typeof item.totalIngredientsCount === "number" && item.totalIngredientsCount > ingredientLines.length) return false;
+  const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const requestedIngredients = intent.ingredients;
+  const includesRequested = requestedIngredients.every(
+    (requested) => normalisedLines.some((line) => matchesAllowedIngredient(line, requested))
+  );
+  if (!includesRequested) return false;
+  return normalisedLines.every(
+    (line) => isPantryStaple(line) || requestedIngredients.some((requested) => matchesAllowedIngredient(line, requested))
+  );
 }
 
 // src/config/aiModel.ts
@@ -177922,7 +178751,7 @@ async function fetchProxySuggestions(searchParams, preferences, signal) {
     throw new GeminiServiceError("network", `Failed to connect to API: ${message2}`);
   }
 }
-async function fetchProxyEnrichment(title, cuisine, mode) {
+async function fetchProxyEnrichment(title, cuisine, mode, options) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 6e4);
   try {
@@ -177931,7 +178760,13 @@ async function fetchProxyEnrichment(title, cuisine, mode) {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, cuisine, mode }),
+      body: JSON.stringify({
+        title,
+        cuisine,
+        mode,
+        strictIngredientMatch: options?.strictIngredientMatch === true,
+        strictQuery: options?.query || ""
+      }),
       signal: controller.signal
     });
     clearTimeout(timeoutId);
@@ -178417,13 +179252,22 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
     throw new GeminiServiceError(category, parsed.isPermission ? SEARCH_PERMISSION_MESSAGE : parsed.message);
   }
 }
-async function enrichRecipe(title, cuisine, mode) {
+async function enrichRecipe(title, cuisine, mode, options) {
   const config = getApiConfig();
   if (isBrowser && config.mode === "proxy") {
-    return fetchProxyEnrichment(title, cuisine, mode);
+    return fetchProxyEnrichment(title, cuisine, mode, options);
   }
   try {
     const modelClient = getAI();
+    const strictIntent = options?.strictIngredientMatch && mode === "cook" && options.query ? detectIngredientIntent(options.query) : null;
+    const strictIngredients = strictIntent?.isIngredientLed ? strictIntent.ingredients : [];
+    const strictDetailLogic = strictIngredients.length > 0 ? `
+STRICT INGREDIENT DETAIL CHECK (HARD):
+- The search only allows these ingredients: ${strictIngredients.join(", ")}.
+- Every ingredient in the complete recipe must be one of those listed ingredients or a basic pantry item such as water, oil, salt, pepper or ordinary seasoning.
+- Do not add rice, potatoes, breadcrumbs, flour, butter, cream, stock, herbs, lemon or any other ingredient unless it is listed or is a permitted pantry item.
+- Include the complete ingredient list in the response. The response will be rejected if any unlisted ingredient appears.
+` : "";
     const systemInstruction = `You are a professional UK culinary content generator.
 Convert the provided title and cuisine into a complete, high-quality UK ${mode === "ready-made" ? "supermarket product detail" : "recipe"}.
 Units: Metric only.
@@ -178439,8 +179283,8 @@ ${mode === "cook" ? '- Ingredients MUST include specific quantities/units (e.g. 
 - DESCRIPTION: Synthesize the best aspects in a professional tone.
 - SOURCE URL: Explicitly provide a representative source for this recipe (domain or search url).
 - TOTAL INGREDIENTS COUNT: Provide an accurate total count of all ingredients required.
+${strictDetailLogic}
 `;
-    const prompt = `Full detail for: "${title}" (${cuisine}). mode: ${mode}.`;
     const config2 = {
       systemInstruction,
       temperature: 0.1,
@@ -178497,17 +179341,30 @@ ${mode === "cook" ? '- Ingredients MUST include specific quantities/units (e.g. 
         required: ["instructions", "ingredients", "description", "sourceUrl", "totalIngredientsCount", ...mode === "ready-made" ? ["retailer"] : []]
       }
     };
-    const response = await callGeminiWithRetry("gemini-3.5-flash", prompt, config2);
-    const text = response.text;
-    if (!text) {
-      throw new Error("Empty enrichment response");
+    let lastStrictMismatch = false;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const prompt = `Full detail for: "${title}" (${cuisine}). mode: ${mode}.
+${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. The only allowed non-pantry ingredients are: ${strictIngredients.join(", ")}. Review every ingredient before returning the response.` : ""}`;
+      const response = await callGeminiWithRetry("gemini-3.5-flash", prompt, config2);
+      const text = response.text;
+      if (!text) {
+        throw new Error("Empty enrichment response");
+      }
+      const parsed = JSON.parse(text);
+      if (!strictIngredients.length || matchesStrictIngredientSearch(parsed, options?.query || "")) {
+        return parsed;
+      }
+      lastStrictMismatch = true;
     }
-    return JSON.parse(text);
+    if (lastStrictMismatch) {
+      throw new Error("Recipe details did not pass the strict ingredient check.");
+    }
+    throw new Error("Empty enrichment response");
   } catch (error) {
     if (isBrowser && config.mode === "direct") {
       console.warn("[GeminiService] Client-side Direct Enrichment failed. Seamlessly falling back to Cloud Proxy...", error);
       try {
-        return await fetchProxyEnrichment(title, cuisine, mode);
+        return await fetchProxyEnrichment(title, cuisine, mode, options);
       } catch (fallbackError) {
         console.error("[GeminiService] Cloud Proxy Enrichment fallback failed too:", fallbackError);
         throw fallbackError;
@@ -190130,8 +190987,11 @@ function createApp() {
   app.post("/api/enrich-recipe", async (req, res) => {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
-      const { title, cuisine, mode } = req.body;
-      const result = await enrichRecipe(title, cuisine, mode);
+      const { title, cuisine, mode, strictIngredientMatch, strictQuery } = req.body;
+      const result = await enrichRecipe(title, cuisine, mode, {
+        strictIngredientMatch: strictIngredientMatch === true,
+        query: typeof strictQuery === "string" ? strictQuery : ""
+      });
       res.json(result);
     } catch (error) {
       console.error("[Server API] Gemini Enrichment Error:", error);

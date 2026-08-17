@@ -13,6 +13,8 @@ interface RecipeDetailOverlayProps {
   isScheduled: boolean;
   onToggleSaved: () => void;
   onPlannerUpdate: (dayId: string) => void;
+  query?: string;
+  strictIngredientMatch?: boolean;
 }
 
 export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
@@ -21,7 +23,9 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
   isSaved,
   isScheduled,
   onToggleSaved,
-  onPlannerUpdate
+  onPlannerUpdate,
+  query = '',
+  strictIngredientMatch = false
 }) => {
   const seoTitle = item ? `${item.title} — DinnerByDesign` : '';
   const seoDescription = item ? `Dinner details for ${item.title}. ${item.description || ''}` : '';
@@ -122,6 +126,8 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
                   isScheduled={isScheduled}
                   onToggleSaved={onToggleSaved}
                   onPlannerUpdate={onPlannerUpdate}
+                  query={query}
+                  strictIngredientMatch={strictIngredientMatch}
                   initiallyExpanded={true}
                   isModal={true}
                 />

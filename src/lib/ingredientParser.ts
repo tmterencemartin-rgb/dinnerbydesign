@@ -241,6 +241,7 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'tomatoes': 'tomato',
       
       'potatoes': 'potato',
+      'peas': 'pea',
       'sweet potatoes': 'sweet potato',
       'new potatoes': 'new potato',
       'roast potatoes': 'roast potato',

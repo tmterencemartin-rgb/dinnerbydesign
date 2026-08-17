@@ -66,6 +66,12 @@ describe('Ingredient Parser & Normalizer', () => {
       ingredients: ['cod', 'potato'],
       reason: 'short-food-list'
     });
+
+    expect(detectIngredientIntent('haddock peas')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['haddock', 'pea'],
+      reason: 'short-food-list'
+    });
   });
 
   test('detects compound ingredients in short searches without separators', () => {
@@ -272,5 +278,9 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(matchesStrictIngredientSearch({
       ingredients: ['chicken drumsticks', 'potatoes', 'oil', 'salt']
     }, 'chicken and potatoes')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['haddock fillets', 'peas', 'rice', 'oil']
+    }, 'haddock peas')).toBe(false);
   });
 });

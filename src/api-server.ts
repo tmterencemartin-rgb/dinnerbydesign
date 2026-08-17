@@ -696,8 +696,11 @@ export function createApp() {
   app.post("/api/enrich-recipe", async (req, res) => {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
-      const { title, cuisine, mode } = req.body;
-      const result = await enrichRecipe(title, cuisine, mode);
+      const { title, cuisine, mode, strictIngredientMatch, strictQuery } = req.body;
+      const result = await enrichRecipe(title, cuisine, mode, {
+        strictIngredientMatch: strictIngredientMatch === true,
+        query: typeof strictQuery === 'string' ? strictQuery : ''
+      });
       res.json(result);
     } catch (error: any) {
       console.error("[Server API] Gemini Enrichment Error:", error);
