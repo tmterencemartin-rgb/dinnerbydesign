@@ -240,7 +240,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Desktop Direct Links */}
-          <div className="hidden md:flex items-center gap-6 font-ibm-plex-mono text-[12px] font-semibold text-dbd-ink-2">
+          <div className="hidden lg:flex items-center gap-6 font-ibm-plex-mono text-[12px] font-semibold text-dbd-ink-2">
             <a
               href="#why-different"
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
@@ -274,7 +274,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           {/* Mobile Menu Action button */}
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -292,7 +292,7 @@ export const LandingView: React.FC = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-0 w-full bg-dbd-surface border-b border-dbd-rule shadow-xl py-6 px-6 flex flex-col gap-4 font-ibm-plex-mono font-semibold text-[13px] md:hidden"
+              className="absolute top-full left-0 w-full bg-dbd-surface border-b border-dbd-rule shadow-xl py-6 px-6 flex flex-col gap-4 font-ibm-plex-mono font-semibold text-[13px] lg:hidden"
             >
               <a
                 href="#why-different"
