@@ -921,6 +921,22 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         Strict search on: {ingredientIntent.ingredients.map(sentenceCase).join(' · ')}. Unlisted ingredients are excluded.
                       </span>
                     )}
+                    {hasIngredientNoResults && (
+                      <span
+                        className="mt-2 flex items-start gap-1.5 text-[10.5px] leading-4 text-dbd-accent"
+                        role="alert"
+                      >
+                        <Info className="mt-0.5 h-3 w-3 shrink-0" />
+                        <span>
+                          <span className="font-semibold">
+                            No recipes found using {strictIngredientMatch ? `only ${ingredientSummary}` : ingredientSummary}.
+                          </span>{' '}
+                          {strictIngredientMatch
+                            ? 'Add another ingredient or turn off strict search.'
+                            : 'Try adding another ingredient or broadening your search.'}
+                        </span>
+                      </span>
+                    )}
                   </span>
                 </label>
               )}
@@ -1125,28 +1141,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </motion.div>
             )}
 
-            {hasIngredientNoResults && (
-              <motion.div
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0 }}
-                role="alert"
-                className="mb-2 rounded border border-dbd-accent/25 bg-dbd-accent/5 px-3 py-2 text-left"
-              >
-                <div className="flex items-center gap-2">
-                  <Info className="h-3.5 w-3.5 shrink-0 text-dbd-accent" />
-                  <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                    <p className="text-[12px] font-bold leading-snug text-gray-900">
-                      No recipes found using {strictIngredientMatch ? `only ${ingredientSummary}` : ingredientSummary}.
-                    </p>
-                    <p className="text-[11px] leading-snug text-gray-600">
-                      {strictIngredientMatch
-                        ? 'Add another ingredient or turn off strict search.'
-                        : 'Try adding another ingredient or broadening your search.'}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            )}
           </div>
 
         <AnimatePresence>
