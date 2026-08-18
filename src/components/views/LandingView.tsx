@@ -506,7 +506,7 @@ export const LandingView: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                  <p className="mt-3 text-[10px] leading-relaxed text-dbd-ink-3">Further options include calorie counts, healthy eating, ingredients to avoid, preferred cooking methods and low-cost choices.</p>
+                  <p className="mt-3 text-[10px] leading-relaxed text-dbd-ink-3">Further options include: calorie counts, wholesome recipes, ingredients to avoid, preferred cooking methods, budget management, high Omega-3, gluten-free and more.</p>
                 </aside>
               </div>
 
