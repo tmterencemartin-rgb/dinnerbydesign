@@ -338,27 +338,9 @@ export const LandingView: React.FC = () => {
           <span className="sm:hidden">Make the weekly shop<br />go further.</span>
           <span className="hidden sm:inline">Make the weekly shop go further.</span>
         </h1>
-        <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-7">
+        <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
           DinnerByDesign helps you plan varied dinners around what you already have, reuse ingredients across the week and see estimated shopping costs before you buy. Free searches give you three real tries without an account. The free trial starts when you create an account, giving you seven days to save recipes, schedule dinners and plan your week.
         </p>
-
-        <div className="max-w-3xl mx-auto border-y border-dbd-rule/60 py-4 mb-8 text-left sm:flex sm:items-center sm:gap-5">
-          <div className="shrink-0 mb-3 sm:mb-0">
-            <p className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.16em] text-dbd-accent uppercase">
-              Personalise every search
-            </p>
-            <p className="mt-1 text-[12px] text-dbd-ink-3">
-              Set your preferences once. Refine any search whenever you like.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2 text-[10.5px] sm:text-[11px] font-ibm-plex-mono font-semibold uppercase tracking-wide text-dbd-ink-2">
-            {['Diet & allergies', 'Budget', 'Time', 'Cooking method'].map((preference) => (
-              <span key={preference} className="rounded-sm bg-dbd-paper px-2.5 py-1.5">
-                {preference}
-              </span>
-            ))}
-          </div>
-        </div>
 
         {/* Action button grouping */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-sm sm:max-w-md mx-auto">
