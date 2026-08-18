@@ -259,6 +259,10 @@ describe('Ingredient Parser & Normalizer', () => {
       ingredients: ['ham', 'eggs', 'new potatoes', 'olive oil', 'dried herbs']
     }, 'ham and eggs and potatoes')).toBe(true);
 
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['ham', 'eggs', 'potatoes', 'olive oil', 'sea salt', 'freshly ground black pepper']
+    }, 'ham, eggs and potatoes')).toBe(true);
+
     expect(matchesStrictIngredientSearch({}, 'ham and eggs')).toBe(false);
   });
 

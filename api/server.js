@@ -178667,7 +178667,7 @@ var normaliseStrictIngredientLine = (value) => {
 };
 var isPantryStaple = (value) => {
   const normalised = value.trim().toLowerCase();
-  return PANTRY_STAPLE_PATTERN.test(normalised) || normalised.split(/\s+/).every((word) => INGREDIENT_MODIFIER_PATTERN.test(word));
+  return PANTRY_STAPLE_PATTERN.test(normalised) || /^(?:(?:freshly|coarsely|finely)\s+)?ground\s+(?:black|white)?\s*pepper$/i.test(normalised) || /^(?:sea|fine|coarse)\s+salt$/i.test(normalised) || normalised.split(/\s+/).every((word) => INGREDIENT_MODIFIER_PATTERN.test(word));
 };
 var matchesAllowedIngredient = (value, allowed2) => {
   const valueWords = value.toLowerCase().split(/\s+/).filter(Boolean);

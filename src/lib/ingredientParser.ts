@@ -758,6 +758,8 @@ const normaliseStrictIngredientLine = (value: string) => {
 const isPantryStaple = (value: string) => {
   const normalised = value.trim().toLowerCase();
   return PANTRY_STAPLE_PATTERN.test(normalised)
+    || /^(?:(?:freshly|coarsely|finely)\s+)?ground\s+(?:black|white)?\s*pepper$/i.test(normalised)
+    || /^(?:sea|fine|coarse)\s+salt$/i.test(normalised)
     || normalised.split(/\s+/).every(word => INGREDIENT_MODIFIER_PATTERN.test(word));
 };
 
