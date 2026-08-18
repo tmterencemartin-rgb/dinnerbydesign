@@ -290,6 +290,22 @@ describe('Ingredient Parser & Normalizer', () => {
     }, 'pork onions and potatoes')).toBe(false);
   });
 
+  test('recognises bird egg variants without weakening specific egg searches', () => {
+    expect(detectIngredientIntent('duck egg and rice')?.ingredients).toEqual(['duck egg', 'rice']);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['2 duck eggs', 'rice', 'oil', 'salt']
+    }, 'egg and rice')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['2 hen eggs', 'rice', 'oil', 'salt']
+    }, 'duck egg and rice')).toBe(false);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['2 duck eggs', 'rice', 'oil', 'salt']
+    }, 'duck egg and rice')).toBe(true);
+  });
+
   test('allows common fish and sausage forms in strict ingredient searches', () => {
     expect(matchesStrictIngredientSearch({
       ingredients: ['2 salmon fillets', '500g mashed potatoes', 'oil', 'salt', 'pepper']

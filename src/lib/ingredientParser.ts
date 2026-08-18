@@ -51,6 +51,8 @@ const MAIN_INGREDIENT_ALIAS_MAP: Record<string, string> = {
   'butter beans': 'butter bean', 'black beans': 'black bean', 'cannellini beans': 'cannellini bean',
   'haricot beans': 'haricot bean', 'baked beans': 'baked bean', 'peas': 'pea',
   'oats': 'oat', 'noodles': 'noodle', 'egg noodles': 'egg noodle', 'rice noodles': 'rice noodle',
+  'hen eggs': 'hen egg', 'chicken eggs': 'chicken egg', 'duck eggs': 'duck egg',
+  'goose eggs': 'goose egg', 'quail eggs': 'quail egg',
   'pearl barley': 'pearl barley', 'bulgur wheat': 'bulgur wheat', 'cous cous': 'couscous',
   'couscous': 'couscous', 'quinoas': 'quinoa', 'polenta': 'polenta',
   // Dairy, fats and compound cupboard ingredients
@@ -481,6 +483,7 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   'cannellini bean', 'haricot bean', 'broad bean', 'fava bean', 'mixed bean',
   'chickpea', 'sweetcorn', 'red pepper', 'green pepper', 'yellow pepper', 'bell pepper', 'sweet pepper', 'sugar snap', 'mange tout',
   'red onion', 'white onion', 'spring onion',
+  'hen egg', 'chicken egg', 'duck egg', 'goose egg', 'quail egg',
   'sweet potato', 'new potato', 'roast potato', 'garlic clove',
   'chestnut mushroom', 'button mushroom', 'wild mushroom',
   'chopped tomato', 'tinned tomato', 'plum tomato', 'cherry tomato', 'beef tomato', 'roma tomato',
@@ -646,6 +649,7 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
   onion: new Set(['red', 'white', 'spring']),
   potato: new Set(['new', 'roast']),
   tomato: new Set(['cherry', 'plum', 'beef', 'tinned', 'chopped']),
+  egg: new Set(['hen', 'chicken', 'duck', 'goose', 'quail']),
   pepper: new Set(['red', 'green', 'yellow', 'bell']),
   chicken: new Set([
     'breast', 'thigh', 'wing', 'leg', 'fillet', 'tenderloin', 'tender', 'strip', 'drumstick', 'drumette',
