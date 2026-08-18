@@ -368,6 +368,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     && source === 'cook'
     && strictIngredientMatch
     && !!resultsIngredientIntent?.isIngredientLed;
+  const strictIngredientSummary = hasStrictIngredientNoResults
+    ? (formatDinnerBrief(resultsQuery, resultsIngredientIntent).toLowerCase() || 'these ingredients')
+    : '';
   const hasPreferenceConflictNotice = !!contradictionWarning
     && contradictionWarning.type !== 'no_results'
     && !hasStrictIngredientNoResults;
@@ -1274,21 +1277,33 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             ) : (
               <div className={`space-y-4 px-4 sm:px-6 max-w-xl mx-auto w-full ${hasPreferenceConflictNotice ? 'py-4' : 'py-8'}`}>
-                {!hasPreferenceConflictNotice && (
+                {hasStrictIngredientNoResults ? (
+                  <div role="alert" className="rounded border border-dbd-accent/30 bg-dbd-accent/5 px-4 py-3 text-left">
+                    <div className="flex items-start gap-2.5">
+                      <Info className="mt-0.5 h-4 w-4 shrink-0 text-dbd-accent" />
+                      <div className="min-w-0">
+                        <h3 className="text-[15px] font-bold leading-snug text-gray-900">
+                          No recipes found using only {strictIngredientSummary}.
+                        </h3>
+                        <p className="mt-1 text-[12.5px] leading-relaxed text-gray-600">
+                          Oil, salt, pepper and basic seasoning are allowed. Try adding another ingredient or turn off strict search.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : !hasPreferenceConflictNotice && (
                   <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-2">
                     <Search className="w-6 h-6 text-gray-300" />
                   </div>
                 )}
                 
-                {!hasPreferenceConflictNotice && (
+                {!hasPreferenceConflictNotice && !hasStrictIngredientNoResults && (
                   <div className="space-y-1.5">
                     <h3 className="text-[16px] font-bold text-gray-900">
-                      {hasStrictIngredientNoResults ? 'No exact matches found' : 'No recipes match all selected preferences.'}
+                      No recipes match all selected preferences.
                     </h3>
                     <p className="text-[13px] text-gray-500 mx-auto leading-relaxed font-medium">
-                      {hasStrictIngredientNoResults
-                        ? 'Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off strict search.'
-                        : 'Try removing one or two preferences to broaden the search.'}
+                      Try removing one or two preferences to broaden the search.
                     </p>
                   </div>
                 )}
