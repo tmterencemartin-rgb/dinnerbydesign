@@ -377,7 +377,7 @@ export const LandingView: React.FC = () => {
           </button>
         </div>
         <p className="mt-4 text-[12px] font-medium text-dbd-ink-3">
-          Free searches: three tries, no account required.
+          Get three free searches, no account required.
         </p>
       </section>
 
@@ -408,9 +408,11 @@ export const LandingView: React.FC = () => {
 
             {/* Sandbox Inner App Stage */}
             <div className="p-3 sm:p-8 bg-[#FAF8F5] text-left">
-              
-              {/* Recipe Source Toggle (HOMEMADE / READY-MADE) */}
-              <div className="flex justify-center mb-6 max-w-sm sm:max-w-md mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono font-semibold">
+              <div className="relative">
+                <div className="sm:pr-72">
+
+                  {/* Recipe Source Toggle (HOMEMADE / READY-MADE) */}
+                  <div className="flex justify-center mb-6 max-w-sm sm:max-w-md mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono font-semibold">
                 <button 
                   onClick={() => selectSandboxSource('cook')}
                   className={`flex-1 py-2 px-3 text-center cursor-pointer transition-all ${sandboxSource === 'cook' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
@@ -425,10 +427,10 @@ export const LandingView: React.FC = () => {
                   <span className="block text-[12px] leading-tight uppercase font-bold tracking-wider">Ready-Made</span>
                   <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5 lowercase">supermarket options</span>
                 </button>
-              </div>
+                  </div>
 
-              {/* Fake Interactive Input String block */}
-              <div className="max-w-2xl mx-auto flex border border-dbd-rule bg-white shadow-sm overflow-hidden select-none hover:border-dbd-accent transition-all">
+                  {/* Fake Interactive Input String block */}
+                  <div className="max-w-2xl mx-auto flex border border-dbd-rule bg-white shadow-sm overflow-hidden select-none hover:border-dbd-accent transition-all">
                 <div className="shrink-0 pl-4 py-3 flex items-center justify-center">
                   <SearchIcon className="w-4 h-4 text-dbd-ink-3" />
                 </div>
@@ -442,10 +444,10 @@ export const LandingView: React.FC = () => {
                 >
                   Find options
                 </button>
-              </div>
+                  </div>
 
-              {/* Preset Click Options */}
-              <div className="max-w-2xl mx-auto mt-4 px-1">
+                  {/* Preset Click Options */}
+                  <div className="max-w-2xl mx-auto mt-4 px-1">
                 <p className="text-[12px] font-ibm-plex-mono font-semibold text-dbd-ink-3 mb-2">Try these preset queries:</p>
                 <div className="flex flex-wrap gap-2">
                   {['Leftover chicken', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag, index) => (
@@ -458,10 +460,10 @@ export const LandingView: React.FC = () => {
                     </button>
                   ))}
                 </div>
-              </div>
+                  </div>
 
-              {/* Verification Timing indicator */}
-              <div className="max-w-2xl mx-auto mt-8 border-b border-dbd-rule/40 pb-2 mb-4 flex items-center gap-2 select-none">
+                  {/* Verification Timing indicator */}
+                  <div className="max-w-2xl mx-auto mt-8 border-b border-dbd-rule/40 pb-2 mb-4 flex items-center gap-2 select-none">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[11px] font-mono text-dbd-ink-3 font-semibold">
                   {isSandboxSearching ? (
@@ -473,10 +475,10 @@ export const LandingView: React.FC = () => {
                     </>
                   )}
                 </span>
-              </div>
+                  </div>
 
-              {/* Recipe List sandbox render */}
-              <div className="max-w-2xl mx-auto space-y-3 relative min-h-[108px] sm:min-h-[220px]">
+                  {/* Recipe List sandbox render */}
+                  <div className="max-w-2xl mx-auto space-y-3 relative min-h-[108px] sm:min-h-[220px]">
                 {isSandboxSearching ? (
                   <div className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-xs select-none">
                     <div className="text-center">
@@ -505,6 +507,25 @@ export const LandingView: React.FC = () => {
                     </span>
                   </div>
                 ))}
+                  </div>
+                </div>
+
+                <aside className="mt-5 sm:mt-0 sm:absolute sm:top-0 sm:right-0 sm:w-64 border border-dbd-rule bg-white p-4 shadow-sm" aria-label="Preferences preview">
+                  <div className="flex items-center justify-between gap-3 border-b border-dbd-rule/70 pb-3">
+                    <h3 className="font-ibm-plex-mono text-[12px] font-bold uppercase tracking-[0.14em] text-dbd-ink">Preferences</h3>
+                    <span className="text-[9px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-accent">Applied</span>
+                  </div>
+                  <p className="mt-3 text-[12px] leading-relaxed text-dbd-ink-3">Your preferences shape every search.</p>
+                  <div className="mt-3 space-y-2">
+                    {['Vegetarian', 'No nuts', 'Under 30 mins', '£2.50 pp'].map((preference) => (
+                      <div key={preference} className="flex items-center gap-2 border border-dbd-rule/70 bg-dbd-surface px-2.5 py-2 text-[10.5px] font-ibm-plex-mono font-semibold uppercase tracking-wide text-dbd-ink-2">
+                        <CheckIcon className="h-3.5 w-3.5 shrink-0 text-dbd-accent" />
+                        {preference}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-[10px] leading-relaxed text-dbd-ink-3">Set them once, then refine any search whenever you like.</p>
+                </aside>
               </div>
 
             </div>
