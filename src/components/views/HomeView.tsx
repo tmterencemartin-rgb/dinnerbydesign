@@ -916,11 +916,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         ? 'Oil, salt, pepper and basic seasoning are allowed. Add garlic, herbs, lemon or other extras to the list if you want them included.'
                         : 'Add at least two ingredients to your search to enable this filter.'}
                     </span>
-                    {strictIngredientMatch && ingredientIntent?.isIngredientLed && ingredientIntent.ingredients.length > 0 && (
-                      <span className="mt-1.5 block border-t border-dbd-rule/50 pt-1.5 text-[10px] font-semibold leading-4 text-dbd-accent" aria-live="polite">
-                        Strict search: {ingredientIntent.ingredients.map(sentenceCase).join(', ')}
-                      </span>
-                    )}
                     {hasIngredientNoResults && (
                       <span
                         className="mt-2 flex items-start gap-1.5 text-[10.5px] leading-4 text-dbd-accent"
