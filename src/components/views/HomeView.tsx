@@ -907,15 +907,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     onChange={(event) => setStrictIngredientMatch(event.target.checked)}
                     disabled={isReadOnly || isGuestSearchLimitReached || !ingredientIntent?.isIngredientLed}
                     className="mt-0.5 h-4 w-4 shrink-0 accent-dbd-accent"
-                    aria-describedby="strict-ingredient-match-help"
                   />
                   <span className="min-w-0">
                     <span className="block text-[11.5px] font-semibold text-dbd-ink">Use only these ingredients (strict)</span>
-                    <span id="strict-ingredient-match-help" className="mt-0.5 block text-[10.5px] leading-4 text-dbd-ink-3">
-                      {ingredientIntent?.isIngredientLed
-                        ? 'Oil, salt, pepper and basic seasoning are allowed. Add garlic, herbs, lemon or other extras to the list if you want them included.'
-                        : 'Add at least two ingredients to your search to enable this filter.'}
-                    </span>
                     {hasIngredientNoResults && (
                       <span
                         className="mt-2 flex items-start gap-1.5 text-[10.5px] leading-4 text-dbd-accent"
