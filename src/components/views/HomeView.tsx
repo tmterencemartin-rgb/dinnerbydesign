@@ -364,16 +364,16 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
-  const hasStrictIngredientNoResults = status === 'noResults'
+  const hasIngredientNoResults = status === 'noResults'
     && source === 'cook'
-    && strictIngredientMatch
     && !!resultsIngredientIntent?.isIngredientLed;
-  const strictIngredientSummary = hasStrictIngredientNoResults
-    ? (formatDinnerBrief(resultsQuery, resultsIngredientIntent).toLowerCase() || 'these ingredients')
+  const hasStrictIngredientNoResults = hasIngredientNoResults && strictIngredientMatch;
+  const ingredientSummary = hasIngredientNoResults
+    ? (formatDinnerBrief(resultsQuery, resultsIngredientIntent).toLowerCase() || 'the listed ingredients')
     : '';
   const hasPreferenceConflictNotice = !!contradictionWarning
     && contradictionWarning.type !== 'no_results'
-    && !hasStrictIngredientNoResults;
+    && !hasIngredientNoResults;
   const dietaryConflictCriterion = React.useMemo(
     () => activeCriteria.find(criterion => criterion.type === 'dietaryRule'),
     [activeCriteria]
@@ -1104,7 +1104,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
             </AnimatePresence>
 
-            {contradictionWarning && !hasStrictIngredientNoResults && (
+            {contradictionWarning && !hasIngredientNoResults && (
               <motion.div 
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1125,7 +1125,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </motion.div>
             )}
 
-            {hasStrictIngredientNoResults && (
+            {hasIngredientNoResults && (
               <motion.div
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1136,10 +1136,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   <Info className="h-3.5 w-3.5 shrink-0 text-dbd-accent" />
                   <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
                     <p className="text-[12px] font-bold leading-snug text-gray-900">
-                      No recipes found using only {strictIngredientSummary}.
+                      No recipes found using {strictIngredientMatch ? `only ${ingredientSummary}` : ingredientSummary}.
                     </p>
                     <p className="text-[11px] leading-snug text-gray-600">
-                      Add another ingredient or turn off strict search.
+                      {strictIngredientMatch
+                        ? 'Add another ingredient or turn off strict search.'
+                        : 'Try adding another ingredient or broadening your search.'}
                     </p>
                   </div>
                 </div>
@@ -1298,13 +1300,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             ) : (
               <div className={`space-y-4 px-4 sm:px-6 max-w-xl mx-auto w-full ${hasPreferenceConflictNotice ? 'py-4' : 'py-8'}`}>
-                {!hasPreferenceConflictNotice && !hasStrictIngredientNoResults && (
+                {!hasPreferenceConflictNotice && !hasIngredientNoResults && (
                   <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-2">
                     <Search className="w-6 h-6 text-gray-300" />
                   </div>
                 )}
                 
-                {!hasPreferenceConflictNotice && !hasStrictIngredientNoResults && (
+                {!hasPreferenceConflictNotice && !hasIngredientNoResults && (
                   <div className="space-y-1.5">
                     <h3 className="text-[16px] font-bold text-gray-900">
                       No recipes match all selected preferences.
@@ -1345,7 +1347,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         Search anyway
                       </button>
                     )}
-                    {contradictionWarning?.type === 'conflict' && !dietaryConflictCriterion && !hasStrictIngredientNoResults && (
+                    {contradictionWarning?.type === 'conflict' && !dietaryConflictCriterion && !hasIngredientNoResults && (
                       <button
                         onClick={() => handleGenerate(undefined, {}, undefined, { force: true })}
                         className="w-full py-3 bg-dbd-accent text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-dbd-accent-mid transition-all shadow-md"
@@ -1361,7 +1363,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         Turn off strict search
                       </button>
                     )}
-                    {!hasPreferenceConflictNotice && !hasStrictIngredientNoResults && (
+                    {!hasPreferenceConflictNotice && !hasIngredientNoResults && (
                       <button
                         onClick={handleReset}
                         className="w-full py-3 bg-gray-900 text-white rounded text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-md"

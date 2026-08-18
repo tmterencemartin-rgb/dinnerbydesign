@@ -802,14 +802,14 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     ? `\nINGREDIENT-LED SEARCH ACTIVE:
 - The user appears to be starting from ingredients they already have.
 - Listed ingredients: ${(ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query)).join(', ') || query}.
-- STRICTLY prioritise recipes that use most or all listed ingredients as primary or key ingredients.
+- Every recipe must use all listed ingredients as primary or key ingredients.
 - Minimise extra shopping. Avoid recipes that need many additional fresh or expensive ingredients.
 - If a recipe needs extra ingredients, keep them essential and ordinary UK supermarket items.
 - In the description or matchReason, briefly explain how the listed ingredients are used.`
     : '';
 
-  const strictIngredientLogic = strictIngredientMatch && ingredientIntent?.isIngredientLed
-    ? `\nSTRICT INGREDIENT MATCH ACTIVE:\n- Every listed ingredient must appear in every returned recipe.\n- Natural forms or varieties of a listed ingredient are allowed when they remain the same ingredient category (for example pork mince or pork chops for pork, red onion for onion, and new potatoes for potato).\n- Do not add meaningful ingredients that are not listed, such as garlic, cream or tomatoes when they were not requested.\n- Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed.\n- Do not replace an exact result with a near match. If there are no exact results, return an empty items array.`
+  const strictIngredientLogic = ingredientIntent?.isIngredientLed
+    ? `\nINGREDIENT MATCH ACTIVE:\n- Every listed ingredient must appear in every returned recipe.\n- Natural forms or varieties of a listed ingredient are allowed when they remain the same ingredient category (for example pork mince or pork chops for pork, red onion for onion, and new potatoes for potato).\n- ${strictIngredientMatch ? 'Do not add meaningful ingredients that are not listed, such as garlic, cream or tomatoes when they were not requested.' : 'Extra ingredients are allowed when they are sensible for the dish.'}\n- ${strictIngredientMatch ? 'Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed.' : 'Keep extra ingredients to a sensible minimum.'}\n- Do not replace an exact result with a near match. If there are no exact results, return an empty items array.`
     : '';
 
   const offalLogic = activeIncludeOffal
@@ -885,8 +885,8 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - Split these on commas and the word 'and'. The independent parsed ingredients are: ${parsedIngredients.map(i => `'${i}'`).join(', ')}.
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
-- ${strictIngredientMatch ? 'Every returned recipe must contain ALL of these listed ingredients.' : 'Always try to return recipes/dishes that contain ALL of these listed ingredients.'}
-- ${strictIngredientMatch ? 'If no exact matches exist, return zero results rather than a near match.' : 'Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible.'}
+- Every returned recipe must contain ALL of these listed ingredients.
+- If no exact matches exist, return zero results rather than a near match.
 ${strictIngredientMatch ? '- Return the complete visible ingredient list for each recipe, not a shortened summary.' : ''}
    - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.`
       : '';
@@ -940,7 +940,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 
     // Dynamic prompt - minimal and direct
     const prompt = `Search intent: "${query}". 
-    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: ${strictIngredientMatch ? 'MUST contain every specified parsed ingredient' : 'MUST contain as many specified parsed ingredients as possible'} (${parsedIngredients.join(', ')}). Minimise extra shopping and feature these ingredients prominently.` : ''}
+    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: MUST contain every specified parsed ingredient (${parsedIngredients.join(', ')}). Minimise extra shopping and feature these ingredients prominently.` : ''}
     ${activeSaladPref === 'main-only' ? 'Requirement: MUST be a main-course salad.' : ''}
     ${activeSaladPref === 'side-only' ? 'Requirement: MUST be a side salad.' : ''}
     ${activeSaladPref === 'none' ? 'Requirement: NO salads.' : ''}

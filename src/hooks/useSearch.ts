@@ -16,7 +16,7 @@ import { generateDinnerSuggestions as performServiceSearch, generateMatchRationa
 import { getRecipeKey, isSameRecipe } from '../lib/recipeUtils';
 import { passesHardConstraints } from '../lib/dietarySafety';
 import { normaliseUserPreferences } from '../lib/preferenceUtils';
-import { detectIngredientIntent, matchesStrictIngredientSearch } from '../lib/ingredientParser';
+import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrictIngredientSearch } from '../lib/ingredientParser';
 import { 
   buildSearchParams, 
   cleanSearchParams, 
@@ -36,6 +36,8 @@ const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
 const GUEST_SEARCH_LIMIT = 3;
 const STRICT_INGREDIENT_NO_RESULTS_MESSAGE =
   'No exact matches found. Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off “Use only these ingredients (strict)”.';
+const INGREDIENT_NO_RESULTS_MESSAGE =
+  'No recipes found using all of the listed ingredients. Try adding another ingredient or broadening your search.';
 
 const isBroadChilliDishQuery = (query: string) => /\b(chilli|chili)\b/i.test(query)
   && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);
@@ -469,6 +471,7 @@ export function useSearch() {
         let recipesWithFinalIds = accumulatedRecipes
           .filter(r => passesHardConstraints(r, effectivePrefs))
           .filter(r => !timeLimit || r.totalTime <= timeLimit)
+          .filter(r => !params.ingredientIntent?.isIngredientLed || matchesRequestedIngredientSearch(r, params.query))
           .filter(r => !params.strictIngredientMatch || matchesStrictIngredientSearch(r, params.query))
           .map(r => ({
             ...r,
@@ -489,6 +492,7 @@ export function useSearch() {
             .filter(r => !existingTitles.has(r.title.toLowerCase().trim()))
             .filter(r => passesHardConstraints(r, effectivePrefs))
             .filter(r => !timeLimit || r.totalTime <= timeLimit)
+            .filter(r => !params.ingredientIntent?.isIngredientLed || matchesRequestedIngredientSearch(r, params.query))
             .filter(r => !params.strictIngredientMatch || matchesStrictIngredientSearch(r, params.query))
             .slice(0, needed)
             .map(r => ({
@@ -517,7 +521,9 @@ export function useSearch() {
             type: 'conflict',
             content: params.strictIngredientMatch
               ? STRICT_INGREDIENT_NO_RESULTS_MESSAGE
-              : `No dishes match your current rules. Try broadening your search or removing an exclusion.`
+              : params.ingredientIntent?.isIngredientLed
+                ? INGREDIENT_NO_RESULTS_MESSAGE
+                : `No dishes match your current rules. Try broadening your search or removing an exclusion.`
           });
           if (!isAppend) {
             setCurrentRecipes([]);

@@ -178445,7 +178445,7 @@ var INGREDIENT_VARIANT_WORDS = {
   tuna: /* @__PURE__ */ new Set(["fillet", "steak", "portion"]),
   sausage: /* @__PURE__ */ new Set(["pork", "chicken", "beef", "lamb", "turkey", "vegetarian", "veggie", "chipolata"]),
   prawn: /* @__PURE__ */ new Set(["tiger", "king"]),
-  crab: /* @__PURE__ */ new Set(["king"]),
+  crab: /* @__PURE__ */ new Set(["king", "meat", "claw", "white", "brown", "lump"]),
   bass: /* @__PURE__ */ new Set(["sea"])
 };
 var BEEF_CUT_TERMS = /* @__PURE__ */ new Set([
@@ -178686,18 +178686,25 @@ var matchesAllowedIngredient = (value, allowed2) => {
     (word) => INGREDIENT_MODIFIER_PATTERN.test(word) || allowedVariantWords.has(word)
   );
 };
-function matchesStrictIngredientSearch(item, query) {
+function matchesRequestedIngredientSearch(item, query) {
   const intent = detectIngredientIntent(query);
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
   const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
   if (ingredientLines.length === 0) return false;
-  if (typeof item.totalIngredientsCount === "number" && item.totalIngredientsCount > ingredientLines.length) return false;
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
-  const includesRequested = requestedIngredients.every(
+  return requestedIngredients.every(
     (requested) => normalisedLines.some((line) => matchesAllowedIngredient(line, requested))
   );
-  if (!includesRequested) return false;
+}
+function matchesStrictIngredientSearch(item, query) {
+  if (!matchesRequestedIngredientSearch(item, query)) return false;
+  const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
+  if (typeof item.totalIngredientsCount === "number" && item.totalIngredientsCount > ingredientLines.length) return false;
+  const intent = detectIngredientIntent(query);
+  if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
+  const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const requestedIngredients = intent.ingredients;
   return normalisedLines.every(
     (line) => isPantryStaple(line) || requestedIngredients.some((requested) => matchesAllowedIngredient(line, requested))
   );
@@ -179328,16 +179335,16 @@ HIGH PROTEIN BIAS (High Protein recipes ACTIVE):
 INGREDIENT-LED SEARCH ACTIVE:
 - The user appears to be starting from ingredients they already have.
 - Listed ingredients: ${(ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query)).join(", ") || query}.
-- STRICTLY prioritise recipes that use most or all listed ingredients as primary or key ingredients.
+- Every recipe must use all listed ingredients as primary or key ingredients.
 - Minimise extra shopping. Avoid recipes that need many additional fresh or expensive ingredients.
 - If a recipe needs extra ingredients, keep them essential and ordinary UK supermarket items.
 - In the description or matchReason, briefly explain how the listed ingredients are used.` : "";
-  const strictIngredientLogic = strictIngredientMatch && ingredientIntent?.isIngredientLed ? `
-STRICT INGREDIENT MATCH ACTIVE:
+  const strictIngredientLogic = ingredientIntent?.isIngredientLed ? `
+INGREDIENT MATCH ACTIVE:
 - Every listed ingredient must appear in every returned recipe.
 - Natural forms or varieties of a listed ingredient are allowed when they remain the same ingredient category (for example pork mince or pork chops for pork, red onion for onion, and new potatoes for potato).
-- Do not add meaningful ingredients that are not listed, such as garlic, cream or tomatoes when they were not requested.
-- Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed.
+- ${strictIngredientMatch ? "Do not add meaningful ingredients that are not listed, such as garlic, cream or tomatoes when they were not requested." : "Extra ingredients are allowed when they are sensible for the dish."}
+- ${strictIngredientMatch ? "Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed." : "Keep extra ingredients to a sensible minimum."}
 - Do not replace an exact result with a near match. If there are no exact results, return an empty items array.` : "";
   const offalLogic = activeIncludeOffal ? "" : `
 OFFAL EXCLUSION (HARD):
@@ -179386,8 +179393,8 @@ INGREDIENT PARSING & INTERPRETATION (CRITICAL):
 - Split these on commas and the word 'and'. The independent parsed ingredients are: ${parsedIngredients.map((i2) => `'${i2}'`).join(", ")}.
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
-- ${strictIngredientMatch ? "Every returned recipe must contain ALL of these listed ingredients." : "Always try to return recipes/dishes that contain ALL of these listed ingredients."}
-- ${strictIngredientMatch ? "If no exact matches exist, return zero results rather than a near match." : "Do NOT return zero results; if perfect matches for all listed ingredients are not possible, prioritize returning recipes containing as many of them as possible."}
+- Every returned recipe must contain ALL of these listed ingredients.
+- If no exact matches exist, return zero results rather than a near match.
 ${strictIngredientMatch ? "- Return the complete visible ingredient list for each recipe, not a shortened summary." : ""}
    - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.` : "";
     const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs based on the user's intent.
@@ -179434,7 +179441,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 `;
     const finalSystemInstruction = systemInstruction + rejectionPolicy;
     const prompt = `Search intent: "${query}". 
-    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: ${strictIngredientMatch ? "MUST contain every specified parsed ingredient" : "MUST contain as many specified parsed ingredients as possible"} (${parsedIngredients.join(", ")}). Minimise extra shopping and feature these ingredients prominently.` : ""}
+    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: MUST contain every specified parsed ingredient (${parsedIngredients.join(", ")}). Minimise extra shopping and feature these ingredients prominently.` : ""}
     ${activeSaladPref === "main-only" ? "Requirement: MUST be a main-course salad." : ""}
     ${activeSaladPref === "side-only" ? "Requirement: MUST be a side salad." : ""}
     ${activeSaladPref === "none" ? "Requirement: NO salads." : ""}

@@ -683,7 +683,7 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
   tuna: new Set(['fillet', 'steak', 'portion']),
   sausage: new Set(['pork', 'chicken', 'beef', 'lamb', 'turkey', 'vegetarian', 'veggie', 'chipolata']),
   prawn: new Set(['tiger', 'king']),
-  crab: new Set(['king']),
+  crab: new Set(['king', 'meat', 'claw', 'white', 'brown', 'lump']),
   bass: new Set(['sea']),
 };
 
@@ -790,26 +790,40 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
 };
 
 /**
- * Applies the Search view's strict ingredient option to generated recipe stubs.
- * Pantry staples are allowed, but every other ingredient must be one of the
- * ingredients listed by the user and every listed ingredient must be present.
+ * Applies the Search view's ingredient requirement to generated recipe stubs.
+ * Every listed ingredient must be present, while extra ingredients remain
+ * allowed unless strict mode is enabled.
  */
-export function matchesStrictIngredientSearch(item: { ingredients?: string[]; totalIngredientsCount?: number }, query: string): boolean {
+export function matchesRequestedIngredientSearch(item: { ingredients?: string[]; totalIngredientsCount?: number }, query: string): boolean {
   const intent = detectIngredientIntent(query);
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
 
   const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
   if (ingredientLines.length === 0) return false;
-  if (typeof item.totalIngredientsCount === 'number' && item.totalIngredientsCount > ingredientLines.length) return false;
 
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
 
-  const includesRequested = requestedIngredients.every(requested =>
+  return requestedIngredients.every(requested =>
     normalisedLines.some(line => matchesAllowedIngredient(line, requested))
   );
-  if (!includesRequested) return false;
+}
 
+/**
+ * Applies the Search view's strict ingredient option to generated recipe stubs.
+ * Pantry staples are allowed, but every other ingredient must be one of the
+ * ingredients listed by the user and every listed ingredient must be present.
+ */
+export function matchesStrictIngredientSearch(item: { ingredients?: string[]; totalIngredientsCount?: number }, query: string): boolean {
+  if (!matchesRequestedIngredientSearch(item, query)) return false;
+
+  const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
+  if (typeof item.totalIngredientsCount === 'number' && item.totalIngredientsCount > ingredientLines.length) return false;
+
+  const intent = detectIngredientIntent(query);
+  if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
+  const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const requestedIngredients = intent.ingredients;
   return normalisedLines.every(line =>
     isPantryStaple(line) || requestedIngredients.some(requested => matchesAllowedIngredient(line, requested))
   );

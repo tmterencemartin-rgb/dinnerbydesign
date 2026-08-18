@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { detectIngredientIntent, matchesStrictIngredientSearch, parseAndNormaliseIngredients } from './ingredientParser';
+import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrictIngredientSearch, parseAndNormaliseIngredients } from './ingredientParser';
 
 describe('Ingredient Parser & Normalizer', () => {
   test('splits on commas and the word-and', () => {
@@ -252,6 +252,20 @@ describe('Ingredient Parser & Normalizer', () => {
       ingredients: ['ham', 'eggs', 'potatoes'],
       totalIngredientsCount: 6
     }, 'ham, eggs and potatoes')).toBe(false);
+  });
+
+  test('requires every listed ingredient in ordinary ingredient-led searches', () => {
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['green beans', 'garlic', 'chilli']
+    }, 'crab and green beans')).toBe(false);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['crab meat', 'green beans', 'garlic', 'chilli']
+    }, 'crab and green beans')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['crab meat', 'green beans', 'garlic', 'chilli']
+    }, 'crab and green beans')).toBe(false);
   });
 
   test('allows common pantry staples but rejects recipes without an ingredient list', () => {

@@ -233,12 +233,12 @@ describe('searchUtils', () => {
       expect(labels).toContain('No Eggs');
     });
 
-    it('shows strict ingredient matching as a temporary search chip only for ingredient lists', () => {
+    it('does not duplicate strict ingredient matching as a result chip', () => {
       expect(buildLabels({
         query: 'ham, eggs and potatoes',
         source: 'cook',
         strictIngredientMatch: true
-      })).toContain('Use only listed ingredients');
+      })).not.toContain('Use only listed ingredients');
 
       expect(buildLabels({
         query: 'ham curry',

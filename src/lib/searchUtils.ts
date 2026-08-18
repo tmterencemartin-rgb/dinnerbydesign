@@ -747,14 +747,6 @@ export const buildActiveCriteria = (
     }
   }
 
-  if (
-    params.strictIngredientMatch
-    && params.source === 'cook'
-    && detectIngredientIntent(params.query)?.isIngredientLed
-  ) {
-    list.push({ type: 'strictIngredientMatch', value: 'true', label: 'Use only listed ingredients' });
-  }
-
   console.log('[buildActiveCriteria] END:', { listCount: list.length, listLabels: list.map(l => l.label) });
   return list;
 };
