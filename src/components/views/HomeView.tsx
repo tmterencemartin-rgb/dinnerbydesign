@@ -913,12 +913,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     <span className="block text-[11.5px] font-semibold text-dbd-ink">Use only these ingredients (strict)</span>
                     <span id="strict-ingredient-match-help" className="mt-0.5 block text-[10.5px] leading-4 text-dbd-ink-3">
                       {ingredientIntent?.isIngredientLed
-                        ? 'Only the ingredients listed above will be used. Oil, salt, pepper and basic seasoning are allowed. Add garlic, herbs, lemon or other extras to your search if you want them included.'
+                        ? 'Oil, salt, pepper and basic seasoning are allowed. Add garlic, herbs, lemon or other extras to the list if you want them included.'
                         : 'Add at least two ingredients to your search to enable this filter.'}
                     </span>
                     {strictIngredientMatch && ingredientIntent?.isIngredientLed && ingredientIntent.ingredients.length > 0 && (
                       <span className="mt-1.5 block border-t border-dbd-rule/50 pt-1.5 text-[10px] font-semibold leading-4 text-dbd-accent" aria-live="polite">
-                        Strict search on: {ingredientIntent.ingredients.map(sentenceCase).join(' · ')}. Unlisted ingredients are excluded.
+                        Strict search: {ingredientIntent.ingredients.map(sentenceCase).join(', ')}
                       </span>
                     )}
                     {hasIngredientNoResults && (
@@ -932,7 +932,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                             No recipes found using {strictIngredientMatch ? `only ${ingredientSummary}` : ingredientSummary}.
                           </span>{' '}
                           {strictIngredientMatch
-                            ? 'Add another ingredient or turn off strict search.'
+                            ? 'Add an ingredient or turn off strict search.'
                             : 'Try adding another ingredient or broadening your search.'}
                         </span>
                       </span>
