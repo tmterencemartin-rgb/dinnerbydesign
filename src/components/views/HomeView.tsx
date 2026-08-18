@@ -1124,6 +1124,27 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               </motion.div>
             )}
+
+            {hasStrictIngredientNoResults && (
+              <motion.div
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                role="alert"
+                className="mb-2 rounded border border-dbd-accent/25 bg-dbd-accent/5 px-3 py-2 text-left"
+              >
+                <div className="flex items-center gap-2">
+                  <Info className="h-3.5 w-3.5 shrink-0 text-dbd-accent" />
+                  <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                    <p className="text-[12px] font-bold leading-snug text-gray-900">
+                      No recipes found using only {strictIngredientSummary}.
+                    </p>
+                    <p className="text-[11px] leading-snug text-gray-600">
+                      Add another ingredient or turn off strict search.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
 
         <AnimatePresence>
@@ -1277,21 +1298,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             ) : (
               <div className={`space-y-4 px-4 sm:px-6 max-w-xl mx-auto w-full ${hasPreferenceConflictNotice ? 'py-4' : 'py-8'}`}>
-                {hasStrictIngredientNoResults ? (
-                  <div role="alert" className="rounded border border-dbd-accent/30 bg-dbd-accent/5 px-4 py-3 text-left">
-                    <div className="flex items-start gap-2.5">
-                      <Info className="mt-0.5 h-4 w-4 shrink-0 text-dbd-accent" />
-                      <div className="min-w-0">
-                        <h3 className="text-[15px] font-bold leading-snug text-gray-900">
-                          No recipes found using only {strictIngredientSummary}.
-                        </h3>
-                        <p className="mt-1 text-[12.5px] leading-relaxed text-gray-600">
-                          Oil, salt, pepper and basic seasoning are allowed. Try adding another ingredient or turn off strict search.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ) : !hasPreferenceConflictNotice && (
+                {!hasPreferenceConflictNotice && !hasStrictIngredientNoResults && (
                   <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-2">
                     <Search className="w-6 h-6 text-gray-300" />
                   </div>
