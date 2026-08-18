@@ -41,7 +41,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
     }
   }, [status, startTime]);
 
-  if (status === 'idle' || hasVisibleResults || (status === 'complete' && !enriching)) return null;
+  if (status === 'idle' || status === 'noResults' || status === 'error' || hasVisibleResults || (status === 'complete' && !enriching)) return null;
 
   const isLowPerf = elapsed > 5;
   const showEnriching = enriching && (status === 'partial' || status === 'complete');
