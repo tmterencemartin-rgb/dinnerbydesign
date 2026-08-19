@@ -364,7 +364,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               >
                 <div className="flex items-center gap-2.5">
                   <Apple className="w-4 h-4 text-gray-500" />
-                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Dietary essentials</span>
+                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Diet, allergies & exclusions</span>
                   {(() => {
                     const cnt = (localDietaryRule !== 'none' ? 1 : 0) + 
                                   (localSaladPreference !== 'all' ? 1 : 0) + 
