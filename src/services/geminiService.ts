@@ -886,13 +886,20 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     
     // Parse and normalise search query elements for ingredient-focused searches
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
+    const preparationPreferences = ingredientIntent?.preparationPreferences;
+    const preparationInstruction = preparationPreferences
+      ? `\n- Explicit preparation requirements: ${[
+          preparationPreferences.skin === 'on' ? 'skin-on' : preparationPreferences.skin === 'off' ? 'skinless' : '',
+          preparationPreferences.bone === 'in' ? 'bone-in' : preparationPreferences.bone === 'out' ? 'boneless' : ''
+        ].filter(Boolean).join(', ')}. These requirements apply to the associated meat or poultry ingredient and must not be substituted.`
+      : '';
     const parsedIngredientsInstruction = ingredientIntent?.isIngredientLed && parsedIngredients.length > 0
       ? `\nINGREDIENT PARSING & INTERPRETATION (CRITICAL):
 - The user's query "${query}" represents one or more listed ingredients.
 - Split these on commas and the word 'and'. The independent parsed ingredients are: ${parsedIngredients.map(i => `'${i}'`).join(', ')}.
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
-- Every returned recipe must contain ALL of these listed ingredients.
+- Every returned recipe must contain ALL of these listed ingredients.${preparationInstruction}
 - If no exact matches exist, return zero results rather than a near match.
 ${strictIngredientMatch ? '- Return the complete visible ingredient list for each recipe, not a shortened summary.' : ''}
    - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.`

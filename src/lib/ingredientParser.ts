@@ -542,6 +542,41 @@ const COMPOUND_INGREDIENT_MODIFIERS = new Set([
   'sliced', 'quartered', 'halved'
 ]);
 
+export type IngredientPreparationPreferences = {
+  skin?: 'on' | 'off';
+  bone?: 'in' | 'out';
+};
+
+export const extractIngredientPreparationPreferences = (query: string): {
+  cleanedQuery: string;
+  preferences: IngredientPreparationPreferences;
+} => {
+  const source = typeof query === 'string' ? query : '';
+  const preferences: IngredientPreparationPreferences = {};
+  const skinOn = /\bskin[-\s]+on\b|\bwith(?:\s+the)?\s+skin\b|\bskin\s+attached\b/gi;
+  const skinOff = /\bskinless\b|\bwithout(?:\s+the)?\s+skin\b|\bno\s+skin\b/gi;
+  const boneIn = /\bbone[-\s]+in\b|\bwith(?:\s+the)?\s+bones?\b|\bon\s+the\s+bone\b/gi;
+  const boneOut = /\bboneless\b|\bwithout(?:\s+the)?\s+bones?\b|\bno\s+bones?\b/gi;
+
+  if (source.match(skinOn)) preferences.skin = 'on';
+  if (source.match(skinOff)) preferences.skin = 'off';
+  if (source.match(boneIn)) preferences.bone = 'in';
+  if (source.match(boneOut)) preferences.bone = 'out';
+
+  const cleanedQuery = source
+    .replace(skinOn, ' ')
+    .replace(skinOff, ' ')
+    .replace(boneIn, ' ')
+    .replace(boneOut, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return { cleanedQuery, preferences };
+};
+
+const hasPreparationPreferences = (preferences: IngredientPreparationPreferences) =>
+  Boolean(preferences.skin || preferences.bone);
+
 const PREFIX_INGREDIENT_MODIFIERS = new Set([
   'fresh', 'frozen', 'tinned', 'canned', 'cooked', 'raw', 'large', 'medium', 'small',
   'new', 'baby', 'mashed', 'boiled', 'baked', 'roasted', 'diced', 'chopped',
@@ -588,13 +623,16 @@ export function detectIngredientIntent(query: string): {
   isIngredientLed: boolean;
   ingredients: string[];
   reason: 'list' | 'phrase' | 'short-food-list';
+  preparationPreferences?: IngredientPreparationPreferences;
 } | null {
   const trimmed = query?.trim();
   if (!trimmed) return null;
 
-  const lower = trimmed.toLowerCase();
+  const { cleanedQuery, preferences } = extractIngredientPreparationPreferences(trimmed);
+  const hasPreparation = hasPreparationPreferences(preferences);
+  const lower = cleanedQuery.toLowerCase();
   const ingredientPhrases = /\b(i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only|what can i make with|what can i cook with)\b/i;
-  const hasListPunctuation = /[,;]/.test(trimmed);
+  const hasListPunctuation = /[,;]/.test(cleanedQuery);
   const hasSimpleAndList = /\b\w+\b\s+\band\b\s+\b\w+\b/i.test(lower) && lower.split(/\s+/).length <= 7;
 
   const withoutLeadIn = lower
@@ -603,12 +641,12 @@ export function detectIngredientIntent(query: string): {
     .replace(/[?!.]/g, ' ')
     .trim();
 
-  const ingredients = parseAndNormaliseIngredients(withoutLeadIn || trimmed)
+  const ingredients = parseAndNormaliseIngredients(withoutLeadIn || cleanedQuery)
     .map(item => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, '').trim())
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
-  const unseparatedWords = trimmed.split(/\s+/).filter(word => !/^and$/i.test(word));
-  const unseparatedIngredients = parseUnseparatedIngredientList(trimmed);
+  const unseparatedWords = cleanedQuery.split(/\s+/).filter(word => !/^and$/i.test(word));
+  const unseparatedIngredients = parseUnseparatedIngredientList(cleanedQuery);
   const isShortUnseparatedIngredientList =
     !hasListPunctuation
     && !ingredientPhrases.test(trimmed)
@@ -618,19 +656,23 @@ export function detectIngredientIntent(query: string): {
     && unseparatedIngredients.length <= 4;
 
   if (isShortUnseparatedIngredientList) {
-    return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list' };
+    return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
-  if (ingredients.length >= 2 && ingredientPhrases.test(trimmed)) {
-    return { isIngredientLed: true, ingredients, reason: 'phrase' };
+  if (ingredients.length >= 2 && ingredientPhrases.test(cleanedQuery)) {
+    return { isIngredientLed: true, ingredients, reason: 'phrase', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (ingredients.length >= 2 && hasListPunctuation) {
-    return { isIngredientLed: true, ingredients, reason: 'list' };
+    return { isIngredientLed: true, ingredients, reason: 'list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (ingredients.length >= 2 && hasSimpleAndList) {
-    return { isIngredientLed: true, ingredients, reason: 'short-food-list' };
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+  }
+
+  if (hasPreparation && ingredients.length > 0) {
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list', preparationPreferences: preferences };
   }
 
   return null;
@@ -768,7 +810,8 @@ const isPantryStaple = (value: string) => {
 };
 
 const matchesAllowedIngredient = (value: string, allowed: string) => {
-  const valueWords = value.toLowerCase().split(/\s+/).filter(Boolean);
+  const valueWithoutPreparation = extractIngredientPreparationPreferences(value).cleanedQuery;
+  const valueWords = valueWithoutPreparation.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedWords = allowed.toLowerCase().split(/\s+/).filter(Boolean);
   if (valueWords.join(' ') === allowedWords.join(' ')) return true;
 
@@ -793,6 +836,16 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
   );
 };
 
+const matchesRequestedPreparation = (
+  value: string,
+  requested?: IngredientPreparationPreferences
+) => {
+  if (!requested || !hasPreparationPreferences(requested)) return true;
+  const found = extractIngredientPreparationPreferences(value).preferences;
+  return (!requested.skin || found.skin === requested.skin)
+    && (!requested.bone || found.bone === requested.bone);
+};
+
 /**
  * Applies the Search view's ingredient requirement to generated recipe stubs.
  * Every listed ingredient must be present, while extra ingredients remain
@@ -807,9 +860,13 @@ export function matchesRequestedIngredientSearch(item: { ingredients?: string[];
 
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
+  const requestedPreparation = intent.preparationPreferences;
 
   return requestedIngredients.every(requested =>
-    normalisedLines.some(line => matchesAllowedIngredient(line, requested))
+    normalisedLines.some(line =>
+      matchesAllowedIngredient(line, requested)
+      && matchesRequestedPreparation(line, requestedPreparation)
+    )
   );
 }
 
@@ -828,7 +885,11 @@ export function matchesStrictIngredientSearch(item: { ingredients?: string[]; to
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
+  const requestedPreparation = intent.preparationPreferences;
   return normalisedLines.every(line =>
-    isPantryStaple(line) || requestedIngredients.some(requested => matchesAllowedIngredient(line, requested))
+    isPantryStaple(line) || requestedIngredients.some(requested =>
+      matchesAllowedIngredient(line, requested)
+      && matchesRequestedPreparation(line, requestedPreparation)
+    )
   );
 }

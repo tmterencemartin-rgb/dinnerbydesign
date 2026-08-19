@@ -306,6 +306,27 @@ describe('Ingredient Parser & Normalizer', () => {
     }, 'duck egg and rice')).toBe(true);
   });
 
+  test('recognises and enforces skin and bone preparation variants', () => {
+    expect(detectIngredientIntent('skin on chicken thighs')?.ingredients).toEqual(['chicken thigh']);
+    expect(detectIngredientIntent('skin on chicken thighs')?.preparationPreferences).toEqual({ skin: 'on' });
+    expect(detectIngredientIntent('skinless chicken thighs')?.preparationPreferences).toEqual({ skin: 'off' });
+    expect(detectIngredientIntent('bone-in chicken thighs')?.preparationPreferences).toEqual({ bone: 'in' });
+    expect(detectIngredientIntent('boneless chicken thighs')?.preparationPreferences).toEqual({ bone: 'out' });
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['skin-on chicken thighs', 'oil', 'salt']
+    }, 'skin on chicken thighs')).toBe(true);
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['skinless chicken thighs', 'oil', 'salt']
+    }, 'skin on chicken thighs')).toBe(false);
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['boneless chicken thighs', 'oil', 'salt']
+    }, 'bone-in chicken thighs')).toBe(false);
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['bone-in chicken thighs', 'oil', 'salt']
+    }, 'bone-in chicken thighs')).toBe(true);
+  });
+
   test('allows common fish and sausage forms in strict ingredient searches', () => {
     expect(matchesStrictIngredientSearch({
       ingredients: ['2 salmon fillets', '500g mashed potatoes', 'oil', 'salt', 'pepper']

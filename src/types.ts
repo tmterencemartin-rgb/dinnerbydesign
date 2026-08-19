@@ -250,6 +250,10 @@ export interface SearchParams {
     isIngredientLed: boolean;
     ingredients: string[];
     reason: 'list' | 'phrase' | 'short-food-list';
+    preparationPreferences?: {
+      skin?: 'on' | 'off';
+      bone?: 'in' | 'out';
+    };
   };
   nutritiousChoice?: boolean;
   preferredSourceIds?: string[];
