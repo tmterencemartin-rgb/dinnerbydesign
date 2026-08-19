@@ -492,7 +492,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         }}
                         className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
-                        <option value="">Add ethical preference...</option>
+                        <option value="">Add preference...</option>
                         {DIETARY_TAXONOMY.religiousEthical.options.map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}

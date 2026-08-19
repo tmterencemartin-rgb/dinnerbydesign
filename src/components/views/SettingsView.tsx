@@ -878,14 +878,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium">Dietary preference</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {displayedPreferences.dietaryRule ? (DIETARY_TAXONOMY.dietaryPreferences.labels[displayedPreferences.dietaryRule] || displayedPreferences.dietaryRule) : 'None'}
+                            {displayedPreferences.dietaryRule ? (DIETARY_TAXONOMY.dietaryPreferences.labels[displayedPreferences.dietaryRule] || displayedPreferences.dietaryRule) : 'No preference'}
                           </span>
                         </div>
 
                         <div className="flex items-start justify-between gap-3 text-[12.5px] border-b border-gray-50 pb-1">
                           <span className="text-gray-500 font-medium">Salad preference</span>
                           <span className="font-bold text-gray-800 text-right">
-                            {displayedPreferences.saladPreference ? (DIETARY_TAXONOMY.saladPreferences.labels[displayedPreferences.saladPreference] || displayedPreferences.saladPreference) : 'All salads permitted'}
+                            {displayedPreferences.saladPreference ? (DIETARY_TAXONOMY.saladPreferences.labels[displayedPreferences.saladPreference] || displayedPreferences.saladPreference) : 'No preference'}
                           </span>
                         </div>
 

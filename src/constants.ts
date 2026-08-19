@@ -56,7 +56,7 @@ export const DIETARY_TAXONOMY = {
     label: 'Dietary preference',
     options: ['none', 'keto', 'paleo', 'pescatarian', 'vegan', 'vegetarian', 'gluten-free'] as DietaryRule[],
     labels: {
-      'none': 'None',
+      'none': 'No preference',
       'keto': 'Keto',
       'paleo': 'Paleo',
       'pescatarian': 'Pescatarian',
