@@ -95,7 +95,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
             alt="DinnerByDesign"
             className="h-[44.1px] w-auto max-w-[267.3px] object-contain mix-blend-multiply mx-auto mb-2"
           />
-          <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mb-4">Less searching. Precise matches. Dinner, decided.</p>
+          <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mb-4">Less searching. More relevant dinners.</p>
           
           <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">
             {isSignUp ? 'Start your 7-day trial.' : 'Sign in to your account'}

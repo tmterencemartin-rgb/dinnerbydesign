@@ -1527,7 +1527,7 @@ export function createApp() {
         let title = "DinnerByDesign | Ad-free UK Dinner Recipe Finder & Costed Shopping Lists";
         let description = "Ad-free UK dinner recipe search: dinner ideas from trusted UK sources, ready-made supermarket options, preference-led search and costed shopping lists.";
         let shareTitle = "DinnerByDesign | UK Dinner Recipe Finder";
-        let shareDescription = "Less searching. Precise matches. Find verified dinner recipes, ready-made supermarket options and costed shopping lists built around your tastes and budget.";
+        let shareDescription = "Less searching. More relevant dinners. Find verified dinner recipes, ready-made supermarket options and costed shopping lists built around your tastes and budget.";
         let canonicalPath = "/";
         let noIndex = false;
         let schema: any = null;
