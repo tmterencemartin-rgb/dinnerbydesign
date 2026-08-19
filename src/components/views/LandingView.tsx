@@ -338,9 +338,17 @@ export const LandingView: React.FC = () => {
           <span className="sm:hidden">Make the weekly shop<br />go further.</span>
           <span className="hidden sm:inline">Make the weekly shop go further.</span>
         </h1>
-        <p className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10">
-          DinnerByDesign helps you plan varied dinners around what you already have, reuse ingredients across the week and see estimated shopping costs before you buy. Free searches give you three real tries without an account. The free trial starts when you create an account, giving you seven days to save recipes, schedule dinners and plan your week.
-        </p>
+        <div className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10 space-y-5">
+          <p>
+            DinnerByDesign helps you plan varied dinners around what you already have. Reuse ingredients across the week, and see estimated shopping costs before you buy. Free searches give you three real tries without an account. The free trial starts once you create one, giving you seven days to save recipes, schedule dinners and plan your week.
+          </p>
+          <p>
+            Set your preferences once and make every search more relevant. Filter by diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources and preferred supermarkets. Change them for any individual search whenever your needs shift.
+          </p>
+          <p className="font-semibold text-dbd-ink">
+            Less searching. More relevant dinners.
+          </p>
+        </div>
 
         {/* Action button grouping */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-sm sm:max-w-md mx-auto">
