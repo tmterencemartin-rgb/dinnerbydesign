@@ -717,7 +717,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   const activeCalorieLimit = searchParams.maxCalories || preferences?.calorieCeiling || null;
   const activeBudgetLimit = searchParams.maxCostPerPortion || preferences?.budgetLimit || null;
   const activeCookingMethods = searchParams.cookingMethods || preferences?.cookingMethods || [];
-  const activeCookingFats = preferences?.cookingFats || [];
+  const activeCookingFats = searchParams.cookingFats || preferences?.cookingFats || [];
   const activeReligious = preferences?.religiousEthical || [];
   const activeServings = searchParams.servings || preferences?.servings || 2;
   const activeSupermarkets = isReadyMade ? (searchParams.supermarkets || preferences?.preferredSupermarkets || []) : [];
@@ -773,6 +773,13 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - This is NOT A HARD FILTER. You MUST still prioritize the most relevant recipes for the query "${query}". 
 - Highly relevant recipes from other sources SHOULD still appear above weak matches from trusted sources.
 - NEVER return an empty or severely reduced result set solely because trusted sources have no good matches. If no good matches exist in trusted sources, return the best matches from all available UK sources.`
+    : '';
+
+  const cookingFatLogic = activeCookingFats.length > 0
+    ? `\nCOOKING FAT PREFERENCE ACTIVE:
+- Prefer recipes that use one or more of these cooking fats: ${activeCookingFats.join(', ')}.
+- Where a recipe uses a generic cooking oil or fat, suggest a selected fat as a practical substitute where it remains suitable for the dish.
+- Respect all dietary, allergy and religious constraints; this is a cooking preference, not a safety override.`
     : '';
 
   const budgetLogic = activeIsLowCost
@@ -920,10 +927,11 @@ HARD CONSTRAINTS:
 9. Cooking Methods: ${activeCookingMethods.length > 0 ? activeCookingMethods.join(', ') : 'Any'}
 10. Religious/Ethical: ${activeReligious.join(', ') || 'None'}
 11. Preferred Supermarkets: ${activeSupermarkets.length > 0 ? activeSupermarkets.join(', ') : 'Any'}
-12. High Omega-3 Prioritisation: ${activeHighOmega3 ? 'Active (focus on oily fish, walnuts, chia, flaxseed)' : 'No'}
-13. High Protein Prioritisation: ${activeHighProtein ? 'Active (focus on lean meats, fish, pulses, eggs)' : 'No'}
-14. Offal: ${activeIncludeOffal ? 'Allowed' : 'Excluded'}
-${saladLogic}${simplicityLogic}${preferredSourcesLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}${chilliDishIntentLogic}
+12. Cooking Fats (Preference): ${activeCookingFats.length > 0 ? activeCookingFats.join(', ') : 'Any'}
+13. High Omega-3 Prioritisation: ${activeHighOmega3 ? 'Active (focus on oily fish, walnuts, chia, flaxseed)' : 'No'}
+14. High Protein Prioritisation: ${activeHighProtein ? 'Active (focus on lean meats, fish, pulses, eggs)' : 'No'}
+15. Offal: ${activeIncludeOffal ? 'Allowed' : 'Excluded'}
+${saladLogic}${simplicityLogic}${preferredSourcesLogic}${cookingFatLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}${chilliDishIntentLogic}
 `;
 
     const rejectionPolicy = `Return { "items": [] } if:
@@ -949,6 +957,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     ${activeNutritious ? 'Priority: Nutritious.' : ''}
     ${activeHighOmega3 ? 'Priority: High Omega-3 (focus on oily fish, walnuts, chia, flaxseed).' : ''}
     ${activeHighProtein ? 'Priority: High Protein (focus on lean meats, fish, pulses, eggs).' : ''}
+    ${activeCookingFats.length > 0 ? `Preference: Use ${activeCookingFats.join(' or ')} for cooking where practical and suitable.` : ''}
     ${ingredientIntent?.isIngredientLed || isLeftoverMode ? `Priority: Ingredient-led search. ${strictIngredientMatch ? 'Use only the listed ingredients apart from basic pantry items.' : 'Prioritize recipes that maximize the use of these specific items and require few extra ingredients.'}` : ''}
     ${activePreferredSourceNames.length > 0 ? `Requirement: Gently favour recipes from these trusted sources: ${activePreferredSourceNames.join(', ')}.` : ''}
     ${activeMaxTime ? `Must be under ${activeMaxTime} mins.` : ''}
