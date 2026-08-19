@@ -343,7 +343,7 @@ export const LandingView: React.FC = () => {
             DinnerByDesign helps you plan varied dinners around what you already have. Reuse ingredients across the week, and see estimated shopping costs before you buy.
           </p>
           <p>
-            Set your preferences once and make every search more relevant. Filter by diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources and preferred supermarkets. Change them for any individual search whenever your needs shift.
+            Set your preferences once and make every search more relevant. Filter by diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources and preferred supermarkets. Revise them for any individual search whenever your needs&nbsp;change.
           </p>
           <p className="font-semibold text-dbd-ink">
             Less searching. More relevant dinners.
