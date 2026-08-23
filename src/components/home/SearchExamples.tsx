@@ -20,12 +20,18 @@ const COOK_EXAMPLES = [
 ];
 
 const READY_MADE_EXAMPLES = [
+  "Indian",
+  "Spare ribs",
   "Chinese",
-  "Tesco",
-  "Vegetarian",
-  "Beef",
-  "Pasta",
-  "Air Fryer"
+  "Moussaka",
+  "Microwave",
+  "Lasagne",
+  "Fish Pie",
+  "Chilli con carne",
+  "Meatballs",
+  "Scampi",
+  "Mac & Cheese",
+  "Greek salad"
 ];
 
 export const SearchExamples: React.FC<SearchExamplesProps> = ({ onSelect, isLoading, mode = 'cook' }) => {
@@ -77,7 +83,9 @@ export const SearchExamples: React.FC<SearchExamplesProps> = ({ onSelect, isLoad
     .filter(s => !historyToDisplay.some(h => h.toLowerCase() === s.toLowerCase()))
     .filter(s => !isForbidden(s));
 
-  const combined = [...historyToDisplay, ...staticToDisplay];
+  const combined = mode === 'ready-made'
+    ? READY_MADE_EXAMPLES
+    : [...historyToDisplay, ...staticToDisplay];
   
   // Final deduplication (case-insensitive)
   const seen = new Set<string>();
@@ -86,7 +94,7 @@ export const SearchExamples: React.FC<SearchExamplesProps> = ({ onSelect, isLoad
     if (seen.has(lower)) return false;
     seen.add(lower);
     return true;
-  }).slice(0, 8);
+  }).slice(0, mode === 'ready-made' ? READY_MADE_EXAMPLES.length : 8);
 
   return (
     <div className="w-full overflow-x-auto scrollbar-hide py-0.5 px-1">

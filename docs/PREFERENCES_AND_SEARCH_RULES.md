@@ -20,7 +20,7 @@ This document describes the maintained preference schema and the behaviour those
 | `servings` | Default number of servings |
 | `calorieCeiling` | Maximum calories per adult serving |
 | `budgetLimit` | Maximum estimated ingredient value per adult serving |
-| `exclusions` | User-entered ingredients that must be excluded |
+| `exclusions` | User-entered ingredients that must be excluded, including allergies or intolerances outside the regulated allergen list |
 | `cuisinePreferences` | Preferred cuisines |
 | `religiousEthical` | Religious and ethical requirements |
 | `cookingMethods` | Preferred cooking methods |
@@ -42,8 +42,11 @@ The following are safety or suitability restrictions rather than ranking prefere
 - religious and ethical restrictions
 - explicit ingredient exclusions
 - an offal exclusion when `includeOffal` is not enabled
+- cooking-fat choices that conflict with the active dietary rule; under the current strict Paleo interpretation, butter, ghee and vegetable oil are hidden and rejected
 
 Apply these restrictions during generation and again through deterministic application checks. If all generated results conflict with the active restrictions, return no results and explain the outcome in plain English.
+
+The Allergies control contains the 14 UK regulated allergen groups. The Other ingredients to avoid control is available for additional allergies, intolerances or personal exclusions. Neither control can guarantee the absence of cross-contact in a packaged product or kitchen; users must still check the product label and preparation guidance.
 
 Salad preference is also enforced according to its selected mode. A request for a main salad must not be satisfied with a side salad, and a user who excludes salads must not receive one.
 

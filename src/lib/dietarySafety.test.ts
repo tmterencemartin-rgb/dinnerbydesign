@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { passesDietaryRule, passesHardConstraints, passesPortionConstraints } from './dietarySafety';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
+import { DIETARY_EXCLUSION_MAP } from '../constants';
 
 describe('Portion and Hard Constraints Safety Layer', () => {
   const baseRecipe: Recipe = {
@@ -101,6 +102,20 @@ describe('Portion and Hard Constraints Safety Layer', () => {
       expect(passesHardConstraints(liverRecipe, { ...unrestrictedPrefs, includeOffal: true })).toBe(true);
     });
 
+    it('blocks offal for pescatarian preferences even when stale offal is enabled', () => {
+      const liverRecipe = {
+        ...baseRecipe,
+        title: 'Liver and onions',
+        ingredients: ['Lamb liver', 'Onion']
+      };
+
+      expect(passesHardConstraints(liverRecipe, {
+        ...prefs,
+        dietaryRule: 'pescatarian',
+        includeOffal: true
+      })).toBe(false);
+    });
+
     it('does not mistake artichoke hearts for offal', () => {
       const artichokeRecipe = {
         ...baseRecipe,
@@ -109,6 +124,67 @@ describe('Portion and Hard Constraints Safety Layer', () => {
       };
 
       expect(passesHardConstraints(artichokeRecipe, prefs)).toBe(true);
+    });
+
+    it('blocks mapped allergen synonyms', () => {
+      const cases = [
+        ['Cereals containing gluten', 'wheat'],
+        ['Cereals containing gluten', 'breadcrumbs'],
+        ['Crustaceans', 'shrimp'],
+        ['Crustaceans', 'scampi'],
+        ['Molluscs', 'mussel'],
+        ['Molluscs', 'oyster'],
+        ['Soybeans', 'soy'],
+        ['Soybeans', 'miso'],
+        ['Sulphur dioxide and sulphites', 'sulphite'],
+        ['Tree nuts', 'almond'],
+        ['Tree nuts', 'macadamia']
+      ] as const;
+
+      for (const [allergy, ingredient] of cases) {
+        expect(DIETARY_EXCLUSION_MAP[allergy]).toContain(ingredient);
+        expect(passesHardConstraints({ ...baseRecipe, title: 'Plain dish', ingredients: [ingredient] }, {
+          ...prefs,
+          dietaryRule: 'none',
+          allergies: [allergy]
+        })).toBe(false);
+      }
+    });
+
+    it('blocks obvious Keto and Paleo disallowed ingredients', () => {
+      expect(passesHardConstraints({ ...baseRecipe, title: 'Potato dish', ingredients: ['potato'] }, {
+        ...prefs,
+        dietaryRule: 'keto',
+        allergies: [],
+        exclusions: []
+      })).toBe(false);
+
+      expect(passesHardConstraints({ ...baseRecipe, title: 'Bread dish', ingredients: ['bread'] }, {
+        ...prefs,
+        dietaryRule: 'paleo',
+        allergies: [],
+        exclusions: []
+      })).toBe(false);
+
+      expect(passesHardConstraints({ ...baseRecipe, title: 'Ghee dish', ingredients: ['ghee'] }, {
+        ...prefs,
+        dietaryRule: 'paleo',
+        allergies: [],
+        exclusions: []
+      })).toBe(false);
+
+      expect(passesHardConstraints({ ...baseRecipe, title: 'Vegetable oil dish', ingredients: ['vegetable oil'] }, {
+        ...prefs,
+        dietaryRule: 'paleo',
+        allergies: [],
+        exclusions: []
+      })).toBe(false);
+    });
+
+    it('blocks obvious Halal and Kosher conflicts', () => {
+      const pork = { ...baseRecipe, title: 'Pork dish', ingredients: ['pork'] };
+      expect(passesHardConstraints(pork, { ...prefs, dietaryRule: 'none', allergies: [], exclusions: [], religiousEthical: ['Prefer Halal-certified ingredients where available'] })).toBe(false);
+      expect(passesHardConstraints(pork, { ...prefs, dietaryRule: 'none', allergies: [], exclusions: [], religiousEthical: ['Kosher-friendly'] })).toBe(false);
     });
   });
 });
@@ -188,6 +264,13 @@ describe('passesDietaryRule Deterministic Safety Net', () => {
     it('should block animal-based stocks', () => {
       const soup = { ...baseRecipe, description: 'Simmered in chicken stock', isVegetarian: true };
       expect(passesDietaryRule(soup, 'vegetarian')).toBe(false);
+    });
+  });
+
+  describe('Mediterranean Diet Pattern', () => {
+    it('accepts a verified Mediterranean-style recipe without applying vegetarian restrictions', () => {
+      const fishRecipe = { ...baseRecipe, title: 'Mediterranean Salmon with Tomatoes', isVegetarian: false, isPescatarian: true, isVegan: false };
+      expect(passesDietaryRule(fishRecipe, 'mediterranean')).toBe(true);
     });
   });
 

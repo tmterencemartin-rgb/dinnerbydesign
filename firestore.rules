@@ -316,6 +316,26 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /searchDeliveryEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /searchCanaryEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /clientErrorEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /adminAccessEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     match /ingredientPriceCatalogue/{entryId} {
       allow read: if isAuthenticated();
       allow create, update: if isAdmin() &&

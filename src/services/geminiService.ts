@@ -2,8 +2,11 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Recipe, ReadyMeal, SearchParams, UserPreferences } from "../types";
 import { getApiUrl, getApiConfig, isLocalhost } from "../lib/api";
 import { PREFERRED_SOURCES } from '../data/preferredSources';
-import { detectIngredientIntent, matchesStrictIngredientSearch, parseAndNormaliseIngredients } from '../lib/ingredientParser';
+import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrictIngredientSearch, parseAndNormaliseIngredients } from '../lib/ingredientParser';
+import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
+import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { ACTIVE_GEMINI_MODEL } from '../config/aiModel';
+import { auth, signInAnon } from '../firebase';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
 const SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
@@ -555,24 +558,39 @@ const sanitizeRealityChecks = (checks: any): any[] => {
 
 const SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
 
+async function getSearchAuthToken(): Promise<string> {
+  const currentUser = auth.currentUser || (await signInAnon()).user;
+  return currentUser.getIdToken();
+}
+
 async function fetchProxySuggestions(searchParams: SearchParams, preferences?: UserPreferences, signal?: AbortSignal): Promise<any> {
   const controller = new AbortController();
+  const externalAbortHandler = () => controller.abort(signal?.reason);
+  if (signal) {
+    if (signal.aborted) controller.abort(signal.reason);
+    else signal.addEventListener('abort', externalAbortHandler, { once: true });
+  }
   const timeoutId = setTimeout(() => {
     const timeoutError = new GeminiServiceError('network', "Search request timed out. Please try again.");
     (controller as any).reason = timeoutError;
-    controller.abort();
+    controller.abort(timeoutError);
   }, 60000);
 
   try {
     const url = getApiUrl('/api/generate-suggestions');
     console.log(`[Diagnostic] Fetching ${url} (Origin: ${window.location.origin})`);
+    const token = await getSearchAuthToken();
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ searchParams, preferences }),
-      signal: signal || controller.signal
+      signal: controller.signal
     });
     clearTimeout(timeoutId);
+    signal?.removeEventListener('abort', externalAbortHandler);
     if (!response.ok) {
       const text = await response.text();
       let err;
@@ -600,8 +618,9 @@ async function fetchProxySuggestions(searchParams: SearchParams, preferences?: U
     return response.json();
   } catch (error: any) {
     clearTimeout(timeoutId);
+    signal?.removeEventListener('abort', externalAbortHandler);
     if (error.name === 'AbortError') {
-      const reason = (signal as any)?.reason || (controller as any).reason;
+      const reason = (controller as any).reason || (signal as any)?.reason;
       if (reason instanceof GeminiServiceError) {
         throw reason;
       }
@@ -717,18 +736,24 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   const activeCalorieLimit = searchParams.maxCalories || preferences?.calorieCeiling || null;
   const activeBudgetLimit = searchParams.maxCostPerPortion || preferences?.budgetLimit || null;
   const activeCookingMethods = searchParams.cookingMethods || preferences?.cookingMethods || [];
-  const activeCookingFats = searchParams.cookingFats || preferences?.cookingFats || [];
+  const activeCookingFats = filterCookingFatsForDiet(
+    activeDietaryRule,
+    searchParams.cookingFats || preferences?.cookingFats || []
+  );
   const activeReligious = preferences?.religiousEthical || [];
   const activeServings = searchParams.servings || preferences?.servings || 2;
   const activeSupermarkets = isReadyMade ? (searchParams.supermarkets || preferences?.preferredSupermarkets || []) : [];
   const activePreferredSourceIds = searchParams.preferredSourceIds || [];
-  const activeIncludeOffal = searchParams.includeOffal !== undefined
-    ? searchParams.includeOffal
-    : preferences?.includeOffal === true;
+  const activeIncludeOffal = dietaryRuleAllowsOffal(activeDietaryRule) && (
+    searchParams.includeOffal !== undefined
+      ? searchParams.includeOffal === true
+      : preferences?.includeOffal === true
+  );
   const activePreferredSourceNames = activePreferredSourceIds.length > 0
     ? PREFERRED_SOURCES.filter(s => activePreferredSourceIds.includes(s.id)).map(s => s.label)
     : [];
-  const hasExplicitDietOrProteinIntent = /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|prawn|shrimp|tofu)\b/i.test(query);
+  const hasExplicitDietOrProteinIntent = Boolean(ingredientIntent?.isIngredientLed)
+    || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|mackerel|prawn|shrimp|tofu)\b/i.test(query);
   const shouldEncourageRecipeVariety = !isReadyMade && activeDietaryRule === 'none' && !hasExplicitDietOrProteinIntent;
   const isBroadChilliDishSearch = /\b(chilli|chili)\b/i.test(query)
     && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);
@@ -759,11 +784,19 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - You MUST NOT return any salads.`
       : '';
 
-    const simplicityLogic = activeIsSimple 
+  const simplicityLogic = activeIsSimple 
     ? `\nSIMPLICITY BIAS (Quick and easy recipes ACTIVE): 
 - STRICTLY limit recipes to NO MORE THAN 4 ingredients.
 - Total time MUST be under 30 minutes.
 - Preparation steps must be minimal.`
+    : '';
+
+  const mediterraneanDietLogic = activeDietaryRule === 'mediterranean'
+    ? `\nMEDITERRANEAN DIET PATTERN ACTIVE:
+- Favour vegetables, fruit, beans, lentils, whole grains, olive oil, herbs, nuts and seeds.
+- Fish and seafood are suitable, with modest amounts of poultry, eggs and dairy where they fit the dish.
+- Keep red meat, processed meat, highly processed foods and excess saturated fat secondary rather than making them the focus.
+- This is a dietary pattern, not a vegetarian rule. Do not make every result vegetarian and do not require every hallmark ingredient in every recipe.`
     : '';
 
   const preferredSourcesLogic = activePreferredSourceNames.length > 0
@@ -890,8 +923,9 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     const preparationInstruction = preparationPreferences
       ? `\n- Explicit preparation requirements: ${[
           preparationPreferences.skin === 'on' ? 'skin-on' : preparationPreferences.skin === 'off' ? 'skinless' : '',
-          preparationPreferences.bone === 'in' ? 'bone-in' : preparationPreferences.bone === 'out' ? 'boneless' : ''
-        ].filter(Boolean).join(', ')}. These requirements apply to the associated meat or poultry ingredient and must not be substituted.`
+          preparationPreferences.bone === 'in' ? 'bone-in' : preparationPreferences.bone === 'out' ? 'boneless' : '',
+          preparationPreferences.fishForm || ''
+        ].filter(Boolean).join(', ')}. These requirements apply to the associated meat, fish or seafood ingredient and must not be substituted.`
       : '';
     const parsedIngredientsInstruction = ingredientIntent?.isIngredientLed && parsedIngredients.length > 0
       ? `\nINGREDIENT PARSING & INTERPRETATION (CRITICAL):
@@ -938,6 +972,7 @@ HARD CONSTRAINTS:
 13. High Omega-3 Prioritisation: ${activeHighOmega3 ? 'Active (focus on oily fish, walnuts, chia, flaxseed)' : 'No'}
 14. High Protein Prioritisation: ${activeHighProtein ? 'Active (focus on lean meats, fish, pulses, eggs)' : 'No'}
 15. Offal: ${activeIncludeOffal ? 'Allowed' : 'Excluded'}
+16. Requested household servings: ${activeServings}${mediterraneanDietLogic}
 ${saladLogic}${simplicityLogic}${preferredSourcesLogic}${cookingFatLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}${chilliDishIntentLogic}
 `;
 
@@ -1092,6 +1127,12 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 
     const data = JSON.parse(text);
     let rawItems = Array.isArray(data.items) ? data.items : [];
+    const filterIngredientLedItems = (candidateItems: any[]) => (
+      ingredientIntent?.isIngredientLed && !isReadyMade
+        ? candidateItems.filter(item => matchesRequestedIngredientSearch(item, query))
+        : candidateItems
+    );
+    rawItems = filterIngredientLedItems(rawItems);
     let wasRepaired = false;
     const repairPrompts: string[] = [];
     const repairOutputs: string[] = [];
@@ -1139,7 +1180,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         const repairOutputText = repairResponse.text || '';
         repairOutputs.push(repairOutputText);
         const repairData = repairOutputText ? JSON.parse(repairOutputText) : {};
-        const repairItems = Array.isArray(repairData.items) ? repairData.items : [];
+        const repairItems = filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []);
         const nonVegetarianRepair = allVegetarian
           ? repairItems.find((item: any) => !isClearlyVegetarian(item))
           : null;

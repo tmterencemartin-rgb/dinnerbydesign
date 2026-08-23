@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { safeStorage } from '../../lib/storage';
+import { Wordmark } from '../Wordmark';
 import { 
   Search as SearchIcon, 
   Calendar as CalendarIcon, 
@@ -15,6 +16,21 @@ import {
 } from 'lucide-react';
 
 const LOGO_EASE: [number, number, number, number] = [0.215, 0.61, 0.355, 1];
+
+const READY_MADE_SANDBOX_TAGS = [
+  'Indian',
+  'Spare ribs',
+  'Chinese',
+  'Moussaka',
+  'Microwave',
+  'Lasagne',
+  'Fish Pie',
+  'Chilli con carne',
+  'Meatballs',
+  'Scampi',
+  'Mac & Cheese',
+  'Greek salad'
+];
 
 const logoVariants = {
   hidden: { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
@@ -102,6 +118,66 @@ export const LandingView: React.FC = () => {
   };
 
   const mockReadyMadeData: Record<string, { title: string; meta: string; source: string }[]> = {
+    'Indian': [
+      { title: 'Tesco Chicken Tikka Masala', meta: '10 min · serves 1 · ~£3.50', source: 'Tesco' },
+      { title: 'Sainsbury’s Vegetable Tikka Masala', meta: '8 min · serves 1 · ~£3.00', source: "Sainsbury's" },
+      { title: 'M&S Dal Makhani', meta: '5 min · serves 1 · ~£4.50', source: 'Marks & Spencer' }
+    ],
+    'Spare ribs': [
+      { title: 'Tesco BBQ Pork Ribs', meta: '30 min · serves 2 · ~£5.50', source: 'Tesco' },
+      { title: 'Waitrose Sticky Spare Ribs', meta: '25 min · serves 2 · ~£7.00', source: 'Waitrose' },
+      { title: 'M&S Korean BBQ Pork Ribs', meta: '30 min · serves 2 · ~£8.00', source: 'Marks & Spencer' }
+    ],
+    'Chinese': [
+      { title: 'Tesco Sweet & Sour Chicken', meta: '8 min · serves 1 · ~£3.50', source: 'Tesco' },
+      { title: 'Sainsbury’s Chow Mein', meta: '7 min · serves 1 · ~£3.00', source: "Sainsbury's" },
+      { title: 'M&S Hoisin Duck', meta: '12 min · serves 2 · ~£7.00', source: 'Marks & Spencer' }
+    ],
+    'Moussaka': [
+      { title: 'Sainsbury’s Beef Moussaka', meta: '35 min · serves 1 · ~£3.50', source: "Sainsbury's" },
+      { title: 'Tesco Vegetarian Moussaka', meta: '35 min · serves 1 · ~£3.00', source: 'Tesco' },
+      { title: 'M&S Aubergine Moussaka', meta: '30 min · serves 2 · ~£7.50', source: 'Marks & Spencer' }
+    ],
+    'Microwave': [
+      { title: 'Tesco Chicken Tikka Masala', meta: '5 min · serves 1 · ~£3.50', source: 'Tesco' },
+      { title: 'Sainsbury’s Macaroni Cheese', meta: '4 min · serves 1 · ~£2.00', source: "Sainsbury's" },
+      { title: 'Waitrose Thai Green Curry', meta: '5 min · serves 1 · ~£5.00', source: 'Waitrose' }
+    ],
+    'Lasagne': [
+      { title: 'Tesco Finest Beef Lasagne', meta: '40 min · serves 2 · ~£6.50', source: 'Tesco' },
+      { title: 'Sainsbury’s Vegetable Lasagne', meta: '35 min · serves 1 · ~£3.20', source: "Sainsbury's" },
+      { title: 'M&S Lasagne Al Forno', meta: '35 min · serves 2 · ~£8.00', source: 'Marks & Spencer' }
+    ],
+    'Fish Pie': [
+      { title: 'Tesco Creamy Fish Pie', meta: '40 min · serves 2 · ~£5.50', source: 'Tesco' },
+      { title: 'Waitrose Fish Pie', meta: '35 min · serves 2 · ~£7.00', source: 'Waitrose' },
+      { title: 'M&S Luxury Fish Pie', meta: '35 min · serves 2 · ~£9.00', source: 'Marks & Spencer' }
+    ],
+    'Chilli con carne': [
+      { title: 'Tesco Chilli Con Carne', meta: '8 min · serves 1 · ~£3.50', source: 'Tesco' },
+      { title: 'Sainsbury’s Beef Chilli', meta: '7 min · serves 1 · ~£3.00', source: "Sainsbury's" },
+      { title: 'M&S Three Bean Chilli', meta: '5 min · serves 1 · ~£4.50', source: 'Marks & Spencer' }
+    ],
+    'Meatballs': [
+      { title: 'Tesco Swedish Meatballs', meta: '20 min · serves 2 · ~£4.50', source: 'Tesco' },
+      { title: 'Sainsbury’s Italian Meatballs', meta: '20 min · serves 2 · ~£4.00', source: "Sainsbury's" },
+      { title: 'M&S Beef Meatballs', meta: '15 min · serves 2 · ~£6.00', source: 'Marks & Spencer' }
+    ],
+    'Scampi': [
+      { title: 'Tesco Wholetail Scampi', meta: '20 min · serves 2 · ~£4.00', source: 'Tesco' },
+      { title: 'Sainsbury’s Breaded Scampi', meta: '20 min · serves 2 · ~£4.50', source: "Sainsbury's" },
+      { title: 'Waitrose Breaded Scampi', meta: '20 min · serves 2 · ~£6.00', source: 'Waitrose' }
+    ],
+    'Mac & Cheese': [
+      { title: 'Tesco Macaroni Cheese', meta: '25 min · serves 1 · ~£2.00', source: 'Tesco' },
+      { title: 'Sainsbury’s Macaroni Cheese', meta: '25 min · serves 1 · ~£2.00', source: "Sainsbury's" },
+      { title: 'M&S Macaroni Cheese', meta: '25 min · serves 1 · ~£4.50', source: 'Marks & Spencer' }
+    ],
+    'Greek salad': [
+      { title: 'M&S Greek Salad', meta: 'Ready to eat · serves 1 · ~£4.00', source: 'Marks & Spencer' },
+      { title: 'Tesco Greek Salad Bowl', meta: 'Ready to eat · serves 1 · ~£3.00', source: 'Tesco' },
+      { title: 'Waitrose Greek Salad', meta: 'Ready to eat · serves 1 · ~£4.50', source: 'Waitrose' }
+    ],
     'Leftover chicken': [
       { title: 'M&S cooked chicken pieces', meta: 'Ready to eat · serves 2 · ~£5.00', source: 'Marks & Spencer' },
       { title: 'Waitrose roast chicken slices', meta: 'Ready to eat · serves 2 · ~£4.50', source: 'Waitrose' },
@@ -190,6 +266,7 @@ export const LandingView: React.FC = () => {
   const selectSandboxSource = (source: 'cook' | 'ready-made') => {
     setIsSandboxSearching(true);
     setSandboxSource(source);
+    setSandboxQuery(source === 'ready-made' ? READY_MADE_SANDBOX_TAGS[0] : 'Leftover chicken');
     setTimeout(() => {
       setIsSandboxSearching(false);
     }, 400);
@@ -217,23 +294,23 @@ export const LandingView: React.FC = () => {
     <div className="native-scroll-root flex flex-col bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
       
       {/* 1. STICKY PREMIUM NAVIGATION BAR */}
-      <nav id="top-nav" className="sticky top-0 z-[1000] bg-dbd-surface/90 backdrop-blur-md border-b border-dbd-rule/60 py-4.5 px-3 sm:px-6 md:px-8">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <nav id="top-nav" className="app-header border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1rem+env(safe-area-inset-top))] pb-0 transition-colors duration-250">
+        <div className="w-full max-w-6xl mx-auto px-6 flex min-h-[62px] items-center justify-between mb-3">
           
           {/* Logo Brand Group */}
           <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <div className="flex flex-col items-start text-left font-sans">
-              <motion.img
+              <motion.div
                 initial="hidden"
                 animate="visible"
                 variants={logoVariants}
                 whileHover={{ scale: 1.035, rotate: -0.3 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-                src="/dbd-logo-with-pin.png"
-                alt="DinnerByDesign"
-                className="h-[35.1px] w-auto max-w-[214.2px] origin-left object-contain mix-blend-multiply sm:h-[44.1px] sm:max-w-[267.3px]"
-              />
-              <span className="text-[8.5px] font-medium text-dbd-ink-3 tracking-[0.01em] mt-1.5 block leading-none whitespace-nowrap">
+                className="origin-left"
+              >
+                <Wordmark className="text-[29.33px]" />
+              </motion.div>
+              <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-center text-[7.5px] font-medium tracking-[0.035em] text-dbd-ink-3 opacity-80">
                 Less searching. More relevant dinners.
               </span>
             </div>
@@ -333,7 +410,7 @@ export const LandingView: React.FC = () => {
       </nav>
 
       {/* 2. HERO HEADER SECTION */}
-      <section className="relative order-1 px-6 max-w-5xl mx-auto pt-12 pb-8 sm:pt-20 sm:pb-12 text-center">
+      <section className="relative order-1 px-6 max-w-5xl mx-auto pt-12 pb-8 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold text-dbd-ink font-sans leading-[1.15] tracking-tight mb-6 max-w-4xl mx-auto">
           <span className="sm:hidden">Make the weekly shop<br />go further.</span>
           <span className="hidden sm:inline">Make the weekly shop go further.</span>
@@ -343,7 +420,7 @@ export const LandingView: React.FC = () => {
             DinnerByDesign helps you plan varied dinners around what you already have. Reuse ingredients across the week, and see estimated shopping costs before you buy.
           </p>
           <p>
-            Set your preferences once and make every search more relevant. Filter by diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources and preferred supermarkets. Revise your preferences any time, or override them for a single&nbsp;search.
+            Set your preferences once, and every search works from them automatically — diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources and preferred supermarkets, without retyping any of it. That's what makes results precise rather than generic: a search that already knows you're cooking for one and avoiding nuts doesn't need to be told twice. Revise your preferences any time, or override them for a single search.
           </p>
           <p className="font-semibold text-dbd-ink">
             Less searching. More relevant dinners.
@@ -352,13 +429,14 @@ export const LandingView: React.FC = () => {
 
         {/* Action button grouping */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-sm sm:max-w-md mx-auto">
-          <button 
+          <a
             id="hero-start-trial-btn"
-            onClick={() => handleStart()}
+            href="/?view=home"
+            onClick={() => safeStorage.setItem('dbd_has_started', 'true')}
             className="w-full sm:w-auto bg-dbd-accent hover:bg-dbd-accent-mid text-white font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-8 py-4 rounded-sm transition-all cursor-pointer shadow-md"
           >
             Try a free search
-          </button>
+          </a>
           <button 
             onClick={() => scrollToSection('interactive-sandbox')}
             className="w-full sm:w-auto bg-transparent border border-transparent hover:border-dbd-rule hover:text-dbd-accent text-dbd-ink-2 font-ibm-plex-mono text-[13px] font-semibold tracking-wider uppercase px-4 py-3 rounded-sm transition-all cursor-pointer flex items-center justify-center gap-2"
@@ -399,7 +477,7 @@ export const LandingView: React.FC = () => {
             {/* Sandbox Inner App Stage */}
             <div className="p-3 sm:p-8 bg-[#FAF8F5] text-left">
               <div className="relative">
-                <div className="sm:pr-72">
+                <div className="lg:pr-72">
 
                   {/* Recipe Source Toggle (HOMEMADE / READY-MADE) */}
                   <div className="flex justify-center mb-6 max-w-sm sm:max-w-md mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono font-semibold">
@@ -439,12 +517,15 @@ export const LandingView: React.FC = () => {
                   {/* Preset Click Options */}
                   <div className="max-w-2xl mx-auto mt-4 px-1">
                 <p className="text-[12px] font-ibm-plex-mono font-semibold text-dbd-ink-3 mb-2">Try these preset queries:</p>
-                <div className="flex flex-wrap gap-2">
-                  {['Leftover chicken', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50'].map((tag, index) => (
+                <div className="flex flex-wrap gap-x-3 gap-y-2 sm:gap-2">
+                  {(sandboxSource === 'ready-made'
+                    ? READY_MADE_SANDBOX_TAGS
+                    : ['Leftover chicken', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50']
+                  ).map((tag, index) => (
                     <button
                       key={tag}
                       onClick={() => selectSandboxTag(tag)}
-                      className={`${index >= 5 ? 'hidden sm:inline-flex' : 'inline-flex'} text-[11px] sm:text-[12px] font-mono px-3 py-2 border rounded-sm transition-all cursor-pointer ${sandboxQuery === tag ? 'bg-dbd-accent/10 border-dbd-accent text-dbd-accent font-bold' : 'bg-white border-dbd-rule/80 text-dbd-ink-2 hover:border-dbd-ink hover:text-dbd-ink'}`}
+                      className={`inline-flex text-[11px] sm:text-[12px] font-mono px-0 py-0 sm:px-3 sm:py-2 border-0 sm:border rounded-none sm:rounded-sm underline underline-offset-2 sm:no-underline transition-all cursor-pointer ${sandboxQuery === tag ? 'text-dbd-accent font-bold sm:bg-dbd-accent/10 sm:border-dbd-accent' : 'text-dbd-accent sm:bg-white sm:border-dbd-rule/80 sm:text-dbd-ink-2 hover:text-dbd-accent-mid sm:hover:border-dbd-ink sm:hover:text-dbd-ink'}`}
                     >
                       {tag}
                     </button>
@@ -468,39 +549,41 @@ export const LandingView: React.FC = () => {
                   </div>
 
                   {/* Recipe List sandbox render */}
-                  <div className="max-w-2xl mx-auto space-y-3 relative min-h-[108px] sm:min-h-[220px]">
-                {isSandboxSearching ? (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-xs select-none">
+                  <div className="max-w-2xl mx-auto relative min-h-[108px] sm:min-h-[220px]">
+                    {isSandboxSearching ? (
+                      <div className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-xs select-none">
                     <div className="text-center">
                       <div className="w-6 h-6 border-2 border-dbd-accent border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                       <p className="text-[11px] text-dbd-ink-3 font-mono">Costing ingredients & verifying links...</p>
                     </div>
-                  </div>
-                ) : null}
+                      </div>
+                    ) : null}
 
-                {currentResultList.map((recipe, index) => (
-                  <div 
-                    key={index} 
-                    onClick={() => handleStart(sandboxQuery)}
-                    className="flex group bg-white border border-dbd-rule/50 hover:border-dbd-accent/60 hover:shadow-xs p-4 flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer transition-all"
-                  >
-                    <div>
-                      <h4 className="text-[14px] sm:text-[15px] font-semibold text-dbd-ink group-hover:text-dbd-accent transition-colors leading-tight mb-1 font-sans">
-                        {recipe.title}
-                      </h4>
-                      <p className="text-[11px] sm:text-[12px] font-mono text-dbd-ink-3">
-                        {recipe.meta}
-                      </p>
+                    <div className="bg-white rounded border border-dbd-rule shadow-[0_1px_4px_rgba(0,0,0,0.025)] overflow-hidden">
+                      {currentResultList.map((recipe, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleStart(sandboxQuery)}
+                          className={`group/card p-3 sm:p-4 relative overflow-visible cursor-pointer hover:bg-dbd-surface/40 transition-colors duration-200 ${index < currentResultList.length - 1 ? 'border-b border-dbd-rule/70' : ''}`}
+                        >
+                          <div className="flex flex-col gap-0.5 items-start">
+                            <h4 className="text-[14px] sm:text-[16px] font-semibold text-gray-900 group-hover/card:text-dbd-accent transition-colors leading-tight tracking-tight text-left">
+                              {recipe.title}
+                            </h4>
+                            <p className="text-[10px] sm:text-[11px] text-gray-400 font-medium leading-tight font-ibm-plex-mono text-left">
+                              {recipe.meta}
+                            </p>
+                            <span className="inline-flex w-fit shrink-0 mt-0.5 text-[8.5px] sm:text-[9px] font-ibm-plex-mono font-semibold uppercase tracking-wider leading-none text-dbd-ink-3 bg-dbd-surface px-2 py-1 border border-dbd-rule rounded-sm group-hover/card:border-dbd-accent group-hover/card:text-dbd-accent group-hover/card:bg-dbd-accent-light transition-all">
+                              from {recipe.source}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <span className="shrink-0 text-[10.5px] font-mono font-semibold uppercase tracking-wider text-dbd-ink-3 bg-dbd-surface px-2.5 py-1.5 border border-dbd-rule/50 rounded-sm group-hover:border-dbd-accent group-hover:text-dbd-accent group-hover:bg-dbd-accent-light transition-all">
-                      from {recipe.source}
-                    </span>
-                  </div>
-                ))}
                   </div>
                 </div>
 
-                <aside className="mt-5 sm:mt-0 sm:absolute sm:top-0 sm:right-0 sm:w-64 border border-dbd-rule bg-white p-4 shadow-sm" aria-label="Preferences preview">
+                <aside className="mt-5 lg:mt-0 lg:absolute lg:top-0 lg:right-0 lg:w-64 border border-dbd-rule bg-white p-4 shadow-sm" aria-label="Preferences preview">
                   <div className="flex items-center justify-between gap-3 border-b border-dbd-rule/70 pb-3">
                     <h3 className="font-ibm-plex-mono text-[12px] font-bold uppercase tracking-[0.14em] text-dbd-ink">Preferences</h3>
                     <span className="text-[9px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-accent">Applied</span>
@@ -525,25 +608,25 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 5. WHY I BUILT DINNERBYDESIGN */}
-      <section id="why-different" className="order-4 py-12 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40 scroll-mt-nav">
+      <section id="why-different" className="order-4 py-6 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40 scroll-mt-nav">
         <div className="max-w-prose text-left select-none">
-          <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-6">
+          <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-3 sm:mb-6">
             Why I built DinnerByDesign
           </h3>
           <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             I live on my own, which means smaller portions, odd quantities and a lot of ingredients I can't use up before they go off. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
           </p>
-          <p className="mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+          <p className="mt-3 sm:mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             My app starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
           </p>
-          <p className="mt-6 text-[13px] font-ibm-plex-mono font-semibold text-dbd-accent">
+          <p className="mt-4 sm:mt-6 text-[13px] font-ibm-plex-mono font-semibold text-dbd-accent">
             Terence, Head chef
           </p>
         </div>
       </section>
 
       {/* WEEKLY SHOP SECTION */}
-      <section className="order-5 py-12 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto">
+      <section className="order-5 py-6 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto">
         <div className="max-w-prose text-left select-none">
           <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
             MADE FOR THE WEEKLY SHOP
@@ -551,15 +634,15 @@ export const LandingView: React.FC = () => {
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15]">
             Inexpensive cooking. Not uninteresting cooking.
           </h3>
-          <p className="mt-6 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+          <p className="mt-3 sm:mt-6 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             For many households, the weekly shop is one of the largest regular costs — and keeping them down usually means buying the same basic ingredients: mince, sausages, chicken, fish fingers, tinned and frozen staples. DinnerByDesign works with that, not around it: finding different ways to cook the same shopping list, including recipes from cuisines where cheap, everyday ingredients are already the tradition, not a workaround.
           </p>
         </div>
       </section>
 
-      {/* BUILT AROUND YOUR KITCHEN */}
-      <section className="order-6 py-12 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+      {false && (
+      <section className="order-6 py-6 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-10 items-start">
           <div className="md:col-span-5 select-none">
             <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
               Built Around Your Kitchen
@@ -570,10 +653,10 @@ export const LandingView: React.FC = () => {
           </div>
 
           <div className="md:col-span-7">
-            <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed mb-8 max-w-prose select-none">
+            <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed mb-4 sm:mb-8 max-w-prose select-none">
               Set one or more of the 18 filters once, or adjust per search. DinnerByDesign pinpoints and shortlists recipes that fit your diet, budget, cooking method and time.
             </p>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-8 text-[11.5px] sm:text-[13px] font-mono font-bold text-dbd-ink-3 uppercase tracking-wider select-none">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-3 sm:gap-y-5 gap-x-5 sm:gap-x-8 text-[11.5px] sm:text-[13px] font-mono font-bold text-dbd-ink-3 uppercase tracking-wider select-none">
               <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Diet & health</div>
               <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Cost</div>
               <div className="flex items-center gap-2.5 whitespace-nowrap"><span className="w-1.5 h-1.5 bg-dbd-accent rounded-full shrink-0" />Time & effort</div>
@@ -584,12 +667,13 @@ export const LandingView: React.FC = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* 6. THREE TABS FEATURE EXPLAINER GRID */}
-      <section id="how-it-works" className="order-3 py-12 sm:py-14 bg-[#F4F1EA] border-t border-dbd-rule/40 scroll-mt-nav px-6 sm:px-8">
+      <section id="how-it-works" className="order-3 py-6 sm:py-14 bg-[#F4F1EA] border-t border-dbd-rule/40 scroll-mt-nav px-6 sm:px-8">
         <div className="max-w-5xl mx-auto">
           
-          <div className="text-center mb-8 select-none">
+          <div className="text-center mb-4 sm:mb-8 select-none">
             <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3">
               How It Works
             </span>
@@ -602,7 +686,7 @@ export const LandingView: React.FC = () => {
           <div className="divide-y divide-dbd-rule/70 border-y border-dbd-rule/70 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:border-y-0 sm:gap-6">
             
             {/* Tab Card 1 */}
-            <div className="py-4 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
+            <div className="py-3 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
               <div className="grid grid-cols-[2.25rem_1fr] gap-x-3 sm:block">
                 <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <SearchIcon className="w-5 h-5" />
@@ -621,7 +705,7 @@ export const LandingView: React.FC = () => {
             </div>
 
             {/* Tab Card 2 */}
-            <div className="py-4 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
+            <div className="py-3 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
               <div className="grid grid-cols-[2.25rem_1fr] gap-x-3 sm:block">
                 <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <CalendarIcon className="w-5 h-5" />
@@ -640,7 +724,7 @@ export const LandingView: React.FC = () => {
             </div>
 
             {/* Tab Card 3 */}
-            <div className="py-4 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
+            <div className="py-3 sm:bg-white sm:border sm:border-dbd-rule sm:rounded-xl sm:p-6 lg:sm:p-8 sm:flex sm:flex-col sm:justify-between sm:shadow-xs sm:select-none sm:hover:scale-[1.01] sm:transition-all">
               <div className="grid grid-cols-[2.25rem_1fr] gap-x-3 sm:block">
                 <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <ShoppingCartIcon className="w-5 h-5" />
@@ -664,27 +748,27 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 7. SUBSCRIPTION PLANS & CONVERSION CONTAINER */}
-      <section id="pricing" className="order-7 py-10 sm:py-16 px-6 sm:px-8 max-w-5xl mx-auto scroll-mt-nav">
+      <section id="pricing" className="order-7 py-6 sm:py-16 px-6 sm:px-8 max-w-5xl mx-auto scroll-mt-nav">
         
-        <div className="text-center mb-10 select-none">
+        <div className="text-center mb-5 sm:mb-10 select-none">
           <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.25em] text-dbd-accent uppercase block mb-3">
             It's all about you.
           </span>
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink">
             Create an account when DinnerByDesign earns it.
           </h3>
-          <p className="mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
+          <p className="mt-2 sm:mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
             Free searches give you three tries without an account. The free trial lasts seven days after sign-up, including continued searches, saved favourites, dinner planning and shopping lists.
           </p>
         </div>
 
         {/* Features Checklist column vs Subscription card panel */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-start">
           
           {/* Checklist left */}
-          <div className="flex flex-col justify-center space-y-4 w-full">
+          <div className="flex flex-col justify-center space-y-2.5 sm:space-y-4 w-full">
             
-            <ul className="space-y-4 font-sans text-[13.5px] sm:text-[14px] text-dbd-ink-2 select-none">
+            <ul className="space-y-2.5 sm:space-y-4 font-sans text-[13.5px] sm:text-[14px] text-dbd-ink-2 select-none">
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
                 <span><strong>Preference-led recipe search</strong>: filter by diet, allergies, budget, portions, time and ingredients to avoid. <button type="button" onClick={() => setView('food-safety')} className="font-semibold text-dbd-accent hover:underline">Read our safety guidance.</button></span>
@@ -815,9 +899,9 @@ export const LandingView: React.FC = () => {
       </section>
 
       {/* 8. SEARCH-FOCUSED FAQ */}
-      <section className="order-8 py-10 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
+      <section className="order-8 py-6 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40">
         <div className="max-w-3xl mx-auto">
-          <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-5">
+          <span className="text-[11px] font-ibm-plex-mono font-bold tracking-[0.2em] text-dbd-accent uppercase block mb-3 sm:mb-5">
             Common Questions
           </span>
           <div className="divide-y divide-dbd-rule">
@@ -847,11 +931,11 @@ export const LandingView: React.FC = () => {
                 answer: 'No. DinnerByDesign is a search, planning and shopping-list app for dinner ideas. It is not a video-based guided cooking lesson app.'
               }
             ].map((item) => (
-              <div key={item.question} className="py-4">
+              <div key={item.question} className="py-2.5 sm:py-4">
                 <h3 className="text-[14px] sm:text-[15px] font-bold text-dbd-ink">
                   {item.question}
                 </h3>
-                <p className="mt-1.5 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed">
+                <p className="mt-1 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed">
                   {item.answer}
                 </p>
               </div>
@@ -862,7 +946,7 @@ export const LandingView: React.FC = () => {
 
       {/* 9. INDEPENDENCE CLAUSE & COGNIZANT LEGAL FOOTER */}
       <footer className="order-9 bg-[#FAF8F5] border-t border-dbd-rule pt-4 sm:pt-6 pb-4 px-6 sm:px-8">
-        <div className="max-w-4xl mx-auto text-center space-y-4 select-none">
+        <div className="max-w-4xl mx-auto text-center space-y-2 sm:space-y-4 select-none">
           
           <div className="flex flex-col items-center justify-center space-y-1.5">
             <h5 className="font-sans text-[19px] font-bold tracking-tight leading-none select-none flex items-center justify-center">
@@ -873,7 +957,7 @@ export const LandingView: React.FC = () => {
             <p className="text-[12px] text-dbd-ink-3 font-semibold pt-1">
               Less searching. More relevant dinners.
             </p>
-            <p className="text-[11px] sm:text-[12px] text-dbd-ink-3 max-w-4xl mx-auto leading-relaxed pt-3">
+            <p className="text-[11px] sm:text-[12px] text-dbd-ink-3 max-w-4xl mx-auto leading-relaxed pt-2 sm:pt-3">
               DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
             </p>
           </div>
@@ -894,7 +978,7 @@ export const LandingView: React.FC = () => {
             </div>
           </div>
 
-          <nav aria-label="Footer" className="mx-auto grid max-w-lg grid-cols-3 gap-x-3 gap-y-3 border-t border-dbd-rule/40 pt-4 text-left font-ibm-plex-mono text-[10.5px] font-semibold leading-4 text-dbd-ink-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:text-[11px]">
+          <nav aria-label="Footer" className="mx-auto grid max-w-lg grid-cols-3 gap-x-3 gap-y-2 border-t border-dbd-rule/40 pt-3 sm:pt-4 text-left font-ibm-plex-mono text-[10.5px] font-semibold leading-4 text-dbd-ink-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:text-[11px]">
             <div className="min-w-0 sm:contents">
               <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Guides</p>
               <div className="flex flex-col gap-1.5 sm:contents">

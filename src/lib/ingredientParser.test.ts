@@ -80,6 +80,16 @@ describe('Ingredient Parser & Normalizer', () => {
     });
   });
 
+  test('detects a standalone named ingredient search', () => {
+    expect(detectIngredientIntent('mackerel')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['mackerel'],
+      reason: 'short-food-list'
+    });
+    expect(matchesRequestedIngredientSearch({ ingredients: ['Mackerel', 'lemon'] }, 'mackerel')).toBe(true);
+    expect(matchesRequestedIngredientSearch({ ingredients: ['Chickpea', 'tomato'] }, 'mackerel')).toBe(false);
+  });
+
   test('detects compound ingredients in short searches without separators', () => {
     expect(detectIngredientIntent('chicken green beans')).toMatchObject({
       isIngredientLed: true,
@@ -327,7 +337,38 @@ describe('Ingredient Parser & Normalizer', () => {
     }, 'bone-in chicken thighs')).toBe(true);
   });
 
+  test('recognises and enforces fish cut-form variants separately from bonelessness', () => {
+    expect(detectIngredientIntent('fish filleted')?.ingredients).toEqual(['fish']);
+    expect(detectIngredientIntent('fish filleted')?.preparationPreferences).toEqual({ fishForm: 'filleted' });
+    expect(detectIngredientIntent('whole salmon')?.preparationPreferences).toEqual({ fishForm: 'whole' });
+    expect(detectIngredientIntent('tuna steaks and rice')?.preparationPreferences).toEqual({ fishForm: 'steak' });
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['salmon fillets', 'potatoes', 'oil']
+    }, 'fish filleted and potatoes')).toBe(true);
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['whole salmon', 'potatoes', 'oil']
+    }, 'fish filleted and potatoes')).toBe(false);
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['tuna steaks', 'rice', 'oil']
+    }, 'tuna steaks and rice')).toBe(true);
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['tuna fillets', 'rice', 'oil']
+    }, 'tuna steaks and rice')).toBe(false);
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['salmon fillets', 'rice', 'oil']
+    }, 'salmon fillets and rice')).toBe(true);
+  });
+
   test('allows common fish and sausage forms in strict ingredient searches', () => {
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['plaice fillets', 'potatoes', 'green beans']
+    }, 'plaice potatoes green beans')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['plaice fillets', 'potatoes', 'green beans', 'lemon']
+    }, 'plaice potatoes green beans')).toBe(false);
+
     expect(matchesStrictIngredientSearch({
       ingredients: ['2 salmon fillets', '500g mashed potatoes', 'oil', 'salt', 'pepper']
     }, 'salmon and potatoes')).toBe(true);

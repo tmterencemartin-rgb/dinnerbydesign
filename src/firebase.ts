@@ -12,6 +12,7 @@ import {
 import { initializeFirestore, memoryLocalCache, doc, getDoc, setDoc, collection, addDoc, query, where, orderBy, onSnapshot, getDocFromServer, limit, Timestamp, FieldValue } from 'firebase/firestore';
 
 import firebaseConfig from '../firebase-applet-config.json';
+import { reportClientError } from './lib/clientErrorTelemetry';
 
 const app = initializeApp(firebaseConfig);
 const isNativeRuntime = () => {
@@ -78,6 +79,12 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   const errorMessage = error instanceof Error ? error.message : String(error);
   const isPermissionError = errorMessage.toLowerCase().includes('permission') || errorMessage.toLowerCase().includes('insufficient');
   const isLoggedOut = !auth.currentUser;
+
+  reportClientError({
+    kind: 'runtime',
+    message: `Firestore ${operationType} request failed`,
+    source: isPermissionError ? 'firestore_permission' : 'firestore_runtime',
+  });
 
   const errInfo: FirestoreErrorInfo = {
     error: errorMessage,

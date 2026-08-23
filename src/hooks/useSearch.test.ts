@@ -32,6 +32,7 @@ describe('useSearch Hook Lifecycle', () => {
   const mockAddToSearchHistory = vi.fn();
   const mockShowToast = vi.fn();
   const mockSetView = vi.fn();
+  const mockGoToSignUp = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -46,6 +47,7 @@ describe('useSearch Hook Lifecycle', () => {
       addToSearchHistory: mockAddToSearchHistory,
       showToast: mockShowToast,
       setView: mockSetView,
+      goToSignUp: mockGoToSignUp,
     });
   });
 
@@ -101,6 +103,23 @@ describe('useSearch Hook Lifecycle', () => {
     expect(result.current.currentRecipes).toEqual([]); 
     expect(result.current.searchContradiction).not.toBe(null);
     expect(result.current.searchContradiction?.type).toBe('no_results');
+    expect(result.current.guestSearchCount).toBe(1);
+  });
+
+  it('does not consume a free search when the service fails', async () => {
+    (geminiService.generateDinnerSuggestions as any).mockRejectedValue(
+      new (geminiService.GeminiServiceError as any)('network', 'Search request timed out. Please try again.')
+    );
+
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.handleGenerate('slow search');
+    });
+
+    expect(result.current.guestSearchCount).toBe(0);
+    expect(window.localStorage.getItem('dbd_guest_search_count_v1')).toBe(null);
+    expect(result.current.searchError).toBe('Search request timed out. Please try again.');
   });
 
   it('should handle race conditions by ignoring stale results', async () => {
@@ -246,7 +265,7 @@ describe('useSearch Hook Lifecycle', () => {
     expect(mockShowToast).toHaveBeenCalledWith(
       "You've used your 3 free searches. Create an account to start your 7-day trial.",
       'Create account',
-      expect.any(Function)
+      mockGoToSignUp
     );
   });
 

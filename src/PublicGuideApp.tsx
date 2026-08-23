@@ -1,5 +1,6 @@
 import React from 'react';
 import { PublicGuideShell } from './components/PublicGuideShell';
+import { Wordmark } from './components/Wordmark';
 import { useSeo } from './hooks/useSeo';
 import { safeStorage } from './lib/storage';
 import { AFFORDABILITY_PLANNER_PENDING_KEY } from './config/features';
@@ -295,7 +296,7 @@ const PublicGuideApp = () => {
     return (
       <main className="mx-auto min-h-screen max-w-3xl px-5 py-16 text-center">
         <a href="/" aria-label="DinnerByDesign home">
-          <img src="/dbd-logo-with-pin.png" alt="DinnerByDesign" className="mx-auto h-10 w-auto max-w-[230px] object-contain mix-blend-multiply" />
+          <Wordmark className="mx-auto text-[40px]" />
         </a>
         <h1 className="mt-12 text-2xl font-bold text-dbd-ink">Guide not found</h1>
         <p className="mt-3 text-sm text-dbd-ink-3">The address may have changed, or the guide may no longer be available.</p>

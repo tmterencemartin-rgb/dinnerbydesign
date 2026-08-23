@@ -77,10 +77,19 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
     jsonLd: seoJsonLd
   });
 
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!item) return null;
 
   const mode = (item as any).retailer ? 'ready-made' : 'cook';
   const detailLabel = mode === 'ready-made' ? 'Ready-made dish' : 'Dinner detail';
+  const returnLabel = mode === 'ready-made' ? 'Back to options' : 'Back to recipes';
 
   return (
     <motion.div
@@ -95,18 +104,18 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
         initial={{ y: '20%' }}
         animate={{ y: 0 }}
         exit={{ y: '20%' }}
-        className="w-full h-full sm:h-[90vh] sm:max-w-4xl bg-white sm:rounded-md shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
+        className="relative w-full h-full sm:h-[90vh] sm:max-w-4xl bg-white sm:rounded-md shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
         <div className="recipe-detail-header flex items-center justify-between px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] border-b border-gray-100 bg-white sticky top-0 z-20">
           <button 
             onClick={onClose}
+            aria-label="Close dinner details"
             className="p-2 -ml-2 text-gray-500 hover:text-gray-900 transition-colors flex items-center gap-1.5 focus:outline-none"
           >
             <ChevronLeft size={20} className="sm:hidden" />
             <X size={20} className="hidden sm:block" />
-            <span className="text-[12px] font-bold uppercase tracking-widest">Close</span>
           </button>
           
           <div className="flex flex-col items-center flex-1 mx-4 overflow-hidden">
@@ -118,7 +127,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
 
         {/* Modal Content */}
         <div className="flex-1 overflow-y-auto bg-white p-2 sm:p-8 overscroll-contain custom-scrollbar">
-          <div className="max-w-3xl mx-auto pb-8 sm:pb-12">
+          <div className="max-w-3xl mx-auto pb-24 sm:pb-20">
              {mode === 'cook' ? (
                 <RecipeCard 
                   recipe={item as Recipe}
@@ -147,6 +156,16 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
           {/* Visual Padding for mobile bottom bars if any */}
           <div className="h-4 sm:hidden" />
         </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={returnLabel}
+          className="absolute bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-30 inline-flex items-center gap-1.5 rounded-full bg-gray-950 px-3.5 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-lg transition-colors hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent focus-visible:ring-offset-2 sm:bottom-5 sm:right-6"
+        >
+          <ChevronLeft size={15} aria-hidden="true" />
+          <span>{returnLabel}</span>
+        </button>
       </motion.div>
     </motion.div>
   );

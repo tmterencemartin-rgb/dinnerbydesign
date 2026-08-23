@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600;700&family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -43,6 +43,7 @@
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-dm-serif: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-dm-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-wordmark: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   --font-ibm-plex-mono: "IBM Plex Mono", monospace;
   --color-accent: #ea580c;
   --color-land-bg: #0b0b09;

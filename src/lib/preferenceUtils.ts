@@ -1,4 +1,6 @@
 import { UserPreferences, DietaryRule, SaladPreference } from '../types';
+import { dietaryRuleAllowsOffal } from './offalPreference';
+import { filterCookingFatsForDiet } from './preferenceCompatibility';
 
 /**
  * Normalises user preferences from potentially legacy data formats.
@@ -82,7 +84,7 @@ export const normaliseUserPreferences = (data: any): UserPreferences => {
   let dietaryRule: DietaryRule = data.dietaryRule || data.dietaryPreference || 'none';
   if (dietaryRule === 'none' && data.dietTypes && Array.isArray(data.dietTypes) && data.dietTypes.length > 0) {
     const mainRule = data.dietTypes[0].toLowerCase();
-    if (['vegan', 'vegetarian', 'paleo', 'keto', 'pescatarian'].includes(mainRule)) {
+    if (['vegan', 'vegetarian', 'paleo', 'keto', 'pescatarian', 'gluten-free', 'mediterranean'].includes(mainRule)) {
       dietaryRule = mainRule as DietaryRule;
     }
   }
@@ -96,7 +98,7 @@ export const normaliseUserPreferences = (data: any): UserPreferences => {
     isLowCost: data.isLowCost || false,
     highOmega3: data.highOmega3 || false,
     highProtein: data.highProtein || false,
-    includeOffal: data.includeOffal === true,
+    includeOffal: data.includeOffal === true && dietaryRuleAllowsOffal(dietaryRule),
     servings: data.servings || 2,
     calorieCeiling: data.calorieCeiling !== undefined ? data.calorieCeiling : (data.caloryCeiling !== undefined ? data.caloryCeiling : null),
     budgetLimit: data.budgetLimit !== undefined ? data.budgetLimit : null,
@@ -109,12 +111,12 @@ export const normaliseUserPreferences = (data: any): UserPreferences => {
     })(),
     religiousEthical: [...new Set((data.religiousEthical || []).map((item: string) => {
       if (item === 'Kosher') return 'Kosher-friendly';
-      if (item === 'Halal') return 'Halal-friendly';
-      if (item === 'Fair Trade only') return 'Fair Trade preference';
+      if (item === 'Halal' || item === 'Halal-friendly') return 'Prefer Halal-certified ingredients where available';
+      if (item === 'Fair Trade only' || item === 'Fair Trade preference') return 'Prefer Fair Trade ingredients where available';
       return item;
     }) as string[])],
     cookingMethods: [...new Set((data.cookingMethods || []) as string[])],
-    cookingFats: [...new Set((data.cookingFats || []) as string[])],
+    cookingFats: filterCookingFatsForDiet(dietaryRule, [...new Set((data.cookingFats || []) as string[])]),
     readyToEatUnderMins: data.readyToEatUnderMins || null,
     preferredMode: data.preferredMode || 'cook',
     customCuisines: [...new Set((data.customCuisines || []) as string[])],

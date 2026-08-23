@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { collection, query, getDocs, doc, updateDoc, serverTimestamp, Timestamp, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
@@ -56,6 +56,45 @@ interface EmailEvent {
   createdAt?: Timestamp | null;
 }
 
+interface SearchDeliveryEvent {
+  id: string;
+  stage?: 'started' | 'results_delivered' | 'no_results_delivered' | 'failed' | 'cancelled' | 'user_reported' | string;
+  source?: string;
+  durationMs?: number | null;
+  resultCount?: number | null;
+  errorCategory?: string | null;
+  deviceClass?: string;
+  createdAt?: Timestamp | null;
+}
+
+interface SearchCanaryEvent {
+  id: string;
+  status?: 'passed' | 'failed' | string;
+  resultCount?: number;
+  latencyMs?: number;
+  errorCategory?: string | null;
+  createdAt?: Timestamp | null;
+}
+
+interface ClientErrorEvent {
+  id: string;
+  kind?: 'runtime' | 'unhandled_rejection' | 'boundary' | 'dynamic_import' | 'resource' | string;
+  message?: string;
+  source?: string | null;
+  path?: string;
+  deviceClass?: string;
+  createdAt?: Timestamp | null;
+}
+
+interface AdminAccessEvent {
+  id: string;
+  event?: string;
+  email?: string | null;
+  path?: string;
+  deviceClass?: string;
+  createdAt?: Timestamp | null;
+}
+
 interface AdminDinnerStats {
   savedCount: number;
   scheduledCount: number;
@@ -87,10 +126,24 @@ export const AdminDashboard: React.FC = () => {
   const [webhookEvents, setWebhookEvents] = useState<StripeWebhookHealthEvent[]>([]);
   const [emailEvents, setEmailEvents] = useState<EmailEvent[]>([]);
   const [aiUsageEvents, setAiUsageEvents] = useState<AiUsageEvent[]>([]);
+  const [searchDeliveryEvents, setSearchDeliveryEvents] = useState<SearchDeliveryEvent[]>([]);
+  const [searchCanaryEvents, setSearchCanaryEvents] = useState<SearchCanaryEvent[]>([]);
+  const [clientErrorEvents, setClientErrorEvents] = useState<ClientErrorEvent[]>([]);
+  const [adminAccessEvents, setAdminAccessEvents] = useState<AdminAccessEvent[]>([]);
+  const [clientErrorsOpen, setClientErrorsOpen] = useState(false);
+  const [monitoringOpen, setMonitoringOpen] = useState(false);
+  const [searchWindow, setSearchWindow] = useState<'24h' | '7d' | 'all'>('24h');
+  const [searchSourceFilter, setSearchSourceFilter] = useState<'all' | 'cook' | 'ready-made'>('all');
+  const [searchDeviceFilter, setSearchDeviceFilter] = useState<'all' | 'mobile' | 'tablet' | 'desktop'>('all');
+  const [dashboardUpdatedAt, setDashboardUpdatedAt] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [publishedArticleQuery, setPublishedArticleQuery] = useState('');
   const [publishedArticleSort, setPublishedArticleSort] = useState<PublishedArticleSort>('newest');
+  const [publishedArticlesOpen, setPublishedArticlesOpen] = useState(false);
+  const [userRegisterOpen, setUserRegisterOpen] = useState(false);
+  const [accountsOpen, setAccountsOpen] = useState(false);
+  const [serviceHealthOpen, setServiceHealthOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<AdminStatusFilter>('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [dinnerStats, setDinnerStats] = useState<Record<string, AdminDinnerStats>>({});
@@ -384,15 +437,79 @@ export const AdminDashboard: React.FC = () => {
         });
 
         setAiUsageEvents(usageData.slice(0, 500));
+
+        const deliverySnapshot = await getDocs(query(
+          collection(db, 'searchDeliveryEvents'),
+          orderBy('createdAt', 'desc'),
+          limit(120)
+        ));
+        setSearchDeliveryEvents(deliverySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as SearchDeliveryEvent[]);
+
+        const canarySnapshot = await getDocs(query(
+          collection(db, 'searchCanaryEvents'),
+          orderBy('createdAt', 'desc'),
+          limit(12)
+        ));
+        setSearchCanaryEvents(canarySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as SearchCanaryEvent[]);
+
+        const clientErrorSnapshot = await getDocs(query(
+          collection(db, 'clientErrorEvents'),
+          orderBy('createdAt', 'desc'),
+          limit(100)
+        ));
+        setClientErrorEvents(clientErrorSnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as ClientErrorEvent[]);
+
+        try {
+          const adminAccessSnapshot = await getDocs(query(
+            collection(db, 'adminAccessEvents'),
+            orderBy('createdAt', 'desc'),
+            limit(30)
+          ));
+          setAdminAccessEvents(adminAccessSnapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          })) as AdminAccessEvent[]);
+        } catch (error) {
+          console.warn('Administrator access monitoring is unavailable:', error);
+          setAdminAccessEvents([]);
+        }
       } catch (err) {
         console.error('Error fetching admin dashboard data:', err);
       } finally {
+        setDashboardUpdatedAt(new Date());
         setLoading(false);
       }
     };
 
     fetchDashboardData();
   }, [isAdmin, refreshAccountReconciliation, setView]);
+
+  useEffect(() => {
+    if (!isAdmin || !currentUser) return;
+
+    void currentUser.getIdToken().then(token => fetch(getApiUrl('/api/admin/monitoring/access'), {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        path: window.location.pathname,
+        deviceClass: window.innerWidth < 640 ? 'mobile' : window.innerWidth < 1024 ? 'tablet' : 'desktop',
+      }),
+    })).catch(error => {
+      console.warn('Administrator access monitoring could not be recorded:', error);
+    });
+  }, [currentUser, isAdmin]);
 
   const handleDeleteUser = (userId: string, email: string) => {
     if (userId === currentUser?.uid || email === 'tmterencemartin@gmail.com') {
@@ -924,6 +1041,70 @@ export const AdminDashboard: React.FC = () => {
 
   const latestWebhookEvent = webhookEvents[0];
   const latestEmailEvent = emailEvents[0];
+  const latestSearchCanary = searchCanaryEvents[0];
+  const recentClientErrorEvents = React.useMemo(() => {
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    return clientErrorEvents.filter(event => {
+      const createdAt = toDate(event.createdAt);
+      return !!createdAt && createdAt.getTime() >= cutoff;
+    });
+  }, [clientErrorEvents]);
+  const recentEmailFailureEvents = React.useMemo(() => {
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    return emailEvents.filter(event => event.status === 'failed' && (toDate(event.createdAt)?.getTime() || 0) >= cutoff);
+  }, [emailEvents]);
+  const recentAiFailureEvents = React.useMemo(() => {
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    return aiUsageEvents.filter(event => event.status === 'failed' && (toDate(event.createdAt)?.getTime() || 0) >= cutoff);
+  }, [aiUsageEvents]);
+  const recentFirestoreEvents = React.useMemo(() => recentClientErrorEvents.filter(event => (event.source || '').startsWith('firestore')), [recentClientErrorEvents]);
+  const latestAdminAccess = adminAccessEvents[0];
+  const filteredSearchDeliveryEvents = React.useMemo(() => {
+    const cutoff = searchWindow === '24h'
+      ? Date.now() - 24 * 60 * 60 * 1000
+      : searchWindow === '7d'
+        ? Date.now() - 7 * 24 * 60 * 60 * 1000
+        : 0;
+
+    return searchDeliveryEvents.filter(event => {
+      const eventDate = toDate(event.createdAt);
+      const matchesWindow = cutoff === 0 || (eventDate ? eventDate.getTime() >= cutoff : false);
+      const matchesSource = searchSourceFilter === 'all' || event.source === searchSourceFilter;
+      const matchesDevice = searchDeviceFilter === 'all' || event.deviceClass === searchDeviceFilter;
+      return matchesWindow && matchesSource && matchesDevice;
+    });
+  }, [searchDeliveryEvents, searchWindow, searchSourceFilter, searchDeviceFilter]);
+
+  const searchDeliverySummary = React.useMemo(() => {
+    const outcomeEvents = filteredSearchDeliveryEvents.filter(event => [
+      'results_delivered',
+      'no_results_delivered',
+      'failed',
+      'cancelled'
+    ].includes(event.stage || ''));
+    const delivered = filteredSearchDeliveryEvents.filter(event => event.stage === 'results_delivered').length;
+    const noResults = filteredSearchDeliveryEvents.filter(event => event.stage === 'no_results_delivered').length;
+    const failed = filteredSearchDeliveryEvents.filter(event => event.stage === 'failed').length;
+    const cancelled = filteredSearchDeliveryEvents.filter(event => event.stage === 'cancelled').length;
+    const reported = filteredSearchDeliveryEvents.filter(event => event.stage === 'user_reported').length;
+    const terminal = outcomeEvents.length;
+
+    return {
+      delivered,
+      noResults,
+      failed,
+      cancelled,
+      reported,
+      terminal,
+      deliveryRate: terminal > 0 ? Math.round(((delivered + noResults) / terminal) * 100) : null
+    };
+  }, [filteredSearchDeliveryEvents]);
+
+  const getCanaryStatusClass = (status?: SearchCanaryEvent['status']) => {
+    if (status === 'passed') return 'bg-emerald-50 text-emerald-700';
+    if (status === 'failed') return 'bg-red-50 text-red-700';
+    return 'bg-gray-100 text-gray-600';
+  };
 
   const getWebhookStatusClass = (status?: StripeWebhookHealthEvent['status']) => {
     if (status === 'succeeded') return 'bg-emerald-50 text-emerald-700';
@@ -1020,17 +1201,29 @@ export const AdminDashboard: React.FC = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-6">
-            <IngredientPriceCatalogueAdmin />
-            <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="published-articles-heading">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-[10px] font-bold text-dbd-accent">Editorial content</p>
-                  <h2 id="published-articles-heading" className="mt-1 text-base font-bold text-gray-950">Published articles</h2>
-                  <p className="mt-1 text-xs font-medium text-gray-500">Open every public editorial page from one place.</p>
-                </div>
-                <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{formatPublicNumber(PUBLISHED_ARTICLES.length)} live</span>
-              </div>
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="order-5">
+              <IngredientPriceCatalogueAdmin />
+            </div>
+            <section className="order-4 rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="published-articles-heading">
+              <button
+                type="button"
+                onClick={() => setPublishedArticlesOpen(previous => !previous)}
+                aria-expanded={publishedArticlesOpen}
+                aria-controls="published-articles-panel"
+                className="flex w-full items-center justify-between gap-3 text-left"
+              >
+                <span>
+                  <span className="block text-[10px] font-bold text-dbd-accent">Editorial content</span>
+                  <span id="published-articles-heading" className="mt-1 block text-base font-bold text-gray-950">Published articles</span>
+                  <span className="mt-1 block text-xs font-medium text-gray-500">Open every public editorial page from one place.</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{formatPublicNumber(PUBLISHED_ARTICLES.length)} live</span>
+                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${publishedArticlesOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </span>
+              </button>
+              {publishedArticlesOpen && <div id="published-articles-panel">
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
                 <div className="relative min-w-0 flex-1">
                   <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" aria-hidden="true" />
                   <label htmlFor="published-article-search" className="sr-only">Search published articles by ingredient or topic</label>
@@ -1059,40 +1252,51 @@ export const AdminDashboard: React.FC = () => {
                     <option value="reviewed">Last reviewed</option>
                   </select>
                 </label>
-              </div>
-              <div className="mt-2 text-[11px] text-gray-500">
-                Showing {visiblePublishedArticles.length} of {PUBLISHED_ARTICLES.length} published articles
-              </div>
-              <div className="mt-3 grid gap-2 md:grid-cols-2">
-                {visiblePublishedArticles.map(article => (
-                  <a
-                    key={article.path}
-                    href={article.path}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group flex min-h-14 items-center justify-between gap-3 rounded border border-gray-200 bg-gray-50/60 px-3 py-2.5 transition-colors hover:border-dbd-accent/30 hover:bg-white"
-                  >
-                    <span className="min-w-0">
-                      <span className="block text-[10px] font-semibold text-gray-500">{article.category}</span>
-                      <span className="mt-0.5 block text-xs font-bold leading-4 text-gray-800 group-hover:text-dbd-accent">{formatPublicArticleTitle(article.title)}</span>
-                    </span>
-                    <ExternalLink className="h-3.5 w-3.5 shrink-0 text-gray-400 group-hover:text-dbd-accent" aria-hidden="true" />
-                  </a>
-                ))}
-              </div>
-              {visiblePublishedArticles.length === 0 && (
-                <p className="mt-3 rounded border border-dashed border-gray-200 px-3 py-4 text-center text-xs text-gray-500">
-                  No published articles match that ingredient or topic.
-                </p>
-              )}
+                </div>
+                <div className="mt-2 text-[11px] text-gray-500">
+                  Showing {visiblePublishedArticles.length} of {PUBLISHED_ARTICLES.length} published articles
+                </div>
+                <div className="mt-3 grid gap-2 md:grid-cols-2">
+                  {visiblePublishedArticles.map(article => (
+                    <a
+                      key={article.path}
+                      href={article.path}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex min-h-14 items-center justify-between gap-3 rounded border border-gray-200 bg-gray-50/60 px-3 py-2.5 transition-colors hover:border-dbd-accent/30 hover:bg-white"
+                    >
+                      <span className="min-w-0">
+                        <span className="block text-[10px] font-semibold text-gray-500">{article.category}</span>
+                        <span className="mt-0.5 block text-xs font-bold leading-4 text-gray-800 group-hover:text-dbd-accent">{formatPublicArticleTitle(article.title)}</span>
+                      </span>
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-gray-400 group-hover:text-dbd-accent" aria-hidden="true" />
+                    </a>
+                  ))}
+                </div>
+                {visiblePublishedArticles.length === 0 && (
+                  <p className="mt-3 rounded border border-dashed border-gray-200 px-3 py-4 text-center text-xs text-gray-500">
+                    No published articles match that ingredient or topic.
+                  </p>
+                )}
+              </div>}
             </section>
 
             <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="account-overview-heading">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Accounts</p>
-                <h2 id="account-overview-heading" className="mt-1 text-base font-bold text-gray-950">Account overview</h2>
-                <p className="mt-1 text-xs font-medium text-gray-500">Stored app profiles, access, payment and usage totals.</p>
-              </div>
+              <button
+                type="button"
+                onClick={() => setAccountsOpen(previous => !previous)}
+                aria-expanded={accountsOpen}
+                aria-controls="account-overview-panel"
+                className="flex w-full items-center justify-between gap-3 text-left"
+              >
+                <span>
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Accounts</span>
+                  <span id="account-overview-heading" className="mt-1 block text-base font-bold text-gray-950">Account overview</span>
+                  <span className="mt-1 block text-xs font-medium text-gray-500">Stored app profiles, access, payment and usage totals.</span>
+                </span>
+                <ChevronDown className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${accountsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </button>
+              {accountsOpen && <div id="account-overview-panel">
               <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
               {[
                 { label: 'App profiles', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
@@ -1224,15 +1428,210 @@ export const AdminDashboard: React.FC = () => {
                   <p className="mt-1 text-[11px] font-medium text-amber-700">{accountReconciliationError}</p>
                 </div>
               ) : null}
+              </div>}
             </section>
 
             <section className="order-2 rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5" aria-labelledby="operations-heading">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Service health</p>
-                <h2 id="operations-heading" className="mt-1 text-base font-bold text-gray-950">Operations and delivery</h2>
-                <p className="mt-1 text-xs font-medium text-gray-500">Monitor AI costs, Stripe events and customer email delivery.</p>
-              </div>
+              <button
+                type="button"
+                onClick={() => setServiceHealthOpen(previous => !previous)}
+                aria-expanded={serviceHealthOpen}
+                aria-controls="service-health-panel"
+                className="flex w-full items-center justify-between gap-3 text-left"
+              >
+                <span>
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Service health</span>
+                  <span id="operations-heading" className="mt-1 block text-base font-bold text-gray-950">Operations and delivery</span>
+                  <span className="mt-1 block text-xs font-medium text-gray-500">Monitor AI costs, Stripe events and customer email delivery.</span>
+                </span>
+                <ChevronDown className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${serviceHealthOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </button>
+              {serviceHealthOpen && <div id="service-health-panel">
               <div className="mt-4 space-y-3">
+            <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-gray-500" />
+                    <h2 className="text-[13px] font-bold text-gray-950">Search assurance</h2>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${getCanaryStatusClass(latestSearchCanary?.status)}`}>
+                      {latestSearchCanary?.status || 'Awaiting canary'}
+                    </span>
+                  </div>
+                  <p className="text-[11px] leading-tight text-gray-400 font-medium max-w-xl">
+                    Scheduled canaries test the production search service without using a customer allowance. User events show whether results or a genuine no-results response reached the screen.
+                  </p>
+                  <p className="text-[10.5px] text-gray-500 font-medium">
+                    Last canary: {latestSearchCanary ? `${formatDateTime(latestSearchCanary.createdAt)} · ${latestSearchCanary.latencyMs || 0}ms` : 'Not run yet'}
+                  </p>
+                  <p className="text-[10.5px] text-gray-500 font-medium">
+                    Dashboard updated: {dashboardUpdatedAt ? formatDateTime(dashboardUpdatedAt) : 'Loading'}
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 w-full lg:max-w-2xl">
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Delivered</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.delivered}</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">No results</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.noResults}</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Failures</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.failed}</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Reports</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.reported}</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Delivery rate</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.deliveryRate === null ? 'N/A' : `${searchDeliverySummary.deliveryRate}%`}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-3">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                  Window
+                  <select
+                    value={searchWindow}
+                    onChange={event => setSearchWindow(event.target.value as typeof searchWindow)}
+                    className="rounded border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold normal-case tracking-normal text-gray-700"
+                  >
+                    <option value="24h">Last 24 hours</option>
+                    <option value="7d">Last 7 days</option>
+                    <option value="all">All recorded</option>
+                  </select>
+                </label>
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                  Mode
+                  <select
+                    value={searchSourceFilter}
+                    onChange={event => setSearchSourceFilter(event.target.value as typeof searchSourceFilter)}
+                    className="rounded border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold normal-case tracking-normal text-gray-700"
+                  >
+                    <option value="all">All searches</option>
+                    <option value="cook">Cook</option>
+                    <option value="ready-made">Ready-made</option>
+                  </select>
+                </label>
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                  Device
+                  <select
+                    value={searchDeviceFilter}
+                    onChange={event => setSearchDeviceFilter(event.target.value as typeof searchDeviceFilter)}
+                    className="rounded border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold normal-case tracking-normal text-gray-700"
+                  >
+                    <option value="all">All devices</option>
+                    <option value="mobile">Mobile</option>
+                    <option value="tablet">Tablet</option>
+                    <option value="desktop">Desktop</option>
+                  </select>
+                </label>
+                <span className="text-[10.5px] font-medium text-gray-400">
+                  {filteredSearchDeliveryEvents.length} events in view
+                </span>
+              </div>
+            </div>
+            <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
+              <button
+                type="button"
+                onClick={() => setMonitoringOpen(previous => !previous)}
+                aria-expanded={monitoringOpen}
+                aria-controls="operational-monitoring-panel"
+                className="flex w-full items-center justify-between gap-3 text-left"
+              >
+                <span>
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4 text-gray-500" aria-hidden="true" />
+                    <span className="text-[13px] font-bold text-gray-950">Operational monitoring</span>
+                  </span>
+                  <span className="mt-1 block text-[11px] font-medium text-gray-400">Administrator access, email delivery, AI failures and Firestore permission signals.</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${recentEmailFailureEvents.length + recentAiFailureEvents.length + recentFirestoreEvents.length > 0 ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
+                    {recentEmailFailureEvents.length + recentAiFailureEvents.length + recentFirestoreEvents.length > 0 ? 'Review signals' : 'No recent failures'}
+                  </span>
+                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${monitoringOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </span>
+              </button>
+              {monitoringOpen && <div id="operational-monitoring-panel" className="mt-3 border-t border-gray-100 pt-3">
+                <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-5">
+                  <div className="rounded border border-gray-100 bg-white p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Admin access</p>
+                    <p className="mt-0.5 text-lg font-bold text-gray-950">{adminAccessEvents.length}</p>
+                    <p className="text-[10.5px] font-medium text-gray-400">recent recorded opens</p>
+                  </div>
+                  <div className="rounded border border-gray-100 bg-white p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Email failures</p>
+                    <p className="mt-0.5 text-lg font-bold text-gray-950">{recentEmailFailureEvents.length}</p>
+                    <p className="text-[10.5px] font-medium text-gray-400">last 24 hours</p>
+                  </div>
+                  <div className="rounded border border-gray-100 bg-white p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">AI failures</p>
+                    <p className="mt-0.5 text-lg font-bold text-gray-950">{recentAiFailureEvents.length}</p>
+                    <p className="text-[10.5px] font-medium text-gray-400">last 24 hours</p>
+                  </div>
+                  <div className="rounded border border-gray-100 bg-white p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Firestore signals</p>
+                    <p className="mt-0.5 text-lg font-bold text-gray-950">{recentFirestoreEvents.length}</p>
+                    <p className="text-[10.5px] font-medium text-gray-400">last 24 hours</p>
+                  </div>
+                  <div className="rounded border border-gray-100 bg-white p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Backups</p>
+                    <p className="mt-0.5 text-lg font-bold text-amber-700">Not set</p>
+                    <p className="text-[10.5px] font-medium text-gray-400">external schedule needed</p>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-1 text-[10.5px] font-medium text-gray-500">
+                  <p>Threshold alerts are active for repeated search, email and AI failures. Alerts are deduplicated for 24 hours.</p>
+                  <p>Last administrator dashboard access: {latestAdminAccess ? `${formatDateTime(latestAdminAccess.createdAt)} · ${latestAdminAccess.deviceClass || 'unknown'}` : 'Not recorded yet'}.</p>
+                  <p>Backup verification is not configured in the app, so no backup health claim is being made.</p>
+                </div>
+              </div>}
+            </div>
+            <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
+              <button
+                type="button"
+                onClick={() => setClientErrorsOpen(previous => !previous)}
+                aria-expanded={clientErrorsOpen}
+                aria-controls="client-error-panel"
+                className="flex w-full items-center justify-between gap-3 text-left"
+              >
+                <span>
+                  <span className="flex items-center gap-1.5">
+                    <Activity className="h-4 w-4 text-gray-500" aria-hidden="true" />
+                    <span className="text-[13px] font-bold text-gray-950">Front-end error monitoring</span>
+                  </span>
+                  <span className="mt-1 block text-[11px] font-medium text-gray-400">Captures uncaught browser errors and failed app loads without search text or personal details.</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${recentClientErrorEvents.length > 0 ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
+                    {recentClientErrorEvents.length > 0 ? `${recentClientErrorEvents.length} in 24h` : 'No incidents'}
+                  </span>
+                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${clientErrorsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </span>
+              </button>
+              {clientErrorsOpen && <div id="client-error-panel" className="mt-3 border-t border-gray-100 pt-3">
+                {clientErrorEvents.length === 0 ? (
+                  <p className="text-[11px] font-medium text-gray-500">No front-end incidents have been recorded.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {clientErrorEvents.slice(0, 8).map(event => (
+                      <div key={event.id} className="rounded border border-gray-100 bg-white p-2.5">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-tight text-gray-500">{event.kind || 'runtime'} · {event.deviceClass || 'unknown'}</span>
+                          <span className="text-[10px] font-medium text-gray-400">{formatDateTime(event.createdAt)}</span>
+                        </div>
+                        <p className="mt-1 text-[11px] font-semibold leading-4 text-gray-800">{event.message || 'Unknown client error'}</p>
+                        <p className="mt-1 truncate text-[10px] font-medium text-gray-400">{event.path || '/'}{event.source ? ` · ${event.source}` : ''}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>}
+            </div>
             <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2">
                 <div className="space-y-1">
@@ -1379,18 +1778,28 @@ export const AdminDashboard: React.FC = () => {
             )}
 
               </div>
+              </div>}
             </section>
 
-            <section className="order-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xs" aria-labelledby="user-accounts-heading">
-              <div className="flex flex-col gap-2 border-b border-gray-200 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">User register</p>
-                  <h2 id="user-accounts-heading" className="mt-1 text-base font-bold text-gray-950">App profiles</h2>
-                  <p className="mt-1 text-xs font-medium text-gray-500">Review stored profiles, access, activity, subscriptions and private admin notes.</p>
-                </div>
-                <p className="text-xs font-semibold text-gray-500">{filteredUsers.length} of {users.length} profiles shown</p>
-              </div>
-              <div className="bg-white">
+            <section className="order-first overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xs" aria-labelledby="user-accounts-heading">
+              <button
+                type="button"
+                onClick={() => setUserRegisterOpen(previous => !previous)}
+                aria-expanded={userRegisterOpen}
+                aria-controls="user-register-panel"
+                className="flex w-full items-center justify-between gap-3 border-b border-gray-200 px-4 py-4 text-left sm:px-5"
+              >
+                <span>
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">User register</span>
+                  <span id="user-accounts-heading" className="mt-1 block text-base font-bold text-gray-950">App profiles</span>
+                  <span className="mt-1 block text-xs font-medium text-gray-500">Review stored profiles, access, activity, subscriptions and private admin notes.</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <span className="text-xs font-semibold text-gray-500">{filteredUsers.length} of {users.length} profiles shown</span>
+                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${userRegisterOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </span>
+              </button>
+              {userRegisterOpen && <div id="user-register-panel" className="bg-white">
               <div className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => {
                   const subscription = user.subscription;
@@ -1588,6 +1997,7 @@ export const AdminDashboard: React.FC = () => {
                 )}
               </div>
             </div>
+              }
             </section>
           </div>
         )}

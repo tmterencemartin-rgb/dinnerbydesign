@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Wordmark } from '../Wordmark';
 import {
   ArrowLeft,
   Calendar,
@@ -72,11 +73,7 @@ export const BudgetFamilySeoConcept: React.FC<BudgetFamilySeoConceptProps> = ({ 
       <header className="border-b border-dbd-rule/50 bg-dbd-surface">
         <div className="mx-auto flex min-h-[82px] max-w-6xl items-center justify-between px-3 sm:min-h-[100px] lg:px-6">
           <button onClick={onBack} aria-label="Back to DinnerByDesign" className="text-left">
-            <img
-              src="/dbd-logo-with-pin.png"
-              alt="DinnerByDesign"
-              className="h-[34.2px] w-auto max-w-[207px] object-contain mix-blend-multiply sm:h-[41.4px]"
-            />
+            <Wordmark className="text-[34.2px] sm:text-[41.4px]" />
             <span className="ml-[42px] mt-1 hidden text-[9px] font-medium tracking-[0.05em] text-dbd-ink-3 sm:block sm:ml-[52px]">
               Less searching. More relevant dinners.
             </span>

@@ -51,6 +51,25 @@ describe('searchUtils', () => {
       expect(params.maxCostPerPortion).toBeUndefined();
     });
 
+    it('carries saved cuisine and source-appropriate time preferences into params', () => {
+      const cookParams = buildSearchParams('Pasta', 'cook', mockPreferences);
+      expect(cookParams.cuisines).toEqual(['Italian']);
+      expect(cookParams.maxTotalTime).toBe(30);
+
+      const readyMadeParams = buildSearchParams('Curry', 'ready-made', mockPreferences);
+      expect(readyMadeParams.maxHeatingTime).toBe(30);
+    });
+
+    it('honours explicit empty cuisine and time overrides', () => {
+      const params = buildSearchParams('Pasta', 'cook', mockPreferences, {
+        cuisines: [],
+        maxTotalTime: undefined
+      });
+
+      expect(params.cuisines).toBeUndefined();
+      expect(params.maxTotalTime).toBeUndefined();
+    });
+
     it('marks ingredient-list searches as ingredient-led for cook mode', () => {
       const params = buildSearchParams('chicken, spinach and rice', 'cook', mockPreferences);
       expect(params.ingredientIntent).toMatchObject({
@@ -81,14 +100,30 @@ describe('searchUtils', () => {
 
     it('excludes offal by default and preserves an opt-in preference', () => {
       expect(buildSearchParams('pasta', 'cook', mockPreferences).includeOffal).toBe(false);
-      expect(buildSearchParams('pasta', 'cook', { ...mockPreferences, includeOffal: true }).includeOffal).toBe(true);
+      expect(buildSearchParams('pasta', 'cook', { ...mockPreferences, dietaryRule: 'none', includeOffal: true }).includeOffal).toBe(true);
     });
 
     it('temporarily includes offal for an explicit search without changing other preferences', () => {
-      const params = buildSearchParams('liver recipes', 'cook', mockPreferences);
+      const params = buildSearchParams('liver recipes', 'cook', { ...mockPreferences, dietaryRule: 'none' });
       expect(params.includeOffal).toBe(true);
       expect(mockPreferences.includeOffal).toBe(false);
-      expect(params.dietaryRule).toBe('vegan');
+      expect(params.dietaryRule).toBeUndefined();
+    });
+
+    it('keeps offal disabled for pescatarian searches, including explicit offal queries', () => {
+      const pescatarianPreferences = { ...mockPreferences, dietaryRule: 'pescatarian' as const, includeOffal: true };
+      expect(buildSearchParams('liver recipes', 'cook', pescatarianPreferences).includeOffal).toBe(false);
+      expect(buildSearchParams('fish', 'cook', pescatarianPreferences).includeOffal).toBe(false);
+    });
+
+    it('removes cooking fats that conflict with the active dietary rule', () => {
+      const params = buildSearchParams('pasta', 'cook', {
+        ...mockPreferences,
+        dietaryRule: 'vegan',
+        cookingFats: ['Olive oil', 'Butter', 'Ghee', 'Lard/Dripping']
+      });
+
+      expect(params.cookingFats).toEqual(['Olive oil']);
     });
 
     it('does not treat artichoke hearts as an offal search', () => {
@@ -343,6 +378,29 @@ describe('searchUtils', () => {
       });
 
       expect(conflict?.conflictLabel).toBe('No Eggs');
+    });
+
+    it('flags common derived and compound allergen terms', () => {
+      const cases = [
+        ['miso noodles', 'Soybeans'],
+        ['scampi', 'Crustaceans'],
+        ['oyster sauce', 'Molluscs'],
+        ['macadamia chicken', 'Tree nuts'],
+        ['barley malt loaf', 'Cereals containing gluten'],
+        ['sulphite preservative', 'Sulphur dioxide and sulphites']
+      ] as const;
+
+      for (const [query, allergy] of cases) {
+        const conflict = detectPreferenceContradiction({
+          query,
+          source: 'cook'
+        }, {
+          ...basePreferences,
+          allergies: [allergy]
+        });
+
+        expect(conflict?.conflictLabel).toBe(`No ${allergy}`);
+      }
     });
 
     it('flags excluded ingredient conflicts', () => {

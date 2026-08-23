@@ -1,4 +1,13 @@
-import type { ReadyMeal, Recipe, SavedRecipe } from '../types';
+import type { DietaryRule, ReadyMeal, Recipe, SavedRecipe } from '../types';
+
+export const OFFAL_INCOMPATIBLE_DIETARY_RULES: ReadonlySet<DietaryRule> = new Set([
+  'pescatarian',
+  'vegetarian',
+  'vegan'
+]);
+
+export const dietaryRuleAllowsOffal = (dietaryRule?: string | null) =>
+  !dietaryRule || !OFFAL_INCOMPATIBLE_DIETARY_RULES.has(dietaryRule as DietaryRule);
 
 const DIRECT_OFFAL_PATTERN = /\b(offal|livers?|kidneys?|tripe|tongues?|sweetbreads?|black pudding|blood sausage)\b/i;
 const LIVER_PATE_PATTERN = /\b(?:liver|chicken|duck|pork)\s+p[aâ]t[eé]\b|\bp[aâ]t[eé]\b[^.]{0,40}\bliver\b/i;

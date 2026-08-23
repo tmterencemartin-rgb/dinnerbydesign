@@ -57,6 +57,10 @@
   ],
   "rewrites": [
     {
+      "source": "/assets/(.*)",
+      "destination": "/api/missing-asset"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/server.js"
     },
@@ -106,6 +110,14 @@
     {
       "path": "/api/ingredient-prices/refresh",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/monitor/search-canary",
+      "schedule": "0 5 * * *"
+    },
+    {
+      "path": "/api/health/deep",
+      "schedule": "30 5 * * *"
     }
   ]
 }

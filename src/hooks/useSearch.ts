@@ -26,6 +26,7 @@ import {
 } from '../lib/searchUtils';
 import { DIETARY_TAXONOMY } from '../constants';
 import { handleFirestoreError } from '../firebase';
+import { createSearchRequestId, sendSearchTelemetry } from '../lib/searchTelemetry';
 
 // Bump this when result-generation behaviour changes so an under-filled batch
 // from an earlier build cannot mask the newer repair logic.
@@ -34,6 +35,7 @@ const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
 const GUEST_SEARCH_LIMIT = 3;
+type SearchDeliveryStatus = 'delivered' | 'failed';
 const STRICT_INGREDIENT_NO_RESULTS_MESSAGE =
   'No exact matches found. Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off “Use only these ingredients (strict)”.';
 const INGREDIENT_NO_RESULTS_MESSAGE =
@@ -239,6 +241,7 @@ export function useSearch() {
     loading,
     showToast,
     setView,
+    goToSignUp,
     addToSearchHistory,
     savePreferences
   } = useAuth();
@@ -263,12 +266,33 @@ export function useSearch() {
     const parsed = raw ? parseInt(raw, 10) : 0;
     return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
   });
+  const telemetryRequestIdRef = useRef<string | null>(null);
+  const telemetryStartedAtRef = useRef<number | null>(null);
+
+  const emitSearchTelemetry = useCallback((stage: Parameters<typeof sendSearchTelemetry>[0]['stage'], details: { durationMs?: number | null; resultCount?: number; errorCategory?: string | null } = {}) => {
+    const requestId = telemetryRequestIdRef.current;
+    if (!requestId) return;
+    void sendSearchTelemetry({
+      requestId,
+      stage,
+      source,
+      ...details
+    });
+  }, [source]);
 
   const resetGuestSearchCount = useCallback(() => {
     safeStorage.removeItem(GUEST_SEARCH_COUNT_KEY);
     setGuestSearchCount(0);
     showToast("Native test searches reset.");
   }, [showToast]);
+
+  const recordGuestSearchDelivery = useCallback(() => {
+    setGuestSearchCount(currentCount => {
+      const nextGuestCount = Math.min(GUEST_SEARCH_LIMIT, currentCount + 1);
+      safeStorage.setItem(GUEST_SEARCH_COUNT_KEY, String(nextGuestCount));
+      return nextGuestCount;
+    });
+  }, []);
   
   const [cuisines, setCuisines] = useState<string[]>([]);
   const [dietTypes, setDietTypes] = useState<string[]>([]);
@@ -354,7 +378,7 @@ export function useSearch() {
   const lastProfileReligiousEthicalRef = useRef<string[] | undefined>(undefined);
   const lastProfileReadyToEatUnderMinsRef = useRef<number | null | undefined>(undefined);
 
-  const performSearch = useCallback(async (params: SearchParams, options: { isAppend?: boolean, isReplacement?: boolean, replacementIndex?: number, preferencesOverride?: UserPreferences | null, isMoreLikeThis?: boolean } = {}) => {
+  const performSearch = useCallback(async (params: SearchParams, options: { isAppend?: boolean, isReplacement?: boolean, replacementIndex?: number, preferencesOverride?: UserPreferences | null, isMoreLikeThis?: boolean } = {}): Promise<SearchDeliveryStatus> => {
     const { isAppend = false, isReplacement = false, replacementIndex, preferencesOverride } = options;
     
     // Abort previous search if any
@@ -375,6 +399,9 @@ export function useSearch() {
     const currentSearchId = ++searchIdRef.current;
     searchStartTimeRef.current = Date.now();
     setSearchStartTime(Date.now());
+    telemetryRequestIdRef.current = params.telemetryRequestId || createSearchRequestId();
+    telemetryStartedAtRef.current = Date.now();
+    emitSearchTelemetry('started');
     
     if (isAppend) setIsAppending(true);
     else setIsGenerating(true);
@@ -398,11 +425,16 @@ export function useSearch() {
           setSearchContradiction(null);
           setStatus('complete');
           setEnriching(false);
-          return;
+          emitSearchTelemetry('results_delivered', {
+            durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()),
+            resultCount: cached.recipes.length + cached.readyMeals.length
+          });
+          return 'delivered';
         }
       }
 
-      const result = await performServiceSearch(params, activePrefs || undefined, signal);
+      const serviceParams = { ...params, telemetryRequestId: telemetryRequestIdRef.current || undefined };
+      const result = await performServiceSearch(serviceParams, activePrefs || undefined, signal);
       const { recipes: accumulatedRecipes = [], readyMeals: accumulatedReadyMeals = [], budgetContradiction: contradiction } = result;
       const alternatives = (result as any).alternatives || [];
       const aiExhausted = (result as any).aiExhausted || false;
@@ -410,7 +442,8 @@ export function useSearch() {
 
       if (currentSearchId !== searchIdRef.current) {
         addLog(`SEARCH: perfomSearch ABORTED (stale id=${currentSearchId})`);
-        return;
+        emitSearchTelemetry('cancelled', { durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()) });
+        return 'failed';
       }
 
       if (hasMeaningfulBudgetContradiction(contradiction)) {
@@ -427,7 +460,12 @@ export function useSearch() {
           setCurrentRecipes([]);
           setCurrentReadyMeals([]);
         }
-        return;
+        emitSearchTelemetry('no_results_delivered', {
+          durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()),
+          resultCount: 0,
+          errorCategory: 'budget_conflict'
+        });
+        return 'delivered';
       } else if (contradiction) {
         addLog('SEARCH: Ignoring incomplete budget contradiction from Gemini.');
       }
@@ -451,6 +489,10 @@ export function useSearch() {
           setCurrentRecipes([]);
           setCurrentReadyMeals([]);
         }
+        emitSearchTelemetry('no_results_delivered', {
+          durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()),
+          resultCount: 0
+        });
       } else {
         const timeLimit = params.maxTotalTime || params.maxHeatingTime;
         
@@ -529,7 +571,12 @@ export function useSearch() {
             setCurrentRecipes([]);
             setCurrentReadyMeals([]);
           }
-          return;
+          emitSearchTelemetry('no_results_delivered', {
+            durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()),
+            resultCount: 0,
+            errorCategory: 'client_filter'
+          });
+          return 'delivered';
         }
 
         if (isReplacement && replacementIndex !== undefined) {
@@ -595,8 +642,12 @@ export function useSearch() {
             });
           }
 
-          if (finalItems.length > 0) {
-            window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
+        if (finalItems.length > 0) {
+          emitSearchTelemetry('results_delivered', {
+            durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()),
+            resultCount: finalItems.length
+          });
+          window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
             const currentId = currentSearchId;
             setEnriching(true);
             generateMatchRationales(finalItems, params, activePrefs || undefined)
@@ -626,11 +677,14 @@ export function useSearch() {
             setStatus('complete');
           }
         }
+        return 'delivered';
       }
+      return 'delivered';
     } catch (error: any) {
       if (error.name === 'AbortError') {
         console.log(`[useSearch] performSearch ABORTED (searchId=${currentSearchId})`);
-        return;
+        emitSearchTelemetry('cancelled', { durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()) });
+        return 'failed';
       }
       setStatus('error');
       const rawErrorMsg = error instanceof GeminiServiceError ? error.message : (error?.message || String(error || "Unknown search error"));
@@ -680,6 +734,10 @@ export function useSearch() {
 
       const errorMsg = cleanErrorMessage(rawErrorMsg);
       const category = error instanceof GeminiServiceError ? error.category : 'unknown';
+      emitSearchTelemetry('failed', {
+        durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()),
+        errorCategory: category
+      });
       
       console.log(`[Diagnostic] SEARCH: Caught error! Category: ${category}. Raw Message: ${rawErrorMsg}`);
       addLog(`DIAGNOSTIC: Search catch block. Category=${category}. Msg=${errorMsg}`);
@@ -689,8 +747,12 @@ export function useSearch() {
       const alreadyRetried = (params as any)._retry === true;
 
       if (isParsingError && isMultiSearch && !alreadyRetried) {
-        performSearch({ ...params, count: 1, _retry: true } as any, options).catch(() => {});
-        return;
+        return performSearch({
+          ...params,
+          count: 1,
+          telemetryRequestId: telemetryRequestIdRef.current || undefined,
+          _retry: true
+        } as any, options);
       }
 
       if (!isReplacement && !isAppend) {
@@ -714,13 +776,14 @@ export function useSearch() {
           setLocalError(errorMsg);
         }
       }
+      return 'failed';
     } finally {
       if (currentSearchId === searchIdRef.current) {
         setIsGenerating(false);
         setIsAppending(false);
       }
     }
-  }, [profile?.preferences, addLog, setError]); // Removed currentRecipes/currentReadyMeals from deps to avoid unnecessary re-creations
+  }, [profile?.preferences, addLog, setError, emitSearchTelemetry]); // Removed currentRecipes/currentReadyMeals from deps to avoid unnecessary re-creations
 
 
   const handleStopSearch = useCallback(() => {
@@ -730,6 +793,8 @@ export function useSearch() {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
+
+    emitSearchTelemetry('cancelled', { durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()) });
     
     searchIdRef.current++;
     setIsGenerating(false);
@@ -740,7 +805,14 @@ export function useSearch() {
     
     setSearchCancelledHint(true);
     setTimeout(() => setSearchCancelledHint(false), 3000);
-  }, [isGenerating, isAppending, status, currentRecipes, currentReadyMeals]);
+  }, [isGenerating, isAppending, status, currentRecipes, currentReadyMeals, emitSearchTelemetry]);
+
+  const reportSearchProblem = useCallback(() => {
+    emitSearchTelemetry('user_reported', {
+      durationMs: telemetryStartedAtRef.current ? Date.now() - telemetryStartedAtRef.current : null
+    });
+    showToast('Thanks. The search attempt has been flagged for review.');
+  }, [emitSearchTelemetry, showToast]);
 
   const handleGenerate = useCallback(async (queryOverride?: string, paramOverrides: Partial<SearchParams> = {}, preferencesOverride?: UserPreferences | null, options?: GenerateOptions) => {
     try {
@@ -749,7 +821,7 @@ export function useSearch() {
       const shouldCountGuestSearch = isGuestPreview && !options?.skipHistory;
 
       if (isGuestPreview && guestSearchCount >= GUEST_SEARCH_LIMIT) {
-        showToast("You've used your 3 free searches. Create an account to start your 7-day trial.", "Create account", () => setView('signin'));
+        showToast("You've used your 3 free searches. Create an account to start your 7-day trial.", "Create account", goToSignUp);
         return;
       }
 
@@ -814,13 +886,10 @@ export function useSearch() {
         setLocalError(null);
         setCurrentRecipes([]);
         setCurrentReadyMeals([]);
+        if (shouldCountGuestSearch) {
+          recordGuestSearchDelivery();
+        }
         return;
-      }
-
-      if (shouldCountGuestSearch) {
-        const nextGuestCount = Math.min(GUEST_SEARCH_LIMIT, guestSearchCount + 1);
-        setGuestSearchCount(nextGuestCount);
-        safeStorage.setItem(GUEST_SEARCH_COUNT_KEY, String(nextGuestCount));
       }
 
       // Add to search history if it's a real query and not from auto-search
@@ -829,11 +898,14 @@ export function useSearch() {
       }
 
       // We don't setIsGenerating(true) here because performSearch does it immediately
-      await performSearch(cleaned, {
+      const deliveryStatus = await performSearch(cleaned, {
         preferencesOverride: options?.suppressDietaryRule
           ? activePrefs
           : (preferencesOverride !== undefined ? preferencesOverride : undefined)
       });
+      if (shouldCountGuestSearch && deliveryStatus === 'delivered') {
+        recordGuestSearchDelivery();
+      }
     } catch (err) {
       setLocalError("An unexpected error occurred. Please try again.");
       setIsGenerating(false);
@@ -843,7 +915,7 @@ export function useSearch() {
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
     saladPreference, allergies, isSimple, isLowCost, isLeftoverMode, strictIngredientMatch, nutritiousChoice, highOmega3, highProtein, includeOffal, servings, preferredSourceIds, dismissedTitles,
-    source, profile?.preferences, addToSearchHistory, performSearch, setError, setIsGenerating, user, guestSearchCount, showToast, setView
+    source, profile?.preferences, addToSearchHistory, performSearch, recordGuestSearchDelivery, setError, setIsGenerating, user, guestSearchCount, showToast, setView, goToSignUp
   ]);
 
 
@@ -852,22 +924,6 @@ export function useSearch() {
   useEffect(() => {
     handleGenerateRef.current = handleGenerate;
   }, [handleGenerate]);
-
-  // Automatic debounced search on input change
-  useEffect(() => {
-    if (!input || input.trim().length < 3) return;
-    if (!user || user.isAnonymous) return;
-    
-    const timer = setTimeout(() => {
-      // Don't auto-search if a search is already in progress with the same query
-      if (lastQuery === input.trim()) return;
-      
-      // Auto-searches skip history to prevent "history pollution" with partial terms
-      handleGenerateRef.current(undefined, {}, null, { skipHistory: true });
-    }, 500); // 500ms debounce for typing
-
-    return () => clearTimeout(timer);
-  }, [input, lastQuery, user]);
 
   // Keep track of the last filter values to detect actual filter changes
   const lastFiltersRef = useRef({
@@ -1003,7 +1059,7 @@ export function useSearch() {
 
     const isGuestPreview = !user || user.isAnonymous;
     if (isGuestPreview && guestSearchCount >= GUEST_SEARCH_LIMIT) {
-      showToast("You've used your 3 free searches. Create an account to start your 7-day trial.", "Create account", () => setView('signin'));
+      showToast("You've used your 3 free searches. Create an account to start your 7-day trial.", "Create account", goToSignUp);
       return;
     }
 
@@ -1050,13 +1106,10 @@ export function useSearch() {
       const params = buildSearchParams(input || lastQuery, source, profile?.preferences || null, combinedOverrides);
       const cleaned = cleanSearchParams(params);
 
-      if (isGuestPreview) {
-        const nextGuestCount = Math.min(GUEST_SEARCH_LIMIT, guestSearchCount + 1);
-        setGuestSearchCount(nextGuestCount);
-        safeStorage.setItem(GUEST_SEARCH_COUNT_KEY, String(nextGuestCount));
+      const deliveryStatus = await performSearch(cleaned, { isAppend: true });
+      if (isGuestPreview && deliveryStatus === 'delivered') {
+        recordGuestSearchDelivery();
       }
-
-      await performSearch(cleaned, { isAppend: true });
     } catch (err) {
       console.error("handleLoadMore failure:", err);
     }
@@ -1066,7 +1119,7 @@ export function useSearch() {
     excludeIngredients, omitIngredients, maxCalories, maxTotalTime, maxHeatingTime, 
     maxCostPerPortion, maxPricePerPerson, cookingMethods, cookingFats, supermarkets, 
     saladPreference, isSimple, isLowCost, isLeftoverMode, strictIngredientMatch, nutritiousChoice, includeOffal, servings, input, lastQuery,
-    source, profile?.preferences, performSearch, user, guestSearchCount, showToast, setView
+    source, profile?.preferences, performSearch, recordGuestSearchDelivery, user, guestSearchCount, showToast, setView, goToSignUp
   ]);
 
 
@@ -1195,7 +1248,9 @@ export function useSearch() {
     const currentPreferences = profile?.preferences || null;
     const currentPrefXmlString = currentPreferences ? JSON.stringify(currentPreferences) : null;
 
-    const isUidTransition = currentUid !== lastPrefUidRef.current;
+    const previousUid = lastPrefUidRef.current;
+    const isUidTransition = currentUid !== previousUid;
+    const isInitialAnonymousGuest = Boolean(user?.isAnonymous && !previousUid);
     const arePreferencesUpdated = currentPrefXmlString !== lastPreferencesJsonRef.current;
 
     if (isUidTransition || arePreferencesUpdated) {
@@ -1275,7 +1330,7 @@ export function useSearch() {
           // Changed preferences from within settings, automatically re-run search query matching new preferences!
           handleGenerate(undefined, {}, currentPreferences, { skipHistory: true });
         }
-      } else {
+      } else if (!isInitialAnonymousGuest) {
         // Logged out completely with null profile/preferences, restore original guests baseline state safely
         resetSearchFilters();
       }
@@ -1578,6 +1633,7 @@ export function useSearch() {
     isListening,
     isSpeechSupported,
     toggleVoiceSearch,
+    reportSearchProblem,
     
     cuisines, setCuisines,
     dietTypes, setDietTypes,

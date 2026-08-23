@@ -25,6 +25,8 @@ import {
   findRegisteredIdentitiesWithoutProfiles,
   summariseAccountReconciliation,
 } from "../src/lib/accountReconciliation";
+import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
+import type { SearchParams } from "../src/types";
 function getFirebaseConfig() {
   return firebaseConfig;
 }
@@ -58,6 +60,14 @@ const CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
 const CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const CONTACT_RATE_LIMIT_MAXIMUM = 4;
 const contactAttempts = new Map<string, number[]>();
+const GUEST_SEARCH_LIMIT = 3;
+const GUEST_IP_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const GUEST_IP_RATE_LIMIT_MAXIMUM = 12;
+const guestSearchAttemptsByIp = new Map<string, number[]>();
+const CLIENT_ERROR_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const CLIENT_ERROR_RATE_LIMIT_MAXIMUM = 30;
+const clientErrorAttemptsByIp = new Map<string, number[]>();
+const MONITORING_ALERT_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 const escapeHtml = (value: string) => value
   .replace(/&/g, "&amp;")
@@ -93,6 +103,33 @@ function isTrustedContactOrigin(req: express.Request) {
   } catch {
     return false;
   }
+}
+
+function hasClientErrorRateLimitCapacity(req: express.Request) {
+  const forwardedFor = req.get('x-forwarded-for');
+  const client = (forwardedFor ? forwardedFor.split(',')[0] : req.ip || 'unknown').trim();
+  const now = Date.now();
+  const recentAttempts = (clientErrorAttemptsByIp.get(client) || [])
+    .filter(attempt => now - attempt < CLIENT_ERROR_RATE_LIMIT_WINDOW_MS);
+
+  if (recentAttempts.length >= CLIENT_ERROR_RATE_LIMIT_MAXIMUM) {
+    clientErrorAttemptsByIp.set(client, recentAttempts);
+    return false;
+  }
+
+  recentAttempts.push(now);
+  clientErrorAttemptsByIp.set(client, recentAttempts);
+  return true;
+}
+
+function sanitiseClientErrorText(value: unknown, maxLength: number) {
+  return String(value || '')
+    .replace(/https?:\/\/[^\s)]+/gi, '[redacted-url]')
+    .replace(/[\w.+-]+@[\w.-]+\.[a-z]{2,}/gi, '[redacted-email]')
+    .replace(/[?&](?:token|key|code|email|query|search)=[^&\s]*/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, maxLength);
 }
 
 function getAppOrigin(req: express.Request): string {
@@ -166,6 +203,93 @@ async function verifyAdminRequest(req: express.Request, res: express.Response) {
     console.error("[AdminAuth] Token verification failed:", error);
     res.status(401).json({ ok: false, error: "Your administrator session could not be verified." });
     return null;
+  }
+}
+
+function getClientIp(req: express.Request) {
+  const forwardedFor = req.get("x-forwarded-for");
+  return (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
+}
+
+function getRecentGuestIpAttempts(req: express.Request) {
+  const clientIp = getClientIp(req);
+  const now = Date.now();
+  return {
+    clientIp,
+    now,
+    recent: (guestSearchAttemptsByIp.get(clientIp) || [])
+    .filter(attempt => now - attempt < GUEST_IP_RATE_LIMIT_WINDOW_MS),
+  };
+}
+
+function hasGuestIpCapacity(req: express.Request) {
+  const { recent } = getRecentGuestIpAttempts(req);
+  return recent.length < GUEST_IP_RATE_LIMIT_MAXIMUM;
+}
+
+function recordGuestIpAttempt(req: express.Request) {
+  const { clientIp, now, recent } = getRecentGuestIpAttempts(req);
+  recent.push(now);
+  guestSearchAttemptsByIp.set(clientIp, recent);
+}
+
+async function verifySearchIdentity(req: express.Request, res: express.Response) {
+  const authorization = req.get("authorization") || "";
+  const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+
+  if (!token) {
+    res.status(401).json({ ok: false, error: "Please refresh the page and try again." });
+    return null;
+  }
+
+  try {
+    const decoded = await getAdminAuth().verifyIdToken(token);
+    const isAnonymous = decoded.firebase?.sign_in_provider === "anonymous";
+
+    if (!isAnonymous) return { uid: decoded.uid, isAnonymous: false };
+    if (!hasGuestIpCapacity(req)) {
+      res.status(429).json({ ok: false, error: "Guest search access is temporarily limited. Please create an account to continue." });
+      return null;
+    }
+
+    const usageSnapshot = await getDb().collection("guestSearchUsage").doc(decoded.uid).get();
+    const count = Number(usageSnapshot.data()?.count || 0);
+    if (count >= GUEST_SEARCH_LIMIT) {
+      res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
+      return null;
+    }
+
+    return { uid: decoded.uid, isAnonymous: true, guestSearchCount: count };
+  } catch (error) {
+    console.error("[SearchAuth] Token verification failed:", error);
+    res.status(401).json({ ok: false, error: "Please refresh the page and try again." });
+    return null;
+  }
+}
+
+async function commitGuestSearchUsage(req: express.Request, uid: string) {
+  try {
+    const usageRef = getDb().collection("guestSearchUsage").doc(uid);
+    const usage = await getDb().runTransaction(async transaction => {
+      const snapshot = await transaction.get(usageRef);
+      const count = Number(snapshot.data()?.count || 0);
+      if (count >= GUEST_SEARCH_LIMIT) return { allowed: false, count };
+
+      const next = count + 1;
+      transaction.set(usageRef, {
+        count: next,
+        updatedAt: FieldValue.serverTimestamp(),
+        lastSearchAt: FieldValue.serverTimestamp()
+      }, { merge: true });
+      return { allowed: true, count: next };
+    });
+
+    if (!usage.allowed) return "limit" as const;
+    recordGuestIpAttempt(req);
+    return "committed" as const;
+  } catch (error) {
+    console.error("[SearchAuth] Failed to commit guest search usage:", error);
+    return "unavailable" as const;
   }
 }
 
@@ -246,8 +370,67 @@ async function recordEmailEvent({
       metadata,
       createdAt: FieldValue.serverTimestamp()
     });
+    if (status === 'failed' && !String(type).endsWith('_alert')) {
+      await maybeSendEmailFailureAlert(type);
+    }
   } catch (logErr) {
     console.error("[EmailLog] Failed to record email event:", logErr);
+  }
+}
+
+async function maybeSendEmailFailureAlert(failedType: string) {
+  try {
+    const cutoff = Date.now() - 60 * 60 * 1000;
+    const snapshot = await getDb().collection('emailEvents')
+      .orderBy('createdAt', 'desc')
+      .limit(100)
+      .get();
+    const recentFailures = snapshot.docs
+      .map((doc: any) => doc.data())
+      .filter((event: any) => {
+        const createdAt = event.createdAt;
+        const createdAtMillis = typeof createdAt?.toMillis === 'function' ? createdAt.toMillis() : 0;
+        return event.status === 'failed' && createdAtMillis >= cutoff;
+      });
+    const criticalTypes = new Set([
+      'new_account_notification',
+      'welcome_email',
+      'trial_ending_reminder',
+      'password_changed_confirmation'
+    ]);
+    const criticalFailure = criticalTypes.has(failedType) || recentFailures.some((event: any) => criticalTypes.has(event.type));
+    if (!criticalFailure && recentFailures.length < 3) return;
+
+    const stateRef = getDb().collection('emailFailureAlertState').doc('current');
+    const state = (await stateRef.get()).data() || {};
+    const lastAlertMillis = typeof state.lastAlertAt?.toMillis === 'function' ? state.lastAlertAt.toMillis() : 0;
+    if (Date.now() - lastAlertMillis < MONITORING_ALERT_COOLDOWN_MS) return;
+
+    const failedTypes = [...new Set(recentFailures.map((event: any) => String(event.type || 'unspecified')))].slice(0, 8);
+    await sendTrackedEmail({
+      to: CONTACT_RECIPIENT,
+      subject: 'DinnerByDesign email delivery issue detected',
+      html: `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <h2 style="margin: 0 0 20px; color: #111;">Email delivery issue detected</h2>
+  <p>Recent transactional email failures have crossed the monitoring threshold.</p>
+  <p><strong>${recentFailures.length}</strong> failed email attempts were recorded in the last hour.</p>
+  <p style="color: #666; font-size: 13px;">Types: ${escapeHtml(failedTypes.join(', ') || failedType)}</p>
+  <p>Review the Email log in the Admin Dashboard. Recipient content is not included in this alert.</p>
+</div>
+      `.trim()
+    }, {
+      type: 'email_delivery_alert',
+      source: 'monitoring',
+      metadata: { failureCount: recentFailures.length, failedTypes }
+    });
+    await stateRef.set({
+      lastAlertAt: FieldValue.serverTimestamp(),
+      failureCount: recentFailures.length,
+      updatedAt: FieldValue.serverTimestamp()
+    }, { merge: true });
+  } catch (error) {
+    console.error('[EmailMonitoring] Failure alert evaluation failed:', error);
   }
 }
 
@@ -276,6 +459,178 @@ async function sendTrackedEmail(
       error
     });
     throw error;
+  }
+}
+
+async function updateSearchCanaryState(details: {
+  status: 'passed' | 'failed';
+  requestId: string;
+  latencyMs: number;
+  resultCount: number;
+  errorCategory?: string | null;
+}) {
+  const stateRef = getDb().collection('searchCanaryState').doc('current');
+  const currentSnapshot = await stateRef.get();
+  const current = currentSnapshot.data() || {};
+  const now = Date.now();
+  const lastAlertAt = current.lastFailureAlertAt;
+  const lastAlertMillis = typeof lastAlertAt?.toMillis === 'function' ? lastAlertAt.toMillis() : 0;
+  const shouldAlert = details.status === 'failed'
+    && (current.status !== 'failed' || now - lastAlertMillis >= 24 * 60 * 60 * 1000);
+
+  let lastFailureAlertAt = current.lastFailureAlertAt || null;
+  if (shouldAlert) {
+    try {
+      await sendTrackedEmail({
+        to: CONTACT_RECIPIENT,
+        subject: 'DinnerByDesign search canary failed',
+        html: `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <h2 style="margin: 0 0 20px; color: #111;">Search canary failure</h2>
+  <p>The scheduled production search check failed.</p>
+  <p>Review <strong>Search assurance</strong> in the Admin Dashboard. No customer search allowance was used.</p>
+  <p style="color: #666; font-size: 13px;">Latency: ${details.latencyMs}ms · Category: ${escapeHtml(details.errorCategory || 'unknown')}</p>
+</div>
+        `.trim()
+      }, {
+        type: 'search_canary_failure',
+        source: 'search_canary',
+        metadata: { requestId: details.requestId, status: details.status }
+      });
+      lastFailureAlertAt = FieldValue.serverTimestamp();
+    } catch (error) {
+      console.error('[SearchCanary] Failure alert could not be sent:', error);
+    }
+  }
+
+  await stateRef.set({
+    status: details.status,
+    requestId: details.requestId,
+    latencyMs: details.latencyMs,
+    resultCount: details.resultCount,
+    errorCategory: details.errorCategory || null,
+    lastPassedAt: details.status === 'passed' ? FieldValue.serverTimestamp() : (current.lastPassedAt || null),
+    lastFailedAt: details.status === 'failed' ? FieldValue.serverTimestamp() : (current.lastFailedAt || null),
+    lastFailureAlertAt,
+    updatedAt: FieldValue.serverTimestamp()
+  }, { merge: true });
+}
+
+async function updateDeepHealthState(details: {
+  status: 'passed' | 'failed';
+  latencyMs: number;
+  checks: Record<string, string>;
+  errorCategory?: string | null;
+}) {
+  const stateRef = getDb().collection('deepHealthState').doc('current');
+  const currentSnapshot = await stateRef.get();
+  const current = currentSnapshot.data() || {};
+  const now = Date.now();
+  const lastAlertAt = current.lastFailureAlertAt;
+  const lastAlertMillis = typeof lastAlertAt?.toMillis === 'function' ? lastAlertAt.toMillis() : 0;
+  const shouldAlert = details.status === 'failed'
+    && (current.status !== 'failed' || now - lastAlertMillis >= MONITORING_ALERT_COOLDOWN_MS);
+
+  let lastFailureAlertAt = current.lastFailureAlertAt || null;
+  if (shouldAlert) {
+    try {
+      await sendTrackedEmail({
+        to: CONTACT_RECIPIENT,
+        subject: 'DinnerByDesign dependency health check failed',
+        html: `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <h2 style="margin: 0 0 20px; color: #111;">Dependency health check failed</h2>
+  <p>The protected daily readiness check found a production dependency or configuration problem.</p>
+  <p>Review the service health signals in the Admin Dashboard. No customer search allowance was used.</p>
+  <p style="color: #666; font-size: 13px;">Checks: ${escapeHtml(JSON.stringify(details.checks))} · Latency: ${details.latencyMs}ms · Category: ${escapeHtml(details.errorCategory || 'unknown')}</p>
+</div>
+        `.trim()
+      }, {
+        type: 'deep_health_failure',
+        source: 'deep_health_monitor',
+        metadata: { checks: details.checks, status: details.status }
+      });
+      lastFailureAlertAt = FieldValue.serverTimestamp();
+    } catch (error) {
+      console.error('[DeepHealth] Failure alert could not be sent:', error);
+    }
+  }
+
+  await stateRef.set({
+    status: details.status,
+    checks: details.checks,
+    latencyMs: details.latencyMs,
+    errorCategory: details.errorCategory || null,
+    lastPassedAt: details.status === 'passed' ? FieldValue.serverTimestamp() : (current.lastPassedAt || null),
+    lastFailedAt: details.status === 'failed' ? FieldValue.serverTimestamp() : (current.lastFailedAt || null),
+    lastFailureAlertAt,
+    updatedAt: FieldValue.serverTimestamp()
+  }, { merge: true });
+}
+
+async function maybeSendSearchDeliveryAlert(details: {
+  stage: string;
+  source: string;
+  deviceClass: string;
+}) {
+  if (!['failed', 'user_reported'].includes(details.stage)) return;
+
+  try {
+    const cutoff = Date.now() - 60 * 60 * 1000;
+    const snapshot = await getDb().collection('searchDeliveryEvents')
+      .orderBy('createdAt', 'desc')
+      .limit(200)
+      .get();
+    const recentEvents = snapshot.docs
+      .map((doc: any) => doc.data())
+      .filter((event: any) => {
+        const createdAt = event.createdAt;
+        const createdAtMillis = typeof createdAt?.toMillis === 'function' ? createdAt.toMillis() : 0;
+        return createdAtMillis >= cutoff;
+      });
+    const failures = recentEvents.filter((event: any) => event.stage === 'failed');
+    const reports = recentEvents.filter((event: any) => event.stage === 'user_reported');
+    const shouldAlert = failures.length >= 3 || reports.length >= 2;
+    if (!shouldAlert) return;
+
+    const stateRef = getDb().collection('searchDeliveryAlertState').doc('current');
+    const stateSnapshot = await stateRef.get();
+    const state = stateSnapshot.data() || {};
+    const lastAlertAt = state.lastAlertAt;
+    const lastAlertMillis = typeof lastAlertAt?.toMillis === 'function' ? lastAlertAt.toMillis() : 0;
+    if (Date.now() - lastAlertMillis < 24 * 60 * 60 * 1000) return;
+
+    await sendTrackedEmail({
+      to: CONTACT_RECIPIENT,
+      subject: 'DinnerByDesign search issues detected',
+      html: `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <h2 style="margin: 0 0 20px; color: #111;">Search issues detected</h2>
+  <p>The last hour contains repeated search failures or user reports.</p>
+  <p><strong>${failures.length}</strong> failed searches and <strong>${reports.length}</strong> user reports were recorded.</p>
+  <p>Most recent signal: ${escapeHtml(details.source)} on ${escapeHtml(details.deviceClass)}.</p>
+  <p>Review Search assurance in the Admin Dashboard. Search text and user details are not included.</p>
+</div>
+      `.trim()
+    }, {
+      type: 'search_delivery_alert',
+      source: 'search_telemetry',
+      metadata: {
+        failureCount: failures.length,
+        reportCount: reports.length,
+        source: details.source,
+        deviceClass: details.deviceClass
+      }
+    });
+
+    await stateRef.set({
+      lastAlertAt: FieldValue.serverTimestamp(),
+      failureCount: failures.length,
+      reportCount: reports.length,
+      updatedAt: FieldValue.serverTimestamp()
+    }, { merge: true });
+  } catch (error) {
+    console.error('[SearchTelemetry] Delivery alert evaluation failed:', error);
   }
 }
 
@@ -329,9 +684,75 @@ async function recordAiUsageEvent(details: Record<string, any>) {
       dateKey: now.toISOString().slice(0, 10),
       createdAt: FieldValue.serverTimestamp()
     });
+    if (details.status === 'failed') {
+      await maybeSendAiFailureAlert(String(details.errorCategory || details.failureStage || 'unknown'));
+    }
   } catch (logErr) {
     console.error("[Usage] Failed to record usage event:", logErr);
   }
+}
+
+async function maybeSendAiFailureAlert(failedCategory: string) {
+  try {
+    const cutoff = Date.now() - 60 * 60 * 1000;
+    const snapshot = await getDb().collection('aiUsageEvents')
+      .orderBy('createdAt', 'desc')
+      .limit(200)
+      .get();
+    const recentFailures = snapshot.docs
+      .map((doc: any) => doc.data())
+      .filter((event: any) => {
+        const createdAt = event.createdAt;
+        const createdAtMillis = typeof createdAt?.toMillis === 'function' ? createdAt.toMillis() : 0;
+        return event.status === 'failed' && createdAtMillis >= cutoff;
+      });
+    const criticalPattern = /auth|permission|quota|rate|limit|unauthori[sz]ed|forbidden|capacity/i;
+    const criticalFailure = criticalPattern.test(failedCategory)
+      || recentFailures.some((event: any) => criticalPattern.test(String(event.errorCategory || event.failureStage || '')));
+    if (!criticalFailure && recentFailures.length < 3) return;
+
+    const stateRef = getDb().collection('aiFailureAlertState').doc('current');
+    const state = (await stateRef.get()).data() || {};
+    const lastAlertMillis = typeof state.lastAlertAt?.toMillis === 'function' ? state.lastAlertAt.toMillis() : 0;
+    if (Date.now() - lastAlertMillis < MONITORING_ALERT_COOLDOWN_MS) return;
+
+    const categories = [...new Set(recentFailures.map((event: any) => String(event.errorCategory || event.failureStage || 'unknown')))].slice(0, 8);
+    await sendTrackedEmail({
+      to: CONTACT_RECIPIENT,
+      subject: 'DinnerByDesign AI service issue detected',
+      html: `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <h2 style="margin: 0 0 20px; color: #111;">AI service issue detected</h2>
+  <p>Recent AI request failures have crossed the monitoring threshold.</p>
+  <p><strong>${recentFailures.length}</strong> failed AI requests were recorded in the last hour.</p>
+  <p style="color: #666; font-size: 13px;">Categories: ${escapeHtml(categories.join(', ') || failedCategory)}</p>
+  <p>Review Service Health in the Admin Dashboard. Search text and account details are not included in this alert.</p>
+</div>
+      `.trim()
+    }, {
+      type: 'ai_service_alert',
+      source: 'monitoring',
+      metadata: { failureCount: recentFailures.length, categories }
+    });
+    await stateRef.set({
+      lastAlertAt: FieldValue.serverTimestamp(),
+      failureCount: recentFailures.length,
+      updatedAt: FieldValue.serverTimestamp()
+    }, { merge: true });
+  } catch (error) {
+    console.error('[AiMonitoring] Failure alert evaluation failed:', error);
+  }
+}
+
+function normaliseSearchRequestId(value: unknown): string | null {
+  const requestId = String(value || '').trim();
+  return /^[a-zA-Z0-9-]{8,80}$/.test(requestId) ? requestId : null;
+}
+
+function isAuthorisedCronRequest(req: express.Request) {
+  const cronSecret = String(process.env.CRON_SECRET || '').trim();
+  const authorization = req.get('authorization') || '';
+  return Boolean(cronSecret && authorization === `Bearer ${cronSecret}`);
 }
 
 // Safe path resolution for ESM/cjs
@@ -405,6 +826,150 @@ export function createApp() {
     });
   });
 
+  app.get("/api/health/deep", async (req, res) => {
+    if (!isAuthorisedCronRequest(req)) {
+      return res.status(process.env.CRON_SECRET ? 401 : 503).json({
+        ok: false,
+        error: process.env.CRON_SECRET ? "Unauthorised." : "Deep health monitoring is not configured."
+      });
+    }
+
+    const startedAt = Date.now();
+    const checks: Record<string, string> = {
+      firestore: 'not_checked',
+      gemini: process.env.GEMINI_API_KEY ? 'configured' : 'missing'
+    };
+    let errorCategory: string | null = null;
+
+    try {
+      await getDb().collection('monitoring').doc('readiness').get();
+      checks.firestore = 'ok';
+    } catch (error: any) {
+      checks.firestore = 'failed';
+      errorCategory = String(error?.code || error?.name || 'firestore_unavailable').slice(0, 80);
+      console.error('[DeepHealth] Firestore readiness check failed:', error);
+    }
+
+    const latencyMs = Date.now() - startedAt;
+    const healthy = checks.firestore === 'ok' && checks.gemini === 'configured';
+    try {
+      await updateDeepHealthState({
+        status: healthy ? 'passed' : 'failed',
+        latencyMs,
+        checks,
+        errorCategory: healthy ? null : (errorCategory || 'configuration_missing')
+      });
+    } catch (error) {
+      console.error('[DeepHealth] State update failed:', error);
+    }
+
+    return res.status(healthy ? 200 : 503).json({
+      ok: healthy,
+      status: healthy ? 'ok' : 'failed',
+      checks,
+      latencyMs
+    });
+  });
+
+  app.get("/api/monitor/search-canary", async (req, res) => {
+    if (!isAuthorisedCronRequest(req)) {
+      return res.status(process.env.CRON_SECRET ? 401 : 503).json({
+        ok: false,
+        error: process.env.CRON_SECRET ? "Unauthorised." : "Search canary monitoring is not configured."
+      });
+    }
+
+    const startedAt = Date.now();
+    const requestId = `canary-${Date.now()}`;
+    const searchParams: SearchParams = {
+      query: 'pasta',
+      source: 'cook',
+      count: 1,
+      telemetryRequestId: requestId
+    };
+
+    try {
+      const result = await generateDinnerSuggestions(searchParams);
+      const resultCount = (result?.recipes?.length || 0) + (result?.readyMeals?.length || 0);
+      const deliverable = isDeliverableSearchResult(result);
+      const latencyMs = Date.now() - startedAt;
+
+      await getDb().collection('searchCanaryEvents').add({
+        requestId,
+        status: deliverable ? 'passed' : 'failed',
+        source: 'cook',
+        resultCount,
+        latencyMs,
+        createdAt: FieldValue.serverTimestamp()
+      });
+      await updateSearchCanaryState({
+        status: deliverable ? 'passed' : 'failed',
+        requestId,
+        latencyMs,
+        resultCount,
+        errorCategory: deliverable ? null : 'undeliverable_response'
+      });
+      await recordAiUsageEvent({
+        requestId,
+        type: 'search_canary',
+        source: 'cook',
+        model: result?.diagnostics?.usage?.model || ACTIVE_GEMINI_MODEL,
+        status: deliverable ? 'succeeded' : 'failed',
+        failureStage: deliverable ? null : 'undeliverable_response',
+        queryLength: searchParams.query.length,
+        requestedCount: searchParams.count,
+        resultCount,
+        serverLatencyMs: latencyMs,
+        inputTokensEstimate: result?.diagnostics?.usage?.inputTokensEstimate || 0,
+        outputTokensEstimate: result?.diagnostics?.usage?.outputTokensEstimate || 0,
+        estimatedCostUsd: estimateGeminiCostUsd(
+          result?.diagnostics?.usage?.inputTokensEstimate || 0,
+          result?.diagnostics?.usage?.outputTokensEstimate || 0
+        )
+      });
+
+      if (!deliverable) {
+        return res.status(503).json({ ok: false, status: 'failed', latencyMs });
+      }
+
+      return res.json({ ok: true, status: 'passed', resultCount, latencyMs });
+    } catch (error: any) {
+      const latencyMs = Date.now() - startedAt;
+      await getDb().collection('searchCanaryEvents').add({
+        requestId,
+        status: 'failed',
+        source: 'cook',
+        resultCount: 0,
+        latencyMs,
+        errorCategory: String(error?.category || error?.name || 'unknown').slice(0, 80),
+        createdAt: FieldValue.serverTimestamp()
+      });
+      await updateSearchCanaryState({
+        status: 'failed',
+        requestId,
+        latencyMs,
+        resultCount: 0,
+        errorCategory: String(error?.category || error?.name || 'unknown').slice(0, 80)
+      });
+      await recordAiUsageEvent({
+        requestId,
+        type: 'search_canary',
+        source: 'cook',
+        model: ACTIVE_GEMINI_MODEL,
+        status: 'failed',
+        failureStage: 'request_error',
+        queryLength: searchParams.query.length,
+        requestedCount: searchParams.count,
+        resultCount: 0,
+        serverLatencyMs: latencyMs,
+        estimatedCostUsd: 0,
+        errorCategory: String(error?.category || error?.name || 'unknown').slice(0, 80)
+      });
+      console.error('[SearchCanary] Production canary failed:', error);
+      return res.status(503).json({ ok: false, status: 'failed', latencyMs });
+    }
+  });
+
   app.get("/api/admin/accounts/reconciliation", async (req, res) => {
     const admin = await verifyAdminRequest(req, res);
     if (!admin) return;
@@ -457,6 +1022,30 @@ export function createApp() {
         ok: false,
         error: "Account reconciliation is unavailable. Server-side Firebase administration must be configured.",
       });
+    }
+  });
+
+  app.post("/api/admin/monitoring/access", async (req, res) => {
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+
+    try {
+      const requestedPath = String(req.body?.path || '/admin').split('?')[0].slice(0, 120) || '/admin';
+      const deviceClass = ['mobile', 'tablet', 'desktop'].includes(req.body?.deviceClass)
+        ? req.body.deviceClass
+        : 'unknown';
+      await getDb().collection('adminAccessEvents').add({
+        event: 'dashboard_opened',
+        userId: admin.uid,
+        email: String(admin.email || '').toLowerCase() || null,
+        path: requestedPath,
+        deviceClass,
+        createdAt: FieldValue.serverTimestamp()
+      });
+      return res.status(204).send();
+    } catch (error) {
+      console.error('[AdminMonitoring] Failed to record administrator access:', error);
+      return res.status(500).json({ ok: false });
     }
   });
 
@@ -593,18 +1182,169 @@ export function createApp() {
     return stripe;
   };
 
+  app.post("/api/search-telemetry", async (req, res) => {
+    const authorization = req.get("authorization") || "";
+    const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+    if (!token) return res.status(401).json({ ok: false });
+
+    try {
+      const decoded = await getAdminAuth().verifyIdToken(token);
+      const requestId = normaliseSearchRequestId(req.body?.requestId);
+      const stage = String(req.body?.stage || '');
+      const source = req.body?.source === 'ready-made' ? 'ready-made' : req.body?.source === 'cook' ? 'cook' : null;
+      const allowedStages = new Set(['started', 'results_delivered', 'no_results_delivered', 'failed', 'cancelled', 'user_reported']);
+
+      if (!requestId || !allowedStages.has(stage) || !source) {
+        return res.status(400).json({ ok: false, error: "Invalid search telemetry event." });
+      }
+
+      const durationMs = Number.isFinite(Number(req.body?.durationMs))
+        ? Math.max(0, Math.min(300000, Number(req.body.durationMs)))
+        : null;
+      const resultCount = Number.isFinite(Number(req.body?.resultCount))
+        ? Math.max(0, Math.min(100, Number(req.body.resultCount)))
+        : null;
+      const viewportWidth = Number.isFinite(Number(req.body?.viewportWidth))
+        ? Math.max(0, Math.min(5000, Number(req.body.viewportWidth)))
+        : null;
+
+      await getDb().collection("searchDeliveryEvents").add({
+        requestId,
+        stage,
+        source,
+        durationMs,
+        resultCount,
+        errorCategory: String(req.body?.errorCategory || '').slice(0, 80) || null,
+        deviceClass: ['mobile', 'tablet', 'desktop'].includes(req.body?.deviceClass) ? req.body.deviceClass : 'unknown',
+        viewportWidth,
+        userId: decoded.uid,
+        isAnonymous: decoded.firebase?.sign_in_provider === 'anonymous',
+        createdAt: FieldValue.serverTimestamp()
+      });
+      await maybeSendSearchDeliveryAlert({
+        stage,
+        source,
+        deviceClass: ['mobile', 'tablet', 'desktop'].includes(req.body?.deviceClass) ? req.body.deviceClass : 'unknown'
+      });
+
+      return res.status(204).send();
+    } catch (error) {
+      console.error("[SearchTelemetry] Failed to record client event:", error);
+      return res.status(500).json({ ok: false });
+    }
+  });
+
+  app.post("/api/client-errors", async (req, res) => {
+    if (!hasClientErrorRateLimitCapacity(req)) {
+      return res.status(429).json({ ok: false });
+    }
+
+    const allowedKinds = new Set(['runtime', 'unhandled_rejection', 'boundary', 'dynamic_import', 'resource']);
+    const kind = String(req.body?.kind || '');
+    const message = sanitiseClientErrorText(req.body?.message, 2000);
+    if (!allowedKinds.has(kind) || !message) {
+      return res.status(400).json({ ok: false, error: 'Invalid client error event.' });
+    }
+
+    let userId: string | null = null;
+    let isAnonymous: boolean | null = null;
+    const authorization = req.get('authorization') || '';
+    const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    if (token) {
+      try {
+        const decoded = await getAdminAuth().verifyIdToken(token);
+        userId = decoded.uid;
+        isAnonymous = decoded.firebase?.sign_in_provider === 'anonymous';
+      } catch {
+        // Client diagnostics remain useful before authentication finishes.
+      }
+    }
+
+    try {
+      await getDb().collection('clientErrorEvents').add({
+        kind,
+        message,
+        stack: sanitiseClientErrorText(req.body?.stack, 3000) || null,
+        source: sanitiseClientErrorText(req.body?.source, 500) || null,
+        path: sanitiseClientErrorText(req.body?.path, 300) || '/',
+        deviceClass: ['mobile', 'tablet', 'desktop'].includes(req.body?.deviceClass) ? req.body.deviceClass : 'unknown',
+        viewportWidth: Number.isFinite(Number(req.body?.viewportWidth))
+          ? Math.max(0, Math.min(5000, Number(req.body.viewportWidth)))
+          : null,
+        userId,
+        isAnonymous,
+        createdAt: FieldValue.serverTimestamp()
+      });
+      return res.status(204).send();
+    } catch (error) {
+      console.error('[ClientErrors] Failed to record browser error:', error);
+      return res.status(500).json({ ok: false });
+    }
+  });
+
   app.post("/api/generate-suggestions", async (req, res) => {
     console.log(`[API] Received request for /api/generate-suggestions`);
+    const requestStartedAt = Date.now();
+    const requestId = normaliseSearchRequestId(req.body?.requestId || req.body?.searchParams?.telemetryRequestId);
     try {
+      const searchIdentity = await verifySearchIdentity(req, res);
+      if (!searchIdentity) return;
       const { searchParams, preferences } = req.body;
       if (!searchParams) {
         throw new Error("Missing searchParams in request body");
       }
       const result = await generateDinnerSuggestions(searchParams, preferences);
+      if (!isDeliverableSearchResult(result)) {
+        await recordAiUsageEvent({
+          requestId,
+          type: classifyAiRequest(searchParams),
+          source: searchParams.source || 'cook',
+          model: ACTIVE_GEMINI_MODEL,
+          status: 'failed',
+          failureStage: 'undeliverable_response',
+          queryLength: String(searchParams.query || '').length,
+          requestedCount: searchParams.count || 3,
+          resultCount: 0,
+          serverLatencyMs: Date.now() - requestStartedAt,
+          estimatedCostUsd: 0,
+          errorCategory: 'model'
+        });
+        return res.status(503).json({
+          ok: false,
+          error: {
+            code: "SEARCH_INVALID_RESPONSE",
+            message: "Search returned an incomplete response. Please try again.",
+            retryable: true,
+            status: 503,
+            category: "model"
+          }
+        });
+      }
+
+      if (searchIdentity.isAnonymous) {
+        const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
+        if (usageCommit === "limit") {
+          return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
+        }
+        if (usageCommit === "unavailable") {
+          return res.status(503).json({
+            ok: false,
+            error: {
+              code: "SEARCH_USAGE_UNAVAILABLE",
+              message: "Your search could not be completed. Please try again in a moment.",
+              retryable: true,
+              status: 503,
+              category: "network"
+            }
+          });
+        }
+      }
+
       const usage = result?.diagnostics?.usage || null;
       const inputTokens = usage?.inputTokensEstimate || estimateTokensFromChars((usage?.inputChars || 0) || String(searchParams.query || '').length);
       const outputTokens = usage?.outputTokensEstimate || estimateTokensFromChars(JSON.stringify(result || {}).length);
       await recordAiUsageEvent({
+        requestId,
         type: classifyAiRequest(searchParams),
         source: searchParams.source || 'cook',
         model: usage?.model || ACTIVE_GEMINI_MODEL,
@@ -614,6 +1354,7 @@ export function createApp() {
         resultCount: (result?.recipes?.length || 0) + (result?.readyMeals?.length || 0),
         latencyMs: result?.diagnostics?.timings?.geminiCall || null,
         totalRoundTripMs: result?.diagnostics?.timings?.totalRoundTrip || null,
+        serverLatencyMs: Date.now() - requestStartedAt,
         inputTokensEstimate: inputTokens,
         outputTokensEstimate: outputTokens,
         estimatedCostUsd: estimateGeminiCostUsd(inputTokens, outputTokens)
@@ -624,6 +1365,7 @@ export function createApp() {
       logApiError("generate-suggestions", error);
       const failedSearchParams = req.body?.searchParams || {};
       await recordAiUsageEvent({
+        requestId,
         type: classifyAiRequest(failedSearchParams),
         source: failedSearchParams.source || 'cook',
         model: ACTIVE_GEMINI_MODEL,
@@ -633,6 +1375,7 @@ export function createApp() {
         resultCount: 0,
         latencyMs: null,
         totalRoundTripMs: null,
+        serverLatencyMs: Date.now() - requestStartedAt,
         inputTokensEstimate: estimateTokensFromChars(String(failedSearchParams.query || '').length),
         outputTokensEstimate: 0,
         estimatedCostUsd: 0,
@@ -1285,6 +2028,60 @@ export function createApp() {
           name: error.name || "EMAIL_FAILURE"
         }
       });
+    }
+  });
+
+  app.post("/api/notify-new-account", async (req, res) => {
+    const authorization = req.get("authorization") || "";
+    const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+
+    if (!token) {
+      return res.status(401).json({ ok: false, error: "A signed-in account is required." });
+    }
+
+    try {
+      const decoded = await getAdminAuth().verifyIdToken(token);
+      if (decoded.firebase?.sign_in_provider === "anonymous") {
+        return res.status(403).json({ ok: false, error: "A registered account is required." });
+      }
+
+      const profileRef = getDb().collection("users").doc(decoded.uid);
+      const profileSnapshot = await profileRef.get();
+      if (!profileSnapshot.exists) {
+        return res.status(404).json({ ok: false, error: "The new account profile is not ready yet." });
+      }
+
+      const profile = profileSnapshot.data() || {};
+      if (profile.newAccountNotificationSentAt) {
+        return res.json({ ok: true, alreadySent: true });
+      }
+
+      const createdAt = new Date().toISOString();
+      const emailHtml = `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <h2 style="margin: 0 0 20px; color: #111;">New DinnerByDesign account</h2>
+  <p>A new registered account has been created.</p>
+  <p>Open the Admin Dashboard to review the account details.</p>
+  <p style="color: #666; font-size: 13px;">Created: ${escapeHtml(createdAt)}</p>
+</div>
+      `.trim();
+
+      await sendTrackedEmail({
+        to: CONTACT_RECIPIENT,
+        subject: "New DinnerByDesign account created",
+        html: emailHtml
+      }, {
+        type: "new_account_notification",
+        source: "auth_context",
+        userId: decoded.uid,
+        metadata: { event: "account_created" }
+      });
+
+      await profileRef.set({ newAccountNotificationSentAt: FieldValue.serverTimestamp() }, { merge: true });
+      return res.json({ ok: true, alreadySent: false });
+    } catch (error: any) {
+      console.error("[AccountNotification] Failed to notify owner of new account:", error);
+      return res.status(500).json({ ok: false, error: "The owner notification could not be sent." });
     }
   });
 

@@ -1,7 +1,8 @@
 import { SearchParams, UserPreferences, DinnerSource, Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { PREFERRED_SOURCES } from '../data/preferredSources';
 import { detectIngredientIntent } from './ingredientParser';
-import { queryExplicitlyRequestsOffal } from './offalPreference';
+import { dietaryRuleAllowsOffal, queryExplicitlyRequestsOffal } from './offalPreference';
+import { filterCookingFatsForDiet } from './preferenceCompatibility';
 
 /**
  * Builds search parameters by combining user input, active filters, and persistent preferences.
@@ -45,19 +46,21 @@ export const buildSearchParams = (
 
   // 2. Persistent Preferences (only if not a similarity search)
   if (!params.similarityContext) {
-    // An explicit offal search temporarily overrides the saved default exclusion.
-    if (queryExplicitlyRequestsOffal(query)) {
-      params.includeOffal = true;
-    } else if (overrides.includeOffal !== undefined) {
-      params.includeOffal = overrides.includeOffal;
-    } else {
-      params.includeOffal = preferences?.includeOffal === true;
-    }
-
-    // Dietary Rule
+    // Dietary rules take precedence over stale or explicit offal settings.
     const persistentDietRule = preferences?.dietaryRule || 'none';
     const temporaryDietRule = overrides.dietaryRule || 'none';
     const finalDietRule = temporaryDietRule !== 'none' ? temporaryDietRule : persistentDietRule;
+
+    // An explicit offal search temporarily overrides the saved default exclusion.
+    if (dietaryRuleAllowsOffal(finalDietRule) && queryExplicitlyRequestsOffal(query)) {
+      params.includeOffal = true;
+    } else if (dietaryRuleAllowsOffal(finalDietRule) && overrides.includeOffal !== undefined) {
+      params.includeOffal = overrides.includeOffal === true;
+    } else {
+      params.includeOffal = dietaryRuleAllowsOffal(finalDietRule) && preferences?.includeOffal === true;
+    }
+
+    // Dietary Rule
     if (finalDietRule !== 'none') params.dietaryRule = finalDietRule;
     else delete params.dietaryRule;
 
@@ -96,7 +99,7 @@ export const buildSearchParams = (
     // Cooking Fats
     const persistentFats = preferences?.cookingFats || [];
     const temporaryFats = overrides.cookingFats || [];
-    const mergedFats = [...new Set([...persistentFats, ...temporaryFats])];
+    const mergedFats = filterCookingFatsForDiet(finalDietRule, [...new Set([...persistentFats, ...temporaryFats])]);
     if (mergedFats.length > 0) params.cookingFats = mergedFats;
     else delete params.cookingFats;
 
@@ -161,13 +164,30 @@ export const buildSearchParams = (
     }
 
     // Cuisine
-    if (overrides.cuisines) {
-      params.cuisines = overrides.cuisines;
+    // An explicitly supplied array, including an empty array, is a temporary
+    // search override. Otherwise carry saved cuisine preferences into the
+    // request so non-hook callers use the same contract as the main search.
+    const hasCuisineOverride = Object.prototype.hasOwnProperty.call(overrides, 'cuisines');
+    if (hasCuisineOverride) {
+      if (overrides.cuisines && overrides.cuisines.length > 0) {
+        params.cuisines = overrides.cuisines;
+      } else {
+        delete params.cuisines;
+      }
     } else if (overrides.cuisine) {
       params.cuisine = overrides.cuisine;
-    } else if (preferences?.cuisinePreferences && !overrides.similarityContext) {
-      // Note: we don't usually map ALL favorite cuisines to a single search parameter 
-      // unless specifically requested.
+    } else if (preferences?.cuisinePreferences && preferences.cuisinePreferences.length > 0 && !overrides.similarityContext) {
+      params.cuisines = [...preferences.cuisinePreferences];
+    }
+
+    // Saved time preferences become explicit source-appropriate limits. An
+    // explicit temporary value, including an empty value from the UI, wins.
+    const hasCookTimeOverride = Object.prototype.hasOwnProperty.call(overrides, 'maxTotalTime');
+    const hasReadyMadeTimeOverride = Object.prototype.hasOwnProperty.call(overrides, 'maxHeatingTime');
+    const savedTime = preferences?.readyToEatUnderMins;
+    if (savedTime !== undefined && savedTime !== null) {
+      if (source === 'cook' && !hasCookTimeOverride) params.maxTotalTime = savedTime;
+      if (source === 'ready-made' && !hasReadyMadeTimeOverride) params.maxHeatingTime = savedTime;
     }
 
     // Low Cost
@@ -219,30 +239,32 @@ const queryConflictGroups = {
   fish: ['fish', 'salmon', 'tuna', 'cod', 'haddock', 'sardine', 'mackerel', 'trout', 'anchovy', 'prawn', 'shrimp', 'crab', 'lobster', 'mussel', 'clam', 'scallop', 'squid'],
   eggs: ['egg', 'eggs', 'omelette', 'frittata', 'quiche'],
   dairy: ['milk', 'cheese', 'cheddar', 'parmesan', 'mozzarella', 'butter', 'cream', 'yoghurt', 'yogurt'],
-  gluten: ['wheat', 'barley', 'rye', 'couscous', 'seitan'],
-  nuts: ['almond', 'almonds', 'walnut', 'walnuts', 'cashew', 'cashews', 'hazelnut', 'hazelnuts', 'pecan', 'pecans', 'pistachio', 'pistachios'],
+  gluten: ['wheat', 'barley', 'rye', 'spelt', 'flour', 'bread', 'breadcrumb', 'breadcrumbs', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats', 'malt', 'seitan'],
+  nuts: ['almond', 'almonds', 'walnut', 'walnuts', 'cashew', 'cashews', 'hazelnut', 'hazelnuts', 'pecan', 'pecans', 'pistachio', 'pistachios', 'brazil nut', 'brazil nuts', 'macadamia', 'macadamias', 'tree nut', 'tree nuts', 'mixed nut', 'mixed nuts'],
   peanuts: ['peanut', 'peanuts'],
-  soy: ['soy', 'soya', 'tofu', 'tempeh', 'edamame'],
+  soy: ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso', 'soy sauce', 'soya sauce', 'soy lecithin'],
   sesame: ['sesame', 'tahini'],
   mustard: ['mustard'],
   celery: ['celery'],
-  lupin: ['lupin']
+  lupin: ['lupin'],
+  sulphites: ['sulphite', 'sulfite', 'sulphur dioxide', 'sulfur dioxide']
 };
 
 const allergyTerms: Record<string, string[]> = {
   'Celery': queryConflictGroups.celery,
   'Cereals containing gluten': queryConflictGroups.gluten,
-  'Crustaceans': ['prawn', 'prawns', 'shrimp', 'crab', 'lobster'],
+  'Crustaceans': ['prawn', 'prawns', 'shrimp', 'crab', 'lobster', 'crayfish', 'langoustine', 'scampi'],
   'Eggs': queryConflictGroups.eggs,
   'Fish': queryConflictGroups.fish,
   'Lupin': queryConflictGroups.lupin,
   'Milk': queryConflictGroups.dairy,
-  'Molluscs': ['mussel', 'mussels', 'clam', 'clams', 'scallop', 'scallops', 'squid'],
+  'Molluscs': ['mussel', 'mussels', 'clam', 'clams', 'scallop', 'scallops', 'oyster', 'oysters', 'squid', 'octopus', 'snail', 'snails', 'whelk', 'whelks', 'cuttlefish'],
   'Mustard': queryConflictGroups.mustard,
   'Peanuts': queryConflictGroups.peanuts,
   'Sesame': queryConflictGroups.sesame,
   'Soybeans': queryConflictGroups.soy,
-  'Tree nuts': queryConflictGroups.nuts
+  'Tree nuts': queryConflictGroups.nuts,
+  'Sulphur dioxide and sulphites': queryConflictGroups.sulphites
 };
 
 export const detectPreferenceContradiction = (

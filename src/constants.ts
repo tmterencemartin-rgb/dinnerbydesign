@@ -6,22 +6,22 @@ export const DIETARY_EXCLUSION_MAP: Record<string, string[]> = {
   'Milk / Dairy': ['milk', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'ghee', 'cream cheese', 'crème fraîche'],
   'Milk/Dairy': ['milk', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'ghee', 'cream cheese', 'crème fraîche'],
   'Eggs': ['egg', 'mayonnaise', 'meringue', 'albumin', 'eggy'],
-  'Cereals containing gluten': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'bread', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats'],
-  'Gluten / Wheat': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'bread', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats'],
-  'Gluten/Wheat': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'bread', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats'],
+  'Cereals containing gluten': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'wheat flour', 'bread', 'breadcrumb', 'breadcrumbs', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats', 'malt', 'malt extract', 'seitan', 'wheat starch'],
+  'Gluten / Wheat': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'wheat flour', 'bread', 'breadcrumb', 'breadcrumbs', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats', 'malt', 'malt extract', 'seitan', 'wheat starch'],
+  'Gluten/Wheat': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'wheat flour', 'bread', 'breadcrumb', 'breadcrumbs', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats', 'malt', 'malt extract', 'seitan', 'wheat starch'],
   'Peanuts': ['peanut', 'groundnut', 'peanuts', 'groundnuts'],
-  'Tree nuts': ['almond', 'walnut', 'cashew', 'hazelnut', 'pecan', 'pistachio', 'brazil nut', 'macadamia', 'hazelnuts', 'walnuts', 'cashews', 'almonds', 'pecans', 'pistachios', 'brazil nuts', 'macadamias'],
-  'Tree Nuts': ['almond', 'walnut', 'cashew', 'hazelnut', 'pecan', 'pistachio', 'brazil nut', 'macadamia', 'hazelnuts', 'walnuts', 'cashews', 'almonds', 'pecans', 'pistachios', 'brazil nuts', 'macadamias'],
+  'Tree nuts': ['almond', 'walnut', 'cashew', 'hazelnut', 'pecan', 'pistachio', 'brazil nut', 'macadamia', 'hazelnuts', 'walnuts', 'cashews', 'almonds', 'pecans', 'pistachios', 'brazil nuts', 'macadamias', 'tree nut', 'tree nuts', 'mixed nut', 'mixed nuts', 'nut butter'],
+  'Tree Nuts': ['almond', 'walnut', 'cashew', 'hazelnut', 'pecan', 'pistachio', 'brazil nut', 'macadamia', 'hazelnuts', 'walnuts', 'cashews', 'almonds', 'pecans', 'pistachios', 'brazil nuts', 'macadamias', 'tree nut', 'tree nuts', 'mixed nut', 'mixed nuts', 'nut butter'],
   'Sesame': ['sesame', 'tahini', 'sesame oil', 'sesame seed', 'sesame seeds'],
-  'Soybeans': ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso', 'soy sauce', 'soya sauce', 'soybean', 'soybeans'],
-  'Soy': ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso', 'soy sauce', 'soya sauce', 'soybean', 'soybeans'],
+  'Soybeans': ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso', 'soy sauce', 'soya sauce', 'soybean', 'soybeans', 'soy protein', 'soya protein', 'soy lecithin'],
+  'Soy': ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso', 'soy sauce', 'soya sauce', 'soybean', 'soybeans', 'soy protein', 'soya protein', 'soy lecithin'],
   'Fish': ['fish', 'anchovy', 'salmon', 'cod', 'tuna', 'haddock', 'trout', 'bass', 'mackerel', 'sardine', 'halibut', 'anchovies'],
   'XFish': ['fish', 'anchovy', 'salmon', 'cod', 'tuna', 'haddock', 'trout', 'bass', 'mackerel', 'sardine', 'halibut', 'anchovies'],
-  'Crustaceans': ['shrimp', 'prawn', 'crab', 'lobster', 'crayfish', 'langoustine', 'krill'],
+  'Crustaceans': ['shrimp', 'prawn', 'crab', 'lobster', 'crayfish', 'langoustine', 'scampi', 'krill'],
   'Shellfish': ['shellfish', 'shrimp', 'prawn', 'crab', 'lobster', 'mussel', 'clam', 'scallop', 'oyster', 'squid', 'octopus', 'langoustine', 'mollusc', 'crustacean'],
   'Celery': ['celery', 'celeriac', 'celery seed', 'celery seeds'],
   'Lupin': ['lupin', 'lupine', 'lupin flour', 'lupin seed', 'lupin seeds'],
-  'Molluscs': ['mussel', 'clam', 'scallop', 'oyster', 'squid', 'octopus', 'snail', 'whelk', 'mollusc'],
+  'Molluscs': ['mussel', 'clam', 'scallop', 'oyster', 'squid', 'octopus', 'snail', 'whelk', 'cuttlefish', 'mollusc', 'molluscs'],
   'Mustard': ['mustard', 'mustard seed', 'dijon', 'senf', 'mustard seeds'],
   'Sulphur dioxide and sulphites': ['sulphite', 'sulfite', 'sulphur dioxide', 'sulfur dioxide', 'e220', 'preservative', 'sulphites', 'sulfites']
 };
@@ -54,7 +54,7 @@ export const UK_SUPERMARKETS = [
 export const DIETARY_TAXONOMY = {
   dietaryPreferences: {
     label: 'Dietary preference',
-    options: ['none', 'keto', 'paleo', 'pescatarian', 'vegan', 'vegetarian', 'gluten-free'] as DietaryRule[],
+    options: ['none', 'keto', 'paleo', 'pescatarian', 'vegan', 'vegetarian', 'gluten-free', 'mediterranean'] as DietaryRule[],
     labels: {
       'none': 'No preference',
       'keto': 'Keto',
@@ -62,7 +62,8 @@ export const DIETARY_TAXONOMY = {
       'pescatarian': 'Pescatarian',
       'vegan': 'Vegan',
       'vegetarian': 'Vegetarian',
-      'gluten-free': 'Gluten-free'
+      'gluten-free': 'Gluten-free',
+      'mediterranean': 'Mediterranean'
     } as Record<DietaryRule, string>
   },
   saladPreferences: {
@@ -103,8 +104,8 @@ export const DIETARY_TAXONOMY = {
   },
   religiousEthical: {
     label: 'Religious & ethical preference',
-    helperText: 'We try to exclude obviously unsuitable recipes, but cannot guarantee religious compliance or product certification.',
-    options: ['Fair Trade preference', 'Kosher-friendly', 'Halal-friendly']
+    helperText: 'We try to exclude obvious ingredient conflicts. Fair Trade is a preference where verified products are available; religious suitability and certification cannot be guaranteed.',
+    options: ['Prefer Fair Trade ingredients where available', 'Kosher-friendly', 'Prefer Halal-certified ingredients where available']
   },
   cookingMethods: {
     label: 'Cooking method',

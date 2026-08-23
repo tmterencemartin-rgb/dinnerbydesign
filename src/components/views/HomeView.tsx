@@ -248,6 +248,7 @@ interface HomeViewProps {
   isAppending: boolean;
   setView: (view: any, highlight?: string) => void;
   searchError?: string | null;
+  reportSearchProblem?: () => void;
   status?: 'idle' | 'searching' | 'partial' | 'complete' | 'noResults' | 'error';
   enriching?: boolean;
   searchStartTime?: number | null;
@@ -270,6 +271,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     updatePlanner,
     showToast,
     goToSignIn,
+    goToSignUp,
     user,
     profile,
     updateProfile,
@@ -324,6 +326,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     hasExhaustedSearch, isAppending,
     setView,
     searchError,
+    reportSearchProblem,
     status = 'idle',
     enriching = false,
     searchStartTime = null,
@@ -378,6 +381,31 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     () => activeCriteria.find(criterion => criterion.type === 'dietaryRule'),
     [activeCriteria]
   );
+
+  const renderStrictIngredientToggle = (className = '') => {
+    if (source !== 'cook' || !ingredientIntent?.isIngredientLed) return null;
+
+    return (
+      <label
+        className={`inline-flex h-7 shrink-0 cursor-pointer items-center gap-2 rounded border px-2 text-[9px] font-semibold transition-colors sm:h-11 sm:px-3 sm:text-[10px] ${
+          strictIngredientMatch
+            ? 'border-dbd-accent/50 bg-dbd-accent/5 text-dbd-accent'
+            : 'border-gray-200 bg-white text-gray-500 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900'
+        } ${isReadOnly || isGuestSearchLimitReached ? 'cursor-not-allowed opacity-60' : ''} ${className}`}
+        title="Restrict this search to the ingredients entered above"
+      >
+        <input
+          type="checkbox"
+          checked={strictIngredientMatch}
+          onChange={(event) => setStrictIngredientMatch(event.target.checked)}
+          disabled={isReadOnly || isGuestSearchLimitReached}
+          className="h-3.5 w-3.5 shrink-0 accent-dbd-accent"
+          aria-label="Only these ingredients"
+        />
+        <span className="whitespace-nowrap">Only these ingredients</span>
+      </label>
+    );
+  };
 
   // Stale Results logic for Batch Apply
   const [dirty, setDirty] = React.useState(false);
@@ -731,7 +759,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   </span>
                   <button
                     type="button"
-                    onClick={goToSignIn}
+                    onClick={isGuestSearchLimitReached ? goToSignUp : goToSignIn}
                     className={`shrink-0 rounded px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors ${
                       isGuestSearchLimitReached
                         ? 'bg-dbd-accent text-white hover:bg-dbd-accent-mid'
@@ -783,7 +811,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <button
                     type="button"
-                    onClick={() => setView('signin')}
+                    onClick={goToSignUp}
                     className="inline-flex min-h-10 w-full items-center justify-center rounded bg-dbd-accent px-5 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid sm:w-auto"
                   >
                     Create account
@@ -801,7 +829,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </section>
             ) : (
               <>
-            {/* Row 1: Segmented Controls */}
             <div className="flex items-center justify-center pb-1">
               <SearchHeader 
                 source={source}
@@ -816,8 +843,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               />
             </div>
 
-            {/* Row 2: Main Input Field and Preferences control on the side */}
-            <div className="flex flex-col gap-3 relative w-full">
+              <div className="flex flex-col gap-3 relative w-full">
               <div className="flex gap-2 items-center w-full">
                 <div className="flex-grow min-w-0">
                   <SearchInput 
@@ -875,6 +901,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   />
                 </div>
                 <div className="hidden sm:block">
+                  {renderStrictIngredientToggle()}
+                </div>
+                <div className="hidden sm:block">
                   <Tooltip text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
                     <button
                       type="button"
@@ -899,39 +928,28 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               </div>
 
-              <p className="px-1 text-[10px] leading-4 text-gray-400">
-                Search uses AI. Do not include private information. <a href="/privacy" className="font-semibold text-dbd-accent hover:underline">Privacy</a>
-              </p>
+              <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[9px] leading-4 text-gray-300">
+                <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <span>AI-powered search. Avoid private information.</span>
+                <a href="/privacy" className="font-semibold text-gray-400 hover:text-dbd-accent hover:underline">Privacy</a>
+                {renderStrictIngredientToggle('sm:hidden ml-auto h-7 px-2 text-[9px]')}
+              </div>
 
-              {source === 'cook' && (
-                <label className={`flex items-start gap-2.5 rounded border border-dbd-rule/60 bg-white px-3 py-2.5 text-left transition-colors ${ingredientIntent?.isIngredientLed ? 'cursor-pointer hover:border-dbd-ink-3/40' : 'cursor-not-allowed opacity-75'}`}>
-                  <input
-                    type="checkbox"
-                    checked={strictIngredientMatch}
-                    onChange={(event) => setStrictIngredientMatch(event.target.checked)}
-                    disabled={isReadOnly || isGuestSearchLimitReached || !ingredientIntent?.isIngredientLed}
-                    className="mt-0.5 h-4 w-4 shrink-0 accent-dbd-accent"
-                  />
-                  <span className="min-w-0">
-                    <span className="block text-[11.5px] font-semibold text-dbd-ink">Use only these ingredients (strict)</span>
-                    {hasIngredientNoResults && (
-                      <span
-                        className="mt-2 flex items-start gap-1.5 text-[10.5px] leading-4 text-dbd-accent"
-                        role="alert"
-                      >
-                        <Info className="mt-0.5 h-3 w-3 shrink-0" />
-                        <span>
-                          <span className="font-semibold">
-                            No recipes found using {strictIngredientMatch ? `only ${ingredientSummary}` : ingredientSummary}.
-                          </span>{' '}
-                          {strictIngredientMatch
-                            ? 'Add an ingredient or turn off strict search.'
-                            : 'Try adding another ingredient or broadening your search.'}
-                        </span>
-                      </span>
-                    )}
+              {hasIngredientNoResults && (
+                <div
+                  className="flex items-start gap-1.5 rounded border border-dbd-accent/20 bg-white px-3 py-2.5 text-[10.5px] leading-4 text-dbd-accent"
+                  role="alert"
+                >
+                  <Info className="mt-0.5 h-3 w-3 shrink-0" />
+                  <span>
+                    <span className="font-semibold">
+                      No recipes found using {strictIngredientMatch ? `only ${ingredientSummary}` : ingredientSummary}.
+                    </span>{' '}
+                    {strictIngredientMatch
+                      ? 'Add an ingredient or turn off strict search.'
+                      : 'Try adding another ingredient or broadening your search.'}
                   </span>
-                </label>
+                </div>
               )}
 
               {source === 'ready-made' && (
@@ -951,13 +969,16 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
+              </div>
+
               {!useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
                   {!hasDismissedSearchOnboarding && !isSearching && (
                     <SearchOnboardingHelper 
                       onSuggestionSelect={(suggestion) => {
+                        setShowFilters(false);
                         setInput(suggestion);
-                        searchInputRef.current?.focus();
+                        handleGenerate(suggestion);
                       }}
                       onDismiss={() => {
                         markSearchOnboardingDismissed();
@@ -993,7 +1014,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   ))}
                 </div>
               )}
-            </div>
               </>
             )}
           </div>
@@ -1243,6 +1263,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             >
               Try Search Again
             </button>
+            {reportSearchProblem && (
+              <button
+                type="button"
+                onClick={reportSearchProblem}
+                className="mt-3 text-[12px] font-semibold text-gray-500 underline underline-offset-2 hover:text-gray-800"
+              >
+                Report this search problem
+              </button>
+            )}
             
             {window.location.search.includes('debug=true') && (
               <details className="mt-8 text-[11px] text-gray-400 group text-center">
@@ -1466,7 +1495,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   <button 
                     onClick={() => handleLoadMore()}
                     disabled={isGenerating || isAppending}
-                    className="flex-1 min-w-0 px-2 py-2.5 sm:py-3 bg-white border border-gray-100 rounded text-[9px] sm:text-[10px] font-semibold text-accent uppercase tracking-[0.14em] sm:tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm cursor-pointer whitespace-nowrap"
+                    className="flex-1 min-w-0 px-2 py-2.5 bg-white border border-gray-100 rounded text-[9px] font-semibold text-accent uppercase tracking-[0.14em] hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
                   >
                     {(isGenerating || isAppending) && <Loader2 className="w-3 h-3 animate-spin" />}
                     {isGuestPreview ? 'More choices · uses 1 search' : 'More choices, please'}
@@ -1475,7 +1504,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <button 
                   onClick={handleCloseAndNewSearch}
                   disabled={isGenerating || isAppending}
-                  className="flex-1 min-w-0 px-2 py-2.5 sm:py-3 bg-white border border-gray-100 rounded text-[9px] sm:text-[10px] font-semibold text-gray-400 hover:text-gray-600 hover:border-gray-200 uppercase tracking-[0.14em] sm:tracking-widest hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm cursor-pointer whitespace-nowrap"
+                  className="flex-1 min-w-0 px-2 py-2.5 bg-white border border-gray-100 rounded text-[9px] font-semibold text-gray-400 hover:text-gray-600 hover:border-gray-200 uppercase tracking-[0.14em] hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
                 >
                   Close & New Search
                 </button>

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { collection, deleteDoc, deleteField, doc, getDocs, serverTimestamp, setDoc, Timestamp } from 'firebase/firestore';
+import { ChevronDown } from 'lucide-react';
 import { db } from '../../firebase';
 import { CatalogueUnit, RuntimeIngredientPriceCatalogueEntry } from '../../services/groceryService';
 
@@ -24,6 +25,7 @@ export const IngredientPriceCatalogueAdmin: React.FC = () => {
   const [draft, setDraft] = useState(emptyDraft);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const load = async () => {
     const snapshot = await getDocs(collection(db, 'ingredientPriceCatalogue'));
@@ -111,10 +113,24 @@ export const IngredientPriceCatalogueAdmin: React.FC = () => {
   };
 
   return <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5">
-    <div className="flex flex-wrap items-start justify-between gap-2">
-      <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Pricing data</p><h2 className="mt-1 text-base font-bold text-gray-950">Ingredient price catalogue</h2><p className="mt-1 text-xs text-gray-500">Only active, verified entries with a source and verification date affect customer estimates. Licensed-feed changes require approval.</p></div>
-      <div className="text-xs font-semibold text-gray-600">{entries.length} entries · {entries.filter(e => e.active).length} active · {reviewCount} to review · {staleCount} stale</div>
-    </div>
+    <button
+      type="button"
+      onClick={() => setIsOpen(previous => !previous)}
+      aria-expanded={isOpen}
+      aria-controls="pricing-data-panel"
+      className="flex w-full flex-wrap items-center justify-between gap-2 text-left"
+    >
+      <span>
+        <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Pricing data</span>
+        <span className="mt-1 block text-base font-bold text-gray-950">Ingredient price catalogue</span>
+        <span className="mt-1 block text-xs text-gray-500">Only active, verified entries with a source and verification date affect customer estimates. Licensed-feed changes require approval.</span>
+      </span>
+      <span className="flex shrink-0 items-center gap-2">
+        <span className="text-xs font-semibold text-gray-600">{entries.length} entries · {entries.filter(e => e.active).length} active · {reviewCount} to review · {staleCount} stale</span>
+        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </span>
+    </button>
+    {isOpen && <div id="pricing-data-panel">
     <form onSubmit={save} className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-6">
       <input required placeholder="Ingredient key" value={draft.ingredientKey} onChange={e => setDraft({...draft, ingredientKey:e.target.value})} className="rounded border p-2 text-xs" />
       <input required placeholder="Retail product" value={draft.productLabel} onChange={e => setDraft({...draft, productLabel:e.target.value})} className="col-span-2 rounded border p-2 text-xs" />
@@ -130,5 +146,6 @@ export const IngredientPriceCatalogueAdmin: React.FC = () => {
       <button disabled={busy} className="rounded bg-gray-950 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{editingId ? 'Update entry' : 'Add entry'}</button>
     </form>
     <div className="mt-3 overflow-x-auto"><table className="w-full text-left text-xs"><thead className="border-y text-gray-500"><tr><th className="p-2">Ingredient</th><th>Product and pack</th><th>Status</th><th>Verified</th><th></th></tr></thead><tbody>{entries.map(entry => <tr key={entry.id} className="border-b"><td className="p-2 font-semibold">{entry.ingredientKey}</td><td>{entry.productLabel} · £{entry.packPrice.toFixed(2)} / {entry.packQuantity}{entry.packUnit}<div className="text-gray-400">{entry.retailer}</div>{entry.pendingPriceRefresh && <div className="mt-1 rounded bg-amber-50 px-2 py-1 text-amber-800">Proposed: {entry.pendingPriceRefresh.productLabel} · £{entry.pendingPriceRefresh.packPrice.toFixed(2)} / {entry.pendingPriceRefresh.packQuantity}{entry.pendingPriceRefresh.packUnit}</div>}</td><td>{entry.verificationStatus}{entry.active ? ' · active' : ''}{entry.refreshStatus === 'review' ? ' · review update' : ''}</td><td>{entry.verifiedAt?.slice(0,10) || 'Not verified'}</td><td className="whitespace-nowrap text-right">{entry.pendingPriceRefresh && <><button disabled={busy} type="button" onClick={()=>void approveRefresh(entry)} className="p-2 font-semibold text-emerald-700 disabled:opacity-50">Approve</button><button disabled={busy} type="button" onClick={()=>void rejectRefresh(entry)} className="p-2 font-semibold text-amber-700 disabled:opacity-50">Reject</button></>}<button type="button" onClick={()=>edit(entry)} className="p-2 font-semibold">Edit</button><button type="button" onClick={async()=>{if(window.confirm(`Delete ${entry.ingredientKey}?`)){await deleteDoc(doc(db,'ingredientPriceCatalogue',entry.id)); await load();}}} className="p-2 font-semibold text-red-600">Delete</button></td></tr>)}</tbody></table></div>
+    </div>}
   </section>;
 };

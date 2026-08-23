@@ -1,5 +1,32 @@
 import { Recipe, SavedRecipe, ReadyMeal, DietaryRule, SaladPreference } from '../types';
-import { itemContainsOffal } from './offalPreference';
+import { DIETARY_EXCLUSION_MAP } from '../constants';
+import { dietaryRuleAllowsOffal, itemContainsOffal } from './offalPreference';
+
+const KETO_EXCLUSIONS = [
+  'sugar', 'honey', 'syrup', 'flour', 'bread', 'pasta', 'rice', 'noodle', 'couscous', 'bulgur',
+  'quinoa', 'oat', 'barley', 'wheat', 'potato', 'sweet potato', 'corn', 'maize', 'bean',
+  'lentil', 'chickpea', 'pea', 'batter', 'breadcrumb', 'cereal', 'pastry', 'wrap', 'tortilla', 'pizza'
+];
+
+const PALEO_EXCLUSIONS = [
+  'sugar', 'syrup', 'flour', 'bread', 'pasta', 'rice', 'noodle', 'couscous', 'bulgur', 'quinoa',
+  'oat', 'barley', 'wheat', 'corn', 'maize', 'bean', 'lentil', 'chickpea', 'pea', 'peanut',
+  'soy', 'soya', 'tofu', 'tempeh', 'edamame', 'milk', 'cheese', 'butter', 'ghee', 'cream', 'yogurt', 'yoghurt', 'vegetable oil'
+];
+
+const RELIGIOUS_EXCLUSION_MAP: Record<string, string[]> = {
+  'Prefer Halal-certified ingredients where available': ['pork', 'bacon', 'ham', 'gammon', 'lard', 'gelatine', 'gelatin', 'alcohol', 'wine', 'beer', 'rum', 'brandy'],
+  'Halal-friendly': ['pork', 'bacon', 'ham', 'gammon', 'lard', 'gelatine', 'gelatin', 'alcohol', 'wine', 'beer', 'rum', 'brandy'],
+  'Kosher-friendly': ['pork', 'bacon', 'ham', 'gammon', 'lard', 'shellfish', 'prawn', 'shrimp', 'crab', 'lobster', 'mussel', 'clam', 'scallop', 'oyster', 'squid', 'octopus'],
+  'Prefer Fair Trade ingredients where available': [],
+  'Fair Trade preference': [],
+  'Fair Trade only': []
+};
+
+const preferenceTerms = (label: string, map: Record<string, string[]>) => {
+  const mapped = Object.entries(map).find(([key]) => key.toLowerCase() === label.trim().toLowerCase())?.[1] || [];
+  return [label, ...mapped];
+};
 
 /**
  * DETERMINISTIC DIETARY SAFETY GATE
@@ -84,6 +111,12 @@ export function passesDietaryRule(recipe: Recipe | SavedRecipe | ReadyMeal, rule
       const GLUTEN_SOURCES = ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'bread', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats'];
       return !match(GLUTEN_SOURCES);
 
+    case 'keto':
+      return !match(KETO_EXCLUSIONS);
+
+    case 'paleo':
+      return !match(PALEO_EXCLUSIONS);
+
     default:
       return true;
   }
@@ -148,8 +181,9 @@ export function passesHardConstraints(
   // 1. Dietary Rule
   if (!passesDietaryRule(recipe, preferences.dietaryRule)) return false;
 
-  // Offal is excluded from ordinary suggestions unless the saved preference or an explicit search allows it.
-  if (preferences.includeOffal !== true && itemContainsOffal(recipe)) return false;
+  // Offal is incompatible with vegetarian, vegan and pescatarian diets even
+  // when an old profile or explicit search carries includeOffal=true.
+  if (itemContainsOffal(recipe) && (!dietaryRuleAllowsOffal(preferences.dietaryRule) || preferences.includeOffal !== true)) return false;
 
   // 3. Salad Preference (HARD)
   const saladPreference = preferences.saladPreference || 'all';
@@ -194,9 +228,9 @@ export function passesHardConstraints(
   // 5. Combine all keyword-based hard constraints
   // All these must be ABSOLUTELY excluded if present
   const forbiddenKeywords = [
-    ...(preferences.allergies || []),
+    ...(preferences.allergies || []).flatMap(allergy => preferenceTerms(allergy, DIETARY_EXCLUSION_MAP)),
     ...(preferences.exclusions || []),
-    ...(preferences.religiousEthical || []),
+    ...(preferences.religiousEthical || []).flatMap(preference => preferenceTerms(preference, RELIGIOUS_EXCLUSION_MAP)),
     ...(preferences.excludeIngredients || [])
   ].filter(Boolean);
 

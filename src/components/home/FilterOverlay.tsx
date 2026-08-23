@@ -6,6 +6,8 @@ import { Tooltip } from '../ui/Tooltip';
 import { DIETARY_TAXONOMY } from '../../constants';
 import { useAuth } from '../../contexts/AuthContext';
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
+import { dietaryRuleAllowsOffal } from '../../lib/offalPreference';
+import { filterCookingFatsForDiet } from '../../lib/preferenceCompatibility';
 
 interface FilterOverlayProps {
   onClose: () => void;
@@ -108,7 +110,9 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
   const [localNutritiousChoice, setLocalNutritiousChoice] = React.useState(nutritiousChoice);
   const [localHighOmega3, setLocalHighOmega3] = React.useState(highOmega3);
   const [localHighProtein, setLocalHighProtein] = React.useState(highProtein);
-  const [localIncludeOffal, setLocalIncludeOffal] = React.useState(includeOffal);
+  const [localIncludeOffal, setLocalIncludeOffal] = React.useState(
+    dietaryRuleAllowsOffal(dietaryRule) && includeOffal
+  );
   const [localIsSimple, setLocalIsSimple] = React.useState(isSimple);
   const [localIsLowCost, setLocalIsLowCost] = React.useState(isLowCost);
   const [localSupermarkets, setLocalSupermarkets] = React.useState<string[]>(supermarkets);
@@ -119,8 +123,16 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
   const [localOmitIngredients, setLocalOmitIngredients] = React.useState<string[]>(omitIngredients);
   const [localAllergies, setLocalAllergies] = React.useState<string[]>(allergies);
   const [localReligiousEthical, setLocalReligiousEthical] = React.useState<string[]>(religiousEthical);
-  const [localCookingFats, setLocalCookingFats] = React.useState<string[]>(cookingFats);
+  const [localCookingFats, setLocalCookingFats] = React.useState<string[]>(
+    filterCookingFatsForDiet(dietaryRule, cookingFats)
+  );
   const [localPreferredSourceIds, setLocalPreferredSourceIds] = React.useState<string[]>(preferredSourceIds);
+
+  const localOffalAllowed = dietaryRuleAllowsOffal(localDietaryRule);
+
+  React.useEffect(() => {
+    if (!localOffalAllowed && localIncludeOffal) setLocalIncludeOffal(false);
+  }, [localOffalAllowed, localIncludeOffal]);
 
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
     dietary: true,
@@ -308,7 +320,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </button>
           </div>
           <div className="text-[12.5px] mt-2 text-gray-500 leading-relaxed font-medium">
-            Customise this search, or save your choices as the default.
+            Set your preferences once. Every search uses them — diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources, preferred supermarkets. Nothing gets retyped. A search that knows you're cooking for one and avoiding nuts won't ask twice. Revise any time. Override for a single search.
           </div>
           <div className="mt-3 flex items-center justify-between gap-3">
             <span className="text-[11px] font-semibold text-gray-400">
@@ -392,7 +404,12 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     <div className="relative mt-1">
                       <select 
                         value={localDietaryRule}
-                        onChange={(e) => setLocalDietaryRule(e.target.value as any)}
+                        onChange={(e) => {
+                          const nextDietaryRule = e.target.value as any;
+                          setLocalDietaryRule(nextDietaryRule);
+                          if (!dietaryRuleAllowsOffal(nextDietaryRule)) setLocalIncludeOffal(false);
+                          setLocalCookingFats(currentFats => filterCookingFatsForDiet(nextDietaryRule, currentFats));
+                        }}
                         className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         {DIETARY_TAXONOMY.dietaryPreferences.options.map(opt => (
@@ -421,18 +438,20 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   </div>
 
                   {/* Safety Note */}
-                  <label className="flex cursor-pointer items-start justify-between gap-4 rounded border border-gray-200 bg-gray-50/70 p-3">
-                    <span className="min-w-0">
-                      <span className="block text-[12px] font-bold text-gray-800">Include offal in suggestions</span>
-                      <span className="mt-1 block text-[10.5px] leading-relaxed text-gray-500">Allows liver, kidney, heart and other offal to appear in ordinary searches and weekly plans.</span>
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={localIncludeOffal}
-                      onChange={(event) => setLocalIncludeOffal(event.target.checked)}
-                      className="mt-0.5 h-4 w-4 shrink-0 accent-dbd-accent"
-                    />
-                  </label>
+                  {localOffalAllowed && (
+                    <label className="flex cursor-pointer items-start justify-between gap-4 rounded border border-gray-200 bg-gray-50/70 p-3">
+                      <span className="min-w-0">
+                        <span className="block text-[12px] font-bold text-gray-800">Include offal in suggestions</span>
+                        <span className="mt-1 block text-[10.5px] leading-relaxed text-gray-500">Allows liver, kidney, heart and other offal to appear in ordinary searches and weekly plans.</span>
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={localIncludeOffal}
+                        onChange={(event) => setLocalIncludeOffal(event.target.checked)}
+                        className="mt-0.5 h-4 w-4 shrink-0 accent-dbd-accent"
+                      />
+                    </label>
+                  )}
 
                   {/* Safety Note */}
                   <div className="bg-amber-50/40 border-l-2 border-amber-400 px-3 py-2.5 rounded-sm flex items-start gap-2.5">
@@ -514,15 +533,16 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     )}
                   </div>
 
-                  {/* Excluded Ingredients */}
+                  {/* Other Ingredients to Avoid */}
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Exclude ingredients for this search</label>
+                    <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Other ingredients to avoid</label>
+                    <p className="text-[10.5px] leading-relaxed text-gray-400 pl-0.5">Use this for allergies or intolerances not listed above, or ingredients you simply do not want.</p>
                     <div className="space-y-2">
                       <div className="flex gap-2">
                         <input 
                           ref={excludeInputRef}
                           type="text"
-                          placeholder="e.g. Coriander, Mushrooms"
+                          placeholder="e.g. mushrooms, coriander, malt"
                           className="flex-1 h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
@@ -912,7 +932,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         <option value="">Any cooking fat</option>
-                        {DIETARY_TAXONOMY.cookingFats.options.map(opt => (
+                        {filterCookingFatsForDiet(localDietaryRule, DIETARY_TAXONOMY.cookingFats.options).map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>

@@ -144,6 +144,7 @@ interface AuthContextType {
   view: AppView;
   setView: (view: AppView, highlight?: string | null) => void;
   goToSignIn: () => void;
+  goToSignUp: () => void;
   highlight: string | null;
   clearHighlight: () => void;
   addToSearchHistory: (query: string, mode: DinnerSource) => Promise<void>;
@@ -399,13 +400,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setViewNavigationTick(tick => tick + 1);
   };
 
+  const goToSignUp = () => {
+    safeStorage.setItem('dbd_has_started', 'true');
+    setHighlightInternal(null);
+    window.dispatchEvent(new CustomEvent('dbd-sign-in-requested'));
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/signin?mode=signup');
+    }
+    setLocation('/signin?mode=signup');
+    setViewNavigationTick(tick => tick + 1);
+  };
+
   const clearHighlight = () => setHighlightInternal(null);
   const planner = React.useMemo(() => savedRecipes.filter(r => !r.isArchived && !!r.scheduledDate), [savedRecipes]);
 
   const healingRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    if (!isAuthReady || !user || planner.length === 0 || accessStatus === 'read_only') return;
+    if (!isAuthReady || !user || user.isAnonymous || planner.length === 0 || accessStatus === 'read_only') return;
     
     // Auto-heal legacy thin recipes in the planner
     const thinRecipes = planner.filter(r => 
@@ -441,7 +453,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [planner, isAuthReady, user, accessStatus]);
 
   const shoppingList = React.useMemo(() => {
-    if (!user) return [];
+    if (!user || user.isAnonymous) return [];
     
     const derived = buildShoppingListData({
       planner,
@@ -455,7 +467,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [planner, pantry, dbShoppingList, user, persistentPantryItems]);
 
   useEffect(() => {
-    if (!user || !isAuthReady || loading || accessStatus === 'read_only') return;
+    if (!user || user.isAnonymous || !isAuthReady || loading || accessStatus === 'read_only') return;
     
     const syncList = async () => {
       try {
@@ -692,6 +704,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (firebaseUser) {
         // Ensure state reflects the new user immediately
         setUser(firebaseUser);
+
+        // Anonymous Firebase identities exist only to support protected guest
+        // search requests. They are not app accounts and must not trigger a
+        // normal profile read/write, which would surface an access error for a
+        // visitor who has not signed in.
+        if (firebaseUser.isAnonymous) {
+          addLog('AUTH: Anonymous guest identity detected; skipping app profile initialisation.');
+          setProfile(null);
+          setSavedRecipes([]);
+          setDbShoppingList([]);
+          setPantry([]);
+          setLoading(false);
+          setIsAuthReady(true);
+          isAuthReadyProcessed.current = true;
+          cleanup();
+          return;
+        }
         
         const userDocRef = doc(db, 'users', firebaseUser.uid);
         
@@ -864,7 +893,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user, isAuthReady]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || user.isAnonymous) {
       clearRuntimeIngredientPriceCatalogue();
       return;
     }
@@ -1760,6 +1789,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: serverTimestamp()
       });
 
+      // Notify the owner in the background. Signup should still complete if the
+      // notification provider is temporarily unavailable.
+      void (async () => {
+        try {
+          const idToken = await credential.user.getIdToken();
+          const response = await fetch(getApiUrl('/api/notify-new-account'), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${idToken}`
+            }
+          });
+          if (!response.ok) {
+            addLog(`AUTH WARNING: New-account notification returned HTTP ${response.status}`);
+            return;
+          }
+          addLog('AUTH: New-account notification sent to the owner.');
+        } catch (notificationError) {
+          addLog(`AUTH WARNING: New-account notification failed: ${notificationError}`);
+        }
+      })();
+
       setUser(credential.user);
       setProfile(initialProfile);
       
@@ -1925,7 +1976,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast, showToast, setToast, handlePrintRecipe,  
       accessStatus, trialDaysLeft, trialTimeRemaining, isAdmin,
       signInWithGoogle, signOut,
-      signUpWithEmail, signInWithEmail, sendPasswordReset, reauthenticateUser, updateUserPassword, view, setView, goToSignIn, highlight, clearHighlight, addToSearchHistory,
+      signUpWithEmail, signInWithEmail, sendPasswordReset, reauthenticateUser, updateUserPassword, view, setView, goToSignIn, goToSignUp, highlight, clearHighlight, addToSearchHistory,
       unitSystem, setUnitSystem
     }}>
       {children}

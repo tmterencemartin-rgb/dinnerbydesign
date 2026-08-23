@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Footer } from './Footer';
 import { Tooltip } from './ui/Tooltip';
 import { safeStorage } from '../lib/storage';
+import { Wordmark } from './Wordmark';
 
 const LOGO_EASE: [number, number, number, number] = [0.215, 0.61, 0.355, 1];
 
@@ -67,10 +68,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
   return (
     <div className="native-scroll-root min-h-screen overflow-x-hidden border border-dbd-rule/10 bg-gray-50 text-dbd-ink flex flex-col transition-colors duration-250 pb-[env(safe-area-inset-bottom)]">
       {/* Navigation */}
-      <nav className="app-header border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1rem+env(safe-area-inset-top))] sm:pt-[calc(1.125rem+env(safe-area-inset-top))] pb-0 transition-colors duration-250">
-        <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
+      <nav className="app-header border-b border-dbd-rule/50 sticky top-0 z-50 bg-dbd-surface pt-[calc(1rem+env(safe-area-inset-top))] pb-0 transition-colors duration-250">
+        <div className="w-full max-w-6xl mx-auto px-6">
           {/* Row 1: Brand & Utilities */}
-          <div className="flex min-h-[62px] justify-between items-center mb-3 sm:min-h-[78px]">
+          <div className="flex min-h-[62px] justify-between items-center mb-3">
             <button 
               className="flex shrink-0 items-center cursor-pointer group focus:outline-none" 
               onClick={() => {
@@ -79,17 +80,17 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
               aria-label="Logo - Back to landing page"
             >
               <div className="flex min-w-0 flex-col items-center text-center">
-                <motion.img
+                <motion.div
                   initial="hidden"
                   animate="visible"
                   variants={logoVariants}
                   whileHover={{ scale: 1.035, rotate: -0.3 }}
                   transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-                  src="/dbd-logo-with-pin.png"
-                  alt="DinnerByDesign"
-                  className="app-header-logo h-[33.3px] w-auto max-w-[200.7px] origin-left object-contain mix-blend-multiply sm:h-[41.4px] sm:max-w-[250.2px]"
-                />
-                <span className="mt-1 block w-full whitespace-nowrap text-center text-[7.5px] font-medium tracking-[0.035em] text-dbd-ink-3 opacity-80 sm:text-[9px] sm:tracking-[0.05em]">Less searching. More relevant dinners.</span>
+                  className="origin-left"
+                >
+                  <Wordmark className="text-[29.33px]" />
+                </motion.div>
+                <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-center text-[7.5px] font-medium tracking-[0.035em] text-dbd-ink-3 opacity-80">Less searching. More relevant dinners.</span>
               </div>
             </button>
             

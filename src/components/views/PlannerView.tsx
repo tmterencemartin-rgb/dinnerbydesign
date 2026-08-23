@@ -66,6 +66,7 @@ const PLAN_PROTEIN_VALUES_BY_DIETARY_RULE: Record<DietaryRule, string[]> = {
   keto: PLAN_PROTEIN_OPTIONS.map(option => option.value),
   paleo: PLAN_PROTEIN_OPTIONS.map(option => option.value),
   'gluten-free': PLAN_PROTEIN_OPTIONS.map(option => option.value),
+  mediterranean: PLAN_PROTEIN_OPTIONS.map(option => option.value),
   pescatarian: ['eggs', 'seafood', 'pescatarian', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
   vegetarian: ['eggs', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
   vegan: ['pulses', 'plant-based', 'vegan'],

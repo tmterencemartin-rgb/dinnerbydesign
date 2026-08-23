@@ -5,7 +5,7 @@ export type AppView = 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-me
 export type DinnerSource = 'cook' | 'ready-made';
 export type SaladPreference = 'all' | 'main-only' | 'side-only' | 'none';
 export type SaladType = 'main' | 'side' | 'none';
-export type DietaryRule = 'none' | 'keto' | 'paleo' | 'pescatarian' | 'vegan' | 'vegetarian' | 'gluten-free';
+export type DietaryRule = 'none' | 'keto' | 'paleo' | 'pescatarian' | 'vegan' | 'vegetarian' | 'gluten-free' | 'mediterranean';
 
 export enum OperationType {
   CREATE = 'create',
@@ -214,6 +214,7 @@ export interface UserProfile {
 export interface SearchParams {
   query: string;
   source: DinnerSource;
+  telemetryRequestId?: string;
   cuisines?: string[];
   /** @deprecated Use cuisines (array) instead */
   cuisine?: string; // legacy support
@@ -253,6 +254,7 @@ export interface SearchParams {
     preparationPreferences?: {
       skin?: 'on' | 'off';
       bone?: 'in' | 'out';
+      fishForm?: 'filleted' | 'whole' | 'steak';
     };
   };
   nutritiousChoice?: boolean;

@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { safeStorage } from '../lib/storage';
 
 import { AuthForm } from './AuthForm';
+import { Wordmark } from './Wordmark';
 
 export const AuthLoading: React.FC = () => (
   <div className="min-h-screen flex items-center justify-center bg-white p-4">
@@ -26,11 +27,7 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center">
       <div className="w-full max-w-sm">
-        <img
-          src="/dbd-logo-with-pin.png"
-          alt="DinnerByDesign"
-          className="h-[44.1px] w-auto max-w-[267.3px] object-contain mix-blend-multiply mx-auto mb-6"
-        />
+        <Wordmark className="mx-auto mb-6 text-[29.33px]" />
         <h1 className="text-[20px] font-bold text-gray-900 tracking-tight mb-3">Authentication Error</h1>
         <p className="text-[14px] text-gray-600 mb-8 leading-relaxed">
           {isOperationNotAllowed 
@@ -90,19 +87,15 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
     <div className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-sm border border-gray-100 p-5 sm:p-6 rounded-xl shadow-sm">
         <div className="text-center mb-4">
-          <img
-            src="/dbd-logo-with-pin.png"
-            alt="DinnerByDesign"
-            className="h-[44.1px] w-auto max-w-[267.3px] object-contain mix-blend-multiply mx-auto mb-2"
-          />
+          <Wordmark className="mx-auto mb-2 text-[29.33px]" />
           <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mb-4">Less searching. More relevant dinners.</p>
           
           <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">
-            {isSignUp ? 'Start your 7-day trial.' : 'Sign in to your account'}
+            {isSignUp ? 'Start your free 7-day trial.' : 'Sign in to your account'}
           </h1>
           <p className="text-[13px] text-gray-500 mt-1.5 leading-snug">
             {isSignUp 
-              ? 'No credit card details required.' 
+              ? 'No card details required.'
               : 'Pick up your saved recipes, planner and shopping list.'}
           </p>
         </div>

@@ -530,6 +530,14 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   ...ADDITIONAL_COMPOUND_INGREDIENT_PHRASES
 ]);
 
+// A single ingredient should still be treated as ingredient-led unless it is
+// commonly used as a broad dish search. This keeps queries such as
+// "mackerel" tied to the named ingredient without turning "pasta" or
+// "chilli" into unnecessarily narrow searches.
+const AMBIGUOUS_STANDALONE_DISH_TERMS = new Set([
+  'chilli', 'pasta', 'rice', 'noodle', 'steak'
+]);
+
 const COMPOUND_INGREDIENT_MODIFIERS = new Set([
   'juice', 'fillet', 'fillets', 'steak', 'steaks', 'breast', 'thigh', 'wing', 'leg',
   'chop', 'chops', 'mince', 'minced', 'sausage', 'sausages', 'tenderloin', 'tender', 'strip',
@@ -545,6 +553,7 @@ const COMPOUND_INGREDIENT_MODIFIERS = new Set([
 export type IngredientPreparationPreferences = {
   skin?: 'on' | 'off';
   bone?: 'in' | 'out';
+  fishForm?: 'filleted' | 'whole' | 'steak';
 };
 
 export const extractIngredientPreparationPreferences = (query: string): {
@@ -557,17 +566,28 @@ export const extractIngredientPreparationPreferences = (query: string): {
   const skinOff = /\bskinless\b|\bwithout(?:\s+the)?\s+skin\b|\bno\s+skin\b/gi;
   const boneIn = /\bbone[-\s]+in\b|\bwith(?:\s+the)?\s+bones?\b|\bon\s+the\s+bone\b/gi;
   const boneOut = /\bboneless\b|\bwithout(?:\s+the)?\s+bones?\b|\bno\s+bones?\b/gi;
+  const hasFishContext = /\b(?:fish|salmon|cod|haddock|mackerel|trout|tuna|sardine|herring|pollock|plaice|hake|monkfish|bass|anchovy)\b/i.test(source);
+  const fishFilleted = hasFishContext ? /\bfilleted\b/gi : /$^/g;
+  const fishFilletNoun = hasFishContext ? /\bfillet(?:s)?\b/gi : /$^/g;
+  const fishWhole = hasFishContext ? /\bwhole\b/gi : /$^/g;
+  const fishSteak = hasFishContext ? /\bsteaks?\b/gi : /$^/g;
 
   if (source.match(skinOn)) preferences.skin = 'on';
   if (source.match(skinOff)) preferences.skin = 'off';
   if (source.match(boneIn)) preferences.bone = 'in';
   if (source.match(boneOut)) preferences.bone = 'out';
+  if (source.match(fishFilleted) || source.match(fishFilletNoun)) preferences.fishForm = 'filleted';
+  if (source.match(fishWhole)) preferences.fishForm = 'whole';
+  if (source.match(fishSteak)) preferences.fishForm = 'steak';
 
   const cleanedQuery = source
     .replace(skinOn, ' ')
     .replace(skinOff, ' ')
     .replace(boneIn, ' ')
     .replace(boneOut, ' ')
+    .replace(fishFilleted, ' ')
+    .replace(fishWhole, ' ')
+    .replace(fishSteak, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -575,7 +595,7 @@ export const extractIngredientPreparationPreferences = (query: string): {
 };
 
 const hasPreparationPreferences = (preferences: IngredientPreparationPreferences) =>
-  Boolean(preferences.skin || preferences.bone);
+  Boolean(preferences.skin || preferences.bone || preferences.fishForm);
 
 const PREFIX_INGREDIENT_MODIFIERS = new Set([
   'fresh', 'frozen', 'tinned', 'canned', 'cooked', 'raw', 'large', 'medium', 'small',
@@ -659,6 +679,19 @@ export function detectIngredientIntent(query: string): {
     return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
+  const isStandaloneIngredientSearch =
+    !hasListPunctuation
+    && !ingredientPhrases.test(trimmed)
+    && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery)
+    && ingredients.length === 1
+    && unseparatedWords.length === 1
+    && UNSEPARATED_INGREDIENT_TERMS.has(ingredients[0])
+    && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(ingredients[0]);
+
+  if (isStandaloneIngredientSearch) {
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+  }
+
   if (ingredients.length >= 2 && ingredientPhrases.test(cleanedQuery)) {
     return { isIngredientLed: true, ingredients, reason: 'phrase', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
@@ -727,11 +760,24 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
   mackerel: new Set(['fillet', 'steak', 'portion']),
   trout: new Set(['fillet', 'steak', 'portion']),
   tuna: new Set(['fillet', 'steak', 'portion']),
+  plaice: new Set(['fillet', 'portion', 'side', 'whole']),
+  sardine: new Set(['fillet', 'portion', 'whole']),
+  herring: new Set(['fillet', 'portion', 'whole']),
+  pollock: new Set(['fillet', 'loin', 'portion']),
+  hake: new Set(['fillet', 'loin', 'portion']),
+  monkfish: new Set(['fillet', 'tail', 'portion']),
+  anchovy: new Set(['fillet']),
   sausage: new Set(['pork', 'chicken', 'beef', 'lamb', 'turkey', 'vegetarian', 'veggie', 'chipolata']),
   prawn: new Set(['tiger', 'king']),
   crab: new Set(['king', 'meat', 'claw', 'white', 'brown', 'lump']),
   bass: new Set(['sea']),
 };
+
+const FISH_SPECIES_WORDS = new Set([
+  'salmon', 'cod', 'haddock', 'mackerel', 'trout', 'tuna', 'sardine', 'herring',
+  'pollock', 'plaice', 'hake', 'monkfish', 'bass', 'anchovy'
+]);
+const FISH_FORM_WORDS = new Set(['fillet', 'steak', 'portion', 'side', 'whole']);
 
 const BEEF_CUT_TERMS = new Set([
   'fillet', 'sirloin', 'rib', 'ribeye', 'ribeye steak', 'rib steak', 'striploin', 'striploin steak',
@@ -813,20 +859,29 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
   const valueWithoutPreparation = extractIngredientPreparationPreferences(value).cleanedQuery;
   const valueWords = valueWithoutPreparation.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedWords = allowed.toLowerCase().split(/\s+/).filter(Boolean);
+  const allowedKey = allowedWords.join(' ');
   if (valueWords.join(' ') === allowedWords.join(' ')) return true;
 
   const allowedStart = valueWords.findIndex((_, index) =>
     allowedWords.every((word, offset) => valueWords[index + offset] === word)
   );
-  if (allowedStart < 0) return false;
+  if (allowedStart < 0) {
+    if (allowedKey !== 'fish') return false;
+    const speciesIndex = valueWords.findIndex(word => FISH_SPECIES_WORDS.has(word));
+    if (speciesIndex < 0) return false;
+    const remainingWords = valueWords.filter((_, index) => index !== speciesIndex);
+    return remainingWords.length === 0 || remainingWords.every(word =>
+      INGREDIENT_MODIFIER_PATTERN.test(word) || FISH_FORM_WORDS.has(word)
+    );
+  }
 
   const remainingWords = valueWords.filter((_, index) =>
     index < allowedStart || index >= allowedStart + allowedWords.length
   );
 
-  const allowedKey = allowedWords.join(' ');
   const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedKey]
-    || (BEEF_CUT_TERMS.has(allowedKey) ? BEEF_CUT_VARIANT_WORDS
+    || (FISH_SPECIES_WORDS.has(allowedKey) || allowedKey === 'sea bass' ? new Set([...FISH_FORM_WORDS, 'loin', 'tail'])
+      : BEEF_CUT_TERMS.has(allowedKey) ? BEEF_CUT_VARIANT_WORDS
       : BACON_VARIANT_TERMS.has(allowedKey) ? BACON_VARIANT_WORDS
         : PORK_CUT_TERMS.has(allowedKey) ? PORK_CUT_VARIANT_WORDS
           : CHICKEN_CUT_TERMS.has(allowedKey) ? CHICKEN_CUT_VARIANT_WORDS
@@ -842,8 +897,11 @@ const matchesRequestedPreparation = (
 ) => {
   if (!requested || !hasPreparationPreferences(requested)) return true;
   const found = extractIngredientPreparationPreferences(value).preferences;
+  const isFishOrMeatLine = /\b(?:fish|salmon|cod|haddock|mackerel|trout|tuna|sardine|herring|pollock|plaice|hake|monkfish|bass|anchovy|chicken|turkey|duck|pork|beef|lamb|venison|rabbit)\b/i.test(value);
+  if (!isFishOrMeatLine) return true;
   return (!requested.skin || found.skin === requested.skin)
-    && (!requested.bone || found.bone === requested.bone);
+    && (!requested.bone || found.bone === requested.bone)
+    && (!requested.fishForm || found.fishForm === requested.fishForm);
 };
 
 /**

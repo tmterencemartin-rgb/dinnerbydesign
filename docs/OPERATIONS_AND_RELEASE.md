@@ -39,6 +39,10 @@ ALLOWED_ORIGINS=https://dinnerbydesign.app,https://www.dinnerbydesign.app
 
 Set `FIREBASE_SERVICE_ACCOUNT_JSON` to the complete JSON credential for a dedicated Firebase service account used by protected administrator endpoints. It is required for authentication reconciliation and complete-account deletion. Keep it encrypted in Vercel and never commit it.
 
+Set `CRON_SECRET` to a random production-only secret. Vercel sends it as a bearer token when it runs `/api/monitor/search-canary` daily. The canary records pass/fail and latency without using a customer account or storing the canary query in telemetry. Real user searches continue to be observed continuously through delivery telemetry.
+
+Canary failures trigger a deduplicated owner alert. Repeated client failures or user reports trigger a separate alert after a threshold is reached within one hour. Alerts contain no search text or customer details.
+
 Do not commit `.env.local`.
 
 ## Connected-service configuration
@@ -98,6 +102,8 @@ Use a fresh or private browser session where account state might hide a problem.
 - Check preference persistence.
 - Send a test email.
 - Confirm the admin dashboard loads for an authorised administrator.
+- Review Search assurance in the admin dashboard. The latest canary should be passed, and delivery failures should be investigated rather than treated as successful searches.
+- Use the Search assurance filters to compare the last 24 hours, last 7 days or all recorded events by search mode and device class.
 
 ### Signed-in browser checks
 

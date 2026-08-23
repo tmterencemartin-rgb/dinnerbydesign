@@ -4,6 +4,7 @@ import {
   getPublicPathway,
   getPublicPathwayForArticle,
 } from '../content/publicPathways';
+import { Wordmark } from './Wordmark';
 
 const CONTACT_EMAIL = 'terence@dinnerbydesign.app';
 
@@ -69,7 +70,7 @@ export const PublicGuideShell: React.FC<{ pathName: string; children: React.Reac
       <header className="border-b border-dbd-rule/50 bg-dbd-surface">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-5 gap-y-3 px-4 py-3 sm:min-h-[88px] sm:flex-nowrap sm:py-0">
           <a href="/" aria-label="DinnerByDesign home">
-            <img src="/dbd-logo-with-pin.png" alt="DinnerByDesign" className="h-[30.6px] w-auto max-w-[189px] object-contain mix-blend-multiply sm:h-[36px]" />
+            <Wordmark className="text-[30.6px] sm:text-[36px]" />
           </a>
           <nav aria-label="Public pathways" className="order-last flex w-full items-center justify-between gap-3 border-t border-dbd-rule/40 pt-2.5 text-[10px] font-semibold text-dbd-ink-2 sm:order-none sm:w-auto sm:border-0 sm:pt-0 sm:text-xs">
             {PUBLIC_PATHWAYS.map(pathway => (

@@ -35,7 +35,7 @@ describe('preferenceUtils', () => {
     it('migrates legacy religiousEthical values', () => {
       const legacyData = { religiousEthical: ['Kosher', 'Halal', 'Fair Trade only'] };
       const normalised = normaliseUserPreferences(legacyData);
-      expect(normalised.religiousEthical).toEqual(['Kosher-friendly', 'Halal-friendly', 'Fair Trade preference']);
+      expect(normalised.religiousEthical).toEqual(['Kosher-friendly', 'Prefer Halal-certified ingredients where available', 'Prefer Fair Trade ingredients where available']);
     });
 
     it('migrates legacy Sainsbury\'s to Sainsbury’s', () => {
@@ -55,6 +55,17 @@ describe('preferenceUtils', () => {
     it('preserves an explicit offal preference', () => {
       expect(normaliseUserPreferences({ includeOffal: true }).includeOffal).toBe(true);
       expect(normaliseUserPreferences({ includeOffal: false }).includeOffal).toBe(false);
+    });
+
+    it('clears conflicting offal preference for pescatarian users', () => {
+      expect(normaliseUserPreferences({ dietaryRule: 'pescatarian', includeOffal: true }).includeOffal).toBe(false);
+    });
+
+    it('clears cooking fats that conflict with the dietary rule', () => {
+      expect(normaliseUserPreferences({
+        dietaryRule: 'vegan',
+        cookingFats: ['Olive oil', 'Butter', 'Ghee', 'Lard/Dripping']
+      }).cookingFats).toEqual(['Olive oil']);
     });
 
     it('preserves existing correct fields', () => {

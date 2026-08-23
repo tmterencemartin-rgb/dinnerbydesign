@@ -195,6 +195,16 @@ When a user lists ingredients:
 - Stage new or changed product, pack and price data for administrator approval.
 - If no licensed feed is available, retain the verified catalogue and built-in UK reference prices.
 
+## Lean production monitoring
+
+- `/api/health` is the public shallow availability check and must remain free of writes and paid AI calls.
+- `/api/health/deep` is protected by `CRON_SECRET`, performs a read-only Firestore readiness check and verifies critical configuration, then returns HTTP 503 on failure.
+- The deep health route is scheduled daily alongside the existing search canary. It records a deduplicated failure alert without consuming a visitor search allowance.
+- `.github/workflows/quality-and-monitoring.yml` runs type checks, unit tests and a production build on code changes, plus safe production browser checks, dependency auditing and protected health checks on the daily schedule or manual dispatch.
+- Production browser checks must not submit visitor searches. Any signed-in data-writing journey requires dedicated test credentials and explicit `E2E_RUN_LIVE_JOURNEY=true`.
+- `.github/dependabot.yml` keeps npm dependencies and GitHub Actions references under review. High and critical npm audit findings fail the scheduled audit job.
+- Firestore backup verification and restore testing remain external operational tasks; the Admin Dashboard must not claim backup health until those checks are configured.
+
 ## Release rule
 
 Before production publication, follow `docs/OPERATIONS_AND_RELEASE.md`. A public guide release must also pass the release gate in `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`.

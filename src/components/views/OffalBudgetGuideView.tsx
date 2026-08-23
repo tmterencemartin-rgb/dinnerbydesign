@@ -1,4 +1,5 @@
 import React from 'react';
+import { Wordmark } from '../Wordmark';
 import { ArrowRight } from 'lucide-react';
 import { OFFAL_BUDGET_GUIDE as guide } from '../../content/seoFoodCostGuides';
 import { OFFAL_BUDGET_DISCLOSURE_FOOTER, OFFAL_PRICE_DISCLOSURES, OFFAL_SAFETY_DISCLOSURES } from '../../content/programmaticDisclosures';
@@ -10,7 +11,7 @@ const Item: React.FC<{ children: React.ReactNode }> = ({ children }) => <li clas
 
 export const OffalBudgetGuideView: React.FC<{ onFindDinners: () => void }> = ({ onFindDinners }) => (
   <div className="min-h-screen bg-[#faf9f7] text-dbd-ink">
-    <header className="border-b border-dbd-rule/50 bg-dbd-surface"><div className="mx-auto flex min-h-[82px] max-w-5xl items-center justify-between px-4 sm:min-h-[96px]"><a href="/" aria-label="DinnerByDesign home"><img src="/dbd-logo-with-pin.png" alt="DinnerByDesign" className="h-[34.2px] w-auto max-w-[207px] object-contain mix-blend-multiply sm:h-[39.6px]" /></a><a href="/signin?mode=signin" className="text-xs font-bold text-dbd-accent hover:underline">Sign in</a></div></header>
+    <header className="border-b border-dbd-rule/50 bg-dbd-surface"><div className="mx-auto flex min-h-[82px] max-w-5xl items-center justify-between px-4 sm:min-h-[96px]"><a href="/" aria-label="DinnerByDesign home"><Wordmark className="text-[34.2px] sm:text-[39.6px]" /></a><a href="/signin?mode=signin" className="text-xs font-bold text-dbd-accent hover:underline">Sign in</a></div></header>
     <main className="mx-auto max-w-3xl px-4 py-8 pb-20 sm:py-12">
       <nav aria-label="Breadcrumb" className="text-xs text-dbd-ink-3"><a href="/" className="hover:underline">DinnerByDesign</a><span className="px-2">/</span><span>Food cost guides</span></nav>
       <article>

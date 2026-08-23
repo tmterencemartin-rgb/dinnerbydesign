@@ -4,6 +4,7 @@ import {createRoot} from 'react-dom/client';
 import App from './App';
 import './index.css';
 import { configureNativeApp, isNativeApp } from './lib/native';
+import { getClientErrorKind, reportClientError } from './lib/clientErrorTelemetry';
 
 configureNativeApp();
 
@@ -16,6 +17,13 @@ window.addEventListener('error', (event) => {
     event.preventDefault();
     return;
   }
+
+  reportClientError({
+    kind: event.filename ? 'resource' : getClientErrorKind(message),
+    message,
+    stack: error?.stack,
+    source: filename,
+  });
 
   console.error('[Global Error Listener]', {
     message,
@@ -40,6 +48,12 @@ window.addEventListener('unhandledrejection', (event) => {
   ) {
     return;
   }
+
+  reportClientError({
+    kind: 'unhandled_rejection',
+    message: reason instanceof Error ? reason.message : String(reason || 'Unhandled promise rejection'),
+    stack: reason?.stack,
+  });
 
   console.error('[Unhandled Rejection]', reason);
 });

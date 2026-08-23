@@ -26,6 +26,10 @@ export default defineConfig({
       name: 'phone-chromium',
       use: { ...devices['Pixel 7'] },
     },
+    {
+      name: 'tablet-chromium',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1024, height: 768 }, isMobile: false },
+    },
   ],
   webServer: useLocalPreview ? {
     command: 'npm run preview -- --host 127.0.0.1 --port 4173',
