@@ -98,31 +98,31 @@
     },
     {
       "source": "/why-dinnerbydesign",
-      "destination": "/api/server.js"
+      "destination": "/why-dinnerbydesign/index.html"
     },
     {
       "source": "/privacy",
-      "destination": "/api/server.js"
+      "destination": "/privacy/index.html"
     },
     {
       "source": "/terms",
-      "destination": "/api/server.js"
+      "destination": "/terms/index.html"
     },
     {
       "source": "/pricing-methodology",
-      "destination": "/api/server.js"
+      "destination": "/pricing-methodology/index.html"
     },
     {
       "source": "/recipe-methodology",
-      "destination": "/api/server.js"
+      "destination": "/recipe-methodology/index.html"
     },
     {
       "source": "/nutrition-methodology",
-      "destination": "/api/server.js"
+      "destination": "/nutrition-methodology/index.html"
     },
     {
       "source": "/food-safety",
-      "destination": "/api/server.js"
+      "destination": "/food-safety/index.html"
     },
     {
       "source": "/(.*)",

@@ -61,6 +61,74 @@ const generateEditorialGuide = async (
   await fs.writeFile(path.join(outputDir, 'index.html'), guideHtml, 'utf8');
   console.log(`Generated ${guidePath}/index.html`);
 };
+
+const SIMPLE_SEO_PAGES = [
+  {
+    path: '/why-dinnerbydesign',
+    title: 'Why DinnerByDesign? Search, plan and shop in one workflow',
+    description: 'See how DinnerByDesign extends recipe search with saved preferences, estimated costs, weekly planning and a consolidated shopping list.',
+    heading: 'Recipe search is only the first step.',
+  },
+  {
+    path: '/privacy',
+    title: 'Privacy, Cookies & AI Data — DinnerByDesign',
+    description: 'Read how DinnerByDesign handles account data, AI processing, service providers, retention, cookies and UK data-protection rights.',
+    heading: 'Privacy, cookies and AI data',
+  },
+  {
+    path: '/terms',
+    title: 'Terms of Service — DinnerByDesign',
+    description: 'Review DinnerByDesign service terms, free-trial rules, subscription prices, renewals, cancellation, refunds and account access.',
+    heading: 'Terms of Service',
+  },
+  {
+    path: '/pricing-methodology',
+    title: 'Ingredient Pricing Methodology — DinnerByDesign',
+    description: 'Learn how DinnerByDesign calculates estimated ingredient costs, full-pack checkout costs, catalogue coverage and price fallbacks.',
+    heading: 'Ingredient Pricing Methodology',
+  },
+  {
+    path: '/recipe-methodology',
+    title: 'Recipe & Recommendation Methodology — DinnerByDesign',
+    description: 'Learn how DinnerByDesign creates, attributes, checks and selects recipe and ready-made dinner information.',
+    heading: 'Recipe & Recommendation Methodology',
+  },
+  {
+    path: '/nutrition-methodology',
+    title: 'Nutrition Estimate Methodology — DinnerByDesign',
+    description: 'Learn how DinnerByDesign nutrition and calorie estimates are produced and why actual values may vary.',
+    heading: 'Nutrition Estimate Methodology',
+  },
+  {
+    path: '/food-safety',
+    title: 'Dietary, Allergy & Cooking Safety — DinnerByDesign',
+    description: 'Understand how DinnerByDesign applies dietary rules and allergy filters, and why labels and safe cooking guidance must still be checked.',
+    heading: 'Dietary, Allergy & Cooking Safety',
+  },
+] as const;
+
+for (const page of SIMPLE_SEO_PAGES) {
+  const canonical = `https://dinnerbydesign.app${page.path}`;
+  const initialHtml = `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><h1>${escapeGuideHtml(page.heading)}</h1><p>${escapeGuideHtml(page.description)}</p></main></div>`;
+  const pageHtml = sourceHtml
+    .replace(/<title>.*?<\/title>/, `<title>${page.title}</title>`)
+    .replace(/<meta name="description" content=".*?"\s*\/?>/, `<meta name="description" content="${page.description}" />`)
+    .replace(/<meta name="robots" content=".*?"\s*\/?>/, '<meta name="robots" content="index, follow" />')
+    .replace(/<link rel="canonical" href=".*?"\s*\/?>/, `<link rel="canonical" href="${canonical}" />`)
+    .replace(/<meta property="og:url" content=".*?"\s*\/?>/, `<meta property="og:url" content="${canonical}" />`)
+    .replace(/<meta property="og:title" content=".*?"\s*\/?>/, `<meta property="og:title" content="${page.title}" />`)
+    .replace(/<meta property="og:description" content=".*?"\s*\/?>/, `<meta property="og:description" content="${page.description}" />`)
+    .replace(/<meta name="twitter:title" content=".*?"\s*\/?>/, `<meta name="twitter:title" content="${page.title}" />`)
+    .replace(/<meta name="twitter:description" content=".*?"\s*\/?>/, `<meta name="twitter:description" content="${page.description}" />`)
+    .replace(/<script type="application\/ld\+json" data-seo-jsonld="static-home">.*?<\/script>/s, '')
+    .replace(/<div id="root">[\s\S]*?<\/div>/, initialHtml);
+
+  const outputDir = path.join(distRoot, page.path.slice(1));
+  await fs.mkdir(outputDir, { recursive: true });
+  await fs.writeFile(path.join(outputDir, 'index.html'), pageHtml, 'utf8');
+  console.log(`Generated ${page.path}/index.html`);
+}
+
 for (const guideRecord of PUBLISHED_PUBLIC_GUIDE_RECORDS) {
   await generateEditorialGuide(
     guideRecord,
