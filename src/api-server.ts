@@ -77,6 +77,9 @@ const escapeHtml = (value: string) => value
   .replace(/"/g, "&quot;")
   .replace(/'/g, "&#039;");
 
+const renderPublicSeoInitialHtml = (heading: string, description: string) =>
+  `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><h1>${escapeHtml(heading)}</h1><p>${escapeHtml(description)}</p></main></div>`;
+
 function hasContactRateLimitCapacity(req: express.Request) {
   const forwardedFor = req.get("x-forwarded-for");
   const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
@@ -2485,42 +2488,55 @@ export function createApp() {
           canonicalPath = FAMILY_DINNERS_FOR_FOUR_PATH;
           schema = getFamilyDinnersForFourJsonLd();
           initialBody = renderFamilyDinnersForFourInitialHtml();
+        } else if (pathName === "/why-dinnerbydesign") {
+          title = "Why DinnerByDesign? Search, plan and shop in one workflow";
+          description = "See how DinnerByDesign extends recipe search with saved preferences, estimated costs, weekly planning and a consolidated shopping list.";
+          shareTitle = title;
+          shareDescription = description;
+          canonicalPath = "/why-dinnerbydesign";
+          initialBody = renderPublicSeoInitialHtml("Recipe search is only the first step.", description);
         } else if (pathName === "/privacy") {
           title = "Privacy, Cookies & AI Data — DinnerByDesign";
           description = "Read how DinnerByDesign handles account data, AI processing, service providers, retention, cookies and UK data-protection rights.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/privacy";
+          initialBody = renderPublicSeoInitialHtml("Privacy, cookies and AI data", description);
         } else if (pathName === "/terms") {
           title = "Terms of Service — DinnerByDesign";
           description = "Review DinnerByDesign service terms, free-trial rules, subscription prices, renewals, cancellation, refunds and account access.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/terms";
+          initialBody = renderPublicSeoInitialHtml("Terms of Service", description);
         } else if (pathName === "/pricing-methodology") {
           title = "Ingredient Pricing Methodology — DinnerByDesign";
           description = "Learn how DinnerByDesign calculates estimated ingredient costs, full-pack checkout costs, catalogue coverage and price fallbacks.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/pricing-methodology";
+          initialBody = renderPublicSeoInitialHtml("Ingredient Pricing Methodology", description);
         } else if (pathName === "/food-safety") {
           title = "Dietary, Allergy & Cooking Safety — DinnerByDesign";
           description = "Understand how DinnerByDesign applies dietary rules and allergy filters, and why labels and safe cooking guidance must still be checked.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/food-safety";
+          initialBody = renderPublicSeoInitialHtml("Dietary, Allergy & Cooking Safety", description);
         } else if (pathName === "/recipe-methodology") {
           title = "Recipe & Recommendation Methodology — DinnerByDesign";
           description = "Learn how DinnerByDesign creates, attributes, checks and selects recipe and ready-made dinner information.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/recipe-methodology";
+          initialBody = renderPublicSeoInitialHtml("Recipe & Recommendation Methodology", description);
         } else if (pathName === "/nutrition-methodology") {
           title = "Nutrition Estimate Methodology — DinnerByDesign";
           description = "Learn how DinnerByDesign nutrition and calorie estimates are produced and why actual values may vary.";
           shareTitle = title;
           shareDescription = description;
           canonicalPath = "/nutrition-methodology";
+          initialBody = renderPublicSeoInitialHtml("Nutrition Estimate Methodology", description);
         } else if (pathName === "/planner") {
           title = "Your Dinner Planner — DinnerByDesign";
           description = "Your weekly bespoke dinner schedule and preparation planner.";

@@ -97,6 +97,34 @@
       "destination": "/api/server.js"
     },
     {
+      "source": "/why-dinnerbydesign",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/terms",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/pricing-methodology",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/recipe-methodology",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/nutrition-methodology",
+      "destination": "/api/server.js"
+    },
+    {
+      "source": "/food-safety",
+      "destination": "/api/server.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
