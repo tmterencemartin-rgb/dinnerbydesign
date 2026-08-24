@@ -28,15 +28,15 @@ export const WhyDinnerByDesignView: React.FC<WhyDinnerByDesignViewProps> = ({ on
       <WhyDinnerByDesignComparison />
     </section>
 
-    <section className="mt-10 rounded-xl bg-dbd-ink p-6 text-white sm:mt-14 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8">
+    <section className="mt-10 border-t border-dbd-rule/60 pt-7 sm:mt-12 sm:flex sm:items-center sm:justify-between sm:gap-8">
       <div>
-        <h2 className="text-xl font-bold sm:text-2xl">See the workflow for yourself.</h2>
-        <p className="mt-2 max-w-xl text-sm leading-6 text-white/70">Start with three free searches, then decide whether DinnerByDesign earns a place in your weekly routine.</p>
+        <h2 className="text-lg font-bold text-dbd-ink sm:text-xl">See the workflow for yourself.</h2>
+        <p className="mt-1.5 max-w-xl text-sm leading-6 text-dbd-ink-3">Start with three free searches, then decide whether DinnerByDesign earns a place in your weekly routine.</p>
       </div>
       <button
         type="button"
         onClick={onTryFreeSearch}
-        className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded bg-white px-5 text-sm font-bold text-dbd-ink transition-colors hover:bg-dbd-surface sm:mt-0 sm:w-auto"
+        className="mt-4 inline-flex min-h-10 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-sm bg-dbd-accent px-4 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent focus-visible:ring-offset-2 sm:mt-0 sm:w-auto"
       >
         Try a free search <ArrowRight size={16} aria-hidden="true" />
       </button>
