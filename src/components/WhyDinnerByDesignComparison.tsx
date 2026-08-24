@@ -79,17 +79,17 @@ export const WhyDinnerByDesignComparison: React.FC<WhyDinnerByDesignComparisonPr
         </div>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-dbd-rule bg-white shadow-sm">
+      <div className={compact ? 'overflow-hidden border-y border-dbd-rule/60' : 'overflow-hidden rounded-xl border border-dbd-rule bg-white shadow-sm'}>
         {compact ? (
-          <div className="divide-y divide-dbd-rule/70">
-            <div className="grid grid-cols-[minmax(0,1fr)_3.5rem_4.5rem] items-center bg-dbd-surface-2/60 px-3 py-2 text-[9px] font-bold uppercase tracking-[0.08em] text-dbd-ink-3 sm:grid-cols-[minmax(0,1fr)_5rem_6rem] sm:px-4">
+          <div className="divide-y divide-dbd-rule/60">
+            <div className="grid grid-cols-[minmax(0,1fr)_3.5rem_4.5rem] items-center px-0 py-1.5 text-[8px] font-bold uppercase tracking-[0.08em] text-dbd-ink-3 sm:grid-cols-[minmax(0,1fr)_5rem_6rem]">
               <span>Capability</span>
               <span className="text-center">LLM</span>
               <span className="text-center">DinnerByDesign</span>
             </div>
             {rows.map(row => (
-              <div key={row.capability} className="grid grid-cols-[minmax(0,1fr)_3.5rem_4.5rem] items-center px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_5rem_6rem] sm:px-4">
-                <span className="pr-2 text-[12px] font-semibold leading-4 text-dbd-ink sm:text-[13px]">{row.capability}</span>
+              <div key={row.capability} className="grid grid-cols-[minmax(0,1fr)_3.5rem_4.5rem] items-center px-0 py-2 sm:grid-cols-[minmax(0,1fr)_5rem_6rem]">
+                <span className="pr-2 text-[11px] font-semibold leading-4 text-dbd-ink sm:text-xs">{row.capability}</span>
                 <span className="flex justify-center"><CapabilityMark available={false} compact /></span>
                 <span className="flex justify-center"><CapabilityMark available compact /></span>
               </div>
