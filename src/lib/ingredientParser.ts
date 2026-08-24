@@ -20,6 +20,11 @@ const MAIN_INGREDIENT_ALIAS_MAP: Record<string, string> = {
   'lamb racks': 'lamb rack', 'rack of lamb': 'lamb rack', 'racks of lamb': 'lamb rack',
   'lamb cutlets': 'lamb cutlet', 'lamb breasts': 'lamb breast', 'lamb saddles': 'lamb saddle',
   'lamb ribs': 'lamb rib', 'lamb medallions': 'lamb medallion', 'lamb kebabs': 'lamb kebab',
+  // Silverside is a beef cut in UK usage; keep the protein explicit in searches.
+  'silverside': 'beef silverside', 'silversides': 'beef silverside',
+  'silverside joint': 'beef silverside joint', 'silverside joints': 'beef silverside joint',
+  'beef silverside': 'beef silverside', 'beef silverside joint': 'beef silverside joint',
+  'beef silverside joints': 'beef silverside joint',
   // Fish and seafood
   'anchovies': 'anchovy', 'sardines': 'sardine', 'herrings': 'herring', 'trouts': 'trout',
   'pollocks': 'pollock', 'plaice': 'plaice', 'hakes': 'hake', 'monkfish': 'monkfish',
@@ -468,6 +473,7 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'lentil', 'lemon', 'lime', 'mackerel', 'mushroom', 'noodle', 'oat', 'onion',
   'pasta', 'pea', 'pepper', 'prawn', 'potato', 'pork', 'rice', 'salmon', 'crab', 'bass',
   'sausage', 'shin', 'brisket', 'sirloin', 'ribeye', 'rump', 'topside', 'silverside', 'chuck',
+  'beef silverside',
   'flank', 'skirt', 'featherblade', 'bavette', 'onglet', 'hanger', 'cheek', 'oxtail',
   'striploin', 'porterhouse', 'tomahawk', 'medallion', 'gammon', 'pancetta', 'rasher', 'lardon',
   'drumstick', 'drumette', 'tenderloin', 'tender', 'strip', 'quarter', 'crown', 'piece', 'portion',
@@ -490,6 +496,7 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   // Meat, fish and seafood forms
   'beef fillet', 'beef sirloin', 'sirloin steak', 'beef ribeye', 'ribeye', 'beef rump', 'rump steak',
   'beef topside', 'beef silverside', 'top rump', 'thick flank', 'beef chuck',
+  'beef silverside joint',
   'braising steak', 'stewing steak', 'beef shin', 'beef brisket', 'short rib', 'beef short rib',
   'flank steak', 'skirt steak', 'featherblade', 'featherblade steak', 'bavette steak', 'onglet steak',
   'flat iron', 'flat iron steak', 'hanger steak', 'beef cheek', 'oxtail', 'diced beef',
@@ -781,7 +788,7 @@ const FISH_FORM_WORDS = new Set(['fillet', 'steak', 'portion', 'side', 'whole'])
 
 const BEEF_CUT_TERMS = new Set([
   'fillet', 'sirloin', 'rib', 'ribeye', 'ribeye steak', 'rib steak', 'striploin', 'striploin steak',
-  'rump', 'topside', 'silverside', 'top rump', 'thick flank', 'chuck', 'chuck steak', 'chuck roast',
+  'rump', 'topside', 'silverside', 'beef silverside', 'top rump', 'thick flank', 'chuck', 'chuck steak', 'chuck roast',
   'braising steak', 'stewing steak', 'frying steak', 'minute steak', 'shin', 'brisket', 'short rib',
   'flank', 'flank steak', 'skirt', 'skirt steak', 'featherblade', 'featherblade steak',
   'bavette', 'bavette steak', 'onglet', 'onglet steak', 'flat iron', 'flat iron steak',
@@ -790,7 +797,7 @@ const BEEF_CUT_TERMS = new Set([
   'beef striploin', 'beef striploin steak',
   'chuck roast', 'frying steak', 'minute steak', 't-bone', 't-bone steak', 'porterhouse steak',
   'tomahawk', 'tomahawk steak', 'porterhouse', 'beef hanger steak', 'medallion', 'beef medallion', 'roasting joint',
-  'beef roasting joint', 'topside joint', 'silverside joint', 'rump joint', 'pot roast'
+  'beef roasting joint', 'topside joint', 'silverside joint', 'beef silverside joint', 'rump joint', 'pot roast'
 ]);
 
 const BEEF_CUT_VARIANT_WORDS = new Set([

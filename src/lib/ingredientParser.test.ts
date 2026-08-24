@@ -167,6 +167,22 @@ describe('Ingredient Parser & Normalizer', () => {
     }
   });
 
+  test('interprets silverside as the UK beef cut', () => {
+    expect(detectIngredientIntent('silverside')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['beef silverside'],
+      reason: 'short-food-list'
+    });
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['Beef silverside joint', 'potatoes']
+    }, 'silverside and potatoes')).toBe(true);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['Silverside fish', 'potatoes']
+    }, 'silverside and potatoes')).toBe(false);
+  });
+
   test('covers common bacon and pork variants in short searches', () => {
     const variants = [
       'streaky bacon', 'back bacon', 'smoked bacon', 'unsmoked bacon', 'bacon rashers',
