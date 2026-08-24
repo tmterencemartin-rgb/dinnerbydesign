@@ -104,8 +104,8 @@ export const DIETARY_TAXONOMY = {
   },
   religiousEthical: {
     label: 'Religious & ethical preference',
-    helperText: 'We try to exclude obvious ingredient conflicts. Fair Trade is a preference where verified products are available; religious suitability and certification cannot be guaranteed.',
-    options: ['Prefer Fair Trade ingredients where available', 'Kosher-friendly', 'Prefer Halal-certified ingredients where available']
+    helperText: 'We try to exclude obvious ingredient conflicts. Fair Trade and free-range are preferences where the source explicitly supports them; religious suitability and certification cannot be guaranteed.',
+    options: ['Prefer Fair Trade ingredients where available', 'Prefer free-range ingredients where available', 'Kosher-friendly', 'Prefer Halal-certified ingredients where available']
   },
   cookingMethods: {
     label: 'Cooking method',

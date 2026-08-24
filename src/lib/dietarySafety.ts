@@ -20,7 +20,8 @@ const RELIGIOUS_EXCLUSION_MAP: Record<string, string[]> = {
   'Kosher-friendly': ['pork', 'bacon', 'ham', 'gammon', 'lard', 'shellfish', 'prawn', 'shrimp', 'crab', 'lobster', 'mussel', 'clam', 'scallop', 'oyster', 'squid', 'octopus'],
   'Prefer Fair Trade ingredients where available': [],
   'Fair Trade preference': [],
-  'Fair Trade only': []
+  'Fair Trade only': [],
+  'Prefer free-range ingredients where available': []
 };
 
 const preferenceTerms = (label: string, map: Record<string, string[]>) => {

@@ -740,7 +740,11 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     activeDietaryRule,
     searchParams.cookingFats || preferences?.cookingFats || []
   );
-  const activeReligious = preferences?.religiousEthical || [];
+  const activeReligious = [...new Set([
+    ...(preferences?.religiousEthical || []),
+    ...(searchParams.religiousEthical || [])
+  ])];
+  const hasFreeRangePreference = activeReligious.some(item => /free[- ]range/i.test(item));
   const activeServings = searchParams.servings || preferences?.servings || 2;
   const activeSupermarkets = isReadyMade ? (searchParams.supermarkets || preferences?.preferredSupermarkets || []) : [];
   const activePreferredSourceIds = searchParams.preferredSourceIds || [];
@@ -770,6 +774,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   if (activeNutritious) appliedFilters.push("Wholesome recipes");
   if (activeHighOmega3) appliedFilters.push("High Omega-3");
   if (activeHighProtein) appliedFilters.push("High Protein");
+  if (hasFreeRangePreference) appliedFilters.push("Free-range preferred where stated");
   if (activeMaxTime) appliedFilters.push(`Under ${activeMaxTime}min`);
   if (ingredientIntent?.isIngredientLed || isLeftoverMode) appliedFilters.push("Ingredient-led");
 
@@ -806,6 +811,14 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - This is NOT A HARD FILTER. You MUST still prioritize the most relevant recipes for the query "${query}". 
 - Highly relevant recipes from other sources SHOULD still appear above weak matches from trusted sources.
 - NEVER return an empty or severely reduced result set solely because trusted sources have no good matches. If no good matches exist in trusted sources, return the best matches from all available UK sources.`
+    : '';
+
+  const freeRangeLogic = hasFreeRangePreference
+    ? `\nFREE-RANGE SOURCING PREFERENCE ACTIVE (SOFT):
+- Prefer recipes and products whose named poultry, eggs, meat or dairy ingredients are explicitly described as free-range by the source.
+- Do not treat free-range as equivalent to organic, pasture-fed, grass-fed, Halal, Kosher or any wider welfare certification.
+- This is a preference, not a hard exclusion. Keep suitable results when the source does not state the production method.
+- Include one reality check labelled "Free-range sourcing" for every result. Say "Source explicitly mentions free-range" only when the returned title, description or ingredient list states it; otherwise say "Free-range status is not stated by the source."`
     : '';
 
   const cookingFatLogic = activeCookingFats.length > 0
@@ -973,7 +986,7 @@ HARD CONSTRAINTS:
 14. High Protein Prioritisation: ${activeHighProtein ? 'Active (focus on lean meats, fish, pulses, eggs)' : 'No'}
 15. Offal: ${activeIncludeOffal ? 'Allowed' : 'Excluded'}
 16. Requested household servings: ${activeServings}${mediterraneanDietLogic}
-${saladLogic}${simplicityLogic}${preferredSourcesLogic}${cookingFatLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}${chilliDishIntentLogic}
+${saladLogic}${simplicityLogic}${preferredSourcesLogic}${freeRangeLogic}${cookingFatLogic}${budgetLogic}${omega3Logic}${remainsProteinLogic}${leftoversLogic}${offalLogic}${recipeVarietyLogic}${chilliDishIntentLogic}
 `;
 
     const rejectionPolicy = `Return { "items": [] } if:
@@ -1222,12 +1235,38 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
     const repairPrompt = repairPrompts.join('\n');
     const repairOutputText = repairOutputs.join('\n');
 
-    let items = rawItems.map((item: any) => ({
-      ...item,
-      realityChecks: sanitizeRealityChecks(item.realityChecks),
-      id: item.id || `dbd-${Math.random().toString(36).substring(2, 9)}`,
-      dietFlagsVerified: true // Mandatory for deterministic safety gate
-    }));
+    let items = rawItems.map((item: any) => {
+      const realityChecks = sanitizeRealityChecks(item.realityChecks);
+      if (hasFreeRangePreference) {
+        const fields = [
+          item.title || '',
+          item.description || '',
+          ...(Array.isArray(item.ingredients) ? item.ingredients : [])
+        ].join(' ');
+        const explicitlyConfirmed = /\bfree[- ]range(?:d)?\b/i.test(fields);
+        return {
+          ...item,
+          realityChecks: [
+            ...realityChecks.filter(check => check.label.toLowerCase() !== 'free-range sourcing').slice(0, 2),
+            {
+              label: 'Free-range sourcing',
+              note: explicitlyConfirmed
+                ? 'Source explicitly mentions free-range.'
+                : 'Free-range status is not stated by the source.',
+              tone: explicitlyConfirmed ? 'positive' : 'neutral'
+            }
+          ],
+          id: item.id || `dbd-${Math.random().toString(36).substring(2, 9)}`,
+          dietFlagsVerified: true
+        };
+      }
+      return {
+        ...item,
+        realityChecks,
+        id: item.id || `dbd-${Math.random().toString(36).substring(2, 9)}`,
+        dietFlagsVerified: true
+      };
+    });
 
     // Post-generation validation for Ready-made mode
     if (isReadyMade) {
