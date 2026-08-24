@@ -506,37 +506,26 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   {/* Religious & Ethical */}
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Religious & ethical</label>
-                    <div className="relative mt-1">
-                      <select 
-                        value=""
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val && !localReligiousEthical.includes(val)) {
-                            setLocalReligiousEthical([...localReligiousEthical, val]);
-                          }
-                        }}
-                        className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
-                      >
-                        <option value="">Add preference...</option>
-                        {DIETARY_TAXONOMY.religiousEthical.options.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    <div className="mt-1 space-y-1.5 rounded border border-gray-200 bg-gray-50/50 p-2.5">
+                      {DIETARY_TAXONOMY.religiousEthical.options.map(opt => {
+                        const checked = localReligiousEthical.includes(opt);
+                        return (
+                          <label key={opt} className="flex cursor-pointer items-start gap-2.5 rounded px-2 py-2 hover:bg-white">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => setLocalReligiousEthical(
+                                checked
+                                  ? localReligiousEthical.filter(item => item !== opt)
+                                  : [...localReligiousEthical, opt]
+                              )}
+                              className="mt-0.5 h-4 w-4 shrink-0 accent-dbd-accent"
+                            />
+                            <span className="text-[11px] font-medium leading-relaxed text-gray-700">{opt}</span>
+                          </label>
+                        );
+                      })}
                     </div>
-                    {localReligiousEthical.length > 0 && (
-                      <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active ethical preferences</span>
-                        {localReligiousEthical.map(item => (
-                          <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
-                            {item}
-                            <button type="button" onClick={() => setLocalReligiousEthical(localReligiousEthical.filter(i => i !== item))} className="hover:text-accent transition-colors p-0.5 cursor-pointer">
-                              <CircleX size={13} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
                   {/* Other Ingredients to Avoid */}
