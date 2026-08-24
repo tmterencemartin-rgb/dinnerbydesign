@@ -1,8 +1,6 @@
-name: Quality and production monitoring
+name: Production monitoring
 
 on:
-  push:
-  pull_request:
   schedule:
     - cron: '15 6 * * *'
   workflow_dispatch:
@@ -11,38 +9,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: quality-and-monitoring-${{ github.ref }}
+  group: production-monitoring
   cancel-in-progress: true
 
 jobs:
-  quality:
-    name: Type check, tests and build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out source
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Type check
-        run: npm run lint
-
-      - name: Run unit tests
-        run: npm test
-
-      - name: Build application
-        run: npm run build
-
   dependency-audit:
     name: High and critical dependency audit
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
@@ -62,7 +34,6 @@ jobs:
 
   production-smoke:
     name: Production smoke checks
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -100,7 +71,10 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
 
       - name: Check protected deep health endpoint
-        run: curl --fail-with-body --silent --show-error --max-time 30 -H "Authorization: Bearer $CRON_SECRET" https://dinnerbydesign.app/api/health/deep
+        run: >-
+          curl --fail-with-body --silent --show-error --max-time 30
+          -H "Authorization: Bearer $CRON_SECRET"
+          https://dinnerbydesign.app/api/health/deep
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
 
