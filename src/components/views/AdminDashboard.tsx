@@ -1587,7 +1587,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="mt-3 space-y-1 text-[10.5px] font-medium text-gray-500">
                   <p>Threshold alerts are active for repeated search, email and AI failures. Alerts are deduplicated for 24 hours.</p>
                   <p>Last administrator dashboard access: {latestAdminAccess ? `${formatDateTime(latestAdminAccess.createdAt)} · ${latestAdminAccess.deviceClass || 'unknown'}` : 'Not recorded yet'}.</p>
-                  <p>Backup verification is not configured in the app, so no backup health claim is being made.</p>
+                  <p>Backup verification is read-only and activates after a Firestore daily schedule, backup-viewer permission and the monitoring flag are configured.</p>
                 </div>
               </div>}
             </div>

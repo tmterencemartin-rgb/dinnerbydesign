@@ -94,6 +94,11 @@ jobs:
       - name: Check shallow health endpoint
         run: curl --fail-with-body --silent --show-error --max-time 20 https://dinnerbydesign.app/api/health
 
+      - name: Verify protected monitoring secret is configured
+        run: test -n "$CRON_SECRET"
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
       - name: Check protected deep health endpoint
         run: curl --fail-with-body --silent --show-error --max-time 30 -H "Authorization: Bearer $CRON_SECRET" https://dinnerbydesign.app/api/health/deep
         env:

@@ -203,7 +203,7 @@ When a user lists ingredients:
 - `.github/workflows/quality-and-monitoring.yml` runs type checks, unit tests and a production build on code changes, plus safe production browser checks, dependency auditing and protected health checks on the daily schedule or manual dispatch.
 - Production browser checks must not submit visitor searches. Any signed-in data-writing journey requires dedicated test credentials and explicit `E2E_RUN_LIVE_JOURNEY=true`.
 - `.github/dependabot.yml` keeps npm dependencies and GitHub Actions references under review. High and critical npm audit findings fail the scheduled audit job.
-- Firestore backup verification and restore testing remain external operational tasks; the Admin Dashboard must not claim backup health until those checks are configured.
+- Firestore backup verification is an opt-in read-only part of deep health. It requires a Google Cloud daily schedule, backup-viewer IAM roles and `FIRESTORE_BACKUP_MONITORING_ENABLED=true`; restore testing remains an external staging task and must not target production.
 
 ## Release rule
 

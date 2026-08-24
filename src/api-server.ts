@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth as getFirebaseAdminAuth } from "firebase-admin/auth";
+import { GoogleAuth } from "google-auth-library";
 import firebaseConfig from "../firebase-applet-config.json";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
@@ -175,6 +176,126 @@ function getDb() {
     _db = getFirestore(config.firestoreDatabaseId || undefined);
   }
   return _db;
+}
+
+type FirestoreBackupCheck = {
+  status: 'passed' | 'failed' | 'not_configured';
+  scheduleCount: number;
+  readyBackupCount: number;
+  latestSnapshotTime?: string | null;
+  ageHours?: number | null;
+  errorCategory?: string | null;
+};
+
+let firestoreAdminAuth: GoogleAuth | null = null;
+
+async function getFirestoreAdminAccessToken() {
+  const serviceAccountJson = String(process.env.FIREBASE_SERVICE_ACCOUNT_JSON || '').trim();
+  if (!serviceAccountJson) return null;
+
+  const credentials = JSON.parse(serviceAccountJson);
+  firestoreAdminAuth ||= new GoogleAuth({
+    credentials,
+    scopes: ['https://www.googleapis.com/auth/cloud-platform']
+  });
+  const client = await firestoreAdminAuth.getClient();
+  const tokenResponse = await client.getAccessToken();
+  const token = typeof tokenResponse === 'string' ? tokenResponse : tokenResponse?.token;
+  if (!token) throw new Error('google_access_token_missing');
+
+  return {
+    token,
+    projectId: credentials.project_id || getFirebaseConfig().projectId || process.env.FIREBASE_PROJECT_ID
+  };
+}
+
+async function firestoreAdminRequest(pathname: string, token: string) {
+  const response = await fetch(`https://firestore.googleapis.com${pathname}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) {
+    const body = await response.text();
+    const error = new Error(`firestore_admin_${response.status}`);
+    (error as any).status = response.status;
+    (error as any).body = body.slice(0, 200);
+    throw error;
+  }
+  return response.json();
+}
+
+async function checkFirestoreBackups(): Promise<FirestoreBackupCheck> {
+  if (String(process.env.FIRESTORE_BACKUP_MONITORING_ENABLED || '').toLowerCase() !== 'true') {
+    return {
+      status: 'not_configured',
+      scheduleCount: 0,
+      readyBackupCount: 0,
+      latestSnapshotTime: null,
+      ageHours: null,
+      errorCategory: 'monitoring_not_enabled'
+    };
+  }
+
+  const auth = await getFirestoreAdminAccessToken();
+  if (!auth?.projectId) {
+    return {
+      status: 'failed',
+      scheduleCount: 0,
+      readyBackupCount: 0,
+      latestSnapshotTime: null,
+      ageHours: null,
+      errorCategory: 'firebase_service_account_missing'
+    };
+  }
+
+  const databaseId = getFirebaseConfig().firestoreDatabaseId || '(default)';
+  const databasePath = `projects/${encodeURIComponent(auth.projectId)}/databases/${encodeURIComponent(databaseId)}`;
+  const schedulesResponse = await firestoreAdminRequest(`/v1/${databasePath}/backupSchedules`, auth.token) as { backupSchedules?: any[] };
+  const schedules = schedulesResponse.backupSchedules || [];
+  if (schedules.length === 0) {
+    return {
+      status: 'failed',
+      scheduleCount: 0,
+      readyBackupCount: 0,
+      latestSnapshotTime: null,
+      ageHours: null,
+      errorCategory: 'backup_schedule_missing'
+    };
+  }
+
+  const database = await firestoreAdminRequest(`/v1/${databasePath}`, auth.token) as { name?: string; locationId?: string };
+  const locationId = String(database.locationId || '').trim();
+  if (!locationId) {
+    return {
+      status: 'failed',
+      scheduleCount: schedules.length,
+      readyBackupCount: 0,
+      latestSnapshotTime: null,
+      ageHours: null,
+      errorCategory: 'firestore_location_missing'
+    };
+  }
+
+  const backupsResponse = await firestoreAdminRequest(
+    `/v1/projects/${encodeURIComponent(auth.projectId)}/locations/${encodeURIComponent(locationId)}/backups?pageSize=100`,
+    auth.token
+  ) as { backups?: any[] };
+  const backups = (backupsResponse.backups || [])
+    .filter(backup => backup.database === database.name && backup.state === 'READY')
+    .filter(backup => typeof backup.snapshotTime === 'string')
+    .sort((left, right) => Date.parse(right.snapshotTime) - Date.parse(left.snapshotTime));
+  const latestSnapshotTime = backups[0]?.snapshotTime || null;
+  const ageHours = latestSnapshotTime ? (Date.now() - Date.parse(latestSnapshotTime)) / (60 * 60 * 1000) : null;
+  const maxAgeHours = Math.min(Math.max(Number(process.env.FIRESTORE_BACKUP_MAX_AGE_HOURS || 48), 24), 168);
+  const status = ageHours !== null && ageHours >= 0 && ageHours <= maxAgeHours ? 'passed' : 'failed';
+
+  return {
+    status,
+    scheduleCount: schedules.length,
+    readyBackupCount: backups.length,
+    latestSnapshotTime,
+    ageHours,
+    errorCategory: status === 'passed' ? null : 'recent_ready_backup_missing'
+  };
 }
 
 function getAdminAuth() {
@@ -837,7 +958,10 @@ export function createApp() {
     const startedAt = Date.now();
     const checks: Record<string, string> = {
       firestore: 'not_checked',
-      gemini: process.env.GEMINI_API_KEY ? 'configured' : 'missing'
+      gemini: process.env.GEMINI_API_KEY ? 'configured' : 'missing',
+      backups: String(process.env.FIRESTORE_BACKUP_MONITORING_ENABLED || '').toLowerCase() === 'true'
+        ? 'not_checked'
+        : 'not_configured'
     };
     let errorCategory: string | null = null;
 
@@ -850,8 +974,22 @@ export function createApp() {
       console.error('[DeepHealth] Firestore readiness check failed:', error);
     }
 
+    if (checks.backups === 'not_checked') {
+      try {
+        const backupCheck = await checkFirestoreBackups();
+        checks.backups = backupCheck.status;
+        if (backupCheck.status === 'failed') errorCategory ||= backupCheck.errorCategory || 'backup_check_failed';
+      } catch (error: any) {
+        checks.backups = 'failed';
+        errorCategory ||= String(error?.code || error?.name || 'backup_check_failed').slice(0, 80);
+        console.error('[DeepHealth] Firestore backup check failed:', error);
+      }
+    }
+
     const latencyMs = Date.now() - startedAt;
-    const healthy = checks.firestore === 'ok' && checks.gemini === 'configured';
+    const healthy = checks.firestore === 'ok'
+      && checks.gemini === 'configured'
+      && checks.backups !== 'failed';
     try {
       await updateDeepHealthState({
         status: healthy ? 'passed' : 'failed',

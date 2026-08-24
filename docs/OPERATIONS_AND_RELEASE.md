@@ -41,9 +41,40 @@ Set `FIREBASE_SERVICE_ACCOUNT_JSON` to the complete JSON credential for a dedica
 
 Set `CRON_SECRET` to a random production-only secret. Vercel sends it as a bearer token when it runs `/api/monitor/search-canary` daily. The canary records pass/fail and latency without using a customer account or storing the canary query in telemetry. Real user searches continue to be observed continuously through delivery telemetry.
 
+Firestore backup monitoring is opt-in because it requires a Google Cloud backup schedule and an IAM permission that should not be granted to the application by default. When the schedule is ready, add these Vercel variables:
+
+```env
+FIRESTORE_BACKUP_MONITORING_ENABLED=true
+FIRESTORE_BACKUP_MAX_AGE_HOURS=48
+```
+
+Grant the Firebase service account used by `FIREBASE_SERVICE_ACCOUNT_JSON` the `roles/datastore.backupsViewer` and `roles/datastore.backupSchedulesViewer` roles. The protected daily deep-health run then checks that a daily schedule exists and that a `READY` backup for this database is no older than the configured limit. A failed check is recorded and included in the existing deduplicated owner alert. The application never creates, deletes or restores a backup.
+
 Canary failures trigger a deduplicated owner alert. Repeated client failures or user reports trigger a separate alert after a threshold is reached within one hour. Alerts contain no search text or customer details.
 
 Do not commit `.env.local`.
+
+### Firestore backup setup
+
+Create the daily schedule once in Google Cloud, using a retention period that fits the project budget. For the current project and database:
+
+```bash
+gcloud firestore backups schedules create \
+  --project='gen-lang-client-0925408841' \
+  --database='ai-studio-ffdbb575-df5b-4ac3-a6ad-710b4076125a' \
+  --recurrence=daily \
+  --retention=14w
+```
+
+If a schedule already exists, do not create a second daily schedule. Confirm it first:
+
+```bash
+gcloud firestore backups schedules list \
+  --project='gen-lang-client-0925408841' \
+  --database='ai-studio-ffdbb575-df5b-4ac3-a6ad-710b4076125a'
+```
+
+After the first backup reaches `READY`, set the Vercel variables above and redeploy. Then manually run the GitHub Actions workflow once and confirm that the protected deep-health check passes. A restore drill should use a separate staging Google Cloud project or an explicitly approved temporary database; restoring into the production database is destructive and must not be automated from the application.
 
 ## Connected-service configuration
 
