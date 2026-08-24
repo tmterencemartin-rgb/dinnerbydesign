@@ -10,6 +10,7 @@ type ComparisonRow = {
 export const WHY_DINNER_BY_DESIGN_ROWS: ComparisonRow[] = [
   { capability: 'Remembers preferences between searches', scope: 'search' },
   { capability: 'Applies preferences automatically', scope: 'search' },
+  { capability: 'Uses named UK publisher sources', scope: 'search' },
   { capability: 'Provides estimated cost per portion', scope: 'search' },
   { capability: 'Compares cost, time, portions and nutrition in one place', scope: 'search' },
   { capability: 'Saves recipes for later', scope: 'planning' },
@@ -114,7 +115,7 @@ export const WhyDinnerByDesignComparison: React.FC<WhyDinnerByDesignComparisonPr
       </div>
 
       <p className="mt-4 text-xs leading-5 text-dbd-ink-3">
-        This compares DinnerByDesign with a typical one-off LLM recipe search. A general LLM can reproduce some functions with extra prompts, tools or add-ons, but those steps have to be set up and repeated by the user.
+        DinnerByDesign draws recipes from named UK publishers only. A general LLM search is not normally limited to UK sources unless the user specifies that requirement.
       </p>
 
       {compact && onTryFreeSearch && (
