@@ -34,6 +34,7 @@ const PublicGuideFooter: React.FC = () => (
             <a href="/dinner-plans" className="hover:text-dbd-accent">Affordable dinner plans</a>
             <a href="/recipes" className="hover:text-dbd-accent">Recipes and cooking ideas</a>
             <a href="/food-costs" className="hover:text-dbd-accent">Food-cost &amp; waste</a>
+            <a href="/why-dinnerbydesign" className="hover:text-dbd-accent">Why DinnerByDesign?</a>
           </div>
         </div>
         <div className="min-w-0 sm:contents">

@@ -71,6 +71,7 @@ import {
 import {
   PublicEditorialGuideView,
 } from './components/views/PublicEditorialGuideView';
+import { WhyDinnerByDesignView } from './components/views/WhyDinnerByDesignView';
 import { PUBLISHED_PUBLIC_GUIDE_RECORDS } from './content/publicGuideRegistry';
 import {
   getPublicGuideJsonLd,
@@ -155,6 +156,14 @@ const PUBLIC_GUIDE_RECORD_ROUTES = PUBLISHED_PUBLIC_GUIDE_RECORDS.reduce<Record<
 }, {});
 
 export const PUBLIC_ROUTES: Record<string, PublicRoute> = {
+  '/why-dinnerbydesign': {
+    seo: {
+      title: 'Why DinnerByDesign? Search, plan and shop in one workflow',
+      description: 'See how DinnerByDesign extends recipe search with saved preferences, estimated costs, weekly planning and a consolidated shopping list.',
+      canonicalPath: '/why-dinnerbydesign',
+    },
+    render: () => <WhyDinnerByDesignView onTryFreeSearch={() => window.location.assign('/?view=home')} />,
+  },
   '/contact': {
     seo: {
       title: 'Contact DinnerByDesign',

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { safeStorage } from '../../lib/storage';
 import { Wordmark } from '../Wordmark';
+import { WhyDinnerByDesignComparison } from '../WhyDinnerByDesignComparison';
 import { 
   Search as SearchIcon, 
   Calendar as CalendarIcon, 
@@ -322,7 +323,7 @@ export const LandingView: React.FC = () => {
               href="#why-different"
               className="hover:text-dbd-accent tracking-tight transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
             >
-              Why it's different
+              Why DinnerByDesign
             </a>
             <a
               href="#how-it-works"
@@ -376,7 +377,7 @@ export const LandingView: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className="hover:text-dbd-accent py-2 transition-colors cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent rounded-sm px-1"
               >
-                Why it's different
+                Why DinnerByDesign
               </a>
               <a
                 href="#how-it-works"
@@ -607,12 +608,21 @@ export const LandingView: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. WHY I BUILT DINNERBYDESIGN */}
+      {/* 5. WHY DINNERBYDESIGN */}
       <section id="why-different" className="order-4 py-6 sm:py-14 px-6 sm:px-8 max-w-5xl mx-auto border-t border-dbd-rule/40 scroll-mt-nav">
-        <div className="max-w-prose text-left select-none">
+        <div className="max-w-3xl text-left">
           <h3 className="text-3xl sm:text-4xl font-sans font-bold text-dbd-ink leading-[1.15] mb-3 sm:mb-6">
-            Why I built DinnerByDesign
+            Why DinnerByDesign?
           </h3>
+          <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
+            A general LLM can suggest a recipe. DinnerByDesign carries that search into the decisions that follow, without repeated prompting or manual organisation.
+          </p>
+          <WhyDinnerByDesignComparison compact onTryFreeSearch={() => { window.location.href = '/?view=home'; }} />
+        </div>
+        <div className="mt-10 max-w-prose text-left select-none sm:mt-14">
+          <h4 className="text-xl sm:text-2xl font-sans font-bold text-dbd-ink leading-[1.15] mb-3 sm:mb-5">
+            Why I built it
+          </h4>
           <p className="text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
             I live on my own, which means smaller portions, odd quantities and a lot of ingredients I can't use up before they go off. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
           </p>
@@ -985,6 +995,7 @@ export const LandingView: React.FC = () => {
                 <a href="/dinner-plans" className="hover:text-dbd-accent hover:underline">Affordable dinner plans</a>
                 <a href="/recipes" className="hover:text-dbd-accent hover:underline">Recipes and cooking ideas</a>
                 <a href="/food-costs" className="hover:text-dbd-accent hover:underline">Food-cost &amp; waste</a>
+                <a href="/why-dinnerbydesign" className="hover:text-dbd-accent hover:underline">Why DinnerByDesign?</a>
               </div>
             </div>
             <div className="min-w-0 sm:contents">

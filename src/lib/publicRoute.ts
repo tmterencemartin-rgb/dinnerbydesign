@@ -3,7 +3,8 @@ const normalisePath = (pathName: string) =>
 
 export const isPublicGuideRoute = (pathName: string) => {
   const path = normalisePath(pathName);
-  return path === '/guides'
+  return path === '/why-dinnerbydesign'
+    || path === '/guides'
     || path === '/contact'
     || path === '/dinner-plans'
     || path === '/recipes'

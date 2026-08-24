@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   PublicEditorialGuideView,
 } from './components/views/PublicEditorialGuideView';
+import { WhyDinnerByDesignView } from './components/views/WhyDinnerByDesignView';
 import {
   FAMILY_DINNERS_FOR_FOUR_PATH,
 } from './content/familyDinnersForFourPlan';
@@ -50,6 +51,13 @@ describe('PublicGuideApp routing', () => {
 
     expect(twoPersonPlan.type).not.toBe(PublicEditorialGuideView);
     expect(familyPlan.type).not.toBe(PublicEditorialGuideView);
+  });
+
+  it('exposes the public comparison page', () => {
+    const comparisonPage = expectReactElement(renderRoute('/why-dinnerbydesign'));
+
+    expect(comparisonPage.type).toBe(WhyDinnerByDesignView);
+    expect(getPublicRouteSeo('/why-dinnerbydesign').canonicalPath).toBe('/why-dinnerbydesign');
   });
 
   it('keeps unknown guide URLs out of the index', () => {
