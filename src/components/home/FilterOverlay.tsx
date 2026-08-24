@@ -338,6 +338,12 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               </button>
             )}
           </div>
+          <div className="mt-3 flex items-start gap-2 rounded border border-gray-100 bg-gray-50/70 px-3 py-2.5">
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+            <p className="text-[10.5px] font-medium leading-relaxed text-gray-500">
+              <span className="font-bold text-gray-600">Why results can narrow:</span> allergies and diet rules exclude unsuitable ingredients, while budget, time and sourcing choices narrow the remaining recipes. If no suitable recipe appears, remove one preference or broaden a limit.
+            </p>
+          </div>
         </div>
 
         <div className="px-4 sm:px-6 pt-3 pb-0 overflow-y-auto space-y-2 flex-1 scrollbar-hide no-scrollbar">
