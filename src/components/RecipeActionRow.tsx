@@ -28,14 +28,9 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
 }) => {
   const [isEmailing, setIsEmailing] = useState(false);
   const [isChoosingDay, setIsChoosingDay] = useState(false);
-  const { user, handlePrintRecipe, showToast, goToSignIn } = useAuth();
+  const { user, handlePrintRecipe, showToast } = useAuth();
 
   const handleSaveAndSchedule = async () => {
-    if (!user || user.isAnonymous) {
-      goToSignIn();
-      return;
-    }
-
     if (!isSaved) {
       await onSave();
       window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));

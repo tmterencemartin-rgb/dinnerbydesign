@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Search, Calendar, LockKeyhole, ShoppingCart } from 'lucide-react';
+import { Search, Calendar, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { Footer } from './Footer';
@@ -34,18 +34,9 @@ const logoVariants = {
 };
 
 export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSearch }) => {
-  const { user, goToSignIn, showToast } = useAuth();
-  const isGuest = !user || user.isAnonymous;
-
-  const requireAccount = useCallback((message: string) => {
-    if (user && !user.isAnonymous) return false;
-    showToast(message, 'Sign In', goToSignIn);
-    return true;
-  }, [goToSignIn, showToast, user]);
+  const { user, goToSignIn } = useAuth();
 
   const goToSavedRecipes = useCallback(() => {
-    if (requireAccount('Sign in to save and schedule dinners.')) return;
-
     if (view === 'planner') {
       document.getElementById('saved-recipes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
@@ -53,12 +44,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
 
     safeStorage.session.setItem('dbd_planner_target', 'saved-recipes');
     setView('planner');
-  }, [requireAccount, setView, view]);
+  }, [setView, view]);
 
   const goToShopping = useCallback(() => {
-    if (requireAccount('Sign in to create and manage your shopping list.')) return;
     setView('shopping');
-  }, [requireAccount, setView]);
+  }, [setView]);
 
   // Revert any leftover dark mode class on the body/html element completely
   useEffect(() => {
@@ -95,7 +85,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
             </button>
             
             <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
-              <Tooltip text={user && !user.isAnonymous ? "View your account and preferences" : "Sign in and save your preferences and recipes for future visits"} position="bottom" align="right">
+              <Tooltip text={user && !user.isAnonymous ? "View your account and preferences" : "Sign in to keep your browser workspace across devices"} position="bottom" align="right">
                 <button 
                   onClick={() => {
                     if (user && !user.isAnonymous) {
@@ -133,27 +123,19 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
             </button>
             <button 
               onClick={goToSavedRecipes}
-              aria-label={isGuest ? 'Save & Schedule, sign in required' : 'Save & Schedule'}
-              title={isGuest ? 'Sign in to save and schedule dinners' : undefined}
-              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'planner' && !isGuest ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
+              aria-label="Save & Schedule"
+              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'planner' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <Calendar className="w-4 h-4 mb-1 md:mb-1.5" />
-              <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest">
-                Save & Schedule
-                {isGuest && <LockKeyhole className="h-2.5 w-2.5" aria-hidden="true" />}
-              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest">Save & Schedule</span>
             </button>
             <button 
               onClick={goToShopping}
-              aria-label={isGuest ? 'Shopping, sign in required' : 'Shopping'}
-              title={isGuest ? 'Sign in to create and manage your shopping list' : undefined}
-              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'shopping' && !isGuest ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
+              aria-label="Shopping"
+              className={`flex-1 flex min-h-[46px] flex-col items-center justify-center py-2 border-b-2 transition-all cursor-pointer ${view === 'shopping' ? 'border-dbd-ink text-dbd-ink font-semibold' : 'border-transparent text-dbd-ink-3 hover:text-dbd-ink-2'}`}
             >
               <ShoppingCart className="w-4 h-4 mb-1 md:mb-1.5" />
-              <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest">
-                Shopping
-                {isGuest && <LockKeyhole className="h-2.5 w-2.5" aria-hidden="true" />}
-              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest">Shopping</span>
             </button>
           </div>
         </div>

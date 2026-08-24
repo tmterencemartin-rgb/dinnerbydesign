@@ -59,7 +59,7 @@ import { buildShoppingListData, SHOPPING_CATEGORIES, normalizeIngredientKey } fr
 import { generateDinnerSuggestions, enrichRecipe } from '../services/geminiService';
 import { safeStorage } from '../lib/storage';
 import { prepareSavedRecipeData } from '../lib/savedRecipeData';
-import { clearRuntimeIngredientPriceCatalogue, RuntimeIngredientPriceCatalogueEntry, setRuntimeIngredientPriceCatalogue } from '../services/groceryService';
+import { clearRuntimeIngredientPriceCatalogue, costItemSync, normalizeIngredient, RuntimeIngredientPriceCatalogueEntry, setRuntimeIngredientPriceCatalogue } from '../services/groceryService';
 import {
   clearPlannerWeekRecipes,
   getScheduledRecipeForDay,
@@ -85,6 +85,8 @@ import {
   removePantryItemDocument,
   updatePantryStapleDocument,
 } from '../lib/pantryWrites';
+import { isSameRecipe } from '../lib/recipeUtils';
+import { clearGuestWorkspace, GuestWorkspace, readGuestWorkspace, writeGuestWorkspace } from '../lib/guestWorkspace';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -215,12 +217,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('[Diagnostic] Logs cleared');
   };
 
-  const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
-  const [dbShoppingList, setDbShoppingList] = useState<ShoppingListItem[]>([]);
-  const [pantry, setPantry] = useState<PantryItem[]>([]);
+  const initialGuestWorkspace = useRef<GuestWorkspace>(readGuestWorkspace());
+  const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>(() => initialGuestWorkspace.current.savedRecipes);
+  const [dbShoppingList, setDbShoppingList] = useState<ShoppingListItem[]>(() => initialGuestWorkspace.current.shoppingList);
+  const [pantry, setPantry] = useState<PantryItem[]>(() => initialGuestWorkspace.current.pantry);
   const [persistentPantryItems, setPersistentPantryItems] = useState<string[]>(() => {
     const stored = safeStorage.getItem('persistentPantryItems');
-    if (!stored) return [];
+    if (!stored) return initialGuestWorkspace.current.persistentPantryItems;
     try {
       return JSON.parse(stored);
     } catch (e) {
@@ -244,6 +247,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return updated;
     });
   };
+
+  const isGuestSession = !user || user.isAnonymous;
+
   const [authError, setAuthError] = useState<string | null>(null);
   const setAuthErrorLogged = (msg: string | null) => {
     setAuthError(msg);
@@ -335,6 +341,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const isAuthReadyProcessed = useRef(false);
+
+  useEffect(() => {
+    if (!isAuthReady || !isGuestSession) return;
+    writeGuestWorkspace({
+      savedRecipes,
+      shoppingList: dbShoppingList,
+      pantry,
+      persistentPantryItems,
+    });
+  }, [dbShoppingList, isAuthReady, isGuestSession, pantry, persistentPantryItems, savedRecipes]);
   const [unitSystem, setUnitSystemInternal] = useState<'metric' | 'imperial'>(() => {
     return (safeStorage.getItem('dbd_unit_system') as 'metric' | 'imperial') || 'metric';
   });
@@ -453,13 +469,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [planner, isAuthReady, user, accessStatus]);
 
   const shoppingList = React.useMemo(() => {
-    if (!user || user.isAnonymous) return [];
-    
     const derived = buildShoppingListData({
       planner,
       pantry,
       existingItems: dbShoppingList,
-      userId: user.uid,
+      userId: user?.uid || 'guest',
       persistentPantryKeys: persistentPantryItems
     });
     
@@ -536,6 +550,48 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const migrateGuestWorkspaceToAccount = async (accountUser: FirebaseUser) => {
+    const workspace = readGuestWorkspace();
+    if (workspace.savedRecipes.length === 0 && workspace.shoppingList.length === 0 && workspace.pantry.length === 0) {
+      return;
+    }
+
+    try {
+      const batch = writeBatch(db);
+
+      workspace.savedRecipes.forEach(recipe => {
+        const recipeId = recipe.id || `guest-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const cleanData = prepareSavedRecipeData(recipe, accountUser.uid, recipe.scheduledDate || null, {
+          savedAt: recipe.savedAt || new Date(),
+          updatedAt: recipe.updatedAt || new Date(),
+        });
+        batch.set(doc(db, 'users', accountUser.uid, 'savedRecipes', recipeId), cleanData, { merge: true });
+      });
+
+      workspace.shoppingList.forEach(item => {
+        batch.set(doc(db, 'users', accountUser.uid, 'shoppingList', item.id), {
+          ...item,
+          userId: accountUser.uid,
+        }, { merge: true });
+      });
+
+      workspace.pantry.forEach(item => {
+        batch.set(doc(db, 'users', accountUser.uid, 'pantry', item.id), {
+          ...item,
+          userId: accountUser.uid,
+        }, { merge: true });
+      });
+
+      await batch.commit();
+      clearGuestWorkspace();
+      safeStorage.removeItem('persistentPantryItems');
+      addLog(`AUTH: Migrated browser workspace to account ${accountUser.uid}.`);
+    } catch (error) {
+      addLog(`AUTH WARNING: Browser workspace could not be migrated: ${error}`);
+      showToast('Your browser workspace is still available on this device.');
+    }
+  };
+
   const signInWithGoogle = async (): Promise<boolean> => {
     if (isAuthInProgress.current) {
       addLog("AUTH: Sign-In already in progress, skipping.");
@@ -566,10 +622,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       addLog(`AUTH: Initiating Google Sign-In. User: ${currentFirebaseUser?.uid}, Anon: ${isAnonymous}`);
       
       if (currentFirebaseUser && isAnonymous) {
-        addLog("AUTH: Attempting to link anonymous account...");
-        try {
-          const result = await linkWithPopup(currentFirebaseUser, provider);
-          setUser(result.user);
+          addLog("AUTH: Attempting to link anonymous account...");
+          try {
+            const result = await linkWithPopup(currentFirebaseUser, provider);
+            await migrateGuestWorkspaceToAccount(result.user);
+            setUser(result.user);
           addLog("AUTH: linkWithPopup SUCCESS.");
           showToast("Account linked successfully!");
           return true;
@@ -590,6 +647,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (credential) {
               try {
                 const result = await signInWithCredential(auth, credential);
+                await migrateGuestWorkspaceToAccount(result.user);
                 setUser(result.user);
                 addLog(`AUTH: Automatic credential sign-in SUCCESS: ${result.user.email}`);
                 showToast("Signed in to your existing account.");
@@ -603,6 +661,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             addLog("AUTH: Falling back to automatic popup login...");
             try {
               const result = await signInWithPopup(auth, provider);
+              await migrateGuestWorkspaceToAccount(result.user);
               setUser(result.user);
               addLog(`AUTH: Automatic popup switch SUCCESS: ${result.user.email}`);
               showToast("Signed in to your existing account.");
@@ -628,6 +687,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         addLog("AUTH: Standard sign-in...");
         const result = await signInWithPopup(auth, provider);
+        await migrateGuestWorkspaceToAccount(result.user);
         setUser(result.user);
         addLog(`AUTH: Standard SUCCESS: ${result.user.email}`);
         showToast("Signed in successfully!");
@@ -705,16 +765,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Ensure state reflects the new user immediately
         setUser(firebaseUser);
 
-        // Anonymous Firebase identities exist only to support protected guest
-        // search requests. They are not app accounts and must not trigger a
-        // normal profile read/write, which would surface an access error for a
-        // visitor who has not signed in.
+        // Anonymous Firebase identities do not have a Firestore profile. Their
+        // saved recipes, plans and shopping data stay in this browser instead.
         if (firebaseUser.isAnonymous) {
-          addLog('AUTH: Anonymous guest identity detected; skipping app profile initialisation.');
+          const guestWorkspace = readGuestWorkspace();
+          addLog('AUTH: Anonymous guest identity detected; loading browser workspace.');
           setProfile(null);
-          setSavedRecipes([]);
-          setDbShoppingList([]);
-          setPantry([]);
+          setSavedRecipes(guestWorkspace.savedRecipes);
+          setDbShoppingList(guestWorkspace.shoppingList);
+          setPantry(guestWorkspace.pantry);
+          setPersistentPantryItems(guestWorkspace.persistentPantryItems);
           setLoading(false);
           setIsAuthReady(true);
           isAuthReadyProcessed.current = true;
@@ -828,12 +888,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           cleanup();
         }
       } else {
-        addLog("AUTH: No user detected. Cleaning up state.");
+        const guestWorkspace = readGuestWorkspace();
+        addLog("AUTH: No user detected. Loading browser workspace.");
         setUser(null);
         setProfile(null);
-        setSavedRecipes([]);
-        setDbShoppingList([]);
-        setPantry([]);
+        setSavedRecipes(guestWorkspace.savedRecipes);
+        setDbShoppingList(guestWorkspace.shoppingList);
+        setPantry(guestWorkspace.pantry);
+        setPersistentPantryItems(guestWorkspace.persistentPantryItems);
         setLoading(false);
         setIsAuthReady(true);
         isAuthReadyProcessed.current = true;
@@ -1092,7 +1154,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updatePlanner = async (scheduledDate: string, recipe: SavedRecipe | Recipe | ReadyMeal) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      const existingOnDay = savedRecipes.find(item => item.scheduledDate === scheduledDate);
+      const existingInSaved = savedRecipes.find(item => isSameRecipe(item, recipe));
+      const finalId = existingInSaved?.id || `guest-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const savedData = prepareSavedRecipeData(recipe, 'guest', scheduledDate, {
+        savedAt: existingInSaved?.savedAt || new Date(),
+        updatedAt: new Date(),
+      }) as unknown as SavedRecipe;
+      const nextRecipe = { ...savedData, id: finalId } as SavedRecipe;
+      setSavedRecipes(previous => [
+        ...previous
+          .filter(item => item.id !== existingOnDay?.id && item.id !== existingInSaved?.id),
+        nextRecipe,
+      ]);
+      return {
+        id: finalId,
+        wasUnscheduledId: existingOnDay?.id,
+        isNew: !existingInSaved,
+      };
+    }
     setError(null);
     try {
       return await updatePlannerRecipe({
@@ -1112,7 +1193,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const saveRecipe = async (item: Recipe | ReadyMeal) => {
-    if (!user) throw new Error('No signed-in user is available for saving recipes.');
+    if (!user || user.isAnonymous) {
+      const existing = savedRecipes.find(recipe => !recipe.isArchived && isSameRecipe(recipe, item));
+      if (existing?.id) return existing.id;
+
+      const id = `guest-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const savedData = prepareSavedRecipeData(item, 'guest', null, {
+        savedAt: new Date(),
+        updatedAt: new Date(),
+      }) as unknown as SavedRecipe;
+      setSavedRecipes(previous => [{ ...savedData, id } as SavedRecipe, ...previous]);
+      return id;
+    }
     try {
       addLog(`SAVE_RECIPE_START: ${item.title}`);
       const savedId = await saveRecipeDocument({
@@ -1161,7 +1253,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateRecipe = async (id: string, updates: Partial<SavedRecipe>) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      setSavedRecipes(previous => previous.map(recipe => (
+        recipe.id === id ? { ...recipe, ...updates, updatedAt: new Date() } : recipe
+      )));
+      return;
+    }
     try {
       await updateRecipeDocument({
         firestoreDb: db,
@@ -1179,7 +1276,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeRecipe = async (id: string) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      setSavedRecipes(previous => previous.filter(recipe => recipe.id !== id));
+      return;
+    }
     try {
       await removeRecipeDocument({
         firestoreDb: db,
@@ -1196,7 +1296,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const unscheduleRecipe = async (id: string) => {
-    if (!user || !id || id === 'unknown') return;
+    if (!id || id === 'unknown') return;
+    if (!user || user.isAnonymous) {
+      setSavedRecipes(previous => previous.map(recipe => (
+        recipe.id === id ? { ...recipe, scheduledDate: null, updatedAt: new Date() } : recipe
+      )));
+      return;
+    }
     try {
       await unschedulePlannerRecipe({
         firestoreDb: db,
@@ -1217,13 +1323,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clearPlannerDay = async (date: string) => {
-    if (!user) return;
     const entry = getScheduledRecipeForDay(savedRecipes, date);
     if (entry?.id) await unscheduleRecipe(entry.id);
   };
 
   const clearPlannerWeek = async () => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      setSavedRecipes(previous => previous.map(recipe => (
+        recipe.scheduledDate ? { ...recipe, scheduledDate: null, updatedAt: new Date() } : recipe
+      )));
+      return;
+    }
     try {
       await clearPlannerWeekRecipes({
         firestoreDb: db,
@@ -1240,7 +1350,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeAllSavedRecipes = async () => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      setSavedRecipes(previous => previous.filter(recipe => !!recipe.scheduledDate));
+      return;
+    }
     try {
       const removedCount = await removeAllUnscheduledSavedRecipes({
         firestoreDb: db,
@@ -1258,7 +1371,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const generateShoppingList = async () => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      showToast("Shopping list updated");
+      return;
+    }
     try {
       await clearDerivedShoppingListDocuments({
         firestoreDb: db,
@@ -1272,7 +1388,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const toggleShoppingItem = async (id: string, checked: boolean) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      const current = shoppingList.find(item => item.id === id);
+      if (current) {
+        setDbShoppingList(previous => [
+          ...previous.filter(item => item.id !== id),
+          { ...current, checked, inStock: checked || current.inStock },
+        ]);
+      }
+      return;
+    }
     try {
       await updateShoppingItemDocument({
         firestoreDb: db,
@@ -1290,7 +1415,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateShoppingItem = async (id: string, updates: Partial<ShoppingListItem>) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      const current = shoppingList.find(item => item.id === id);
+      if (current) {
+        setDbShoppingList(previous => [
+          ...previous.filter(item => item.id !== id),
+          { ...current, ...updates },
+        ]);
+      }
+      return;
+    }
     try {
       await updateShoppingItemDocument({
         firestoreDb: db,
@@ -1308,7 +1442,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addCustomShoppingItem = async (name: string, category: string = 'Other') => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      const id = `guest-item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const normalized = normalizeIngredient(name);
+      const item = costItemSync({
+        id,
+        name,
+        nameRaw: name,
+        category: 'Added items',
+        checked: false,
+        inStock: false,
+        isCustom: true,
+        userId: 'guest',
+        ...normalized,
+        sourceRecipeIds: [],
+        sourceDays: [],
+        generatedAt: new Date(),
+      } as any) as ShoppingListItem;
+      setDbShoppingList(previous => [...previous, { ...item, category }]);
+      return;
+    }
     try {
       await addCustomShoppingItemDocument({
         firestoreDb: db,
@@ -1326,7 +1479,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeShoppingItem = async (id: string) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      setDbShoppingList(previous => previous.filter(item => item.id !== id));
+      return;
+    }
     try {
       await removeShoppingItemDocument({
         firestoreDb: db,
@@ -1343,7 +1499,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addToPantry = async (name: string, category: string = 'Other', isStaple: boolean = false) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      const id = `guest-pantry-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      setPantry(previous => [...previous, {
+        id,
+        name,
+        category,
+        isStaple,
+        userId: 'guest',
+        lastUsed: new Date(),
+      }]);
+      return;
+    }
     try {
       await addPantryItemDocument({
         firestoreDb: db,
@@ -1362,7 +1529,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeFromPantry = async (id: string) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      setPantry(previous => previous.filter(item => item.id !== id));
+      return;
+    }
     try {
       await removePantryItemDocument({
         firestoreDb: db,
@@ -1379,7 +1549,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const togglePantryStaple = async (id: string, isStaple: boolean) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) {
+      setPantry(previous => previous.map(item => (
+        item.id === id ? { ...item, isStaple } : item
+      )));
+      return;
+    }
     try {
       await updatePantryStapleDocument({
         firestoreDb: db,
@@ -1789,6 +1964,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: serverTimestamp()
       });
 
+      await migrateGuestWorkspaceToAccount(credential.user);
+
       // Notify the owner in the background. Signup should still complete if the
       // notification provider is temporarily unavailable.
       void (async () => {
@@ -1868,6 +2045,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       addLog(`AUTH: Signing in ${email}...`);
       const credential = await signInWithEmailAndPassword(auth, email, pass);
+      await migrateGuestWorkspaceToAccount(credential.user);
       setUser(credential.user);
       showToast("Signed in!");
       addLog(`AUTH: Sign-in success for ${email}`);

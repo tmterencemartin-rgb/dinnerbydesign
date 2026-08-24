@@ -112,6 +112,8 @@ const ViewLoading = () => (
 
 const GUEST_VISIBLE_VIEWS = new Set<AppView>([
   'home',
+  'planner',
+  'shopping',
   'landing',
   'pricing-methodology',
   'food-safety',
@@ -600,7 +602,9 @@ const AppContent = () => {
     return <AuthSignIn defaultMode={isSignInByDefault ? 'signin' : 'signup'} />;
   }
 
-  if (isGuest && view !== 'home') {
+  // Guests can use the browser-only planning and shopping workspace. Account-only
+  // views such as Settings and Admin remain protected.
+  if (isGuest && !['home', 'planner', 'shopping'].includes(view)) {
     if (authError) return <AuthError error={authError} />;
     const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
     const isSignInByDefault = params?.get('mode') === 'signin' || params?.get('view') === 'home' || params?.get('from') === 'email' || params?.get('highlight') === 'password-management';

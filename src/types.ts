@@ -1,5 +1,7 @@
 import { Timestamp, FieldValue } from 'firebase/firestore';
 
+export type AppTimestamp = Timestamp | FieldValue | Date;
+
 export type AppView = 'home' | 'settings' | 'planner' | 'shopping' | 'pricing-methodology' | 'food-safety' | 'recipe-methodology' | 'nutrition-methodology' | 'privacy' | 'terms' | 'landing' | 'signin' | 'admin' | 'success' | 'guides' | 'five-a-day-guide' | 'cheap-finishing-touches-guide' | 'low-cost-dinners-guide' | 'home-cooked-ready-made-guide' | 'meal-plan-five-for-two-under-40' | 'food-costs-uk-2026' | 'food-costs-lower-cost-cuts' | 'food-costs-cheaper-meat-cuts' | 'food-costs-shared-ingredients' | 'food-costs-complete-packs' | 'food-costs-low-cost-cooking-techniques' | 'food-costs-cooking-for-one' | 'food-costs-offal-budget' | 'food-costs-portion-planning' | 'food-costs-mediterranean-affordable-cooking' | 'food-costs-summer-stews' | 'food-costs-fresh-or-frozen' | 'food-costs-batch-cooking' | 'food-costs-grocery-cost-options' | 'food-costs-grocery-prediction';
 
 export type DinnerSource = 'cook' | 'ready-made';
@@ -302,10 +304,10 @@ export interface SavedRecipe {
   mode: 'cook' | 'ready-made';
   instructions?: string[];
   readyMadeKit?: ReadyMadeKit;
-  savedAt: Timestamp | FieldValue | null; // Firestore Timestamp
-  updatedAt?: Timestamp | FieldValue | null;
+  savedAt: AppTimestamp | null; // Firestore Timestamp or browser-local Date
+  updatedAt?: AppTimestamp | null;
   isArchived?: boolean;
-  archivedAt?: Timestamp | FieldValue | null;
+  archivedAt?: AppTimestamp | null;
   personalNote?: string | null;
   userId: string;
   retailer?: string;
@@ -343,7 +345,7 @@ export interface ShoppingListItem {
   inStock?: boolean;
   sourceRecipeIds: string[];
   sourceDays: string[];
-  generatedAt: Timestamp | FieldValue;
+  generatedAt: AppTimestamp;
   userId: string;
   isCustom?: boolean;
   excludedByPantry?: boolean;
@@ -382,6 +384,6 @@ export interface PantryItem {
   name: string;
   category: string;
   isStaple: boolean;
-  lastUsed?: Timestamp | FieldValue;
+  lastUsed?: AppTimestamp;
   userId: string;
 }

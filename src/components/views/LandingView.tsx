@@ -758,7 +758,7 @@ export const LandingView: React.FC = () => {
             Create an account when DinnerByDesign earns it.
           </h3>
           <p className="mt-2 sm:mt-3 text-dbd-ink-2 font-medium text-[15px] max-w-xl mx-auto">
-            Free searches give you three tries without an account. The free trial lasts seven days after sign-up, including continued searches, saved favourites, dinner planning and shopping lists.
+            Free searches give you three tries without an account. Save, schedule and build a shopping list in this browser, then sign up to keep it across devices and continue searching.
           </p>
         </div>
 

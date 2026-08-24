@@ -170,6 +170,7 @@ When a user lists ingredients:
 - When the free-search allowance is exhausted, replace inactive Search controls with one account panel while leaving any existing results visible below it.
 - New guests may see no more than three compact starter searches. Returning guests should see a quiet remaining-search count rather than the full onboarding panel.
 - Count each guest search-service request against the three-search allowance, including `More choices`. Label that action clearly for guests and block it when the allowance is exhausted.
+- Guests may save recipes, schedule dinners and build a costed shopping list in a browser-only workspace while their three-search allowance remains available. Store that workspace locally, keep the three-search cap unchanged, and migrate the saved recipes, schedule, shopping-list items and pantry items into the account when the visitor signs up or signs in. Preferences and cross-device persistence still require an account.
 
 ## Public guides inside the working app
 

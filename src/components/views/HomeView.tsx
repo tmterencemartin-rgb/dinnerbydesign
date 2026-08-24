@@ -538,10 +538,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       showToast("Your trial has ended. Upgrade to save more recipes.", "Upgrade", () => setView('settings'));
       return;
     }
-    if (!user || user.isAnonymous) {
-      goToSignIn();
-      return;
-    }
     const existing = savedRecipes.find(r => !r.isArchived && isSameRecipe(r, recipe));
     try {
       if (existing) {
@@ -552,7 +548,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
         const savedId = await saveRecipe(recipe);
         if (!savedId) throw new Error('Save did not return a saved recipe id.');
         window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
-        showToast("Recipe saved!");
+        showToast(user && !user.isAnonymous ? "Recipe saved!" : "Recipe saved in this browser.");
         setSelectedItem(null);
         setView('planner');
       }
@@ -565,10 +561,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const handlePlannerUpdate = async (dayId: string, recipe: any) => {
     if (isReadOnly) {
       showToast("Your trial has ended. Upgrade to continue planning.", "Upgrade", () => setView('settings'));
-      return;
-    }
-    if (!user || user.isAnonymous) {
-      goToSignIn();
       return;
     }
     try {

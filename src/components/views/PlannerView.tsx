@@ -144,7 +144,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     addLog,
     handlePrintRecipe,
     showToast,
-    goToSignIn,
     updateRecipe,
     user,
     accessStatus,
@@ -435,10 +434,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
   const handlePlanWeek = async () => {
     if (checkReadOnly("Your trial has ended. Upgrade to plan your week.")) return;
-    if (!user || user.isAnonymous) {
-      showToast("Sign in to create a weekly plan.", "Sign In", goToSignIn);
-      return;
-    }
 
     setPlanAlert(null);
     setBuiltWeekCost(null);
@@ -721,7 +716,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 <h2 className="text-[20px] font-bold text-gray-900 text-center">Save & Schedule</h2>
                 <p className="text-[12px] text-gray-400 font-medium text-center max-w-md">
                   {(!user || user.isAnonymous) 
-                    ? "Keep track of your weekly dinners and browse your temporary collection below."
+                    ? "Keep your dinners organised in this browser, then sign in later if you want to carry them across devices."
                     : "Keep dinner organised: choose what to cook and when, then bring the ingredients together in one shopping list."}
                 </p>
               </div>
@@ -963,7 +958,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                      {user && !user.isAnonymous && activeSavedRecipes.length > 0 && (
+                      {activeSavedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
                           {showDeleteAllSavedConfirm ? (
                             <div className="flex items-center gap-2">
