@@ -62,16 +62,16 @@ export const WhyDinnerByDesignComparison: React.FC<WhyDinnerByDesignComparisonPr
   }, [compact, scope]);
 
   return (
-    <div className={compact ? 'mt-8' : 'mt-8 sm:mt-10'}>
+    <div className={compact ? 'mt-6' : 'mt-6 sm:mt-8'}>
       {!compact && (
-        <div className="mb-5 flex flex-wrap gap-2" aria-label="Filter comparison capabilities">
+        <div className="mb-3 flex flex-wrap gap-2" aria-label="Filter comparison capabilities">
           {SCOPE_OPTIONS.map(option => (
             <button
               key={option.id}
               type="button"
               onClick={() => setScope(option.id)}
               aria-pressed={scope === option.id}
-              className={`min-h-10 rounded-full border px-3.5 text-xs font-semibold transition-colors ${scope === option.id ? 'border-dbd-accent bg-dbd-accent text-white' : 'border-dbd-rule bg-white text-dbd-ink-2 hover:border-dbd-accent hover:text-dbd-accent'}`}
+              className={`min-h-9 rounded-full border px-3 text-[11px] font-semibold transition-colors ${scope === option.id ? 'border-dbd-accent bg-dbd-accent text-white' : 'border-dbd-rule bg-white text-dbd-ink-2 hover:border-dbd-accent hover:text-dbd-accent'}`}
             >
               {option.label}
             </button>
@@ -79,7 +79,7 @@ export const WhyDinnerByDesignComparison: React.FC<WhyDinnerByDesignComparisonPr
         </div>
       )}
 
-      <div className={compact ? 'overflow-hidden border-y border-dbd-rule/60' : 'overflow-hidden rounded-xl border border-dbd-rule bg-white shadow-sm'}>
+      <div className="overflow-hidden border-y border-dbd-rule/60">
         {compact ? (
           <div className="divide-y divide-dbd-rule/60">
             <div className="grid grid-cols-[minmax(0,1fr)_3.5rem_4.5rem] items-center px-0 py-1.5 text-[8px] font-bold uppercase tracking-[0.08em] text-dbd-ink-3 sm:grid-cols-[minmax(0,1fr)_5rem_6rem]">
@@ -97,30 +97,17 @@ export const WhyDinnerByDesignComparison: React.FC<WhyDinnerByDesignComparisonPr
           </div>
         ) : null}
 
-        {!compact && <div className="hidden grid-cols-[minmax(0,1fr)_8rem_8rem] items-center border-b border-dbd-rule bg-dbd-surface-2 px-4 py-3 text-xs font-bold text-dbd-ink-2 sm:grid sm:px-5">
-          <span>Capability</span>
-          <span className="text-center">Typical LLM search</span>
-          <span className="text-center">DinnerByDesign</span>
-        </div>}
-
-        {!compact && <div className="divide-y divide-dbd-rule sm:hidden">
+        {!compact && <div className="divide-y divide-dbd-rule/60">
+          <div className="grid grid-cols-[minmax(0,1fr)_4rem_5.5rem] items-center px-0 py-1.5 text-[8px] font-bold uppercase tracking-[0.08em] text-dbd-ink-3 sm:grid-cols-[minmax(0,1fr)_8rem_8rem] sm:px-0 sm:text-[10px]">
+            <span>Capability</span>
+            <span className="text-center">Typical LLM</span>
+            <span className="text-center">DinnerByDesign</span>
+          </div>
           {rows.map(row => (
-            <div key={row.capability} className="px-4 py-4">
-              <p className="text-sm font-semibold leading-5 text-dbd-ink">{row.capability}</p>
-              <div className="mt-3 grid grid-cols-2 gap-3 text-center text-[10px] font-bold uppercase tracking-wide text-dbd-ink-3">
-                <div className="flex flex-col items-center gap-1.5"><CapabilityMark available={false} /><span>Typical LLM</span></div>
-                <div className="flex flex-col items-center gap-1.5"><CapabilityMark available /><span>DinnerByDesign</span></div>
-              </div>
-            </div>
-          ))}
-        </div>}
-
-        {!compact && <div className="hidden divide-y divide-dbd-rule sm:block">
-          {rows.map(row => (
-            <div key={row.capability} className="grid grid-cols-[minmax(0,1fr)_8rem_8rem] items-center px-4 py-3.5 sm:px-5">
-              <span className="text-sm font-semibold leading-5 text-dbd-ink">{row.capability}</span>
-              <span className="flex justify-center"><CapabilityMark available={false} /></span>
-              <span className="flex justify-center"><CapabilityMark available /></span>
+            <div key={row.capability} className="grid grid-cols-[minmax(0,1fr)_4rem_5.5rem] items-center px-0 py-2.5 sm:grid-cols-[minmax(0,1fr)_8rem_8rem] sm:py-3">
+              <span className="pr-2 text-xs font-semibold leading-4 text-dbd-ink sm:text-sm">{row.capability}</span>
+              <span className="flex justify-center"><CapabilityMark available={false} compact /></span>
+              <span className="flex justify-center"><CapabilityMark available compact /></span>
             </div>
           ))}
         </div>}
