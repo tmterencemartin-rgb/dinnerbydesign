@@ -220693,6 +220693,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       const repairPrompt2 = `Search intent: "${query2}".
 Return exactly ${repairCount} additional ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs.
 Do not repeat any existing title: ${existingTitles.join(", ") || "None"}.
+${ingredientIntent?.isIngredientLed && !isReadyMade ? `Every added recipe must include each requested ingredient in its ingredients array: ${parsedIngredients.join(", ")}. Use a normal named variant where appropriate, but keep each requested ingredient explicit.` : ""}
 ${allVegetarian ? "At least one added result must be a conventional non-vegetarian version where that is a normal fit for this dish. The user has not selected a vegetarian preference." : ""}
 ${isReadyMade ? "Return commercially available UK ready-made products only." : "Return home-cooking recipes only."}`;
       repairPrompts.push(repairPrompt2);
