@@ -449,7 +449,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const recipeId = recipe.id!;
         healingRef.current.add(recipeId);
         try {
-          const enriched = await enrichRecipe(recipe.title, recipe.cuisine, 'cook');
+          const enriched = await enrichRecipe(recipe.title, recipe.cuisine, 'cook', { sourceUrl: recipe.sourceUrl });
           if (enriched && 'ingredients' in enriched && Array.isArray(enriched.ingredients) && enriched.ingredients.length > 0) {
             const cleanData = prepareSavedRecipeData({ ...recipe, ...enriched } as Recipe, user.uid, recipe.scheduledDate || null, {
               savedAt: serverTimestamp(),

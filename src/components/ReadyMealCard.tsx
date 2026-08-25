@@ -237,7 +237,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   useEffect(() => {
     if (isExpanded && !currentServingSuggestion && !isEnriching) {
       setIsEnriching(true);
-      enrichRecipe(meal.title, meal.cuisine, 'ready-made')
+      enrichRecipe(meal.title, meal.cuisine, 'ready-made', { sourceUrl: meal.sourceUrl })
         .then(data => {
           setEnrichedData(data);
           setIsEnriching(false);

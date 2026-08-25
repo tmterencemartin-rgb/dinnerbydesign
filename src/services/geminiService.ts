@@ -5,7 +5,8 @@ import { PREFERRED_SOURCES } from '../data/preferredSources';
 import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrictIngredientSearch, parseAndNormaliseIngredients } from '../lib/ingredientParser';
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
-import { ACTIVE_GEMINI_MODEL } from '../config/aiModel';
+import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
+import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { auth, signInAnon } from '../firebase';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
@@ -332,7 +333,7 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
   // Model Fallback chain for basic text/flash tasks to handle daily/per-minute free quota limits robustly
   let activeModels = [modelId];
   if (modelId === 'gemini-3.5-flash') {
-    activeModels = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+    activeModels = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
   } else if (modelId.includes('flash')) {
     activeModels = [modelId];
     if (modelId !== 'gemini-3.1-flash-lite') activeModels.push('gemini-3.1-flash-lite');
@@ -343,13 +344,14 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
   // If in browser and Direct Mode (localhost only), use native fetch to ensure maximum reliability 
   if (typeof window !== 'undefined' && apiConfig.mode === 'direct' && apiConfig.directApiKey && isLocalhost()) {
     const apiKey = apiConfig.directApiKey;
-    // Use gemini-3.5-flash for maximum reliability in direct mode calls
-    const targetModel = modelId.includes('gemini-') ? modelId.replace(/gemini-(1\.5|2\.0|3\.1|3\.5)-flash/g, 'gemini-3.5-flash') : 'gemini-3.5-flash';
+    const targetModel = modelId;
     
     // Direct mode fallback chain selection
     let directModels = [targetModel];
     if (targetModel === 'gemini-3.5-flash') {
-      directModels = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+      directModels = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+    } else if (targetModel === 'gemini-3.5-flash-lite') {
+      directModels = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
     }
     let directModelIndex = 0;
 
@@ -381,6 +383,9 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
       if (config.responseSchema) {
         restPayload.generationConfig.responseSchema = serializeSchemaForRest(config.responseSchema);
       }
+    }
+    if (config.googleSearch) {
+      restPayload.tools = [{ google_search: {} }];
     }
 
     let lastError: any;
@@ -428,7 +433,8 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
 
             responseData = {
               text: candidate.content?.parts?.[0]?.text || "",
-              functionCalls: candidate.content?.parts?.filter((p: any) => p.functionCall).map((p: any) => p.functionCall) || null
+              functionCalls: candidate.content?.parts?.filter((p: any) => p.functionCall).map((p: any) => p.functionCall) || null,
+              groundingMetadata: candidate.groundingMetadata || null
             };
             break;
           } catch (error: any) {
@@ -488,7 +494,8 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
 	              systemInstruction: config?.systemInstruction,
 	              temperature: config?.temperature ?? 0.7,
 	              responseMimeType: config?.responseMimeType ?? config?.response_mime_type,
-	              responseSchema: config?.responseSchema ?? config?.response_schema
+              responseSchema: config?.responseSchema ?? config?.response_schema,
+              ...(config?.googleSearch ? { tools: [{ googleSearch: {} }] } : {})
 	            }
 	          });
 
@@ -539,6 +546,46 @@ const estimateTokensFromText = (value: string | undefined | null) => {
   if (!value) return 0;
   return Math.ceil(value.length / 4);
 };
+
+type GroundedSource = {
+  url: string;
+  title?: string;
+};
+
+const canonicaliseGroundedUrl = (value: unknown): string | null => {
+  if (typeof value !== 'string' || !/^https?:\/\//i.test(value.trim())) return null;
+  try {
+    const url = new URL(value.trim());
+    url.hash = '';
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return null;
+  }
+};
+
+const getGroundedSources = (response: any): GroundedSource[] => {
+  const metadata = response?.groundingMetadata || response?.candidates?.[0]?.groundingMetadata;
+  const chunks = Array.isArray(metadata?.groundingChunks) ? metadata.groundingChunks : [];
+  const seen = new Set<string>();
+
+  return chunks.flatMap((chunk: any) => {
+    const url = canonicaliseGroundedUrl(chunk?.web?.uri || chunk?.web?.url);
+    if (!url || seen.has(url)) return [];
+    seen.add(url);
+    return [{ url, title: typeof chunk?.web?.title === 'string' ? chunk.web.title : undefined }];
+  });
+};
+
+const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
+  items.filter(item => {
+    const canonicalUrl = canonicaliseGroundedUrl(item?.sourceUrl);
+    if (!canonicalUrl) return false;
+    const groundedSource = sources.get(canonicalUrl);
+    if (!groundedSource) return false;
+    item.sourceUrl = groundedSource.url;
+    return true;
+  })
+);
 
 const sanitizeRealityChecks = (checks: any): any[] => {
   if (!Array.isArray(checks)) return [];
@@ -637,10 +684,7 @@ async function fetchProxySuggestions(searchParams: SearchParams, preferences?: U
   }
 }
 
-type RecipeEnrichmentOptions = {
-  strictIngredientMatch?: boolean;
-  query?: string;
-};
+type RecipeEnrichmentOptions = EnrichmentRequestOptions;
 
 async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook' | 'ready-made', options?: RecipeEnrichmentOptions): Promise<any> {
   const controller = new AbortController();
@@ -652,13 +696,7 @@ async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook'
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title,
-        cuisine,
-        mode,
-        strictIngredientMatch: options?.strictIngredientMatch === true,
-        strictQuery: options?.query || ''
-      }),
+      body: JSON.stringify(buildEnrichmentRequestBody(title, cuisine, mode, options)),
       signal: controller.signal
     });
     clearTimeout(timeoutId);
@@ -927,6 +965,11 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     && activeReligious.length === 0
     && eligibleChilliFallbacks.length > 0;
 
+  const groundedSources = new Map<string, GroundedSource>();
+  const rememberGroundedSources = (response: any) => {
+    getGroundedSources(response).forEach(source => groundedSources.set(source.url, source));
+  };
+
   try {
     const modelClient = getAI();
     
@@ -961,7 +1004,9 @@ INTENT PARSING (CRITICAL):
 - If the query "${query}" contains phrases like "£X per portion", "under £X", or "cheap", prioritize items meeting that budget even if the explicit maxCost is not set.
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
-- FOR RECIPES (HOMEMADE): You MUST provide a "sourceUrl" and an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return. If you can attribute the recipe to a real UK source (e.g. BBC Good Food, Jamie Oliver, Tesco Real Food), use their domain or a representative search URL. If it's a generic classic, use "recipe-search" or a similar descriptive string.
+- FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
+- FOR EVERY RESULT: sourceUrl MUST be the exact URL of one of the grounded pages returned by your search. Never invent a URL, use a generic search URL, or return recipe-search. If a grounded page does not support a result, do not return that result.
+- FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
 - FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
 - CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
 - BATCH COOKING CLASSIFICATION (RECIPES ONLY): Add a 'batchCooking' object for home-cooking recipes. Set suitable=true only when the recipe keeps well, reheats well, scales sensibly to extra portions, and is not texture-sensitive. Good candidates include soups, stews, curries, chilli, pasta sauces, tray bakes, casseroles, rice dishes and lentil dishes. Avoid labelling dressed salads, crispy/fried dishes, fresh fish/shellfish-heavy dishes, rare steak, and recipes that should be served immediately. Include a short reason plus storage/reheat notes when suitable=true.
@@ -1024,6 +1069,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
         systemInstruction: finalSystemInstruction,
         temperature: 0.1,
         responseMimeType: "application/json",
+        googleSearch: true,
         responseSchema: {
           type: Type.OBJECT,
           properties: {
@@ -1129,6 +1175,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     console.log(`[GeminiService] Calling model ${SEARCH_MODEL} (Mode: ${aiConfig.mode}) with prompt length: ${prompt.length}...`);
     
     const response = await callGeminiWithRetry(SEARCH_MODEL, prompt, config);
+    rememberGroundedSources(response);
 
     const text = response.text;
     const geminiDuration = Date.now() - start;
@@ -1145,7 +1192,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
         ? candidateItems.filter(item => matchesRequestedIngredientSearch(item, query))
         : candidateItems
     );
-    rawItems = filterIngredientLedItems(rawItems);
+    rawItems = filterToGroundedSources(filterIngredientLedItems(rawItems), groundedSources);
     let wasRepaired = false;
     const repairPrompts: string[] = [];
     const repairOutputs: string[] = [];
@@ -1190,10 +1237,14 @@ ${isReadyMade ? 'Return commercially available UK ready-made products only.' : '
 REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's exclusions and variety requirement.`
         };
         const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt, repairConfig);
+        rememberGroundedSources(repairResponse);
         const repairOutputText = repairResponse.text || '';
         repairOutputs.push(repairOutputText);
         const repairData = repairOutputText ? JSON.parse(repairOutputText) : {};
-        const repairItems = filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []);
+        const repairItems = filterToGroundedSources(
+          filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []),
+          groundedSources
+        );
         const nonVegetarianRepair = allVegetarian
           ? repairItems.find((item: any) => !isClearlyVegetarian(item))
           : null;
@@ -1219,7 +1270,10 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         ...(excludeTitles || []),
         ...rawItems.map((item: any) => String(item.title || '').trim())
       ].filter(Boolean).map(title => title.toLowerCase()));
-      const fallbackItems = eligibleChilliFallbacks.filter(item => !existingTitles.has(item.title.toLowerCase()));
+      const fallbackItems = filterToGroundedSources(
+        eligibleChilliFallbacks.filter(item => !existingTitles.has(item.title.toLowerCase())),
+        groundedSources
+      );
       const allVegetarian = rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
 
       if (allVegetarian && rawItems.length >= count && fallbackItems.length > 0) {
@@ -1231,7 +1285,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
       }
     }
 
-    rawItems = dedupeItems(rawItems).slice(0, count);
+    rawItems = filterToGroundedSources(dedupeItems(rawItems).slice(0, count), groundedSources);
     const repairPrompt = repairPrompts.join('\n');
     const repairOutputText = repairOutputs.join('\n');
 
@@ -1294,6 +1348,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
       isCurated: false,
       diagnostics: {
         repaired: wasRepaired,
+        groundedSourceCount: groundedSources.size,
         timings: { geminiCall: geminiDuration, totalRoundTrip: Date.now() - start },
         usage: {
           model: SEARCH_MODEL,
@@ -1380,7 +1435,7 @@ REQUISITES:
 ${mode === 'cook' ? '- Ingredients MUST include specific quantities/units (e.g. "200g", "1 tsp").' : '- Must be a real commercial UK ready-made product. Instructions reflect heating (oven/microwave/air-fryer).'}
 - READY-MADE KIT: For ready-made mode, add a 'readyMadeKit' object with the core product, 1-3 optional supermarket sides, and 2-3 tiny upgrades using ordinary UK items. Upgrades must be product-specific and cuisine-aware; avoid repeated generic texture ideas, especially crispy onions or grated cheese, unless they genuinely fit the product. Toasted breadcrumbs can suit some pasta-based products, but use them sparingly and only when they genuinely improve the item.
 - DESCRIPTION: Synthesize the best aspects in a professional tone.
-- SOURCE URL: Explicitly provide a representative source for this recipe (domain or search url).
+- SOURCE URL: Use Google Search grounding to provide an exact real source page for this recipe. Never invent a URL or use a generic search URL. ${options?.sourceUrl ? `Preserve this existing grounded source URL exactly: ${options.sourceUrl}` : 'If no grounded source page supports the recipe, omit the source URL.'}
 - TOTAL INGREDIENTS COUNT: Provide an accurate total count of all ingredients required.
 - STANDARD SERVINGS: Provide the standard number of adult portions made by the full recipe as totalServings. Do not use the user's current shopping quantity for this field.
 ${strictDetailLogic}
@@ -1390,6 +1445,7 @@ ${strictDetailLogic}
         systemInstruction,
         temperature: 0.1,
         responseMimeType: "application/json",
+        googleSearch: true,
         responseSchema: {
           type: Type.OBJECT,
           properties: {
@@ -1440,15 +1496,16 @@ ${strictDetailLogic}
               }
             } : {})
           },
-          required: ["instructions", "ingredients", "description", "sourceUrl", "totalIngredientsCount", ...(mode === 'ready-made' ? ["retailer"] : ["totalServings"])]
+          required: ["instructions", "ingredients", "description", "totalIngredientsCount", ...(mode === 'ready-made' ? ["retailer"] : ["totalServings"])]
         }
     };
 
     let lastStrictMismatch = false;
     for (let attempt = 0; attempt < 2; attempt += 1) {
       const prompt = `Full detail for: "${title}" (${cuisine}). mode: ${mode}.
+${options?.sourceUrl ? `Existing source URL: ${options.sourceUrl}` : ''}
 ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. The only allowed non-pantry ingredients are: ${strictIngredients.join(', ')}. Review every ingredient before returning the response.` : ''}`;
-      const response = await callGeminiWithRetry("gemini-3.5-flash", prompt, config);
+      const response = await callGeminiWithRetry(ENRICHMENT_GEMINI_MODEL, prompt, config);
       const text = response.text;
 
       if (!text) {
@@ -1456,6 +1513,16 @@ ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. 
       }
 
       const parsed = JSON.parse(text);
+      const groundedSources = new Map(getGroundedSources(response).map(source => [source.url, source]));
+      const existingSourceUrl = canonicaliseGroundedUrl(options?.sourceUrl);
+      const returnedSourceUrl = canonicaliseGroundedUrl(parsed.sourceUrl);
+      if (existingSourceUrl) {
+        parsed.sourceUrl = existingSourceUrl;
+      } else if (returnedSourceUrl && groundedSources.has(returnedSourceUrl)) {
+        parsed.sourceUrl = groundedSources.get(returnedSourceUrl)?.url;
+      } else {
+        delete parsed.sourceUrl;
+      }
       if (!strictIngredients.length || matchesStrictIngredientSearch(parsed, options?.query || '')) {
         return parsed;
       }
@@ -1546,7 +1613,7 @@ Context: Query: "${searchParams.query}", Diet: ${preferences?.dietaryRule || "No
 
 Items: ${JSON.stringify(itemSummaries)}`;
 
-    const response = await callGeminiWithRetry("gemini-3.5-flash", systemInstruction, { 
+    const response = await callGeminiWithRetry(ENRICHMENT_GEMINI_MODEL, systemInstruction, {
         temperature: 0.1,
         responseMimeType: "application/json", 
         responseSchema 

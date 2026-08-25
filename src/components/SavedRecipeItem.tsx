@@ -72,7 +72,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
     if (isExpanded && (!currentInstructions.length || currentIngredients.length < totalCount) && !isEnriching) {
       setIsEnriching(true);
       import('../services/geminiService').then(({ enrichRecipe }) => {
-        enrichRecipe(recipe.title, recipe.cuisine, recipe.mode)
+        enrichRecipe(recipe.title, recipe.cuisine, recipe.mode, { sourceUrl: recipe.sourceUrl })
           .then(data => {
             setEnrichedData(data);
             setIsEnriching(false);

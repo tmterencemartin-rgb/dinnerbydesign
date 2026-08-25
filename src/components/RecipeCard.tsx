@@ -255,10 +255,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   useEffect(() => {
     if (isExpanded && !currentInstructions?.length && !isEnriching) {
       setIsEnriching(true);
-      enrichRecipe(recipe.title, recipe.cuisine, mode, strictIngredientMatch ? {
-        strictIngredientMatch: true,
-        query
-      } : undefined)
+      enrichRecipe(recipe.title, recipe.cuisine, mode, {
+        sourceUrl: recipe.sourceUrl,
+        ...(strictIngredientMatch ? {
+          strictIngredientMatch: true,
+          query
+        } : {})
+      })
         .then(data => {
           if (strictIngredientMatch && mode === 'cook' && !matchesStrictIngredientSearch(data, query)) {
             throw new Error('Recipe details did not pass the strict ingredient check.');

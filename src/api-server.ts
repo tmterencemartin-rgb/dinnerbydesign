@@ -27,6 +27,7 @@ import {
   summariseAccountReconciliation,
 } from "../src/lib/accountReconciliation";
 import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
+import { parseEnrichmentRequestOptions } from "../src/lib/enrichmentRequest";
 import type { SearchParams } from "../src/types";
 function getFirebaseConfig() {
   return firebaseConfig;
@@ -1580,11 +1581,8 @@ export function createApp() {
   app.post("/api/enrich-recipe", async (req, res) => {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
-      const { title, cuisine, mode, strictIngredientMatch, strictQuery } = req.body;
-      const result = await enrichRecipe(title, cuisine, mode, {
-        strictIngredientMatch: strictIngredientMatch === true,
-        query: typeof strictQuery === 'string' ? strictQuery : ''
-      });
+      const { title, cuisine, mode } = req.body;
+      const result = await enrichRecipe(title, cuisine, mode, parseEnrichmentRequestOptions(req.body));
       res.json(result);
     } catch (error: any) {
       console.error("[Server API] Gemini Enrichment Error:", error);

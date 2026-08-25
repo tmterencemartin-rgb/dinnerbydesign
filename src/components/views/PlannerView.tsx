@@ -188,7 +188,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     if (viewingPlannerEntry && lacksData && !isEnriching) {
       setIsEnriching(true);
       import('../../services/geminiService').then(({ enrichRecipe }) => {
-        enrichRecipe(viewingPlannerEntry.title, viewingPlannerEntry.cuisine || '', viewingPlannerEntry.mode)
+        enrichRecipe(viewingPlannerEntry.title, viewingPlannerEntry.cuisine || '', viewingPlannerEntry.mode, { sourceUrl: viewingPlannerEntry.sourceUrl })
           .then(data => {
             const updated = { ...viewingPlannerEntry, ...data };
             setViewingPlannerEntry(updated);

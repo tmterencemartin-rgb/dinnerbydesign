@@ -73,7 +73,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
 
       if (isIncomplete) {
         try {
-          const enriched = await enrichRecipe(recipe.title, recipe.cuisine, mode);
+          const enriched = await enrichRecipe(recipe.title, recipe.cuisine, mode, { sourceUrl: recipe.sourceUrl });
           if (enriched) {
             if (enriched.ingredients && enriched.ingredients.length > 0) {
               finalIngredients = enriched.ingredients;
