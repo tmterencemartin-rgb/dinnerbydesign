@@ -269,7 +269,7 @@ describe('useSearch Hook Lifecycle', () => {
     );
   });
 
-  it('tops up broad chilli searches after client-side filtering leaves one result', async () => {
+  it('keeps a broad chilli search honest when only one source-backed recipe is available', async () => {
     (geminiService.generateDinnerSuggestions as any).mockResolvedValue({
       recipes: [{
         title: 'Turkey and Sweetcorn Chilli',
@@ -280,7 +280,7 @@ describe('useSearch Hook Lifecycle', () => {
         totalServings: 2,
         totalTime: 15,
         saladType: 'none',
-        sourceUrl: 'recipe-search',
+        sourceUrl: 'https://www.bbcgoodfood.com/recipes/turkey-chilli',
         isVegetarian: false,
         isPescatarian: false,
         isVegan: false,
@@ -295,12 +295,8 @@ describe('useSearch Hook Lifecycle', () => {
       await result.current.handleGenerate('chilli');
     });
 
-    expect(result.current.currentRecipes).toHaveLength(3);
-    expect(result.current.currentRecipes?.map(r => r.title)).toEqual([
-      'Turkey and Sweetcorn Chilli',
-      'Quick beef chilli con carne',
-      'No-bean beef chilli'
-    ]);
+    expect(result.current.currentRecipes).toHaveLength(1);
+    expect(result.current.currentRecipes?.map(r => r.title)).toEqual(['Turkey and Sweetcorn Chilli']);
   });
 
   it('filters strict ingredient searches before showing recipe cards', async () => {

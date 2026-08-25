@@ -30,7 +30,7 @@ import { createSearchRequestId, sendSearchTelemetry } from '../lib/searchTelemet
 
 // Bump this when result-generation behaviour changes so an under-filled batch
 // from an earlier build cannot mask the newer repair logic.
-const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v4';
+const SEARCH_CACHE_KEY = 'dbd_recent_search_cache_v5';
 const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
@@ -39,7 +39,7 @@ type SearchDeliveryStatus = 'delivered' | 'failed';
 const STRICT_INGREDIENT_NO_RESULTS_MESSAGE =
   'No exact matches found. Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off “Use only these ingredients (strict)”.';
 const INGREDIENT_NO_RESULTS_MESSAGE =
-  'No recipes found using all of the listed ingredients. Try adding another ingredient or broadening your search.';
+  'No source-backed recipes were found using all of the listed ingredients. Try adding another ingredient or broadening your search.';
 
 const isBroadChilliDishQuery = (query: string) => /\b(chilli|chili)\b/i.test(query)
   && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);
@@ -483,7 +483,7 @@ export function useSearch() {
             ? params.strictIngredientMatch
               ? STRICT_INGREDIENT_NO_RESULTS_MESSAGE
               : `No dishes match your current filters. This might be due to a strict dietary preference (e.g. Vegetarian only) or exclusions. Try loosening your filters or searching for something else.`
-            : `No dishes found for "${params.query || input}". Try adjusting your search term or broadening your criteria.`
+            : `No source-backed recipes found for "${params.query || input}". Try adjusting your search term or broadening your criteria.`
         });
         if (!isAppend) {
           setCurrentRecipes([]);
@@ -520,34 +520,6 @@ export function useSearch() {
             id: r.id || getRecipeKey(r)
           }));
 
-        if (
-          params.source === 'cook'
-          && isBroadChilliDishQuery(params.query || '')
-          && recipesWithFinalIds.length < (params.count || INITIAL_COOK_FROM_SCRATCH_RESULTS)
-        ) {
-          const existingTitles = new Set([
-            ...(params.excludeTitles || []),
-            ...recipesWithFinalIds.map(r => r.title)
-          ].map(title => title.toLowerCase().trim()));
-          const needed = (params.count || INITIAL_COOK_FROM_SCRATCH_RESULTS) - recipesWithFinalIds.length;
-          const chilliTopUps = BROAD_CHILLI_CLIENT_FALLBACKS
-            .filter(r => !existingTitles.has(r.title.toLowerCase().trim()))
-            .filter(r => passesHardConstraints(r, effectivePrefs))
-            .filter(r => !timeLimit || r.totalTime <= timeLimit)
-            .filter(r => !params.ingredientIntent?.isIngredientLed || matchesRequestedIngredientSearch(r, params.query))
-            .filter(r => !params.strictIngredientMatch || matchesStrictIngredientSearch(r, params.query))
-            .slice(0, needed)
-            .map(r => ({
-              ...r,
-              id: r.id || getRecipeKey(r)
-            }));
-
-          if (chilliTopUps.length > 0) {
-            recipesWithFinalIds = [...recipesWithFinalIds, ...chilliTopUps];
-            addLog(`SEARCH: broad chilli client top-up added ${chilliTopUps.length} result(s).`);
-          }
-        }
-          
         const readyMealsWithFinalIds = accumulatedReadyMeals
           .filter(m => passesHardConstraints(m, effectivePrefs))
           .filter(m => !timeLimit || m.totalTime <= timeLimit)
@@ -565,7 +537,7 @@ export function useSearch() {
               ? STRICT_INGREDIENT_NO_RESULTS_MESSAGE
               : params.ingredientIntent?.isIngredientLed
                 ? INGREDIENT_NO_RESULTS_MESSAGE
-                : `No dishes match your current rules. Try broadening your search or removing an exclusion.`
+                : `No source-backed recipes match your current rules. Try broadening your search or removing an exclusion.`
           });
           if (!isAppend) {
             setCurrentRecipes([]);

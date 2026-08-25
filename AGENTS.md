@@ -80,7 +80,7 @@ When a user lists ingredients:
 
 ## Search service
 
-- Recipe search uses `gemini-3.1-flash-lite` with Google Search grounding and aims to return three recipes through one bounded recovery request. Show an original-recipe link only for an exact grounded URL or a direct page from the approved publisher allow-list; otherwise show `Source unavailable`. Enrichment and match-rationale calls use `gemini-3.5-flash`.
+- Recipe search uses `gemini-3.1-flash-lite` with Google Search grounding and aims to return up to three source-backed recipes through one bounded recovery request. Return a recipe only when its exact original-recipe URL appears in the Google grounding response. Do not add local or model-only fallbacks. When fewer than three verified recipes exist, show the available results and say so plainly. Enrichment and match-rationale calls use `gemini-3.5-flash`.
 - Production traffic uses the cloud proxy.
 - Direct mode is for local development and troubleshooting.
 - A failed direct request must fall back to the cloud proxy where the existing flow supports it.

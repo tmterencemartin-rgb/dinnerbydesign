@@ -367,6 +367,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
+  const hasPartialSourceBackedResults = source === 'cook'
+    && resultsCount > 0
+    && resultsCount < 3
+    && !isSearching;
   const hasIngredientNoResults = status === 'noResults'
     && source === 'cook'
     && !!resultsIngredientIntent?.isIngredientLed;
@@ -1407,6 +1411,11 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {showNotBoringSummerSaladsResultsCopy && (
                   <p className="mt-1 text-[12px] font-normal leading-relaxed text-gray-500">
                     {NOT_BORING_SUMMER_SALADS_RESULTS_COPY}
+                  </p>
+                )}
+                {hasPartialSourceBackedResults && (
+                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
+                    {resultsCount === 1 ? 'One source-backed recipe was found.' : `${resultsCount} source-backed recipes were found.`} We only show recipes with a verified original-recipe link.
                   </p>
                 )}
               </div>
