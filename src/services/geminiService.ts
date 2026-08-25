@@ -549,6 +549,20 @@ const estimateTokensFromText = (value: string | undefined | null) => {
   return Math.ceil(value.length / 4);
 };
 
+const withRequestTimeout = async <T>(request: Promise<T>, timeoutMs: number, label: string): Promise<T> => {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      request,
+      new Promise<T>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error(`${label} timed out`)), timeoutMs);
+      })
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+};
+
 const getGroundedSources = (response: any): GroundedSource[] => {
   const metadata = response?.groundingMetadata || response?.candidates?.[0]?.groundingMetadata;
   const chunks = Array.isArray(metadata?.groundingChunks) ? metadata.groundingChunks : [];
@@ -1192,10 +1206,10 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const repairPrompts: string[] = [];
     const repairOutputs: string[] = [];
 
-    // Ingredient-led searches get one compact recovery request when the full
-    // schema returns no deliverable candidates. This keeps the grounded
-    // source gate while avoiding several slow retries with the large schema.
-    if (ingredientIntent?.isIngredientLed && !isReadyMade && rawItems.length === 0) {
+    // Ingredient-led searches aim to present the requested number of recipes.
+    // One compact, time-bounded recovery fills any gap without allowing a slow
+    // model request to turn an otherwise useful search into a timeout.
+    if (ingredientIntent?.isIngredientLed && !isReadyMade && rawItems.length < count) {
       const recoveryPrompt = `Recover a recipe search for "${query}".
 Return up to ${count} complete UK home-cooking recipe stubs.
 Every recipe must include all of these requested ingredients in its ingredients array: ${parsedIngredients.join(', ')}.
@@ -1235,7 +1249,11 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       };
 
       try {
-        const recoveryResponse = await callGeminiWithRetry(SEARCH_MODEL, recoveryPrompt, recoveryConfig);
+        const recoveryResponse = await withRequestTimeout(
+          callGeminiWithRetry(SEARCH_MODEL, recoveryPrompt, recoveryConfig, 1),
+          12_000,
+          'Ingredient search recovery'
+        );
         rememberGroundedSources(recoveryResponse);
         const recoveryOutputText = recoveryResponse.text || '';
         repairOutputs.push(recoveryOutputText);
