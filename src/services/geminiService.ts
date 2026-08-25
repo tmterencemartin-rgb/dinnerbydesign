@@ -1182,6 +1182,65 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const repairPrompts: string[] = [];
     const repairOutputs: string[] = [];
 
+    // Ingredient-led searches get one compact recovery request when the full
+    // schema returns no deliverable candidates. This keeps the grounded
+    // source gate while avoiding several slow retries with the large schema.
+    if (ingredientIntent?.isIngredientLed && !isReadyMade && rawItems.length < count) {
+      const recoveryPrompt = `Recover a recipe search for "${query}".
+Return up to ${count} complete UK home-cooking recipe stubs.
+Every recipe must include all of these requested ingredients in its ingredients array: ${parsedIngredients.join(', ')}.
+Use Google Search grounding and set sourceUrl to an exact grounded recipe page URL.
+Return an empty items array only when no grounded page supports the request. Never use an ellipsis or placeholder.`;
+      repairPrompts.push(recoveryPrompt);
+
+      const recoveryConfig = {
+        ...config,
+        systemInstruction: `${finalSystemInstruction}
+RECOVERY REQUEST: Keep the response compact and valid. Include every requested ingredient explicitly in each ingredients array and use only a source URL grounded by this response.`,
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            items: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  title: { type: Type.STRING },
+                  description: { type: Type.STRING },
+                  cuisine: { type: Type.STRING },
+                  totalTime: { type: Type.NUMBER },
+                  totalServings: { type: Type.NUMBER },
+                  caloriesPerPortion: { type: Type.NUMBER },
+                  costPerPortion: { type: Type.STRING },
+                  ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
+                  totalIngredientsCount: { type: Type.NUMBER },
+                  sourceUrl: { type: Type.STRING }
+                },
+                required: ['title', 'description', 'ingredients', 'sourceUrl']
+              }
+            }
+          },
+          required: ['items']
+        }
+      };
+
+      try {
+        const recoveryResponse = await callGeminiWithRetry(SEARCH_MODEL, recoveryPrompt, recoveryConfig);
+        rememberGroundedSources(recoveryResponse);
+        const recoveryOutputText = recoveryResponse.text || '';
+        repairOutputs.push(recoveryOutputText);
+        const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
+        const recoveryItems = filterToGroundedSources(
+          filterIngredientLedItems(Array.isArray(recoveryData.items) ? recoveryData.items : []),
+          groundedSources
+        );
+        rawItems = [...rawItems, ...recoveryItems];
+        wasRepaired = recoveryItems.length > 0;
+      } catch (recoveryError) {
+        console.warn('[GeminiService] Compact ingredient recovery failed; keeping the results already found.', recoveryError);
+      }
+    }
+
     const dedupeItems = (itemsToDedupe: any[]) => {
       const seenTitles = new Set<string>();
       return itemsToDedupe.filter((item: any) => {
@@ -1200,7 +1259,8 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 
     // The model may under-fill an otherwise valid response. Make a small number
     // of bounded repair requests rather than accepting one result as complete.
-    for (let repairAttempt = 0; repairAttempt < 3; repairAttempt += 1) {
+    const maxRepairAttempts = ingredientIntent?.isIngredientLed && !isReadyMade ? 0 : 3;
+    for (let repairAttempt = 0; repairAttempt < maxRepairAttempts; repairAttempt += 1) {
       rawItems = dedupeItems(rawItems);
       const missingCount = Math.max(0, count - rawItems.length);
       const allVegetarian = shouldEncourageRecipeVariety && rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
