@@ -578,6 +578,10 @@ const getGroundedSources = (response: any): GroundedSource[] => {
 
 const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
   items.filter(item => {
+    // A preceding pass can deliberately remove an internal Google link while
+    // retaining the recipe. Do not discard that already-sanitised recipe when
+    // Google supplied no source metadata to validate against.
+    if (sources.size === 0 && !item?.sourceUrl) return true;
     const groundedSourceUrl = retainCandidateSourceUrl(item?.sourceUrl, [...sources.values()]);
     if (groundedSourceUrl && !(sources.size === 0 && isInternalGroundingUrl(groundedSourceUrl))) {
       item.sourceUrl = groundedSourceUrl;
