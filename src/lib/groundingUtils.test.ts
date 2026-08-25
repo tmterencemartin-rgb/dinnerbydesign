@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
+import { canonicaliseGroundedUrl, isInternalGroundingUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   const groundedSources = [
@@ -28,5 +28,10 @@ describe('grounded source URL reconciliation', () => {
       'https://www.bbcgoodfood.com/recipes/haddock-potato-bake'
     );
     expect(retainCandidateSourceUrl('not a URL', [])).toBeNull();
+  });
+
+  it('recognises internal grounding URLs that are not recipe pages', () => {
+    expect(isInternalGroundingUrl('https://vertexaisearch.cloud.google.com/grounding/recipe')).toBe(true);
+    expect(isInternalGroundingUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(false);
   });
 });

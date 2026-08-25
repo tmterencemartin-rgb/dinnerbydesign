@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { canonicaliseGroundedUrl, isInternalGroundingUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { auth, signInAnon } from '../firebase';
@@ -565,9 +565,15 @@ const getGroundedSources = (response: any): GroundedSource[] => {
 const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
   items.filter(item => {
     const groundedSourceUrl = retainCandidateSourceUrl(item?.sourceUrl, [...sources.values()]);
+    if (groundedSourceUrl && !(sources.size === 0 && isInternalGroundingUrl(groundedSourceUrl))) {
+      item.sourceUrl = groundedSourceUrl;
+      return true;
+    }
+    if (sources.size === 0 && isInternalGroundingUrl(item?.sourceUrl)) {
+      delete item.sourceUrl;
+      return true;
+    }
     if (!groundedSourceUrl) return false;
-    item.sourceUrl = groundedSourceUrl;
-    return true;
   })
 );
 

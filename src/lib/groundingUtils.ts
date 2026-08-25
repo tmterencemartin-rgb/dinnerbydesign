@@ -64,3 +64,13 @@ export const retainCandidateSourceUrl = (
     ? canonicalCandidate
     : reconcileGroundedSourceUrl(canonicalCandidate, sources);
 };
+
+export const isInternalGroundingUrl = (value: unknown): boolean => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  if (!canonicalUrl) return false;
+
+  const host = new URL(canonicalUrl).hostname.toLowerCase();
+  return host === 'vertexaisearch.cloud.google.com'
+    || host === 'vertexaisearch.googleapis.com'
+    || host.endsWith('.vertexaisearch.cloud.google.com');
+};
