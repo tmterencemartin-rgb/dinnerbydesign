@@ -1171,13 +1171,17 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     }
 
     const data = parseModelJson(text);
-    let rawItems = Array.isArray(data.items) ? data.items : [];
+    const parsedItems = Array.isArray(data.items) ? data.items : [];
     const filterIngredientLedItems = (candidateItems: any[]) => (
       ingredientIntent?.isIngredientLed && !isReadyMade
         ? candidateItems.filter(item => matchesRequestedIngredientSearch(item, query))
         : candidateItems
     );
-    rawItems = filterToGroundedSources(filterIngredientLedItems(rawItems), groundedSources);
+    const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
+    let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSources);
+    console.log(
+      `[GeminiService] Ingredient search candidates: model=${parsedItems.length}, ingredient=${ingredientMatchedItems.length}, grounded=${rawItems.length}, sources=${groundedSources.size}`
+    );
     let wasRepaired = false;
     const repairPrompts: string[] = [];
     const repairOutputs: string[] = [];
