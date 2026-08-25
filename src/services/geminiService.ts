@@ -6,6 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
+import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { auth, signInAnon } from '../firebase';
 
@@ -547,22 +548,6 @@ const estimateTokensFromText = (value: string | undefined | null) => {
   return Math.ceil(value.length / 4);
 };
 
-type GroundedSource = {
-  url: string;
-  title?: string;
-};
-
-const canonicaliseGroundedUrl = (value: unknown): string | null => {
-  if (typeof value !== 'string' || !/^https?:\/\//i.test(value.trim())) return null;
-  try {
-    const url = new URL(value.trim());
-    url.hash = '';
-    return url.toString().replace(/\/$/, '');
-  } catch {
-    return null;
-  }
-};
-
 const getGroundedSources = (response: any): GroundedSource[] => {
   const metadata = response?.groundingMetadata || response?.candidates?.[0]?.groundingMetadata;
   const chunks = Array.isArray(metadata?.groundingChunks) ? metadata.groundingChunks : [];
@@ -578,11 +563,9 @@ const getGroundedSources = (response: any): GroundedSource[] => {
 
 const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
   items.filter(item => {
-    const canonicalUrl = canonicaliseGroundedUrl(item?.sourceUrl);
-    if (!canonicalUrl) return false;
-    const groundedSource = sources.get(canonicalUrl);
-    if (!groundedSource) return false;
-    item.sourceUrl = groundedSource.url;
+    const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
+    if (!groundedSourceUrl) return false;
+    item.sourceUrl = groundedSourceUrl;
     return true;
   })
 );
@@ -1513,13 +1496,13 @@ ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. 
       }
 
       const parsed = JSON.parse(text);
-      const groundedSources = new Map(getGroundedSources(response).map(source => [source.url, source]));
+      const groundedSources = getGroundedSources(response);
       const existingSourceUrl = canonicaliseGroundedUrl(options?.sourceUrl);
-      const returnedSourceUrl = canonicaliseGroundedUrl(parsed.sourceUrl);
+      const returnedSourceUrl = reconcileGroundedSourceUrl(parsed.sourceUrl, groundedSources);
       if (existingSourceUrl) {
         parsed.sourceUrl = existingSourceUrl;
-      } else if (returnedSourceUrl && groundedSources.has(returnedSourceUrl)) {
-        parsed.sourceUrl = groundedSources.get(returnedSourceUrl)?.url;
+      } else if (returnedSourceUrl) {
+        parsed.sourceUrl = returnedSourceUrl;
       } else {
         delete parsed.sourceUrl;
       }

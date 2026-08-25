@@ -189506,6 +189506,39 @@ function parseEnrichmentRequestOptions(body) {
   };
 }
 
+// src/lib/groundingUtils.ts
+var canonicaliseGroundedUrl = (value) => {
+  if (typeof value !== "string" || !/^https?:\/\//i.test(value.trim())) return null;
+  try {
+    const url = new URL(value.trim());
+    url.hash = "";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return null;
+  }
+};
+var normaliseGroundedUrlForMatch = (value) => {
+  const url = new URL(value);
+  url.hostname = url.hostname.toLowerCase().replace(/^www\./, "");
+  url.hash = "";
+  const meaningfulParams = [...url.searchParams.entries()].filter(([key]) => !/^(utm_[^=]+|gclid|fbclid|dclid|msclkid)$/i.test(key)).sort(([leftKey, leftValue], [rightKey, rightValue]) => leftKey.localeCompare(rightKey) || leftValue.localeCompare(rightValue));
+  url.search = new URLSearchParams(meaningfulParams).toString();
+  if (url.pathname !== "/") url.pathname = url.pathname.replace(/\/+$/, "");
+  return url.toString().replace(/\/$/, "");
+};
+var reconcileGroundedSourceUrl = (candidate, sources) => {
+  const canonicalCandidate = canonicaliseGroundedUrl(candidate);
+  if (!canonicalCandidate) return null;
+  const exactMatch = sources.find((source) => canonicaliseGroundedUrl(source.url) === canonicalCandidate);
+  if (exactMatch) return canonicaliseGroundedUrl(exactMatch.url);
+  const candidateMatchKey = normaliseGroundedUrlForMatch(canonicalCandidate);
+  const relaxedMatch = sources.find((source) => {
+    const canonicalSource = canonicaliseGroundedUrl(source.url);
+    return canonicalSource && normaliseGroundedUrlForMatch(canonicalSource) === candidateMatchKey;
+  });
+  return relaxedMatch ? canonicaliseGroundedUrl(relaxedMatch.url) : null;
+};
+
 // src/config/aiModel.ts
 var ACTIVE_GEMINI_MODEL = "gemini-3.5-flash-lite";
 var ENRICHMENT_GEMINI_MODEL = "gemini-3.5-flash";
@@ -220091,16 +220124,6 @@ var estimateTokensFromText = (value) => {
   if (!value) return 0;
   return Math.ceil(value.length / 4);
 };
-var canonicaliseGroundedUrl = (value) => {
-  if (typeof value !== "string" || !/^https?:\/\//i.test(value.trim())) return null;
-  try {
-    const url = new URL(value.trim());
-    url.hash = "";
-    return url.toString().replace(/\/$/, "");
-  } catch {
-    return null;
-  }
-};
 var getGroundedSources = (response) => {
   const metadata = response?.groundingMetadata || response?.candidates?.[0]?.groundingMetadata;
   const chunks = Array.isArray(metadata?.groundingChunks) ? metadata.groundingChunks : [];
@@ -220113,11 +220136,9 @@ var getGroundedSources = (response) => {
   });
 };
 var filterToGroundedSources = (items, sources) => items.filter((item) => {
-  const canonicalUrl = canonicaliseGroundedUrl(item?.sourceUrl);
-  if (!canonicalUrl) return false;
-  const groundedSource = sources.get(canonicalUrl);
-  if (!groundedSource) return false;
-  item.sourceUrl = groundedSource.url;
+  const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
+  if (!groundedSourceUrl) return false;
+  item.sourceUrl = groundedSourceUrl;
   return true;
 });
 var sanitizeRealityChecks = (checks) => {
@@ -220877,13 +220898,13 @@ ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. 
         throw new Error("Empty enrichment response");
       }
       const parsed = JSON.parse(text);
-      const groundedSources = new Map(getGroundedSources(response).map((source) => [source.url, source]));
+      const groundedSources = getGroundedSources(response);
       const existingSourceUrl = canonicaliseGroundedUrl(options2?.sourceUrl);
-      const returnedSourceUrl = canonicaliseGroundedUrl(parsed.sourceUrl);
+      const returnedSourceUrl = reconcileGroundedSourceUrl(parsed.sourceUrl, groundedSources);
       if (existingSourceUrl) {
         parsed.sourceUrl = existingSourceUrl;
-      } else if (returnedSourceUrl && groundedSources.has(returnedSourceUrl)) {
-        parsed.sourceUrl = groundedSources.get(returnedSourceUrl)?.url;
+      } else if (returnedSourceUrl) {
+        parsed.sourceUrl = returnedSourceUrl;
       } else {
         delete parsed.sourceUrl;
       }

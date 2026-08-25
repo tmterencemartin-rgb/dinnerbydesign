@@ -1,0 +1,50 @@
+export type GroundedSource = {
+  url: string;
+  title?: string;
+};
+
+export const canonicaliseGroundedUrl = (value: unknown): string | null => {
+  if (typeof value !== 'string' || !/^https?:\/\//i.test(value.trim())) return null;
+  try {
+    const url = new URL(value.trim());
+    url.hash = '';
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return null;
+  }
+};
+
+const normaliseGroundedUrlForMatch = (value: string): string => {
+  const url = new URL(value);
+  url.hostname = url.hostname.toLowerCase().replace(/^www\./, '');
+  url.hash = '';
+
+  const meaningfulParams = [...url.searchParams.entries()]
+    .filter(([key]) => !/^(utm_[^=]+|gclid|fbclid|dclid|msclkid)$/i.test(key))
+    .sort(([leftKey, leftValue], [rightKey, rightValue]) => (
+      leftKey.localeCompare(rightKey) || leftValue.localeCompare(rightValue)
+    ));
+  url.search = new URLSearchParams(meaningfulParams).toString();
+
+  if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/+$/, '');
+  return url.toString().replace(/\/$/, '');
+};
+
+export const reconcileGroundedSourceUrl = (
+  candidate: unknown,
+  sources: GroundedSource[]
+): string | null => {
+  const canonicalCandidate = canonicaliseGroundedUrl(candidate);
+  if (!canonicalCandidate) return null;
+
+  const exactMatch = sources.find(source => canonicaliseGroundedUrl(source.url) === canonicalCandidate);
+  if (exactMatch) return canonicaliseGroundedUrl(exactMatch.url);
+
+  const candidateMatchKey = normaliseGroundedUrlForMatch(canonicalCandidate);
+  const relaxedMatch = sources.find(source => {
+    const canonicalSource = canonicaliseGroundedUrl(source.url);
+    return canonicalSource && normaliseGroundedUrlForMatch(canonicalSource) === candidateMatchKey;
+  });
+
+  return relaxedMatch ? canonicaliseGroundedUrl(relaxedMatch.url) : null;
+};
