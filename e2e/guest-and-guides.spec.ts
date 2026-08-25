@@ -17,12 +17,12 @@ test.describe('guest access', () => {
     await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
   });
 
-  test('locked tabs explain that an account is required', async ({ page }) => {
-    await page.getByRole('button', { name: 'Save & Schedule, sign in required' }).click();
-    await expect(page.getByText('Sign in to save and schedule dinners.')).toBeVisible();
+  test('guests can open the planning and shopping views', async ({ page }) => {
+    await page.getByRole('button', { name: 'Save & Schedule' }).click();
+    await expect(page.getByRole('heading', { name: 'Save & Schedule' })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Shopping, sign in required' }).click();
-    await expect(page.getByText('Sign in to create and manage your shopping list.')).toBeVisible();
+    await page.getByRole('button', { name: 'Shopping' }).click();
+    await expect(page.getByRole('heading', { name: 'Shopping list', exact: true })).toBeVisible();
   });
 
   test('search preferences open without consuming a free search', async ({ page }) => {
@@ -108,7 +108,7 @@ test.describe('public guides', () => {
 
     await page.getByRole('button', { name: /Plan my week/ }).click();
     await expect(page).toHaveURL(/\/signin$/);
-    await expect(page.getByText('Start your 7-day full-access trial.')).toBeVisible();
+    await expect(page.getByText('Start your free 7-day trial.')).toBeVisible();
   });
 });
 

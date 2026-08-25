@@ -62,6 +62,19 @@ jobs:
           E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
           E2E_RUN_LIVE_JOURNEY: ${{ secrets.E2E_RUN_LIVE_JOURNEY }}
 
+      - name: Upload browser traces and screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-smoke-artifacts
+          path: test-results/
+          if-no-files-found: ignore
+
+  production-health:
+    name: Production health endpoints
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
       - name: Check shallow health endpoint
         run: curl --fail-with-body --silent --show-error --max-time 20 https://dinnerbydesign.app/api/health
 
@@ -77,11 +90,3 @@ jobs:
           https://dinnerbydesign.app/api/health/deep
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
-
-      - name: Upload browser traces and screenshots on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-smoke-artifacts
-          path: test-results/
-          if-no-files-found: ignore
