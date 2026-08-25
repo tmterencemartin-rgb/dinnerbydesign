@@ -1421,7 +1421,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 )}
                 {hasPartialSourceBackedResults && (
                   <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                    {resultsCount === 1 ? 'One source-backed recipe was found.' : `${resultsCount} source-backed recipes were found.`} We only show recipes with a verified original-recipe link.
+                    {resultsCount === 1 ? 'One source-backed recipe was found.' : `${resultsCount} source-backed recipes were found.`} We only show recipes with a direct original-recipe link.
                   </p>
                 )}
               </div>

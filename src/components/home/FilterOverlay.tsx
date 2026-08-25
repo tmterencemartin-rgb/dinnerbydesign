@@ -610,7 +610,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                 <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
                   <p className="text-[11px] text-gray-400 font-medium leading-relaxed italic pl-1 border-l-2 border-accent/20">
                     {source === 'cook'
-                      ? <>Your selected sources help rank results, but every recipe shown must still have a verified original-publisher link. <a href="/recipe-methodology" className="font-semibold text-dbd-accent not-italic hover:underline">Where recipes come from</a></>
+                      ? <>Your selected sources help rank results, but every recipe shown must still have a direct original-publisher link. <a href="/recipe-methodology" className="font-semibold text-dbd-accent not-italic hover:underline">Where recipes come from</a></>
                       : <>Your selected stores help shape product recommendations and shopping links. <a href="/recipe-methodology" className="font-semibold text-dbd-accent not-italic hover:underline">How product information is created</a></>}
                   </p>
                   {source === 'cook' ? (

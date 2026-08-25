@@ -65,7 +65,7 @@ export const FoodSafetyMethodologyView: React.FC<MethodologyProps> = ({ setView 
 );
 
 export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) => (
-  <MethodologyShell setView={setView} eyebrow="Recipe and recommendation transparency" title="How dinner information is created and selected" introduction="DinnerByDesign uses Google Search to find published recipes, then combines user instructions, structured filters and generated summaries to produce focused dinner suggestions. Every recipe result includes a verified link to its original publisher.">
+  <MethodologyShell setView={setView} eyebrow="Recipe and recommendation transparency" title="How dinner information is created and selected" introduction="DinnerByDesign uses Google Search to find published recipes, then combines user instructions, structured filters and generated summaries to produce focused dinner suggestions. Every recipe result includes a direct link to its original publisher.">
     <Section title="Search suggestions and recipe details">
       <p>Recipe cards and fuller details may be generated to match the user’s search, household, dietary rules, budget, cooking time and other preferences. They are concise DinnerByDesign summaries, not a verbatim reproduction of the publisher’s recipe.</p>
       <p>Use the original-publisher link for the complete current ingredient list, method and any source details that matter. Normal judgement and safety checks still apply.</p>
@@ -76,7 +76,7 @@ export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) =
       <p>These systems support dinner planning; they do not make decisions with legal or similarly significant effects about users.</p>
     </Section>
     <Section title="Where recipes come from">
-      <p>DinnerByDesign uses Google Search to find published recipes. A recipe result appears only when its original-recipe link has been verified through that search. The publisher owns that recipe and its current ingredients, method and other details.</p>
+      <p>DinnerByDesign uses Google Search to find published recipes. Where Google supplies an exact source link, that link is used. If it does not, DinnerByDesign accepts only a direct recipe page from an approved publisher, never a search-results or category page. The publisher owns that recipe and its current ingredients, method and other details.</p>
       <p>Preferred publishers are a ranking preference, not a guarantee. They can influence relevance, but a stronger source-backed match from another publisher may still appear.</p>
       <p>A source link does not mean that the publisher created, approved or endorsed DinnerByDesign’s summary, or that DinnerByDesign has a commercial relationship with that publisher.</p>
     </Section>

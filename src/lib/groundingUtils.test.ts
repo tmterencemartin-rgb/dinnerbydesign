@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canonicaliseGroundedUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
+import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   const groundedSources = [
@@ -38,5 +38,12 @@ describe('grounded source URL reconciliation', () => {
   it('accepts only recognised recipe-publisher domains when no grounding record is available', () => {
     expect(isTrustedRecipePublisherUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
     expect(isTrustedRecipePublisherUrl('https://example.com/haddock-potato-bake')).toBe(false);
+  });
+
+  it('accepts only direct recipe pages from approved publishers when grounding metadata is absent', () => {
+    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.kitchensanctuary.com/creamy-garlic-scallops/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
   });
 });

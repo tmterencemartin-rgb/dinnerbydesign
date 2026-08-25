@@ -97,3 +97,15 @@ export const isTrustedRecipePublisherUrl = (value: unknown): boolean => {
   const host = new URL(canonicalUrl).hostname.toLowerCase().replace(/^www\./, '');
   return TRUSTED_RECIPE_PUBLISHER_HOSTS.has(host);
 };
+
+export const isApprovedDirectRecipeUrl = (value: unknown): boolean => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  if (!canonicalUrl || !isTrustedRecipePublisherUrl(canonicalUrl) || isInternalGroundingUrl(canonicalUrl)) return false;
+
+  const url = new URL(canonicalUrl);
+  if (url.protocol !== 'https:' || url.pathname === '/' || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
+    return false;
+  }
+
+  return !['q', 'query', 'search', 's'].some(param => url.searchParams.has(param));
+};
