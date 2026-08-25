@@ -1,5 +1,6 @@
 import React from 'react';
 import { Recipe, ReadyMeal } from '../types';
+import { getRecipeSourceLabel } from '../lib/sourceLabel';
 
 interface CompactRecipeItemProps {
   item: Recipe | ReadyMeal;
@@ -22,12 +23,8 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
   const recipe = item as Recipe;
   const meal = item as ReadyMeal;
 
-  const getDomain = (url?: string | null) => {
-    if (!url) return null;
-    return url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0].toUpperCase();
-  };
-
-  const domain = isCook ? getDomain(recipe.sourceUrl) : getDomain(meal.sourceUrl);
+  const sourceUrl = isCook ? recipe.sourceUrl : meal.sourceUrl;
+  const domain = sourceUrl ? getRecipeSourceLabel(sourceUrl) : null;
   const cuisineLabel = isCook ? recipe.cuisine : meal.retailer || meal.cuisine;
   const shouldShowCuisineLabel = cuisineLabel && cuisineLabel.trim().toLowerCase() !== 'active cook';
   const calories = item.caloriesPerPortion;
