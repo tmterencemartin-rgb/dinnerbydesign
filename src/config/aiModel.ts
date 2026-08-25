@@ -1,9 +1,11 @@
-export const ACTIVE_GEMINI_MODEL = 'gemini-3.5-flash-lite' as const;
+// Recipe search combines Google grounding with structured recipe data. Keep it on
+// the fuller Flash model; Flash-Lite remains available only as a fallback.
+export const ACTIVE_GEMINI_MODEL = 'gemini-3.5-flash' as const;
 export const ENRICHMENT_GEMINI_MODEL = 'gemini-3.5-flash' as const;
 
 export const ACTIVE_GEMINI_PRICING_USD_PER_MILLION = {
-  input: 0.3,
-  output: 2.5,
+  input: 1.5,
+  output: 9,
 } as const;
 
 export function estimateGeminiCostUsd(inputTokens: number, outputTokens: number): number {
