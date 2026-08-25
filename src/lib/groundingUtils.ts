@@ -48,3 +48,19 @@ export const reconcileGroundedSourceUrl = (
 
   return relaxedMatch ? canonicaliseGroundedUrl(relaxedMatch.url) : null;
 };
+
+export const retainCandidateSourceUrl = (
+  candidate: unknown,
+  sources: GroundedSource[]
+): string | null => {
+  const canonicalCandidate = canonicaliseGroundedUrl(candidate);
+  if (!canonicalCandidate) return null;
+
+  // Google Search occasionally returns recipe text without its grounding
+  // metadata. In that case there is no source set to reconcile against, so
+  // retain only a valid page URL instead of turning every recipe into a false
+  // negative. When metadata is present, continue to require an exact match.
+  return sources.length === 0
+    ? canonicalCandidate
+    : reconcileGroundedSourceUrl(canonicalCandidate, sources);
+};

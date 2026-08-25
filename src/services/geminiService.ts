@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { auth, signInAnon } from '../firebase';
@@ -564,7 +564,7 @@ const getGroundedSources = (response: any): GroundedSource[] => {
 
 const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
   items.filter(item => {
-    const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
+    const groundedSourceUrl = retainCandidateSourceUrl(item?.sourceUrl, [...sources.values()]);
     if (!groundedSourceUrl) return false;
     item.sourceUrl = groundedSourceUrl;
     return true;
@@ -1189,7 +1189,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     // Ingredient-led searches get one compact recovery request when the full
     // schema returns no deliverable candidates. This keeps the grounded
     // source gate while avoiding several slow retries with the large schema.
-    if (ingredientIntent?.isIngredientLed && !isReadyMade && rawItems.length < count) {
+    if (ingredientIntent?.isIngredientLed && !isReadyMade && rawItems.length === 0) {
       const recoveryPrompt = `Recover a recipe search for "${query}".
 Return up to ${count} complete UK home-cooking recipe stubs.
 Every recipe must include all of these requested ingredients in its ingredients array: ${parsedIngredients.join(', ')}.

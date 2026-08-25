@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl } from './groundingUtils';
+import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   const groundedSources = [
@@ -21,5 +21,12 @@ describe('grounded source URL reconciliation', () => {
   it('rejects URLs that are not in the grounded source set', () => {
     expect(reconcileGroundedSourceUrl('https://example.com/haddock-potatoes', groundedSources)).toBeNull();
     expect(reconcileGroundedSourceUrl('recipe-search', groundedSources)).toBeNull();
+  });
+
+  it('retains a valid source URL when Google returns no grounding metadata', () => {
+    expect(retainCandidateSourceUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake#method', [])).toBe(
+      'https://www.bbcgoodfood.com/recipes/haddock-potato-bake'
+    );
+    expect(retainCandidateSourceUrl('not a URL', [])).toBeNull();
   });
 });
