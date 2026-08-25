@@ -59,14 +59,21 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
                   {cuisineLabel}
                 </span>
               )}
-              {domain && (
+              {domain ? (
                 <>
                   {shouldShowCuisineLabel && <Separator />}
                     <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider truncate">
-                    {domain}
+                    Original: {domain}
                   </span>
                 </>
-              )}
+              ) : isCook ? (
+                <>
+                  {shouldShowCuisineLabel && <Separator />}
+                  <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate">
+                    Source unavailable
+                  </span>
+                </>
+              ) : null}
             </div>
             
             <h3 className="text-[15px] font-bold text-gray-900 truncate leading-tight group-hover:text-accent transition-colors">

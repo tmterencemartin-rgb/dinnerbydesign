@@ -400,17 +400,23 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         {recipe.cuisine}
                       </span>
                     )}
-                    {mode !== 'ready-made' && recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') && (
-                      <a
-                        href={recipe.sourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(event) => event.stopPropagation()}
-                        className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px] hover:text-dbd-accent hover:underline"
-                        aria-label={`Open recipe source for ${recipe.title}`}
-                      >
-                        {getRecipeSourceLabel(recipe.sourceUrl)}
-                      </a>
+                    {mode !== 'ready-made' && (
+                      recipe.sourceUrl && !recipe.sourceUrl.includes('recipe-search') ? (
+                        <a
+                          href={recipe.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(event) => event.stopPropagation()}
+                          className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px] hover:text-dbd-accent hover:underline"
+                          aria-label={`Open original recipe for ${recipe.title}`}
+                        >
+                          Original recipe: {getRecipeSourceLabel(recipe.sourceUrl)}
+                        </a>
+                      ) : (
+                        <span className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                          Source unavailable
+                        </span>
+                      )
                     )}
                   </div>
                 
