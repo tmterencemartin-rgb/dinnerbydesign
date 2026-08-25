@@ -189539,6 +189539,40 @@ var reconcileGroundedSourceUrl = (candidate, sources) => {
   return relaxedMatch ? canonicaliseGroundedUrl(relaxedMatch.url) : null;
 };
 
+// src/lib/parseModelJson.ts
+var parseModelJson = (text) => {
+  const trimmed = String(text || "").trim();
+  if (!trimmed) throw new Error("Empty model response");
+  const candidates = [trimmed];
+  const fenced = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenced?.[1]) candidates.push(fenced[1].trim());
+  const objectStart = trimmed.indexOf("{");
+  const objectEnd = trimmed.lastIndexOf("}");
+  if (objectStart >= 0 && objectEnd > objectStart) {
+    candidates.push(trimmed.slice(objectStart, objectEnd + 1));
+  }
+  let lastError;
+  for (const candidate of candidates) {
+    try {
+      return JSON.parse(candidate);
+    } catch (error) {
+      lastError = error;
+    }
+    const repaired = candidate.replace(
+      /("(?:items|rationales)"\s*:\s*)\.\.\.(?=\s*[,}])/g,
+      "$1[]"
+    );
+    if (repaired !== candidate) {
+      try {
+        return JSON.parse(repaired);
+      } catch (error) {
+        lastError = error;
+      }
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Invalid model JSON");
+};
+
 // src/config/aiModel.ts
 var ACTIVE_GEMINI_MODEL = "gemini-3.5-flash-lite";
 var ENRICHMENT_GEMINI_MODEL = "gemini-3.5-flash";
@@ -220452,6 +220486,7 @@ INTENT PARSING (CRITICAL):
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
 - FOR EVERY RESULT: sourceUrl MUST be the exact URL of one of the grounded pages returned by your search. Never invent a URL, use a generic search URL, or return recipe-search. If a grounded page does not support a result, do not return that result.
+- Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
 - FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
 - CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
@@ -220621,7 +220656,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     if (!text) {
       throw new GeminiServiceError("empty", "Empty response from search service.");
     }
-    const data = JSON.parse(text);
+    const data = parseModelJson(text);
     let rawItems = Array.isArray(data.items) ? data.items : [];
     const filterIngredientLedItems = (candidateItems) => ingredientIntent?.isIngredientLed && !isReadyMade ? candidateItems.filter((item) => matchesRequestedIngredientSearch(item, query2)) : candidateItems;
     rawItems = filterToGroundedSources(filterIngredientLedItems(rawItems), groundedSources);
@@ -220665,7 +220700,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         rememberGroundedSources(repairResponse);
         const repairOutputText2 = repairResponse.text || "";
         repairOutputs.push(repairOutputText2);
-        const repairData = repairOutputText2 ? JSON.parse(repairOutputText2) : {};
+        const repairData = repairOutputText2 ? parseModelJson(repairOutputText2) : {};
         const repairItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []),
           groundedSources
@@ -220897,7 +220932,7 @@ ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. 
       if (!text) {
         throw new Error("Empty enrichment response");
       }
-      const parsed = JSON.parse(text);
+      const parsed = parseModelJson(text);
       const groundedSources = getGroundedSources(response);
       const existingSourceUrl = canonicaliseGroundedUrl(options2?.sourceUrl);
       const returnedSourceUrl = reconcileGroundedSourceUrl(parsed.sourceUrl, groundedSources);
@@ -220991,7 +221026,7 @@ Items: ${JSON.stringify(itemSummaries)}`;
       }
     );
     const text = response.text || "{}";
-    const data = JSON.parse(text);
+    const data = parseModelJson(text);
     const rationalesMap = {};
     if (data.rationales && Array.isArray(data.rationales)) {
       data.rationales.forEach((r2) => {

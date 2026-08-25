@@ -7,6 +7,7 @@ import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
 import { canonicaliseGroundedUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { auth, signInAnon } from '../firebase';
 
@@ -989,6 +990,7 @@ INTENT PARSING (CRITICAL):
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
 - FOR EVERY RESULT: sourceUrl MUST be the exact URL of one of the grounded pages returned by your search. Never invent a URL, use a generic search URL, or return recipe-search. If a grounded page does not support a result, do not return that result.
+- Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
 - FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
 - CONVENIENCE CLASSIFICATION (CRITICAL): Assign a 'convenienceProfile' to every recipe stub: 'scratch' for traditional scratch-cooking/baking/home recipes; 'convenience' for assembly-based dishes, ready-made products, or convenience shortcuts.
@@ -1168,7 +1170,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       throw new GeminiServiceError('empty', "Empty response from search service.");
     }
 
-    const data = JSON.parse(text);
+    const data = parseModelJson(text);
     let rawItems = Array.isArray(data.items) ? data.items : [];
     const filterIngredientLedItems = (candidateItems: any[]) => (
       ingredientIntent?.isIngredientLed && !isReadyMade
@@ -1223,7 +1225,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         rememberGroundedSources(repairResponse);
         const repairOutputText = repairResponse.text || '';
         repairOutputs.push(repairOutputText);
-        const repairData = repairOutputText ? JSON.parse(repairOutputText) : {};
+        const repairData = repairOutputText ? parseModelJson(repairOutputText) : {};
         const repairItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []),
           groundedSources
@@ -1495,7 +1497,7 @@ ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. 
         throw new Error("Empty enrichment response");
       }
 
-      const parsed = JSON.parse(text);
+      const parsed = parseModelJson(text);
       const groundedSources = getGroundedSources(response);
       const existingSourceUrl = canonicaliseGroundedUrl(options?.sourceUrl);
       const returnedSourceUrl = reconcileGroundedSourceUrl(parsed.sourceUrl, groundedSources);
@@ -1604,7 +1606,7 @@ Items: ${JSON.stringify(itemSummaries)}`;
     );
 
     const text = response.text || "{}";
-    const data = JSON.parse(text);
+    const data = parseModelJson(text);
     const rationalesMap: Record<string, string> = {};
     if (data.rationales && Array.isArray(data.rationales)) {
       data.rationales.forEach((r: any) => {
