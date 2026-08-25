@@ -189559,6 +189559,9 @@ var parseModelJson = (text) => {
       lastError = error;
     }
     const repaired = candidate.replace(
+      /("(?:items|rationales)"\s*:\s*)\[\s*(?:\.\.\.|…)\s*\]/g,
+      "$1[]"
+    ).replace(
       /("(?:items|rationales)"\s*:\s*)\.\.\.(?=\s*[,}])/g,
       "$1[]"
     );
@@ -189568,6 +189571,9 @@ var parseModelJson = (text) => {
       } catch (error) {
         lastError = error;
       }
+    }
+    if (/"items"\s*:\s*(?:\.\.\.|…|\[\s*(?:\.\.\.|…))/i.test(candidate)) {
+      return { items: [] };
     }
   }
   throw lastError instanceof Error ? lastError : new Error("Invalid model JSON");

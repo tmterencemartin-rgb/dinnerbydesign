@@ -24,6 +24,9 @@ export const parseModelJson = (text: string): any => {
     // despite the JSON response schema. Treat that placeholder as no items so
     // the bounded repair pass can request complete grounded results.
     const repaired = candidate.replace(
+      /("(?:items|rationales)"\s*:\s*)\[\s*(?:\.\.\.|…)\s*\]/g,
+      '$1[]'
+    ).replace(
       /("(?:items|rationales)"\s*:\s*)\.\.\.(?=\s*[,}])/g,
       '$1[]'
     );
@@ -33,6 +36,12 @@ export const parseModelJson = (text: string): any => {
       } catch (error) {
         lastError = error;
       }
+    }
+
+    // If the provider truncated the response immediately after the
+    // placeholder, keep the search repair path alive with an empty array.
+    if (/"items"\s*:\s*(?:\.\.\.|…|\[\s*(?:\.\.\.|…))/i.test(candidate)) {
+      return { items: [] };
     }
   }
 

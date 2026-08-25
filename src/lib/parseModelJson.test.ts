@@ -12,6 +12,11 @@ describe('parseModelJson', () => {
       items: [],
       budgetContradiction: null
     });
+    expect(parseModelJson('{"items": [...]}')).toEqual({ items: [] });
+    expect(parseModelJson('{"items": [\n  ...\n],"budgetContradiction":null}')).toEqual({
+      items: [],
+      budgetContradiction: null
+    });
   });
 
   it('still rejects unrelated malformed JSON', () => {
