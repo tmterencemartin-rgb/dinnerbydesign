@@ -3,6 +3,21 @@ export type GroundedSource = {
   title?: string;
 };
 
+const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set([
+  'bbcgoodfood.com',
+  'bbc.co.uk',
+  'tescorealfood.com',
+  'tesco.com',
+  'theguardian.com',
+  'mob.co.uk',
+  'deliciousmagazine.co.uk',
+  'thehappyfoodie.co.uk',
+  'kitchensanctuary.com',
+  'diabetes.org.uk',
+  'slimmingworld.co.uk',
+  'jamieoliver.com'
+]);
+
 export const canonicaliseGroundedUrl = (value: unknown): string | null => {
   if (typeof value !== 'string' || !/^https?:\/\//i.test(value.trim())) return null;
   try {
@@ -73,4 +88,12 @@ export const isInternalGroundingUrl = (value: unknown): boolean => {
   return host === 'vertexaisearch.cloud.google.com'
     || host === 'vertexaisearch.googleapis.com'
     || host.endsWith('.vertexaisearch.cloud.google.com');
+};
+
+export const isTrustedRecipePublisherUrl = (value: unknown): boolean => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  if (!canonicalUrl) return false;
+
+  const host = new URL(canonicalUrl).hostname.toLowerCase().replace(/^www\./, '');
+  return TRUSTED_RECIPE_PUBLISHER_HOSTS.has(host);
 };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canonicaliseGroundedUrl, isInternalGroundingUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
+import { canonicaliseGroundedUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   const groundedSources = [
@@ -33,5 +33,10 @@ describe('grounded source URL reconciliation', () => {
   it('recognises internal grounding URLs that are not recipe pages', () => {
     expect(isInternalGroundingUrl('https://vertexaisearch.cloud.google.com/grounding/recipe')).toBe(true);
     expect(isInternalGroundingUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(false);
+  });
+
+  it('accepts only recognised recipe-publisher domains when no grounding record is available', () => {
+    expect(isTrustedRecipePublisherUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
+    expect(isTrustedRecipePublisherUrl('https://example.com/haddock-potato-bake')).toBe(false);
   });
 });

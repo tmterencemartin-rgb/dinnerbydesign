@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { canonicaliseGroundedUrl, isInternalGroundingUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { canonicaliseGroundedUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { auth, signInAnon } from '../firebase';
@@ -578,20 +578,17 @@ const getGroundedSources = (response: any): GroundedSource[] => {
 
 const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
   items.filter(item => {
-    // A preceding pass can deliberately remove an internal Google link while
-    // retaining the recipe. Do not discard that already-sanitised recipe when
-    // Google supplied no source metadata to validate against.
-    if (sources.size === 0 && !item?.sourceUrl) return true;
-    const groundedSourceUrl = retainCandidateSourceUrl(item?.sourceUrl, [...sources.values()]);
-    if (groundedSourceUrl && !(sources.size === 0 && isInternalGroundingUrl(groundedSourceUrl))) {
-      item.sourceUrl = groundedSourceUrl;
+    if (sources.size === 0) {
+      const sourceUrl = canonicaliseGroundedUrl(item?.sourceUrl);
+      if (sourceUrl && isTrustedRecipePublisherUrl(sourceUrl)) item.sourceUrl = sourceUrl;
+      else delete item.sourceUrl;
       return true;
     }
-    if (sources.size === 0 && isInternalGroundingUrl(item?.sourceUrl)) {
-      delete item.sourceUrl;
-      return true;
-    }
+
+    const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
     if (!groundedSourceUrl) return false;
+    item.sourceUrl = groundedSourceUrl;
+    return true;
   })
 );
 
@@ -1013,7 +1010,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- FOR EVERY RESULT: sourceUrl MUST be the exact URL of one of the grounded pages returned by your search. Never invent a URL, use a generic search URL, or return recipe-search. If a grounded page does not support a result, do not return that result.
+- When Google provides a grounded page, sourceUrl MUST be its exact recipe-page URL. Never invent a URL, use a generic search URL, or return recipe-search. When Google does not provide a grounded page, omit sourceUrl unless it is an exact recipe page from BBC Good Food, BBC Food, Tesco Real Food, Guardian Feast, Mob, delicious. magazine, The Happy Foodie, Kitchen Sanctuary, Diabetes UK, Slimming World, or Jamie Oliver.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
 - FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
@@ -1163,7 +1160,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                     }
                   })
                 },
-                required: ["title", "description", "cuisine", "totalTime", "ingredients", "sourceUrl", "totalIngredientsCount", "realityChecks", ...(isReadyMade ? ["retailer"] : ["totalServings"])]
+                required: ["title", "description", "cuisine", "totalTime", "ingredients", "totalIngredientsCount", "realityChecks", ...(isReadyMade ? ["retailer"] : ["totalServings"])]
               }
             },
             budgetContradiction: {
@@ -1244,7 +1241,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
                   totalIngredientsCount: { type: Type.NUMBER },
                   sourceUrl: { type: Type.STRING }
                 },
-                required: ['title', 'description', 'ingredients', 'sourceUrl']
+                required: ['title', 'description', 'ingredients']
               }
             }
           },
