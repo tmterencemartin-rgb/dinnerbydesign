@@ -65,20 +65,19 @@ export const FoodSafetyMethodologyView: React.FC<MethodologyProps> = ({ setView 
 );
 
 export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) => (
-  <MethodologyShell setView={setView} eyebrow="Recipe and recommendation transparency" title="How dinner information is created and selected" introduction="DinnerByDesign combines user instructions, structured filters, generated summaries and links to external sources to produce focused dinner suggestions. This page explains what is generated, what is attributed and why particular results appear.">
+  <MethodologyShell setView={setView} eyebrow="Recipe and recommendation transparency" title="How dinner information is created and selected" introduction="DinnerByDesign uses Google Search to find published recipes, then combines user instructions, structured filters and generated summaries to produce focused dinner suggestions. Every recipe result includes a verified link to its original publisher.">
     <Section title="Search suggestions and recipe details">
-      <p>Dinner suggestions and concise descriptions may be generated to match the user’s search, household, dietary rules, budget, cooking time and other preferences. When fuller information is requested, the app may generate an original ingredient list, method and practical summary for the suggested dinner.</p>
-      <p>Generated wording is not a verbatim reproduction of an external recipe. Users should treat it as a practical suggestion that still requires normal judgement and safety checks.</p>
+      <p>Recipe cards and fuller details may be generated to match the user’s search, household, dietary rules, budget, cooking time and other preferences. They are concise DinnerByDesign summaries, not a verbatim reproduction of the publisher’s recipe.</p>
+      <p>Use the original-publisher link for the complete current ingredient list, method and any source details that matter. Normal judgement and safety checks still apply.</p>
     </Section>
     <Section title="Where AI and automation are used">
-      <p>Automated AI services help interpret searches, create candidate dinners, expand ingredient lists and methods, describe why a result may suit the user, and build candidate weekly plans. Structured software then applies required fields, dietary checks, exclusions and other consistency rules.</p>
-      <p>Results are not routinely reviewed by a person before display. Automation can produce a plausible but incorrect recipe detail, source, product name, price, retailer or explanation. Important information must therefore be checked against the current source, product label or retailer listing.</p>
+      <p>Automated AI services help interpret searches, summarise recipe information, expand ingredient lists and methods, describe why a result may suit the user, and build candidate weekly plans. Structured software then applies required fields, dietary checks, exclusions and other consistency rules.</p>
+      <p>Results are not routinely reviewed by a person before display. Automation can still produce an incorrect recipe detail, product name, price, retailer or explanation. Important information should be checked against the linked source, current product label or retailer listing.</p>
       <p>These systems support dinner planning; they do not make decisions with legal or similarly significant effects about users.</p>
     </Section>
     <Section title="Where recipes come from">
-      <p>Some dinner suggestions include a named external recipe publisher. When a source page is available, DinnerByDesign shows the publisher on the result and links to it. The publisher owns that recipe and its current ingredients, method and other details.</p>
-      <p>Other results are generic dinner ideas created by DinnerByDesign from the search and selected preferences. They are practical planning suggestions, not a copy of a publisher’s recipe. Check the linked publisher page when exact instructions or source details matter.</p>
-      <p>Trusted sources are a preference, not a guarantee. They help rank results, but a stronger match from another reputable source may still appear.</p>
+      <p>DinnerByDesign uses Google Search to find published recipes. A recipe result appears only when its original-recipe link has been verified through that search. The publisher owns that recipe and its current ingredients, method and other details.</p>
+      <p>Preferred publishers are a ranking preference, not a guarantee. They can influence relevance, but a stronger source-backed match from another publisher may still appear.</p>
       <p>A source link does not mean that the publisher created, approved or endorsed DinnerByDesign’s summary, or that DinnerByDesign has a commercial relationship with that publisher.</p>
     </Section>
     <Section title="How search results are selected">
