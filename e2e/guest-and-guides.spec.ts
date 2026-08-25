@@ -21,7 +21,7 @@ test.describe('guest access', () => {
     await page.getByRole('button', { name: 'Save & Schedule' }).click();
     await expect(page.getByRole('heading', { name: 'Save & Schedule' })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Shopping' }).click();
+    await page.getByRole('button', { name: 'View shopping list' }).click();
     await expect(page.getByRole('heading', { name: 'Shopping list', exact: true })).toBeVisible();
   });
 
