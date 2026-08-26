@@ -35,6 +35,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
               <a href="/dinner-plans" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Affordable dinner plans</a>
               <a href="/recipes" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Recipes and cooking ideas</a>
               <a href="/food-costs" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Food-cost &amp; waste</a>
+              <a href="/why-dinnerbydesign" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Why DinnerByDesign?</a>
             </div>
           </div>
 
