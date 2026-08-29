@@ -227,14 +227,14 @@ describe('plannerUtils', () => {
     expect(swaps[0].saving).toBe(4);
   });
 
-  it('creates a mixed weekly plan from generated homemade and ready-made dinners', async () => {
+  it('creates a weekly plan from generated homemade and ready-made dinners', async () => {
     const generatedQueries: string[] = [];
     const result = await createWeeklyDinnerPlan({
       settings: {
         dinnerCount: 3,
         budget: '30',
         servings: 2,
-        protein: 'mixed',
+        protein: 'no-preference',
         time: 'under30',
         homemadeCount: 2,
       },
@@ -322,7 +322,7 @@ describe('plannerUtils', () => {
         dinnerCount: 3,
         budget: '24',
         servings: 4,
-        protein: 'mixed',
+        protein: 'no-preference',
         time: 'any',
         homemadeCount: 3,
         minimiseCost: true,

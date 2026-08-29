@@ -311,7 +311,7 @@ const normalizeRequestedProteins = (
 
   if (proteinList.includes('no-preference')) return ['no-preference'];
 
-  if (proteinList.length > 0 && !proteinList.includes('mixed') && !proteinList.includes('no-preference')) {
+  if (proteinList.length > 0 && !proteinList.includes('no-preference')) {
     return proteinList.slice(0, dinnerCount);
   }
   if (preferences?.dietaryRule === 'vegetarian') return Array(dinnerCount).fill('vegetarian');
@@ -320,7 +320,6 @@ const normalizeRequestedProteins = (
 };
 
 const getProteinText = (protein: string) => {
-  if (protein === 'mixed') return 'mixed proteins';
   if (protein === 'no-preference') return 'any suitable protein';
   if (protein === 'offal') return 'offal such as liver, kidney or heart';
   if (protein === 'seafood') return 'fish and seafood';
@@ -381,7 +380,7 @@ export const createWeeklyDinnerPlan = async ({
   const shouldMinimiseCost = settings.minimiseCost === true;
   const shouldReuseIngredients = settings.reuseIngredients === true;
   const requestedProteins = normalizeRequestedProteins(settings.protein, settings.dinnerCount, preferences);
-  const preferredProteins = requestedProteins.filter(protein => protein !== 'mixed' && protein !== 'no-preference');
+  const preferredProteins = requestedProteins.filter(protein => protein !== 'no-preference');
   const includeOffalForPlan = requestedProteins.includes('offal') || preferences?.includeOffal === true;
   const proteinText = preferredProteins.length > 0 ? getProteinsText(preferredProteins) : getProteinsText(requestedProteins);
   const timeText = getTimeText(settings.time);
@@ -451,12 +450,12 @@ export const createWeeklyDinnerPlan = async ({
   }
 
   const baseExcludedTitles = [...existingPlannerTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)];
-  const fallbackProteins = [...new Set([...preferredProteins, 'mixed'])];
+  const fallbackProteins = [...new Set([...preferredProteins, 'no-preference'])];
   const fallbackTimeText = getFallbackTimeText(settings.time);
 
   for (let i = homemadeItems.length; i < homemadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
-    const fallbackProteinText = fallbackProtein === 'mixed' ? 'any permitted protein' : getProteinText(fallbackProtein);
+    const fallbackProteinText = getProteinText(fallbackProtein);
     const fallbackQuery = `${fallbackTimeText} cooked ${fallbackProteinText} dinner for ${servingsCount} people; use other permitted proteins if needed to complete the week${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
     const fallbackParams = makeParams(fallbackQuery, 'cook', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
@@ -470,7 +469,7 @@ export const createWeeklyDinnerPlan = async ({
 
   for (let i = readyMadeItems.length; i < readyMadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[(homemadeTarget + i) % fallbackProteins.length];
-    const fallbackProteinText = fallbackProtein === 'mixed' ? 'any permitted protein' : getProteinText(fallbackProtein);
+    const fallbackProteinText = getProteinText(fallbackProtein);
     const fallbackQuery = `${fallbackTimeText} UK supermarket ready-made ${fallbackProteinText} dinner product for ${servingsCount} people; use other permitted proteins if needed to complete the week${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
     const fallbackParams = makeParams(fallbackQuery, 'ready-made', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
@@ -493,7 +492,7 @@ export const createWeeklyDinnerPlan = async ({
   if (dinners.length < settings.dinnerCount) {
     return {
       dinners,
-      alert: `Only ${dinners.length} suitable ${dinners.length === 1 ? 'dinner was' : 'dinners were'} found after the safety checks. Try increasing the budget, changing the time target, or using Mixed / No preference for proteins.`,
+      alert: `Only ${dinners.length} suitable ${dinners.length === 1 ? 'dinner was' : 'dinners were'} found after the safety checks. Try increasing the budget, changing the time target, or using No preference for proteins.`,
     };
   }
 

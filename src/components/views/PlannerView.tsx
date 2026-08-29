@@ -45,7 +45,6 @@ interface PlannerViewProps {
 
 const PLAN_PROTEIN_OPTIONS = [
   { value: 'no-preference', label: 'No preference' },
-  { value: 'mixed', label: 'Mixed' },
   { value: 'beef', label: 'Beef' },
   { value: 'chicken', label: 'Chicken' },
   { value: 'eggs', label: 'Eggs' },
@@ -69,9 +68,9 @@ const PLAN_PROTEIN_VALUES_BY_DIETARY_RULE: Record<DietaryRule, string[]> = {
   paleo: PLAN_PROTEIN_OPTIONS.map(option => option.value),
   'gluten-free': PLAN_PROTEIN_OPTIONS.map(option => option.value),
   mediterranean: PLAN_PROTEIN_OPTIONS.map(option => option.value),
-  pescatarian: ['mixed', 'no-preference', 'eggs', 'seafood', 'pescatarian', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
-  vegetarian: ['mixed', 'no-preference', 'eggs', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
-  vegan: ['mixed', 'no-preference', 'pulses', 'plant-based', 'vegan'],
+  pescatarian: ['no-preference', 'eggs', 'seafood', 'pescatarian', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
+  vegetarian: ['no-preference', 'eggs', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
+  vegan: ['no-preference', 'pulses', 'plant-based', 'vegan'],
 };
 
 const PLAN_PROTEIN_EXCLUSION_TERMS: Record<string, string[]> = {
@@ -303,8 +302,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
   const handlePlanProteinSelect = (labels: string[]) => {
     const values = labels.map(getPlanProteinValue);
-    const openChoice = values.find(value => value === 'mixed' || value === 'no-preference');
-    const specificProteins = values.filter(value => value !== 'mixed' && value !== 'no-preference');
+    const openChoice = values.find(value => value === 'no-preference');
+    const specificProteins = values.filter(value => value !== 'no-preference');
     if (specificProteins.length > 0) {
       setPlanProteins(specificProteins.slice(0, maxPlanProteinChoices));
       return;
