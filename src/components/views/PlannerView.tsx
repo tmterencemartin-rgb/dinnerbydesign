@@ -817,7 +817,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </label>
                     <div className="space-y-1">
                       <PreferenceDropdown
-                        label="Preferred proteins"
+                        label="Protein and dietary preference"
                         options={allowedPlanProteinOptions.map(option => option.label)}
                         selected={selectedPlanProteinLabels}
                         onSelect={handlePlanProteinSelect}
