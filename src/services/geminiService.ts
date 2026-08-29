@@ -1285,6 +1285,14 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
         item.description,
         ...(Array.isArray(item.ingredients) ? item.ingredients : [])
       ].filter(Boolean).join(' '));
+    const isReadyMadeCandidate = (item: any) => {
+      const source = String(item.sourceUrl || '').toLowerCase();
+      const retailer = String(item.retailer || '').trim();
+      if (!retailer) return false;
+
+      const recipeDomains = ['bbcgoodfood.com', 'jamieoliver.com', 'allrecipes.com', 'simplyrecipes.com', 'foodnetwork.com', 'epicurious.com', 'tasty.co', 'delish.com'];
+      return !recipeDomains.some(domain => source.includes(domain));
+    };
 
     // The model may under-fill an otherwise valid response. Make a small number
     // of bounded repair requests rather than accepting one result as complete.
@@ -1332,6 +1340,49 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
       } catch (repairError) {
         console.warn('[GeminiService] Result repair pass failed; keeping the results already found.', repairError);
         break;
+      }
+    }
+
+    // Ready-made searches can lose otherwise useful candidates when a model
+    // response contains recipe pages, missing retailers or duplicate products.
+    // Make one bounded recovery request after those checks so a narrow query
+    // such as a single protein has a fair chance to reach the normal result
+    // count without relaxing any hard user constraints.
+    if (isReadyMade) {
+      rawItems = dedupeItems(rawItems).filter(isReadyMadeCandidate);
+      if (rawItems.length < count) {
+        const missingCount = count - rawItems.length;
+        const existingTitles = [...(excludeTitles || []), ...rawItems.map((item: any) => String(item.title || '').trim())].filter(Boolean);
+        const readyMadeRecoveryPrompt = `Broaden the ready-made product search for "${query}".
+Return exactly ${missingCount} additional distinct UK supermarket ready-made product stubs.
+Keep the original named protein, dish style or other search intent where possible, but vary product formats and permitted retailers to find genuinely different options.
+Do not repeat these titles: ${existingTitles.join(', ') || 'None'}.
+Preserve every hard dietary, allergy, ethical, budget and heating-time rule. Use Google Search grounding and provide an exact source product page URL for every result. Never use a generic search URL or a home-cooking recipe.`;
+        repairPrompts.push(readyMadeRecoveryPrompt);
+
+        try {
+          const readyMadeRecoveryResponse = await callGeminiWithRetry(
+            SEARCH_MODEL,
+            readyMadeRecoveryPrompt,
+            {
+              ...config,
+              systemInstruction: `${finalSystemInstruction}
+READY-MADE RECOVERY: The initial search was under-filled after source and product validation. Return only additional, distinct ready-made products that preserve the original intent and all hard constraints.`
+            }
+          );
+          rememberGroundedSources(readyMadeRecoveryResponse);
+          const recoveryOutputText = readyMadeRecoveryResponse.text || '';
+          repairOutputs.push(recoveryOutputText);
+          const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
+          const recoveryItems = filterToGroundedSources(
+            Array.isArray(recoveryData.items) ? recoveryData.items : [],
+            groundedSources
+          ).filter(isReadyMadeCandidate);
+          rawItems = [...rawItems, ...recoveryItems];
+          wasRepaired = wasRepaired || recoveryItems.length > 0;
+        } catch (recoveryError) {
+          console.warn('[GeminiService] Ready-made recovery failed; keeping the products already found.', recoveryError);
+        }
       }
     }
 
@@ -1398,20 +1449,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
 
     // Post-generation validation for Ready-made mode
     if (isReadyMade) {
-      items = items.filter((item: any) => {
-        const source = (item.sourceUrl || '').toLowerCase();
-        const retailer = (item.retailer || '').toLowerCase();
-        
-        // 1. Must have a retailer
-        if (!retailer) return false;
-
-        // 2. Reject known recipe sites in ready-made mode
-        const RECIPE_DOMAINS = ['bbcgoodfood.com', 'jamieoliver.com', 'allrecipes.com', 'simplyrecipes.com', 'foodnetwork.com', 'epicurious.com', 'tasty.co', 'delish.com'];
-        const isRecipeSite = RECIPE_DOMAINS.some(domain => source.includes(domain));
-        if (isRecipeSite) return false;
-
-        return true;
-      });
+      items = items.filter(isReadyMadeCandidate);
     }
 
     const finalResult: any = {
