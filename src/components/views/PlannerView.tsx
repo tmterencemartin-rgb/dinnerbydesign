@@ -302,13 +302,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const maxPlanProteinChoices = Math.min(planDinnerCount, allowedPlanProteinOptions.length);
 
   const handlePlanProteinSelect = (labels: string[]) => {
-    if (labels.length === 0) {
-      setPlanProteins(['no-preference']);
-      return;
-    }
     const values = labels.map(getPlanProteinValue);
     const openChoice = values.find(value => value === 'mixed' || value === 'no-preference');
-    setPlanProteins(openChoice ? [openChoice] : values.slice(0, maxPlanProteinChoices));
+    const specificProteins = values.filter(value => value !== 'mixed' && value !== 'no-preference');
+    if (specificProteins.length > 0) {
+      setPlanProteins(specificProteins.slice(0, maxPlanProteinChoices));
+      return;
+    }
+    setPlanProteins([openChoice || 'no-preference']);
   };
 
   useEffect(() => {
