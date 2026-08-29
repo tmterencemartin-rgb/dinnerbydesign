@@ -1411,7 +1411,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 )}
                 {source === 'cook' && (
                   <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                    Source-backed results: each recipe links to its original publisher. DinnerByDesign uses AI to create the comparison summary. <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">How recipe sources work</a>
+                    Source-backed results: each recipe links to its original publisher. DinnerByDesign uses AI to create the comparison summary. Open the original recipe in a new tab, then switch back to DinnerByDesign when you’re ready. <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">How recipe sources work</a>
                   </p>
                 )}
                 {showNotBoringSummerSaladsResultsCopy && (
