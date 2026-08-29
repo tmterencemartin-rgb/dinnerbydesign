@@ -46,95 +46,104 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
     >
       <div className="flex items-center justify-between gap-2.5 sm:gap-4">
         {/* Content */}
-        <button
-          type="button"
-          onClick={onClick}
-          className="flex-1 min-w-0 text-left active:scale-[0.99] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent/30 focus-visible:ring-offset-2 rounded"
-        >
-          <div className="flex flex-col">
-            {/* Row 1: Taxonomy & Source */}
-            <div className="flex items-center gap-1 mb-0.5 sm:mb-1">
-              {shouldShowCuisineLabel && (
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest shrink-0">
-                  {cuisineLabel}
-                </span>
-              )}
-              {domain ? (
-                <>
-                  {shouldShowCuisineLabel && <Separator />}
-                    <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider truncate">
-                    Original: {domain}
-                  </span>
-                </>
-              ) : isCook ? (
-                <>
-                  {shouldShowCuisineLabel && <Separator />}
-                  <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate">
-                    Source unavailable
-                  </span>
-                </>
-              ) : null}
-            </div>
-            
-            <h3 className="text-[15px] font-bold text-gray-900 truncate leading-tight group-hover:text-accent transition-colors">
-              {item.title}
-            </h3>
-
-            {item.matchReason && (
-              <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-gray-500">
-                <span className="font-bold uppercase tracking-wider text-[9px] text-gray-500">Match:</span>{' '}
-                {item.matchReason}
-              </p>
+        <div className="flex-1 min-w-0">
+          {/* Row 1: Taxonomy & Source */}
+          <div className="flex items-center gap-1 mb-0.5 sm:mb-1">
+            {shouldShowCuisineLabel && (
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest shrink-0">
+                {cuisineLabel}
+              </span>
             )}
-
-            {/* Row 2: Visual Metadata (Strictly matching user snippet) */}
-            <div className="flex flex-wrap items-center gap-y-0.5 sm:gap-y-1 mt-1 sm:mt-2 text-[11px] text-gray-500 font-medium tracking-tight">
-              {calories && (
-                <>
-                  <span className="whitespace-nowrap">{calories} kcal pp</span>
-                  <Separator />
-                </>
-              )}
-              
-              {costPerPortion && (
-                <div className="flex items-center gap-1.5 whitespace-nowrap">
-                   <span>{costPerPortion} pp</span>
-                   {totalCost && (
-                     <span className="text-[10px] bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded">
-                        Total {isCook ? `£${(totalCost as number).toFixed(2)}` : totalCost}
-                     </span>
-                   )}
-                </div>
-              )}
-
-              {time && (
-                <>
-                  <Separator />
-                  <span className="whitespace-nowrap">{time} mins</span>
-                </>
-              )}
-
-              {source === 'ready-made' && (item as ReadyMeal).isAirFryerFriendly && (
-                <div className="ml-2 text-[10px] text-accent font-bold bg-accent/10 px-2 py-0.5 rounded-md uppercase tracking-wider">
-                  Air Fryer
-                </div>
-              )}
-            </div>
-
-            {!isCook && (
-              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] font-semibold text-gray-500">
-                <span className="rounded bg-gray-50 px-2 py-0.5 uppercase tracking-wider">
-                  Dinner kit
+            {domain ? (
+              <>
+                {shouldShowCuisineLabel && <Separator />}
+                <a
+                  href={sourceUrl || undefined}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(event) => event.stopPropagation()}
+                  className="text-[10px] uppercase font-bold text-gray-500 tracking-wider truncate hover:text-dbd-accent hover:underline"
+                  aria-label={`Open original recipe for ${item.title}`}
+                >
+                  Original: {domain}
+                </a>
+              </>
+            ) : isCook ? (
+              <>
+                {shouldShowCuisineLabel && <Separator />}
+                <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate">
+                  Source unavailable
                 </span>
-                <span className="truncate">
-                  {kitSideCount || kitUpgradeCount
-                    ? `${kitSideCount} add-ons + ${kitUpgradeCount} upgrades`
-                    : 'Add-ons + quick upgrades'}
-                </span>
-              </div>
-            )}
+              </>
+            ) : null}
           </div>
-        </button>
+
+          <button
+            type="button"
+            onClick={onClick}
+            className="w-full text-left active:scale-[0.99] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent/30 focus-visible:ring-offset-2 rounded"
+          >
+            <div className="flex flex-col">
+              <h3 className="text-[15px] font-bold text-gray-900 truncate leading-tight group-hover:text-accent transition-colors">
+                {item.title}
+              </h3>
+
+              {item.matchReason && (
+                <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-gray-500">
+                  <span className="font-bold uppercase tracking-wider text-[9px] text-gray-500">Match:</span>{' '}
+                  {item.matchReason}
+                </p>
+              )}
+
+              {/* Row 2: Visual Metadata (Strictly matching user snippet) */}
+              <div className="flex flex-wrap items-center gap-y-0.5 sm:gap-y-1 mt-1 sm:mt-2 text-[11px] text-gray-500 font-medium tracking-tight">
+                {calories && (
+                  <>
+                    <span className="whitespace-nowrap">{calories} kcal pp</span>
+                    <Separator />
+                  </>
+                )}
+
+                {costPerPortion && (
+                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+                     <span>{costPerPortion} pp</span>
+                     {totalCost && (
+                       <span className="text-[10px] bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded">
+                          Total {isCook ? `£${(totalCost as number).toFixed(2)}` : totalCost}
+                       </span>
+                     )}
+                  </div>
+                )}
+
+                {time && (
+                  <>
+                    <Separator />
+                    <span className="whitespace-nowrap">{time} mins</span>
+                  </>
+                )}
+
+                {source === 'ready-made' && (item as ReadyMeal).isAirFryerFriendly && (
+                  <div className="ml-2 text-[10px] text-accent font-bold bg-accent/10 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                    Air Fryer
+                  </div>
+                )}
+              </div>
+
+              {!isCook && (
+                <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] font-semibold text-gray-500">
+                  <span className="rounded bg-gray-50 px-2 py-0.5 uppercase tracking-wider">
+                    Dinner kit
+                  </span>
+                  <span className="truncate">
+                    {kitSideCount || kitUpgradeCount
+                      ? `${kitSideCount} add-ons + ${kitUpgradeCount} upgrades`
+                      : 'Add-ons + quick upgrades'}
+                  </span>
+                </div>
+              )}
+            </div>
+          </button>
+        </div>
 
         {/* Text-only action cue */}
         <div className="shrink-0 flex items-center gap-1.5">
