@@ -44,6 +44,8 @@ interface PlannerViewProps {
 }
 
 const PLAN_PROTEIN_OPTIONS = [
+  { value: 'no-preference', label: 'No preference' },
+  { value: 'mixed', label: 'Mixed' },
   { value: 'beef', label: 'Beef' },
   { value: 'chicken', label: 'Chicken' },
   { value: 'eggs', label: 'Eggs' },
@@ -67,9 +69,9 @@ const PLAN_PROTEIN_VALUES_BY_DIETARY_RULE: Record<DietaryRule, string[]> = {
   paleo: PLAN_PROTEIN_OPTIONS.map(option => option.value),
   'gluten-free': PLAN_PROTEIN_OPTIONS.map(option => option.value),
   mediterranean: PLAN_PROTEIN_OPTIONS.map(option => option.value),
-  pescatarian: ['eggs', 'seafood', 'pescatarian', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
-  vegetarian: ['eggs', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
-  vegan: ['pulses', 'plant-based', 'vegan'],
+  pescatarian: ['mixed', 'no-preference', 'eggs', 'seafood', 'pescatarian', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
+  vegetarian: ['mixed', 'no-preference', 'eggs', 'pulses', 'plant-based', 'vegetarian', 'vegan'],
+  vegan: ['mixed', 'no-preference', 'pulses', 'plant-based', 'vegan'],
 };
 
 const PLAN_PROTEIN_EXCLUSION_TERMS: Record<string, string[]> = {
@@ -117,6 +119,7 @@ const getAllowedPlanProteinOptions = (preferences?: UserPreferences | null) => {
 };
 
 const getDefaultPlanProteins = (dinnerCount: number, options = PLAN_PROTEIN_OPTIONS) => {
+  if (options.some(option => option.value === 'no-preference')) return ['no-preference'];
   const allowedValues = new Set(options.map(option => option.value));
   const defaults = DEFAULT_PLAN_PROTEINS.filter(protein => allowedValues.has(protein));
   const remaining = options.map(option => option.value).filter(protein => !defaults.includes(protein));
@@ -299,8 +302,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const maxPlanProteinChoices = Math.min(planDinnerCount, allowedPlanProteinOptions.length);
 
   const handlePlanProteinSelect = (labels: string[]) => {
-    if (labels.length === 0) return;
-    setPlanProteins(labels.map(getPlanProteinValue).slice(0, maxPlanProteinChoices));
+    if (labels.length === 0) {
+      setPlanProteins(['no-preference']);
+      return;
+    }
+    const values = labels.map(getPlanProteinValue);
+    const openChoice = values.find(value => value === 'mixed' || value === 'no-preference');
+    setPlanProteins(openChoice ? [openChoice] : values.slice(0, maxPlanProteinChoices));
   };
 
   useEffect(() => {
@@ -731,7 +739,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
                     {isPlannerEmpty
                       ? 'No recipes saved yet. Find recipes to save and they’ll appear here, ready to schedule. Or let DinnerByDesign build a week around your household, budget and available time.'
-                      : 'Use your preferences to generate a set of dinners and add them to your collection.'}
+                      : 'Use your preferences to generate a set of dinners and add them to your collection. Preferred proteins guide the mix; safe alternatives can fill any gaps.'}
                   </p>
                 </div>
                 <div className="flex max-w-full flex-wrap gap-2 self-start sm:self-auto">
@@ -808,19 +816,19 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </label>
                     <div className="space-y-1">
                       <PreferenceDropdown
-                        label="Proteins"
+                        label="Preferred proteins"
                         options={allowedPlanProteinOptions.map(option => option.label)}
                         selected={selectedPlanProteinLabels}
                         onSelect={handlePlanProteinSelect}
                         isMulti
-                        placeholder="Choose proteins"
+                        placeholder="Choose preferences"
                         maxSelected={maxPlanProteinChoices}
                         hint={`${planProteins.length}/${maxPlanProteinChoices}`}
                         compact
                         hideSelectedSummary
                       />
                       <p className="text-[9.5px] leading-snug text-gray-400">
-                        Available proteins reflect your personalised search preferences. Choosing Offal permits it for this plan only.
+                        Preferred proteins guide variety rather than acting as hard exclusions. Dietary, allergy and ethical rules still apply. Choosing Offal permits it for this plan only.
                       </p>
                     </div>
                     <label className="space-y-1">

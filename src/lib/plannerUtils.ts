@@ -344,6 +344,8 @@ const getTimeText = (time: WeeklyPlanTime) => {
   return 'varied dinners';
 };
 
+const getWeeklyCandidateCount = (targetCount: number) => Math.min(12, Math.max(targetCount * 2, targetCount + 3));
+
 const getFallbackTimeText = (time: WeeklyPlanTime) => {
   if (time === 'quick') return 'quick';
   if (time === 'under30') return 'under 30 minute';
@@ -379,8 +381,9 @@ export const createWeeklyDinnerPlan = async ({
   const shouldMinimiseCost = settings.minimiseCost === true;
   const shouldReuseIngredients = settings.reuseIngredients === true;
   const requestedProteins = normalizeRequestedProteins(settings.protein, settings.dinnerCount, preferences);
+  const preferredProteins = requestedProteins.filter(protein => protein !== 'mixed' && protein !== 'no-preference');
   const includeOffalForPlan = requestedProteins.includes('offal') || preferences?.includeOffal === true;
-  const proteinText = getProteinsText(requestedProteins);
+  const proteinText = preferredProteins.length > 0 ? getProteinsText(preferredProteins) : getProteinsText(requestedProteins);
   const timeText = getTimeText(settings.time);
   const weeklySaladPreference = preferences?.saladPreference === 'main-only' ? 'main-only' : 'all';
   const homemadeTarget = Math.min(settings.homemadeCount, settings.dinnerCount);
@@ -427,8 +430,8 @@ export const createWeeklyDinnerPlan = async ({
 
   if (homemadeTarget > 0) {
     try {
-      const query = `${homemadeTarget} cooked dinners for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
-      const params = makeParams(query, 'cook', homemadeTarget, existingPlannerTitles);
+      const query = `${homemadeTarget} cooked dinners for ${servingsCount} people with ${proteinText}; treat these as preferred proteins and use other permitted proteins if needed to complete the week. Prefer ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
+      const params = makeParams(query, 'cook', getWeeklyCandidateCount(homemadeTarget), existingPlannerTitles);
       const result = await generateDinnerSuggestions(params, preferences || undefined);
       addEligibleCandidates(result.recipes || [], homemadeItems, homemadeTarget);
     } catch (err: any) {
@@ -438,8 +441,8 @@ export const createWeeklyDinnerPlan = async ({
 
   if (readyMadeTarget > 0) {
     try {
-      const readyQuery = `${readyMadeTarget} UK supermarket ready-made dinner products for ${servingsCount} people with ${proteinText}, ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
-      const readyParams = makeParams(readyQuery, 'ready-made', readyMadeTarget, [...existingPlannerTitles, ...homemadeItems.map(item => item.title)]);
+      const readyQuery = `${readyMadeTarget} UK supermarket ready-made dinner products for ${servingsCount} people with ${proteinText}; treat these as preferred proteins and use other permitted proteins if needed to complete the week. Prefer ${timeText}${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
+      const readyParams = makeParams(readyQuery, 'ready-made', getWeeklyCandidateCount(readyMadeTarget), [...existingPlannerTitles, ...homemadeItems.map(item => item.title)]);
       const readyResult = await generateDinnerSuggestions(readyParams, preferences || undefined);
       addEligibleCandidates(readyResult.readyMeals || [], readyMadeItems, readyMadeTarget);
     } catch (err: any) {
@@ -448,12 +451,13 @@ export const createWeeklyDinnerPlan = async ({
   }
 
   const baseExcludedTitles = [...existingPlannerTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)];
-  const fallbackProteins = requestedProteins;
+  const fallbackProteins = [...new Set([...preferredProteins, 'mixed'])];
   const fallbackTimeText = getFallbackTimeText(settings.time);
 
   for (let i = homemadeItems.length; i < homemadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[i % fallbackProteins.length];
-    const fallbackQuery = `${fallbackTimeText} cooked ${getProteinText(fallbackProtein)} dinner for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
+    const fallbackProteinText = fallbackProtein === 'mixed' ? 'any permitted protein' : getProteinText(fallbackProtein);
+    const fallbackQuery = `${fallbackTimeText} cooked ${fallbackProteinText} dinner for ${servingsCount} people; use other permitted proteins if needed to complete the week${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
     const fallbackParams = makeParams(fallbackQuery, 'cook', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
     try {
@@ -466,7 +470,8 @@ export const createWeeklyDinnerPlan = async ({
 
   for (let i = readyMadeItems.length; i < readyMadeTarget; i += 1) {
     const fallbackProtein = fallbackProteins[(homemadeTarget + i) % fallbackProteins.length];
-    const fallbackQuery = `${fallbackTimeText} UK supermarket ready-made ${getProteinText(fallbackProtein)} dinner product for ${servingsCount} people${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
+    const fallbackProteinText = fallbackProtein === 'mixed' ? 'any permitted protein' : getProteinText(fallbackProtein);
+    const fallbackQuery = `${fallbackTimeText} UK supermarket ready-made ${fallbackProteinText} dinner product for ${servingsCount} people; use other permitted proteins if needed to complete the week${budgetValue ? ` under £${budgetValue} total` : ''}${optimisationClause}`;
     const fallbackParams = makeParams(fallbackQuery, 'ready-made', 1, [...baseExcludedTitles, ...homemadeItems.map(item => item.title), ...readyMadeItems.map(item => item.title)]);
 
     try {
@@ -488,7 +493,7 @@ export const createWeeklyDinnerPlan = async ({
   if (dinners.length < settings.dinnerCount) {
     return {
       dinners,
-      alert: `Only ${dinners.length} suitable ${dinners.length === 1 ? 'dinner was' : 'dinners were'} found. Try increasing the budget, reducing the number of dinners, or changing the protein.`,
+      alert: `Only ${dinners.length} suitable ${dinners.length === 1 ? 'dinner was' : 'dinners were'} found after the safety checks. Try increasing the budget, changing the time target, or using Mixed / No preference for proteins.`,
     };
   }
 

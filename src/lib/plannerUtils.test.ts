@@ -439,6 +439,7 @@ describe('plannerUtils', () => {
 
   it('passes multiple selected proteins into weekly planning params', async () => {
     let capturedQuery = '';
+    let capturedCount = 0;
 
     const result = await createWeeklyDinnerPlan({
       settings: {
@@ -453,6 +454,7 @@ describe('plannerUtils', () => {
       preferences,
       generateDinnerSuggestions: async params => {
         if (!capturedQuery) capturedQuery = params.query;
+        if (!capturedCount) capturedCount = params.count;
         return {
           recipes: [
             {
@@ -476,6 +478,8 @@ describe('plannerUtils', () => {
     });
 
     expect(result.dinners.map(item => item.title)).toEqual(['Varied Dinner']);
+    expect(capturedCount).toBe(10);
+    expect(capturedQuery).toContain('treat these as preferred proteins');
     expect(capturedQuery).toContain('varied proteins across the week');
     expect(capturedQuery).toContain('chicken');
     expect(capturedQuery).toContain('fish and seafood');
