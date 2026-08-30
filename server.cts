@@ -1,4 +1,3 @@
-import path from "path";
 import dotenv from "dotenv";
 import { createApp } from "./src/api-server";
 
@@ -15,7 +14,7 @@ process.on("unhandledRejection", (reason, promise) => {
 
 async function startServer() {
   const PORT = Number(process.env.PORT || 3000);
-  
+
   // Ensure NODE_ENV is set for the app logic
   if (!process.env.NODE_ENV) {
     const isCompiled = process.argv[1]?.includes('dist') || false;
@@ -23,16 +22,16 @@ async function startServer() {
   }
 
   console.log(`[Server] Booting in ${process.env.NODE_ENV} mode...`);
-  
+
   const app = await createApp();
-  
+
   // Only listen if not running as a Vercel function
   if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on http://0.0.0.0:${PORT}`);
     });
   }
-  
+
   return app;
 }
 
@@ -48,12 +47,7 @@ const handler = async (req: any, res: any) => {
   }
 };
 
-// Export for ESM (tsx)
-export { createApp };
-export default handler;
-
-// For CJS bundling compatibility - ensures the bundle's module.exports is the handler function
-if (typeof module !== 'undefined' && module.exports) {
-  Object.assign(handler, { createApp, default: handler });
-  module.exports = handler;
-}
+// Keep the bundled Vercel function as a callable CommonJS handler while also
+// exposing the app factory for local tooling that loads the bundle directly.
+Object.assign(handler, { createApp, default: handler });
+module.exports = handler;

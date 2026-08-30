@@ -166563,14 +166563,8 @@ var init_stripe_esm_node = __esm({
   }
 });
 
-// server.ts
-var server_exports = {};
-__export(server_exports, {
-  createApp: () => createApp,
-  default: () => server_default
-});
-module.exports = __toCommonJS(server_exports);
-var import_dotenv = __toESM(require_main(), 1);
+// server.cts
+var import_dotenv = __toESM(require_main());
 
 // src/api-server.ts
 var import_express = __toESM(require_express2(), 1);
@@ -234565,7 +234559,7 @@ function createApp() {
   return app2;
 }
 
-// server.ts
+// server.cts
 import_dotenv.default.config({ path: ".env.local" });
 import_dotenv.default.config();
 process.on("uncaughtException", (err) => {
@@ -234599,15 +234593,8 @@ var handler = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error during boot" });
   }
 };
-var server_default = handler;
-if (typeof module !== "undefined" && module.exports) {
-  Object.assign(handler, { createApp, default: handler });
-  module.exports = handler;
-}
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  createApp
-});
+Object.assign(handler, { createApp, default: handler });
+module.exports = handler;
 /*! Bundled license information:
 
 depd/index.js:
