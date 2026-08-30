@@ -638,7 +638,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
         </div>
 
         {/* Tab switcher navigation bar */}
-        <div className="flex border-b border-gray-100 justify-start sm:justify-center gap-1 sm:gap-4 mt-6 overflow-x-auto no-scrollbar scroll-smooth">
+        <div className="flex flex-wrap border-b border-gray-100 justify-center gap-x-1 gap-y-0 sm:gap-4 mt-6">
           <button
             onClick={() => setActiveTab('profile')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
