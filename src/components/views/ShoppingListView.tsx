@@ -355,7 +355,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
           <button 
             id="back-to-plan-btn"
             onClick={onBackToPlan}
-            className="flex items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
+            className="flex min-h-8 items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
           >
             <ChevronLeft id="back-chevron" className="w-4 h-4 -ml-1" />
             <span id="back-text">Back to Schedule</span>

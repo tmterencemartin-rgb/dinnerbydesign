@@ -613,7 +613,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
           <button
             id="back-to-search-btn"
             onClick={() => setView('home')}
-            className="flex items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
+            className="flex min-h-8 items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
           >
             <ChevronLeft id="back-chevron" className="w-4 h-4 -ml-1" />
             <span id="back-text">Back to search</span>
@@ -1030,9 +1030,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-gray-100 pt-3 text-[11px] font-semibold text-dbd-accent">
-                    <button type="button" onClick={() => setView('food-safety')} className="hover:underline">Dietary and allergy safety</button>
-                    <button type="button" onClick={() => setView('nutrition-methodology')} className="hover:underline">How nutrition is estimated</button>
-                    <button type="button" onClick={() => setView('recipe-methodology')} className="hover:underline">How results are selected</button>
+                    <button type="button" onClick={() => setView('food-safety')} className="min-h-6 hover:underline">Dietary and allergy safety</button>
+                    <button type="button" onClick={() => setView('nutrition-methodology')} className="min-h-6 hover:underline">How nutrition is estimated</button>
+                    <button type="button" onClick={() => setView('recipe-methodology')} className="min-h-6 hover:underline">How results are selected</button>
                   </div>
                 </div>
               </div>

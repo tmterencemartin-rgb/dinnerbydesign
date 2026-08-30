@@ -713,7 +713,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 <button 
                   id="back-to-search-btn"
                   onClick={() => setView('home')} 
-                  className="flex items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
+                  className="flex min-h-8 items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
                 >
                   <ChevronLeft id="back-chevron" className="w-4 h-4 -ml-1" />
                   <span id="back-text">Back to search</span>
@@ -1679,7 +1679,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         type="button"
                         onClick={() => setIsRecentlyRemovedOpen(prev => !prev)}
                         aria-expanded={isRecentlyRemovedOpen}
-                        className="inline-flex items-center gap-2 rounded px-1 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-accent"
+                        className="inline-flex min-h-6 items-center gap-2 rounded px-1 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-accent"
                       >
                         {isRecentlyRemovedOpen ? 'Hide removed recipes' : `Show removed recipes (${archivedSavedRecipes.length})`}
                       </button>
