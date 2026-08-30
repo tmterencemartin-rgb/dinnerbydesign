@@ -365,7 +365,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
         <div className="flex flex-col items-center pb-2 pt-0 space-y-2">
           <h2 className="text-[20px] font-bold text-gray-900">Shopping list</h2>
           {hasVisibleShoppingItems && (
-            <div className="flex flex-col items-center gap-2 text-gray-400">
+            <div className="flex flex-col items-center gap-2 text-gray-500">
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <p className="text-[13px] font-medium">
                   {editingItems.length} {editingItems.length === 1 ? 'item' : 'items'}
@@ -405,14 +405,14 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                         >
                           <button 
                             type="button" 
-                            className="p-1 text-gray-400 hover:text-accent rounded-full hover:bg-gray-50 focus:outline-none transition-colors cursor-help flex items-center justify-center"
+                            className="p-1 text-gray-500 hover:text-accent rounded-full hover:bg-gray-50 focus:outline-none transition-colors cursor-help flex items-center justify-center"
                             aria-label="About price calculations"
                           >
                             <Info className="w-3.5 h-3.5" />
                           </button>
                         </Tooltip>
                       </div>
-                      <p className="text-[9.5px] text-gray-400 font-medium">
+                      <p className="text-[9.5px] text-gray-500 font-medium">
                         Expected checkout: £{expectedCheckoutCost.toFixed(2)} · excludes items already in stock
                       </p>
                     </div>
@@ -423,7 +423,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   <button 
                     onClick={handleEmailList}
                     disabled={isEmailing}
-                    className="flex items-center gap-1.5 text-gray-400 hover:text-accent transition-all active:scale-95 group disabled:opacity-50"
+                    className="flex items-center gap-1.5 text-gray-500 hover:text-accent transition-all active:scale-95 group disabled:opacity-50"
                   >
                     <Mail className="w-3.5 h-3.5" />
                     <span className="text-[13px] font-medium border-b border-transparent group-hover:border-accent">
@@ -432,7 +432,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                   </button>
                   <button 
                     onClick={handleCopyList}
-                    className={`flex items-center gap-1.5 transition-all active:scale-95 group ${copyStatus === 'Copied!' ? 'text-emerald-500' : 'text-gray-400 hover:text-accent'}`}
+                    className={`flex items-center gap-1.5 transition-all active:scale-95 group ${copyStatus === 'Copied!' ? 'text-emerald-500' : 'text-gray-500 hover:text-accent'}`}
                   >
                     <PlusCircle className={`w-3.5 h-3.5 ${copyStatus === 'Copied!' ? 'hidden' : ''}`} />
                     {copyStatus === 'Copied!' && <Check className="w-3.5 h-3.5" />}
@@ -450,7 +450,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                       className={`px-2.5 py-0.5 text-[9.5px] font-bold rounded transition-all duration-150 cursor-pointer ${
                         unitSystem === 'metric'
                           ? 'bg-gray-900 text-white'
-                          : 'text-gray-400 hover:text-gray-600'
+                          : 'text-gray-500 hover:text-gray-600'
                       }`}
                     >
                       Metric
@@ -461,7 +461,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                       className={`px-2.5 py-0.5 text-[9.5px] font-bold rounded transition-all duration-150 cursor-pointer ${
                         unitSystem === 'imperial'
                           ? 'bg-gray-900 text-white'
-                          : 'text-gray-400 hover:text-gray-600'
+                          : 'text-gray-500 hover:text-gray-600'
                       }`}
                     >
                       Imperial
@@ -581,7 +581,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                     >
                       {/* Category Header */}
                     <div className="flex items-center justify-between border-b border-gray-50 pb-0 mb-0.5">
-                      <h4 className="font-bold text-[10px] tracking-wider text-gray-400 uppercase">
+                      <h4 className="font-bold text-[10px] tracking-wider text-gray-500 uppercase">
                         {category}
                       </h4>
                       {category.toLowerCase().includes('cupboard') && (
@@ -595,7 +595,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                             className="p-1 hover:bg-gray-50 rounded-full transition-colors focus:outline-none flex items-center justify-center cursor-help"
                             aria-label="About cupboard items"
                           >
-                            <Info className="w-4 h-4 text-gray-400 hover:text-accent transition-colors" />
+                            <Info className="w-4 h-4 text-gray-500 hover:text-accent transition-colors" />
                           </button>
                         </Tooltip>
                       )}
@@ -647,7 +647,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                               ) : (
                                 <span 
                                   onClick={() => startEditing(item)}
-                                  className={`text-[13px] cursor-text transition-all break-words leading-tight font-medium hover:text-accent ${(item.inStock || item.checked) ? 'text-gray-400' : 'text-gray-700'}`}
+                                  className={`text-[13px] cursor-text transition-all break-words leading-tight font-medium hover:text-accent ${(item.inStock || item.checked) ? 'text-gray-500' : 'text-gray-700'}`}
                                 >
                                   {getDisplayItemName(item.name)}
                                 </span>
@@ -741,7 +741,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                             >
                               <Check className="w-3.5 h-3.5" strokeWidth={3} />
                             </button>
-                            <span className="text-[13px] text-gray-400 line-through opacity-60 truncate">
+                            <span className="text-[13px] text-gray-500 line-through opacity-60 truncate">
                               {getDisplayItemName(item.name)}
                             </span>
                           </div>
@@ -767,7 +767,7 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
                     {/* Manual In stock Pantry Staples (Original persistence) */}
                     {pantry.length > 0 && (
                       <div className="space-y-2 pt-6 border-t border-gray-100">
-                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Manual Staples & Extras</p>
+                         <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Manual Staples & Extras</p>
                           <div className="flex flex-wrap gap-2 pt-1">
                             {pantry.map(p => (
                               <div key={p.id} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-gray-100 rounded text-[12px] text-gray-500 hover:border-gray-200 transition-colors">

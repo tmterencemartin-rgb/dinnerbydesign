@@ -92,7 +92,7 @@ export const InstallPrompt: React.FC = () => {
           <div className="bg-white border border-gray-200 shadow-xl rounded p-5 w-full max-w-sm pointer-events-auto relative">
             <button 
               onClick={dismiss}
-              className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
+              className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
               aria-label="Dismiss"
             >
               <X className="w-5 h-5" />

@@ -31,7 +31,7 @@ export const RetailerCtaLink = ({ product, type = 'ready-made' }: RetailerCtaLin
         </Tooltip>
       </div>
       {cta.helper && (
-        <p className="text-[11px] text-gray-400 font-medium pl-5 leading-tight">
+        <p className="text-[11px] text-gray-500 font-medium pl-5 leading-tight">
           {cta.helper}
         </p>
       )}

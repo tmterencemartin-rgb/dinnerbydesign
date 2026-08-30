@@ -551,7 +551,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               </button>
               <button 
                 onClick={() => setViewingPlannerEntry(null)}
-                className="p-1 px-1.5 text-gray-400 hover:text-gray-900 transition-colors"
+                className="p-1 px-1.5 text-gray-500 hover:text-gray-900 transition-colors"
                 title="Close"
               >
                 <CircleX size={16} />
@@ -566,7 +566,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 <h2 className="text-[15px] font-medium text-gray-900 leading-tight">
                   {viewingPlannerEntry.title}
                 </h2>
-                <div className="flex items-center gap-2 flex-wrap text-xs text-gray-400 font-normal mt-1.5 mb-4">
+                <div className="flex items-center gap-2 flex-wrap text-xs text-gray-500 font-normal mt-1.5 mb-4">
                   {(() => {
                     const parts: React.ReactNode[] = [];
                     
@@ -636,9 +636,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
               {(viewingPlannerEntry.ingredients || isEnriching) && viewingPlannerEntry.mode !== 'ready-made' && (
                 <div className="space-y-2 pt-4 border-t border-gray-100">
-                  <h3 className="text-[12px] text-gray-400 font-bold uppercase tracking-wider mb-1.5 font-sans">Ingredients</h3>
+                  <h3 className="text-[12px] text-gray-500 font-bold uppercase tracking-wider mb-1.5 font-sans">Ingredients</h3>
                   {isEnriching && !viewingPlannerEntry.ingredients?.length ? (
-                    <p className="text-[14px] text-gray-400 animate-pulse">Sourcing ingredients...</p>
+                    <p className="text-[14px] text-gray-500 animate-pulse">Sourcing ingredients...</p>
                   ) : (
                     <ul className="space-y-0">
                       {viewingPlannerEntry.ingredients?.filter(ing => ing && ing.trim().length > 0).map((ing, i) => {
@@ -678,9 +678,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
               {(viewingPlannerEntry.instructions || isEnriching) && viewingPlannerEntry.mode !== 'ready-made' && (
                 <div className="space-y-3 pt-4 border-t border-gray-100">
-                  <h3 className="text-[12px] text-gray-400 font-bold uppercase tracking-wider mb-1.5 font-sans">Method</h3>
+                  <h3 className="text-[12px] text-gray-500 font-bold uppercase tracking-wider mb-1.5 font-sans">Method</h3>
                   {isEnriching && !viewingPlannerEntry.instructions?.length ? (
-                    <p className="text-[14px] text-gray-400 animate-pulse">Sourcing instructions...</p>
+                    <p className="text-[14px] text-gray-500 animate-pulse">Sourcing instructions...</p>
                   ) : (
                     <div className="space-y-0">
                       {viewingPlannerEntry.instructions?.map((step, i) => (
@@ -698,7 +698,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
               {viewingPlannerEntry.servingSuggestion && (
                 <div className="space-y-1.5 pt-4 border-t border-gray-100">
-                  <h3 className="text-[12px] text-gray-400 font-bold uppercase tracking-wider mb-1.5 font-sans">Serving Suggestion</h3>
+                  <h3 className="text-[12px] text-gray-500 font-bold uppercase tracking-wider mb-1.5 font-sans">Serving Suggestion</h3>
                   <p className="text-[14px] text-gray-600 leading-relaxed max-w-2xl italic">
                     {viewingPlannerEntry.servingSuggestion}
                   </p>
@@ -722,7 +722,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
               <div className="flex flex-col items-center pb-2 pt-0 space-y-2">
                 <h2 className="text-[20px] font-bold text-gray-900 text-center">Save & Schedule</h2>
-                <p className="text-[12px] text-gray-400 font-medium text-center max-w-md">
+                <p className="text-[12px] text-gray-500 font-medium text-center max-w-md">
                   {(!user || user.isAnonymous) 
                     ? "Keep your dinners organised in this browser, then sign in later if you want to carry them across devices."
                     : "Keep dinner organised: choose what to cook and when, then bring the ingredients together in one shopping list."}
@@ -747,7 +747,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     <button
                       type="button"
                       onClick={() => setView('home')}
-                      className="h-9 px-4 rounded border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-widest text-gray-700 hover:border-gray-400 hover:text-gray-950 transition-colors"
+                      className="h-9 px-4 rounded border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-widest text-gray-700 hover:border-gray-500 hover:text-gray-950 transition-colors"
                     >
                       Find recipes to save
                     </button>
@@ -773,7 +773,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Dinners</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Dinners</span>
                       <select
                         value={planDinnerCount}
                         onChange={(e) => setPlanDinnerCount(Number(e.target.value) as 3 | 5 | 7)}
@@ -785,7 +785,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </select>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Serves</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Serves</span>
                       <select
                         value={planServings}
                         onChange={(e) => setPlanServings(Number(e.target.value))}
@@ -800,9 +800,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </select>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Ingredient-value target</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Ingredient-value target</span>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] font-bold text-gray-400">£</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] font-bold text-gray-500">£</span>
                         <input
                           value={planBudget}
                           onChange={(e) => setPlanBudget(e.target.value)}
@@ -810,7 +810,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           className="w-full h-10 bg-gray-50 border border-gray-100 rounded pl-7 pr-3 text-[12px] font-semibold text-gray-700 outline-none"
                         />
                       </div>
-                      <p className="text-[9.5px] leading-snug text-gray-400">
+                      <p className="text-[9.5px] leading-snug text-gray-500">
                         Compares the estimated value of ingredients used. Checkout may cost more because complete packs are purchased.
                       </p>
                     </label>
@@ -827,12 +827,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         compact
                         hideSelectedSummary
                       />
-                      <p className="text-[9.5px] leading-snug text-gray-400">
+                      <p className="text-[9.5px] leading-snug text-gray-500">
                         Preferred proteins guide variety rather than acting as hard exclusions. Dietary, allergy and ethical rules still apply. Choosing Offal permits it for this plan only.
                       </p>
                     </div>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Time</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Time</span>
                       <select
                         value={planTime}
                         onChange={(e) => setPlanTime(e.target.value as WeeklyPlanTime)}
@@ -845,7 +845,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       </select>
                     </label>
                     <label className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Homemade/Ready-made</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Homemade/Ready-made</span>
                       <select
                         value={planHomemadeCount}
                         onChange={(e) => setPlanHomemadeCount(Number(e.target.value))}
@@ -870,7 +870,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         />
                         <span>
                           <span className="block text-[11px] font-bold text-gray-700">Minimise shopping cost</span>
-                          <span className="block mt-0.5 text-[10.5px] leading-relaxed text-gray-400">Prioritise lower-cost dinners within your weekly budget.</span>
+                          <span className="block mt-0.5 text-[10.5px] leading-relaxed text-gray-500">Prioritise lower-cost dinners within your weekly budget.</span>
                         </span>
                       </label>
                       <label className="flex items-start gap-2.5 rounded border border-gray-100 bg-gray-50/70 px-3 py-2.5 cursor-pointer">
@@ -882,7 +882,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         />
                         <span>
                           <span className="block text-[11px] font-bold text-gray-700">Reuse ingredients</span>
-                          <span className="block mt-0.5 text-[10.5px] leading-relaxed text-gray-400">Prefer dinners that share packs and create practical leftovers.</span>
+                          <span className="block mt-0.5 text-[10.5px] leading-relaxed text-gray-500">Prefer dinners that share packs and create practical leftovers.</span>
                         </span>
                       </label>
                     </div>
@@ -890,11 +890,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   {planPresetNotice && (
                     <div className="text-[11px] text-gray-600 leading-relaxed bg-gray-50 border border-gray-100 px-3 py-2 flex items-start justify-between gap-3">
                       <span>{planPresetNotice}</span>
-                      <button type="button" onClick={() => setPlanPresetNotice(null)} className="shrink-0 font-bold text-gray-400 hover:text-gray-700">Dismiss</button>
+                      <button type="button" onClick={() => setPlanPresetNotice(null)} className="shrink-0 font-bold text-gray-500 hover:text-gray-700">Dismiss</button>
                     </div>
                   )}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <p className="min-w-0 text-[11px] text-gray-400 font-medium leading-relaxed">
+                    <p className="min-w-0 text-[11px] text-gray-500 font-medium leading-relaxed">
                       {Number(planBudget) > 0
                         ? `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}: about £${(Number(planBudget) / planDinnerCount).toFixed(2)} per dinner, or £${(Number(planBudget) / planDinnerCount / planServings).toFixed(2)} per person.`
                         : `Plans ${planDinnerCount} dinners for ${planServings} ${planServings === 1 ? 'person' : 'people'}.`}
@@ -962,8 +962,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   {/* SAVED HEADER ROW */}
                   <div className="flex items-center justify-between border-b border-gray-100 pb-2">
                     <div className="flex items-baseline gap-2 pl-1">
-                      <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">My collection</h3>
-                      <span className="text-[12px] text-gray-400 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
+                      <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">My collection</h3>
+                      <span className="text-[12px] text-gray-500 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       {activeSavedRecipes.length > 0 && (
@@ -1023,7 +1023,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Estimated ingredient value</p>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Estimated ingredient value</p>
                           <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
                             <span className="text-[22px] font-bold tracking-tight text-gray-950">£{builtWeekCost.estimatedTotal.toFixed(2)}</span>
                             <span className="text-[11px] font-medium text-gray-500">
@@ -1043,7 +1043,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               Based on {builtWeekCost.pricedDinnerCount} of {builtWeekCost.dinnerCount} dinners; remaining costs are not yet available.
                             </p>
                           )}
-                          <p className="mt-1 text-[10.5px] leading-relaxed text-gray-400">
+                          <p className="mt-1 text-[10.5px] leading-relaxed text-gray-500">
                             This estimates the ingredient value used in these dinners, not what you may pay at checkout. Schedule dinners to estimate the shopping cost, including complete packs, shared ingredients and items already in stock.
                           </p>
                           <button
@@ -1057,7 +1057,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         <button
                           type="button"
                           onClick={() => setBuiltWeekCost(null)}
-                          className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-gray-700"
+                          className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-gray-700"
                         >
                           Dismiss
                         </button>
@@ -1073,18 +1073,18 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
                           {/* Left: Search Bar */}
                           <div className="relative w-full sm:max-w-[340px]">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
                             <input 
                               type="text"
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
                               placeholder="Search your collection..."
-                              className="w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[11.5px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40 transition-all"
+                              className="w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[11.5px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
                               <button 
                                 onClick={() => setSavedSearchQuery('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 cursor-pointer"
                               >
                                 <CircleX size={14} />
                               </button>
@@ -1113,7 +1113,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                 >
                                   {hasActiveSavedFilters ? activeSavedFilterCount : ''}
                                 </span>
-                                <span className="text-gray-400 text-[10px] ml-0.5">▼</span>
+                                <span className="text-gray-500 text-[10px] ml-0.5">▼</span>
                               </button>
 
                               <AnimatePresence initial={false}>
@@ -1136,7 +1136,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     transition={{ duration: shouldReduceMotion ? 0.01 : 0.16, ease: 'easeOut' }}
                                     className="absolute left-0 md:left-auto md:right-0 top-full mt-1.5 w-56 bg-white border border-gray-100 rounded shadow-md p-3 z-50"
                                   >
-                                    <div className="mb-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1 text-left">COOKING STYLE</div>
+                                    <div className="mb-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 px-1 text-left">COOKING STYLE</div>
                                     <div className="space-y-1">
                                       <label className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded cursor-pointer text-xs font-medium text-gray-700 select-none">
                                         <input type="checkbox" checked={convenienceFilter === 'scratch'} onChange={() => setConvenienceFilter(prev => prev === 'scratch' ? 'all' : 'scratch')} className="rounded border-gray-300 text-accent h-3.5 w-3.5 cursor-pointer" />
@@ -1148,7 +1148,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                       </label>
                                     </div>
                                     <div className="border-t border-gray-100 my-2"></div>
-                                    <div className="mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1 text-left">QUICK MOODS</div>
+                                    <div className="mb-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 px-1 text-left">QUICK MOODS</div>
                                     <div className="space-y-1">
                                       {[
                                         {id: 'under20', label: '⏱️ Under 20 min'},
@@ -1176,7 +1176,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
                             {/* 2. Sort Dropdown */}
                             <div className="flex items-center gap-1 px-2 bg-white hover:bg-gray-50 rounded border border-gray-100 h-8 transition-colors">
-                              <History className="w-3.5 h-3.5 text-gray-400" />
+                              <History className="w-3.5 h-3.5 text-gray-500" />
                               <select value={savedSortBy} onChange={(e) => setSavedSortBy(e.target.value as SavedSortOption)} className="bg-transparent text-[11px] font-bold text-gray-500 outline-none cursor-pointer py-0.5 pr-0.5">
                                 <option value="newest">Newest Added</option>
                                 <option value="oldest">Oldest Added</option>
@@ -1234,7 +1234,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         <div className="p-3 border-t border-gray-50">
                                           {hasExhaustedSaved || savedDisplayOffset + 6 >= processed.length ? (
                                             <div className="p-2 bg-gray-50/50 rounded-md text-center">
-                                              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">End of results</p>
+                                              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">End of results</p>
                                             </div>
                                           ) : (
                                             <button 
@@ -1277,12 +1277,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   <div className="flex flex-col gap-2 border-t border-gray-100 pt-4">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 pl-1">
-                        <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Scheduled</h3>
-                        <span className="text-[12px] text-gray-400 font-medium">
+                        <h3 className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Scheduled</h3>
+                        <span className="text-[12px] text-gray-500 font-medium">
                           {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
                         </span>
                         <span className="text-[12px] text-gray-300">•</span>
-                        <span className="text-[12px] text-gray-400 font-medium">
+                        <span className="text-[12px] text-gray-500 font-medium">
                           {Math.min(planner.length, 7)}/7 days filled
                         </span>
                       </div>
@@ -1451,8 +1451,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     <h4 className="text-[13.5px] font-bold text-gray-900 truncate pr-4">{entry.title}</h4>
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                       <span className="text-[10.5px] font-bold text-accent uppercase tracking-wider">{entry.cuisine || 'Dinner'}</span>
-                                      {entry.price && <span className="text-[10px] text-gray-400 font-medium">• {entry.price} pp</span>}
-                                      {entry.totalTime && <span className="text-[10px] text-gray-400 font-medium">• {entry.totalTime} mins</span>}
+                                      {entry.price && <span className="text-[10px] text-gray-500 font-medium">• {entry.price} pp</span>}
+                                      {entry.totalTime && <span className="text-[10px] text-gray-500 font-medium">• {entry.totalTime} mins</span>}
                                       {scheduledPersonalNote && (
                                         <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-orange-800">
                                           <StickyNote size={11} /> Note
@@ -1469,7 +1469,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     transition={{ duration: shouldReduceMotion ? 0.01 : 0.16, ease: 'easeOut' }}
                                     className="flex flex-col"
                                   >
-                                    <span className="text-[13px] text-gray-400 font-medium">Nothing scheduled yet</span>
+                                    <span className="text-[13px] text-gray-500 font-medium">Nothing scheduled yet</span>
                                     {targetPlannerDay === dayId && (
                                       <p className="text-[11px] text-accent font-semibold mt-1 animate-in fade-in slide-in-from-top-1">Select a recipe below to schedule for {dayId}...</p>
                                     )}
@@ -1489,7 +1489,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                       className={`p-1.5 rounded transition-colors ${
                                         scheduledPersonalNote
                                           ? 'bg-orange-50 text-orange-800 hover:bg-orange-100'
-                                          : 'bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-accent'
+                                          : 'bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-accent'
                                       }`}
                                       title={scheduledPersonalNote ? 'Edit personal note' : 'Add personal note'}
                                     >
@@ -1500,7 +1500,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         e.stopPropagation();
                                         handlePrintRecipe(entry);
                                       }}
-                                      className="p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-accent rounded transition-colors"
+                                      className="p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-accent rounded transition-colors"
                                       title="Print"
                                       aria-label={`Print ${entry.title}`}
                                     >
@@ -1518,7 +1518,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                           }
                                         }
                                       }}
-                                      className="p-1.5 bg-gray-50 hover:bg-accent/5 text-gray-400 hover:text-accent rounded transition-colors"
+                                      className="p-1.5 bg-gray-50 hover:bg-accent/5 text-gray-500 hover:text-accent rounded transition-colors"
                                       title="Remove from schedule"
                                       aria-label={`Remove ${entry.title} from schedule`}
                                     >
@@ -1571,11 +1571,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                 value={scheduledNoteDraft}
                                 onChange={(e) => setScheduledNoteDraft(e.target.value.slice(0, 1000))}
                                 placeholder="Personal note..."
-                                className="w-full min-h-[70px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40"
+                                className="w-full min-h-[70px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-500 focus:border-accent/40"
                                 maxLength={1000}
                               />
                               <div className="mt-1.5 flex items-center justify-between gap-2">
-                                <span className="text-[10px] font-medium text-gray-400">{scheduledNoteDraft.length}/1000</span>
+                                <span className="text-[10px] font-medium text-gray-500">{scheduledNoteDraft.length}/1000</span>
                                 <div className="flex items-center gap-1.5">
                                   <button
                                     onClick={() => {
@@ -1656,7 +1656,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               ? `Your estimated shopping-list cost is about £${activeShoppingListTotal.toFixed(2)} for this plan.`
                               : 'Build the shopping list to see what this week is likely to cost.'}
                           </p>
-                          <p className="mt-1 text-[11px] text-gray-400 leading-relaxed">
+                          <p className="mt-1 text-[11px] text-gray-500 leading-relaxed">
                             Saved dinners are not included until you schedule them. Prices are based on {supermarketLabel} where available and may vary by pack size and retailer.
                           </p>
                         </div>
@@ -1679,24 +1679,24 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         type="button"
                         onClick={() => setIsRecentlyRemovedOpen(prev => !prev)}
                         aria-expanded={isRecentlyRemovedOpen}
-                        className="inline-flex items-center gap-2 rounded px-1 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400 transition-colors hover:text-accent"
+                        className="inline-flex items-center gap-2 rounded px-1 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-accent"
                       >
                         {isRecentlyRemovedOpen ? 'Hide removed recipes' : `Show removed recipes (${archivedSavedRecipes.length})`}
                       </button>
                       {isRecentlyRemovedOpen && (
                         <>
-                          <p className="mt-1 px-1 text-[11px] leading-relaxed text-gray-400">
+                          <p className="mt-1 px-1 text-[11px] leading-relaxed text-gray-500">
                             Removed recipes stay here until you restore or permanently delete them.
                           </p>
                           <div className="relative mt-2">
-                            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" aria-hidden="true" />
                             <input
                               type="search"
                               value={removedSearchQuery}
                               onChange={(e) => setRemovedSearchQuery(e.target.value)}
                               placeholder="Search removed recipes..."
                               aria-label="Search removed recipes"
-                              className="h-8 w-full rounded border border-gray-100 bg-white pl-8 pr-3 text-[11px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-accent/40 focus-visible:ring-2 focus-visible:ring-accent/20"
+                              className="h-8 w-full rounded border border-gray-100 bg-white pl-8 pr-3 text-[11px] text-gray-700 outline-none placeholder:text-gray-500 focus:border-accent/40 focus-visible:ring-2 focus-visible:ring-accent/20"
                             />
                           </div>
                           <div className="mt-2 divide-y divide-gray-50 rounded border border-gray-100 bg-gray-50/40">
@@ -1708,7 +1708,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   className="min-w-0 text-left hover:opacity-75"
                                 >
                                   <span className="block truncate text-[12px] font-semibold text-gray-700">{recipe.title}</span>
-                                  <span className="mt-0.5 block truncate text-[10.5px] text-gray-400">
+                                  <span className="mt-0.5 block truncate text-[10.5px] text-gray-500">
                                     {recipe.cuisine || 'Dinner'}{recipe.totalTime ? ` · ${recipe.totalTime} mins` : ''}
                                   </span>
                                 </button>
@@ -1723,7 +1723,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   <button
                                     type="button"
                                     onClick={() => handlePermanentlyDeleteSavedRecipe(recipe)}
-                                    className="p-1 text-gray-400 hover:text-red-500"
+                                    className="p-1 text-gray-500 hover:text-red-500"
                                     title="Permanently delete"
                                     aria-label={`Permanently delete ${recipe.title}`}
                                   >

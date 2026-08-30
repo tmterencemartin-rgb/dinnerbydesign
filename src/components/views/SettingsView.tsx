@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ChevronDown, 
-  Trash2, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Trash2,
   ExternalLink,
   Info,
   Sparkles,
@@ -25,8 +25,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { UserPreferences, AppView } from '../../types';
 import { NumberStepper } from '../ui/NumberStepper';
 import { Tooltip } from '../ui/Tooltip';
-import { 
-  DIETARY_TAXONOMY, 
+import {
+  DIETARY_TAXONOMY,
 } from '../../constants';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 import { getApiUrl, getApiConfig, setApiConfig } from '../../lib/api';
@@ -47,12 +47,12 @@ interface SettingsViewProps {
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, clearHighlight }) => {
-  const { 
-    user, 
-    profile, 
-    savedRecipes, 
-    addLog, 
-    setError, 
+  const {
+    user,
+    profile,
+    savedRecipes,
+    addLog,
+    setError,
     savePreferences,
     signInWithGoogle,
     signOut,
@@ -137,9 +137,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     setIsSendingTest(true);
     const apiUrl = getApiUrl('/api/send-email');
     const recipient = user.email;
-    
+
     console.log(`[Settings] Sending test email to ${recipient} via ${apiUrl}...`);
-    
+
     try {
       // 1. Health Check Ping
       try {
@@ -153,7 +153,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       console.log(`[Diagnostic] Executing fetch to ${apiUrl}...`);
       const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
@@ -177,7 +177,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       });
 
       console.log(`[Diagnostic] Response status: ${response.status} ${response.ok ? '(OK)' : '(FAILED)'}`);
-      
+
       if (!response.ok) {
         let errorMsg = 'Failed to send test email';
         let errorCode = '';
@@ -190,7 +190,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
         }
         throw new Error(`${errorMsg}${errorCode}`);
       }
-      
+
       const resData = await response.json().catch(() => ({}));
       if (resData?.simulated) {
         showToast(`Simulated send: Verify your email on Resend to receive real ones!`);
@@ -199,18 +199,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       }
     } catch (err: any) {
       console.error("Test email error details:", err);
-      const isFetchError = err.message.includes("NETWORK_ERROR") || 
-                         err.message.toLowerCase().includes("failed to fetch") || 
+      const isFetchError = err.message.includes("NETWORK_ERROR") ||
+                         err.message.toLowerCase().includes("failed to fetch") ||
                          err.name === "TypeError";
-      
+
       if (isFetchError) {
         showToast(`Network Error: Ensure the search service is online. (Target: ${apiUrl})`);
       } else if (
         err.name === "validation_error" ||
         err.message?.toLowerCase().includes("validation") ||
-        err.message?.includes("restricted") || 
-        err.message?.includes("RECIPIENT_RESTRICTION") || 
-        err.message?.includes("RESEND_RESTRICTION") || 
+        err.message?.includes("restricted") ||
+        err.message?.includes("RECIPIENT_RESTRICTION") ||
+        err.message?.includes("RESEND_RESTRICTION") ||
         err.message?.includes("validation_error")
       ) {
         showToast("Delivery restricted: This email isn't verified in the sending service yet. Copy manually instead.");
@@ -328,7 +328,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       setPreferencesError("No preferences found to save.");
       return;
     }
-    
+
     let updatedPrefs = { ...currentPrefs };
     let changed = false;
 
@@ -351,10 +351,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       } else {
         await savePreferences(currentPrefs);
       }
-      
-      setPreferencesError(null); 
+
+      setPreferencesError(null);
       setShowInlineSuccess(true);
-      
+
       // Immediate redirect to search view as requested
       setTimeout(() => setView('home'), 500);
     } catch (err: any) {
@@ -376,7 +376,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       await savePreferences(defaultPrefs);
       setPreferencesError(null);
       setShowInlineSuccess(true);
-      
+
       // Immediate redirect to search view as requested
       setTimeout(() => setView('home'), 500);
     } catch (err) {
@@ -403,7 +403,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     if (!user) return;
     setIsDeleting(true);
     setDeleteError(null);
-    
+
     // 1. Proactive Re-authentication if provider is password and password is provided
     const hasPasswordProvider = user.providerData.some(p => p.providerId === 'password');
     if (hasPasswordProvider) {
@@ -434,16 +434,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       const savedRecipesSnapshot = await getDocs(collection(db, 'users', user.uid, 'savedRecipes'));
       const pantrySnapshot = await getDocs(collection(db, 'users', user.uid, 'pantry'));
       const shoppingListSnapshot = await getDocs(collection(db, 'users', user.uid, 'shoppingList'));
-      
+
       const batch = writeBatch(db);
-      
+
       savedRecipesSnapshot.docs.forEach(doc => batch.delete(doc.ref));
       pantrySnapshot.docs.forEach(doc => batch.delete(doc.ref));
       shoppingListSnapshot.docs.forEach(doc => batch.delete(doc.ref));
-      
+
       batch.delete(doc(db, 'users', user.uid, 'profile', 'preferences'));
       batch.delete(doc(db, 'users', user.uid));
-      
+
       await batch.commit();
       addLog(`SETTINGS: Firestore user data successfully purged!`);
     } catch (dbErr: any) {
@@ -476,7 +476,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             }
           }
         }
-        
+
         const emailHtml = `
 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
   <div style="border-bottom: 1px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 24px;">
@@ -521,16 +521,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       }
 
       await user.delete();
-      
+
       // Explicitly clear local preferences to prevent stale restoration
       safeStorage.removeItem('dbd_has_started');
       safeStorage.removeItem('dbd_temporary_preferences');
 
       showToast("Account deleted");
       addLog(`SETTINGS: Account purged, redirecting to landing.`);
-      
+
       // Navigate to landing and ensure state is reset
-      setView('landing'); 
+      setView('landing');
       window.scrollTo(0, 0);
     } catch (authErr: any) {
       const errMessage = authErr.message || '';
@@ -551,14 +551,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
   const handleManageBilling = async () => {
     const customerId = profile?.subscription?.stripeCustomerId;
-    
+
     if (!customerId) {
       showToast("No active subscription found to manage.");
       return;
     }
 
     setIsPortalLoading(true);
-    
+
     try {
       const response = await fetch(getApiUrl('/api/create-portal-session'), {
         method: 'POST',
@@ -601,7 +601,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
   };
 
   return (
-    <motion.div 
+    <motion.div
       key="settings"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -610,18 +610,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     >
       <div className="space-y-1 pt-5 sm:pt-6">
         <div className="flex items-center justify-between">
-          <button 
+          <button
             id="back-to-search-btn"
-            onClick={() => setView('home')} 
+            onClick={() => setView('home')}
             className="flex items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
           >
             <ChevronLeft id="back-chevron" className="w-4 h-4 -ml-1" />
             <span id="back-text">Back to search</span>
           </button>
-          
-          <button 
+
+          <button
             onClick={() => setView('home')}
-            className="p-1 px-1.5 text-gray-400 hover:text-gray-900 transition-colors"
+            className="p-1 px-1.5 text-gray-500 hover:text-gray-900 transition-colors"
             aria-label="Close settings"
           >
             <CircleX size={16} />
@@ -629,7 +629,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
         </div>
 
         <div className="flex flex-col items-center pb-2 pt-0 space-y-1">
-          <h2 
+          <h2
             className="text-[20px] font-bold text-gray-900 text-center select-none cursor-default"
             onClick={handleDebugClick}
           >
@@ -642,80 +642,80 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
           <button
             onClick={() => setActiveTab('profile')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
-              activeTab === 'profile' 
-                ? 'text-gray-950 font-bold' 
-                : 'text-gray-400/80 hover:text-gray-600 font-bold'
+              activeTab === 'profile'
+                ? 'text-gray-950 font-bold'
+                : 'text-gray-500 hover:text-gray-600 font-bold'
             }`}
           >
             Profile
             {activeTab === 'profile' && (
-              <motion.div 
-                layoutId="activeSettingsTabLine" 
-                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10" 
+              <motion.div
+                layoutId="activeSettingsTabLine"
+                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10"
               />
             )}
           </button>
           <button
             onClick={() => setActiveTab('subscription')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
-              activeTab === 'subscription' 
-                ? 'text-gray-950 font-bold' 
-                : 'text-gray-400/80 hover:text-gray-600 font-bold'
+              activeTab === 'subscription'
+                ? 'text-gray-950 font-bold'
+                : 'text-gray-500 hover:text-gray-600 font-bold'
             }`}
           >
             Subscription
             {activeTab === 'subscription' && (
-              <motion.div 
-                layoutId="activeSettingsTabLine" 
-                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10" 
+              <motion.div
+                layoutId="activeSettingsTabLine"
+                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10"
               />
             )}
           </button>
           <button
             onClick={() => setActiveTab('security')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
-              activeTab === 'security' 
-                ? 'text-gray-950 font-bold' 
-                : 'text-gray-400/80 hover:text-gray-600 font-bold'
+              activeTab === 'security'
+                ? 'text-gray-950 font-bold'
+                : 'text-gray-500 hover:text-gray-600 font-bold'
             }`}
           >
             Security
             {activeTab === 'security' && (
-              <motion.div 
-                layoutId="activeSettingsTabLine" 
-                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10" 
+              <motion.div
+                layoutId="activeSettingsTabLine"
+                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10"
               />
             )}
           </button>
           <button
             onClick={() => setActiveTab('support')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
-              activeTab === 'support' 
-                ? 'text-gray-950 font-bold' 
-                : 'text-gray-400/80 hover:text-gray-600 font-bold'
+              activeTab === 'support'
+                ? 'text-gray-950 font-bold'
+                : 'text-gray-500 hover:text-gray-600 font-bold'
             }`}
           >
             Help
             {activeTab === 'support' && (
-              <motion.div 
-                layoutId="activeSettingsTabLine" 
-                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10" 
+              <motion.div
+                layoutId="activeSettingsTabLine"
+                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10"
               />
             )}
           </button>
           <button
             onClick={() => setActiveTab('privacy')}
             className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
-              activeTab === 'privacy' 
-                ? 'text-gray-950 font-bold' 
-                : 'text-gray-400/80 hover:text-gray-600 font-bold'
+              activeTab === 'privacy'
+                ? 'text-gray-950 font-bold'
+                : 'text-gray-500 hover:text-gray-600 font-bold'
             }`}
           >
             Privacy
             {activeTab === 'privacy' && (
-              <motion.div 
-                layoutId="activeSettingsTabLine" 
-                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10" 
+              <motion.div
+                layoutId="activeSettingsTabLine"
+                className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10"
               />
             )}
           </button>
@@ -723,16 +723,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             <button
               onClick={() => setActiveTab('developer')}
               className={`pb-2.5 px-3 text-[13px] relative transition-all duration-200 outline-none whitespace-nowrap ${
-                activeTab === 'developer' 
-                  ? 'text-gray-950 font-bold' 
-                  : 'text-gray-400/80 hover:text-gray-600 font-bold'
+                activeTab === 'developer'
+                  ? 'text-gray-950 font-bold'
+                  : 'text-gray-500 hover:text-gray-600 font-bold'
               }`}
             >
               Developer
               {activeTab === 'developer' && (
-                <motion.div 
-                  layoutId="activeSettingsTabLine" 
-                  className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10" 
+                <motion.div
+                  layoutId="activeSettingsTabLine"
+                  className="absolute bottom-[-1px] left-0 right-0 h-[2.5px] bg-gray-950 rounded-full z-10"
                 />
               )}
             </button>
@@ -742,19 +742,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
         {/* Status Notifications */}
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
           {showInlineSuccess && (
-            <motion.div 
+            <motion.div
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               className="bg-gray-900 text-white px-6 py-2.5 rounded shadow-md flex items-center justify-center gap-2 border border-white/10"
             >
               <div className="w-4 h-4 rounded bg-accent flex items-center justify-center">
-                <CircleX size={10} className="rotate-45" /> 
+                <CircleX size={10} className="rotate-45" />
               </div>
               <span className="text-[13px] font-bold">Preferences saved</span>
             </motion.div>
           )}
           {preferencesError && (
-            <motion.div 
+            <motion.div
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               className="bg-red-600 text-white px-6 py-2.5 rounded shadow-md flex items-center justify-between gap-4 pointer-events-auto"
@@ -763,7 +763,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                 <CircleX size={14} />
                 <span className="text-[13px] font-medium">{preferencesError}</span>
               </div>
-              <button 
+              <button
                 onClick={() => setPreferencesError(null)}
                 className="text-white/80 hover:text-white"
               >
@@ -778,15 +778,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       <div className="pt-2 min-h-[440px]">
         {/* Tab 1: Profile */}
         {activeTab === 'profile' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             <div className={isAdmin && user && !user.isAnonymous ? "grid gap-4 md:grid-cols-2" : "space-y-4"}>
               {/* Account Card */}
               <div id="account-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-3">
-                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Profile</h3>
+                <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Profile</h3>
                 {user && !user.isAnonymous ? (
                   <div className="space-y-3 pb-1">
                     <div className="flex items-center gap-3 min-w-0">
@@ -799,17 +799,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                       )}
                       <div className="min-w-0">
                         <p className="text-[14px] text-gray-900 font-bold leading-none">{user.displayName || user.email || 'User'}</p>
-                        <p className="text-[11px] text-gray-400 mt-1.5 font-medium leading-none truncate">{user.email}</p>
+                        <p className="text-[11px] text-gray-500 mt-1.5 font-medium leading-none truncate">{user.email}</p>
                       </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 sm:pl-[52px]">
-                      <button 
+                      <button
                         onClick={signOut}
                         className="px-3 py-1.5 bg-white border border-gray-100 text-gray-700 text-[11px] font-bold rounded hover:bg-gray-50 hover:border-gray-200 transition-all"
                       >
                         Sign out
                       </button>
-                      <button 
+                      <button
                         onClick={handleSendTestEmail}
                         disabled={isSendingTest}
                         className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 text-gray-700 text-[11px] font-bold rounded hover:bg-gray-100 transition-all disabled:opacity-50"
@@ -829,7 +829,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                     <div className="space-y-1">
                       <h3 className="text-[13.5px] text-gray-900 font-bold">Admin dashboard</h3>
-                      <p className="text-[11.5px] text-gray-400 font-semibold leading-relaxed">
+                      <p className="text-[11.5px] text-gray-500 font-semibold leading-relaxed">
                         Review subscribers, subscription status, Stripe webhook health, email status and CSV exports.
                       </p>
                     </div>
@@ -849,14 +849,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             {user && !user.isAnonymous && (
               <div id="dietary-profile-summary" className="space-y-3 pt-1">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-1.5">
-                  <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1">My Dietary Profile</h3>
+                  <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-1">My Dietary Profile</h3>
                 </div>
 
                 <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
                     <div className="space-y-0.5">
                       <p className="text-[13px] text-gray-900 font-bold leading-snug">My Search Defaults</p>
-                      <p className="text-[11px] text-gray-400 font-semibold">Applied automatically to every search</p>
+                      <p className="text-[11px] text-gray-500 font-semibold">Applied automatically to every search</p>
                     </div>
                     <button
                       onClick={() => setView('home', true)}
@@ -870,7 +870,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     {/* Core Rules */}
                     <div className="space-y-2.5">
-                      <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                         <Apple className="w-3.5 h-3.5 text-gray-500" />
                         Core Rules & Restrictions
                       </h4>
@@ -926,7 +926,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
                     {/* Limits, Budget & Priorities */}
                     <div className="space-y-2.5">
-                      <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5 text-gray-500" />
                         Limits & Saved Priorities
                       </h4>
@@ -997,7 +997,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
                     {/* Global Culinary & Store Preferences */}
                     <div className="space-y-2.5 md:col-span-2 pt-3 border-t border-gray-100">
-                      <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                         <Utensils className="w-3.5 h-3.5 text-gray-500" />
                         Culinary Preferences
                       </h4>
@@ -1005,24 +1005,24 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         <div>
                           <span className="text-gray-500 font-semibold text-[11.5px] block">Cuisine Preferences</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
-                            {displayedPreferences.cuisinePreferences && displayedPreferences.cuisinePreferences.length > 0 
-                              ? displayedPreferences.cuisinePreferences.join(', ') 
+                            {displayedPreferences.cuisinePreferences && displayedPreferences.cuisinePreferences.length > 0
+                              ? displayedPreferences.cuisinePreferences.join(', ')
                               : 'All world cuisines'}
                           </p>
                         </div>
                         <div>
                           <span className="text-gray-500 font-semibold text-[11.5px] block">Cooking Methods</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
-                            {displayedPreferences.cookingMethods && displayedPreferences.cookingMethods.length > 0 
-                              ? displayedPreferences.cookingMethods.join(', ') 
+                            {displayedPreferences.cookingMethods && displayedPreferences.cookingMethods.length > 0
+                              ? displayedPreferences.cookingMethods.join(', ')
                               : 'Any methods allowed'}
                           </p>
                         </div>
                         <div>
                           <span className="text-gray-500 font-semibold text-[11.5px] block">Nearby retailers</span>
                           <p className="text-[12px] text-gray-800 font-bold mt-1">
-                            {displayedPreferences.preferredSupermarkets && displayedPreferences.preferredSupermarkets.length > 0 
-                              ? displayedPreferences.preferredSupermarkets.join(', ') 
+                            {displayedPreferences.preferredSupermarkets && displayedPreferences.preferredSupermarkets.length > 0
+                              ? displayedPreferences.preferredSupermarkets.join(', ')
                               : 'All UK retailers'}
                           </p>
                         </div>
@@ -1038,21 +1038,21 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               </div>
             )}
 
-            
+
 
           </motion.div>
         )}
 
         {/* Tab 2: Subscription */}
         {activeTab === 'subscription' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             <div id="subscription-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Subscription</h3>
+                <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Subscription</h3>
                 {(accessStatus === 'paid' || accessStatus === 'trial') && (
                   <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-[11px] bg-emerald-50 px-2.5 py-1 rounded uppercase tracking-wider">
                      <ShieldCheck size={14} strokeWidth={2.5} />
@@ -1069,11 +1069,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         <p className="text-[13px] text-gray-900 font-bold leading-snug">
                           Unlock Full Access
                         </p>
-                        <p className="text-[12px] text-gray-400 leading-relaxed font-semibold opacity-85">
+                        <p className="text-[12px] text-gray-500 leading-relaxed font-semibold opacity-85">
                           Activate your monthly or annual subscription to unlock unlimited recipes, multi-device planning, and full supermarket costing.
                         </p>
                       </div>
-                      
+
                       <ul id="feature-list" className="space-y-3.5 pl-0.5">
                         <li className="flex items-start gap-2">
                           <span className="text-dbd-accent font-bold mt-0.5 text-[11px]">✓</span>
@@ -1104,11 +1104,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   <div className="space-y-4">
                     <div className={`p-4 rounded space-y-1 ${accessStatus === 'paid' ? 'bg-emerald-50/40' : 'bg-gray-50/70'}`}>
                       <p className="text-[13.5px] text-gray-900 font-bold">
-                        {accessStatus === 'paid' 
-                          ? 'Your subscription is currently active!' 
+                        {accessStatus === 'paid'
+                          ? 'Your subscription is currently active!'
                           : `Free Trial — ${trialDurationText} remaining`}
                       </p>
-                      <p className="text-[12px] text-gray-400 leading-normal font-semibold">
+                      <p className="text-[12px] text-gray-500 leading-normal font-semibold">
                         {accessStatus === 'paid'
                           ? 'Thank you for supporting DinnerByDesign. You have unlimited bespoke searches, portion sizes, active plans and UK supermarket trackers synced across all devices.'
                           : `You have full access to all features. Your trial ends on ${trialEndFormatted}.`}
@@ -1121,14 +1121,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                           <p className="text-[13px] text-gray-900 font-bold leading-snug">
                             Subscribe before your trial ends
                           </p>
-                          <p className="text-[12px] text-gray-400 leading-normal font-semibold">
+                          <p className="text-[12px] text-gray-500 leading-normal font-semibold">
                             Choose a monthly or annual account now to keep DinnerByDesign active without interruption.
                           </p>
                         </div>
                         <StripeCheckoutButton className="w-full" />
                       </div>
                     )}
-                    
+
                     {(profile?.isPremium || profile?.subscription?.stripeCustomerId) && (
                       <button
                         onClick={handleManageBilling}
@@ -1136,9 +1136,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 text-[12px] font-bold rounded hover:bg-gray-50 transition-all font-bold disabled:opacity-50"
                       >
                         {isPortalLoading ? (
-                          <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                          <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
                         ) : (
-                          <ExternalLink className="w-4 h-4 text-gray-400" />
+                          <ExternalLink className="w-4 h-4 text-gray-500" />
                         )}
                         Manage Billing & Subscription
                       </button>
@@ -1152,14 +1152,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
         {/* Tab 3: Security */}
         {activeTab === 'security' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             <div id="security-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Security</h3>
+                <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Security</h3>
               </div>
 
               {user?.providerData.some(p => p.providerId === 'password') ? (
@@ -1167,12 +1167,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   <div className="space-y-4">
                     <div className="space-y-1">
                       <h4 id="password-management" className="text-[13px] font-bold text-gray-900">Change Password</h4>
-                      <p className="text-[11px] text-gray-400 font-medium leading-relaxed">
+                      <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
                         Keeping your account secure is important. Your new password must be at least 6 characters long.
                       </p>
                     </div>
 
-                    <form 
+                    <form
                       onSubmit={async (e) => {
                         e.preventDefault();
                         setPasswordError(null);
@@ -1184,7 +1184,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                           setPasswordError("New password must be at least 6 characters.");
                           return;
                         }
-                        
+
                         setIsUpdatingPassword(true);
                         try {
                           await updateUserPassword(currentPassword, newPassword);
@@ -1213,7 +1213,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
                       <div className="space-y-2">
                         <label className="text-[11.5px] font-bold text-gray-500 block pl-0.5 uppercase tracking-wide">Current Password</label>
-                        <input 
+                        <input
                           type="password"
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
@@ -1225,7 +1225,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
                       <div className="space-y-2">
                         <label className="text-[11.5px] font-bold text-gray-500 block pl-0.5 uppercase tracking-wide">New Password</label>
-                        <input 
+                        <input
                           type="password"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
@@ -1238,7 +1238,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
                       <div className="space-y-2">
                         <label className="text-[11.5px] font-bold text-gray-500 block pl-0.5 uppercase tracking-wide">Confirm New Password</label>
-                        <input 
+                        <input
                           type="password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -1269,8 +1269,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     <p className="text-[13.5px] font-bold">Social Login Enabled</p>
                   </div>
                   <p className="text-[12px] text-gray-500 font-medium leading-relaxed max-w-sm">
-                    You are currently using Google to sign in. Since Google manages your authentication, 
-                    there is no password for you to change here. To update your Google account security, 
+                    You are currently using Google to sign in. Since Google manages your authentication,
+                    there is no password for you to change here. To update your Google account security,
                     please visit your Google Account settings.
                   </p>
                 </div>
@@ -1281,15 +1281,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
         {/* Tab 3: Support */}
         {activeTab === 'support' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             {/* Support Contact Card */}
             <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-6">
               <div className="space-y-1">
-                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Help & Support</h3>
+                <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Help & Support</h3>
                 <p className="text-[13.5px] text-gray-900 font-bold">How can we help you today?</p>
               </div>
 
@@ -1300,12 +1300,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   </div>
                   <div className="space-y-1">
                     <h4 className="text-[14px] text-gray-900 font-bold">Email Support</h4>
-                    <p className="text-[12px] text-gray-400 font-medium leading-relaxed">
+                    <p className="text-[12px] text-gray-500 font-medium leading-relaxed">
                       Facing a technical issue or have a question about your recipes? Our team usually responds within 24 hours.
                     </p>
                   </div>
                   <div className="pt-2">
-                    <button 
+                    <button
                       onClick={() => {
                         navigator.clipboard.writeText('terence@dinnerbydesign.app');
                         setShowEmailCopied(true);
@@ -1335,7 +1335,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     </div>
                     <h4 className="text-[14px] text-gray-900 font-bold">Frequently Asked</h4>
                   </div>
-                  
+
                   <div className="space-y-2 mt-2">
                     {faqData.map((faq) => {
                       const isOpen = openFaqId === faq.id;
@@ -1350,9 +1350,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                             <span className={`text-[12.5px] font-bold transition-colors ${isOpen ? 'text-accent' : 'text-gray-700 group-hover:text-gray-900'}`}>
                               {faq.question}
                             </span>
-                            <ChevronDown 
-                              size={16} 
-                              className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-accent' : 'group-hover:text-gray-600'}`} 
+                            <ChevronDown
+                              size={16}
+                              className={`text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180 text-accent' : 'group-hover:text-gray-600'}`}
                             />
                           </button>
                           {isOpen && (
@@ -1379,7 +1379,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {/* Billing Help Card */}
             <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Billing & Account</h3>
+              <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Billing & Account</h3>
               <div className="space-y-4 pl-0.5">
                 <div className="flex items-start gap-3">
                   <div className="mt-1 w-5 h-5 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -1387,7 +1387,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   </div>
                   <div className="space-y-1">
                     <p className="text-[13px] text-gray-900 font-bold">Secure Billing via Stripe</p>
-                    <p className="text-[11.5px] text-gray-400 font-medium leading-relaxed">
+                    <p className="text-[11.5px] text-gray-500 font-medium leading-relaxed">
                       All payments are processed securely by Stripe. We do not store your credit card details on our servers.
                     </p>
                   </div>
@@ -1405,16 +1405,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {/* Troubleshooting Card */}
             <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
-                <Settings size={14} className="text-gray-400" />
+              <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
+                <Settings size={14} className="text-gray-500" />
                 Search Setup
               </h3>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-0.5">
                 <div>
                   <h4 className="text-[13px] text-gray-900 font-semibold">Reset Search Guide</h4>
-                  <p className="text-[11.5px] text-gray-400 font-medium">Reset the search walkthrough if you missed it.</p>
+                  <p className="text-[11.5px] text-gray-500 font-medium">Reset the search walkthrough if you missed it.</p>
                 </div>
-                <button 
+                <button
                   onClick={() => {
                     safeStorage.removeItem('dbd_onboarding_completed');
                     safeStorage.removeItem('dbd_has_searched');
@@ -1422,7 +1422,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     safeStorage.removeItem('dbd_has_started');
                     showToast("Search state reset!");
                     setTimeout(() => window.location.reload(), 500);
-                  }} 
+                  }}
                   className="px-3.5 py-1.5 bg-gray-50 border border-gray-100 hover:bg-gray-100 text-gray-900 text-[11px] font-bold rounded uppercase tracking-wider transition-all cursor-pointer"
                 >
                   Reset Walkthrough
@@ -1434,28 +1434,28 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
             <div className="pt-4 flex flex-col items-center space-y-4 text-center pb-8">
               <div className="space-y-1">
                 <p className="text-[16px] text-gray-900 font-bold font-sans">DinnerByDesign</p>
-                <p className="text-[12px] text-gray-400 font-semibold max-w-xs leading-relaxed">
+                <p className="text-[12px] text-gray-500 font-semibold max-w-xs leading-relaxed">
                   Less searching. More relevant dinners.
                 </p>
               </div>
               <div className="flex items-center gap-4 pt-2">
-                <button 
+                <button
                   onClick={() => setView('privacy')}
-                  className="text-[11px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors"
+                  className="text-[11px] font-bold text-gray-500 hover:text-gray-900 uppercase tracking-widest transition-colors"
                 >
                   Privacy
                 </button>
                 <div className="w-1 h-1 rounded-full bg-gray-200" />
-                <button 
+                <button
                   onClick={() => setView('terms')}
-                  className="text-[11px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors"
+                  className="text-[11px] font-bold text-gray-500 hover:text-gray-900 uppercase tracking-widest transition-colors"
                 >
                   Terms
                 </button>
               </div>
               {user && !user.isAnonymous && (
                 <div className="pt-8 border-t border-gray-50 w-full flex justify-center">
-                  <button onClick={handleResetPreferences} className="text-[11px] uppercase tracking-wider text-gray-400 hover:text-red-500 font-bold transition-colors cursor-pointer">Clear all active filters</button>
+                  <button onClick={handleResetPreferences} className="text-[11px] uppercase tracking-wider text-gray-500 hover:text-red-500 font-bold transition-colors cursor-pointer">Clear all active filters</button>
                 </div>
               )}
             </div>
@@ -1464,18 +1464,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
         {/* Tab 4: Developer */}
         {showDebug && activeTab === 'developer' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             {/* Developer Connection Card */}
             <div id="developer-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Internal tools</h3>
-              
+              <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Internal tools</h3>
+
               <div className="space-y-1">
                 <h4 className="text-[13.5px] text-gray-900 font-bold">Backend override</h4>
-                <p className="text-[11.5px] text-gray-400 font-semibold leading-normal">
+                <p className="text-[11.5px] text-gray-500 font-semibold leading-normal">
                   Leave blank for the deployed server. Use only when testing a local backend.
                 </p>
               </div>
@@ -1484,14 +1484,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                 <div className="space-y-2">
                   <label className="text-[12px] text-gray-800 font-bold block">Local server URL</label>
                   <div className="flex items-center gap-2">
-                    <input 
+                    <input
                       type="text"
                       value={customApiUrl}
                       onChange={(e) => setCustomApiUrl(e.target.value)}
                       placeholder="e.g., http://localhost:3000"
                       className="flex-1 bg-gray-50/50 border border-gray-100 rounded px-4 py-2 text-[12.5px] outline-none focus:ring-2 focus:ring-gray-900/5 font-mono"
                     />
-                    <button 
+                    <button
                       onClick={handleSaveConnectionUrl}
                       className="bg-gray-900 hover:bg-black text-white px-4 py-2 rounded text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap"
                     >
@@ -1501,9 +1501,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                 </div>
 
                 <div className="bg-gray-50/50 rounded p-4 space-y-1.5 self-center">
-                  <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block">Preset Quicklinks</span>
+                  <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold block">Preset Quicklinks</span>
                   <div className="flex flex-wrap gap-2">
-                    <button 
+                    <button
                       onClick={() => {
                         setCustomApiUrl("http://localhost:3000");
                         safeStorage.setItem('CUSTOM_API_BASE_URL', "http://localhost:3000");
@@ -1513,7 +1513,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     >
                       localhost:3000
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         setCustomApiUrl("");
                         safeStorage.removeItem('CUSTOM_API_BASE_URL');
@@ -1530,10 +1530,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {/* Request Routing Settings */}
             <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Request routing</h3>
+              <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Request routing</h3>
               <div className="space-y-1">
                 <h4 className="text-[13.5px] text-gray-900 font-bold">Server route</h4>
-                <p className="text-[11.5px] text-gray-400 font-semibold leading-normal">
+                <p className="text-[11.5px] text-gray-500 font-semibold leading-normal">
                   Cloud Proxy is the normal production route. Direct Mode is for local testing only.
                 </p>
               </div>
@@ -1542,21 +1542,21 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                 <div className="flex-1 space-y-3">
                   <label className="text-[12px] text-gray-800 font-bold block">Routing mode</label>
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       onClick={() => setApiConfigState(prev => ({ ...prev, mode: 'proxy' }))}
                       className={`flex-1 py-1.5 px-3 rounded border text-[11px] font-bold uppercase tracking-wider transition-all ${
-                        apiConfig.mode === 'proxy' 
-                          ? 'bg-gray-900 text-white border-gray-900' 
+                        apiConfig.mode === 'proxy'
+                          ? 'bg-gray-900 text-white border-gray-900'
                           : 'bg-white text-gray-600 border-gray-100 hover:bg-gray-50'
                       }`}
                     >
                       Cloud Proxy
                     </button>
-                    <button 
+                    <button
                       onClick={() => setApiConfigState(prev => ({ ...prev, mode: 'direct' }))}
                       className={`flex-1 py-1.5 px-3 rounded border text-[11px] font-bold uppercase tracking-wider transition-all ${
-                        apiConfig.mode === 'direct' 
-                          ? 'bg-accent text-white border-accent' 
+                        apiConfig.mode === 'direct'
+                          ? 'bg-accent text-white border-accent'
                           : 'bg-white text-gray-600 border-gray-100 hover:bg-gray-50'
                       }`}
                     >
@@ -1569,7 +1569,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   <div className="flex-1 space-y-3 animate-fade-in">
                     <label className="text-[12px] text-gray-800 font-bold block">Local test key</label>
                     <div className="flex items-center gap-2">
-                      <input 
+                      <input
                         type="password"
                         value={apiConfig.directApiKey || ''}
                         onChange={(e) => setApiConfigState(prev => ({ ...prev, directApiKey: e.target.value }))}
@@ -1582,7 +1582,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
               </div>
 
               <div className="pt-1 flex justify-end">
-                <button 
+                <button
                   onClick={handleSaveApiConfig}
                   className="bg-gray-900 hover:bg-black text-white px-6 py-2 rounded text-[11px] font-bold uppercase tracking-wider transition-all"
                 >
@@ -1593,7 +1593,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {showDebug && (
               <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
-                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5">Service Diagnostics</h3>
+                <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">Service Diagnostics</h3>
                 <div className="p-0.5">
                   <ConnectionDiagnostics />
                 </div>
@@ -1604,25 +1604,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
         {/* Tab 3: Privacy */}
         {activeTab === 'privacy' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 8 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             {/* Privacy Management Card */}
             <div id="privacy-section" className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
-                <Database className="w-3.5 h-3.5 text-gray-400" />
+              <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
+                <Database className="w-3.5 h-3.5 text-gray-500" />
                 Privacy & Data
               </h3>
               <div className="flex flex-col gap-4 pl-0.5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100/50">
                   <div>
                     <h4 className="text-[13px] text-gray-900 font-semibold">Download My Data</h4>
-                    <p className="text-[11.5px] text-gray-400 font-medium">Export all preferences, plans and recipe history offline.</p>
+                    <p className="text-[11.5px] text-gray-500 font-medium">Export all preferences, plans and recipe history offline.</p>
                   </div>
-                  <button 
-                    onClick={handleDownloadData} 
+                  <button
+                    onClick={handleDownloadData}
                     className="px-3.5 py-1.5 bg-gray-50 border border-gray-100 hover:bg-gray-100 text-gray-900 text-[11px] font-bold rounded uppercase tracking-wider transition-all cursor-pointer"
                   >
                     Download JSON
@@ -1633,27 +1633,27 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
 
             {/* Legal Notices Card */}
             <div className="bg-white rounded border border-gray-100 p-4 sm:p-5 space-y-4">
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
+              <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest pl-0.5 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-gray-500" />
                 Legal Notices
               </h3>
-              <p className="text-[12px] text-gray-400 font-medium pl-0.5 max-w-lg leading-normal">
+              <p className="text-[12px] text-gray-500 font-medium pl-0.5 max-w-lg leading-normal">
                 Review our comprehensive policies regarding personal data processing, allergy declarations, liability limitations, and terms of service.
               </p>
               <div className="flex flex-wrap gap-3 pl-0.5 pt-1">
-                <button 
-                  onClick={() => setView('privacy')} 
+                <button
+                  onClick={() => setView('privacy')}
                   className="px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-100 text-gray-850 text-[12px] font-semibold rounded flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   <span>Privacy Policy</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
+                  <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
                 </button>
-                <button 
-                  onClick={() => setView('terms')} 
+                <button
+                  onClick={() => setView('terms')}
                   className="px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-100 text-gray-850 text-[12px] font-semibold rounded flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   <span>Terms of Service</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
+                  <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
                 </button>
               </div>
             </div>
@@ -1669,7 +1669,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <h4 className="text-[13px] text-red-650 font-bold">Delete Account</h4>
-                      <p className="text-[11.5px] text-gray-400 font-medium">Permanently delete your profile and wipe out all remote storage.</p>
+                      <p className="text-[11.5px] text-gray-500 font-medium">Permanently delete your profile and wipe out all remote storage.</p>
                     </div>
                     <div className="flex flex-col justify-end">
                       {!showDeleteConfirm ? (
@@ -1688,7 +1688,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                           <span className="text-[11px] text-red-700 font-semibold leading-normal leading-tight">
                             Are you absolutely sure? This action is immediate and cannot be undone.
                           </span>
-                          
+
                           {user.providerData.some(p => p.providerId === 'password') && (
                             <div className="space-y-1">
                               <label className="text-[10px] text-red-600 font-bold">CONFIRM YOUR PASSWORD:</label>
@@ -1702,7 +1702,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                               />
                             </div>
                           )}
-                          
+
                           {deleteError && (
                             <span className="text-[10px] text-red-650 font-semibold leading-normal block">
                               ⚠️ {deleteError}

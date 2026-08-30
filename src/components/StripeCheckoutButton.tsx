@@ -99,8 +99,8 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
   };
 
   return (
-    <div 
-      id="premium-subscription-panel" 
+    <div
+      id="premium-subscription-panel"
       className={`${className}`}
     >
       <div className="flex flex-col gap-1.5">
@@ -110,21 +110,21 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
             id="select-monthly-btn"
             onClick={() => setPlan('monthly')}
             className={`flex-grow flex items-center justify-center px-2 rounded-sm transition-all outline-none text-center text-[9.5px] font-bold ${
-              plan === 'monthly' 
+              plan === 'monthly'
                 ? 'bg-white text-dbd-accent border border-gray-200/20'
-                : 'text-gray-400 hover:text-gray-600'
+                : 'text-gray-500 hover:text-gray-600'
             }`}
           >
             Monthly
           </button>
-          
+
           <button
             id="select-yearly-btn"
             onClick={() => setPlan('yearly')}
             className={`flex-grow flex items-center justify-center px-2 rounded-sm transition-all outline-none text-center text-[9.5px] font-bold gap-1 ${
-              plan === 'yearly' 
+              plan === 'yearly'
                 ? 'bg-white text-dbd-accent border border-gray-200/20'
-                : 'text-gray-400 hover:text-gray-600'
+                : 'text-gray-500 hover:text-gray-600'
             }`}
           >
             Annual <span className={`text-[8px] px-1 py-0.5 rounded-sm ${plan === 'yearly' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-500 opacity-60'}`}>save 16%</span>
@@ -136,15 +136,15 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
           <span className="text-[24px] font-bold text-gray-900 font-mono tracking-tight leading-none">
             {plan === 'monthly' ? '£2.99' : '£2.50'}
           </span>
-          <span className="text-gray-400 text-[10px] font-semibold font-mono">/ month</span>
+          <span className="text-gray-500 text-[10px] font-semibold font-mono">/ month</span>
         </div>
 
         <div className="space-y-1">
           <div className="min-h-[38px] flex flex-col justify-start">
-            <p className="text-[9.5px] text-gray-400 font-semibold font-ibm-plex-mono leading-tight">
+            <p className="text-[9.5px] text-gray-500 font-semibold font-ibm-plex-mono leading-tight">
               Billed monthly. Cancel anytime. Pay annually to save 16%.
             </p>
-            <p className="text-[9.5px] text-gray-400 font-semibold font-ibm-plex-mono leading-tight">
+            <p className="text-[9.5px] text-gray-500 font-semibold font-ibm-plex-mono leading-tight">
               No credit card required for the free trial.
             </p>
           </div>
@@ -153,8 +153,8 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
             onClick={handleCheckout}
             disabled={loading}
             className={`w-full h-8 px-4 text-[10px] font-bold uppercase tracking-[0.12em] rounded-sm transition-all flex items-center justify-center ${
-              loading 
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+              loading
+                ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                 : 'bg-dbd-accent text-white hover:bg-dbd-accent-mid'
             }`}
           >

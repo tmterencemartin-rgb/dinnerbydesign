@@ -316,14 +316,14 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
           <div className="flex items-center justify-between">
             <h2 className="text-[16px] font-bold text-gray-950 tracking-normal">Recipe preferences</h2>
             <button onClick={onClose} className="p-2 hover:bg-gray-50 rounded transition-colors shrink-0">
-              <CircleX className="w-5 h-5 text-gray-400" />
+              <CircleX className="w-5 h-5 text-gray-500" />
             </button>
           </div>
           <div className="text-[12.5px] mt-2 text-gray-500 leading-relaxed font-medium">
             Set your preferences once. Every search uses them — diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources, preferred supermarkets. Nothing gets retyped. A search that knows you're cooking for one and avoiding nuts won't ask twice. Revise any time. Override for a single search.
           </div>
           <div className="mt-3 flex items-center justify-between gap-3">
-            <span className="text-[11px] font-semibold text-gray-400">
+            <span className="text-[11px] font-semibold text-gray-500">
               {activePreferenceCount > 0
                 ? `${activePreferenceCount} active preference${activePreferenceCount === 1 ? '' : 's'}`
                 : 'No active preferences'}
@@ -339,7 +339,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             )}
           </div>
           <div className="mt-3 flex items-start gap-2 rounded border border-gray-100 bg-gray-50/70 px-3 py-2.5">
-            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-500" />
             <p className="text-[10.5px] font-medium leading-relaxed text-gray-500">
               <span className="font-bold text-gray-600">Why results can narrow:</span> allergies and diet rules exclude unsuitable ingredients, while budget, time and sourcing choices narrow the remaining recipes. If no suitable recipe appears, remove one preference or broaden a limit.
             </p>
@@ -396,7 +396,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   })()}
                 </div>
                 <ChevronDown 
-                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
                     openSections.dietary ? 'rotate-180 text-gray-700' : ''
                   }`} 
                 />
@@ -422,7 +422,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           <option key={opt} value={opt}>{DIETARY_TAXONOMY.dietaryPreferences.labels[opt]}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     </div>
                   </div>
 
@@ -439,7 +439,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           <option key={val} value={val}>{label}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     </div>
                   </div>
 
@@ -486,11 +486,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     </div>
                     {localAllergies.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active allergies</span>
+                        <span className="text-[10px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Active allergies</span>
                         {localAllergies.map(item => (
                           <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-red-50 text-red-700 border border-red-100 rounded text-[11px] font-medium animate-in fade-in zoom-in-95 duration-100">
                             {item}
@@ -531,7 +531,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   {/* Other Ingredients to Avoid */}
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Other ingredients to avoid</label>
-                    <p className="text-[10.5px] leading-relaxed text-gray-400 pl-0.5">Use this for allergies or intolerances not listed above, or ingredients you simply do not want.</p>
+                    <p className="text-[10.5px] leading-relaxed text-gray-500 pl-0.5">Use this for allergies or intolerances not listed above, or ingredients you simply do not want.</p>
                     <div className="space-y-2">
                       <div className="flex gap-2">
                         <input 
@@ -600,7 +600,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   })()}
                 </div>
                 <ChevronDown 
-                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
                     openSections.sources ? 'rotate-180 text-gray-700' : ''
                   }`} 
                 />
@@ -608,7 +608,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               
               {openSections.sources && (
                 <div className="px-4 pb-4 pt-3 border-t border-gray-100 space-y-3.5 bg-white animate-in fade-in duration-200">
-                  <p className="text-[11px] text-gray-400 font-medium leading-relaxed italic pl-1 border-l-2 border-accent/20">
+                  <p className="text-[11px] text-gray-500 font-medium leading-relaxed italic pl-1 border-l-2 border-accent/20">
                     {source === 'cook'
                       ? <>Your selected sources help rank results, but every recipe shown must still have a direct original-publisher link. <a href="/recipe-methodology" className="font-semibold text-dbd-accent not-italic hover:underline">Where recipes come from</a></>
                       : <>Your selected stores help shape product recommendations and shopping links. <a href="/recipe-methodology" className="font-semibold text-dbd-accent not-italic hover:underline">How product information is created</a></>}
@@ -636,11 +636,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                             <option key={sourceOpt.id} value={sourceOpt.id}>{sourceOpt.label}</option>
                           ))}
                         </select>
-                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                       </div>
                       {localPreferredSourceIds.length > 0 && (
                         <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                          <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active trusted sources</span>
+                          <span className="text-[10px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Active trusted sources</span>
                           {localPreferredSourceIds.map(id => {
                             const sourceObj = PREFERRED_SOURCES.find(s => s.id === id);
                             const label = sourceObj ? sourceObj.label : id;
@@ -663,7 +663,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Nearby retailers</label>
                         <span className="text-[9.5px] font-semibold text-accent bg-accent/5 px-2 py-0.5 rounded">Ready-made mode</span>
                       </div>
-                      <p className="text-[11px] text-gray-400 leading-relaxed pl-0.5">
+                      <p className="text-[11px] text-gray-500 leading-relaxed pl-0.5">
                         Choose the shops you can easily use. Ready-made results will prioritise these.
                       </p>
                       <div className="relative mt-1">
@@ -682,11 +682,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                             <option key={opt} value={opt}>{opt}</option>
                           ))}
                         </select>
-                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                       </div>
                       {localSupermarkets.length > 0 && (
                         <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                          <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Your nearby retailers</span>
+                          <span className="text-[10px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Your nearby retailers</span>
                           {localSupermarkets.map(item => (
                             <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                               {item}
@@ -725,7 +725,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   })()}
                 </div>
                 <ChevronDown 
-                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
                     openSections.timeBudget ? 'rotate-180 text-gray-700' : ''
                   }`} 
                 />
@@ -766,7 +766,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         placeholder="e.g. 30"
                         className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium"
                       />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 font-semibold">mins</span>
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-gray-500 font-semibold">mins</span>
                     </div>
                   </div>
 
@@ -782,7 +782,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           placeholder="e.g. 600"
                           className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium"
                         />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-medium text-gray-400 uppercase">kcal</span>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-medium text-gray-500 uppercase">kcal</span>
                       </div>
                     </div>
 
@@ -798,7 +798,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         </a>
                       </div>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[13px] text-gray-400 font-bold">£</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[13px] text-gray-500 font-bold">£</span>
                         <input 
                           type="number"
                           step="0.50"
@@ -832,7 +832,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   })()}
                 </div>
                 <ChevronDown 
-                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
                     openSections.cooking ? 'rotate-180 text-gray-700' : ''
                   }`} 
                 />
@@ -859,11 +859,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     </div>
                     {localCuisines.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100 font-display">
-                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active cuisines</span>
+                        <span className="text-[10px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Active cuisines</span>
                         {localCuisines.map(item => (
                           <div key={item} className="flex items-center justify-between py-1 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100 font-sans">
                             {item}
@@ -897,11 +897,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           <option key={method} value={method}>{method}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     </div>
                     {localCookingMethods.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100">
-                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active methods</span>
+                        <span className="text-[10px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Active methods</span>
                         {localCookingMethods.map(item => (
                           <div key={item} className="flex items-center justify-between py-1 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                             {item}
@@ -933,11 +933,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     </div>
                     {localCookingFats.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2 bg-gray-50/50 p-2.5 rounded border border-gray-100 font-display">
-                        <span className="text-[10px] font-semibold text-gray-400 tracking-[0.02em] pl-0.5">Active cooking fats</span>
+                        <span className="text-[10px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Active cooking fats</span>
                         {localCookingFats.map(item => (
                           <div key={item} className="flex items-center justify-between py-1.5 px-2.5 bg-gray-100 border border-gray-200 rounded text-[11px] font-medium text-gray-700 animate-in fade-in zoom-in-95 duration-100">
                             {item}
@@ -975,7 +975,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   })()}
                 </div>
                 <ChevronDown 
-                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
                     openSections.goals ? 'rotate-180 text-gray-700' : ''
                   }`} 
                 />
@@ -1028,10 +1028,10 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         <div className="text-[13px] font-bold text-gray-800 leading-tight flex items-center gap-1.5">
                           {item.label}
                           <Tooltip text={item.tooltip} position="bottom" align="center">
-                            <Info className="w-3.5 h-3.5 text-gray-300 hover:text-gray-400 cursor-help transition-colors font-semibold" />
+                            <Info className="w-3.5 h-3.5 text-gray-300 hover:text-gray-500 cursor-help transition-colors font-semibold" />
                           </Tooltip>
                         </div>
-                        <p className="text-[11px] text-gray-400 font-medium leading-normal mt-0.5">{item.tooltip}</p>
+                        <p className="text-[11px] text-gray-500 font-medium leading-normal mt-0.5">{item.tooltip}</p>
                       </div>
                       <button
                         type="button"
@@ -1079,7 +1079,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
           <button 
             type="button"
             onClick={() => resetAllLocalFilters()}
-            className="w-full min-h-10 px-4 py-2.5 bg-white text-gray-400 hover:text-gray-700 text-[11px] font-bold tracking-[0.04em] leading-none text-center hover:bg-gray-50 transition-all rounded"
+            className="w-full min-h-10 px-4 py-2.5 bg-white text-gray-500 hover:text-gray-700 text-[11px] font-bold tracking-[0.04em] leading-none text-center hover:bg-gray-50 transition-all rounded"
           >
             Clear preferences
           </button>

@@ -166,7 +166,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
         <div key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1.5 sm:rounded sm:bg-white sm:border sm:px-2">
           <p className="text-[11px] font-bold text-gray-700 leading-snug">{displayName}</p>
           {item.note && (
-            <p className="mt-0.5 text-[10px] font-medium text-gray-400 leading-snug">{displayNote}</p>
+            <p className="mt-0.5 text-[10px] font-medium text-gray-500 leading-snug">{displayNote}</p>
           )}
         </div>
       ) : (
@@ -188,7 +188,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               Dinner kit
             </h4>
           </div>
-          <p className="text-[11px] text-gray-400 font-semibold mt-1">
+          <p className="text-[11px] text-gray-500 font-semibold mt-1">
             Product, sides and quick finishes in one place.
           </p>
         </div>
@@ -201,7 +201,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
       <div className="grid gap-2.5 sm:gap-4">
         <div className="min-w-0 border-b border-dbd-rule/70 pb-2 sm:rounded sm:bg-white/75 sm:border sm:p-3">
-          <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+          <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
             Core product
           </p>
           <p className="text-[15px] font-bold text-gray-900 leading-snug">
@@ -211,14 +211,14 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
         <div className="grid gap-2.5 sm:gap-4 sm:grid-cols-2">
           <div className="min-w-0">
-            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
               Add alongside
             </p>
             {renderKitItems(dinnerKit.sides)}
           </div>
 
           <div className="min-w-0">
-            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
               Quick upgrades
             </p>
             {renderKitItems(dinnerKit.upgrades, false, true)}
@@ -226,7 +226,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
         </div>
 
         {dinnerKit.fitNote && (
-          <p className="text-[11px] text-gray-400 leading-relaxed pt-2 border-t border-gray-100">
+          <p className="text-[11px] text-gray-500 leading-relaxed pt-2 border-t border-gray-100">
             {tidyKitText(dinnerKit.fitNote)}
           </p>
         )}
@@ -330,13 +330,13 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 {meal.title}
               </h3>
 
-              <p className={`text-[14px] text-gray-400 font-medium leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isModal ? '' : 'line-clamp-2'}`}>
+              <p className={`text-[14px] text-gray-500 font-medium leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isModal ? '' : 'line-clamp-2'}`}>
                 {meal.description}
               </p>
 
               {meal.matchReason && meal.matchReason.length > 0 && (
-                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-400 leading-snug">
-                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-400">Match:</span>{' '}
+                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-500 leading-snug">
+                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-500">Match:</span>{' '}
                   <span className="italic">{tidyKitText(meal.matchReason)}</span>
                 </p>
               )}
@@ -372,7 +372,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                       </Tooltip>
                     )}
                     {requestedServings !== 1 && (
-                      <span className="text-gray-400 font-bold text-[10px] uppercase tracking-tight whitespace-nowrap">
+                      <span className="text-gray-500 font-bold text-[10px] uppercase tracking-tight whitespace-nowrap">
                         Buy {packLabel}
                       </span>
                     )}
@@ -463,7 +463,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     <div className="pt-4 border-t border-gray-100">
                       <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
                       {isEnriching && !currentServingSuggestion ? (
-                        <div className="flex items-center gap-2 py-4 text-[13px] text-gray-400 italic">
+                        <div className="flex items-center gap-2 py-4 text-[13px] text-gray-500 italic">
                           <Loader2 className="w-4 h-4 animate-spin text-accent" />
                           <span>Sourcing details...</span>
                         </div>
@@ -485,7 +485,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full py-1.5 text-[11px] text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent/30"
+                className="w-full py-1.5 text-[11px] text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent/30"
               >
                 {isExpanded ? (
                   <>Show less <ChevronUp className="w-3 h-3" /></>

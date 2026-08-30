@@ -14,7 +14,7 @@ export const AuthLoading: React.FC = () => (
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full mx-auto mb-4"
       />
-      <p className="text-[12px] text-gray-400 font-medium tracking-tight">Setting the table...</p>
+      <p className="text-[12px] text-gray-500 font-medium tracking-tight">Setting the table...</p>
     </div>
   </div>
 );
@@ -38,7 +38,7 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
         {!isOperationNotAllowed && !isProfileError && (
           <div className="mb-8 px-2">
             <div className="bg-gray-50 p-3 rounded border border-gray-100 text-left">
-              <p className="text-[10px] text-gray-400 font-mono break-all leading-tight opacity-70">
+              <p className="text-[10px] text-gray-500 font-mono break-all leading-tight opacity-70">
                 {error}
               </p>
             </div>
@@ -75,7 +75,7 @@ export const AuthSyncing: React.FC = () => (
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full mx-auto mb-4"
       />
-      <p className="text-[12px] text-gray-400 font-medium tracking-tight">Re-syncing your station...</p>
+      <p className="text-[12px] text-gray-500 font-medium tracking-tight">Re-syncing your station...</p>
     </div>
   </div>
 );
@@ -88,7 +88,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
       <div className="w-full max-w-sm border border-gray-100 p-5 sm:p-6 rounded-xl shadow-sm">
         <div className="text-center mb-4">
           <Wordmark className="mx-auto mb-2 text-[29.33px]" />
-          <p className="text-[10px] text-gray-400 font-medium tracking-[0.01em] mb-4">Less searching. More relevant dinners.</p>
+          <p className="text-[10px] text-gray-500 font-medium tracking-[0.01em] mb-4">Less searching. More relevant dinners.</p>
           
           <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">
             {isSignUp ? 'Start your free 7-day trial.' : 'Sign in to your account'}

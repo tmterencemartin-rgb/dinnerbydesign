@@ -52,7 +52,7 @@ export const Toast: React.FC<ToastProps> = ({ message, actionLabel, onAction, on
           
           <button 
             onClick={onClose}
-            className="p-1 hover:bg-white/10 rounded-lg transition-colors text-gray-400 hover:text-white"
+            className="p-1 hover:bg-white/10 rounded-lg transition-colors text-gray-500 hover:text-white"
           >
             <X className="w-4 h-4" />
           </button>

@@ -86,7 +86,7 @@ export const RecipeCompareModal: React.FC<RecipeCompareModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
+            className="p-2 text-gray-500 hover:text-gray-900 transition-colors"
             aria-label="Close recipe compare"
           >
             <X className="h-5 w-5" />
@@ -107,13 +107,13 @@ export const RecipeCompareModal: React.FC<RecipeCompareModalProps> = ({
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{getSource(item)}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">{getSource(item)}</p>
                         <h3 className="text-[15px] font-bold text-gray-950 leading-tight mt-1">{item.title}</h3>
                       </div>
                       <button
                         type="button"
                         onClick={() => onRemove(item)}
-                        className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-red-500"
+                        className="text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-red-500"
                       >
                         Remove
                       </button>
@@ -152,7 +152,7 @@ export const RecipeCompareModal: React.FC<RecipeCompareModalProps> = ({
                     </div>
 
                     <div className="pt-1">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Ingredients</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Ingredients</p>
                       <ul className="space-y-1 text-[12px] text-gray-600">
                         {ingredients.slice(0, 6).map((ingredient, ingredientIndex) => (
                           <li key={`${getItemId(item)}-${ingredientIndex}`} className="flex gap-2 leading-relaxed">
@@ -161,7 +161,7 @@ export const RecipeCompareModal: React.FC<RecipeCompareModalProps> = ({
                           </li>
                         ))}
                         {ingredients.length > 6 && (
-                          <li className="pl-3 text-[11px] font-semibold text-gray-400">+ {ingredients.length - 6} more</li>
+                          <li className="pl-3 text-[11px] font-semibold text-gray-500">+ {ingredients.length - 6} more</li>
                         )}
                       </ul>
                     </div>

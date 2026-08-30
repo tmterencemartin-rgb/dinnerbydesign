@@ -28,7 +28,7 @@ export const NumberStepper = ({
     </button>
     <div className="flex-grow flex items-center justify-center px-2 min-w-[2.5rem]">
       <span className="text-[12px] font-semibold text-gray-900 leading-none">{value}</span>
-      <span className="ml-1 text-[10px] font-medium text-gray-400 tracking-tight leading-none">{label}</span>
+      <span className="ml-1 text-[10px] font-medium text-gray-500 tracking-tight leading-none">{label}</span>
     </div>
     <button
       onClick={() => onChange(Math.min(max, value + 1))}

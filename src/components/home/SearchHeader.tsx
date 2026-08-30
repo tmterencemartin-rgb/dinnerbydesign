@@ -34,12 +34,12 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
             />
           )}
           <span className={`text-[12px] font-bold uppercase tracking-wider ${
-            source === 'cook' ? 'text-accent' : 'text-gray-400 hover:text-gray-600'
+            source === 'cook' ? 'text-accent' : 'text-gray-500 hover:text-gray-600'
           }`}>
             Homemade
           </span>
           <span className={`text-[10px] font-normal tracking-normal normal-case leading-tight block mt-1 ${
-            source === 'cook' ? 'text-accent/75' : 'text-gray-400/80'
+            source === 'cook' ? 'text-accent/75' : 'text-gray-500'
           }`}>
             recipes to cook
           </span>
@@ -59,12 +59,12 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
             />
           )}
           <span className={`text-[12px] font-bold uppercase tracking-wider ${
-            source === 'ready-made' ? 'text-accent' : 'text-gray-400 hover:text-gray-600'
+            source === 'ready-made' ? 'text-accent' : 'text-gray-500 hover:text-gray-600'
           }`}>
             Ready-made
           </span>
           <span className={`text-[10px] font-normal tracking-normal normal-case leading-tight block mt-1 ${
-            source === 'ready-made' ? 'text-accent/75' : 'text-gray-400/80'
+            source === 'ready-made' ? 'text-accent/75' : 'text-gray-500'
           }`}>
             supermarket options
           </span>

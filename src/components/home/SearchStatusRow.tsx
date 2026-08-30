@@ -114,8 +114,8 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
 
             {showSearching && filterLabels && (
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white/70 rounded">
-                <Filter className="w-3 h-3 text-gray-400" />
-                <span className="text-[10px] text-gray-400 font-medium whitespace-nowrap">
+                <Filter className="w-3 h-3 text-gray-500" />
+                <span className="text-[10px] text-gray-500 font-medium whitespace-nowrap">
                   Checking: <span className="text-gray-600 italic">{filterLabels}{hasMoreFilters ? '...' : ''}</span>
                 </span>
               </div>

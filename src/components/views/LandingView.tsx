@@ -571,7 +571,7 @@ export const LandingView: React.FC = () => {
                             <h4 className="text-[14px] sm:text-[16px] font-semibold text-gray-900 group-hover/card:text-dbd-accent transition-colors leading-tight tracking-tight text-left">
                               {recipe.title}
                             </h4>
-                            <p className="text-[10px] sm:text-[11px] text-gray-400 font-medium leading-tight font-ibm-plex-mono text-left">
+                            <p className="text-[10px] sm:text-[11px] text-gray-500 font-medium leading-tight font-ibm-plex-mono text-left">
                               {recipe.meta}
                             </p>
                             <span className="inline-flex w-fit shrink-0 mt-0.5 text-[8.5px] sm:text-[9px] font-ibm-plex-mono font-semibold uppercase tracking-wider leading-none text-dbd-ink-3 bg-dbd-surface px-2 py-1 border border-dbd-rule rounded-sm group-hover/card:border-dbd-accent group-hover/card:text-dbd-accent group-hover/card:bg-dbd-accent-light transition-all">

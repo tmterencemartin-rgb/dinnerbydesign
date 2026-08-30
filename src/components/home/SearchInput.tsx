@@ -96,7 +96,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               className={`p-1.5 px-2 rounded transition-all duration-200 ${
                 isListening 
                   ? 'bg-dbd-accent text-white animate-pulse shadow-sm' 
-                  : isReadOnly ? 'text-gray-300' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                  : isReadOnly ? 'text-gray-300' : 'text-gray-500 hover:text-gray-600 hover:bg-gray-100'
               }`}
             >
               <Mic className={`w-3.5 h-3.5 ${isListening ? 'text-white' : ''}`} />
@@ -115,7 +115,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           spellCheck={false}
           aria-label="Search recipes by ingredient, dish, cuisine or chef"
           placeholder={isReadOnly ? (readOnlyPlaceholder || "Upgrade to search again") : getSearchPlaceholder()}
-          className={`flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-400 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
+          className={`flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
         />
 
         {input && !isGenerating && !isReadOnly && (
@@ -140,7 +140,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         aria-label={isGenerating ? 'Searching for dinner options' : 'Find dinner options'}
         aria-busy={isGenerating}
         className={`h-11 rounded px-3 text-white text-[10px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center sm:h-auto sm:rounded-none sm:px-5 sm:text-[11px] sm:border-l sm:border-gray-100 ${
-          isReadOnly ? 'bg-gray-400' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
+          isReadOnly ? 'bg-gray-500' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
         }`}
       >
         {isGenerating ? (

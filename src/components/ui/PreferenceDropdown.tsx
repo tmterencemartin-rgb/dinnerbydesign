@@ -56,8 +56,8 @@ export const PreferenceDropdown = ({
   return (
     <div className={`space-y-2 relative ${isOpen ? 'z-50' : 'z-0'}`}>
       <div className="flex items-center justify-between gap-2">
-        <label className={compact ? "block text-[10px] font-bold uppercase tracking-widest text-gray-400" : "block text-[12px] text-gray-500 font-normal"}>{label}</label>
-        {hint && <span className="text-[10px] font-semibold text-gray-400 whitespace-nowrap">{hint}</span>}
+        <label className={compact ? "block text-[10px] font-bold uppercase tracking-widest text-gray-500" : "block text-[12px] text-gray-500 font-normal"}>{label}</label>
+        {hint && <span className="text-[10px] font-semibold text-gray-500 whitespace-nowrap">{hint}</span>}
       </div>
       <div className="relative">
         <button

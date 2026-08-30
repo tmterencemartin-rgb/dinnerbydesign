@@ -15,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
         <div className="flex min-w-0 flex-col items-center md:items-start">
           <div className="relative z-10 flex flex-col items-center gap-0.5 text-[11px] text-gray-500 sm:gap-1 sm:text-[13px] md:items-start">
             <span>&copy; {currentYear} DinnerByDesign. All rights reserved.</span>
-            <span className="text-[10.5px] font-semibold text-gray-400 sm:text-[12px]">
+            <span className="text-[10.5px] font-semibold text-gray-500 sm:text-[12px]">
               Less searching. More relevant dinners.
             </span>
             <a 
@@ -30,7 +30,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
         
         <nav aria-label="Footer" className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-3 text-left sm:gap-x-6 sm:gap-y-0 md:justify-items-start lg:col-span-3">
           <div className="min-w-0">
-            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Guides</p>
+            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-500">Guides</p>
             <div className="flex flex-col items-start gap-1.5 md:gap-2">
               <a href="/dinner-plans" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Affordable dinner plans</a>
               <a href="/recipes" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Recipes and cooking ideas</a>
@@ -40,7 +40,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
 
           <div className="min-w-0">
-            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Information</p>
+            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-500">Information</p>
             <div className="flex flex-col items-start gap-1.5 md:gap-2">
               <a href="/contact" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Contact us</a>
               <a
@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
 
           <div className="min-w-0">
-            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-400">Legal</p>
+            <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-500">Legal</p>
             <div className="flex flex-col items-start gap-1.5 md:gap-2">
               <a
                 href="/privacy"
@@ -86,7 +86,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
         </nav>
 
-        <div className="border-t border-gray-200/50 pt-2.5 text-center text-[9.5px] leading-4 text-gray-400 sm:pt-3 sm:text-[11px] sm:leading-relaxed md:col-span-2 md:text-left lg:col-span-4">
+        <div className="border-t border-gray-200/50 pt-2.5 text-center text-[9.5px] leading-4 text-gray-500 sm:pt-3 sm:text-[11px] sm:leading-relaxed md:col-span-2 md:text-left lg:col-span-4">
           DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
         </div>
       </div>

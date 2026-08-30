@@ -197,7 +197,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
         ) : showNotes ? (
           <div key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1.5 sm:rounded sm:bg-white sm:border sm:px-2">
             <p className="text-[10.5px] font-bold text-gray-700 leading-snug">{tidyKitText(item.name)}</p>
-            <p className="mt-0.5 text-[10px] font-medium text-gray-400 leading-snug">{tidyKitText(item.note)}</p>
+            <p className="mt-0.5 text-[10px] font-medium text-gray-500 leading-snug">{tidyKitText(item.note)}</p>
           </div>
         ) : (
           <span key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1 text-[10.5px] font-medium text-gray-700 leading-snug sm:rounded sm:bg-white sm:border sm:px-2 sm:py-0.5">
@@ -218,7 +218,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
               Dinner kit
             </h4>
           </div>
-          <p className="text-[11px] text-gray-400 font-semibold mt-1">
+          <p className="text-[11px] text-gray-500 font-semibold mt-1">
             Main dish, sides and quick finishes in one place.
           </p>
         </div>
@@ -226,7 +226,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
       <div className="grid gap-2.5 sm:gap-3">
         <div className="min-w-0 border-b border-dbd-rule/70 pb-2 sm:rounded sm:bg-white/75 sm:border sm:p-2.5">
-          <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+          <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
             Core dish
           </p>
           <p className="text-[14px] font-bold text-gray-900 leading-snug">
@@ -236,14 +236,14 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
         <div className="grid gap-2.5 sm:gap-3 sm:grid-cols-2">
           <div className="min-w-0">
-            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
               Add alongside
             </p>
             {renderKitItems(kitSides)}
           </div>
 
           <div className="min-w-0">
-            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
               Easy upgrades
             </p>
             {renderKitItems(kitUpgrades, false, true)}
@@ -369,13 +369,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 {recipe.title}
               </h3>
               
-              <p className={`text-[12px] sm:text-[14px] text-gray-400 font-medium leading-snug sm:leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isExpanded ? '' : 'line-clamp-2'}`}>
+              <p className={`text-[12px] sm:text-[14px] text-gray-500 font-medium leading-snug sm:leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isExpanded ? '' : 'line-clamp-2'}`}>
                 {recipe.description}
               </p>
 
               {recipe.matchReason && (
-                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-400 leading-snug">
-                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-400">Match:</span>{' '}
+                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-500 leading-snug">
+                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-500">Match:</span>{' '}
                   <span className="italic">{recipe.matchReason}</span>
                 </p>
               )}
@@ -413,7 +413,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                           Original recipe: {getRecipeSourceLabel(recipe.sourceUrl)}
                         </a>
                       ) : (
-                        <span className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                        <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider">
                           Source unavailable
                         </span>
                       )
@@ -437,7 +437,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                           </span>
                         </Tooltip>
                         {requestedServings !== 1 && (
-                          <span className="hidden sm:inline text-gray-400 font-bold text-[9px] uppercase tracking-tighter whitespace-nowrap">
+                          <span className="hidden sm:inline text-gray-500 font-bold text-[9px] uppercase tracking-tighter whitespace-nowrap">
                             Total £{(parseFloat(recipe.costPerPortion.replace(/[^\d.]/g, '')) * requestedServings).toFixed(2)}
                           </span>
                         )}
@@ -605,7 +605,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             <div className="space-y-1 sm:space-y-3">
               {currentIngredients.length > 0 && !isExpanded && (
                 <div className="flex items-center justify-between pt-1 border-t border-gray-50 mt-1 pb-1">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                     Ingredients ({unitSystem})
                   </span>
                   <div className="inline-flex border border-gray-100 rounded-full p-0.5 bg-gray-50 shadow-inner">
@@ -615,7 +615,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
                         unitSystem === 'metric'
                           ? 'bg-white text-gray-900 shadow-sm border border-gray-100/50'
-                          : 'text-gray-400 hover:text-gray-600'
+                          : 'text-gray-500 hover:text-gray-600'
                       }`}
                     >
                       Metric
@@ -626,7 +626,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
                         unitSystem === 'imperial'
                           ? 'bg-white text-accent shadow-sm border border-gray-100/50'
-                          : 'text-gray-400 hover:text-gray-600'
+                          : 'text-gray-500 hover:text-gray-600'
                       }`}
                     >
                       Imperial
@@ -638,7 +638,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
               {!isExpanded && (
                 <div className="space-y-0.5 pt-0.5 max-w-2xl lg:max-w-3xl mr-auto w-full">
                   {isEnriching && !currentIngredients.length ? (
-                    <div className="flex items-center gap-2 py-1.5 text-[11px] text-gray-400">
+                    <div className="flex items-center gap-2 py-1.5 text-[11px] text-gray-500">
                       <Loader2 className="w-3 h-3 animate-spin" />
                       <span>Fetching details...</span>
                     </div>
@@ -651,7 +651,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                         </li>
                       ))}
                       {totalCount > 2 && (
-                        <li className="text-[11px] text-gray-400 pl-4 font-medium tracking-tight">
+                        <li className="text-[11px] text-gray-500 pl-4 font-medium tracking-tight">
                           + {totalCount - 2} {totalCount - 2 === 1 ? 'ingredient' : 'ingredients'}
                         </li>
                       )}
@@ -679,7 +679,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       {/* Left column: Ingredients */}
                       <div className="w-full h-fit pb-2 md:pb-0 flex flex-col gap-1.5 sm:gap-2.5">
                         <div className="flex items-center justify-between gap-3">
-                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                             Ingredients
                           </span>
                           <div className="inline-flex w-fit border border-gray-100 rounded-full p-0.5 bg-gray-50 shadow-inner">
@@ -689,7 +689,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                               className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
                                 unitSystem === 'metric'
                                   ? 'bg-white text-gray-900 shadow-sm border border-gray-100/50'
-                                  : 'text-gray-400 hover:text-gray-600'
+                                  : 'text-gray-500 hover:text-gray-600'
                               }`}
                             >
                               Metric
@@ -700,7 +700,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                               className={`px-2 py-0.5 text-[9px] font-bold rounded-full transition-all duration-150 ${
                                 unitSystem === 'imperial'
                                   ? 'bg-white text-accent shadow-sm border border-gray-100/50'
-                                  : 'text-gray-400 hover:text-gray-600'
+                                  : 'text-gray-500 hover:text-gray-600'
                               }`}
                             >
                               Imperial
@@ -708,7 +708,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                           </div>
                         </div>
                         {isEnriching && !currentIngredients.length ? (
-                          <div className="flex items-center gap-1.5 py-1 text-[11px] text-gray-400">
+                          <div className="flex items-center gap-1.5 py-1 text-[11px] text-gray-500">
                             <Loader2 className="w-3 h-3 animate-spin" />
                             <span>Fetching details...</span>
                           </div>
@@ -726,13 +726,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
                       {/* Right column: Instructions & Match Reason */}
                        <div className="w-full flex flex-col gap-2 sm:gap-3">
-                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Preparation</h4>
+                        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Preparation</h4>
                         <div>
                           {(recipe as any).totalServings && (
                             <p className="text-[11px] text-gray-500 mb-1">Makes {(recipe as any).totalServings} adult portions</p>
                           )}
                           {isEnriching && !currentInstructions.length ? (
-                            <div className="flex items-center gap-1.5 py-3 text-[12px] text-gray-400 italic">
+                            <div className="flex items-center gap-1.5 py-3 text-[12px] text-gray-500 italic">
                               <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
                               <span>Sourcing steps...</span>
                             </div>

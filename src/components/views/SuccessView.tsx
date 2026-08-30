@@ -101,7 +101,7 @@ export const SuccessView: React.FC<SuccessViewProps> = ({ setView }) => {
                 : 'Stripe has received the payment. DinnerByDesign is waiting for the secure Stripe confirmation to update your account; this usually takes a few seconds.'}
           </p>
           {!isSubscriptionConfirmed && (
-            <p className="text-[12px] text-gray-400 leading-relaxed">
+            <p className="text-[12px] text-gray-500 leading-relaxed">
               If this message stays here, check Settings again in a moment. You will not need to pay twice.
             </p>
           )}

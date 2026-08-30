@@ -45,7 +45,7 @@ export const PricingMethodologyView: React.FC<PricingMethodologyViewProps> = ({ 
         <p className="text-[14px] leading-relaxed text-gray-600">
           DinnerByDesign provides cost estimates to help compare dinners, plan against a weekly budget and understand what a chosen week may cost at the supermarket. These figures are planning tools—not quotations, guarantees of availability or promises of the exact amount a retailer will charge.
         </p>
-        <p className="text-[11.5px] text-gray-400">Reference catalogue version: {catalogueVersion}</p>
+        <p className="text-[11.5px] text-gray-500">Reference catalogue version: {catalogueVersion}</p>
       </header>
 
       <div className="mt-8 space-y-6">

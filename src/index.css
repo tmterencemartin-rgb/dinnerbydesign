@@ -67,8 +67,6 @@
   --color-dbd-warm: var(--dbd-warm);
   --color-dbd-rule: var(--dbd-rule);
 
-  /* Keep small supporting copy readable on the warm light surfaces. */
-  --color-gray-400: #70706a;
   --color-gray-500: #626977;
 }
 

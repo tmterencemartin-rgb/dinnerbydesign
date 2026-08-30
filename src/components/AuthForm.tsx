@@ -31,15 +31,15 @@ const withAuthTimeout = async <T,>(operation: Promise<T>, isNative: boolean): Pr
   }
 };
 
-export const AuthForm: React.FC<AuthFormProps> = ({ 
-  onSuccess, 
+export const AuthForm: React.FC<AuthFormProps> = ({
+  onSuccess,
   mode = 'signup',
   onToggleMode,
   className = ""
 }) => {
-  const { 
-    signInWithEmail, 
-    signUpWithEmail, 
+  const {
+    signInWithEmail,
+    signUpWithEmail,
     sendPasswordReset,
     signInWithGoogle
   } = useAuth();
@@ -49,7 +49,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   const isNativeTest = isNativeTestBuild();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -92,7 +92,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       onSuccess?.();
     } catch (err: any) {
       let msg = err.message || "Authentication failed";
-      
+
       if (err.code === 'auth/operation-not-allowed') {
         msg = "Email/Password login is not enabled in Firebase.";
       } else if (err.code === 'auth/email-already-in-use') {
@@ -102,7 +102,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       } else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
         msg = "Incorrect email or password.";
       }
-      
+
       setError(msg);
     } finally {
       setLoading(false);
@@ -138,25 +138,25 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               {error}
             </p>
           )}
-          
+
           <div className="space-y-0.5">
             {isSignUp && (
               <>
                 <div className="flex gap-0.5">
-                  <input 
-                    type="text" 
-                    placeholder="First Name" 
-                    value={firstName} 
-                    onChange={(e) => setFirstName(e.target.value)} 
-                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tl px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tl px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-500"
                     required={isSignUp}
                   />
-                  <input 
-                    type="text" 
-                    placeholder="Last Name" 
-                    value={lastName} 
-                    onChange={(e) => setLastName(e.target.value)} 
-                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tr px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-1/2 bg-gray-50 border border-gray-100 rounded-tr px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-500"
                     required={isSignUp}
                   />
                 </div>
@@ -171,40 +171,40 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                       <option key={c.code} value={c.code}>{c.code} ({c.country})</option>
                     ))}
                   </select>
-                  <input 
-                    type="tel" 
-                    placeholder="Telephone Number" 
-                    value={phone} 
-                    onChange={(e) => setPhone(e.target.value)} 
-                    className="flex-1 bg-gray-50 border border-gray-100 px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
+                  <input
+                    type="tel"
+                    placeholder="Telephone Number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="flex-1 bg-gray-50 border border-gray-100 px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-500"
                     required={isSignUp}
                   />
                 </div>
               </>
             )}
-            <input 
-              type="email" 
-              placeholder="Email address" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              className={`w-full bg-gray-50 border border-gray-100 px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400 ${!isSignUp ? 'rounded-t' : ''}`} 
-              required 
+            <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={`w-full bg-gray-50 border border-gray-100 px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-500 ${!isSignUp ? 'rounded-t' : ''}`}
+              required
             />
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              className="w-full bg-gray-50 border border-gray-100 rounded-b px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-400" 
-              required 
-              minLength={6} 
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-gray-50 border border-gray-100 rounded-b px-3 py-2.5 text-[13.5px] outline-none focus:ring-1 focus:ring-accent/20 placeholder:text-gray-500"
+              required
+              minLength={6}
             />
           </div>
-          
+
           <div className="pt-2 space-y-1.5">
-            <button 
-              type="submit" 
-              disabled={loading} 
+            <button
+              type="submit"
+              disabled={loading}
               className="w-full py-2.5 bg-gray-900 text-white rounded text-[13px] font-bold shadow-sm hover:bg-black transition-all flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 size={16} className="animate-spin" /> : (isSignUp ? 'Create account' : 'Sign in')}
@@ -212,10 +212,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
             {!isSignUp && (
               <div className="text-center">
-                <button 
-                  type="button" 
-                  onClick={handleForgotPassword} 
-                  className="text-[11px] text-gray-400 hover:text-accent font-medium transition-colors hover:underline"
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-[11px] text-gray-500 hover:text-accent font-medium transition-colors hover:underline"
                 >
                   Forgot password?
                 </button>
@@ -226,7 +226,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       </div>
 
       {isNative ? (
-        <p className="text-[11px] text-gray-400 font-medium text-center leading-snug">
+        <p className="text-[11px] text-gray-500 font-medium text-center leading-snug">
           {isNativeTest
             ? 'Google sign-in will be added to the native app later. Please use email and password for this test build.'
             : 'Google sign-in is not available in the native app yet. Please use email and password.'}
@@ -235,7 +235,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         <div className="space-y-2">
           <div className="relative flex items-center">
             <div className="flex-grow border-t border-gray-100"></div>
-            <span className="flex-shrink mx-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">or</span>
+            <span className="flex-shrink mx-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest">or</span>
             <div className="flex-grow border-t border-gray-100"></div>
           </div>
 
@@ -285,9 +285,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         {isSignUp ? (
           <p className="text-[13px] text-gray-500 font-medium">
             Already have an account?{' '}
-            <button 
-              type="button" 
-              onClick={onToggleMode} 
+            <button
+              type="button"
+              onClick={onToggleMode}
               className="text-gray-900 font-bold underline hover:text-accent transition-colors cursor-pointer"
             >
               Sign in
@@ -296,9 +296,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         ) : (
           <p className="text-[13px] text-gray-500 font-medium">
             New here?{' '}
-            <button 
-              type="button" 
-              onClick={onToggleMode} 
+            <button
+              type="button"
+              onClick={onToggleMode}
               className="text-gray-900 font-bold underline hover:text-accent transition-colors cursor-pointer"
             >
               Create an account

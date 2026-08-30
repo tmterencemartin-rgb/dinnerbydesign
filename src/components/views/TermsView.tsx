@@ -23,7 +23,7 @@ export const TermsView: React.FC<TermsViewProps> = ({ setView }) => {
         <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Service and subscription terms</p>
         <h1 className="text-[24px] font-bold leading-9 text-gray-950">Terms of Service</h1>
         <p className="text-[14px] leading-relaxed text-gray-600">These terms explain the service, free trial, paid subscriptions, cancellation and the responsibilities that apply when using DinnerByDesign.</p>
-        <p className="text-[11.5px] text-gray-400">Last updated: 18 July 2026</p>
+        <p className="text-[11.5px] text-gray-500">Last updated: 18 July 2026</p>
       </header>
       <div className="mt-8 space-y-6">
         <Section title="1. About these terms"><p>By creating an account, buying a subscription or using DinnerByDesign, you agree to these terms. If you do not agree, do not use the service. DinnerByDesign can be contacted at <a className="font-semibold text-dbd-accent hover:underline" href="mailto:terence@dinnerbydesign.app">terence@dinnerbydesign.app</a>.</p></Section>

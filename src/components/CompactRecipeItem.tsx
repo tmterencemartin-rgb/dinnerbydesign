@@ -71,7 +71,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
             ) : isCook ? (
               <>
                 {shouldShowCuisineLabel && <Separator />}
-                <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate">
+                <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider truncate">
                   Source unavailable
                 </span>
               </>
@@ -108,7 +108,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
                   <div className="flex items-center gap-1.5 whitespace-nowrap">
                      <span>{costPerPortion} pp</span>
                      {totalCost && (
-                       <span className="text-[10px] bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded">
+                       <span className="text-[10px] bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded">
                           Total {isCook ? `£${(totalCost as number).toFixed(2)}` : totalCost}
                        </span>
                      )}

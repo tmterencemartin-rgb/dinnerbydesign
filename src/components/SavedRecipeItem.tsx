@@ -163,7 +163,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
         <div className="space-y-2">
           {/* Header row: Cuisine / Retailer + Delete Button */}
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">
+            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">
               {recipe.mode === 'ready-made' && recipe.retailer ? recipe.retailer : recipe.cuisine}
             </span>
             <button 
@@ -246,7 +246,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 e.stopPropagation();
                 handlePrintRecipe(recipe);
               }}
-              className="text-[10.5px] text-gray-400 hover:text-accent font-bold transition-colors cursor-pointer"
+              className="text-[10.5px] text-gray-500 hover:text-accent font-bold transition-colors cursor-pointer"
             >
               Print
             </button>
@@ -255,7 +255,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 e.stopPropagation();
                 setIsEditingNote(true);
               }}
-              className={`text-[10.5px] font-bold transition-colors cursor-pointer ${personalNote ? 'text-orange-800 hover:text-accent' : 'text-gray-400 hover:text-accent'}`}
+              className={`text-[10.5px] font-bold transition-colors cursor-pointer ${personalNote ? 'text-orange-800 hover:text-accent' : 'text-gray-500 hover:text-accent'}`}
             >
               {noteButtonLabel}
             </button>
@@ -291,12 +291,12 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 <div className="absolute right-0 bottom-full mb-2 z-50 bg-white border border-gray-100 rounded shadow-md p-3 min-w-[220px]">
                   <div className="flex justify-between items-start gap-3 mb-1.5 border-b border-gray-50 pb-1.5">
                     <div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Dinner Day</span>
+                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Dinner Day</span>
                       {weekIsFull && !scheduledDate && (
                         <p className="mt-0.5 text-[10.5px] text-gray-500 leading-snug">Schedule full. Choose a day to replace.</p>
                       )}
                     </div>
-                    <button onClick={() => setIsChoosingDay(false)} className="text-gray-400 hover:text-gray-600"><CircleX size={10} /></button>
+                    <button onClick={() => setIsChoosingDay(false)} className="text-gray-500 hover:text-gray-600"><CircleX size={10} /></button>
                   </div>
                   <div className="grid grid-cols-1 gap-1">
                     {days.map(day => {
@@ -320,7 +320,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                           <span className="min-w-0">
                             <span className="capitalize block">{day}</span>
                             {bookedRecipe && (
-                              <span className="block truncate max-w-[125px] text-[9.5px] text-gray-400 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
+                              <span className="block truncate max-w-[125px] text-[9.5px] text-gray-500 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
                             )}
                           </span>
                           {isBooked && day !== scheduledDate && <span className="text-[8.5px] uppercase font-bold tracking-widest text-accent">Replace</span>}
@@ -354,11 +354,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               value={noteDraft}
               onChange={(e) => setNoteDraft(e.target.value.slice(0, 1000))}
               placeholder="Personal note..."
-              className="w-full min-h-[74px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40"
+              className="w-full min-h-[74px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-500 focus:border-accent/40"
               maxLength={1000}
             />
             <div className="mt-1.5 flex items-center justify-between gap-2">
-              <span className="text-[10px] font-medium text-gray-400">{noteDraft.length}/1000</span>
+              <span className="text-[10px] font-medium text-gray-500">{noteDraft.length}/1000</span>
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => {
@@ -434,7 +434,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 {recipe.title}
               </h3>
               
-              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-gray-400 font-normal mt-0.5">
+              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-gray-500 font-normal mt-0.5">
                 {(() => {
                   const items: React.ReactNode[] = [];
                   
@@ -580,7 +580,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                               <p className="mt-0.5 text-[11px] text-gray-500 leading-snug">Schedule full. Choose a day to replace.</p>
                             )}
                           </div>
-                          <button onClick={(e) => { e.stopPropagation(); setIsChoosingDay(false); }} className="text-gray-400 hover:text-gray-600 cursor-pointer"><CircleX size={12} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setIsChoosingDay(false); }} className="text-gray-500 hover:text-gray-600 cursor-pointer"><CircleX size={12} /></button>
                         </div>
                         <div className="grid grid-cols-1 gap-1">
                           {days.map(day => {
@@ -604,7 +604,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                                 <span className="min-w-0 pr-2">
                                   <span className="capitalize block">{day}</span>
                                   {bookedRecipe && (
-                                    <span className="block truncate max-w-[150px] text-[10px] text-gray-400 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
+                                    <span className="block truncate max-w-[150px] text-[10px] text-gray-500 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
                                   )}
                                 </span>
                                 {isBooked && day !== scheduledDate && <span className="text-[10px] uppercase font-bold tracking-widest text-accent">Replace</span>}
@@ -624,7 +624,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                     className={`inline-flex h-7 items-center gap-1.5 px-2.5 rounded border text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                       personalNote
                         ? 'border-orange-100 bg-orange-50/70 text-orange-800 hover:bg-orange-50'
-                        : 'border-gray-100 text-gray-400 hover:bg-gray-50 hover:text-gray-700'
+                        : 'border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-700'
                     }`}
                     title={personalNote ? 'Edit personal note' : 'Add personal note'}
                   >
@@ -636,7 +636,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       e.stopPropagation();
                       onRemove();
                     }}
-                    className="inline-flex h-7 items-center gap-1.5 px-2.5 rounded border border-gray-100 text-[11px] font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
+                    className="inline-flex h-7 items-center gap-1.5 px-2.5 rounded border border-gray-100 text-[11px] font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer whitespace-nowrap"
                     title="Remove from collection"
                   >
                     <span>Remove</span>
@@ -694,7 +694,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
               {scheduledDate || showCheck ? (
                 <Check className="w-2.5 h-2.5 text-emerald-600" />
               ) : (
-                <CalendarPlus className="w-2.5 h-2.5 text-gray-400" />
+                <CalendarPlus className="w-2.5 h-2.5 text-gray-500" />
               )}
               <span>{scheduledDate ? `Scheduled` : showCheck ? 'Scheduled' : 'Schedule'}</span>
             </button>
@@ -708,7 +708,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                       <p className="mt-0.5 text-[11px] text-gray-500 leading-snug">Schedule full. Choose a day to replace.</p>
                     )}
                   </div>
-                  <button onClick={() => setIsChoosingDay(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer"><CircleX size={12} /></button>
+                  <button onClick={() => setIsChoosingDay(false)} className="text-gray-500 hover:text-gray-600 cursor-pointer"><CircleX size={12} /></button>
                 </div>
                 <div className="grid grid-cols-1 gap-1">
                   {days.map(day => {
@@ -732,7 +732,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                         <span className="min-w-0 pr-2">
                           <span className="capitalize block">{day}</span>
                           {bookedRecipe && (
-                            <span className="block truncate max-w-[150px] text-[10px] text-gray-400 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
+                            <span className="block truncate max-w-[150px] text-[10px] text-gray-500 font-medium normal-case tracking-normal">{bookedRecipe.title}</span>
                           )}
                         </span>
                         {isBooked && day !== scheduledDate && <span className="text-[10px] uppercase font-bold tracking-widest text-accent">Replace</span>}
@@ -780,11 +780,11 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
             value={noteDraft}
             onChange={(e) => setNoteDraft(e.target.value.slice(0, 1000))}
             placeholder="Personal note..."
-            className="w-full min-h-[74px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-400 focus:border-accent/40"
+            className="w-full min-h-[74px] resize-none rounded border border-orange-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-gray-800 outline-none placeholder:text-gray-500 focus:border-accent/40"
             maxLength={1000}
           />
           <div className="mt-1.5 flex items-center justify-between gap-2">
-            <span className="text-[10px] font-medium text-gray-400">{noteDraft.length}/1000</span>
+            <span className="text-[10px] font-medium text-gray-500">{noteDraft.length}/1000</span>
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => {
@@ -817,14 +817,14 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           >
             <div className="pt-2.5 space-y-2.5 w-full">
               {recipe.description && (
-                <p className="text-[12.5px] text-gray-400 leading-relaxed italic">{recipe.description}</p>
+                <p className="text-[12.5px] text-gray-500 leading-relaxed italic">{recipe.description}</p>
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(currentIngredients.length > 0 || isEnriching) && (
                   <div>
-                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 font-sans">Ingredients</h4>
+                    <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-sans">Ingredients</h4>
                     {isEnriching && !currentIngredients.length ? (
-                      <p className="text-[12px] text-gray-400 animate-pulse">Sourcing ingredients...</p>
+                      <p className="text-[12px] text-gray-500 animate-pulse">Sourcing ingredients...</p>
                     ) : (
                       <ul className="space-y-0">
                         {currentIngredients.map((ing, i) => {
@@ -863,9 +863,9 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 )}
                 {(currentInstructions.length > 0 || isEnriching) && recipe.mode !== 'ready-made' && (
                   <div>
-                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 font-sans">Method</h4>
+                    <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 font-sans">Method</h4>
                     {isEnriching && !currentInstructions.length ? (
-                      <p className="text-[12px] text-gray-400 animate-pulse">Sourcing instructions...</p>
+                      <p className="text-[12px] text-gray-500 animate-pulse">Sourcing instructions...</p>
                     ) : (
                       <div className="space-y-0">
                         {currentInstructions.map((step, i) => (
@@ -882,7 +882,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
                 )}
                 {recipe.servingSuggestion && !currentIngredients.length && (
                   <div>
-                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Serving Suggestion</h4>
+                    <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Serving Suggestion</h4>
                     <p className="text-[12px] text-gray-700 leading-relaxed">{recipe.servingSuggestion}</p>
                   </div>
                 )}

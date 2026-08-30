@@ -24,7 +24,7 @@ const MethodologyShell: React.FC<MethodologyProps & { eyebrow: string; title: st
         <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">{eyebrow}</p>
         <h1 className="text-[24px] font-bold leading-9 text-gray-950">{title}</h1>
         <p className="text-[14px] leading-relaxed text-gray-600">{introduction}</p>
-        <p className="text-[11.5px] text-gray-400">Last updated: 18 July 2026</p>
+        <p className="text-[11.5px] text-gray-500">Last updated: 18 July 2026</p>
       </header>
       <div className="mt-8 space-y-6">{children}</div>
       <div className="mt-10 border-t border-gray-100 pt-6 text-[14px] leading-relaxed text-gray-500">

@@ -394,7 +394,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
         className={`inline-flex h-7 shrink-0 cursor-pointer items-center gap-2 rounded border px-2 text-[9px] font-semibold transition-colors sm:h-11 sm:px-3 sm:text-[10px] ${
           strictIngredientMatch
             ? 'border-dbd-accent/50 bg-dbd-accent/5 text-dbd-accent'
-            : 'border-gray-200 bg-white text-gray-500 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900'
+            : 'border-gray-200 bg-white text-gray-500 hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900'
         } ${isReadOnly || isGuestSearchLimitReached ? 'cursor-not-allowed opacity-60' : ''} ${className}`}
         title="Restrict this search to the ingredients entered above"
       >
@@ -882,8 +882,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                         }}
                         className={`flex h-11 w-full items-center justify-center gap-2 rounded border text-gray-600 transition-colors cursor-pointer ${
                           showFilters
-                            ? 'bg-gray-100 border-gray-400 text-gray-900'
-                            : 'bg-white border-gray-200 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-gray-100 border-gray-500 text-gray-900'
+                            : 'bg-white border-gray-200 hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900'
                         }`}
                         aria-label="Open search preferences"
                         title="Open search preferences"
@@ -909,8 +909,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       }}
                       className={`flex items-center justify-center gap-2 px-3 h-11 rounded border text-gray-500 hover:text-gray-900 transition-colors cursor-pointer shrink-0 ${
                         showFilters
-                          ? 'bg-gray-100 border-gray-400 text-gray-900'
-                          : 'bg-white border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                          ? 'bg-gray-100 border-gray-500 text-gray-900'
+                          : 'bg-white border-gray-200 hover:border-gray-500 hover:bg-gray-50'
                       }`}
                       aria-label="Open search preferences"
                       title="Open search preferences"
@@ -927,8 +927,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[9px] leading-4 text-gray-300">
                 <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
                 <span>{source === 'cook' ? 'AI-assisted, source-backed recipe search. Every result links to its original publisher.' : 'AI-powered search. Avoid private information.'}</span>
-                {source === 'cook' && <a href="/recipe-methodology" className="font-semibold text-gray-400 hover:text-dbd-accent hover:underline">Recipe sources</a>}
-                <a href="/privacy" className="font-semibold text-gray-400 hover:text-dbd-accent hover:underline">Privacy</a>
+                {source === 'cook' && <a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">Recipe sources</a>}
+                <a href="/privacy" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">Privacy</a>
                 {renderStrictIngredientToggle('sm:hidden ml-auto h-7 px-2 text-[9px]')}
               </div>
 
@@ -957,7 +957,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       setShowFilters(true);
                       setPreferencesError(null);
                     }}
-                    className="text-left text-[11.5px] text-gray-400 hover:text-gray-700 leading-relaxed font-semibold transition-colors"
+                    className="text-left text-[11.5px] text-gray-500 hover:text-gray-700 leading-relaxed font-semibold transition-colors"
                   >
                     {hasNearbyRetailers
                       ? `Prioritising nearby retailers: ${supermarkets.slice(0, 3).join(', ')}${supermarkets.length > 3 ? '...' : ''}. Change this in search preferences.`
@@ -985,7 +985,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   
                   {showBasicSearchGuidance && (
                     <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
-                      <p className="text-[12px] text-gray-400 leading-relaxed font-semibold">
+                      <p className="text-[12px] text-gray-500 leading-relaxed font-semibold">
                         {source === 'cook' 
                           ? "Search by ingredient, cuisine, chef or phrase — e.g. 'Low cost recipes'."
                           : "Search for ready-made dinners from shops you can easily use."}
@@ -1096,7 +1096,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       onClick={() => setView('settings')}
                       className="group flex flex-wrap items-center gap-1.5 px-0.5 py-1 opacity-70 hover:opacity-100 transition-opacity text-left"
                     >
-                      <span className="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Trusted sources:</span>
+                      <span className="text-[9.5px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">Trusted sources:</span>
                       <span className="text-[10.5px] font-bold text-gray-600 leading-tight">
                         {(() => {
                           const selected = PREFERRED_SOURCES.filter(s => localPreferences?.preferredSourceIds?.includes(s.id));
@@ -1105,7 +1105,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                           return `${labels.slice(0, 3).join(', ')} +${labels.length - 3} more`;
                         })()}
                       </span>
-                      <ChevronRight size={10} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight size={10} className="text-gray-500 group-hover:translate-x-0.5 transition-transform" />
                     </button>
                   )}
                 </div>
@@ -1120,7 +1120,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   exit={{ opacity: 0, y: -4 }}
                   className="px-3 sm:px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg flex items-center gap-2 mb-2"
                 >
-                  <Info className="w-3 h-3 text-gray-400" />
+                  <Info className="w-3 h-3 text-gray-500" />
                   <span className="text-[11px] text-gray-500 font-medium">Search cancelled – showing your last results.</span>
                 </motion.div>
               )}
@@ -1271,7 +1271,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             )}
             
             {window.location.search.includes('debug=true') && (
-              <details className="mt-8 text-[11px] text-gray-400 group text-center">
+              <details className="mt-8 text-[11px] text-gray-500 group text-center">
                 <summary className="cursor-pointer hover:text-gray-600 transition-colors uppercase tracking-widest font-bold">Debug logs</summary>
                 <div className="mt-2 bg-gray-50 p-3 rounded border border-gray-100 max-w-xs mx-auto break-words text-left font-mono whitespace-pre-wrap max-h-40 overflow-y-auto">
                   {searchError}
@@ -1339,7 +1339,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                           </span>
                         ))}
                         {activeCriteria.length > 8 && (
-                          <span className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                          <span className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                             +{activeCriteria.length - 8} more
                           </span>
                         )}
@@ -1442,7 +1442,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     type="button"
                     disabled={compareItems.length < 2}
                     onClick={() => setShowCompareModal(true)}
-                    className="h-8 px-3 rounded bg-gray-900 text-white disabled:bg-gray-200 disabled:text-gray-400 text-[10px] font-bold uppercase tracking-widest transition-colors"
+                    className="h-8 px-3 rounded bg-gray-900 text-white disabled:bg-gray-200 disabled:text-gray-500 text-[10px] font-bold uppercase tracking-widest transition-colors"
                   >
                     Compare selected
                   </button>
@@ -1452,7 +1452,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       setCompareItems([]);
                       setShowCompareModal(false);
                     }}
-                    className="h-8 px-3 rounded bg-white text-gray-400 hover:text-gray-700 text-[10px] font-bold uppercase tracking-widest transition-colors"
+                    className="h-8 px-3 rounded bg-white text-gray-500 hover:text-gray-700 text-[10px] font-bold uppercase tracking-widest transition-colors"
                   >
                     Clear
                   </button>
@@ -1489,7 +1489,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             {hasExhaustedSearch && (
               <div className="p-3 bg-gray-50/50 border border-gray-100 rounded-lg space-y-2 mt-2 sm:mt-4">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <Info className="w-3.5 h-3.5 text-gray-400" />
+                  <Info className="w-3.5 h-3.5 text-gray-500" />
                   <p className="text-[13px] font-bold text-gray-900 leading-tight">No more matching dinners found</p>
                 </div>
                 <p className="text-[12px] text-gray-500 leading-relaxed pl-6">
@@ -1511,7 +1511,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <button 
                   onClick={handleCloseAndNewSearch}
                   disabled={isGenerating || isAppending}
-                  className="flex-1 min-w-0 px-2 py-2.5 bg-white border border-gray-100 rounded text-[9px] font-semibold text-gray-400 hover:text-gray-600 hover:border-gray-200 uppercase tracking-[0.14em] hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
+                  className="flex-1 min-w-0 px-2 py-2.5 bg-white border border-gray-100 rounded text-[9px] font-semibold text-gray-500 hover:text-gray-600 hover:border-gray-200 uppercase tracking-[0.14em] hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
                 >
                   Close & New Search
                 </button>

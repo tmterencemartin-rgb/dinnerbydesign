@@ -1144,7 +1144,7 @@ export const AdminDashboard: React.FC = () => {
           
           <div className="grid w-full min-w-0 grid-cols-1 gap-2 xl:flex-1 xl:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.2fr)]">
             <div className="relative min-w-0">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input 
                 type="text" 
                 placeholder="Search users..." 
@@ -1219,13 +1219,13 @@ export const AdminDashboard: React.FC = () => {
                 </span>
                 <span className="flex shrink-0 items-center gap-2">
                   <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">{formatPublicNumber(PUBLISHED_ARTICLES.length)} live</span>
-                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${publishedArticlesOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${publishedArticlesOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                 </span>
               </button>
               {publishedArticlesOpen && <div id="published-articles-panel">
                 <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
                 <div className="relative min-w-0 flex-1">
-                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" aria-hidden="true" />
                   <label htmlFor="published-article-search" className="sr-only">Search published articles by ingredient or topic</label>
                   <input
                     id="published-article-search"
@@ -1233,7 +1233,7 @@ export const AdminDashboard: React.FC = () => {
                     value={publishedArticleQuery}
                     onChange={event => setPublishedArticleQuery(event.target.value)}
                     placeholder="Search by ingredient or topic"
-                    className="h-9 w-full rounded border border-gray-200 bg-white pl-8 pr-3 text-xs text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:border-dbd-accent/50 focus:ring-2 focus:ring-dbd-accent/10"
+                    className="h-9 w-full rounded border border-gray-200 bg-white pl-8 pr-3 text-xs text-gray-800 outline-none transition-colors placeholder:text-gray-500 focus:border-dbd-accent/50 focus:ring-2 focus:ring-dbd-accent/10"
                   />
                 </div>
                 <label className="flex h-9 shrink-0 items-center gap-2 rounded border border-gray-200 bg-white px-2.5 text-xs text-gray-500">
@@ -1269,7 +1269,7 @@ export const AdminDashboard: React.FC = () => {
                         <span className="block text-[10px] font-semibold text-gray-500">{article.category}</span>
                         <span className="mt-0.5 block text-xs font-bold leading-4 text-gray-800 group-hover:text-dbd-accent">{formatPublicArticleTitle(article.title)}</span>
                       </span>
-                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-gray-400 group-hover:text-dbd-accent" aria-hidden="true" />
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-gray-500 group-hover:text-dbd-accent" aria-hidden="true" />
                     </a>
                   ))}
                 </div>
@@ -1294,7 +1294,7 @@ export const AdminDashboard: React.FC = () => {
                   <span id="account-overview-heading" className="mt-1 block text-base font-bold text-gray-950">Account overview</span>
                   <span className="mt-1 block text-xs font-medium text-gray-500">Stored app profiles, access, payment and usage totals.</span>
                 </span>
-                <ChevronDown className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${accountsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                <ChevronDown className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${accountsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
               {accountsOpen && <div id="account-overview-panel">
               <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
@@ -1309,9 +1309,9 @@ export const AdminDashboard: React.FC = () => {
                   <div key={item.label} className="rounded border border-gray-200 bg-gray-50/60 p-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{item.label}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">{item.label}</p>
                         <p className="text-xl font-bold text-gray-950 mt-0.5">{item.value}</p>
-                        <p className="text-[11px] font-medium text-gray-400 mt-0.5">{item.detail}</p>
+                        <p className="text-[11px] font-medium text-gray-500 mt-0.5">{item.detail}</p>
                       </div>
                       <div className="w-7 h-7 rounded bg-gray-50 flex items-center justify-center">
                         <Icon className="w-3.5 h-3.5 text-gray-500" />
@@ -1340,12 +1340,12 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4">
                     <div className="rounded border border-gray-200 bg-white p-2.5">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Registered sign-ins</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Registered sign-ins</p>
                       <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.registeredIdentities}</p>
                       <p className="text-[10.5px] font-medium text-gray-500">{accountReconciliation.registeredWithoutProfile} without a profile</p>
                     </div>
                     <div className="rounded border border-gray-200 bg-white p-2.5">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Anonymous identities</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Anonymous identities</p>
                       <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.anonymousIdentities}</p>
                       <p className="text-[10.5px] font-medium text-gray-500">{accountReconciliation.anonymousWithoutProfile} without a profile</p>
                       {accountReconciliation.anonymousWithoutProfileUids.length > 0 && (
@@ -1360,12 +1360,12 @@ export const AdminDashboard: React.FC = () => {
                       )}
                     </div>
                     <div className="rounded border border-gray-200 bg-white p-2.5">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">App profiles</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">App profiles</p>
                       <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.profileDocuments}</p>
                       <p className="text-[10.5px] font-medium text-gray-500">{accountReconciliation.profilesWithoutAuthentication} without a sign-in</p>
                     </div>
                     <div className="rounded border border-gray-200 bg-white p-2.5">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">All identities</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">All identities</p>
                       <p className="mt-0.5 text-lg font-bold text-gray-950">{accountReconciliation.authenticationIdentities}</p>
                       <p className="text-[10.5px] font-medium text-gray-500">Registered and anonymous</p>
                     </div>
@@ -1411,7 +1411,7 @@ export const AdminDashboard: React.FC = () => {
                                 </p>
                               </div>
                             </div>
-                            <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium text-gray-400">
+                            <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium text-gray-500">
                               <span>{account.providers.length > 0 ? account.providers.join(', ') : 'Email or phone sign-in'}</span>
                               {account.disabled && <span className="font-bold text-red-600">Disabled</span>}
                               <span className="font-mono">UID {account.uid}</span>
@@ -1444,7 +1444,7 @@ export const AdminDashboard: React.FC = () => {
                   <span id="operations-heading" className="mt-1 block text-base font-bold text-gray-950">Operations and delivery</span>
                   <span className="mt-1 block text-xs font-medium text-gray-500">Monitor AI costs, Stripe events and customer email delivery.</span>
                 </span>
-                <ChevronDown className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${serviceHealthOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                <ChevronDown className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${serviceHealthOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
               {serviceHealthOpen && <div id="service-health-panel">
               <div className="mt-4 space-y-3">
@@ -1458,7 +1458,7 @@ export const AdminDashboard: React.FC = () => {
                       {latestSearchCanary?.status || 'Awaiting canary'}
                     </span>
                   </div>
-                  <p className="text-[11px] leading-tight text-gray-400 font-medium max-w-xl">
+                  <p className="text-[11px] leading-tight text-gray-500 font-medium max-w-xl">
                     Scheduled canaries test the production search service without using a customer allowance. User events show whether results or a genuine no-results response reached the screen.
                   </p>
                   <p className="text-[10.5px] text-gray-500 font-medium">
@@ -1470,29 +1470,29 @@ export const AdminDashboard: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 w-full lg:max-w-2xl">
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Delivered</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Delivered</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.delivered}</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">No results</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">No results</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.noResults}</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Failures</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Failures</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.failed}</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Reports</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Reports</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.reported}</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Delivery rate</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Delivery rate</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.deliveryRate === null ? 'N/A' : `${searchDeliverySummary.deliveryRate}%`}</p>
                   </div>
                 </div>
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-3">
-                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
                   Window
                   <select
                     value={searchWindow}
@@ -1504,7 +1504,7 @@ export const AdminDashboard: React.FC = () => {
                     <option value="all">All recorded</option>
                   </select>
                 </label>
-                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
                   Mode
                   <select
                     value={searchSourceFilter}
@@ -1516,7 +1516,7 @@ export const AdminDashboard: React.FC = () => {
                     <option value="ready-made">Ready-made</option>
                   </select>
                 </label>
-                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
                   Device
                   <select
                     value={searchDeviceFilter}
@@ -1529,7 +1529,7 @@ export const AdminDashboard: React.FC = () => {
                     <option value="desktop">Desktop</option>
                   </select>
                 </label>
-                <span className="text-[10.5px] font-medium text-gray-400">
+                <span className="text-[10.5px] font-medium text-gray-500">
                   {filteredSearchDeliveryEvents.length} events in view
                 </span>
               </div>
@@ -1547,41 +1547,41 @@ export const AdminDashboard: React.FC = () => {
                     <ShieldCheck className="h-4 w-4 text-gray-500" aria-hidden="true" />
                     <span className="text-[13px] font-bold text-gray-950">Operational monitoring</span>
                   </span>
-                  <span className="mt-1 block text-[11px] font-medium text-gray-400">Administrator access, email delivery, AI failures and Firestore permission signals.</span>
+                  <span className="mt-1 block text-[11px] font-medium text-gray-500">Administrator access, email delivery, AI failures and Firestore permission signals.</span>
                 </span>
                 <span className="flex shrink-0 items-center gap-2">
                   <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${recentEmailFailureEvents.length + recentAiFailureEvents.length + recentFirestoreEvents.length > 0 ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
                     {recentEmailFailureEvents.length + recentAiFailureEvents.length + recentFirestoreEvents.length > 0 ? 'Review signals' : 'No recent failures'}
                   </span>
-                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${monitoringOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${monitoringOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                 </span>
               </button>
               {monitoringOpen && <div id="operational-monitoring-panel" className="mt-3 border-t border-gray-100 pt-3">
                 <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-5">
                   <div className="rounded border border-gray-100 bg-white p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Admin access</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Admin access</p>
                     <p className="mt-0.5 text-lg font-bold text-gray-950">{adminAccessEvents.length}</p>
-                    <p className="text-[10.5px] font-medium text-gray-400">recent recorded opens</p>
+                    <p className="text-[10.5px] font-medium text-gray-500">recent recorded opens</p>
                   </div>
                   <div className="rounded border border-gray-100 bg-white p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Email failures</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Email failures</p>
                     <p className="mt-0.5 text-lg font-bold text-gray-950">{recentEmailFailureEvents.length}</p>
-                    <p className="text-[10.5px] font-medium text-gray-400">last 24 hours</p>
+                    <p className="text-[10.5px] font-medium text-gray-500">last 24 hours</p>
                   </div>
                   <div className="rounded border border-gray-100 bg-white p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">AI failures</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">AI failures</p>
                     <p className="mt-0.5 text-lg font-bold text-gray-950">{recentAiFailureEvents.length}</p>
-                    <p className="text-[10.5px] font-medium text-gray-400">last 24 hours</p>
+                    <p className="text-[10.5px] font-medium text-gray-500">last 24 hours</p>
                   </div>
                   <div className="rounded border border-gray-100 bg-white p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Firestore signals</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Firestore signals</p>
                     <p className="mt-0.5 text-lg font-bold text-gray-950">{recentFirestoreEvents.length}</p>
-                    <p className="text-[10.5px] font-medium text-gray-400">last 24 hours</p>
+                    <p className="text-[10.5px] font-medium text-gray-500">last 24 hours</p>
                   </div>
                   <div className="rounded border border-gray-100 bg-white p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Backups</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Backups</p>
                     <p className="mt-0.5 text-lg font-bold text-amber-700">Not set</p>
-                    <p className="text-[10.5px] font-medium text-gray-400">external schedule needed</p>
+                    <p className="text-[10.5px] font-medium text-gray-500">external schedule needed</p>
                   </div>
                 </div>
                 <div className="mt-3 space-y-1 text-[10.5px] font-medium text-gray-500">
@@ -1604,13 +1604,13 @@ export const AdminDashboard: React.FC = () => {
                     <Activity className="h-4 w-4 text-gray-500" aria-hidden="true" />
                     <span className="text-[13px] font-bold text-gray-950">Front-end error monitoring</span>
                   </span>
-                  <span className="mt-1 block text-[11px] font-medium text-gray-400">Captures uncaught browser errors and failed app loads without search text or personal details.</span>
+                  <span className="mt-1 block text-[11px] font-medium text-gray-500">Captures uncaught browser errors and failed app loads without search text or personal details.</span>
                 </span>
                 <span className="flex shrink-0 items-center gap-2">
                   <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${recentClientErrorEvents.length > 0 ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
                     {recentClientErrorEvents.length > 0 ? `${recentClientErrorEvents.length} in 24h` : 'No incidents'}
                   </span>
-                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${clientErrorsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${clientErrorsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                 </span>
               </button>
               {clientErrorsOpen && <div id="client-error-panel" className="mt-3 border-t border-gray-100 pt-3">
@@ -1622,10 +1622,10 @@ export const AdminDashboard: React.FC = () => {
                       <div key={event.id} className="rounded border border-gray-100 bg-white p-2.5">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className="text-[10px] font-bold uppercase tracking-tight text-gray-500">{event.kind || 'runtime'} · {event.deviceClass || 'unknown'}</span>
-                          <span className="text-[10px] font-medium text-gray-400">{formatDateTime(event.createdAt)}</span>
+                          <span className="text-[10px] font-medium text-gray-500">{formatDateTime(event.createdAt)}</span>
                         </div>
                         <p className="mt-1 text-[11px] font-semibold leading-4 text-gray-800">{event.message || 'Unknown client error'}</p>
-                        <p className="mt-1 truncate text-[10px] font-medium text-gray-400">{event.path || '/'}{event.source ? ` · ${event.source}` : ''}</p>
+                        <p className="mt-1 truncate text-[10px] font-medium text-gray-500">{event.path || '/'}{event.source ? ` · ${event.source}` : ''}</p>
                       </div>
                     ))}
                   </div>
@@ -1642,30 +1642,30 @@ export const AdminDashboard: React.FC = () => {
                       Estimate
                     </span>
                   </div>
-                  <p className="text-[11px] leading-tight text-gray-400 font-medium max-w-2xl">
+                  <p className="text-[11px] leading-tight text-gray-500 font-medium max-w-2xl">
                     Tracks server-side Gemini calls from the point this monitor was added. Token and cost figures are estimates based on prompt and response size.
                   </p>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 w-full lg:max-w-4xl">
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Gemini cost</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Gemini cost</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{formatCurrency(summaryStats.estimatedAiCostGbp)}</p>
-                    <p className="text-[10.5px] text-gray-400 font-medium">{formatCurrency(summaryStats.estimatedAiCostUsd, 'USD')} est.</p>
+                    <p className="text-[10.5px] text-gray-500 font-medium">{formatCurrency(summaryStats.estimatedAiCostUsd, 'USD')} est.</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Model calls</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Model calls</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.aiCalls}</p>
-                    <p className="text-[10.5px] text-gray-400 font-medium">{summaryStats.failedAiCalls} failed</p>
+                    <p className="text-[10.5px] text-gray-500 font-medium">{summaryStats.failedAiCalls} failed</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Call mix</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Call mix</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.recipeSearchCalls}/{summaryStats.readyMadeCalls}/{summaryStats.weeklyPlanCalls}</p>
-                    <p className="text-[10.5px] text-gray-400 font-medium">Recipe / ready-made / weekly</p>
+                    <p className="text-[10.5px] text-gray-500 font-medium">Recipe / ready-made / weekly</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Net snapshot</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Net snapshot</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{formatCurrency(summaryStats.estimatedNetAfterStripeAndAi)}</p>
-                    <p className="text-[10.5px] text-gray-400 font-medium">After Stripe + Gemini est.</p>
+                    <p className="text-[10.5px] text-gray-500 font-medium">After Stripe + Gemini est.</p>
                   </div>
                 </div>
               </div>
@@ -1693,7 +1693,7 @@ export const AdminDashboard: React.FC = () => {
                         {latestWebhookEvent.status}
                       </span>
                     </div>
-                    <p className="text-[11.5px] text-gray-400 font-medium">
+                    <p className="text-[11.5px] text-gray-500 font-medium">
                       {latestWebhookEvent.type} · {formatDateTime(latestWebhookEvent.updatedAt || latestWebhookEvent.receivedAt || latestWebhookEvent.stripeCreatedAt)}
                     </p>
                     {latestWebhookEvent?.message && (
@@ -1712,8 +1712,8 @@ export const AdminDashboard: React.FC = () => {
                             {event.status}
                           </span>
                         </div>
-                        <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.eventId}</p>
-                        <p className="text-[10px] text-gray-400 font-medium mt-1">
+                        <p className="text-[10px] text-gray-500 font-mono mt-1 truncate">{event.eventId}</p>
+                        <p className="text-[10px] text-gray-500 font-medium mt-1">
                           {formatDateTime(event.updatedAt || event.receivedAt || event.stripeCreatedAt)}
                         </p>
                       </div>
@@ -1742,7 +1742,7 @@ export const AdminDashboard: React.FC = () => {
                         {latestEmailEvent.status}
                       </span>
                     </div>
-                    <p className="text-[11.5px] text-gray-400 font-medium">
+                    <p className="text-[11.5px] text-gray-500 font-medium">
                       {latestEmailEvent.type || latestEmailEvent.subject || 'Email'} · {formatDateTime(latestEmailEvent.createdAt)}
                     </p>
                     {latestEmailEvent?.errorMessage && (
@@ -1758,8 +1758,8 @@ export const AdminDashboard: React.FC = () => {
                             {event.status || 'unknown'}
                           </span>
                         </div>
-                        <p className="text-[10px] text-gray-400 font-mono mt-1 truncate">{event.to || 'No recipient'}</p>
-                        <p className="text-[10px] text-gray-400 font-medium mt-1 truncate">
+                        <p className="text-[10px] text-gray-500 font-mono mt-1 truncate">{event.to || 'No recipient'}</p>
+                        <p className="text-[10px] text-gray-500 font-medium mt-1 truncate">
                           {event.subject || 'No subject'} · {formatDateTime(event.createdAt)}
                         </p>
                       </div>
@@ -1796,7 +1796,7 @@ export const AdminDashboard: React.FC = () => {
                 </span>
                 <span className="flex shrink-0 items-center gap-2">
                   <span className="text-xs font-semibold text-gray-500">{filteredUsers.length} of {users.length} profiles shown</span>
-                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${userRegisterOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${userRegisterOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                 </span>
               </button>
               {userRegisterOpen && <div id="user-register-panel" className="bg-white">
@@ -1851,18 +1851,18 @@ export const AdminDashboard: React.FC = () => {
                           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                             <p className="truncate text-sm font-bold leading-tight text-gray-950 sm:text-[15px]">{user.displayName || user.email || 'User'}</p>
                             {getStatusBadge(user)}
-                            <span className="min-w-0 basis-full truncate font-mono text-[11.5px] text-gray-400 sm:basis-auto" title={user.email || 'No email'}>{user.email || 'No email'}</span>
+                            <span className="min-w-0 basis-full truncate font-mono text-[11.5px] text-gray-500 sm:basis-auto" title={user.email || 'No email'}>{user.email || 'No email'}</span>
                           </div>
 
                           <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[10.5px] leading-snug">
-                            <span><span className="text-gray-400">Joined</span> <span className="font-semibold text-gray-700">{formatDate(user.createdAt)}</span></span>
-                            {trialEndDate && <span><span className="text-gray-400">{trialHasEnded ? 'Trial ended' : 'Trial ends'}</span> <span className="font-semibold text-gray-700">{formatDate(trialEndDate)}</span></span>}
-                            <span><span className="text-gray-400">Saved</span> <span className="font-semibold text-gray-700">{stats.savedCount}</span></span>
-                            <span><span className="text-gray-400">Scheduled</span> <span className="font-semibold text-gray-700">{stats.scheduledCount}</span></span>
-                            <span><span className="text-gray-400">Searches</span> <span className="font-semibold text-gray-700">{getSearchCount(user)}</span></span>
+                            <span><span className="text-gray-500">Joined</span> <span className="font-semibold text-gray-700">{formatDate(user.createdAt)}</span></span>
+                            {trialEndDate && <span><span className="text-gray-500">{trialHasEnded ? 'Trial ended' : 'Trial ends'}</span> <span className="font-semibold text-gray-700">{formatDate(trialEndDate)}</span></span>}
+                            <span><span className="text-gray-500">Saved</span> <span className="font-semibold text-gray-700">{stats.savedCount}</span></span>
+                            <span><span className="text-gray-500">Scheduled</span> <span className="font-semibold text-gray-700">{stats.scheduledCount}</span></span>
+                            <span><span className="text-gray-500">Searches</span> <span className="font-semibold text-gray-700">{getSearchCount(user)}</span></span>
                           </div>
 
-                          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] leading-snug text-gray-400">
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] leading-snug text-gray-500">
                             <span>Welcome <span className="font-semibold text-gray-600">{user.welcomeEmailSent ? 'sent' : 'not sent'}</span></span>
                             {confirmationSent && <span>Subscription confirmation <span className="font-semibold text-gray-600">sent</span></span>}
                             {user.permanentAccessEmailSentAt && <span>Access email <span className="font-semibold text-gray-600">sent {formatDate(user.permanentAccessEmailSentAt)}</span></span>}
@@ -1905,7 +1905,7 @@ export const AdminDashboard: React.FC = () => {
                                     setNoteDrafts(prev => ({ ...prev, [user.uid]: user.adminNote || '' }));
                                     setEditingNoteUid(null);
                                   }}
-                                  className="text-xs font-bold text-gray-400 hover:text-gray-600"
+                                  className="text-xs font-bold text-gray-500 hover:text-gray-600"
                                 >
                                   Cancel
                                 </button>
@@ -1918,12 +1918,12 @@ export const AdminDashboard: React.FC = () => {
                               <div className="grid gap-x-5 gap-y-2.5 text-[11px] sm:grid-cols-3">
                                 {detailGroups.map((group) => (
                                   <div key={group.label} className="min-w-0">
-                                    <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">{group.label}</p>
+                                    <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.14em] text-gray-500">{group.label}</p>
                                     <div className="flex flex-wrap gap-x-3 gap-y-1">
                                       {group.items.map((item) => (
                                         <div key={`${group.label}-${item.label}`} className="inline-flex min-w-0 items-baseline gap-1.5 leading-snug">
-                                          <span className="shrink-0 text-gray-400">{item.label}</span>
-                                          <span className={`${item.muted ? 'italic text-gray-400' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`} title={item.value}>{item.value}</span>
+                                          <span className="shrink-0 text-gray-500">{item.label}</span>
+                                          <span className={`${item.muted ? 'italic text-gray-500' : 'text-gray-700'} ${item.mono ? 'font-mono' : ''} truncate`} title={item.value}>{item.value}</span>
                                         </div>
                                       ))}
                                     </div>
@@ -1976,8 +1976,8 @@ export const AdminDashboard: React.FC = () => {
                               disabled={loading || actionLoading !== null}
                               className={`text-xs font-bold transition-colors ${
                                 actionLoading === user.uid
-                                  ? 'cursor-not-allowed text-gray-400'
-                                  : 'text-gray-400 hover:text-red-600'
+                                  ? 'cursor-not-allowed text-gray-500'
+                                  : 'text-gray-500 hover:text-red-600'
                               } disabled:opacity-50`}
                               title="Delete the sign-in identity, profile and stored app data"
                             >
@@ -1991,7 +1991,7 @@ export const AdminDashboard: React.FC = () => {
                 })}
 
                 {filteredUsers.length === 0 && (
-                  <div className="px-6 py-12 text-center text-gray-400 italic">
+                  <div className="px-6 py-12 text-center text-gray-500 italic">
                     No users match your current selection
                   </div>
                 )}

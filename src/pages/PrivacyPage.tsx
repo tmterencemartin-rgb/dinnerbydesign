@@ -33,7 +33,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
       )}
 
       <h1 className="text-[24px] leading-9 font-bold text-gray-900">Privacy & cookies</h1>
-      <p className="text-[11px] text-gray-400 italic mb-4">Last updated: 18 July 2026</p>
+      <p className="text-[11px] text-gray-500 italic mb-4">Last updated: 18 July 2026</p>
       
       <p className="text-[14px] text-gray-600 leading-relaxed mb-4">
         This notice explains what personal information DinnerByDesign uses, why it is needed, how AI and service providers are involved, how long information is retained, and the choices available to users.
