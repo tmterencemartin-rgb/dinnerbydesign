@@ -15,6 +15,27 @@ export default defineConfig(({mode}) => {
     define: {
       'globalThis.__DBD_API_BASE_URL__': JSON.stringify(env.VITE_API_BASE_URL || ''),
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('/node_modules/firebase/') || id.includes('/node_modules/@firebase/')) {
+              return 'firebase-vendor';
+            }
+            if (id.includes('/node_modules/framer-motion/')) {
+              return 'motion-vendor';
+            }
+            if (id.includes('/node_modules/lucide-react/')) {
+              return 'icons-vendor';
+            }
+            if (id.includes('/src/content/')) {
+              return 'public-content';
+            }
+            return undefined;
+          },
+        },
+      },
+    },
     test: {
       environment: 'jsdom',
       globals: true,
