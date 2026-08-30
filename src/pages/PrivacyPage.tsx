@@ -13,7 +13,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
   const backLabel = isGuest ? '← Back to Landing' : '← Back to Settings';
 
   return (
-    <motion.div
+    <motion.main
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -139,6 +139,6 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
         If you have questions about privacy or cookies, contact:<br />
         <a href="mailto:terence@dinnerbydesign.app" className="text-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>
       </p>
-    </motion.div>
+    </motion.main>
   );
 };
