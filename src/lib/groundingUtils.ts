@@ -15,7 +15,16 @@ const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set([
   'kitchensanctuary.com',
   'diabetes.org.uk',
   'slimmingworld.co.uk',
-  'jamieoliver.com'
+  'jamieoliver.com',
+  'waitrose.com',
+  'asda.com',
+  'sainsburysmagazine.co.uk',
+  'olivemagazine.com',
+  'greatbritishchefs.com',
+  'telegraph.co.uk',
+  'thetimes.com',
+  'thesundaytimes.co.uk',
+  'goodhousekeeping.com'
 ]);
 
 export const canonicaliseGroundedUrl = (value: unknown): string | null => {

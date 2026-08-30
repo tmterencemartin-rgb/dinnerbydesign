@@ -187774,6 +187774,46 @@ var PREFERRED_SOURCES = [
     id: "bbc_low_gi",
     label: "BBC low-GI & diabetes",
     description: "Quick, diabetes-friendly and low-GI ideas from BBC recipe collections."
+  },
+  {
+    id: "waitrose",
+    label: "Waitrose",
+    description: "Supermarket recipes ranging from quick everyday dishes to seasonal cooking."
+  },
+  {
+    id: "asda",
+    label: "Asda",
+    description: "Practical supermarket recipes and cooking ideas built around accessible ingredients."
+  },
+  {
+    id: "sainsburys_magazine",
+    label: "Sainsbury's Magazine",
+    description: "Seasonal recipes, classic dishes and practical ideas from Sainsbury's food magazine."
+  },
+  {
+    id: "olive_magazine",
+    label: "olive magazine",
+    description: "Travel-led, seasonal and modern recipes from olive magazine."
+  },
+  {
+    id: "great_british_chefs",
+    label: "Great British Chefs",
+    description: "Chef-led recipes, from accessible cooking to more ambitious dishes."
+  },
+  {
+    id: "the_telegraph",
+    label: "The Telegraph",
+    description: "Food writing and recipes from The Telegraph's cookery coverage."
+  },
+  {
+    id: "the_times_sunday_times",
+    label: "The Times & Sunday Times",
+    description: "Recipes and food writing from The Times and Sunday Times."
+  },
+  {
+    id: "good_housekeeping",
+    label: "Good Housekeeping",
+    description: "Test-kitchen recipes and practical cooking guidance from Good Housekeeping."
   }
 ];
 
@@ -189507,6 +189547,29 @@ function parseEnrichmentRequestOptions(body) {
 }
 
 // src/lib/groundingUtils.ts
+var TRUSTED_RECIPE_PUBLISHER_HOSTS = /* @__PURE__ */ new Set([
+  "bbcgoodfood.com",
+  "bbc.co.uk",
+  "tescorealfood.com",
+  "tesco.com",
+  "theguardian.com",
+  "mob.co.uk",
+  "deliciousmagazine.co.uk",
+  "thehappyfoodie.co.uk",
+  "kitchensanctuary.com",
+  "diabetes.org.uk",
+  "slimmingworld.co.uk",
+  "jamieoliver.com",
+  "waitrose.com",
+  "asda.com",
+  "sainsburysmagazine.co.uk",
+  "olivemagazine.com",
+  "greatbritishchefs.com",
+  "telegraph.co.uk",
+  "thetimes.com",
+  "thesundaytimes.co.uk",
+  "goodhousekeeping.com"
+]);
 var canonicaliseGroundedUrl = (value) => {
   if (typeof value !== "string" || !/^https?:\/\//i.test(value.trim())) return null;
   try {
@@ -189537,6 +189600,27 @@ var reconcileGroundedSourceUrl = (candidate, sources) => {
     return canonicalSource && normaliseGroundedUrlForMatch(canonicalSource) === candidateMatchKey;
   });
   return relaxedMatch ? canonicaliseGroundedUrl(relaxedMatch.url) : null;
+};
+var isInternalGroundingUrl = (value) => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  if (!canonicalUrl) return false;
+  const host = new URL(canonicalUrl).hostname.toLowerCase();
+  return host === "vertexaisearch.cloud.google.com" || host === "vertexaisearch.googleapis.com" || host.endsWith(".vertexaisearch.cloud.google.com");
+};
+var isTrustedRecipePublisherUrl = (value) => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  if (!canonicalUrl) return false;
+  const host = new URL(canonicalUrl).hostname.toLowerCase().replace(/^www\./, "");
+  return TRUSTED_RECIPE_PUBLISHER_HOSTS.has(host);
+};
+var isApprovedDirectRecipeUrl = (value) => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  if (!canonicalUrl || !isTrustedRecipePublisherUrl(canonicalUrl) || isInternalGroundingUrl(canonicalUrl)) return false;
+  const url = new URL(canonicalUrl);
+  if (url.protocol !== "https:" || url.pathname === "/" || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
+    return false;
+  }
+  return !["q", "query", "search", "s"].some((param) => url.searchParams.has(param));
 };
 
 // src/lib/parseModelJson.ts
@@ -189580,11 +189664,11 @@ var parseModelJson = (text) => {
 };
 
 // src/config/aiModel.ts
-var ACTIVE_GEMINI_MODEL = "gemini-3.5-flash-lite";
+var ACTIVE_GEMINI_MODEL = "gemini-3.1-flash-lite";
 var ENRICHMENT_GEMINI_MODEL = "gemini-3.5-flash";
 var ACTIVE_GEMINI_PRICING_USD_PER_MILLION = {
-  input: 0.3,
-  output: 2.5
+  input: 0.25,
+  output: 1.5
 };
 function estimateGeminiCostUsd(inputTokens, outputTokens) {
   return Math.max(inputTokens || 0, 0) / 1e6 * ACTIVE_GEMINI_PRICING_USD_PER_MILLION.input + Math.max(outputTokens || 0, 0) / 1e6 * ACTIVE_GEMINI_PRICING_USD_PER_MILLION.output;
@@ -220164,6 +220248,19 @@ var estimateTokensFromText = (value) => {
   if (!value) return 0;
   return Math.ceil(value.length / 4);
 };
+var withRequestTimeout = async (request, timeoutMs, label) => {
+  let timeoutId;
+  try {
+    return await Promise.race([
+      request,
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error(`${label} timed out`)), timeoutMs);
+      })
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+};
 var getGroundedSources = (response) => {
   const metadata = response?.groundingMetadata || response?.candidates?.[0]?.groundingMetadata;
   const chunks = Array.isArray(metadata?.groundingChunks) ? metadata.groundingChunks : [];
@@ -220176,6 +220273,12 @@ var getGroundedSources = (response) => {
   });
 };
 var filterToGroundedSources = (items, sources) => items.filter((item) => {
+  if (sources.size === 0) {
+    const sourceUrl = canonicaliseGroundedUrl(item?.sourceUrl);
+    if (!sourceUrl || !isApprovedDirectRecipeUrl(sourceUrl)) return false;
+    item.sourceUrl = sourceUrl;
+    return true;
+  }
   const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
   if (!groundedSourceUrl) return false;
   item.sourceUrl = groundedSourceUrl;
@@ -220491,7 +220594,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- FOR EVERY RESULT: sourceUrl MUST be the exact URL of one of the grounded pages returned by your search. Never invent a URL, use a generic search URL, or return recipe-search. If a grounded page does not support a result, do not return that result.
+- When Google provides a grounded page, sourceUrl MUST be its exact recipe-page URL. Never invent a URL, use a generic search URL, or return recipe-search. When Google does not provide a grounded page, omit sourceUrl unless it is an exact recipe page from BBC Good Food, BBC Food, Tesco Real Food, Guardian Feast, Mob, delicious. magazine, The Happy Foodie, Kitchen Sanctuary, Diabetes UK, Slimming World, or Jamie Oliver.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
 - FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
@@ -220636,7 +220739,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                   }
                 }
               },
-              required: ["title", "description", "cuisine", "totalTime", "ingredients", "sourceUrl", "totalIngredientsCount", "realityChecks", ...isReadyMade ? ["retailer"] : ["totalServings"]]
+              required: ["title", "description", "cuisine", "totalTime", "ingredients", "totalIngredientsCount", "realityChecks", ...isReadyMade ? ["retailer"] : ["totalServings"]]
             }
           },
           budgetContradiction: {
@@ -220663,9 +220766,13 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       throw new GeminiServiceError("empty", "Empty response from search service.");
     }
     const data = parseModelJson(text);
-    let rawItems = Array.isArray(data.items) ? data.items : [];
+    const parsedItems = Array.isArray(data.items) ? data.items : [];
     const filterIngredientLedItems = (candidateItems) => ingredientIntent?.isIngredientLed && !isReadyMade ? candidateItems.filter((item) => matchesRequestedIngredientSearch(item, query2)) : candidateItems;
-    rawItems = filterToGroundedSources(filterIngredientLedItems(rawItems), groundedSources);
+    const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
+    let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSources);
+    console.log(
+      `[GeminiService] Ingredient search candidates: model=${parsedItems.length}, ingredient=${ingredientMatchedItems.length}, grounded=${rawItems.length}, sources=${groundedSources.size}`
+    );
     let wasRepaired = false;
     const repairPrompts = [];
     const repairOutputs = [];
@@ -220699,7 +220806,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
                   totalIngredientsCount: { type: Type.NUMBER },
                   sourceUrl: { type: Type.STRING }
                 },
-                required: ["title", "description", "ingredients", "sourceUrl"]
+                required: ["title", "description", "ingredients"]
               }
             }
           },
@@ -220707,7 +220814,11 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
         }
       };
       try {
-        const recoveryResponse = await callGeminiWithRetry(SEARCH_MODEL, recoveryPrompt, recoveryConfig);
+        const recoveryResponse = await withRequestTimeout(
+          callGeminiWithRetry(SEARCH_MODEL, recoveryPrompt, recoveryConfig, 1),
+          12e3,
+          "Ingredient search recovery"
+        );
         rememberGroundedSources(recoveryResponse);
         const recoveryOutputText = recoveryResponse.text || "";
         repairOutputs.push(recoveryOutputText);
@@ -220736,6 +220847,13 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       item.description,
       ...Array.isArray(item.ingredients) ? item.ingredients : []
     ].filter(Boolean).join(" "));
+    const isReadyMadeCandidate = (item) => {
+      const source2 = String(item.sourceUrl || "").toLowerCase();
+      const retailer = String(item.retailer || "").trim();
+      if (!retailer) return false;
+      const recipeDomains = ["bbcgoodfood.com", "jamieoliver.com", "allrecipes.com", "simplyrecipes.com", "foodnetwork.com", "epicurious.com", "tasty.co", "delish.com"];
+      return !recipeDomains.some((domain) => source2.includes(domain));
+    };
     const maxRepairAttempts = ingredientIntent?.isIngredientLed && !isReadyMade ? 0 : 3;
     for (let repairAttempt = 0; repairAttempt < maxRepairAttempts; repairAttempt += 1) {
       rawItems = dedupeItems(rawItems);
@@ -220775,6 +220893,42 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
       } catch (repairError) {
         console.warn("[GeminiService] Result repair pass failed; keeping the results already found.", repairError);
         break;
+      }
+    }
+    if (isReadyMade) {
+      rawItems = dedupeItems(rawItems).filter(isReadyMadeCandidate);
+      if (rawItems.length < count) {
+        const missingCount = count - rawItems.length;
+        const existingTitles = [...excludeTitles || [], ...rawItems.map((item) => String(item.title || "").trim())].filter(Boolean);
+        const readyMadeRecoveryPrompt = `Broaden the ready-made product search for "${query2}".
+Return exactly ${missingCount} additional distinct UK supermarket ready-made product stubs.
+Keep the original named protein, dish style or other search intent where possible, but vary product formats and permitted retailers to find genuinely different options.
+Do not repeat these titles: ${existingTitles.join(", ") || "None"}.
+Preserve every hard dietary, allergy, ethical, budget and heating-time rule. Use Google Search grounding and provide an exact source product page URL for every result. Never use a generic search URL or a home-cooking recipe.`;
+        repairPrompts.push(readyMadeRecoveryPrompt);
+        try {
+          const readyMadeRecoveryResponse = await callGeminiWithRetry(
+            SEARCH_MODEL,
+            readyMadeRecoveryPrompt,
+            {
+              ...config2,
+              systemInstruction: `${finalSystemInstruction}
+READY-MADE RECOVERY: The initial search was under-filled after source and product validation. Return only additional, distinct ready-made products that preserve the original intent and all hard constraints.`
+            }
+          );
+          rememberGroundedSources(readyMadeRecoveryResponse);
+          const recoveryOutputText = readyMadeRecoveryResponse.text || "";
+          repairOutputs.push(recoveryOutputText);
+          const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
+          const recoveryItems = filterToGroundedSources(
+            Array.isArray(recoveryData.items) ? recoveryData.items : [],
+            groundedSources
+          ).filter(isReadyMadeCandidate);
+          rawItems = [...rawItems, ...recoveryItems];
+          wasRepaired = wasRepaired || recoveryItems.length > 0;
+        } catch (recoveryError) {
+          console.warn("[GeminiService] Ready-made recovery failed; keeping the products already found.", recoveryError);
+        }
       }
     }
     if (canUseChilliFallback) {
@@ -220829,15 +220983,7 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
       };
     });
     if (isReadyMade) {
-      items = items.filter((item) => {
-        const source2 = (item.sourceUrl || "").toLowerCase();
-        const retailer = (item.retailer || "").toLowerCase();
-        if (!retailer) return false;
-        const RECIPE_DOMAINS = ["bbcgoodfood.com", "jamieoliver.com", "allrecipes.com", "simplyrecipes.com", "foodnetwork.com", "epicurious.com", "tasty.co", "delish.com"];
-        const isRecipeSite = RECIPE_DOMAINS.some((domain) => source2.includes(domain));
-        if (isRecipeSite) return false;
-        return true;
-      });
+      items = items.filter(isReadyMadeCandidate);
     }
     const finalResult = {
       appliedFilters,

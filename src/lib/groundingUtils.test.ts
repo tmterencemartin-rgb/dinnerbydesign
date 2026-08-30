@@ -43,6 +43,15 @@ describe('grounded source URL reconciliation', () => {
   it('accepts only direct recipe pages from approved publishers when grounding metadata is absent', () => {
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.kitchensanctuary.com/creamy-garlic-scallops/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.waitrose.com/ecom/recipes/roast-chicken')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.asda.com/good-living/recipes/sausage-and-bean-stew')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.sainsburysmagazine.co.uk/recipes/chicken-pie')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.olivemagazine.com/recipes/vegetarian/green-lentil-curry/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.greatbritishchefs.com/recipes/chicken-curry-recipe')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.telegraph.co.uk/recipes/0/chicken-pie/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.thetimes.com/life-style/food-drink/recipe/chicken-pie-0')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.thesundaytimes.co.uk/thedish/recipe/chicken-pie')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.goodhousekeeping.com/uk/food/recipes/a12345/chicken-pie/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
   });

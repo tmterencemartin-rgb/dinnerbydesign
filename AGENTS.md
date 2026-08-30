@@ -4,11 +4,12 @@ These are the durable working rules for this repository. Detailed procedures bel
 
 ## Documentation authority
 
-- Preferences and search behaviour: `docs/PREFERENCES_AND_SEARCH_RULES.md`
-- Public content and programmatic SEO: `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`
-- Deployment and acceptance checks: `docs/OPERATIONS_AND_RELEASE.md`
-- Durable implementation principles: `docs/ENGINEERING_NOTES.md`
-- Native iOS packaging: `docs/native-ios.md`
+- Preferences and search behaviour: `docs/product/preferences-and-search.md`
+- Public content and programmatic SEO: `docs/content/programmatic-seo.md`
+- Deployment and acceptance checks: `docs/operations/release-guide.md`
+- Durable implementation principles: `docs/engineering/notes.md`
+- Commercial partner position: `docs/commercial/partner-readiness.md`
+- Native iOS packaging: `docs/platform/ios.md`
 - Active roadmap and technical debt: `TODO.md`
 
 When implementation and documentation disagree, verify the running code and update the affected document in the same change.
@@ -62,6 +63,7 @@ When a user lists ingredients:
 - Hide internal paths and low-level engineering details in user-facing updates.
 - State whether acceptance was verified in the running app, in production or at implementation level.
 - Record new durable product rules here or in the appropriate linked document.
+- For dynamic React lists, use persisted identifiers where available, deterministic composite identifiers otherwise, and array positions only for short-lived presentation content.
 
 ## View navigation loading
 
@@ -143,7 +145,7 @@ When a user lists ingredients:
 
 ## Programmatic SEO
 
-- Every public guide must comply with `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`.
+- Every public guide must comply with `docs/content/programmatic-seo.md`.
 - Public pages may demonstrate cost, ingredient reuse and personalisation without cluttering protected app views.
 - Register each published page in the structured publishing registry.
 - Generate crawler-visible HTML, canonical metadata and the appropriate structured data.
@@ -208,4 +210,4 @@ When a user lists ingredients:
 
 ## Release rule
 
-Before production publication, follow `docs/OPERATIONS_AND_RELEASE.md`. A public guide release must also pass the release gate in `docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md`.
+Before production publication, follow `docs/operations/release-guide.md`. A public guide release must also pass the release gate in `docs/content/programmatic-seo.md`.

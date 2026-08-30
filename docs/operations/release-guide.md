@@ -213,4 +213,4 @@ For a new or changed public guide:
 
 ## Native iOS build
 
-The web app remains the source of truth. Native packaging and simulator instructions are maintained in [native-ios.md](native-ios.md).
+The web app remains the source of truth. Native packaging and simulator instructions are maintained in [the iOS guide](../platform/ios.md).

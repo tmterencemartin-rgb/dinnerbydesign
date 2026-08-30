@@ -14,10 +14,13 @@ Do not commit `.env.local`.
 
 ## Documentation
 
+Start with the [documentation index](docs/README.md).
+
 - [Project instructions](AGENTS.md)
-- [Preferences and search rules](docs/PREFERENCES_AND_SEARCH_RULES.md)
-- [Programmatic SEO publishing standard](docs/PROGRAMMATIC_SEO_PUBLISHING_STANDARD.md)
-- [Operations and release guide](docs/OPERATIONS_AND_RELEASE.md)
-- [Engineering notes](docs/ENGINEERING_NOTES.md)
-- [Native iOS wrapper](docs/native-ios.md)
-- [Roadmap and technical debt](TODO.md)
+- [Preferences and search rules](docs/product/preferences-and-search.md)
+- [Programmatic SEO publishing standard](docs/content/programmatic-seo.md)
+- [Operations and release guide](docs/operations/release-guide.md)
+- [Partner readiness pack](docs/commercial/partner-readiness.md)
+- [Engineering notes](docs/engineering/notes.md)
+- [Native iOS wrapper](docs/platform/ios.md)
+- [Active roadmap and technical debt](TODO.md)

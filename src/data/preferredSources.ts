@@ -64,5 +64,45 @@ export const PREFERRED_SOURCES: PreferredSource[] = [
     id: "bbc_low_gi",
     label: "BBC low-GI & diabetes",
     description: "Quick, diabetes-friendly and low-GI ideas from BBC recipe collections."
+  },
+  {
+    id: "waitrose",
+    label: "Waitrose",
+    description: "Supermarket recipes ranging from quick everyday dishes to seasonal cooking."
+  },
+  {
+    id: "asda",
+    label: "Asda",
+    description: "Practical supermarket recipes and cooking ideas built around accessible ingredients."
+  },
+  {
+    id: "sainsburys_magazine",
+    label: "Sainsbury's Magazine",
+    description: "Seasonal recipes, classic dishes and practical ideas from Sainsbury's food magazine."
+  },
+  {
+    id: "olive_magazine",
+    label: "olive magazine",
+    description: "Travel-led, seasonal and modern recipes from olive magazine."
+  },
+  {
+    id: "great_british_chefs",
+    label: "Great British Chefs",
+    description: "Chef-led recipes, from accessible cooking to more ambitious dishes."
+  },
+  {
+    id: "the_telegraph",
+    label: "The Telegraph",
+    description: "Food writing and recipes from The Telegraph's cookery coverage."
+  },
+  {
+    id: "the_times_sunday_times",
+    label: "The Times & Sunday Times",
+    description: "Recipes and food writing from The Times and Sunday Times."
+  },
+  {
+    id: "good_housekeeping",
+    label: "Good Housekeeping",
+    description: "Test-kitchen recipes and practical cooking guidance from Good Housekeeping."
   }
 ];
