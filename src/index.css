@@ -180,3 +180,14 @@
   width: 100% !important;
   vertical-align: top !important;
 }
+
+/* Keep keyboard focus visible on controls that use compact or outline-free styles. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--dbd-accent) !important;
+  outline-offset: 2px;
+}

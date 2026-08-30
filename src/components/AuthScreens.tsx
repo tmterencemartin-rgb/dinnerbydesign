@@ -8,7 +8,7 @@ import { Wordmark } from './Wordmark';
 
 export const AuthLoading: React.FC = () => (
   <div className="min-h-screen flex items-center justify-center bg-white p-4">
-    <div className="text-center">
+    <div className="text-center" role="status" aria-live="polite" aria-label="Loading your account">
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -69,7 +69,7 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
 
 export const AuthSyncing: React.FC = () => (
   <div className="min-h-screen flex items-center justify-center bg-white p-4">
-    <div className="text-center">
+    <div className="text-center" role="status" aria-live="polite" aria-label="Synchronising your account">
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
