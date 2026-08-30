@@ -11,7 +11,7 @@
   /* ACTIVE SETTINGS: Deep Sepia (Original) */
   --dbd-ink: #1a1a18;
   --dbd-ink-2: #4a4a46;
-  --dbd-ink-3: #8a8a84;
+  --dbd-ink-3: #6a6a64;
   --dbd-surface: #f7f5f0;
   --dbd-surface-2: #eeecea;
   --dbd-surface-3: #e3e0db;
@@ -66,6 +66,10 @@
   --color-dbd-accent-light: var(--dbd-accent-light);
   --color-dbd-warm: var(--dbd-warm);
   --color-dbd-rule: var(--dbd-rule);
+
+  /* Keep small supporting copy readable on the warm light surfaces. */
+  --color-gray-400: #70706a;
+  --color-gray-500: #626977;
 }
 
 @layer base {
