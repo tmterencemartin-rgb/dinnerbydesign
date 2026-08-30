@@ -39,7 +39,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
             Homemade
           </span>
           <span className={`text-[10px] font-normal tracking-normal normal-case leading-tight block mt-1 ${
-            source === 'cook' ? 'text-accent/75' : 'text-gray-500'
+            source === 'cook' ? 'text-accent' : 'text-gray-500'
           }`}>
             recipes to cook
           </span>
@@ -64,7 +64,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
             Ready-made
           </span>
           <span className={`text-[10px] font-normal tracking-normal normal-case leading-tight block mt-1 ${
-            source === 'ready-made' ? 'text-accent/75' : 'text-gray-500'
+            source === 'ready-made' ? 'text-accent' : 'text-gray-500'
           }`}>
             supermarket options
           </span>

@@ -1545,7 +1545,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     </button>
                                   </div>
                                 ) : (
-                                  <span className="text-[11px] text-gray-300 font-medium uppercase tracking-wider">Open</span>
+                                  <span className="text-[11px] text-gray-500 font-medium uppercase tracking-wider">Open</span>
                                 )}
                               </div>
                             </div>

@@ -38,7 +38,7 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
         {!isOperationNotAllowed && !isProfileError && (
           <div className="mb-8 px-2">
             <div className="bg-gray-50 p-3 rounded border border-gray-100 text-left">
-              <p className="text-[10px] text-gray-500 font-mono break-all leading-tight opacity-70">
+              <p className="text-[10px] text-gray-500 font-mono break-all leading-tight">
                 {error}
               </p>
             </div>

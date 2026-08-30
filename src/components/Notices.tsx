@@ -17,11 +17,11 @@ export const GuidanceNotice = ({ hasCost, mode = 'cook', className = "" }: Guida
       <Info className="hidden sm:block w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
       <div className="space-y-0.5 sm:space-y-1 min-w-0">
         <p className="text-[10px] sm:text-[10.5px] font-bold text-gray-500 uppercase tracking-widest leading-none">Guidance</p>
-        <p className="text-[10.5px] sm:text-[11.5px] font-medium text-gray-500/90 leading-snug">
+        <p className="text-[10.5px] sm:text-[11.5px] font-medium text-gray-500 leading-snug">
           Check ingredients, quantities, timings and retailer details before cooking or buying.
         </p>
         {hasCost && (
-          <p className="text-[10.5px] sm:text-[12px] font-medium text-gray-500/90 leading-snug">
+          <p className="text-[10.5px] sm:text-[12px] font-medium text-gray-500 leading-snug">
             {guidanceText}
           </p>
         )}

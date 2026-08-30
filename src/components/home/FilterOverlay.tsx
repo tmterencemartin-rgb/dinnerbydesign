@@ -357,7 +357,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                 <p className="text-[11.5px] text-accent font-bold leading-tight">
                   {isDietaryRuleSuppressed ? 'Dietary preferences paused' : 'Permanent preferences hidden'}
                 </p>
-                <p className="text-[10px] text-accent/70 font-medium">Standard rules (diet, allergies) are inactive for this search.</p>
+                <p className="text-[10px] text-dbd-accent font-medium">Standard rules (diet, allergies) are inactive for this search.</p>
               </div>
               {clearSuppression && (
                 <button 

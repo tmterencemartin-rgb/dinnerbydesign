@@ -311,7 +311,7 @@ export const LandingView: React.FC = () => {
               >
                 <Wordmark className="text-[29.33px]" />
               </motion.div>
-              <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-center text-[7.5px] font-medium tracking-[0.035em] text-dbd-ink-3 opacity-80">
+              <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-center text-[9px] font-medium tracking-[0.035em] text-dbd-ink-3">
                 Less searching. More relevant dinners.
               </span>
             </div>
@@ -990,7 +990,7 @@ export const LandingView: React.FC = () => {
 
           <nav aria-label="Footer" className="mx-auto grid max-w-lg grid-cols-3 gap-x-3 gap-y-2 border-t border-dbd-rule/40 pt-3 sm:pt-4 text-left font-ibm-plex-mono text-[10.5px] font-semibold leading-4 text-dbd-ink-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:text-[11px]">
             <div className="min-w-0 sm:contents">
-              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Guides</p>
+              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Guides</p>
               <div className="flex flex-col gap-1.5 sm:contents">
                 <a href="/dinner-plans" className="hover:text-dbd-accent hover:underline">Affordable dinner plans</a>
                 <a href="/recipes" className="hover:text-dbd-accent hover:underline">Recipes and cooking ideas</a>
@@ -999,7 +999,7 @@ export const LandingView: React.FC = () => {
               </div>
             </div>
             <div className="min-w-0 sm:contents">
-              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Information</p>
+              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Information</p>
               <div className="flex flex-col items-start gap-1.5 sm:contents">
                 <button onClick={() => setView('pricing-methodology')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Pricing methodology</button>
                 <button onClick={() => setView('food-safety')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Food safety</button>
@@ -1008,7 +1008,7 @@ export const LandingView: React.FC = () => {
               </div>
             </div>
             <div className="min-w-0 sm:contents">
-              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Legal</p>
+              <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Legal</p>
               <div className="flex flex-col items-start gap-1.5 sm:contents">
                 <button onClick={() => setView('privacy')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Privacy & cookies</button>
                 <button onClick={() => setView('terms')} className="text-left hover:text-dbd-accent hover:underline cursor-pointer focus:outline-none">Terms of Service</button>

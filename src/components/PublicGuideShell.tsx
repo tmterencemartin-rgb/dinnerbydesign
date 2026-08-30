@@ -22,14 +22,14 @@ const PublicGuideFooter: React.FC = () => (
     <div className="mx-auto grid w-full max-w-5xl gap-4 px-4 text-center sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:text-left">
       <div className="space-y-1 text-[11px] leading-5 text-dbd-ink-3 sm:text-xs">
         <p>&copy; {new Date().getFullYear()} DinnerByDesign. All rights reserved.</p>
-        <p className="font-semibold text-dbd-ink-3/70">Less searching. More relevant dinners.</p>
+        <p className="font-semibold text-dbd-ink-3">Less searching. More relevant dinners.</p>
         <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Contact DinnerByDesign" className="inline-block font-semibold text-dbd-accent hover:underline">
           {CONTACT_EMAIL}
         </a>
       </div>
       <nav aria-label="Footer" className="grid grid-cols-3 gap-x-3 gap-y-3 text-left text-[10.5px] leading-4 text-dbd-ink-3 sm:flex sm:max-w-xl sm:flex-wrap sm:justify-end sm:gap-x-5 sm:gap-y-1 sm:text-xs">
         <div className="min-w-0 sm:contents">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Guides</p>
+          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Guides</p>
           <div className="flex flex-col gap-1.5 sm:contents">
             <a href="/dinner-plans" className="hover:text-dbd-accent">Affordable dinner plans</a>
             <a href="/recipes" className="hover:text-dbd-accent">Recipes and cooking ideas</a>
@@ -38,7 +38,7 @@ const PublicGuideFooter: React.FC = () => (
           </div>
         </div>
         <div className="min-w-0 sm:contents">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Information</p>
+          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Information</p>
           <div className="flex flex-col gap-1.5 sm:contents">
             <a href="/contact" className="hover:text-dbd-accent">Contact us</a>
             <a href="/pricing-methodology" className="hover:text-dbd-accent">How prices are calculated</a>
@@ -48,14 +48,14 @@ const PublicGuideFooter: React.FC = () => (
           </div>
         </div>
         <div className="min-w-0 sm:contents">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3/70 sm:hidden">Legal</p>
+          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Legal</p>
           <div className="flex flex-col gap-1.5 sm:contents">
             <a href="/privacy" className="hover:text-dbd-accent">Privacy &amp; cookies</a>
             <a href="/terms" className="hover:text-dbd-accent">Terms of Service</a>
           </div>
         </div>
       </nav>
-      <p className="border-t border-dbd-rule/40 pt-3 text-center text-[10px] leading-5 text-dbd-ink-3/70 sm:col-span-2 sm:text-left sm:text-[11px]">
+      <p className="border-t border-dbd-rule/40 pt-3 text-center text-[10px] leading-5 text-dbd-ink-3 sm:col-span-2 sm:text-left sm:text-[11px]">
         DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
       </p>
     </div>
