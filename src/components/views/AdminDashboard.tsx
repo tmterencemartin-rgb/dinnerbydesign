@@ -1148,6 +1148,7 @@ export const AdminDashboard: React.FC = () => {
               <input 
                 type="text" 
                 placeholder="Search users..." 
+                aria-label="Search users"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="h-10 w-full pl-9 pr-4 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-dbd-accent/20 focus:border-dbd-accent"
@@ -1157,6 +1158,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="grid min-w-0 grid-cols-1 items-stretch gap-1.5 sm:grid-cols-2 md:grid-cols-[minmax(140px,1fr)_auto_auto] md:items-center md:gap-2">
               <select 
                 value={statusFilter}
+                aria-label="Filter users by account status"
                 onChange={(e) => setStatusFilter(e.target.value as any)}
                 className="h-9 w-full min-w-0 px-2 border border-gray-200 rounded text-xs focus:outline-none focus:ring-2 focus:ring-dbd-accent/20 bg-white sm:h-10 sm:px-3 sm:text-sm"
               >
@@ -1888,6 +1890,7 @@ export const AdminDashboard: React.FC = () => {
                               <input
                                 type="text"
                                 value={noteDrafts[user.uid] || ''}
+                                aria-label={`Private admin note for ${user.email || user.uid}`}
                                 onChange={(e) => setNoteDrafts(prev => ({ ...prev, [user.uid]: e.target.value }))}
                                 placeholder="Private admin note"
                                 className="min-w-0 flex-1 rounded border border-gray-200 px-2.5 py-1.5 text-xs text-gray-700 outline-none focus:border-dbd-accent"
