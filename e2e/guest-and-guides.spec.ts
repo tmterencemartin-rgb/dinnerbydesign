@@ -138,6 +138,59 @@ test.describe('signed-in planning', () => {
     await expect(page).toHaveURL(/\/shopping$/);
   });
 
+  test('preferences dialog manages focus for keyboard and assistive technology users', async ({ page }) => {
+    test.skip(!hasUserCredentials, 'Set E2E_USER_EMAIL and E2E_USER_PASSWORD to run the signed-in accessibility checks.');
+
+    await signInWithCredentials(page, process.env.E2E_USER_EMAIL!, process.env.E2E_USER_PASSWORD!);
+
+    const preferencesButton = page.getByRole('button', { name: 'Open search preferences' });
+    await preferencesButton.click();
+
+    const dialog = page.getByRole('dialog', { name: 'Recipe preferences' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'Close recipe preferences' })).toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(preferencesButton).toBeFocused();
+  });
+
+  test('signed-in screens expose named controls and landmarks', async ({ page }) => {
+    test.skip(!hasUserCredentials, 'Set E2E_USER_EMAIL and E2E_USER_PASSWORD to run the signed-in accessibility checks.');
+
+    await signInWithCredentials(page, process.env.E2E_USER_EMAIL!, process.env.E2E_USER_PASSWORD!);
+
+    for (const route of ['/planner', '/shopping', '/settings']) {
+      await page.goto(route);
+      await expect(page.getByRole('main')).toHaveCount(1);
+      await expect(page.getByRole('navigation', { name: 'Footer' })).toBeVisible();
+      await expect(page.getByRole('heading').first()).toBeVisible();
+    }
+  });
+
+  test('settings tabs reflow at 400 percent equivalent', async ({ page }) => {
+    test.skip(!hasUserCredentials, 'Set E2E_USER_EMAIL and E2E_USER_PASSWORD to run the signed-in accessibility checks.');
+
+    await signInWithCredentials(page, process.env.E2E_USER_EMAIL!, process.env.E2E_USER_PASSWORD!);
+    await page.setViewportSize({ width: 360, height: 225 });
+    await page.goto('/settings');
+    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
+
+    const tabNames = ['Profile', 'Subscription', 'Security', 'Help', 'Privacy'];
+    for (const tabName of tabNames) {
+      const tab = page.getByRole('button', { name: tabName, exact: true });
+      const box = await tab.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.x + box!.width).toBeLessThanOrEqual(360);
+    }
+
+    const documentWidth = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(documentWidth.scrollWidth).toBeLessThanOrEqual(documentWidth.clientWidth);
+  });
+
   test('admin direct route opens for an administrator', async ({ page }) => {
     test.skip(!hasAdminCredentials, 'Set E2E_ADMIN_EMAIL and E2E_ADMIN_PASSWORD to run the admin direct-route check.');
 
@@ -146,6 +199,20 @@ test.describe('signed-in planning', () => {
     await page.goto('/admin');
     await expect(page.getByRole('heading', { name: 'Admin dashboard' })).toBeVisible();
     await expect(page).toHaveURL(/\/admin$/);
+  });
+
+  test('admin controls have accessible names', async ({ page }) => {
+    test.skip(!hasAdminCredentials, 'Set E2E_ADMIN_EMAIL and E2E_ADMIN_PASSWORD to run the admin accessibility check.');
+
+    await signInWithCredentials(page, process.env.E2E_ADMIN_EMAIL!, process.env.E2E_ADMIN_PASSWORD!);
+    await page.goto('/admin');
+
+    await expect(page.getByRole('main')).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: 'Admin dashboard' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Search users' })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Filter users by account status' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Export CSV' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Delete All Listed Accounts' })).toBeDisabled();
   });
 
   test('search, save, schedule and shopping list journey', async ({ page }) => {
