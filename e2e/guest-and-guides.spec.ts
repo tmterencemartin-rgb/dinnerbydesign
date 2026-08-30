@@ -121,7 +121,7 @@ test.describe('signed-in planning', () => {
     await page.getByRole('button', { name: 'Save & Schedule' }).click();
     await expect(page.getByRole('heading', { name: 'Save & Schedule' })).toBeVisible();
     await page.getByRole('button', { name: 'Shopping' }).click();
-    await expect(page.getByRole('heading', { name: 'Shopping list' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Shopping list', exact: true })).toBeVisible();
   });
 
   test('signed-in direct routes open planner and shopping', async ({ page }) => {
