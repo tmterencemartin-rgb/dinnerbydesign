@@ -737,6 +737,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       exit={{ opacity: 0 }}
       className="space-y-6"
     >
+      <h1 className="sr-only">Find dinner options</h1>
         {/* Search Section */}
       <div className={`w-full flex flex-col relative ${showCentredInitialSearch ? 'justify-start py-4 sm:min-h-[calc(100dvh-11rem)] sm:justify-center sm:py-12' : ''}`}>
         <div className="flex flex-col">

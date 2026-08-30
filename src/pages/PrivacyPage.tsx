@@ -43,7 +43,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
 
       <h2 className="text-[18px] font-bold text-gray-900 mb-2">Who is responsible for your information</h2>
       <p className="text-[14px] text-gray-600 leading-relaxed mb-4">
-        DinnerByDesign is the controller responsible for personal information processed through this service. Privacy questions and rights requests can be sent to <a href="mailto:terence@dinnerbydesign.app" className="text-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>.
+        DinnerByDesign is the controller responsible for personal information processed through this service. Privacy questions and rights requests can be sent to <a href="mailto:terence@dinnerbydesign.app" className="text-dbd-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>.
       </p>
 
       <div className="border-b border-gray-200/60 my-4" />
@@ -60,7 +60,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
           <strong className="text-gray-800">C. Search inputs:</strong> When you search, the app processes the words, filters, budget, timing, source choices, retailer choices, and preference settings needed to return suitable dinner results.
         </p>
         <p>
-          <strong className="text-gray-800">D. Support messages:</strong> If you contact us at <a href="mailto:terence@dinnerbydesign.app" className="text-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>, we use your message and contact details to respond.
+          <strong className="text-gray-800">D. Support messages:</strong> If you contact us at <a href="mailto:terence@dinnerbydesign.app" className="text-dbd-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>, we use your message and contact details to respond.
         </p>
       </div>
 
@@ -116,7 +116,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
       <div className="border-b border-gray-200/60 my-4" />
 
       <h2 className="text-[18px] font-bold text-gray-900 mb-2">9. Your data-protection rights</h2>
-      <div className="space-y-3 text-[14px] text-gray-600 leading-relaxed mb-4"><p>Depending on the circumstances, UK data-protection law may provide rights to access, correct, erase, restrict or receive personal information, and to object to particular processing. Consent can be withdrawn where processing depends on consent.</p><p><strong className="text-gray-800">Right to object:</strong> you may object to processing based on legitimate interests. The request will be considered against any compelling legitimate grounds or legal requirements.</p><p>Requests can be sent to <a href="mailto:terence@dinnerbydesign.app" className="text-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>. Identity may need to be verified. Users also have the right to complain to the UK Information Commissioner’s Office at <a href="https://ico.org.uk/make-a-complaint/" className="text-accent font-semibold hover:underline" target="_blank" rel="noreferrer">ico.org.uk</a>.</p></div>
+      <div className="space-y-3 text-[14px] text-gray-600 leading-relaxed mb-4"><p>Depending on the circumstances, UK data-protection law may provide rights to access, correct, erase, restrict or receive personal information, and to object to particular processing. Consent can be withdrawn where processing depends on consent.</p><p><strong className="text-gray-800">Right to object:</strong> you may object to processing based on legitimate interests. The request will be considered against any compelling legitimate grounds or legal requirements.</p><p>Requests can be sent to <a href="mailto:terence@dinnerbydesign.app" className="text-dbd-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>. Identity may need to be verified. Users also have the right to complain to the UK Information Commissioner’s Office at <a href="https://ico.org.uk/make-a-complaint/" className="text-dbd-accent font-semibold hover:underline" target="_blank" rel="noreferrer">ico.org.uk</a>.</p></div>
 
       <div className="border-b border-gray-200/60 my-4" />
 
@@ -137,7 +137,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
       <h2 className="text-[18px] font-bold text-gray-900 mb-2">12. Contact us</h2>
       <p className="text-[14px] text-gray-600 leading-relaxed font-sans">
         If you have questions about privacy or cookies, contact:<br />
-        <a href="mailto:terence@dinnerbydesign.app" className="text-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>
+        <a href="mailto:terence@dinnerbydesign.app" className="text-dbd-accent font-semibold hover:underline">terence@dinnerbydesign.app</a>
       </p>
     </motion.main>
   );

@@ -21,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             <a 
               href={`mailto:${CONTACT_EMAIL}`}
               aria-label="Contact DinnerByDesign"
-              className="relative z-50 block py-0.5 text-[11px] font-semibold text-accent transition-colors hover:text-accent/80 hover:underline sm:text-xs"
+              className="relative z-50 block py-0.5 text-[11px] font-semibold text-dbd-accent transition-colors hover:text-dbd-accent-mid hover:underline sm:text-xs"
             >
               {CONTACT_EMAIL}
             </a>

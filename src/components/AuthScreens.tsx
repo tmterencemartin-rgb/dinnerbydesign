@@ -84,7 +84,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
   const [isSignUp, setIsSignUp] = React.useState(defaultMode === 'signup');
   
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
+    <main className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-sm border border-gray-100 p-5 sm:p-6 rounded-xl shadow-sm">
         <div className="text-center mb-4">
           <Wordmark className="mx-auto mb-2 text-[29.33px]" />
@@ -105,6 +105,6 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
           onToggleMode={() => setIsSignUp(!isSignUp)}
         />
       </div>
-    </div>
+    </main>
   );
 };
