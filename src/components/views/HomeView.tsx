@@ -1462,9 +1462,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
             <div className="border-y border-dbd-rule/70 bg-white divide-y divide-dbd-rule/70">
               {source === 'cook' ? (
-                currentRecipes?.map((recipe, idx) => (
+                currentRecipes?.map(recipe => (
                   <CompactRecipeItem
-                    key={recipe.id || `compact-recipe-${idx}`}
+                    key={recipe.id || `compact-recipe-${recipe.title}`}
                     item={recipe}
                     source="cook"
                     onClick={() => setSelectedItem(recipe)}
@@ -1473,14 +1473,14 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   />
                 ))
               ) : (
-                currentReadyMeals?.map((meal, idx) => (
+                currentReadyMeals?.map(readyMadeDinner => (
                   <CompactRecipeItem
-                    key={meal.id || `compact-meal-${idx}`}
-                    item={meal}
+                    key={readyMadeDinner.id || `compact-ready-made-${readyMadeDinner.title}`}
+                    item={readyMadeDinner}
                     source="ready-made"
-                    onClick={() => setSelectedItem(meal)}
-                    onCompare={() => handleCompareToggle(meal)}
-                    isCompareSelected={isCompareSelected(meal)}
+                    onClick={() => setSelectedItem(readyMadeDinner)}
+                    onCompare={() => handleCompareToggle(readyMadeDinner)}
+                    isCompareSelected={isCompareSelected(readyMadeDinner)}
                   />
                 ))
               )}

@@ -563,7 +563,7 @@ export const LandingView: React.FC = () => {
                     <div className="bg-white rounded border border-dbd-rule shadow-[0_1px_4px_rgba(0,0,0,0.025)] overflow-hidden">
                       {currentResultList.map((recipe, index) => (
                         <div
-                          key={index}
+                          key={`${sandboxSource}-${recipe.title}`}
                           onClick={() => handleStart(sandboxQuery)}
                           className={`group/card p-3 sm:p-4 relative overflow-visible cursor-pointer hover:bg-dbd-surface/40 transition-colors duration-200 ${index < currentResultList.length - 1 ? 'border-b border-dbd-rule/70' : ''}`}
                         >
