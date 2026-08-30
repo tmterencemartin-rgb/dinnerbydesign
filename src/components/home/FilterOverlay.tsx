@@ -100,6 +100,47 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
   const { savePreferences, profile, showToast } = useAuth();
 
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    const previousActiveElement = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ) || []).filter(element => element.getClientRects().length > 0);
+
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      previousActiveElement?.focus();
+    };
+  }, [onClose]);
+
   // Maintain isolated local states for all interactive filters
   const [localMaxCalories, setLocalMaxCalories] = React.useState(maxCalories);
   const [localMaxTotalTime, setLocalMaxTotalTime] = React.useState(maxTotalTime);
@@ -304,18 +345,22 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     >
       <motion.div 
         id="filter-overlay-content"
+        ref={dialogRef}
         key="filter-overlay-content"
         initial={{ y: "100%", opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: "100%", opacity: 0, transition: { duration: 0.25 } }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         className="bg-white w-full max-w-lg rounded-t-md sm:rounded-md shadow-xl overflow-hidden flex flex-col max-h-[calc(100dvh-2rem)] sm:max-h-[90vh]"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="filter-overlay-title"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="px-4 sm:px-6 py-4 border-b border-gray-100 sticky top-0 bg-white z-10 shrink-0">
           <div className="flex items-center justify-between">
-            <h2 className="text-[16px] font-bold text-gray-950 tracking-normal">Recipe preferences</h2>
-            <button onClick={onClose} className="p-2 hover:bg-gray-50 rounded transition-colors shrink-0">
+            <h2 id="filter-overlay-title" className="text-[16px] font-bold text-gray-950 tracking-normal">Recipe preferences</h2>
+            <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close recipe preferences" className="p-2 hover:bg-gray-50 rounded transition-colors shrink-0">
               <CircleX className="w-5 h-5 text-gray-500" />
             </button>
           </div>
