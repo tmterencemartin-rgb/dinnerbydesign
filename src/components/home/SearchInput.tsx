@@ -115,7 +115,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           spellCheck={false}
           aria-label="Search recipes by ingredient, dish, cuisine or chef"
           placeholder={isReadOnly ? (readOnlyPlaceholder || "Upgrade to search again") : getSearchPlaceholder()}
-          className={`flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
+          className={`search-query-input flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
         />
 
         {input && !isGenerating && !isReadOnly && (
