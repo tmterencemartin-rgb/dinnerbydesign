@@ -69,11 +69,11 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         }
       }}
       className={`grid grid-cols-2 gap-2 w-full items-stretch transition-all sm:flex sm:h-11 sm:gap-0 sm:overflow-hidden sm:rounded ${
-        isReadOnly ? 'opacity-75 sm:bg-gray-100' : 'sm:bg-gray-50 sm:focus-within:ring-2 sm:focus-within:ring-dbd-accent/50'
+        isReadOnly ? 'opacity-75 sm:bg-gray-100' : 'sm:bg-gray-50'
       }`}
     >
       <div className={`col-span-2 flex h-11 min-w-0 items-center rounded px-1 transition-all sm:h-auto sm:flex-1 sm:rounded-none ${
-        isReadOnly ? 'bg-gray-100' : 'bg-gray-50 focus-within:ring-2 focus-within:ring-dbd-accent/50 sm:focus-within:ring-0'
+        isReadOnly ? 'bg-gray-100' : 'bg-gray-50'
       }`}>
         {isGenerating ? (
           <button
