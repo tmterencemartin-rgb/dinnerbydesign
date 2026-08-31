@@ -927,7 +927,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
               <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
                 <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
-                <span>{source === 'cook' ? 'AI-assisted, source-backed recipe search. Every result links to its original publisher.' : 'AI-powered search. Avoid private information.'}</span>
+                <span>{source === 'cook' ? 'AI-assisted search, with links to original recipe sources.' : 'AI-powered search. Avoid private information.'}</span>
                 {source === 'cook' && <a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">Recipe sources</a>}
                 <a href="/privacy" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">Privacy</a>
                 {renderStrictIngredientToggle('sm:hidden ml-auto h-7 px-2 text-[9px]')}
@@ -1408,11 +1408,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {resultsIngredientIntent?.isIngredientLed && resultsIngredientIntent.ingredients.length > 0 && (
                   <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
                     Search focus: {resultsIngredientIntent.ingredients.map(sentenceCase).join(', ')}. Each result shows its match explanation where available.
-                  </p>
-                )}
-                {source === 'cook' && (
-                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                    Source-backed results: each recipe links to its original publisher. DinnerByDesign uses AI to create the comparison summary. Open the original recipe in a new tab, then switch back to DinnerByDesign when you’re ready. <a href="/recipe-methodology" className="font-semibold text-dbd-accent hover:underline">How recipe sources work</a>
                   </p>
                 )}
                 {showNotBoringSummerSaladsResultsCopy && (
