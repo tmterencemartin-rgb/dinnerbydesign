@@ -13,12 +13,14 @@ export const safeStorage = {
       return null;
     }
   },
-  setItem: (key: string, value: string): void => {
+  setItem: (key: string, value: string): boolean => {
     try {
-      if (typeof window === 'undefined' || !window.localStorage) return;
+      if (typeof window === 'undefined' || !window.localStorage) return false;
       localStorage.setItem(key, value);
+      return true;
     } catch (e) {
       console.warn(`[Storage] Failed to write ${key} to localStorage:`, e);
+      return false;
     }
   },
   removeItem: (key: string): void => {
@@ -39,12 +41,14 @@ export const safeStorage = {
         return null;
       }
     },
-    setItem: (key: string, value: string): void => {
+    setItem: (key: string, value: string): boolean => {
       try {
-        if (typeof window === 'undefined' || !window.sessionStorage) return;
+        if (typeof window === 'undefined' || !window.sessionStorage) return false;
         sessionStorage.setItem(key, value);
+        return true;
       } catch (e) {
         console.warn(`[Storage] Failed to write ${key} to sessionStorage:`, e);
+        return false;
       }
     },
     removeItem: (key: string): void => {

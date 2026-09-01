@@ -10,6 +10,19 @@ export interface GuestWorkspace {
   persistentPantryItems: string[];
 }
 
+/**
+ * Returns a stable Firestore-safe ID for a guest recipe that has no saved ID.
+ * The source URL is preferred because titles and recipe IDs can be reused by
+ * different publishers.
+ */
+export const getGuestRecipeDocumentId = (recipe: Pick<SavedRecipe, 'id' | 'recipeId' | 'sourceUrl' | 'title' | 'cuisine' | 'mode'>): string => {
+  if (recipe.id && !recipe.id.includes('/')) return recipe.id;
+
+  const stableValue = recipe.sourceUrl || recipe.recipeId || `${recipe.mode}:${recipe.cuisine}:${recipe.title}`;
+  const encoded = encodeURIComponent(stableValue).replace(/%/g, '_').slice(0, 400);
+  return `guest-${encoded || 'recipe'}`;
+};
+
 const emptyGuestWorkspace = (): GuestWorkspace => ({
   savedRecipes: [],
   shoppingList: [],
@@ -54,8 +67,8 @@ export const readGuestWorkspace = (): GuestWorkspace => {
   }
 };
 
-export const writeGuestWorkspace = (workspace: GuestWorkspace) => {
-  safeStorage.setItem(GUEST_WORKSPACE_STORAGE_KEY, JSON.stringify(workspace));
+export const writeGuestWorkspace = (workspace: GuestWorkspace): boolean => {
+  return safeStorage.setItem(GUEST_WORKSPACE_STORAGE_KEY, JSON.stringify(workspace));
 };
 
 export const clearGuestWorkspace = () => {

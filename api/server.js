@@ -187610,10 +187610,12 @@ var safeStorage = {
   },
   setItem: (key, value) => {
     try {
-      if (typeof window === "undefined" || !window.localStorage) return;
+      if (typeof window === "undefined" || !window.localStorage) return false;
       localStorage.setItem(key, value);
+      return true;
     } catch (e2) {
       console.warn(`[Storage] Failed to write ${key} to localStorage:`, e2);
+      return false;
     }
   },
   removeItem: (key) => {
@@ -187636,10 +187638,12 @@ var safeStorage = {
     },
     setItem: (key, value) => {
       try {
-        if (typeof window === "undefined" || !window.sessionStorage) return;
+        if (typeof window === "undefined" || !window.sessionStorage) return false;
         sessionStorage.setItem(key, value);
+        return true;
       } catch (e2) {
         console.warn(`[Storage] Failed to write ${key} to sessionStorage:`, e2);
+        return false;
       }
     },
     removeItem: (key) => {

@@ -86,7 +86,7 @@ import {
   updatePantryStapleDocument,
 } from '../lib/pantryWrites';
 import { isSameRecipe } from '../lib/recipeUtils';
-import { clearGuestWorkspace, GuestWorkspace, readGuestWorkspace, writeGuestWorkspace } from '../lib/guestWorkspace';
+import { clearGuestWorkspace, getGuestRecipeDocumentId, GuestWorkspace, readGuestWorkspace, writeGuestWorkspace } from '../lib/guestWorkspace';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -162,6 +162,19 @@ const isOwnerEmail = (email?: string | null) => (
 
 const hasPermanentAccess = (profile?: UserProfile | null) => profile?.permanentAccess === true;
 
+const readJsonStringArray = (stored: string | null): string[] => {
+  if (!stored) return [];
+  try {
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed)
+      ? parsed.filter((value): value is string => typeof value === 'string')
+      : [];
+  } catch (error) {
+    console.warn('[AuthContext] Failed to parse stored string list:', error);
+    return [];
+  }
+};
+
 const parseToDate = (val: any): Date => {
   if (!val) return new Date();
   if (val instanceof Date) return val;
@@ -218,18 +231,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const initialGuestWorkspace = useRef<GuestWorkspace>(readGuestWorkspace());
+  const guestStorageWarningShown = useRef(false);
   const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>(() => initialGuestWorkspace.current.savedRecipes);
   const [dbShoppingList, setDbShoppingList] = useState<ShoppingListItem[]>(() => initialGuestWorkspace.current.shoppingList);
   const [pantry, setPantry] = useState<PantryItem[]>(() => initialGuestWorkspace.current.pantry);
   const [persistentPantryItems, setPersistentPantryItems] = useState<string[]>(() => {
     const stored = safeStorage.getItem('persistentPantryItems');
-    if (!stored) return initialGuestWorkspace.current.persistentPantryItems;
-    try {
-      return JSON.parse(stored);
-    } catch (e) {
-      console.warn("[AuthContext] Failed to parse persistentPantryItems:", e);
-      return [];
-    }
+    return stored ? readJsonStringArray(stored) : initialGuestWorkspace.current.persistentPantryItems;
   });
 
   const addPersistentPantryItem = async (key: string) => {
@@ -344,12 +352,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!isAuthReady || !isGuestSession) return;
-    writeGuestWorkspace({
+    const didPersist = writeGuestWorkspace({
       savedRecipes,
       shoppingList: dbShoppingList,
       pantry,
       persistentPantryItems,
     });
+    if (!didPersist && !guestStorageWarningShown.current) {
+      guestStorageWarningShown.current = true;
+      addLog('AUTH WARNING: Browser storage is unavailable; guest changes will remain only until this page closes.');
+      showToast('This browser could not save your guest workspace between visits.');
+    } else if (didPersist) {
+      guestStorageWarningShown.current = false;
+    }
   }, [dbShoppingList, isAuthReady, isGuestSession, pantry, persistentPantryItems, savedRecipes]);
   const [unitSystem, setUnitSystemInternal] = useState<'metric' | 'imperial'>(() => {
     return (safeStorage.getItem('dbd_unit_system') as 'metric' | 'imperial') || 'metric';
@@ -552,39 +567,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const migrateGuestWorkspaceToAccount = async (accountUser: FirebaseUser) => {
     const workspace = readGuestWorkspace();
-    if (workspace.savedRecipes.length === 0 && workspace.shoppingList.length === 0 && workspace.pantry.length === 0) {
+    if (workspace.savedRecipes.length === 0 && workspace.shoppingList.length === 0 && workspace.pantry.length === 0 && workspace.persistentPantryItems.length === 0) {
       return;
     }
 
     try {
-      const batch = writeBatch(db);
+      type BatchOperation = (batch: ReturnType<typeof writeBatch>) => void;
+      const operations: BatchOperation[] = [];
 
       workspace.savedRecipes.forEach(recipe => {
-        const recipeId = recipe.id || `guest-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const recipeId = getGuestRecipeDocumentId(recipe);
         const cleanData = prepareSavedRecipeData(recipe, accountUser.uid, recipe.scheduledDate || null, {
           savedAt: recipe.savedAt || new Date(),
           updatedAt: recipe.updatedAt || new Date(),
         });
-        batch.set(doc(db, 'users', accountUser.uid, 'savedRecipes', recipeId), cleanData, { merge: true });
+        operations.push(batch => batch.set(doc(db, 'users', accountUser.uid, 'savedRecipes', recipeId), cleanData, { merge: true }));
       });
 
       workspace.shoppingList.forEach(item => {
-        batch.set(doc(db, 'users', accountUser.uid, 'shoppingList', item.id), {
+        operations.push(batch => batch.set(doc(db, 'users', accountUser.uid, 'shoppingList', item.id), {
           ...item,
           userId: accountUser.uid,
-        }, { merge: true });
+        }, { merge: true }));
       });
 
       workspace.pantry.forEach(item => {
-        batch.set(doc(db, 'users', accountUser.uid, 'pantry', item.id), {
+        operations.push(batch => batch.set(doc(db, 'users', accountUser.uid, 'pantry', item.id), {
           ...item,
           userId: accountUser.uid,
-        }, { merge: true });
+        }, { merge: true }));
       });
 
-      await batch.commit();
+      // Firestore limits a batch to 500 writes. Keeping a margin also makes
+      // future migration additions less likely to cross that limit.
+      for (let index = 0; index < operations.length; index += 450) {
+        const batch = writeBatch(db);
+        operations.slice(index, index + 450).forEach(operation => operation(batch));
+        await batch.commit();
+      }
+
+      if (workspace.persistentPantryItems.length > 0) {
+        const existingPersistent = readJsonStringArray(safeStorage.getItem('persistentPantryItems'));
+        const didPersist = safeStorage.setItem('persistentPantryItems', JSON.stringify([...new Set([...existingPersistent, ...workspace.persistentPantryItems])]));
+        if (!didPersist) {
+          throw new Error('Browser pantry markers could not be preserved.');
+        }
+      }
       clearGuestWorkspace();
-      safeStorage.removeItem('persistentPantryItems');
       addLog(`AUTH: Migrated browser workspace to account ${accountUser.uid}.`);
     } catch (error) {
       addLog(`AUTH WARNING: Browser workspace could not be migrated: ${error}`);
