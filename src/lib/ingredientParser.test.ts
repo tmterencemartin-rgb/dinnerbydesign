@@ -159,6 +159,27 @@ describe('Ingredient Parser & Normalizer', () => {
       reason: 'short-food-list'
     });
 
+    expect(detectIngredientIntent('at least two veg')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['vegetable'],
+      categoryMinimums: { vegetable: 2 },
+      reason: 'short-food-list'
+    });
+
+    expect(detectIngredientIntent('one protein with two vegetables')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['protein', 'vegetable'],
+      categoryMinimums: { protein: 1, vegetable: 2 },
+      reason: 'short-food-list'
+    });
+
+    expect(detectIngredientIntent('one protein plus two vegetables')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['protein', 'vegetable'],
+      categoryMinimums: { protein: 1, vegetable: 2 },
+      reason: 'short-food-list'
+    });
+
     expect(matchesRequestedIngredientSearch({
       ingredients: ['chicken breast', 'red pepper', 'onion', 'oil']
     }, '1 protein two vegetables')).toBe(true);

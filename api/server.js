@@ -188911,6 +188911,8 @@ var VEGETABLE_CATEGORY_TERMS = /* @__PURE__ */ new Set([
 var INGREDIENT_CATEGORY_ALIASES = {
   vegetable: "vegetable",
   vegetables: "vegetable",
+  veg: "vegetable",
+  veggies: "vegetable",
   protein: "protein",
   proteins: "protein",
   carbohydrate: "carbohydrate",
@@ -188918,7 +188920,8 @@ var INGREDIENT_CATEGORY_ALIASES = {
   carb: "carbohydrate",
   carbs: "carbohydrate"
 };
-var CATEGORY_QUANTITY_PATTERN = /\b(\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+(vegetable|vegetables|protein|proteins|carbohydrate|carbohydrates|carb|carbs)\b/gi;
+var CATEGORY_LABEL_PATTERN = /\b(vegetable|vegetables|veg|veggies|protein|proteins|carbohydrate|carbohydrates|carb|carbs)\b/gi;
+var CATEGORY_QUANTITY_PATTERN = /\b(?:(?:at\s+least|a\s+minimum\s+of)\s+)?(\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten|a\s+couple\s+of|a\s+few)\s+(?:(?:different|distinct|separate)\s+)?(vegetable|vegetables|veg|veggies|protein|proteins|carbohydrate|carbohydrates|carb|carbs)\b/gi;
 var CATEGORY_QUANTITY_WORDS = {
   a: 1,
   an: 1,
@@ -188931,11 +188934,13 @@ var CATEGORY_QUANTITY_WORDS = {
   seven: 7,
   eight: 8,
   nine: 9,
-  ten: 10
+  ten: 10,
+  "a couple of": 2,
+  "a few": 3
 };
 var normaliseCategoryQuantities = (query2) => {
   const minimums = {};
-  const normalisedQuery = query2.replace(CATEGORY_QUANTITY_PATTERN, (_match, rawQuantity, rawCategory) => {
+  const quantityNormalisedQuery = query2.replace(CATEGORY_QUANTITY_PATTERN, (_match, rawQuantity, rawCategory) => {
     const category = INGREDIENT_CATEGORY_ALIASES[rawCategory.toLowerCase()];
     const quantity = Number(rawQuantity) || CATEGORY_QUANTITY_WORDS[rawQuantity.toLowerCase()];
     if (category && quantity > 0) {
@@ -188944,7 +188949,12 @@ var normaliseCategoryQuantities = (query2) => {
     }
     return rawCategory;
   });
-  return { query: normalisedQuery, minimums };
+  const labelNormalisedQuery = quantityNormalisedQuery.replace(
+    CATEGORY_LABEL_PATTERN,
+    (rawCategory) => INGREDIENT_CATEGORY_ALIASES[rawCategory.toLowerCase()] || rawCategory
+  );
+  const queryWithConnectors = /\b(?:vegetable|veg|veggies|protein|carbohydrate|carbs?)\b/i.test(labelNormalisedQuery) ? labelNormalisedQuery.replace(/\b(?:with|plus)\b/gi, " and ") : labelNormalisedQuery;
+  return { query: queryWithConnectors, minimums };
 };
 var PROTEIN_CATEGORY_TERMS = /* @__PURE__ */ new Set([
   "anchovy",

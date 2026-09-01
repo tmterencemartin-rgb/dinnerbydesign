@@ -557,6 +557,8 @@ type IngredientCategory = 'vegetable' | 'protein' | 'carbohydrate';
 const INGREDIENT_CATEGORY_ALIASES: Record<string, IngredientCategory> = {
   vegetable: 'vegetable',
   vegetables: 'vegetable',
+  veg: 'vegetable',
+  veggies: 'vegetable',
   protein: 'protein',
   proteins: 'protein',
   carbohydrate: 'carbohydrate',
@@ -565,7 +567,8 @@ const INGREDIENT_CATEGORY_ALIASES: Record<string, IngredientCategory> = {
   carbs: 'carbohydrate'
 };
 
-const CATEGORY_QUANTITY_PATTERN = /\b(\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+(vegetable|vegetables|protein|proteins|carbohydrate|carbohydrates|carb|carbs)\b/gi;
+const CATEGORY_LABEL_PATTERN = /\b(vegetable|vegetables|veg|veggies|protein|proteins|carbohydrate|carbohydrates|carb|carbs)\b/gi;
+const CATEGORY_QUANTITY_PATTERN = /\b(?:(?:at\s+least|a\s+minimum\s+of)\s+)?(\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten|a\s+couple\s+of|a\s+few)\s+(?:(?:different|distinct|separate)\s+)?(vegetable|vegetables|veg|veggies|protein|proteins|carbohydrate|carbohydrates|carb|carbs)\b/gi;
 const CATEGORY_QUANTITY_WORDS: Record<string, number> = {
   a: 1,
   an: 1,
@@ -578,7 +581,9 @@ const CATEGORY_QUANTITY_WORDS: Record<string, number> = {
   seven: 7,
   eight: 8,
   nine: 9,
-  ten: 10
+  ten: 10,
+  'a couple of': 2,
+  'a few': 3
 };
 
 const normaliseCategoryQuantities = (query: string): {
@@ -586,7 +591,7 @@ const normaliseCategoryQuantities = (query: string): {
   minimums: Partial<Record<IngredientCategory, number>>;
 } => {
   const minimums: Partial<Record<IngredientCategory, number>> = {};
-  const normalisedQuery = query.replace(CATEGORY_QUANTITY_PATTERN, (_match, rawQuantity: string, rawCategory: string) => {
+  const quantityNormalisedQuery = query.replace(CATEGORY_QUANTITY_PATTERN, (_match, rawQuantity: string, rawCategory: string) => {
     const category = INGREDIENT_CATEGORY_ALIASES[rawCategory.toLowerCase()];
     const quantity = Number(rawQuantity) || CATEGORY_QUANTITY_WORDS[rawQuantity.toLowerCase()];
     if (category && quantity > 0) {
@@ -595,7 +600,13 @@ const normaliseCategoryQuantities = (query: string): {
     }
     return rawCategory;
   });
-  return { query: normalisedQuery, minimums };
+  const labelNormalisedQuery = quantityNormalisedQuery.replace(CATEGORY_LABEL_PATTERN, rawCategory =>
+    INGREDIENT_CATEGORY_ALIASES[rawCategory.toLowerCase()] || rawCategory
+  );
+  const queryWithConnectors = /\b(?:vegetable|veg|veggies|protein|carbohydrate|carbs?)\b/i.test(labelNormalisedQuery)
+    ? labelNormalisedQuery.replace(/\b(?:with|plus)\b/gi, ' and ')
+    : labelNormalisedQuery;
+  return { query: queryWithConnectors, minimums };
 };
 
 const PROTEIN_CATEGORY_TERMS = new Set([
