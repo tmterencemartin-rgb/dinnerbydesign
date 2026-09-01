@@ -40,10 +40,10 @@ export const CUISINES = [
 ];
 
 export const COOKING_METHODS = [
-  'Air fryer', 'BBQ', 'Baked', 'Boiled', 'Braised', 'Deep fried', 'Fried',
+  'Air fryer', 'BBQ', 'Baked', 'Boiled', 'Braised', 'Broiled', 'Deep fried', 'Fried',
   'Griddled', 'Grilled', 'One pot', 'Oven bake', 'Pan fried', 'Poached',
-  'Roasted', 'Sautéed', 'Shallow fried', 'Slow cooker', 'Steamed', 'Stewed',
-  'Stir fry', 'Tray bake'
+  'Roasted', 'Sautéed', 'Seared', 'Shallow fried', 'Slow cooker', 'Smoked',
+  'Sous vide', 'Steamed', 'Stewed', 'Stir fry', 'Tray bake'
 ];
 
 // Search-friendly aliases keep the controlled labels concise while allowing
@@ -51,21 +51,25 @@ export const COOKING_METHODS = [
 export const COOKING_METHOD_ALIASES: Record<string, string[]> = {
   'Air fryer': ['air-fried', 'air fried', 'air fryer'],
   'BBQ': ['barbecue', 'barbecued', 'barbeque', 'barbecuing'],
-  'Baked': ['bake', 'baked', 'oven-baked', 'oven baked'],
+  'Baked': ['bake', 'baked', 'baking', 'oven-baked', 'oven baked'],
   'Boiled': ['boil', 'boiled'],
   'Braised': ['braise', 'braised', 'pot-roasted', 'pot roasted'],
-  'Deep fried': ['deep-fried', 'deep fried'],
+  'Broiled': ['broil', 'broiled'],
+  'Deep fried': ['deep-fried', 'deep fried', 'deep-frying', 'deep frying'],
   'Fried': ['fry', 'fried'],
   'Griddled': ['griddle', 'griddled'],
   'Grilled': ['grill', 'grilled'],
   'One pot': ['one-pot', 'one pot'],
-  'Oven bake': ['bake', 'baked', 'oven-baked', 'oven baked'],
+  'Oven bake': ['bake', 'baked', 'baking', 'oven-baked', 'oven baked'],
   'Pan fried': ['pan-fry', 'pan-fried', 'pan fried'],
   'Poached': ['poach', 'poached'],
   'Roasted': ['roast', 'roasted'],
   'Sautéed': ['sauté', 'sautéed', 'saute', 'sauteed'],
+  'Seared': ['sear', 'seared', 'searing'],
   'Shallow fried': ['shallow-fried', 'shallow fried'],
   'Slow cooker': ['slow-cooked', 'slow cooked', 'slow cooker'],
+  'Smoked': ['smoke', 'smoked', 'smoking'],
+  'Sous vide': ['sous-vide', 'sous vide'],
   'Steamed': ['steam', 'steamed'],
   'Stewed': ['stew', 'stewed'],
   'Stir fry': ['stir-fry', 'stir-fried', 'stir fry'],
