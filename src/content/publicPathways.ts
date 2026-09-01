@@ -90,6 +90,8 @@ const PATHWAY_CONFIG: Array<Omit<PublicPathway, 'articles'>> = [
       '/guides/do-vegetables-in-dishes-count-towards-5-a-day',
       '/guides/fifteen-minute-dinners-everyday-supermarket-ingredients',
       '/guides/family-dinners-for-fussy-eaters-one-base-flexible-finishes',
+      '/guides/curries-around-the-world',
+      '/guides/indian-regional-curries',
     ],
   },
   {

@@ -95,6 +95,10 @@ import {
   SUMMER_STEWS_GUIDE_RECORD,
   UK_FOOD_COSTS_2026_GUIDE_RECORD,
 } from './seoFoodCostGuides';
+import {
+  CURRIES_AROUND_THE_WORLD_GUIDE_RECORD,
+  INDIAN_REGIONAL_CURRIES_GUIDE_RECORD,
+} from './curriesAroundTheWorldGuides';
 import type { PublicGuideRecord } from './publicGuideModel';
 
 export const PUBLIC_GUIDE_RECORDS = [
@@ -135,6 +139,8 @@ export const PUBLIC_GUIDE_RECORDS = [
   NINE_BUDGET_DINNERS_WITH_POTATOES_GUIDE_RECORD,
   FIFTEEN_MINUTE_DINNERS_GUIDE_RECORD,
   FAMILY_FUSSY_EATERS_GUIDE_RECORD,
+  CURRIES_AROUND_THE_WORLD_GUIDE_RECORD,
+  INDIAN_REGIONAL_CURRIES_GUIDE_RECORD,
 ] satisfies PublicGuideRecord[];
 
 export const PUBLISHED_PUBLIC_GUIDE_RECORDS = PUBLIC_GUIDE_RECORDS.filter(guide => guide.status === 'published');
