@@ -14,6 +14,40 @@ const PALEO_EXCLUSIONS = [
   'soy', 'soya', 'tofu', 'tempeh', 'edamame', 'milk', 'cheese', 'butter', 'ghee', 'cream', 'yogurt', 'yoghurt', 'vegetable oil'
 ];
 
+const MEAT_POULTRY = [
+  'beef', 'pork', 'lamb', 'bacon', 'ham', 'sausage', 'venison', 'veal', 'chorizo', 'salami', 'lard', 'gelatine', 'gelatin', 'chicken', 'turkey', 'duck', 'poultry', 'pepperoni',
+  'gammon', 'mutton', 'goose', 'pancetta', 'panchetta', 'prosciutto', 'black pudding', 'suet', 'dripping',
+  'bone broth', 'chicken stock', 'chicken broth', 'beef stock', 'beef broth', 'lamb stock', 'lamb broth', 'duck stock'
+];
+
+const FISH_SEAFOOD = [
+  'fish', 'salmon', 'tuna', 'cod', 'haddock', 'trout', 'bass', 'prawn', 'shrimp', 'crab', 'lobster', 'mussel', 'clam', 'oyster', 'scallop', 'squid', 'octopus', 'seafood', 'anchovy', 'anchovies', 'mackerel', 'sardine', 'fish sauce', 'oyster sauce', 'shrimp paste', 'anchovy paste',
+  'roe', 'caviar', 'calamari', 'scampi', 'langoustine', 'crayfish', 'bonito', 'dashi', 'worcestershire'
+];
+
+const ANIMAL_DERIVATIVES = [
+  'egg', 'milk', 'buttermilk', 'milk powder', 'milk solids', 'dairy', 'cheese', 'butter', 'honey', 'cream', 'yogurt', 'yoghurt', 'whey', 'casein', 'lactose', 'lactalbumin', 'mayo', 'mayonnaise', 'halloumi', 'parmesan', 'feta', 'mozzarella', 'paneer', 'ghee',
+  'rennet', 'beeswax', 'isinglass', 'carmine', 'shellac', 'albumen', 'pepsin'
+];
+
+const GLUTEN_SOURCES = [
+  'wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'bread', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats', 'malt', 'malt extract', 'seitan', 'wheat starch'
+];
+
+const matchesKeyword = (text: string, keyword: string): boolean => {
+  const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim();
+  if (!safeKeyword) return false;
+
+  let baseKeyword = safeKeyword;
+  if (baseKeyword.endsWith('ies')) baseKeyword = baseKeyword.slice(0, -3) + 'y';
+  else if (baseKeyword.endsWith('es')) baseKeyword = baseKeyword.slice(0, -2);
+  else if (baseKeyword.endsWith('s')) baseKeyword = baseKeyword.slice(0, -1);
+
+  return new RegExp(`\\b${baseKeyword}(s|es|ies)?\\b`, 'i').test(text);
+};
+
+const containsKeyword = (text: string, keywords: string[]): boolean => keywords.some(keyword => matchesKeyword(text, keyword));
+
 const RELIGIOUS_EXCLUSION_MAP: Record<string, string[]> = {
   'Prefer Halal-certified ingredients where available': ['pork', 'bacon', 'ham', 'gammon', 'lard', 'gelatine', 'gelatin', 'alcohol', 'wine', 'beer', 'rum', 'brandy'],
   'Halal-friendly': ['pork', 'bacon', 'ham', 'gammon', 'lard', 'gelatine', 'gelatin', 'alcohol', 'wine', 'beer', 'rum', 'brandy'],
@@ -54,28 +88,7 @@ export function passesDietaryRule(recipe: Recipe | SavedRecipe | ReadyMeal, rule
     recipe.mainIngredient || ''
   ].join(' ').toLowerCase();
 
-  const match = (kws: string[]) => kws.some(kw => {
-    // Exact word boundary regex to avoid false positives like "eggplant" for "egg"
-    // Also supports common pluralisations (s, es, ies)
-    const safeKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`\\b${safeKw}(s|es|ies)?\\b`, 'i');
-    return regex.test(fieldsToSearch);
-  });
-
-  const MEAT_POULTRY = [
-    'beef', 'pork', 'lamb', 'bacon', 'ham', 'sausage', 'venison', 'veal', 'chorizo', 'salami', 'lard', 'gelatine', 'gelatin', 'chicken', 'turkey', 'duck', 'poultry', 'pepperoni',
-    'gammon', 'mutton', 'goose', 'pancetta', 'panchetta', 'prosciutto', 'black pudding', 'suet', 'dripping'
-  ];
-  
-  const FISH_SEAFOOD = [
-    'fish', 'salmon', 'tuna', 'cod', 'haddock', 'trout', 'bass', 'prawn', 'shrimp', 'crab', 'lobster', 'mussel', 'clam', 'oyster', 'scallop', 'squid', 'octopus', 'seafood', 'anchovy', 'anchovies', 'mackerel', 'sardine', 'fish sauce', 'oyster sauce', 'shrimp paste',
-    'roe', 'caviar', 'calamari', 'scampi', 'langoustine', 'crayfish', 'bonito', 'dashi', 'worcestershire'
-  ];
-  
-  const ANIMAL_DERIVATIVES = [
-    'egg', 'milk', 'dairy', 'cheese', 'butter', 'honey', 'cream', 'yogurt', 'yoghurt', 'whey', 'casein', 'mayo', 'mayonnaise', 'halloumi', 'parmesan', 'feta', 'mozzarella', 'paneer', 'ghee',
-    'rennet', 'beeswax', 'isinglass', 'carmine', 'shellac', 'albumen', 'pepsin'
-  ];
+  const match = (kws: string[]) => containsKeyword(fieldsToSearch, kws);
 
   // Derive flags dynamically if they are missing (for legacy or offline recipes)
   const isVegetarian = recipe.isVegetarian !== undefined ? recipe.isVegetarian : !match(MEAT_POULTRY) && !match(FISH_SEAFOOD);
@@ -109,7 +122,6 @@ export function passesDietaryRule(recipe: Recipe | SavedRecipe | ReadyMeal, rule
       return true;
 
     case 'gluten-free':
-      const GLUTEN_SOURCES = ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'bread', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats'];
       return !match(GLUTEN_SOURCES);
 
     case 'keto':
@@ -135,26 +147,42 @@ export function passesPortionConstraints(
   }
 ): boolean {
   // 1. Calorie Check
-  const caloriesPerPortion = 'caloriesPerPortion' in item ? item.caloriesPerPortion : item.calories;
-  if (preferences.calorieCeiling && caloriesPerPortion) {
-    if (caloriesPerPortion > preferences.calorieCeiling) return false;
+  const explicitCalories = 'caloriesPerPortion' in item ? item.caloriesPerPortion : item.calories;
+  const derivedCalories = explicitCalories ?? (
+    'totalRecipeCalories' in item && item.totalRecipeCalories !== undefined && item.totalServings && item.totalServings > 0
+      ? item.totalRecipeCalories / item.totalServings
+      : null
+  );
+  const calorieCeiling = preferences.calorieCeiling;
+  if (Number.isFinite(calorieCeiling) && (calorieCeiling as number) > 0) {
+    if (derivedCalories === null || derivedCalories === undefined || !Number.isFinite(derivedCalories)) return false;
+    if (derivedCalories > calorieCeiling!) return false;
   }
 
   // 2. Budget Check
   const budgetLimit = preferences.budgetLimit;
-  if (budgetLimit) {
+  if (Number.isFinite(budgetLimit) && (budgetLimit as number) > 0) {
     let costPerPortion: number | null = null;
-    
-    if ('costPerPortion' in item && item.costPerPortion) {
-      // costPerPortion is usually a string like "£2.50" or "£2.50 pp"
-      const match = item.costPerPortion.match(/[\d.]+/);
+
+    const costText = 'costPerPortion' in item ? item.costPerPortion : undefined;
+    const priceText = 'price' in item ? item.price : undefined;
+    const totalPriceText = 'totalPrice' in item ? item.totalPrice : undefined;
+    if (costText) {
+      const match = costText.replace(/,/g, '').match(/[\d]+(?:\.\d+)?/);
       if (match) costPerPortion = parseFloat(match[0]);
-    } else if ('price' in item && item.price) {
-      const match = item.price.match(/[\d.]+/);
+    } else if (priceText) {
+      const match = priceText.replace(/,/g, '').match(/[\d]+(?:\.\d+)?/);
       if (match) costPerPortion = parseFloat(match[0]);
+    } else if ('totalRecipeCost' in item && item.totalRecipeCost !== undefined && item.totalServings && item.totalServings > 0) {
+      costPerPortion = item.totalRecipeCost / item.totalServings;
+    } else if (totalPriceText && item.totalServings && item.totalServings > 0) {
+      const match = totalPriceText.replace(/,/g, '').match(/[\d]+(?:\.\d+)?/);
+      if (match) costPerPortion = parseFloat(match[0]) / item.totalServings;
     }
 
-    if (costPerPortion !== null && costPerPortion > budgetLimit) return false;
+    // A hard budget cannot be verified without a usable price, so fail closed.
+    if (costPerPortion === null || !Number.isFinite(costPerPortion)) return false;
+    if (costPerPortion > budgetLimit!) return false;
   }
 
   return true;
@@ -248,19 +276,6 @@ export function passesHardConstraints(
 
   // 4. Verification Check
   return !forbiddenKeywords.some(kw => {
-    let safeKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim().toLowerCase();
-    if (!safeKw) return false;
-    
-    // Simple singularisation: if ends in 's', also try matching without 's'
-    // This ensures "onions" matches "onion"
-    let baseKw = safeKw;
-    if (baseKw.endsWith('ies')) baseKw = baseKw.slice(0, -3) + 'y';
-    else if (baseKw.endsWith('es')) baseKw = baseKw.slice(0, -2);
-    else if (baseKw.endsWith('s')) baseKw = baseKw.slice(0, -1);
-
-    // Matches the base word (singular) or its common plural forms in the target text
-    // This handles both "onion" -> "onions" and "onions" -> "onion" 
-    const regex = new RegExp(`\\b${baseKw}(s|es|ies)?\\b`, 'i');
-    return regex.test(fieldsToSearch);
+    return matchesKeyword(fieldsToSearch, kw);
   });
 }

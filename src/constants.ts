@@ -2,9 +2,9 @@ import { DietaryRule, SaladPreference } from './types';
 
 export const DIETARY_EXCLUSION_MAP: Record<string, string[]> = {
   'No Pork': ['pork', 'bacon', 'ham', 'gammon', 'prosciutto', 'pancetta', 'lard', 'pig', 'piglet', 'sausage', 'chorizo', 'salami'],
-  'Milk': ['milk', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'ghee', 'cream cheese', 'crème fraîche'],
-  'Milk / Dairy': ['milk', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'ghee', 'cream cheese', 'crème fraîche'],
-  'Milk/Dairy': ['milk', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'ghee', 'cream cheese', 'crème fraîche'],
+  'Milk': ['milk', 'buttermilk', 'milk powder', 'milk solids', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'lactalbumin', 'ghee', 'cream cheese', 'crème fraîche'],
+  'Milk / Dairy': ['milk', 'buttermilk', 'milk powder', 'milk solids', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'lactalbumin', 'ghee', 'cream cheese', 'crème fraîche'],
+  'Milk/Dairy': ['milk', 'buttermilk', 'milk powder', 'milk solids', 'cheese', 'butter', 'cream', 'yogurt', 'yoghurt', 'dairy', 'whey', 'casein', 'lactose', 'lactalbumin', 'ghee', 'cream cheese', 'crème fraîche'],
   'Eggs': ['egg', 'mayonnaise', 'meringue', 'albumin', 'eggy'],
   'Cereals containing gluten': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'wheat flour', 'bread', 'breadcrumb', 'breadcrumbs', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats', 'malt', 'malt extract', 'seitan', 'wheat starch'],
   'Gluten / Wheat': ['wheat', 'gluten', 'barley', 'rye', 'spelt', 'flour', 'wheat flour', 'bread', 'breadcrumb', 'breadcrumbs', 'pasta', 'couscous', 'semolina', 'bulgur', 'oat', 'oats', 'malt', 'malt extract', 'seitan', 'wheat starch'],
@@ -15,8 +15,8 @@ export const DIETARY_EXCLUSION_MAP: Record<string, string[]> = {
   'Sesame': ['sesame', 'tahini', 'sesame oil', 'sesame seed', 'sesame seeds'],
   'Soybeans': ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso', 'soy sauce', 'soya sauce', 'soybean', 'soybeans', 'soy protein', 'soya protein', 'soy lecithin'],
   'Soy': ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso', 'soy sauce', 'soya sauce', 'soybean', 'soybeans', 'soy protein', 'soya protein', 'soy lecithin'],
-  'Fish': ['fish', 'anchovy', 'salmon', 'cod', 'tuna', 'haddock', 'trout', 'bass', 'mackerel', 'sardine', 'halibut', 'anchovies'],
-  'XFish': ['fish', 'anchovy', 'salmon', 'cod', 'tuna', 'haddock', 'trout', 'bass', 'mackerel', 'sardine', 'halibut', 'anchovies'],
+  'Fish': ['fish', 'fish sauce', 'anchovy', 'anchovy paste', 'salmon', 'cod', 'tuna', 'haddock', 'trout', 'bass', 'mackerel', 'sardine', 'halibut', 'anchovies', 'bonito', 'dashi', 'worcestershire'],
+  'XFish': ['fish', 'fish sauce', 'anchovy', 'anchovy paste', 'salmon', 'cod', 'tuna', 'haddock', 'trout', 'bass', 'mackerel', 'sardine', 'halibut', 'anchovies', 'bonito', 'dashi', 'worcestershire'],
   'Crustaceans': ['shrimp', 'prawn', 'crab', 'lobster', 'crayfish', 'langoustine', 'scampi', 'krill'],
   'Shellfish': ['shellfish', 'shrimp', 'prawn', 'crab', 'lobster', 'mussel', 'clam', 'scallop', 'oyster', 'squid', 'octopus', 'langoustine', 'mollusc', 'crustacean'],
   'Celery': ['celery', 'celeriac', 'celery seed', 'celery seeds'],

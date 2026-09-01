@@ -58,6 +58,25 @@ describe('Portion and Hard Constraints Safety Layer', () => {
       expect(passesPortionConstraints(meal, { calorieCeiling: null, budgetLimit: 5 })).toBe(true);
       expect(passesPortionConstraints(meal, { calorieCeiling: null, budgetLimit: 3 })).toBe(false);
     });
+
+    it('should fail closed when an active hard limit cannot be verified', () => {
+      const missingValues = { ...baseRecipe, costPerPortion: undefined, caloriesPerPortion: undefined, calories: undefined };
+
+      expect(passesPortionConstraints(missingValues, { calorieCeiling: 500, budgetLimit: null })).toBe(false);
+      expect(passesPortionConstraints(missingValues, { calorieCeiling: null, budgetLimit: 3 })).toBe(false);
+    });
+
+    it('should derive limits from total recipe values when per-portion values are absent', () => {
+      const totals = {
+        ...baseRecipe,
+        caloriesPerPortion: undefined,
+        totalRecipeCalories: 800,
+        costPerPortion: undefined,
+        totalRecipeCost: 5,
+      };
+
+      expect(passesPortionConstraints(totals, { calorieCeiling: 500, budgetLimit: 3 })).toBe(true);
+    });
   });
 
   describe('passesHardConstraints', () => {
@@ -265,6 +284,12 @@ describe('passesDietaryRule Deterministic Safety Net', () => {
       const soup = { ...baseRecipe, description: 'Simmered in chicken stock', isVegetarian: true };
       expect(passesDietaryRule(soup, 'vegetarian')).toBe(false);
     });
+
+    it('should block hidden fish derivatives', () => {
+      for (const ingredient of ['Worcestershire sauce', 'Dashi', 'Oyster sauce', 'Anchovy paste']) {
+        expect(passesDietaryRule({ ...baseRecipe, ingredients: [ingredient], isVegetarian: true }, 'vegetarian')).toBe(false);
+      }
+    });
   });
 
   describe('Mediterranean Diet Pattern', () => {
@@ -315,6 +340,18 @@ describe('passesDietaryRule Deterministic Safety Net', () => {
     it('should block specific cheeses like Parmesan (Rennet)', () => {
       const pasta = { ...baseRecipe, ingredients: ['Pasta', 'Parmesan'], isVegan: true };
       expect(passesDietaryRule(pasta, 'vegan')).toBe(false);
+    });
+
+    it('should block less obvious dairy derivatives', () => {
+      for (const ingredient of ['Buttermilk', 'Milk powder', 'Lactalbumin']) {
+        expect(passesDietaryRule({ ...baseRecipe, ingredients: [ingredient], isVegan: true }, 'vegan')).toBe(false);
+      }
+    });
+
+    it('should block malt and seitan for gluten-free searches', () => {
+      for (const ingredient of ['Malt extract', 'Seitan', 'Wheat starch']) {
+        expect(passesDietaryRule({ ...baseRecipe, ingredients: [ingredient] }, 'gluten-free')).toBe(false);
+      }
     });
   });
 
