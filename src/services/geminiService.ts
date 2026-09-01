@@ -1002,6 +1002,9 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
 - Every returned recipe must contain ALL of these listed ingredients.${preparationInstruction}
+- If 'vegetable' is listed, it means at least one named vegetable in the recipe. Do not count vegetable oil, vegetable stock or vegetable broth as the vegetable requirement.
+- If 'protein' is listed, it means at least one named meat, fish, seafood, egg, pulse, nut or plant-protein ingredient.
+- If 'carbohydrate' is listed, it means at least one named starchy ingredient such as rice, pasta, bread, noodles, potatoes or grains.
 - If no exact matches exist, return zero results rather than a near match.
 ${strictIngredientMatch ? '- Return the complete visible ingredient list for each recipe, not a shortened summary.' : ''}
    - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.`

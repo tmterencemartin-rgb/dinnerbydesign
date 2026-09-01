@@ -78,6 +78,70 @@ describe('Ingredient Parser & Normalizer', () => {
       ingredients: ['lamb', 'rice'],
       reason: 'short-food-list'
     });
+
+    expect(detectIngredientIntent('chicken vegetables')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['chicken', 'vegetable'],
+      reason: 'short-food-list'
+    });
+  });
+
+  test('treats vegetables as a flexible category alongside an exact protein', () => {
+    expect(detectIngredientIntent('chicken and vegetables')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['chicken', 'vegetable'],
+      reason: 'short-food-list'
+    });
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['chicken breast', 'red peppers', 'onion', 'oil']
+    }, 'chicken vegetables')).toBe(true);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['chicken breast', 'rice', 'oil']
+    }, 'chicken vegetables')).toBe(false);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['chicken breast', 'vegetable stock', 'oil']
+    }, 'chicken vegetables')).toBe(false);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['chicken breast', 'carrots', 'onion', 'oil', 'salt']
+    }, 'chicken and vegetables')).toBe(true);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['chicken breast', 'carrots', 'rice', 'oil', 'salt']
+    }, 'chicken and vegetables')).toBe(false);
+  });
+
+  test('treats protein and carbohydrates as flexible ingredient categories', () => {
+    expect(detectIngredientIntent('protein vegetables carbohydrates')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['protein', 'vegetable', 'carbohydrate'],
+      reason: 'short-food-list'
+    });
+
+    expect(detectIngredientIntent('protein and carbs')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['protein', 'carbohydrate'],
+      reason: 'short-food-list'
+    });
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['chicken breast', 'carrots', 'basmati rice']
+    }, 'protein vegetables carbohydrates')).toBe(true);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['carrots', 'basmati rice']
+    }, 'protein vegetables carbohydrates')).toBe(false);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['chicken breast', 'carrots']
+    }, 'protein vegetables carbohydrates')).toBe(false);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['chicken breast', 'carrots', 'basmati rice', 'oil', 'salt']
+    }, 'protein vegetables carbohydrates')).toBe(true);
   });
 
   test('detects a standalone named ingredient search', () => {

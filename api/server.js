@@ -188474,7 +188474,10 @@ function parseAndNormaliseIngredients(query2) {
       "chest nuts": "chestnut",
       "macadamia nuts": "macadamia nut",
       "lime juice": "lime",
-      "lemon juice": "lemon"
+      "lemon juice": "lemon",
+      "proteins": "protein",
+      "carbohydrates": "carbohydrate",
+      "carbs": "carbohydrate"
     };
     if (vocabularyMap[normalized]) {
       normalized = vocabularyMap[normalized];
@@ -188603,6 +188606,9 @@ var UNSEPARATED_INGREDIENT_TERMS = /* @__PURE__ */ new Set([
   "tuna",
   "turkey",
   "turnip",
+  "vegetable",
+  "protein",
+  "carbohydrate",
   "yogurt",
   "yoghurt",
   "lemongrass",
@@ -188849,6 +188855,140 @@ var UNSEPARATED_INGREDIENT_PHRASES = /* @__PURE__ */ new Set([
   "chestnut",
   "macadamia nut",
   ...ADDITIONAL_COMPOUND_INGREDIENT_PHRASES
+]);
+var VEGETABLE_CATEGORY_TERMS = /* @__PURE__ */ new Set([
+  "artichoke",
+  "asparagus",
+  "aubergine",
+  "avocado",
+  "beetroot",
+  "broccoli",
+  "brussels sprout",
+  "butternut squash",
+  "cabbage",
+  "carrot",
+  "cauliflower",
+  "celeriac",
+  "celery",
+  "chard",
+  "courgette",
+  "cucumber",
+  "fennel",
+  "fennel bulb",
+  "garlic",
+  "green bean",
+  "kale",
+  "leek",
+  "lettuce",
+  "mange tout",
+  "mushroom",
+  "okra",
+  "onion",
+  "pak choi",
+  "parsnip",
+  "pea",
+  "pepper",
+  "potato",
+  "pumpkin",
+  "radish",
+  "rocket",
+  "shallot",
+  "spinach",
+  "spring green",
+  "spring onion",
+  "squash",
+  "sweetcorn",
+  "sweet potato",
+  "swede",
+  "tomato",
+  "turnip",
+  "watercress",
+  "mixed vegetable",
+  "seasonal vegetable",
+  "frozen vegetable",
+  "stir-fry vegetable"
+]);
+var PROTEIN_CATEGORY_TERMS = /* @__PURE__ */ new Set([
+  "anchovy",
+  "bacon",
+  "beef",
+  "bean",
+  "chickpea",
+  "chorizo",
+  "chicken",
+  "crab",
+  "duck",
+  "egg",
+  "game",
+  "haddock",
+  "ham",
+  "hake",
+  "herring",
+  "lamb",
+  "lentil",
+  "lobster",
+  "mackerel",
+  "monkfish",
+  "mussel",
+  "oyster",
+  "pancetta",
+  "pea",
+  "pork",
+  "prawn",
+  "rabbit",
+  "salmon",
+  "sausage",
+  "scallop",
+  "seitan",
+  "sardine",
+  "squid",
+  "tofu",
+  "trout",
+  "tuna",
+  "turkey",
+  "venison",
+  "white fish",
+  "tempeh",
+  "edamame",
+  "quinoa",
+  "almond",
+  "cashew",
+  "peanut",
+  "walnut",
+  "pistachio"
+]);
+var CARBOHYDRATE_CATEGORY_TERMS = /* @__PURE__ */ new Set([
+  "barley",
+  "bean",
+  "bread",
+  "bulgur wheat",
+  "chickpea",
+  "couscous",
+  "corn",
+  "flour",
+  "gnocchi",
+  "lentil",
+  "macaroni",
+  "naan",
+  "noodle",
+  "oat",
+  "orzo",
+  "pasta",
+  "pea",
+  "pitta",
+  "polenta",
+  "potato",
+  "quinoa",
+  "rice",
+  "roti",
+  "spaghetti",
+  "sweetcorn",
+  "sweet potato",
+  "tortilla",
+  "wrap",
+  "yam",
+  "plantain",
+  "cassava"
 ]);
 var AMBIGUOUS_STANDALONE_DISH_TERMS = /* @__PURE__ */ new Set([
   "chilli",
@@ -189456,6 +189596,21 @@ var matchesAllowedIngredient = (value, allowed2) => {
     (word) => INGREDIENT_MODIFIER_PATTERN.test(word) || allowedVariantWords.has(word)
   );
 };
+var matchesVegetableCategory = (value) => {
+  const normalisedValue = value.trim().toLowerCase();
+  if (/\bvegetable\s+(?:oil|stock|broth|bouillon)\b/i.test(normalisedValue)) return false;
+  const parsedValues = parseAndNormaliseIngredients(normalisedValue);
+  return parsedValues.some((candidate) => candidate === "vegetable" || VEGETABLE_CATEGORY_TERMS.has(candidate) || candidate.split(/\s+/).some((word) => VEGETABLE_CATEGORY_TERMS.has(word)));
+};
+var matchesIngredientCategory = (value, categoryTerms) => {
+  const normalisedValue = value.trim().toLowerCase();
+  const parsedValues = parseAndNormaliseIngredients(normalisedValue);
+  return parsedValues.some((candidate) => {
+    if (categoryTerms.has(candidate)) return true;
+    return candidate.split(/\s+/).some((word) => categoryTerms.has(word));
+  });
+};
+var matchesRequestedIngredient = (value, allowed2) => allowed2 === "vegetable" ? matchesVegetableCategory(value) : allowed2 === "protein" ? matchesIngredientCategory(value, PROTEIN_CATEGORY_TERMS) : allowed2 === "carbohydrate" ? matchesIngredientCategory(value, CARBOHYDRATE_CATEGORY_TERMS) : matchesAllowedIngredient(value, allowed2);
 var matchesRequestedPreparation = (value, requested) => {
   if (!requested || !hasPreparationPreferences(requested)) return true;
   const found = extractIngredientPreparationPreferences(value).preferences;
@@ -189473,7 +189628,7 @@ function matchesRequestedIngredientSearch(item, query2) {
   const requestedPreparation = intent.preparationPreferences;
   return requestedIngredients.every(
     (requested) => normalisedLines.some(
-      (line) => matchesAllowedIngredient(line, requested) && matchesRequestedPreparation(line, requestedPreparation)
+      (line) => matchesRequestedIngredient(line, requested) && matchesRequestedPreparation(line, requestedPreparation)
     )
   );
 }
@@ -189488,7 +189643,7 @@ function matchesStrictIngredientSearch(item, query2) {
   const requestedPreparation = intent.preparationPreferences;
   return normalisedLines.every(
     (line) => isPantryStaple(line) || requestedIngredients.some(
-      (requested) => matchesAllowedIngredient(line, requested) && matchesRequestedPreparation(line, requestedPreparation)
+      (requested) => matchesRequestedIngredient(line, requested) && matchesRequestedPreparation(line, requestedPreparation)
     )
   );
 }
@@ -220609,6 +220764,9 @@ INGREDIENT PARSING & INTERPRETATION (CRITICAL):
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
 - Every returned recipe must contain ALL of these listed ingredients.${preparationInstruction}
+- If 'vegetable' is listed, it means at least one named vegetable in the recipe. Do not count vegetable oil, vegetable stock or vegetable broth as the vegetable requirement.
+- If 'protein' is listed, it means at least one named meat, fish, seafood, egg, pulse, nut or plant-protein ingredient.
+- If 'carbohydrate' is listed, it means at least one named starchy ingredient such as rice, pasta, bread, noodles, potatoes or grains.
 - If no exact matches exist, return zero results rather than a near match.
 ${strictIngredientMatch ? "- Return the complete visible ingredient list for each recipe, not a shortened summary." : ""}
    - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.` : "";

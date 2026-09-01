@@ -57,6 +57,9 @@ When a user provides several ingredients:
 - split the entry on commas and the word `and`;
 - normalise singular and plural forms in UK English;
 - treat common spelling variants as equivalent;
+- treat `vegetable` or `vegetables` as a category that can match a named vegetable, but not vegetable oil or vegetable stock;
+- treat `protein` as a category that can match a named meat, fish, seafood, egg, pulse, nut or plant-protein ingredient;
+- treat `carbohydrate`, `carbohydrates` or `carbs` as a category that can match a named starchy ingredient such as rice, pasta, bread, noodles, potatoes or grains;
 - look for recipes containing all requested ingredients before relaxing the search.
 
 For an ingredient-led search, the Search view may also enable `strictIngredientMatch`. This is a temporary per-search control, not part of `UserPreferences`. When enabled, every listed ingredient must be present and every other meaningful ingredient is rejected. Basic pantry items such as water, oil, salt, pepper and ordinary seasoning are allowed. If the generated result data does not contain a complete ingredient list, it cannot pass the strict check.

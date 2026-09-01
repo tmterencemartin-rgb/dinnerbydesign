@@ -422,6 +422,9 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'macadamia nuts': 'macadamia nut',
       'lime juice': 'lime',
       'lemon juice': 'lemon',
+      'proteins': 'protein',
+      'carbohydrates': 'carbohydrate',
+      'carbs': 'carbohydrate',
     };
     
     // Try vocab mapping first
@@ -479,7 +482,7 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'drumstick', 'drumette', 'tenderloin', 'tender', 'strip', 'quarter', 'crown', 'piece', 'portion',
   'giblet', 'liver', 'heart', 'neck',
   'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato',
-  'tuna', 'turkey', 'turnip', 'yogurt', 'yoghurt', 'lemongrass', 'buttermilk', 'chestnut',
+  'tuna', 'turkey', 'turnip', 'vegetable', 'protein', 'carbohydrate', 'yogurt', 'yoghurt', 'lemongrass', 'buttermilk', 'chestnut',
   ...ADDITIONAL_MAIN_INGREDIENT_TERMS
 ]);
 
@@ -535,6 +538,33 @@ const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   'double cream', 'cream cheese', 'sour cream', 'goat cheese', 'cottage cheese', 'buttermilk',
   'passion fruit', 'dragon fruit', 'star fruit', 'pine nut', 'chestnut', 'macadamia nut',
   ...ADDITIONAL_COMPOUND_INGREDIENT_PHRASES
+]);
+
+// "Vegetables" is a useful category in a search such as "chicken vegetables".
+// It should match a named vegetable, but not vegetable oil or vegetable stock.
+const VEGETABLE_CATEGORY_TERMS = new Set([
+  'artichoke', 'asparagus', 'aubergine', 'avocado', 'beetroot', 'broccoli', 'brussels sprout',
+  'butternut squash', 'cabbage', 'carrot', 'cauliflower', 'celeriac', 'celery', 'chard',
+  'courgette', 'cucumber', 'fennel', 'fennel bulb', 'garlic', 'green bean', 'kale', 'leek',
+  'lettuce', 'mange tout', 'mushroom', 'okra', 'onion', 'pak choi', 'parsnip', 'pea', 'pepper',
+  'potato', 'pumpkin', 'radish', 'rocket', 'shallot', 'spinach', 'spring green', 'spring onion',
+  'squash', 'sweetcorn', 'sweet potato', 'swede', 'tomato', 'turnip', 'watercress',
+  'mixed vegetable', 'seasonal vegetable', 'frozen vegetable', 'stir-fry vegetable'
+]);
+
+const PROTEIN_CATEGORY_TERMS = new Set([
+  'anchovy', 'bacon', 'beef', 'bean', 'chickpea', 'chorizo', 'chicken', 'crab', 'duck', 'egg',
+  'game', 'haddock', 'ham', 'hake', 'herring', 'lamb', 'lentil', 'lobster', 'mackerel', 'monkfish',
+  'mussel', 'oyster', 'pancetta', 'pea', 'pork', 'prawn', 'rabbit', 'salmon', 'sausage', 'scallop',
+  'seitan', 'sardine', 'squid', 'tofu', 'trout', 'tuna', 'turkey', 'venison', 'white fish',
+  'tempeh', 'edamame', 'quinoa', 'almond', 'cashew', 'peanut', 'walnut', 'pistachio'
+]);
+
+const CARBOHYDRATE_CATEGORY_TERMS = new Set([
+  'barley', 'bean', 'bread', 'bulgur wheat', 'chickpea', 'couscous', 'corn', 'flour', 'gnocchi',
+  'lentil', 'macaroni', 'naan', 'noodle', 'oat', 'orzo', 'pasta', 'pea', 'pitta', 'polenta',
+  'potato', 'quinoa', 'rice', 'roti', 'spaghetti', 'sweetcorn', 'sweet potato', 'tortilla',
+  'wrap', 'yam', 'plantain', 'cassava'
 ]);
 
 // A single ingredient should still be treated as ingredient-led unless it is
@@ -898,6 +928,34 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
   );
 };
 
+const matchesVegetableCategory = (value: string) => {
+  const normalisedValue = value.trim().toLowerCase();
+  if (/\bvegetable\s+(?:oil|stock|broth|bouillon)\b/i.test(normalisedValue)) return false;
+
+  const parsedValues = parseAndNormaliseIngredients(normalisedValue);
+  return parsedValues.some(candidate => candidate === 'vegetable'
+    || VEGETABLE_CATEGORY_TERMS.has(candidate)
+    || candidate.split(/\s+/).some(word => VEGETABLE_CATEGORY_TERMS.has(word)));
+};
+
+const matchesIngredientCategory = (value: string, categoryTerms: Set<string>) => {
+  const normalisedValue = value.trim().toLowerCase();
+  const parsedValues = parseAndNormaliseIngredients(normalisedValue);
+  return parsedValues.some(candidate => {
+    if (categoryTerms.has(candidate)) return true;
+    return candidate.split(/\s+/).some(word => categoryTerms.has(word));
+  });
+};
+
+const matchesRequestedIngredient = (value: string, allowed: string) =>
+  allowed === 'vegetable'
+    ? matchesVegetableCategory(value)
+    : allowed === 'protein'
+      ? matchesIngredientCategory(value, PROTEIN_CATEGORY_TERMS)
+      : allowed === 'carbohydrate'
+        ? matchesIngredientCategory(value, CARBOHYDRATE_CATEGORY_TERMS)
+        : matchesAllowedIngredient(value, allowed);
+
 const matchesRequestedPreparation = (
   value: string,
   requested?: IngredientPreparationPreferences
@@ -929,7 +987,7 @@ export function matchesRequestedIngredientSearch(item: { ingredients?: string[];
 
   return requestedIngredients.every(requested =>
     normalisedLines.some(line =>
-      matchesAllowedIngredient(line, requested)
+      matchesRequestedIngredient(line, requested)
       && matchesRequestedPreparation(line, requestedPreparation)
     )
   );
@@ -953,7 +1011,7 @@ export function matchesStrictIngredientSearch(item: { ingredients?: string[]; to
   const requestedPreparation = intent.preparationPreferences;
   return normalisedLines.every(line =>
     isPantryStaple(line) || requestedIngredients.some(requested =>
-      matchesAllowedIngredient(line, requested)
+      matchesRequestedIngredient(line, requested)
       && matchesRequestedPreparation(line, requestedPreparation)
     )
   );
