@@ -219814,6 +219814,31 @@ var db = initializeFirestore2(app, {
 }, firebase_applet_config_default.firestoreDatabaseId);
 var signInAnon = () => signInAnonymously(auth);
 
+// src/constants.ts
+var COOKING_METHOD_ALIASES = {
+  "Air fryer": ["air-fried", "air fried", "air fryer"],
+  "BBQ": ["barbecue", "barbecued", "barbeque", "barbecuing"],
+  "Baked": ["bake", "baked", "oven-baked", "oven baked"],
+  "Boiled": ["boil", "boiled"],
+  "Braised": ["braise", "braised", "pot-roasted", "pot roasted"],
+  "Deep fried": ["deep-fried", "deep fried"],
+  "Fried": ["fry", "fried"],
+  "Griddled": ["griddle", "griddled"],
+  "Grilled": ["grill", "grilled"],
+  "One pot": ["one-pot", "one pot"],
+  "Oven bake": ["bake", "baked", "oven-baked", "oven baked"],
+  "Pan fried": ["pan-fry", "pan-fried", "pan fried"],
+  "Poached": ["poach", "poached"],
+  "Roasted": ["roast", "roasted"],
+  "Saut\xE9ed": ["saut\xE9", "saut\xE9ed", "saute", "sauteed"],
+  "Shallow fried": ["shallow-fried", "shallow fried"],
+  "Slow cooker": ["slow-cooked", "slow cooked", "slow cooker"],
+  "Steamed": ["steam", "steamed"],
+  "Stewed": ["stew", "stewed"],
+  "Stir fry": ["stir-fry", "stir-fried", "stir fry"],
+  "Tray bake": ["tray-bake", "tray bake"]
+};
+
 // src/services/geminiService.ts
 var SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
 var BROAD_CHILLI_FALLBACKS = [
@@ -220416,6 +220441,10 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const activeCalorieLimit = searchParams.maxCalories || preferences?.calorieCeiling || null;
   const activeBudgetLimit = searchParams.maxCostPerPortion || preferences?.budgetLimit || null;
   const activeCookingMethods = searchParams.cookingMethods || preferences?.cookingMethods || [];
+  const activeCookingMethodHints = activeCookingMethods.length > 0 ? activeCookingMethods.map((method) => {
+    const aliases = COOKING_METHOD_ALIASES[method] || [];
+    return aliases.length > 0 ? `${method} (also: ${aliases.join(", ")})` : method;
+  }).join("; ") : "Any";
   const activeCookingFats = filterCookingFatsForDiet(
     activeDietaryRule,
     searchParams.cookingFats || preferences?.cookingFats || []
@@ -220607,7 +220636,7 @@ HARD CONSTRAINTS:
 6. Exclusions: ${[...preferences?.exclusions || [], ...searchParams.exclusions || []].join(", ") || "None"}
 7. Cuisine: ${targetCuisines?.length ? targetCuisines.join(", ") : legacyCuisine || "Any"}
 8. Trusted Sources (Ranking Hint): ${activePreferredSourceNames.length > 0 ? activePreferredSourceNames.join(", ") : "Any trusted UK source"}
-9. Cooking Methods: ${activeCookingMethods.length > 0 ? activeCookingMethods.join(", ") : "Any"}
+9. Cooking Methods: ${activeCookingMethodHints}
 10. Religious/Ethical: ${activeReligious.join(", ") || "None"}
 11. Preferred Supermarkets: ${activeSupermarkets.length > 0 ? activeSupermarkets.join(", ") : "Any"}
 12. Cooking Fats (Preference): ${activeCookingFats.length > 0 ? activeCookingFats.join(", ") : "Any"}

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { CircleX, Check, ChevronDown, Sparkles, Info, Save, Search, Apple, Store, Clock, Utensils, Heart, ShieldAlert } from 'lucide-react';
 import { NumberStepper } from '../ui/NumberStepper';
 import { Tooltip } from '../ui/Tooltip';
-import { DIETARY_TAXONOMY } from '../../constants';
+import { COOKING_METHODS, DIETARY_TAXONOMY } from '../../constants';
 import { useAuth } from '../../contexts/AuthContext';
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { dietaryRuleAllowsOffal } from '../../lib/offalPreference';
@@ -936,9 +936,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                       >
                         <option value="">Any method</option>
-                        {[
-                          'Air fryer', 'BBQ', 'One pot', 'Oven bake', 'Pan fried', 'Slow cooker', 'Stir fry', 'Tray bake'
-                        ].map(method => (
+                        {COOKING_METHODS.map(method => (
                           <option key={method} value={method}>{method}</option>
                         ))}
                       </select>

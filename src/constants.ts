@@ -40,8 +40,37 @@ export const CUISINES = [
 ];
 
 export const COOKING_METHODS = [
-  'Air fryer', 'BBQ', 'One pot', 'Oven bake', 'Pan fried', 'Slow cooker', 'Stir fry', 'Tray bake'
+  'Air fryer', 'BBQ', 'Baked', 'Boiled', 'Braised', 'Deep fried', 'Fried',
+  'Griddled', 'Grilled', 'One pot', 'Oven bake', 'Pan fried', 'Poached',
+  'Roasted', 'Sautéed', 'Shallow fried', 'Slow cooker', 'Steamed', 'Stewed',
+  'Stir fry', 'Tray bake'
 ];
+
+// Search-friendly aliases keep the controlled labels concise while allowing
+// recipe publishers to describe the same method in different ways.
+export const COOKING_METHOD_ALIASES: Record<string, string[]> = {
+  'Air fryer': ['air-fried', 'air fried', 'air fryer'],
+  'BBQ': ['barbecue', 'barbecued', 'barbeque', 'barbecuing'],
+  'Baked': ['bake', 'baked', 'oven-baked', 'oven baked'],
+  'Boiled': ['boil', 'boiled'],
+  'Braised': ['braise', 'braised', 'pot-roasted', 'pot roasted'],
+  'Deep fried': ['deep-fried', 'deep fried'],
+  'Fried': ['fry', 'fried'],
+  'Griddled': ['griddle', 'griddled'],
+  'Grilled': ['grill', 'grilled'],
+  'One pot': ['one-pot', 'one pot'],
+  'Oven bake': ['bake', 'baked', 'oven-baked', 'oven baked'],
+  'Pan fried': ['pan-fry', 'pan-fried', 'pan fried'],
+  'Poached': ['poach', 'poached'],
+  'Roasted': ['roast', 'roasted'],
+  'Sautéed': ['sauté', 'sautéed', 'saute', 'sauteed'],
+  'Shallow fried': ['shallow-fried', 'shallow fried'],
+  'Slow cooker': ['slow-cooked', 'slow cooked', 'slow cooker'],
+  'Steamed': ['steam', 'steamed'],
+  'Stewed': ['stew', 'stewed'],
+  'Stir fry': ['stir-fry', 'stir-fried', 'stir fry'],
+  'Tray bake': ['tray-bake', 'tray bake']
+};
 
 export const COOKING_FATS = [
   'Butter', 'Coconut oil', 'Ghee', 'Lard/Dripping', 'Olive oil', 'Vegetable oil'

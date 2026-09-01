@@ -10,6 +10,7 @@ import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, reconcileGroundedSo
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { auth, signInAnon } from '../firebase';
+import { COOKING_METHOD_ALIASES } from '../constants';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
 const SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
@@ -779,6 +780,12 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   const activeCalorieLimit = searchParams.maxCalories || preferences?.calorieCeiling || null;
   const activeBudgetLimit = searchParams.maxCostPerPortion || preferences?.budgetLimit || null;
   const activeCookingMethods = searchParams.cookingMethods || preferences?.cookingMethods || [];
+  const activeCookingMethodHints = activeCookingMethods.length > 0
+    ? activeCookingMethods.map(method => {
+        const aliases = COOKING_METHOD_ALIASES[method] || [];
+        return aliases.length > 0 ? `${method} (also: ${aliases.join(', ')})` : method;
+      }).join('; ')
+    : 'Any';
   const activeCookingFats = filterCookingFatsForDiet(
     activeDietaryRule,
     searchParams.cookingFats || preferences?.cookingFats || []
@@ -1029,7 +1036,7 @@ HARD CONSTRAINTS:
 6. Exclusions: ${[...(preferences?.exclusions || []), ...(searchParams.exclusions || [])].join(', ') || 'None'}
 7. Cuisine: ${targetCuisines?.length ? targetCuisines.join(', ') : (legacyCuisine || 'Any')}
 8. Trusted Sources (Ranking Hint): ${activePreferredSourceNames.length > 0 ? activePreferredSourceNames.join(', ') : 'Any trusted UK source'}
-9. Cooking Methods: ${activeCookingMethods.length > 0 ? activeCookingMethods.join(', ') : 'Any'}
+9. Cooking Methods: ${activeCookingMethodHints}
 10. Religious/Ethical: ${activeReligious.join(', ') || 'None'}
 11. Preferred Supermarkets: ${activeSupermarkets.length > 0 ? activeSupermarkets.join(', ') : 'Any'}
 12. Cooking Fats (Preference): ${activeCookingFats.length > 0 ? activeCookingFats.join(', ') : 'Any'}
