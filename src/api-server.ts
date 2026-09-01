@@ -28,6 +28,12 @@ import {
 } from "../src/lib/accountReconciliation";
 import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
 import { parseEnrichmentRequestOptions } from "../src/lib/enrichmentRequest";
+import {
+  getWebhookClaimDecision,
+  isFreshEmailClaim,
+  shouldApplyStripeEvent,
+  STRIPE_WEBHOOK_PROCESSING_LEASE_MS,
+} from "../src/lib/webhookSafety";
 import type { SearchParams } from "../src/types";
 function getFirebaseConfig() {
   return firebaseConfig;
@@ -780,6 +786,145 @@ async function recordStripeWebhookEvent(event: any, status: "processing" | "succ
     await getDb().collection("stripeWebhookEvents").doc(eventId).set(record, { merge: true });
   } catch (logErr) {
     console.error("[Webhook Health] Failed to record Stripe webhook event:", logErr);
+  }
+}
+
+async function claimStripeWebhookEvent(event: any) {
+  const eventId = String(event?.id || '').trim();
+  if (!eventId) return { status: 'process' as const, eventId: null };
+
+  const eventRef = getDb().collection('stripeWebhookEvents').doc(eventId);
+  const now = Date.now();
+  return getDb().runTransaction(async (transaction: any) => {
+    const snapshot = await transaction.get(eventRef);
+    const decision = getWebhookClaimDecision(snapshot.data(), now, STRIPE_WEBHOOK_PROCESSING_LEASE_MS);
+    if (decision !== 'process') return { status: decision, eventId };
+
+    transaction.set(eventRef, {
+      eventId,
+      type: event?.type || 'unknown',
+      status: 'processing',
+      stripeCreatedAt: event?.created ? Timestamp.fromMillis(event.created * 1000) : null,
+      processingStartedAt: Timestamp.fromMillis(now),
+      receivedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      message: 'Webhook claimed for processing',
+      error: null,
+    }, { merge: true });
+
+    return { status: 'process' as const, eventId };
+  });
+}
+
+async function hasLiveAuthenticationIdentity(uid: string) {
+  try {
+    await getAdminAuth().getUser(uid);
+    return true;
+  } catch (error: any) {
+    if (error?.code === 'auth/user-not-found') return false;
+    throw error;
+  }
+}
+
+async function claimUserEmailSend(userRef: any, sentField: string) {
+  const sendingField = `${sentField}SendingAt`;
+  const now = Date.now();
+
+  return getDb().runTransaction(async (transaction: any) => {
+    const snapshot = await transaction.get(userRef);
+    if (!snapshot.exists) return false;
+
+    const data = snapshot.data() || {};
+    if (data[sentField] === true || isFreshEmailClaim(data[sendingField], now)) return false;
+
+    transaction.update(userRef, {
+      [sendingField]: Timestamp.fromMillis(now),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    return true;
+  });
+}
+
+async function completeUserEmailSend(userRef: any, sentField: string) {
+  const sendingField = `${sentField}SendingAt`;
+  await getDb().runTransaction(async (transaction: any) => {
+    const snapshot = await transaction.get(userRef);
+    if (!snapshot.exists) return;
+
+    transaction.update(userRef, {
+      [sentField]: true,
+      [`${sentField}At`]: FieldValue.serverTimestamp(),
+      [sendingField]: FieldValue.delete(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  });
+}
+
+async function releaseUserEmailSend(userRef: any, sentField: string) {
+  const sendingField = `${sentField}SendingAt`;
+  try {
+    await getDb().runTransaction(async (transaction: any) => {
+      const snapshot = await transaction.get(userRef);
+      if (!snapshot.exists) return;
+      transaction.update(userRef, { [sendingField]: FieldValue.delete() });
+    });
+  } catch (error) {
+    console.error(`[Email] Failed to release ${sentField} claim:`, error);
+  }
+}
+
+async function claimUserInvoiceEmailSend(userRef: any, invoiceId: string) {
+  const sendingField = 'subscriptionPaymentFailedEmailSendingAt';
+  const sendingInvoiceField = 'subscriptionPaymentFailedEmailSendingInvoiceId';
+  const now = Date.now();
+
+  return getDb().runTransaction(async (transaction: any) => {
+    const snapshot = await transaction.get(userRef);
+    if (!snapshot.exists) return false;
+
+    const data = snapshot.data() || {};
+    if (data.subscriptionPaymentFailedEmailLastInvoiceId === invoiceId) return false;
+    if (
+      data[sendingInvoiceField] === invoiceId
+      && isFreshEmailClaim(data[sendingField], now)
+    ) return false;
+
+    transaction.update(userRef, {
+      [sendingInvoiceField]: invoiceId,
+      [sendingField]: Timestamp.fromMillis(now),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    return true;
+  });
+}
+
+async function completeUserInvoiceEmailSend(userRef: any, invoiceId: string) {
+  await getDb().runTransaction(async (transaction: any) => {
+    const snapshot = await transaction.get(userRef);
+    if (!snapshot.exists) return;
+
+    transaction.update(userRef, {
+      subscriptionPaymentFailedEmailLastInvoiceId: invoiceId,
+      subscriptionPaymentFailedEmailSentAt: FieldValue.serverTimestamp(),
+      subscriptionPaymentFailedEmailSendingInvoiceId: FieldValue.delete(),
+      subscriptionPaymentFailedEmailSendingAt: FieldValue.delete(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  });
+}
+
+async function releaseUserInvoiceEmailSend(userRef: any) {
+  try {
+    await getDb().runTransaction(async (transaction: any) => {
+      const snapshot = await transaction.get(userRef);
+      if (!snapshot.exists) return;
+      transaction.update(userRef, {
+        subscriptionPaymentFailedEmailSendingInvoiceId: FieldValue.delete(),
+        subscriptionPaymentFailedEmailSendingAt: FieldValue.delete(),
+      });
+    });
+  } catch (error) {
+    console.error('[Email] Failed to release payment-failure email claim:', error);
   }
 }
 
@@ -1710,6 +1855,15 @@ export function createApp() {
     }
 
     console.log(`[Webhook] Handling event: ${event.type}`);
+    const webhookClaim = await claimStripeWebhookEvent(event);
+    if (webhookClaim.status === 'already_processed') {
+      console.log(`[Webhook] Ignoring duplicate event ${webhookClaim.eventId}`);
+      return res.json({ received: true, duplicate: true });
+    }
+    if (webhookClaim.status === 'in_progress') {
+      console.log(`[Webhook] Deferring event ${webhookClaim.eventId} while another attempt is active`);
+      return res.status(409).json({ received: false, retryable: true });
+    }
     await recordStripeWebhookEvent(event, "processing", {
       message: "Webhook received and verified"
     });
@@ -1730,6 +1884,11 @@ export function createApp() {
 
           if (userId && customerId) {
             console.log(`[Webhook] Linking customer ${customerId} to user ${userId}`);
+
+            if (!await hasLiveAuthenticationIdentity(userId)) {
+              console.warn(`[Webhook] Skipping checkout for deleted authentication identity ${userId}`);
+              break;
+            }
             
             const userRef = getDb().collection('users').doc(userId);
             await userRef.set({
@@ -1744,7 +1903,10 @@ export function createApp() {
             const userData = userDoc.data();
             const userEmail = userData?.email || session.customer_details?.email;
 
-            if (userEmail && !userData?.subscriptionConfirmationEmailSent) {
+            const shouldSendSubscriptionConfirmation = userEmail
+              ? await claimUserEmailSend(userRef, 'subscriptionConfirmationEmailSent')
+              : false;
+            if (shouldSendSubscriptionConfirmation) {
               try {
                 const appUrl = PRODUCTION_APP_URL;
                 await sendTrackedEmail({
@@ -1781,12 +1943,10 @@ export function createApp() {
                     stripeSessionId: session.id
                   }
                 });
-                await userRef.set({
-                  subscriptionConfirmationEmailSent: true,
-                  subscriptionConfirmationEmailSentAt: FieldValue.serverTimestamp()
-                }, { merge: true });
+                await completeUserEmailSend(userRef, 'subscriptionConfirmationEmailSent');
                 console.log(`[Webhook] Subscription confirmation email sent to ${userEmail}`);
               } catch (emailErr) {
+                await releaseUserEmailSend(userRef, 'subscriptionConfirmationEmailSent');
                 console.error(`[Webhook] Failed to send subscription confirmation email:`, emailErr);
               }
             }
@@ -1814,6 +1974,10 @@ export function createApp() {
           if (!userQuery.empty) {
             const userDoc = userQuery.docs[0];
             const userId = userDoc.id;
+            if (!await hasLiveAuthenticationIdentity(userId)) {
+              console.warn(`[Webhook] Skipping subscription update for deleted authentication identity ${userId}`);
+              break;
+            }
             const userData = userDoc.data();
             await recordStripeWebhookEvent(event, "processing", {
               userId,
@@ -1848,21 +2012,37 @@ export function createApp() {
               isTrialing,
               isPaying,
               hasAccess,
+              lastStripeEventCreatedAt: event.created || null,
+              lastStripeEventId: event.id || null,
               updatedAt: FieldValue.serverTimestamp()
             };
 
             console.log(`[Webhook] Updating subscription for user ${userId} to ${status}`);
-            await userDoc.ref.set({
-              subscription: summary,
-              isPremium: isPaying || isPaymentGraceActive,
-              accessStatus: summary.accessStatus,
-              updatedAt: FieldValue.serverTimestamp()
-            }, { merge: true });
+            const appliedSubscriptionUpdate = await getDb().runTransaction(async (transaction: any) => {
+              const currentSnapshot = await transaction.get(userDoc.ref);
+              if (!currentSnapshot.exists) return false;
+              const currentData = currentSnapshot.data() || {};
+              if (!shouldApplyStripeEvent(currentData.subscription?.lastStripeEventCreatedAt, event.created)) {
+                return false;
+              }
+              transaction.set(userDoc.ref, {
+                subscription: summary,
+                isPremium: isPaying || isPaymentGraceActive,
+                accessStatus: summary.accessStatus,
+                updatedAt: FieldValue.serverTimestamp()
+              }, { merge: true });
+              return true;
+            });
+
+            if (!appliedSubscriptionUpdate) {
+              console.log(`[Webhook] Ignoring older subscription event ${event.id || '(unknown)'}`);
+              break;
+            }
 
             const userEmail = userData?.email;
             const shouldSendCancellationEmail = event.type === 'customer.subscription.deleted'
               && userEmail
-              && !userData?.subscriptionCancellationEmailSent;
+              && await claimUserEmailSend(userDoc.ref, 'subscriptionCancellationEmailSent');
 
             if (shouldSendCancellationEmail) {
               try {
@@ -1901,12 +2081,10 @@ export function createApp() {
                   }
                 });
 
-                await userDoc.ref.set({
-                  subscriptionCancellationEmailSent: true,
-                  subscriptionCancellationEmailSentAt: FieldValue.serverTimestamp()
-                }, { merge: true });
+                await completeUserEmailSend(userDoc.ref, 'subscriptionCancellationEmailSent');
                 console.log(`[Webhook] Subscription cancellation email sent to ${userEmail}`);
               } catch (emailErr) {
+                await releaseUserEmailSend(userDoc.ref, 'subscriptionCancellationEmailSent');
                 console.error(`[Webhook] Failed to send subscription cancellation email:`, emailErr);
               }
             }
@@ -1932,13 +2110,24 @@ export function createApp() {
               .get();
 
             if (!userQuery.empty) {
-              await userQuery.docs[0].ref.set({
-                isPremium: true,
-                accessStatus: 'paid',
-                subscriptionPaymentFailedEmailLastInvoiceId: null,
-                subscriptionPaymentGraceEndsAt: null,
-                updatedAt: FieldValue.serverTimestamp()
-              }, { merge: true });
+              const userDoc = userQuery.docs[0];
+              if (await hasLiveAuthenticationIdentity(userDoc.id)) {
+                await getDb().runTransaction(async (transaction: any) => {
+                  const currentSnapshot = await transaction.get(userDoc.ref);
+                  if (!currentSnapshot.exists) return;
+                  const currentData = currentSnapshot.data() || {};
+                  if (!shouldApplyStripeEvent(currentData.lastStripePaymentEventCreatedAt, event.created)) return;
+                  transaction.set(userDoc.ref, {
+                    isPremium: true,
+                    accessStatus: 'paid',
+                    subscriptionPaymentFailedEmailLastInvoiceId: null,
+                    subscriptionPaymentGraceEndsAt: null,
+                    lastStripePaymentEventCreatedAt: event.created || null,
+                    lastStripePaymentEventId: event.id || null,
+                    updatedAt: FieldValue.serverTimestamp()
+                  }, { merge: true });
+                });
+              }
             }
           }
           break;
@@ -1960,23 +2149,43 @@ export function createApp() {
 
           if (!userQuery.empty) {
             const userDoc = userQuery.docs[0];
+            if (!await hasLiveAuthenticationIdentity(userDoc.id)) {
+              console.warn(`[Webhook] Skipping payment-failure update for deleted authentication identity ${userDoc.id}`);
+              break;
+            }
             const userData = userDoc.data();
             const graceEndsAt = Timestamp.fromMillis(Date.now() + 5 * 24 * 60 * 60 * 1000);
             console.log(`[Webhook] Payment failed for user ${userDoc.id}`);
-            await userDoc.ref.set({
-              isPremium: true,
-              accessStatus: 'paid',
-              'subscription.subscriptionStatus': 'past_due',
-              'subscription.accessStatus': 'paid',
-              'subscription.hasAccess': true,
-              subscriptionPaymentGraceEndsAt: graceEndsAt,
-              updatedAt: FieldValue.serverTimestamp()
-            }, { merge: true });
+            const appliedPaymentFailure = await getDb().runTransaction(async (transaction: any) => {
+              const currentSnapshot = await transaction.get(userDoc.ref);
+              if (!currentSnapshot.exists) return false;
+              const currentData = currentSnapshot.data() || {};
+              if (!shouldApplyStripeEvent(currentData.lastStripePaymentEventCreatedAt, event.created)) return false;
+              transaction.set(userDoc.ref, {
+                isPremium: true,
+                accessStatus: 'paid',
+                'subscription.subscriptionStatus': 'past_due',
+                'subscription.accessStatus': 'paid',
+                'subscription.hasAccess': true,
+                subscriptionPaymentGraceEndsAt: graceEndsAt,
+                lastStripePaymentEventCreatedAt: event.created || null,
+                lastStripePaymentEventId: event.id || null,
+                updatedAt: FieldValue.serverTimestamp()
+              }, { merge: true });
+              return true;
+            });
+
+            if (!appliedPaymentFailure) {
+              console.log(`[Webhook] Ignoring older payment event ${event.id || '(unknown)'}`);
+              break;
+            }
 
             const userEmail = userData?.email || invoice.customer_email;
-            const alreadySentForInvoice = userData?.subscriptionPaymentFailedEmailLastInvoiceId === invoice.id;
+            const shouldSendPaymentFailureEmail = userEmail
+              ? await claimUserInvoiceEmailSend(userDoc.ref, invoice.id)
+              : false;
 
-            if (userEmail && !alreadySentForInvoice) {
+            if (shouldSendPaymentFailureEmail) {
               try {
                 const appUrl = PRODUCTION_APP_URL;
                 const invoiceUrl = invoice.hosted_invoice_url || null;
@@ -2014,12 +2223,10 @@ export function createApp() {
                   }
                 });
 
-                await userDoc.ref.set({
-                  subscriptionPaymentFailedEmailLastInvoiceId: invoice.id,
-                  subscriptionPaymentFailedEmailSentAt: FieldValue.serverTimestamp()
-                }, { merge: true });
+                await completeUserInvoiceEmailSend(userDoc.ref, invoice.id);
                 console.log(`[Webhook] Payment failed email sent to ${userEmail}`);
               } catch (emailErr) {
+                await releaseUserInvoiceEmailSend(userDoc.ref);
                 console.error(`[Webhook] Failed to send payment failed email:`, emailErr);
               }
             }
