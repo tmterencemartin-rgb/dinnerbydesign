@@ -24,6 +24,13 @@ export const singularize = (str: string): string => {
 
 export const getIngredientCategory = (ingredient: string): string => {
   const lower = ingredient.toLowerCase();
+
+  // Resolve common overlaps before the broad keyword scan. Without this,
+  // "eggplant" can match "egg" and "red pepper" can match cupboard pepper.
+  if (/\b(eggplant|aubergine)\b/.test(lower)) return 'Veg & fruit';
+  if (/\b(red|green|yellow|orange|bell|sweet) pepper\b/.test(lower)) return 'Veg & fruit';
+  if (/\b(black|white|pink|sichuan) pepper\b|\bpeppercorns?\b/.test(lower)) return 'Cupboard';
+
   for (const [cat, keywords] of Object.entries(SHOPPING_CATEGORIES)) {
     if (keywords.some(k => lower.includes(k))) return cat;
   }
@@ -32,7 +39,7 @@ export const getIngredientCategory = (ingredient: string): string => {
 
 export const parseIngredientName = (ing: string) => {
   const units = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'cup', 'cups', 'oz', 'lb', 'bunch', 'bunches', 'clove', 'cloves', 'can', 'cans', 'tin', 'tins', 'pack', 'packs', 'bag', 'bags', 'slice', 'slices', 'head', 'heads', 'clove', 'cloves', 'knob', 'pinch', 'piece', 'pieces'];
-  const unitRegex = new RegExp(`^([\\d\\/\\.\\-\\s]+)\\s*(${units.join('|')})\\s+(.*)$`, 'i');
+  const unitRegex = new RegExp(`^([\\d\\/\\.\\-\\s½⅓¼¾⅔⅜⅝⅞]+)\\s*(${units.join('|')})\\s+(.*)$`, 'i');
   const match = ing.match(unitRegex);
   
   if (match) {
@@ -43,7 +50,7 @@ export const parseIngredientName = (ing: string) => {
     };
   }
   
-  const numMatch = ing.match(/^([\d\/\.\-\s]+)\s+(.*)$/);
+  const numMatch = ing.match(/^([\d\/\.\-\s½⅓¼¾⅔⅜⅝⅞]+)\s+(.*)$/);
   if (numMatch) {
     return {
       quantity: numMatch[1].trim(),
@@ -340,14 +347,30 @@ export function buildSupermarketPlanSummary(
 
 const parseNumericQuantity = (q: string): number => {
   if (!q) return 0;
-  if (q.includes('/')) {
-    const parts = q.split('/');
-    const n = parseFloat(parts[0]);
-    const d = parseFloat(parts[1]);
-    if (!isNaN(n) && !isNaN(d)) return n / d;
+  const normalized = q.trim()
+    .replace(/½/g, ' 1/2').replace(/⅓/g, ' 1/3').replace(/¼/g, ' 1/4')
+    .replace(/¾/g, ' 3/4').replace(/⅔/g, ' 2/3').replace(/⅜/g, ' 3/8')
+    .replace(/⅝/g, ' 5/8').replace(/⅞/g, ' 7/8')
+    .replace(/\s+/g, ' ');
+
+  // For a stated range, use the upper bound so the list does not under-buy.
+  const range = normalized.match(/^(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)$/);
+  if (range) return Number(range[2]);
+
+  const mixed = normalized.match(/^(\d+(?:\.\d+)?)\s+(\d+)\/(\d+)$/);
+  if (mixed) {
+    const denominator = Number(mixed[3]);
+    return denominator > 0 ? Number(mixed[1]) + Number(mixed[2]) / denominator : 0;
   }
-  const val = parseFloat(q);
-  return isNaN(val) ? 0 : val;
+
+  const fraction = normalized.match(/^(\d+)\/(\d+)$/);
+  if (fraction) {
+    const denominator = Number(fraction[2]);
+    return denominator > 0 ? Number(fraction[1]) / denominator : 0;
+  }
+
+  const val = Number(normalized);
+  return Number.isFinite(val) ? val : 0;
 };
 
 /**

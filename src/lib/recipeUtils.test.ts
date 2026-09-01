@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getRecipeKey, isSameRecipe, getSourceUrl } from './recipeUtils';
+import { getRecipeDeduplicationKey, getRecipeKey, isSameRecipe, getSourceUrl } from './recipeUtils';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 
 describe('recipeUtils', () => {
@@ -55,6 +55,22 @@ describe('recipeUtils', () => {
     it('handles null/undefined inputs', () => {
       expect(isSameRecipe(null, undefined)).toBe(false);
       expect(isSameRecipe({ title: 'A', cuisine: 'B' } as any, null)).toBe(false);
+    });
+  });
+
+  describe('getRecipeDeduplicationKey', () => {
+    it('keeps same-title recipes from different publisher URLs distinct', () => {
+      const first = { title: 'Chicken Curry', cuisine: 'Indian', sourceUrl: 'https://example.com/one/' } as Recipe;
+      const second = { title: 'Chicken Curry', cuisine: 'Indian', sourceUrl: 'https://example.com/two/' } as Recipe;
+
+      expect(getRecipeDeduplicationKey(first)).not.toBe(getRecipeDeduplicationKey(second));
+    });
+
+    it('normalises a trailing slash for the same source URL', () => {
+      const first = { title: 'Chicken Curry', cuisine: 'Indian', sourceUrl: 'https://example.com/recipe/' } as Recipe;
+      const second = { title: 'Different title', cuisine: 'Indian', sourceUrl: 'https://example.com/recipe' } as Recipe;
+
+      expect(getRecipeDeduplicationKey(first)).toBe(getRecipeDeduplicationKey(second));
     });
   });
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SavedRecipe } from '../types';
-import { buildShoppingListData, buildSupermarketPlanSummary } from './shoppingUtils';
+import { aggregateWeeklyIngredients, buildShoppingListData, buildSupermarketPlanSummary, getIngredientCategory } from './shoppingUtils';
 
 const makeRecipe = (overrides: Partial<SavedRecipe>): SavedRecipe => ({
   recipeId: overrides.recipeId || overrides.id || overrides.title || 'recipe',
@@ -53,6 +53,30 @@ describe('buildSupermarketPlanSummary', () => {
       expect.arrayContaining(['Chicken thighs', 'Red pepper', 'Courgette'])
     );
     expect(summary.planNotes.some(note => note.includes('reused'))).toBe(true);
+  });
+});
+
+describe('shopping edge cases', () => {
+  it('keeps overlapping produce names in the correct category', () => {
+    expect(getIngredientCategory('1 red pepper')).toBe('Veg & fruit');
+    expect(getIngredientCategory('1 eggplant')).toBe('Veg & fruit');
+    expect(getIngredientCategory('black pepper')).toBe('Cupboard');
+  });
+
+  it('uses the upper bound for ranges and parses mixed fractions', () => {
+    const ingredients = aggregateWeeklyIngredients([
+      makeRecipe({
+        id: 'range',
+        title: 'Range recipe',
+        scheduledDate: 'monday',
+        totalServings: 2,
+        requestedServings: 2,
+        ingredients: ['1-2 onions', '1 1/2kg potatoes'],
+      }),
+    ]);
+
+    expect(ingredients.find(item => item.id === 'onion')?.unitQuantities['']).toBe(2);
+    expect(ingredients.find(item => item.id === 'potato')?.unitQuantities.kg).toBe(1.5);
   });
 });
 

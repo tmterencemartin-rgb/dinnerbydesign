@@ -1,7 +1,7 @@
 import { DinnerSource, ReadyMeal, Recipe, SavedRecipe, SearchParams, UserPreferences } from '../types';
 import { passesHardConstraints } from './dietarySafety';
 import { buildSearchParams, checkSearchMatch, cleanSearchParams } from './searchUtils';
-import { getConvenienceProfile } from './recipeUtils';
+import { getConvenienceProfile, getRecipeDeduplicationKey } from './recipeUtils';
 
 export type SavedSortOption = 'newest' | 'oldest' | 'name' | 'quickest' | 'lowest-cost';
 export type ConvenienceFilter = 'all' | 'scratch' | 'convenience';
@@ -289,13 +289,13 @@ const addUniqueCandidates = <T extends Recipe | ReadyMeal>(
   items: T[],
   target: T[],
   targetCount: number,
-  seenTitles: Set<string>
+  seenRecipeKeys: Set<string>
 ) => {
   for (const item of items) {
-    const titleKey = item.title.toLowerCase();
-    if (!seenTitles.has(titleKey) && target.length < targetCount) {
+    const recipeKey = getRecipeDeduplicationKey(item);
+    if (!seenRecipeKeys.has(recipeKey) && target.length < targetCount) {
       target.push(item);
-      seenTitles.add(titleKey);
+      seenRecipeKeys.add(recipeKey);
     }
   }
 };
@@ -371,22 +371,26 @@ export const createWeeklyDinnerPlan = async ({
   generateDinnerSuggestions: GenerateDinnerSuggestions;
   addLog: (message: string) => void;
 }): Promise<WeeklyPlanResult> => {
-  const servingsCount = settings.servings;
+  const dinnerCount = [3, 5, 7].includes(settings.dinnerCount) ? settings.dinnerCount : 3;
+  const servingsCount = Number.isFinite(settings.servings) && settings.servings > 0
+    ? Math.floor(settings.servings)
+    : 1;
   const budgetValue = Number(settings.budget);
   const perPortionBudget = Number.isFinite(budgetValue) && budgetValue > 0
-    ? Number((budgetValue / settings.dinnerCount / servingsCount).toFixed(2))
+    ? Number((budgetValue / dinnerCount / servingsCount).toFixed(2))
     : undefined;
   const shouldApplyLowCostBias = perPortionBudget !== undefined && perPortionBudget <= 2;
   const shouldMinimiseCost = settings.minimiseCost === true;
   const shouldReuseIngredients = settings.reuseIngredients === true;
-  const requestedProteins = normalizeRequestedProteins(settings.protein, settings.dinnerCount, preferences);
+  const requestedProteins = normalizeRequestedProteins(settings.protein, dinnerCount, preferences);
   const preferredProteins = requestedProteins.filter(protein => protein !== 'no-preference');
   const includeOffalForPlan = requestedProteins.includes('offal') || preferences?.includeOffal === true;
   const proteinText = preferredProteins.length > 0 ? getProteinsText(preferredProteins) : getProteinsText(requestedProteins);
   const timeText = getTimeText(settings.time);
   const weeklySaladPreference = preferences?.saladPreference === 'main-only' ? 'main-only' : 'all';
-  const homemadeTarget = Math.min(settings.homemadeCount, settings.dinnerCount);
-  const readyMadeTarget = Math.max(settings.dinnerCount - homemadeTarget, 0);
+  const requestedHomemadeCount = Number.isFinite(settings.homemadeCount) ? Math.max(0, Math.floor(settings.homemadeCount)) : 0;
+  const homemadeTarget = Math.min(requestedHomemadeCount, dinnerCount);
+  const readyMadeTarget = Math.max(dinnerCount - homemadeTarget, 0);
   const existingPlannerTitles = planner.map(item => item.title);
   const baseSafetyPrefs = buildSafetyPrefs(preferences);
   const safetyPrefs = baseSafetyPrefs
@@ -421,10 +425,10 @@ export const createWeeklyDinnerPlan = async ({
 
   const homemadeItems: Recipe[] = [];
   const readyMadeItems: ReadyMeal[] = [];
-  const seenTitles = new Set<string>();
+  const seenRecipeKeys = new Set<string>();
   const addEligibleCandidates = <T extends Recipe | ReadyMeal>(items: T[], target: T[], targetCount: number) => {
     const eligible = safetyPrefs ? items.filter(item => passesHardConstraints(item, safetyPrefs)) : items;
-    addUniqueCandidates(eligible, target, targetCount, seenTitles);
+    addUniqueCandidates(eligible, target, targetCount, seenRecipeKeys);
   };
 
   if (homemadeTarget > 0) {
@@ -481,7 +485,7 @@ export const createWeeklyDinnerPlan = async ({
     }
   }
 
-  const dinners = [...homemadeItems, ...readyMadeItems].slice(0, settings.dinnerCount);
+  const dinners = [...homemadeItems, ...readyMadeItems].slice(0, dinnerCount);
   if (dinners.length === 0) {
     return {
       dinners,
@@ -489,7 +493,7 @@ export const createWeeklyDinnerPlan = async ({
     };
   }
 
-  if (dinners.length < settings.dinnerCount) {
+  if (dinners.length < dinnerCount) {
     return {
       dinners,
       alert: `Only ${dinners.length} suitable ${dinners.length === 1 ? 'dinner was' : 'dinners were'} found after the safety checks. Try increasing the budget, changing the time target, or using No preference for proteins.`,

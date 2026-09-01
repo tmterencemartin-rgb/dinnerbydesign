@@ -13,7 +13,7 @@ import {
 import { normalizeIngredient, costItemSync } from '../services/groceryService';
 import { safeStorage } from '../lib/storage';
 import { generateDinnerSuggestions as performServiceSearch, generateMatchRationales, GeminiServiceError, INITIAL_COOK_FROM_SCRATCH_RESULTS, INITIAL_READY_MADE_RESULTS, MORE_CHOICES_RESULTS } from '../services/geminiService';
-import { getRecipeKey, isSameRecipe } from '../lib/recipeUtils';
+import { getRecipeDeduplicationKey, getRecipeKey, isSameRecipe } from '../lib/recipeUtils';
 import { passesHardConstraints } from '../lib/dietarySafety';
 import { normaliseUserPreferences } from '../lib/preferenceUtils';
 import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrictIngredientSearch } from '../lib/ingredientParser';
@@ -569,8 +569,9 @@ export function useSearch() {
           if (recipesWithFinalIds.length > 0) {
             setCurrentRecipes(prev => {
               const existing = prev || [];
+              const existingKeys = new Set(existing.map(getRecipeDeduplicationKey));
               const uniqueNew = (recipesWithFinalIds as Recipe[]).filter(nr => 
-                !existing.some(er => er.title.toLowerCase().trim() === nr.title.toLowerCase().trim())
+                !existingKeys.has(getRecipeDeduplicationKey(nr))
               );
               newlyAddedCount += uniqueNew.length;
               return [...existing, ...uniqueNew];
@@ -579,8 +580,9 @@ export function useSearch() {
           if (readyMealsWithFinalIds.length > 0) {
             setCurrentReadyMeals(prev => {
               const existing = prev || [];
+              const existingKeys = new Set(existing.map(getRecipeDeduplicationKey));
               const uniqueNew = (readyMealsWithFinalIds as ReadyMeal[]).filter(nm => 
-                !existing.some(em => em.title.toLowerCase().trim() === nm.title.toLowerCase().trim())
+                !existingKeys.has(getRecipeDeduplicationKey(nm))
               );
               newlyAddedCount += uniqueNew.length;
               return [...existing, ...uniqueNew];

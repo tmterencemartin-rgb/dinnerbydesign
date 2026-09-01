@@ -20,6 +20,19 @@ export const getRecipeKey = (item: Recipe | ReadyMeal | SavedRecipe): string => 
 };
 
 /**
+ * Identity used when combining search or planner results.
+ * A title is not a reliable identity because different publishers can use
+ * the same title for different recipes.
+ */
+export const getRecipeDeduplicationKey = (item: Recipe | ReadyMeal | SavedRecipe): string => {
+  const sourceUrl = typeof item.sourceUrl === 'string' ? item.sourceUrl.trim() : '';
+  if (sourceUrl && /^https?:\/\//i.test(sourceUrl)) {
+    return `source:${sourceUrl.replace(/\/+$/, '').toLowerCase()}`;
+  }
+  return `recipe:${getRecipeKey(item)}`;
+};
+
+/**
  * Checks if two recipe objects represent the same recipe or a very close variant.
  */
 export const isSameRecipe = (
@@ -171,4 +184,3 @@ export const getConvenienceProfile = (item: any): 'scratch' | 'convenience' => {
   // Default to scratch for cook mode home recipes unless title explicitly states otherwise
   return 'scratch';
 };
-

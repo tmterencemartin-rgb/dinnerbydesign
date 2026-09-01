@@ -313,6 +313,48 @@ describe('plannerUtils', () => {
     expect(generatedQueries[1]).toContain('1 UK supermarket ready-made dinner products');
   });
 
+  it('keeps same-title recipes when they come from different sources', async () => {
+    const result = await createWeeklyDinnerPlan({
+      settings: {
+        dinnerCount: 3,
+        budget: '30',
+        servings: 2,
+        protein: 'no-preference',
+        time: 'any',
+        homemadeCount: 3,
+      },
+      planner: [],
+      preferences,
+      generateDinnerSuggestions: async () => ({
+        recipes: [
+          {
+            title: 'Chicken Curry', description: 'First publisher version', ingredients: [], instructions: [], cuisine: 'Indian',
+            totalServings: 2, totalTime: 30, saladType: 'none', sourceUrl: 'https://example.com/one',
+            isVegetarian: false, isPescatarian: false, isVegan: false, dietFlagsVerified: true,
+          },
+          {
+            title: 'Chicken Curry', description: 'Second publisher version', ingredients: [], instructions: [], cuisine: 'Indian',
+            totalServings: 2, totalTime: 35, saladType: 'none', sourceUrl: 'https://example.com/two',
+            isVegetarian: false, isPescatarian: false, isVegan: false, dietFlagsVerified: true,
+          },
+          {
+            title: 'Chickpea Curry', description: 'Third publisher version', ingredients: [], instructions: [], cuisine: 'Indian',
+            totalServings: 2, totalTime: 25, saladType: 'none', sourceUrl: 'https://example.com/three',
+            isVegetarian: true, isPescatarian: true, isVegan: true, dietFlagsVerified: true,
+          },
+        ],
+      }),
+      addLog: () => {},
+    });
+
+    expect(result.dinners).toHaveLength(3);
+    expect(result.dinners.map(item => item.sourceUrl)).toEqual([
+      'https://example.com/one',
+      'https://example.com/two',
+      'https://example.com/three',
+    ]);
+  });
+
   it('applies the affordability pilot priorities to weekly generation', async () => {
     let capturedQuery = '';
     let capturedLowCost = false;
