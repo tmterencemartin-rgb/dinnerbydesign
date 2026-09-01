@@ -258,6 +258,7 @@ export interface SearchParams {
       bone?: 'in' | 'out';
       fishForm?: 'filleted' | 'whole' | 'steak';
     };
+    categoryMinimums?: Partial<Record<'vegetable' | 'protein' | 'carbohydrate', number>>;
   };
   nutritiousChoice?: boolean;
   preferredSourceIds?: string[];

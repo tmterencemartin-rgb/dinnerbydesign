@@ -144,6 +144,34 @@ describe('Ingredient Parser & Normalizer', () => {
     }, 'protein vegetables carbohydrates')).toBe(true);
   });
 
+  test('enforces quantities for category-based ingredient searches', () => {
+    expect(detectIngredientIntent('1 protein two vegetables')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['protein', 'vegetable'],
+      categoryMinimums: { protein: 1, vegetable: 2 },
+      reason: 'short-food-list'
+    });
+
+    expect(detectIngredientIntent('one protein and two vegetables')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['protein', 'vegetable'],
+      categoryMinimums: { protein: 1, vegetable: 2 },
+      reason: 'short-food-list'
+    });
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['chicken breast', 'red pepper', 'onion', 'oil']
+    }, '1 protein two vegetables')).toBe(true);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['chicken breast', 'carrots', 'oil']
+    }, '1 protein two vegetables')).toBe(false);
+
+    expect(matchesStrictIngredientSearch({
+      ingredients: ['chicken breast', 'red pepper', 'onion', 'oil', 'salt']
+    }, 'one protein and two vegetables')).toBe(true);
+  });
+
   test('detects a standalone named ingredient search', () => {
     expect(detectIngredientIntent('mackerel')).toMatchObject({
       isIngredientLed: true,

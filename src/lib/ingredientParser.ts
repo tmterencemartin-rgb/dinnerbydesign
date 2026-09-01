@@ -552,6 +552,52 @@ const VEGETABLE_CATEGORY_TERMS = new Set([
   'mixed vegetable', 'seasonal vegetable', 'frozen vegetable', 'stir-fry vegetable'
 ]);
 
+type IngredientCategory = 'vegetable' | 'protein' | 'carbohydrate';
+
+const INGREDIENT_CATEGORY_ALIASES: Record<string, IngredientCategory> = {
+  vegetable: 'vegetable',
+  vegetables: 'vegetable',
+  protein: 'protein',
+  proteins: 'protein',
+  carbohydrate: 'carbohydrate',
+  carbohydrates: 'carbohydrate',
+  carb: 'carbohydrate',
+  carbs: 'carbohydrate'
+};
+
+const CATEGORY_QUANTITY_PATTERN = /\b(\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+(vegetable|vegetables|protein|proteins|carbohydrate|carbohydrates|carb|carbs)\b/gi;
+const CATEGORY_QUANTITY_WORDS: Record<string, number> = {
+  a: 1,
+  an: 1,
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+  nine: 9,
+  ten: 10
+};
+
+const normaliseCategoryQuantities = (query: string): {
+  query: string;
+  minimums: Partial<Record<IngredientCategory, number>>;
+} => {
+  const minimums: Partial<Record<IngredientCategory, number>> = {};
+  const normalisedQuery = query.replace(CATEGORY_QUANTITY_PATTERN, (_match, rawQuantity: string, rawCategory: string) => {
+    const category = INGREDIENT_CATEGORY_ALIASES[rawCategory.toLowerCase()];
+    const quantity = Number(rawQuantity) || CATEGORY_QUANTITY_WORDS[rawQuantity.toLowerCase()];
+    if (category && quantity > 0) {
+      minimums[category] = Math.max(minimums[category] || 0, quantity);
+      return category;
+    }
+    return rawCategory;
+  });
+  return { query: normalisedQuery, minimums };
+};
+
 const PROTEIN_CATEGORY_TERMS = new Set([
   'anchovy', 'bacon', 'beef', 'bean', 'chickpea', 'chorizo', 'chicken', 'crab', 'duck', 'egg',
   'game', 'haddock', 'ham', 'hake', 'herring', 'lamb', 'lentil', 'lobster', 'mackerel', 'monkfish',
@@ -681,13 +727,15 @@ export function detectIngredientIntent(query: string): {
   ingredients: string[];
   reason: 'list' | 'phrase' | 'short-food-list';
   preparationPreferences?: IngredientPreparationPreferences;
+  categoryMinimums?: Partial<Record<IngredientCategory, number>>;
 } | null {
   const trimmed = query?.trim();
   if (!trimmed) return null;
 
   const { cleanedQuery, preferences } = extractIngredientPreparationPreferences(trimmed);
   const hasPreparation = hasPreparationPreferences(preferences);
-  const lower = cleanedQuery.toLowerCase();
+  const { query: categoryNormalisedQuery, minimums: categoryMinimums } = normaliseCategoryQuantities(cleanedQuery);
+  const lower = categoryNormalisedQuery.toLowerCase();
   const ingredientPhrases = /\b(i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only|what can i make with|what can i cook with)\b/i;
   const hasListPunctuation = /[,;]/.test(cleanedQuery);
   const hasSimpleAndList = /\b\w+\b\s+\band\b\s+\b\w+\b/i.test(lower) && lower.split(/\s+/).length <= 7;
@@ -698,12 +746,13 @@ export function detectIngredientIntent(query: string): {
     .replace(/[?!.]/g, ' ')
     .trim();
 
-  const ingredients = parseAndNormaliseIngredients(withoutLeadIn || cleanedQuery)
+  const ingredients = parseAndNormaliseIngredients(withoutLeadIn || categoryNormalisedQuery)
     .map(item => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, '').trim())
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
-  const unseparatedWords = cleanedQuery.split(/\s+/).filter(word => !/^and$/i.test(word));
-  const unseparatedIngredients = parseUnseparatedIngredientList(cleanedQuery);
+  const unseparatedWords = categoryNormalisedQuery.split(/\s+/).filter(word => !/^and$/i.test(word));
+  const unseparatedIngredients = parseUnseparatedIngredientList(categoryNormalisedQuery);
+  const categoryMetadata = Object.keys(categoryMinimums).length > 0 ? { categoryMinimums } : {};
   const isShortUnseparatedIngredientList =
     !hasListPunctuation
     && !ingredientPhrases.test(trimmed)
@@ -713,7 +762,7 @@ export function detectIngredientIntent(query: string): {
     && unseparatedIngredients.length <= 4;
 
   if (isShortUnseparatedIngredientList) {
-    return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   const isStandaloneIngredientSearch =
@@ -726,23 +775,23 @@ export function detectIngredientIntent(query: string): {
     && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(ingredients[0]);
 
   if (isStandaloneIngredientSearch) {
-    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (ingredients.length >= 2 && ingredientPhrases.test(cleanedQuery)) {
-    return { isIngredientLed: true, ingredients, reason: 'phrase', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    return { isIngredientLed: true, ingredients, reason: 'phrase', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (ingredients.length >= 2 && hasListPunctuation) {
-    return { isIngredientLed: true, ingredients, reason: 'list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    return { isIngredientLed: true, ingredients, reason: 'list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (ingredients.length >= 2 && hasSimpleAndList) {
-    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (hasPreparation && ingredients.length > 0) {
-    return { isIngredientLed: true, ingredients, reason: 'short-food-list', preparationPreferences: preferences };
+    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...categoryMetadata, preparationPreferences: preferences };
   }
 
   return null;
@@ -956,6 +1005,9 @@ const matchesRequestedIngredient = (value: string, allowed: string) =>
         ? matchesIngredientCategory(value, CARBOHYDRATE_CATEGORY_TERMS)
         : matchesAllowedIngredient(value, allowed);
 
+const isIngredientCategory = (value: string): value is IngredientCategory =>
+  value === 'vegetable' || value === 'protein' || value === 'carbohydrate';
+
 const matchesRequestedPreparation = (
   value: string,
   requested?: IngredientPreparationPreferences
@@ -986,10 +1038,15 @@ export function matchesRequestedIngredientSearch(item: { ingredients?: string[];
   const requestedPreparation = intent.preparationPreferences;
 
   return requestedIngredients.every(requested =>
-    normalisedLines.some(line =>
-      matchesRequestedIngredient(line, requested)
-      && matchesRequestedPreparation(line, requestedPreparation)
-    )
+    isIngredientCategory(requested) && (intent.categoryMinimums?.[requested] || 1) > 1
+      ? new Set(normalisedLines.filter(line =>
+          matchesRequestedIngredient(line, requested)
+          && matchesRequestedPreparation(line, requestedPreparation)
+        )).size >= (intent.categoryMinimums?.[requested] || 1)
+      : normalisedLines.some(line =>
+          matchesRequestedIngredient(line, requested)
+          && matchesRequestedPreparation(line, requestedPreparation)
+        )
   );
 }
 

@@ -52,6 +52,12 @@ const sentenceCase = (value: string) => {
   return clean ? clean.charAt(0).toUpperCase() + clean.slice(1) : '';
 };
 
+const formatIngredientFocus = (ingredient: string, minimum?: number) => {
+  if (!minimum || minimum <= 1) return sentenceCase(ingredient);
+  const plural = ingredient === 'carbohydrate' ? 'carbohydrates' : `${ingredient}s`;
+  return `At least ${minimum} ${plural}`;
+};
+
 const formatDinnerBrief = (query: string, ingredientIntent: ReturnType<typeof detectIngredientIntent>) => {
   const cleanQuery = stripSearchLeadIn(query);
   if (!cleanQuery) return '';
@@ -1407,7 +1413,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </h2>
                 {resultsIngredientIntent?.isIngredientLed && resultsIngredientIntent.ingredients.length > 0 && (
                   <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                    Search focus: {resultsIngredientIntent.ingredients.map(sentenceCase).join(', ')}. Each result shows its match explanation where available.
+                    Search focus: {resultsIngredientIntent.ingredients.map(ingredient => formatIngredientFocus(ingredient, resultsIngredientIntent.categoryMinimums?.[ingredient as 'vegetable' | 'protein' | 'carbohydrate'])).join(', ')}. Each result shows its match explanation where available.
                   </p>
                 )}
                 {showNotBoringSummerSaladsResultsCopy && (

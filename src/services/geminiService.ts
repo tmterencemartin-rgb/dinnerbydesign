@@ -987,6 +987,13 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     
     // Parse and normalise search query elements for ingredient-focused searches
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query);
+    const categoryMinimums = ingredientIntent?.categoryMinimums || {};
+    const categoryMinimumText = Object.entries(categoryMinimums)
+      .map(([category, minimum]) => `${minimum} ${category}${minimum === 1 ? '' : 's'}`)
+      .join(', ');
+    const categoryMinimumInstruction = categoryMinimumText
+      ? `\n- Category minimums: at least ${categoryMinimumText}, counting distinct matching ingredients.`
+      : '';
     const preparationPreferences = ingredientIntent?.preparationPreferences;
     const preparationInstruction = preparationPreferences
       ? `\n- Explicit preparation requirements: ${[
@@ -1002,6 +1009,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
 - These ingredients have been normalised to singular names in UK English (such as tomatoes to 'tomato', red peppers to 'red pepper'), treating plurals and spelling variants as equivalent.
 - You MUST interpret each parsed element as a distinct ingredient list item.
 - Every returned recipe must contain ALL of these listed ingredients.${preparationInstruction}
+${categoryMinimumInstruction}
 - If 'vegetable' is listed, it means at least one named vegetable in the recipe. Do not count vegetable oil, vegetable stock or vegetable broth as the vegetable requirement.
 - If 'protein' is listed, it means at least one named meat, fish, seafood, egg, pulse, nut or plant-protein ingredient.
 - If 'carbohydrate' is listed, it means at least one named starchy ingredient such as rice, pasta, bread, noodles, potatoes or grains.
@@ -1064,7 +1072,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 
     // Dynamic prompt - minimal and direct
     const prompt = `Search intent: "${query}". 
-    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: MUST contain every specified parsed ingredient (${parsedIngredients.join(', ')}). Minimise extra shopping and feature these ingredients prominently.` : ''}
+    ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: MUST contain every specified parsed ingredient (${parsedIngredients.join(', ')}).${categoryMinimumInstruction} Minimise extra shopping and feature these ingredients prominently.` : ''}
     ${activeSaladPref === 'main-only' ? 'Requirement: MUST be a main-course salad.' : ''}
     ${activeSaladPref === 'side-only' ? 'Requirement: MUST be a side salad.' : ''}
     ${activeSaladPref === 'none' ? 'Requirement: NO salads.' : ''}
@@ -1223,7 +1231,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     if (ingredientIntent?.isIngredientLed && !isReadyMade && rawItems.length < count) {
       const recoveryPrompt = `Recover a recipe search for "${query}".
 Return up to ${count} complete UK home-cooking recipe stubs.
-Every recipe must include all of these requested ingredients in its ingredients array: ${parsedIngredients.join(', ')}.
+Every recipe must include all of these requested ingredients in its ingredients array: ${parsedIngredients.join(', ')}.${categoryMinimumInstruction}
 Use Google Search grounding and set sourceUrl to an exact grounded recipe page URL.
 Return an empty items array only when no grounded page supports the request. Never use an ellipsis or placeholder.`;
       repairPrompts.push(recoveryPrompt);
