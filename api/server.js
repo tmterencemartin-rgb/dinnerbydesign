@@ -234281,11 +234281,18 @@ function createApp() {
   });
   app2.post("/api/create-checkout-session", async (req, res) => {
     try {
+      const authorization = req.get("authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+      if (!token) return res.status(401).json({ error: "A signed-in account is required." });
+      const decoded = await getAdminAuth().verifyIdToken(token);
+      if (decoded.firebase?.sign_in_provider === "anonymous") {
+        return res.status(403).json({ error: "A registered account is required to subscribe." });
+      }
       const stripeClient = await getStripe();
       const origin = getAppOrigin(req);
       const { plan, userId } = req.body;
-      if (!userId) {
-        return res.status(400).json({ error: "Missing userId" });
+      if (!userId || userId !== decoded.uid) {
+        return res.status(400).json({ error: "The signed-in account could not be verified." });
       }
       const isYearly = plan === "yearly";
       const successUrl = origin.endsWith("/") ? `${origin}success?session_id={CHECKOUT_SESSION_ID}` : `${origin}/success?session_id={CHECKOUT_SESSION_ID}`;
@@ -234293,8 +234300,7 @@ function createApp() {
       const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ["card"],
         client_reference_id: userId,
-        customer_email: req.body.email,
-        // Use email from body if provided
+        customer_email: decoded.email || void 0,
         metadata: { userId, plan: isYearly ? "annual" : "monthly" },
         line_items: [
           {
@@ -234336,11 +234342,50 @@ function createApp() {
   });
   app2.post("/api/create-portal-session", async (req, res) => {
     try {
-      const { customerId } = req.body;
-      if (!customerId) return res.status(400).json({ error: "Missing customerId" });
+      const authorization = req.get("authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+      if (!token) return res.status(401).json({ error: "A signed-in account is required." });
+      const decoded = await getAdminAuth().verifyIdToken(token);
+      if (decoded.firebase?.sign_in_provider === "anonymous") {
+        return res.status(403).json({ error: "A registered account is required to manage billing." });
+      }
       const stripeClient = await getStripe();
-      const origin = req.headers.origin || req.headers.referer || `${req.protocol}://${req.get("host")}`;
-      const returnUrl = origin.endsWith("/") ? `${origin}settings` : `${origin}/settings`;
+      const userRef = getDb().collection("users").doc(decoded.uid);
+      const profileSnapshot = await userRef.get();
+      const profile = profileSnapshot.data() || {};
+      let customerId = String(profile.subscription?.stripeCustomerId || "").trim();
+      if (!customerId && decoded.email) {
+        const customers = await stripeClient.customers.list({
+          email: decoded.email,
+          limit: 100
+        });
+        const customersWithActiveSubscriptions = [];
+        for (const customer of customers.data || []) {
+          const subscriptions = await stripeClient.subscriptions.list({
+            customer: customer.id,
+            status: "all",
+            limit: 20
+          });
+          const hasManageableSubscription = (subscriptions.data || []).some((subscription) => ["active", "trialing", "past_due", "unpaid"].includes(subscription.status));
+          if (hasManageableSubscription) customersWithActiveSubscriptions.push(customer.id);
+        }
+        if (customersWithActiveSubscriptions.length === 1) {
+          customerId = customersWithActiveSubscriptions[0];
+          if (profileSnapshot.exists) {
+            await userRef.set({
+              subscription: {
+                stripeCustomerId: customerId,
+                updatedAt: FieldValue.serverTimestamp()
+              },
+              updatedAt: FieldValue.serverTimestamp()
+            }, { merge: true });
+          }
+        }
+      }
+      if (!customerId) {
+        return res.status(404).json({ error: "Your billing details are not ready yet. Please try again shortly." });
+      }
+      const returnUrl = `${getAppOrigin(req)}/?view=settings`;
       const session = await stripeClient.billingPortal.sessions.create({
         customer: customerId,
         return_url: returnUrl

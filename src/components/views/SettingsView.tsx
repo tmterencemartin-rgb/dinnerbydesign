@@ -550,10 +550,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
   };
 
   const handleManageBilling = async () => {
-    const customerId = profile?.subscription?.stripeCustomerId;
-
-    if (!customerId) {
-      showToast("No active subscription found to manage.");
+    if (!user) {
+      showToast("Please sign in to manage billing.");
       return;
     }
 
@@ -562,11 +560,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     try {
       const response = await fetch(getApiUrl('/api/create-portal-session'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerId }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await user.getIdToken()}`,
+        },
       });
 
-      if (!response.ok) throw new Error('Failed to create portal session');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Billing management is temporarily unavailable.');
+      }
       const { url } = await response.json();
       window.location.href = url;
     } catch (err: any) {
@@ -585,6 +588,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
   }, [localPreferences, profile?.preferences, exclusionsDraft]);
 
   const displayedPreferences = localPreferences || profile?.preferences || normaliseUserPreferences(null);
+  const canManageBilling = accessStatus === 'paid'
+    || !!profile?.isPremium
+    || !!profile?.subscription?.stripeCustomerId;
 
   const [debugClicks, setDebugClicks] = useState(0);
   const isDebugUrl = typeof window !== 'undefined' && window.location.search.includes('debug=true');
@@ -1129,7 +1135,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                       </div>
                     )}
 
-                    {(profile?.isPremium || profile?.subscription?.stripeCustomerId) && (
+                    {canManageBilling && (
                       <button
                         onClick={handleManageBilling}
                         disabled={isPortalLoading}
@@ -1140,7 +1146,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                         ) : (
                           <ExternalLink className="w-4 h-4 text-gray-500" />
                         )}
-                        Manage Billing & Subscription
+                        Manage or cancel subscription
                       </button>
                     )}
                   </div>
@@ -1392,10 +1398,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     </p>
                   </div>
                 </div>
-                {profile?.isPremium && (
+                {canManageBilling && (
                   <div className="pt-2">
-                    <button className="text-[12px] text-dbd-accent hover:underline font-bold transition-all flex items-center gap-1.5">
-                      Manage subscription in customer portal
+                    <button
+                      type="button"
+                      onClick={handleManageBilling}
+                      disabled={isPortalLoading}
+                      className="text-[12px] text-dbd-accent hover:underline font-bold transition-all flex items-center gap-1.5 disabled:opacity-50"
+                    >
+                      Manage or cancel subscription
                       <ExternalLink size={12} />
                     </button>
                   </div>

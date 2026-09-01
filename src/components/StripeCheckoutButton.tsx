@@ -47,8 +47,9 @@ export const StripeCheckoutButton: React.FC<StripeCheckoutButtonProps> = ({ clas
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await user.getIdToken()}`,
         },
-        body: JSON.stringify({ plan, userId: user.uid, email: user.email }),
+        body: JSON.stringify({ plan, userId: user.uid }),
       });
 
       if (!response.ok) {
