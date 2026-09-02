@@ -220859,7 +220859,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- When Google provides a grounded page, sourceUrl MUST be its exact recipe-page URL. Never invent a URL, use a generic search URL, or return recipe-search. When Google does not provide a grounded page, omit sourceUrl unless it is an exact recipe page from BBC Good Food, BBC Food, Tesco Real Food, Guardian Feast, Mob, delicious. magazine, The Happy Foodie, Kitchen Sanctuary, Diabetes UK, Slimming World, or Jamie Oliver.
+- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from the approved publisher or retailer list. Never invent a URL, use a generic search URL, return recipe-search, or omit sourceUrl.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
 - FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
@@ -221004,7 +221004,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
                   }
                 }
               },
-              required: ["title", "description", "cuisine", "totalTime", "ingredients", "totalIngredientsCount", "realityChecks", ...isReadyMade ? ["retailer"] : ["totalServings"]]
+              required: ["title", "description", "cuisine", "totalTime", "ingredients", "totalIngredientsCount", "sourceUrl", "realityChecks", ...isReadyMade ? ["retailer"] : ["totalServings"]]
             }
           },
           budgetContradiction: {
@@ -221071,7 +221071,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
                   totalIngredientsCount: { type: Type.NUMBER },
                   sourceUrl: { type: Type.STRING }
                 },
-                required: ["title", "description", "ingredients"]
+                required: ["title", "description", "ingredients", "sourceUrl"]
               }
             }
           },
