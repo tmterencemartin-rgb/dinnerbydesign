@@ -820,7 +820,12 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
   ]),
   onion: new Set(['red', 'white', 'spring']),
   potato: new Set(['new', 'roast']),
-  tomato: new Set(['cherry', 'plum', 'beef', 'tinned', 'chopped']),
+  // Generic tomato searches should include common substantive forms used in
+  // UK recipes, including passata and purée.
+  tomato: new Set([
+    'cherry', 'plum', 'beef', 'tinned', 'chopped', 'sun-dried', 'sundried',
+    'puree', 'purée', 'paste', 'passata', 'sauce', 'based'
+  ]),
   egg: new Set(['hen', 'chicken', 'duck', 'goose', 'quail']),
   pepper: new Set(['red', 'green', 'yellow', 'bell']),
   chicken: new Set([

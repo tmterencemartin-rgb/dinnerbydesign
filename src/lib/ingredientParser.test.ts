@@ -429,6 +429,16 @@ describe('Ingredient Parser & Normalizer', () => {
     }, 'pork onions and potatoes')).toBe(false);
   });
 
+  test('recognises common substantive tomato forms in generic searches', () => {
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['pork mince', 'tomato purée', 'onion']
+    }, 'pork, tomatoes')).toBe(true);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['pork shoulder', 'tomato passata', 'garlic']
+    }, 'pork and tomatoes')).toBe(true);
+  });
+
   test('recognises bird egg variants without weakening specific egg searches', () => {
     expect(detectIngredientIntent('duck egg and rice')?.ingredients).toEqual(['duck egg', 'rice']);
 

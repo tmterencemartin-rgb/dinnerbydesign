@@ -189260,7 +189260,23 @@ var INGREDIENT_VARIANT_WORDS = {
   ]),
   onion: /* @__PURE__ */ new Set(["red", "white", "spring"]),
   potato: /* @__PURE__ */ new Set(["new", "roast"]),
-  tomato: /* @__PURE__ */ new Set(["cherry", "plum", "beef", "tinned", "chopped"]),
+  // Generic tomato searches should include common substantive forms used in
+  // UK recipes, including passata and purée.
+  tomato: /* @__PURE__ */ new Set([
+    "cherry",
+    "plum",
+    "beef",
+    "tinned",
+    "chopped",
+    "sun-dried",
+    "sundried",
+    "puree",
+    "pur\xE9e",
+    "paste",
+    "passata",
+    "sauce",
+    "based"
+  ]),
   egg: /* @__PURE__ */ new Set(["hen", "chicken", "duck", "goose", "quail"]),
   pepper: /* @__PURE__ */ new Set(["red", "green", "yellow", "bell"]),
   chicken: /* @__PURE__ */ new Set([
@@ -220826,10 +220842,12 @@ INGREDIENT PARSING & INTERPRETATION (CRITICAL):
 - You MUST interpret each parsed element as a distinct ingredient list item.
 - Every returned recipe must contain ALL of these listed ingredients.${preparationInstruction}
 ${categoryMinimumInstruction}
+- For a generic ingredient such as tomato, common substantive forms such as fresh tomato, cherry or plum tomato, chopped or tinned tomato, passata, tomato pur\xE9e or tomato paste count as that ingredient. Do not count a trace flavouring or an unrelated product name.
+- For a generic protein such as pork, a normal pork cut, pork mince or pork sausage counts unless the user asked for a specific cut.
 - If 'vegetable' is listed, it means at least one named vegetable in the recipe. Do not count vegetable oil, vegetable stock or vegetable broth as the vegetable requirement.
 - If 'protein' is listed, it means at least one named meat, fish, seafood, egg, pulse, nut or plant-protein ingredient.
 - If 'carbohydrate' is listed, it means at least one named starchy ingredient such as rice, pasta, bread, noodles, potatoes or grains.
-- If no exact matches exist, return zero results rather than a near match.
+- If no supported matches exist, return zero results rather than a near match.
 ${strictIngredientMatch ? "- Return the complete visible ingredient list for each recipe, not a shortened summary." : ""}
    - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.` : "";
     const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs based on the user's intent.
@@ -221027,7 +221045,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
       const recoveryPrompt = `Recover a recipe search for "${query2}".
 Return up to ${count} complete UK home-cooking recipe stubs.
 Every recipe must include all of these requested ingredients in its ingredients array: ${parsedIngredients.join(", ")}.${categoryMinimumInstruction}
-Use Google Search grounding and set sourceUrl to an exact grounded recipe page URL.
+Use Google Search grounding and set sourceUrl to an exact grounded recipe page URL. Search natural combinations such as "pork and tomato recipes" where useful, while keeping every listed ingredient requirement.
 Return an empty items array only when no grounded page supports the request. Never use an ellipsis or placeholder.`;
       repairPrompts.push(recoveryPrompt);
       const recoveryConfig = {
