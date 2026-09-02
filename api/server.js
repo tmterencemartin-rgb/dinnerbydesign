@@ -189373,7 +189373,19 @@ var INGREDIENT_VARIANT_WORDS = {
     "hake",
     "monkfish",
     "bass",
-    "anchovy"
+    "anchovy",
+    "white",
+    "oily",
+    "sea",
+    "fillet",
+    "fillets",
+    "steak",
+    "steaks",
+    "portion",
+    "portions",
+    "side",
+    "sides",
+    "whole"
   ]),
   rice: /* @__PURE__ */ new Set(["wild", "brown", "basmati", "long", "jasmine", "bomba", "risotto"]),
   bean: /* @__PURE__ */ new Set(["butter", "kidney", "black", "cannellini", "haricot", "baked", "green", "broad", "fava", "runner", "edamame"]),
@@ -189416,7 +189428,17 @@ var FISH_SPECIES_WORDS = /* @__PURE__ */ new Set([
   "bass",
   "anchovy"
 ]);
-var FISH_FORM_WORDS = /* @__PURE__ */ new Set(["fillet", "steak", "portion", "side", "whole"]);
+var FISH_FORM_WORDS = /* @__PURE__ */ new Set([
+  "fillet",
+  "fillets",
+  "steak",
+  "steaks",
+  "portion",
+  "portions",
+  "side",
+  "sides",
+  "whole"
+]);
 var BEEF_CUT_TERMS = /* @__PURE__ */ new Set([
   "fillet",
   "sirloin",
@@ -189655,13 +189677,13 @@ var matchesAllowedIngredient = (value, allowed2) => {
     if (speciesIndex < 0) return false;
     const remainingWords2 = valueWords.filter((_, index) => index !== speciesIndex);
     return remainingWords2.length === 0 || remainingWords2.every(
-      (word) => INGREDIENT_MODIFIER_PATTERN.test(word) || FISH_FORM_WORDS.has(word)
+      (word) => INGREDIENT_MODIFIER_PATTERN.test(word) || FISH_FORM_WORDS.has(word) || word === "sea"
     );
   }
   const remainingWords = valueWords.filter(
     (_, index) => index < allowedStart || index >= allowedStart + allowedWords.length
   );
-  const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedKey] || (FISH_SPECIES_WORDS.has(allowedKey) || allowedKey === "sea bass" ? /* @__PURE__ */ new Set([...FISH_FORM_WORDS, "loin", "tail"]) : BEEF_CUT_TERMS.has(allowedKey) ? BEEF_CUT_VARIANT_WORDS : BACON_VARIANT_TERMS.has(allowedKey) ? BACON_VARIANT_WORDS : PORK_CUT_TERMS.has(allowedKey) ? PORK_CUT_VARIANT_WORDS : CHICKEN_CUT_TERMS.has(allowedKey) ? CHICKEN_CUT_VARIANT_WORDS : /* @__PURE__ */ new Set());
+  const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedKey] || (FISH_SPECIES_WORDS.has(allowedKey) || allowedKey === "sea bass" ? /* @__PURE__ */ new Set([...FISH_FORM_WORDS, "loin", "tail"]) : allowedKey === "fish" ? /* @__PURE__ */ new Set([...FISH_SPECIES_WORDS, ...FISH_FORM_WORDS, "white", "oily", "sea"]) : BEEF_CUT_TERMS.has(allowedKey) ? BEEF_CUT_VARIANT_WORDS : BACON_VARIANT_TERMS.has(allowedKey) ? BACON_VARIANT_WORDS : PORK_CUT_TERMS.has(allowedKey) ? PORK_CUT_VARIANT_WORDS : CHICKEN_CUT_TERMS.has(allowedKey) ? CHICKEN_CUT_VARIANT_WORDS : /* @__PURE__ */ new Set());
   return remainingWords.length === 0 || remainingWords.every(
     (word) => INGREDIENT_MODIFIER_PATTERN.test(word) || allowedVariantWords.has(word)
   );

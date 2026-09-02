@@ -847,7 +847,8 @@ const INGREDIENT_VARIANT_WORDS: Record<string, Set<string>> = {
   duck: new Set(['breast', 'leg', 'fillet']),
   fish: new Set([
     'salmon', 'cod', 'haddock', 'mackerel', 'trout', 'tuna', 'sardine', 'herring',
-    'pollock', 'plaice', 'hake', 'monkfish', 'bass', 'anchovy'
+    'pollock', 'plaice', 'hake', 'monkfish', 'bass', 'anchovy', 'white', 'oily', 'sea',
+    'fillet', 'fillets', 'steak', 'steaks', 'portion', 'portions', 'side', 'sides', 'whole'
   ]),
   rice: new Set(['wild', 'brown', 'basmati', 'long', 'jasmine', 'bomba', 'risotto']),
   bean: new Set(['butter', 'kidney', 'black', 'cannellini', 'haricot', 'baked', 'green', 'broad', 'fava', 'runner', 'edamame']),
@@ -879,7 +880,10 @@ const FISH_SPECIES_WORDS = new Set([
   'salmon', 'cod', 'haddock', 'mackerel', 'trout', 'tuna', 'sardine', 'herring',
   'pollock', 'plaice', 'hake', 'monkfish', 'bass', 'anchovy'
 ]);
-const FISH_FORM_WORDS = new Set(['fillet', 'steak', 'portion', 'side', 'whole']);
+const FISH_FORM_WORDS = new Set([
+  'fillet', 'fillets', 'steak', 'steaks', 'portion', 'portions',
+  'side', 'sides', 'whole'
+]);
 
 const BEEF_CUT_TERMS = new Set([
   'fillet', 'sirloin', 'rib', 'ribeye', 'ribeye steak', 'rib steak', 'striploin', 'striploin steak',
@@ -973,7 +977,7 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
     if (speciesIndex < 0) return false;
     const remainingWords = valueWords.filter((_, index) => index !== speciesIndex);
     return remainingWords.length === 0 || remainingWords.every(word =>
-      INGREDIENT_MODIFIER_PATTERN.test(word) || FISH_FORM_WORDS.has(word)
+      INGREDIENT_MODIFIER_PATTERN.test(word) || FISH_FORM_WORDS.has(word) || word === 'sea'
     );
   }
 
@@ -983,6 +987,7 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
 
   const allowedVariantWords = INGREDIENT_VARIANT_WORDS[allowedKey]
     || (FISH_SPECIES_WORDS.has(allowedKey) || allowedKey === 'sea bass' ? new Set([...FISH_FORM_WORDS, 'loin', 'tail'])
+      : allowedKey === 'fish' ? new Set([...FISH_SPECIES_WORDS, ...FISH_FORM_WORDS, 'white', 'oily', 'sea'])
       : BEEF_CUT_TERMS.has(allowedKey) ? BEEF_CUT_VARIANT_WORDS
       : BACON_VARIANT_TERMS.has(allowedKey) ? BACON_VARIANT_WORDS
         : PORK_CUT_TERMS.has(allowedKey) ? PORK_CUT_VARIANT_WORDS

@@ -439,6 +439,20 @@ describe('Ingredient Parser & Normalizer', () => {
     }, 'pork and tomatoes')).toBe(true);
   });
 
+  test('recognises common descriptions of generic fish searches', () => {
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['white fish fillets', 'mixed vegetables']
+    }, 'fish vegetables')).toBe(true);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['oily fish', 'spinach']
+    }, 'fish vegetables')).toBe(true);
+
+    expect(matchesRequestedIngredientSearch({
+      ingredients: ['sea bass fillet', 'courgette']
+    }, 'fish vegetables')).toBe(true);
+  });
+
   test('recognises bird egg variants without weakening specific egg searches', () => {
     expect(detectIngredientIntent('duck egg and rice')?.ingredients).toEqual(['duck egg', 'rice']);
 
