@@ -232955,7 +232955,9 @@ function getAppOrigin(req) {
   try {
     const parsed = new URL(origin);
     const isLocal = ["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
-    return isLocal ? parsed.origin : PRODUCTION_APP_URL;
+    const isDinnerByDesignPreview = parsed.hostname.startsWith("dinnerbydesign-") && parsed.hostname.endsWith(".vercel.app");
+    if (isLocal || isDinnerByDesignPreview) return parsed.origin;
+    return PRODUCTION_APP_URL;
   } catch {
     return PRODUCTION_APP_URL;
   }
