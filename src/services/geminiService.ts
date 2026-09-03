@@ -1813,6 +1813,7 @@ export async function generateMatchRationales(
     const systemInstruction = `You are a match rationale generator for a dinner planning app.
 Provide objective, non-obvious explanations for why these specific items were suggested.
 NO subjective adjectives (tasty, delicious, premium). 
+Return a short, plain-language reason only. Do not begin with or include "matches the query", "match:", or similar meta wording.
 Context: Query: "${searchParams.query}", Diet: ${preferences?.dietaryRule || "None"}
 
 Items: ${JSON.stringify(itemSummaries)}`;

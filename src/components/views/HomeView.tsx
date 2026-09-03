@@ -1416,7 +1416,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </h2>
                 {resultsIngredientIntent?.isIngredientLed && resultsIngredientIntent.ingredients.length > 0 && (
                   <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                    Search focus: {resultsIngredientIntent.ingredients.map(ingredient => formatIngredientFocus(ingredient, resultsIngredientIntent.categoryMinimums?.[ingredient as 'vegetable' | 'protein' | 'carbohydrate'])).join(', ')}. Each result shows its match explanation where available.
+                    Search focus: {resultsIngredientIntent.ingredients.map(ingredient => formatIngredientFocus(ingredient, resultsIngredientIntent.categoryMinimums?.[ingredient as 'vegetable' | 'protein' | 'carbohydrate'])).join(', ')}.
                   </p>
                 )}
                 {showNotBoringSummerSaladsResultsCopy && (
@@ -1472,6 +1472,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     key={recipe.id || `compact-recipe-${recipe.title}`}
                     item={recipe}
                     source="cook"
+                    query={resultsQuery}
                     onClick={() => setSelectedItem(recipe)}
                     onCompare={() => handleCompareToggle(recipe)}
                     isCompareSelected={isCompareSelected(recipe)}
@@ -1483,6 +1484,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     key={readyMadeDinner.id || `compact-ready-made-${readyMadeDinner.title}`}
                     item={readyMadeDinner}
                     source="ready-made"
+                    query={resultsQuery}
                     onClick={() => setSelectedItem(readyMadeDinner)}
                     onCompare={() => handleCompareToggle(readyMadeDinner)}
                     isCompareSelected={isCompareSelected(readyMadeDinner)}

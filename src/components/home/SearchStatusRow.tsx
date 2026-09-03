@@ -105,7 +105,7 @@ export const SearchStatusRow: React.FC<SearchStatusRowProps> = ({
                           ? (isReadyMade ? readyMadeSearchText : isIngredientLed ? `Using ${ingredientIntent?.ingredients.slice(0, 4).join(', ')} as the starting point.` : "Searching broadly across all matches – add preferences for more precise results.")
                           : "Applying your specific preferences to find the perfect match.")
                   ) : (status === 'partial' || showEnriching) ? (
-                    "Refining descriptions and match rationales."
+                    "Refining recipe details."
                   ) : null}
                 </p>
               </div>

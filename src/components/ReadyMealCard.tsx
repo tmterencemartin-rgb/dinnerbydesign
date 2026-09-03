@@ -4,7 +4,7 @@ import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag } from 'luc
 import { ReadyMeal, ReadyMadeKitItem } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
-import { isSameRecipe } from '../lib/recipeUtils';
+import { getDisplayMatchReason, isSameRecipe } from '../lib/recipeUtils';
 import { CircleX } from './ui/CircleX';
 import { Tooltip } from './ui/Tooltip';
 import { RetailerCtaLink } from './RetailerCtaLink';
@@ -50,6 +50,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
   const currentServingSuggestion = enrichedData?.servingSuggestion || meal.servingSuggestion;
   const currentKit = enrichedData?.readyMadeKit || meal.readyMadeKit;
+  const displayMatchReason = getDisplayMatchReason(meal.matchReason, meal.title, query);
 
   const fallbackKit = React.useMemo(() => {
     const cuisine = (meal.cuisine || '').toLowerCase();
@@ -334,10 +335,9 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 {meal.description}
               </p>
 
-              {meal.matchReason && meal.matchReason.length > 0 && (
+              {displayMatchReason && (
                 <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-500 leading-snug">
-                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-500">Match:</span>{' '}
-                  <span className="italic">{tidyKitText(meal.matchReason)}</span>
+                  {displayMatchReason}
                 </p>
               )}
 

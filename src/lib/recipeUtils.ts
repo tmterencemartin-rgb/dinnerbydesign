@@ -108,7 +108,8 @@ export const shouldShowMatchReason = (
   const genericFiller = [
     'direct match', 'matches search', 'matching the search', 'major uk retailer', 
     'major retailer', 'ready meal', 'curated for you', 'exact match', 
-    'relevant result', 'matching your query', 'suggested for you'
+    'relevant result', 'matching your query', 'matches the query',
+    'matches your query', 'matches the search', 'suggested for you'
   ];
 
   const isGeneric = genericFiller.some(filler => r.includes(filler));
@@ -127,6 +128,29 @@ export const shouldShowMatchReason = (
   // 2. MUST NOT be generic or a restatement.
   // 3. MUST NOT have been caught by banned terms (checked first).
   return hasExplanatorySignal && !isGeneric && !isTitleRestatement && !isQueryRestatement;
+};
+
+/**
+ * Returns concise, useful match context for result cards.
+ * Generated rationales often begin with a redundant explanation of their own purpose.
+ */
+export const getDisplayMatchReason = (
+  reason: string | null | undefined,
+  title: string,
+  query: string
+): string | null => {
+  if (!reason || reason.trim().length === 0) return null;
+
+  const withoutBoilerplate = reason
+    .trim()
+    .replace(/^(?:this\s+)?matches?\s+(?:the|your)\s+(?:search|query)(?:\s+(?:by|because|with))?\s*/i, '')
+    .replace(/^(?:featuring|using|including)\s+/i, '')
+    .trim();
+
+  if (!withoutBoilerplate) return null;
+
+  const displayReason = withoutBoilerplate.charAt(0).toUpperCase() + withoutBoilerplate.slice(1);
+  return shouldShowMatchReason(displayReason, title, query) ? displayReason : null;
 };
 
 /**

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getRecipeDeduplicationKey, getRecipeKey, isSameRecipe, getSourceUrl } from './recipeUtils';
+import { getDisplayMatchReason, getRecipeDeduplicationKey, getRecipeKey, isSameRecipe, getSourceUrl } from './recipeUtils';
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 
 describe('recipeUtils', () => {
@@ -89,6 +89,20 @@ describe('recipeUtils', () => {
 
     it('returns null if sourceUrl is missing', () => {
       expect(getSourceUrl({})).toBe(null);
+    });
+  });
+
+  describe('getDisplayMatchReason', () => {
+    it('removes redundant query language and keeps useful context', () => {
+      expect(getDisplayMatchReason(
+        'Matches the query by featuring chicken thighs as the primary protein source, paired with yogurt.',
+        'Chicken thigh curry',
+        'chicken thighs'
+      )).toBe('Chicken thighs as the primary protein source, paired with yogurt.');
+    });
+
+    it('suppresses generic match explanations', () => {
+      expect(getDisplayMatchReason('Matches the query.', 'Chicken curry', 'chicken')).toBe(null);
     });
   });
 });

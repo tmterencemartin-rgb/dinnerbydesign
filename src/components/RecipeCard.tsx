@@ -4,7 +4,7 @@ import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag } from 'luc
 import { Recipe, ReadyMeal, SavedRecipe } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
-import { isSameRecipe } from '../lib/recipeUtils';
+import { getDisplayMatchReason, isSameRecipe } from '../lib/recipeUtils';
 import { CircleX } from './ui/CircleX';
 import { Tooltip } from './ui/Tooltip';
 import { RetailerCtaLink } from './RetailerCtaLink';
@@ -58,6 +58,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   const displayedServings = (recipe as any).totalServings || requestedServings;
   const cuisineLabel = recipe.cuisine || '';
   const shouldShowCuisineLabel = cuisineLabel.trim().toLowerCase() !== 'active cook';
+  const displayMatchReason = getDisplayMatchReason(recipe.matchReason, recipe.title, query);
   
   const currentIngredients = (enrichedData?.ingredients || (recipe as any).ingredients || [])
     .filter((ing: string) => ing && ing.trim().length > 0);
@@ -373,10 +374,9 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 {recipe.description}
               </p>
 
-              {recipe.matchReason && (
+              {displayMatchReason && (
                 <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-500 leading-snug">
-                  <span className="font-bold tracking-widest uppercase text-[9px] text-gray-500">Match:</span>{' '}
-                  <span className="italic">{recipe.matchReason}</span>
+                  {displayMatchReason}
                 </p>
               )}
 

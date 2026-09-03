@@ -1,10 +1,12 @@
 import React from 'react';
 import { Recipe, ReadyMeal } from '../types';
+import { getDisplayMatchReason } from '../lib/recipeUtils';
 import { getRecipeSourceLabel } from '../lib/sourceLabel';
 
 interface CompactRecipeItemProps {
   item: Recipe | ReadyMeal;
   source: 'cook' | 'ready-made';
+  query?: string;
   onClick: () => void;
   onCompare?: () => void;
   isCompareSelected?: boolean;
@@ -14,6 +16,7 @@ interface CompactRecipeItemProps {
 export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
   item,
   source,
+  query = '',
   onClick,
   onCompare,
   isCompareSelected = false,
@@ -33,6 +36,7 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
   const time = item.totalTime || (meal as any).heatingTime;
   const kitSideCount = !isCook ? (meal.readyMadeKit?.sides?.length || 0) : 0;
   const kitUpgradeCount = !isCook ? (meal.readyMadeKit?.upgrades?.length || 0) : 0;
+  const displayMatchReason = getDisplayMatchReason(item.matchReason, item.title, query);
 
   const Separator = () => (
     <span className="inline-block w-[1px] h-3 bg-gray-200 mx-1 sm:mx-2" aria-hidden="true" />
@@ -88,10 +92,9 @@ export const CompactRecipeItem: React.FC<CompactRecipeItemProps> = ({
                 {item.title}
               </h3>
 
-              {item.matchReason && (
+              {displayMatchReason && (
                 <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-gray-500">
-                  <span className="font-bold uppercase tracking-wider text-[9px] text-gray-500">Match:</span>{' '}
-                  {item.matchReason}
+                  {displayMatchReason}
                 </p>
               )}
 
