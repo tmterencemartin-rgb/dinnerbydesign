@@ -59,6 +59,7 @@ describe('grounded source URL reconciliation', () => {
   it('recognises direct HTTPS content URLs independently of publisher approval', () => {
     expect(isDirectHttpsContentUrl('https://example.com/recipes/scallops')).toBe(true);
     expect(isDirectHttpsContentUrl('http://example.com/recipes/scallops')).toBe(false);
+    expect(isDirectHttpsContentUrl('https://user:password@example.com/recipes/scallops')).toBe(false);
     expect(isDirectHttpsContentUrl('https://example.com/search?q=scallops')).toBe(false);
     expect(isDirectHttpsContentUrl('https://example.com/collections/weeknight')).toBe(false);
   });

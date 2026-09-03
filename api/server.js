@@ -47258,13 +47258,13 @@ var require_verifier = __commonJS({
     module2.exports = verifier;
     var Enum = require_enum();
     var util = require_util3();
-    function invalid(field2, expected) {
+    function invalid2(field2, expected) {
       return field2.name + ": " + expected + (field2.repeated && expected !== "array" ? "[]" : field2.map && expected !== "object" ? "{k:" + field2.keyType + "}" : "") + " expected";
     }
     function genVerifyValue(gen, field2, fieldIndex, ref) {
       if (field2.resolvedType) {
         if (field2.resolvedType instanceof Enum) {
-          gen("switch(%s){", ref)("default:")("return%j", invalid(field2, "enum value"));
+          gen("switch(%s){", ref)("default:")("return%j", invalid2(field2, "enum value"));
           for (var keys = Object.keys(field2.resolvedType.values), j = 0; j < keys.length; ++j) gen("case %i:", field2.resolvedType.values[keys[j]]);
           gen("break")("}");
         } else {
@@ -47277,27 +47277,27 @@ var require_verifier = __commonJS({
           case "sint32":
           case "fixed32":
           case "sfixed32":
-            gen("if(!util.isInteger(%s))", ref)("return%j", invalid(field2, "integer"));
+            gen("if(!util.isInteger(%s))", ref)("return%j", invalid2(field2, "integer"));
             break;
           case "int64":
           case "uint64":
           case "sint64":
           case "fixed64":
           case "sfixed64":
-            gen("if(!util.isInteger(%s)&&!(%s&&util.isInteger(%s.low)&&util.isInteger(%s.high)))", ref, ref, ref, ref)("return%j", invalid(field2, "integer|Long"));
+            gen("if(!util.isInteger(%s)&&!(%s&&util.isInteger(%s.low)&&util.isInteger(%s.high)))", ref, ref, ref, ref)("return%j", invalid2(field2, "integer|Long"));
             break;
           case "float":
           case "double":
-            gen('if(typeof %s!=="number")', ref)("return%j", invalid(field2, "number"));
+            gen('if(typeof %s!=="number")', ref)("return%j", invalid2(field2, "number"));
             break;
           case "bool":
-            gen('if(typeof %s!=="boolean")', ref)("return%j", invalid(field2, "boolean"));
+            gen('if(typeof %s!=="boolean")', ref)("return%j", invalid2(field2, "boolean"));
             break;
           case "string":
-            gen("if(!util.isString(%s))", ref)("return%j", invalid(field2, "string"));
+            gen("if(!util.isString(%s))", ref)("return%j", invalid2(field2, "string"));
             break;
           case "bytes":
-            gen('if(!(%s&&typeof %s.length==="number"||util.isString(%s)))', ref, ref, ref)("return%j", invalid(field2, "buffer"));
+            gen('if(!(%s&&typeof %s.length==="number"||util.isString(%s)))', ref, ref, ref)("return%j", invalid2(field2, "buffer"));
             break;
         }
       }
@@ -47310,17 +47310,17 @@ var require_verifier = __commonJS({
         case "sint32":
         case "fixed32":
         case "sfixed32":
-          gen("if(!util.key32Re.test(%s))", ref)("return%j", invalid(field2, "integer key"));
+          gen("if(!util.key32Re.test(%s))", ref)("return%j", invalid2(field2, "integer key"));
           break;
         case "int64":
         case "uint64":
         case "sint64":
         case "fixed64":
         case "sfixed64":
-          gen("if(!util.key64Re.test(%s))", ref)("return%j", invalid(field2, "integer|Long key"));
+          gen("if(!util.key64Re.test(%s))", ref)("return%j", invalid2(field2, "integer|Long key"));
           break;
         case "bool":
-          gen("if(!util.key2Re.test(%s))", ref)("return%j", invalid(field2, "boolean key"));
+          gen("if(!util.key2Re.test(%s))", ref)("return%j", invalid2(field2, "boolean key"));
           break;
       }
       return gen;
@@ -47334,11 +47334,11 @@ var require_verifier = __commonJS({
         var field2 = mtype._fieldsArray[i2].resolve(), ref = "m" + util.safeProp(field2.name);
         if (field2.optional) gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j)){", ref, field2.name);
         if (field2.map) {
-          gen("if(!util.isObject(%s))", ref)("return%j", invalid(field2, "object"))("var k=Object.keys(%s)", ref)("for(var i=0;i<k.length;++i){");
+          gen("if(!util.isObject(%s))", ref)("return%j", invalid2(field2, "object"))("var k=Object.keys(%s)", ref)("for(var i=0;i<k.length;++i){");
           genVerifyKey(gen, field2, "k[i]");
           genVerifyValue(gen, field2, i2, ref + "[k[i]]")("}");
         } else if (field2.repeated) {
-          gen("if(!Array.isArray(%s))", ref)("return%j", invalid(field2, "array"))("for(var i=0;i<%s.length;++i){", ref);
+          gen("if(!Array.isArray(%s))", ref)("return%j", invalid2(field2, "array"))("for(var i=0;i<%s.length;++i){", ref);
           genVerifyValue(gen, field2, i2, ref + "[i]")("}");
         } else {
           if (field2.partOf) {
@@ -189864,7 +189864,7 @@ var isDirectHttpsContentUrl = (value) => {
   const canonicalUrl = canonicaliseGroundedUrl(value);
   if (!canonicalUrl) return false;
   const url = new URL(canonicalUrl);
-  if (url.protocol !== "https:" || url.pathname === "/" || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
+  if (url.protocol !== "https:" || url.username || url.password || url.pathname === "/" || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
     return false;
   }
   return !["q", "query", "search", "s"].some((param) => url.searchParams.has(param));
@@ -220573,6 +220573,24 @@ var sanitizeRealityChecks = (checks) => {
     tone: allowedTones.has(check2.tone) ? check2.tone : "neutral"
   })).filter((check2) => check2.label && check2.note).slice(0, 3);
 };
+var replaceForbiddenDinnerCopy = (value) => value.replace(/\bmeal(s)?\b/gi, (match2) => {
+  const replacement = match2.toLowerCase().endsWith("s") ? "dinners" : "dinner";
+  return match2[0] === match2[0].toUpperCase() ? replacement.charAt(0).toUpperCase() + replacement.slice(1) : replacement;
+});
+var sanitizeGeneratedCopy = (value, key = "") => {
+  if (typeof value === "string") {
+    return ["id", "sourceUrl", "tone", "saladType", "convenienceProfile"].includes(key) ? value : replaceForbiddenDinnerCopy(value);
+  }
+  if (Array.isArray(value)) return value.map((item) => sanitizeGeneratedCopy(item, key));
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.entries(value).map(([childKey, childValue]) => [childKey, sanitizeGeneratedCopy(childValue, childKey)]));
+};
+var sanitizeRationaleMap = (value) => Object.fromEntries(
+  Object.entries(value || {}).map(([title, rationale]) => [
+    title,
+    typeof rationale === "string" ? replaceForbiddenDinnerCopy(rationale) : String(rationale || "")
+  ])
+);
 var SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
 async function getSearchAuthToken() {
   const currentUser = auth.currentUser || (await signInAnon()).user;
@@ -220660,9 +220678,9 @@ async function fetchProxyEnrichment(title, cuisine, mode, options2) {
       body: JSON.stringify(buildEnrichmentRequestBody(title, cuisine, mode, options2)),
       signal: controller.signal
     });
-    clearTimeout(timeoutId);
     if (!response.ok) {
       const text = await response.text();
+      clearTimeout(timeoutId);
       let err;
       try {
         err = JSON.parse(text);
@@ -220679,7 +220697,9 @@ async function fetchProxyEnrichment(title, cuisine, mode, options2) {
       }
       throw new Error(errMessage);
     }
-    return response.json();
+    const payload = await response.json();
+    clearTimeout(timeoutId);
+    return payload;
   } catch (error) {
     clearTimeout(timeoutId);
     throw new Error(`Failed to contact enrichment API: ${error.message}`);
@@ -221284,16 +221304,17 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
     const repairPrompt = repairPrompts.join("\n");
     const repairOutputText = repairOutputs.join("\n");
     let items = rawItems.map((item) => {
-      const realityChecks = sanitizeRealityChecks(item.realityChecks);
+      const sanitizedItem = sanitizeGeneratedCopy(item);
+      const realityChecks = sanitizeRealityChecks(sanitizedItem.realityChecks);
       if (hasFreeRangePreference) {
         const fields = [
-          item.title || "",
-          item.description || "",
-          ...Array.isArray(item.ingredients) ? item.ingredients : []
+          sanitizedItem.title || "",
+          sanitizedItem.description || "",
+          ...Array.isArray(sanitizedItem.ingredients) ? sanitizedItem.ingredients : []
         ].join(" ");
         const explicitlyConfirmed = /\bfree[- ]range(?:d)?\b/i.test(fields);
         return {
-          ...item,
+          ...sanitizedItem,
           realityChecks: [
             ...realityChecks.filter((check2) => check2.label.toLowerCase() !== "free-range sourcing").slice(0, 2),
             {
@@ -221307,7 +221328,7 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
         };
       }
       return {
-        ...item,
+        ...sanitizedItem,
         realityChecks,
         id: item.id || `dbd-${Math.random().toString(36).substring(2, 9)}`,
         dietFlagsVerified: true
@@ -221516,7 +221537,7 @@ async function generateMatchRationales(items, searchParams, preferences) {
         body: JSON.stringify({ items, searchParams, preferences })
       });
       if (!response.ok) return {};
-      return response.json();
+      return response.json().then(sanitizeRationaleMap);
     } catch (err) {
       console.error("[GeminiService] Client failed to fetch rationales:", err);
       return {};
@@ -221572,7 +221593,7 @@ Items: ${JSON.stringify(itemSummaries)}`;
         }
       });
     }
-    return rationalesMap;
+    return sanitizeRationaleMap(rationalesMap);
   } catch (error) {
     if (isBrowser2 && config.mode === "direct") {
       console.warn("[GeminiService] Client-side Direct Rationale failed. Seamlessly falling back to Cloud Proxy...", error);
@@ -221583,7 +221604,7 @@ Items: ${JSON.stringify(itemSummaries)}`;
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ items, searchParams, preferences })
         });
-        if (response.ok) return response.json();
+        if (response.ok) return response.json().then(sanitizeRationaleMap);
       } catch (fallbackError) {
         console.error("[GeminiService] Cloud Proxy Rationale fallback failed:", fallbackError);
       }
@@ -232975,6 +232996,163 @@ var allergyTerms = {
   "Sulphur dioxide and sulphites": queryConflictGroups.sulphites
 };
 
+// src/lib/searchRequestValidation.ts
+var MAX_SEARCH_QUERY_LENGTH = 500;
+var MAX_SEARCH_ARRAY_ITEMS = 40;
+var MAX_SEARCH_ITEM_LENGTH = 160;
+var SEARCH_ARRAY_FIELDS = [
+  "cuisines",
+  "dietTypes",
+  "allergies",
+  "exclusions",
+  "religiousEthical",
+  "styleWellness",
+  "excludeIngredients",
+  "omitIngredients",
+  "cookingMethods",
+  "cookingFats",
+  "retailers",
+  "supermarkets",
+  "excludeTitles",
+  "preferredSourceIds"
+];
+var PREFERENCE_ARRAY_FIELDS = [
+  "allergies",
+  "exclusions",
+  "cuisinePreferences",
+  "religiousEthical",
+  "cookingMethods",
+  "cookingFats",
+  "preferredSupermarkets",
+  "preferredSourceIds",
+  "customCuisines"
+];
+var BOOLEAN_FIELDS = [
+  "isSimple",
+  "isLowCost",
+  "nutritiousChoice",
+  "highOmega3",
+  "highProtein",
+  "includeOffal"
+];
+var NUMBER_FIELDS = [
+  "maxTotalTime",
+  "maxPrepTime",
+  "maxCookTime",
+  "maxCostPerPortion",
+  "maxPricePerPerson",
+  "maxHeatingTime",
+  "maxCalories",
+  "servings",
+  "count",
+  "calorieCeiling",
+  "budgetLimit",
+  "readyToEatUnderMins"
+];
+var NULLABLE_NUMBER_FIELDS = /* @__PURE__ */ new Set([
+  "maxCostPerPortion",
+  "maxPricePerPerson",
+  "maxCalories",
+  "calorieCeiling",
+  "budgetLimit",
+  "readyToEatUnderMins"
+]);
+var DIETARY_RULES = /* @__PURE__ */ new Set([
+  "none",
+  "keto",
+  "paleo",
+  "pescatarian",
+  "vegan",
+  "vegetarian",
+  "gluten-free",
+  "mediterranean"
+]);
+var SALAD_PREFERENCES = /* @__PURE__ */ new Set(["all", "main-only", "side-only", "none"]);
+var SOURCES = /* @__PURE__ */ new Set(["cook", "ready-made"]);
+var isRecord = (value) => !!value && typeof value === "object" && !Array.isArray(value);
+var invalid = (code, message2) => ({
+  ok: false,
+  code,
+  message: message2
+});
+function validateStringArrays(record, fields, label) {
+  for (const field2 of fields) {
+    if (!Object.prototype.hasOwnProperty.call(record, field2)) continue;
+    const value = record[field2];
+    if (!Array.isArray(value)) {
+      return invalid("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
+    }
+    if (value.length > MAX_SEARCH_ARRAY_ITEMS || value.some((item) => typeof item !== "string" || item.length > MAX_SEARCH_ITEM_LENGTH)) {
+      return invalid("SEARCH_REQUEST_TOO_LARGE", `${label} contains too much filter information.`);
+    }
+  }
+  return { ok: true };
+}
+function validateScalarTypes(record, label) {
+  for (const field2 of BOOLEAN_FIELDS) {
+    if (Object.prototype.hasOwnProperty.call(record, field2) && typeof record[field2] !== "boolean") {
+      return invalid("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
+    }
+  }
+  for (const field2 of NUMBER_FIELDS) {
+    if (!Object.prototype.hasOwnProperty.call(record, field2)) continue;
+    const value = record[field2];
+    if (value === null && NULLABLE_NUMBER_FIELDS.has(field2)) continue;
+    if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1e4) {
+      return invalid("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
+    }
+  }
+  return { ok: true };
+}
+function validateSearchParams(searchParams) {
+  if (!isRecord(searchParams)) {
+    return invalid("SEARCH_REQUEST_INVALID", "The search request is invalid.");
+  }
+  if (typeof searchParams.query !== "string") {
+    return invalid("SEARCH_REQUEST_INVALID", "The search query must be text.");
+  }
+  if (searchParams.query.trim().length > MAX_SEARCH_QUERY_LENGTH) {
+    return invalid("SEARCH_QUERY_TOO_LONG", "Please shorten the search query and try again.");
+  }
+  if (typeof searchParams.source !== "string" || !SOURCES.has(searchParams.source)) {
+    return invalid("SEARCH_REQUEST_INVALID", "The search source is invalid.");
+  }
+  if (Object.prototype.hasOwnProperty.call(searchParams, "count")) {
+    const count = searchParams.count;
+    if (typeof count !== "number" || !Number.isInteger(count) || count < 1 || count > 3) {
+      return invalid("SEARCH_REQUEST_INVALID", "The requested result count is invalid.");
+    }
+  }
+  const arraysResult = validateStringArrays(searchParams, SEARCH_ARRAY_FIELDS, "The search request");
+  if (!arraysResult.ok) return arraysResult;
+  return validateScalarTypes(searchParams, "The search request");
+}
+function validatePreferences(preferences) {
+  if (preferences === void 0 || preferences === null) return { ok: true };
+  if (!isRecord(preferences)) {
+    return invalid("PREFERENCES_INVALID", "The saved preferences are invalid.");
+  }
+  const arraysResult = validateStringArrays(preferences, PREFERENCE_ARRAY_FIELDS, "The saved preferences");
+  if (!arraysResult.ok) return arraysResult;
+  const scalarResult = validateScalarTypes(preferences, "The saved preferences");
+  if (!scalarResult.ok) return scalarResult;
+  if (Object.prototype.hasOwnProperty.call(preferences, "dietaryRule") && (typeof preferences.dietaryRule !== "string" || !DIETARY_RULES.has(preferences.dietaryRule))) {
+    return invalid("PREFERENCES_INVALID", "The saved dietary preference is invalid.");
+  }
+  if (Object.prototype.hasOwnProperty.call(preferences, "saladPreference") && (typeof preferences.saladPreference !== "string" || !SALAD_PREFERENCES.has(preferences.saladPreference))) {
+    return invalid("PREFERENCES_INVALID", "The saved salad preference is invalid.");
+  }
+  if (Object.prototype.hasOwnProperty.call(preferences, "preferredMode") && (typeof preferences.preferredMode !== "string" || !SOURCES.has(preferences.preferredMode))) {
+    return invalid("PREFERENCES_INVALID", "The saved search mode is invalid.");
+  }
+  return { ok: true };
+}
+var validateSearchRequestPayload = (searchParams, preferences) => {
+  const searchResult = validateSearchParams(searchParams);
+  if (!searchResult.ok) return searchResult;
+  return validatePreferences(preferences);
+};
+
 // src/lib/webhookSafety.ts
 var STRIPE_WEBHOOK_PROCESSING_LEASE_MS = 5 * 60 * 1e3;
 var TRANSACTIONAL_EMAIL_CLAIM_LEASE_MS = 5 * 60 * 1e3;
@@ -234279,8 +234457,18 @@ function createApp() {
       const searchIdentity = await verifySearchIdentity(req, res);
       if (!searchIdentity) return;
       const { searchParams: rawSearchParams, preferences } = req.body;
-      if (!rawSearchParams || typeof rawSearchParams !== "object") {
-        throw new Error("Missing searchParams in request body");
+      const validation = validateSearchRequestPayload(rawSearchParams, preferences);
+      if ("code" in validation) {
+        return res.status(400).json({
+          ok: false,
+          error: {
+            code: validation.code,
+            message: validation.message,
+            retryable: false,
+            status: 400,
+            category: "request"
+          }
+        });
       }
       const searchParams = normaliseIncomingSearchParams(rawSearchParams);
       if (!searchParams.query) {

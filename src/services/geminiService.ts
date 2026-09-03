@@ -609,6 +609,33 @@ const sanitizeRealityChecks = (checks: any): any[] => {
     .slice(0, 3);
 };
 
+export const replaceForbiddenDinnerCopy = (value: string): string => value.replace(/\bmeal(s)?\b/gi, match => {
+  const replacement = match.toLowerCase().endsWith('s') ? 'dinners' : 'dinner';
+  return match[0] === match[0].toUpperCase()
+    ? replacement.charAt(0).toUpperCase() + replacement.slice(1)
+    : replacement;
+});
+
+const sanitizeGeneratedCopy = (value: any, key = ''): any => {
+  if (typeof value === 'string') {
+    return ['id', 'sourceUrl', 'tone', 'saladType', 'convenienceProfile'].includes(key)
+      ? value
+      : replaceForbiddenDinnerCopy(value);
+  }
+  if (Array.isArray(value)) return value.map(item => sanitizeGeneratedCopy(item, key));
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(Object.entries(value).map(([childKey, childValue]) => (
+    [childKey, sanitizeGeneratedCopy(childValue, childKey)]
+  )));
+};
+
+const sanitizeRationaleMap = (value: any): Record<string, string> => Object.fromEntries(
+  Object.entries(value || {}).map(([title, rationale]) => [
+    title,
+    typeof rationale === 'string' ? replaceForbiddenDinnerCopy(rationale) : String(rationale || '')
+  ])
+);
+
 const SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
 
 async function getSearchAuthToken(): Promise<string> {
@@ -708,9 +735,9 @@ async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook'
       body: JSON.stringify(buildEnrichmentRequestBody(title, cuisine, mode, options)),
       signal: controller.signal
     });
-    clearTimeout(timeoutId);
     if (!response.ok) {
       const text = await response.text();
+      clearTimeout(timeoutId);
       let err;
       try {
         err = JSON.parse(text);
@@ -728,7 +755,9 @@ async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook'
       }
       throw new Error(errMessage);
     }
-    return response.json();
+    const payload = await response.json();
+    clearTimeout(timeoutId);
+    return payload;
   } catch (error: any) {
     clearTimeout(timeoutId);
     throw new Error(`Failed to contact enrichment API: ${error.message}`);
@@ -1477,16 +1506,17 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
     const repairOutputText = repairOutputs.join('\n');
 
     let items = rawItems.map((item: any) => {
-      const realityChecks = sanitizeRealityChecks(item.realityChecks);
+      const sanitizedItem = sanitizeGeneratedCopy(item);
+      const realityChecks = sanitizeRealityChecks(sanitizedItem.realityChecks);
       if (hasFreeRangePreference) {
         const fields = [
-          item.title || '',
-          item.description || '',
-          ...(Array.isArray(item.ingredients) ? item.ingredients : [])
+          sanitizedItem.title || '',
+          sanitizedItem.description || '',
+          ...(Array.isArray(sanitizedItem.ingredients) ? sanitizedItem.ingredients : [])
         ].join(' ');
         const explicitlyConfirmed = /\bfree[- ]range(?:d)?\b/i.test(fields);
         return {
-          ...item,
+          ...sanitizedItem,
           realityChecks: [
             ...realityChecks.filter(check => check.label.toLowerCase() !== 'free-range sourcing').slice(0, 2),
             {
@@ -1502,7 +1532,7 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
         };
       }
       return {
-        ...item,
+        ...sanitizedItem,
         realityChecks,
         id: item.id || `dbd-${Math.random().toString(36).substring(2, 9)}`,
         dietFlagsVerified: true
@@ -1746,7 +1776,7 @@ export async function generateMatchRationales(
         body: JSON.stringify({ items, searchParams, preferences })
       });
       if (!response.ok) return {};
-      return response.json();
+      return response.json().then(sanitizeRationaleMap);
     } catch (err) {
       console.error("[GeminiService] Client failed to fetch rationales:", err);
       return {};
@@ -1804,7 +1834,7 @@ Items: ${JSON.stringify(itemSummaries)}`;
         }
       });
     }
-    return rationalesMap;
+    return sanitizeRationaleMap(rationalesMap);
   } catch (error) {
     if (isBrowser && config.mode === 'direct') {
       console.warn("[GeminiService] Client-side Direct Rationale failed. Seamlessly falling back to Cloud Proxy...", error);
@@ -1815,7 +1845,7 @@ Items: ${JSON.stringify(itemSummaries)}`;
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items, searchParams, preferences })
         });
-        if (response.ok) return response.json();
+        if (response.ok) return response.json().then(sanitizeRationaleMap);
       } catch (fallbackError) {
         console.error("[GeminiService] Cloud Proxy Rationale fallback failed:", fallbackError);
       }

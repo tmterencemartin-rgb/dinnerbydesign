@@ -112,7 +112,7 @@ export const isDirectHttpsContentUrl = (value: unknown): boolean => {
   if (!canonicalUrl) return false;
 
   const url = new URL(canonicalUrl);
-  if (url.protocol !== 'https:' || url.pathname === '/' || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
+  if (url.protocol !== 'https:' || url.username || url.password || url.pathname === '/' || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
     return false;
   }
 

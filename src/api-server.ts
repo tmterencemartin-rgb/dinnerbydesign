@@ -29,6 +29,7 @@ import {
 import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
 import { parseEnrichmentRequestOptions } from "../src/lib/enrichmentRequest";
 import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
+import { validateSearchRequestPayload } from "../src/lib/searchRequestValidation";
 import {
   getWebhookClaimDecision,
   isFreshEmailClaim,
@@ -1582,8 +1583,18 @@ export function createApp() {
       const searchIdentity = await verifySearchIdentity(req, res);
       if (!searchIdentity) return;
       const { searchParams: rawSearchParams, preferences } = req.body;
-      if (!rawSearchParams || typeof rawSearchParams !== 'object') {
-        throw new Error("Missing searchParams in request body");
+      const validation = validateSearchRequestPayload(rawSearchParams, preferences);
+      if ('code' in validation) {
+        return res.status(400).json({
+          ok: false,
+          error: {
+            code: validation.code,
+            message: validation.message,
+            retryable: false,
+            status: 400,
+            category: 'request'
+          }
+        });
       }
       const searchParams = normaliseIncomingSearchParams(rawSearchParams);
       if (!searchParams.query) {
