@@ -616,7 +616,7 @@ export const replaceForbiddenDinnerCopy = (value: string): string => value.repla
     : replacement;
 });
 
-const sanitizeGeneratedCopy = (value: any, key = ''): any => {
+export const sanitizeGeneratedCopy = (value: any, key = ''): any => {
   if (typeof value === 'string') {
     return ['id', 'sourceUrl', 'tone', 'saladType', 'convenienceProfile'].includes(key)
       ? value
@@ -757,7 +757,7 @@ async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook'
     }
     const payload = await response.json();
     clearTimeout(timeoutId);
-    return payload;
+    return sanitizeGeneratedCopy(payload);
   } catch (error: any) {
     clearTimeout(timeoutId);
     throw new Error(`Failed to contact enrichment API: ${error.message}`);
@@ -1728,7 +1728,7 @@ ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. 
         delete parsed.sourceUrl;
       }
       if (!strictIngredients.length || matchesStrictIngredientSearch(parsed, options?.query || '')) {
-        return parsed;
+        return sanitizeGeneratedCopy(parsed);
       }
 
       lastStrictMismatch = true;

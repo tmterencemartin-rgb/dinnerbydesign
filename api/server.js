@@ -220729,7 +220729,7 @@ async function fetchProxyEnrichment(title, cuisine, mode, options2) {
     }
     const payload = await response.json();
     clearTimeout(timeoutId);
-    return payload;
+    return sanitizeGeneratedCopy(payload);
   } catch (error) {
     clearTimeout(timeoutId);
     throw new Error(`Failed to contact enrichment API: ${error.message}`);
@@ -221532,7 +221532,7 @@ ${strictIngredients.length > 0 ? `This is strict search attempt ${attempt + 1}. 
         delete parsed.sourceUrl;
       }
       if (!strictIngredients.length || matchesStrictIngredientSearch(parsed, options2?.query || "")) {
-        return parsed;
+        return sanitizeGeneratedCopy(parsed);
       }
       lastStrictMismatch = true;
     }
