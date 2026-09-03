@@ -189860,14 +189860,18 @@ var isTrustedRecipePublisherUrl = (value) => {
   const host = new URL(canonicalUrl).hostname.toLowerCase().replace(/^www\./, "");
   return TRUSTED_RECIPE_PUBLISHER_HOSTS.has(host);
 };
-var isApprovedDirectRecipeUrl = (value) => {
+var isDirectHttpsContentUrl = (value) => {
   const canonicalUrl = canonicaliseGroundedUrl(value);
-  if (!canonicalUrl || !isTrustedRecipePublisherUrl(canonicalUrl) || isInternalGroundingUrl(canonicalUrl)) return false;
+  if (!canonicalUrl) return false;
   const url = new URL(canonicalUrl);
   if (url.protocol !== "https:" || url.pathname === "/" || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
     return false;
   }
   return !["q", "query", "search", "s"].some((param) => url.searchParams.has(param));
+};
+var isApprovedDirectRecipeUrl = (value) => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  return !!canonicalUrl && !isInternalGroundingUrl(canonicalUrl) && isTrustedRecipePublisherUrl(canonicalUrl) && isDirectHttpsContentUrl(canonicalUrl);
 };
 
 // src/lib/parseModelJson.ts
@@ -220556,7 +220560,7 @@ var filterToGroundedSources = (items, sources) => items.filter((item) => {
     return true;
   }
   const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
-  if (!groundedSourceUrl) return false;
+  if (!groundedSourceUrl || !isDirectHttpsContentUrl(groundedSourceUrl)) return false;
   item.sourceUrl = groundedSourceUrl;
   return true;
 });
@@ -220599,10 +220603,10 @@ async function fetchProxySuggestions(searchParams, preferences, signal) {
       body: JSON.stringify({ searchParams, preferences }),
       signal: controller.signal
     });
-    clearTimeout(timeoutId);
-    signal?.removeEventListener("abort", externalAbortHandler);
     if (!response.ok) {
       const text = await response.text();
+      clearTimeout(timeoutId);
+      signal?.removeEventListener("abort", externalAbortHandler);
       let err;
       try {
         err = JSON.parse(text);
@@ -220622,7 +220626,10 @@ async function fetchProxySuggestions(searchParams, preferences, signal) {
       }
       throw new GeminiServiceError(errCategory, errMessage);
     }
-    return response.json();
+    const payload = await response.json();
+    clearTimeout(timeoutId);
+    signal?.removeEventListener("abort", externalAbortHandler);
+    return payload;
   } catch (error) {
     clearTimeout(timeoutId);
     signal?.removeEventListener("abort", externalAbortHandler);
@@ -221102,12 +221109,35 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
                   costPerPortion: { type: Type.STRING },
                   ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
                   totalIngredientsCount: { type: Type.NUMBER },
+                  saladType: { type: Type.STRING, enum: ["main", "side", "none"] },
+                  realityChecks: {
+                    type: Type.ARRAY,
+                    items: {
+                      type: Type.OBJECT,
+                      properties: {
+                        label: { type: Type.STRING },
+                        note: { type: Type.STRING },
+                        tone: { type: Type.STRING, enum: ["positive", "caution", "neutral"] }
+                      },
+                      required: ["label", "note", "tone"]
+                    }
+                  },
                   sourceUrl: {
                     type: Type.STRING,
                     description: "Exact direct HTTPS URL of the recipe page, never a search, category or collection page."
                   }
                 },
-                required: ["title", "description", "ingredients", "sourceUrl"]
+                required: [
+                  "title",
+                  "description",
+                  "cuisine",
+                  "totalTime",
+                  "totalServings",
+                  "ingredients",
+                  "totalIngredientsCount",
+                  "realityChecks",
+                  "sourceUrl"
+                ]
               }
             }
           },

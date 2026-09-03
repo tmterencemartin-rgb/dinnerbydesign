@@ -107,9 +107,9 @@ export const isTrustedRecipePublisherUrl = (value: unknown): boolean => {
   return TRUSTED_RECIPE_PUBLISHER_HOSTS.has(host);
 };
 
-export const isApprovedDirectRecipeUrl = (value: unknown): boolean => {
+export const isDirectHttpsContentUrl = (value: unknown): boolean => {
   const canonicalUrl = canonicaliseGroundedUrl(value);
-  if (!canonicalUrl || !isTrustedRecipePublisherUrl(canonicalUrl) || isInternalGroundingUrl(canonicalUrl)) return false;
+  if (!canonicalUrl) return false;
 
   const url = new URL(canonicalUrl);
   if (url.protocol !== 'https:' || url.pathname === '/' || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
@@ -117,4 +117,12 @@ export const isApprovedDirectRecipeUrl = (value: unknown): boolean => {
   }
 
   return !['q', 'query', 'search', 's'].some(param => url.searchParams.has(param));
+};
+
+export const isApprovedDirectRecipeUrl = (value: unknown): boolean => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  return !!canonicalUrl
+    && !isInternalGroundingUrl(canonicalUrl)
+    && isTrustedRecipePublisherUrl(canonicalUrl)
+    && isDirectHttpsContentUrl(canonicalUrl);
 };

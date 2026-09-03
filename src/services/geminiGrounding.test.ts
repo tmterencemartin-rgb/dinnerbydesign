@@ -28,4 +28,25 @@ describe('Gemini search grounding filters', () => {
       sourceUrl: 'https://www.kitchensanctuary.com/recovery-recipe'
     }]);
   });
+
+  it('accepts a non-approved publisher only when its grounded URL is a direct HTTPS page', () => {
+    const groundedSources = new Map([
+      ['https://example.com/recipes/scallops', { url: 'https://example.com/recipes/scallops' }]
+    ]);
+    const candidate = { title: 'Grounded recipe', sourceUrl: 'https://example.com/recipes/scallops' };
+
+    expect(filterToGroundedSources([candidate], groundedSources)).toEqual([candidate]);
+  });
+
+  it('rejects grounded HTTP and search URLs', () => {
+    const httpSource = new Map([
+      ['http://example.com/recipes/scallops', { url: 'http://example.com/recipes/scallops' }]
+    ]);
+    const searchSource = new Map([
+      ['https://example.com/search?q=scallops', { url: 'https://example.com/search?q=scallops' }]
+    ]);
+
+    expect(filterToGroundedSources([{ sourceUrl: 'http://example.com/recipes/scallops' }], httpSource)).toEqual([]);
+    expect(filterToGroundedSources([{ sourceUrl: 'https://example.com/search?q=scallops' }], searchSource)).toEqual([]);
+  });
 });

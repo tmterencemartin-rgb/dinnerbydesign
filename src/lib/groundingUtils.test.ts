@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
+import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   const groundedSources = [
@@ -54,5 +54,12 @@ describe('grounded source URL reconciliation', () => {
     expect(isApprovedDirectRecipeUrl('https://www.goodhousekeeping.com/uk/food/recipes/a12345/chicken-pie/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
+  });
+
+  it('recognises direct HTTPS content URLs independently of publisher approval', () => {
+    expect(isDirectHttpsContentUrl('https://example.com/recipes/scallops')).toBe(true);
+    expect(isDirectHttpsContentUrl('http://example.com/recipes/scallops')).toBe(false);
+    expect(isDirectHttpsContentUrl('https://example.com/search?q=scallops')).toBe(false);
+    expect(isDirectHttpsContentUrl('https://example.com/collections/weeknight')).toBe(false);
   });
 });
