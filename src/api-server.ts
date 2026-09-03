@@ -28,6 +28,7 @@ import {
 } from "../src/lib/accountReconciliation";
 import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
 import { parseEnrichmentRequestOptions } from "../src/lib/enrichmentRequest";
+import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
 import {
   getWebhookClaimDecision,
   isFreshEmailClaim,
@@ -1580,9 +1581,22 @@ export function createApp() {
     try {
       const searchIdentity = await verifySearchIdentity(req, res);
       if (!searchIdentity) return;
-      const { searchParams, preferences } = req.body;
-      if (!searchParams) {
+      const { searchParams: rawSearchParams, preferences } = req.body;
+      if (!rawSearchParams || typeof rawSearchParams !== 'object') {
         throw new Error("Missing searchParams in request body");
+      }
+      const searchParams = normaliseIncomingSearchParams(rawSearchParams);
+      if (!searchParams.query) {
+        return res.status(400).json({
+          ok: false,
+          error: {
+            code: "SEARCH_QUERY_REQUIRED",
+            message: "Please enter a recipe or ingredient to search for.",
+            retryable: false,
+            status: 400,
+            category: "model"
+          }
+        });
       }
       const result = await generateDinnerSuggestions(searchParams, preferences);
       if (!isDeliverableSearchResult(result)) {

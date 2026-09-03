@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildActiveCriteria, buildSearchParams, cleanSearchParams, detectPreferenceContradiction } from './searchUtils';
+import { buildActiveCriteria, buildSearchParams, cleanSearchParams, detectPreferenceContradiction, normaliseIncomingSearchParams } from './searchUtils';
 import { UserPreferences, DinnerSource } from '../types';
 import { DIETARY_TAXONOMY } from '../constants';
 
@@ -77,6 +77,34 @@ describe('searchUtils', () => {
         ingredients: ['chicken', 'spinach', 'rice']
       });
       expect(params.isLeftoverMode).toBe(true);
+    });
+
+    it('rebuilds ingredient intent when a request omits or falsifies it', () => {
+      const params = normaliseIncomingSearchParams({
+        query: 'chicken, rice',
+        source: 'cook',
+        ingredientIntent: null,
+        strictIngredientMatch: true
+      });
+
+      expect(params.ingredientIntent).toMatchObject({
+        isIngredientLed: true,
+        ingredients: ['chicken', 'rice']
+      });
+      expect(params.isLeftoverMode).toBe(true);
+      expect(params.strictIngredientMatch).toBe(true);
+    });
+
+    it('removes cook-only ingredient controls from ready-made requests', () => {
+      const params = normaliseIncomingSearchParams({
+        query: 'chicken and rice',
+        source: 'ready-made',
+        ingredientIntent: { isIngredientLed: true },
+        strictIngredientMatch: true
+      });
+
+      expect(params.ingredientIntent).toBeUndefined();
+      expect(params.strictIngredientMatch).toBeUndefined();
     });
 
     it('keeps strict ingredient matching as a temporary cook-search option', () => {

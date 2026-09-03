@@ -577,7 +577,7 @@ const getGroundedSources = (response: any): GroundedSource[] => {
   });
 };
 
-const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
+export const filterToGroundedSources = (items: any[], sources: Map<string, GroundedSource>): any[] => (
   items.filter(item => {
     if (sources.size === 0) {
       const sourceUrl = canonicaliseGroundedUrl(item?.sourceUrl);
@@ -978,9 +978,15 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     && eligibleChilliFallbacks.length > 0;
 
   const groundedSources = new Map<string, GroundedSource>();
-  const rememberGroundedSources = (response: any) => {
-    getGroundedSources(response).forEach(source => groundedSources.set(source.url, source));
+  const rememberGroundedSources = (response: any): GroundedSource[] => {
+    const responseSources = getGroundedSources(response);
+    responseSources.forEach(source => groundedSources.set(source.url, source));
+    return responseSources;
   };
+
+  const groundedSourceMap = (sources: GroundedSource[]) => new Map(
+    sources.map(source => [source.url, source] as const)
+  );
 
   try {
     const modelClient = getAI();
@@ -1204,7 +1210,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     console.log(`[GeminiService] Calling model ${SEARCH_MODEL} (Mode: ${aiConfig.mode}) with prompt length: ${prompt.length}...`);
     
     const response = await callGeminiWithRetry(SEARCH_MODEL, prompt, config);
-    rememberGroundedSources(response);
+    const initialGroundedSources = rememberGroundedSources(response);
 
     const text = response.text;
     const geminiDuration = Date.now() - start;
@@ -1222,7 +1228,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
         : candidateItems
     );
     const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
-    let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSources);
+    let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSourceMap(initialGroundedSources));
     console.log(
       `[GeminiService] Ingredient search candidates: model=${parsedItems.length}, ingredient=${ingredientMatchedItems.length}, grounded=${rawItems.length}, sources=${groundedSources.size}`
     );
@@ -1281,13 +1287,13 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
           12_000,
           'Ingredient search recovery'
         );
-        rememberGroundedSources(recoveryResponse);
+        const recoveryGroundedSources = rememberGroundedSources(recoveryResponse);
         const recoveryOutputText = recoveryResponse.text || '';
         repairOutputs.push(recoveryOutputText);
         const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
         const recoveryItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(recoveryData.items) ? recoveryData.items : []),
-          groundedSources
+          groundedSourceMap(recoveryGroundedSources)
         );
         rawItems = [...rawItems, ...recoveryItems];
         wasRepaired = recoveryItems.length > 0;
@@ -1345,13 +1351,13 @@ ${isReadyMade ? 'Return commercially available UK ready-made products only.' : '
 REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's exclusions and variety requirement.`
         };
         const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt, repairConfig);
-        rememberGroundedSources(repairResponse);
+        const repairGroundedSources = rememberGroundedSources(repairResponse);
         const repairOutputText = repairResponse.text || '';
         repairOutputs.push(repairOutputText);
         const repairData = repairOutputText ? parseModelJson(repairOutputText) : {};
         const repairItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []),
-          groundedSources
+          groundedSourceMap(repairGroundedSources)
         );
         const nonVegetarianRepair = allVegetarian
           ? repairItems.find((item: any) => !isClearlyVegetarian(item))
@@ -1396,13 +1402,13 @@ Preserve every hard dietary, allergy, ethical, budget and heating-time rule. Use
 READY-MADE RECOVERY: The initial search was under-filled after source and product validation. Return only additional, distinct ready-made products that preserve the original intent and all hard constraints.`
             }
           );
-          rememberGroundedSources(readyMadeRecoveryResponse);
+          const readyMadeRecoveryGroundedSources = rememberGroundedSources(readyMadeRecoveryResponse);
           const recoveryOutputText = readyMadeRecoveryResponse.text || '';
           repairOutputs.push(recoveryOutputText);
           const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
           const recoveryItems = filterToGroundedSources(
             Array.isArray(recoveryData.items) ? recoveryData.items : [],
-            groundedSources
+            groundedSourceMap(readyMadeRecoveryGroundedSources)
           ).filter(isReadyMadeCandidate);
           rawItems = [...rawItems, ...recoveryItems];
           wasRepaired = wasRepaired || recoveryItems.length > 0;
@@ -1436,7 +1442,11 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
       }
     }
 
-    rawItems = filterToGroundedSources(dedupeItems(rawItems).slice(0, count), groundedSources);
+    // Each response was validated against its own grounding set above. Do not
+    // revalidate against the aggregate map here: a response without metadata
+    // may still have a valid approved direct URL, even if an earlier response
+    // did contain grounding metadata.
+    rawItems = dedupeItems(rawItems).slice(0, count);
     const repairPrompt = repairPrompts.join('\n');
     const repairOutputText = repairOutputs.join('\n');
 

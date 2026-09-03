@@ -373,6 +373,16 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(detectIngredientIntent('Jamie Oliver pasta')).toBeNull();
   });
 
+  test('does not treat descriptive or compound dish phrases as ingredient lists', () => {
+    expect(detectIngredientIntent('fish and chips')).toBeNull();
+    expect(detectIngredientIntent('quick and easy chicken')).toBeNull();
+    expect(detectIngredientIntent('best and easy pasta')).toBeNull();
+    expect(detectIngredientIntent('beef and rice')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['beef', 'rice']
+    });
+  });
+
   test('enforces every listed ingredient and rejects meaningful extras in strict mode', () => {
     expect(matchesStrictIngredientSearch({
       ingredients: ['250g ham', '2 eggs', '500g potatoes', '1 tbsp oil', 'salt', 'pepper']

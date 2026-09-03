@@ -189204,8 +189204,9 @@ function detectIngredientIntent(query2) {
   const hasSimpleAndList = /\b\w+\b\s+\band\b\s+\b\w+\b/i.test(lower2) && lower2.split(/\s+/).length <= 7;
   const withoutLeadIn = lower2.replace(/\b(what can i make with|what can i cook with|i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only)\b/gi, "").replace(/\b(?:only|just)\b/gi, " ").replace(/[?!.]/g, " ").trim();
   const ingredients = parseAndNormaliseIngredients(withoutLeadIn || categoryNormalisedQuery).map((item) => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, "").trim()).filter((item) => item.length > 1 && item.split(/\s+/).length <= 3);
-  const unseparatedWords = categoryNormalisedQuery.split(/\s+/).filter((word) => !/^and$/i.test(word));
-  const unseparatedIngredients = parseUnseparatedIngredientList(categoryNormalisedQuery);
+  const shortIngredientQuery = withoutLeadIn || categoryNormalisedQuery;
+  const unseparatedWords = shortIngredientQuery.split(/\s+/).filter((word) => !/^and$/i.test(word));
+  const unseparatedIngredients = parseUnseparatedIngredientList(shortIngredientQuery);
   const categoryMetadata = Object.keys(categoryMinimums).length > 0 ? { categoryMinimums } : {};
   const isShortUnseparatedIngredientList = !hasListPunctuation && !ingredientPhrases.test(trimmed) && unseparatedWords.length >= 2 && unseparatedWords.length <= 6 && unseparatedIngredients.length >= 2 && unseparatedIngredients.length <= 4;
   if (isShortUnseparatedIngredientList) {
@@ -189222,7 +189223,9 @@ function detectIngredientIntent(query2) {
     return { isIngredientLed: true, ingredients, reason: "list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
   }
   if (ingredients.length >= 2 && hasSimpleAndList) {
-    return { isIngredientLed: true, ingredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
+    if (unseparatedIngredients.length === ingredients.length) {
+      return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
+    }
   }
   if (hasPreparation && ingredients.length > 0) {
     return { isIngredientLed: true, ingredients, reason: "short-food-list", ...categoryMetadata, preparationPreferences: preferences };
@@ -220840,8 +220843,13 @@ CHILLI DISH INTENT:
   const canUseChilliFallback = shouldEncourageRecipeVariety && isBroadChilliDishSearch && !isReadyMade && activeSaladPref !== "main-only" && activeSaladPref !== "side-only" && !activeIsSimple && activeCookingMethods.length === 0 && activeCookingFats.length === 0 && activeReligious.length === 0 && eligibleChilliFallbacks.length > 0;
   const groundedSources = /* @__PURE__ */ new Map();
   const rememberGroundedSources = (response) => {
-    getGroundedSources(response).forEach((source2) => groundedSources.set(source2.url, source2));
+    const responseSources = getGroundedSources(response);
+    responseSources.forEach((source2) => groundedSources.set(source2.url, source2));
+    return responseSources;
   };
+  const groundedSourceMap = (sources) => new Map(
+    sources.map((source2) => [source2.url, source2])
+  );
   try {
     const modelClient = getAI();
     const parsedIngredients = ingredientIntent?.ingredients?.length ? ingredientIntent.ingredients : parseAndNormaliseIngredients(query2);
@@ -221048,7 +221056,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const aiConfig = getApiConfig();
     console.log(`[GeminiService] Calling model ${SEARCH_MODEL} (Mode: ${aiConfig.mode}) with prompt length: ${prompt.length}...`);
     const response = await callGeminiWithRetry(SEARCH_MODEL, prompt, config2);
-    rememberGroundedSources(response);
+    const initialGroundedSources = rememberGroundedSources(response);
     const text = response.text;
     const geminiDuration = Date.now() - start;
     console.log(`[GeminiService] Response received in ${geminiDuration}ms. Text length: ${text?.length || 0}`);
@@ -221059,7 +221067,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const parsedItems = Array.isArray(data.items) ? data.items : [];
     const filterIngredientLedItems = (candidateItems) => ingredientIntent?.isIngredientLed && !isReadyMade ? candidateItems.filter((item) => matchesRequestedIngredientSearch(item, query2)) : candidateItems;
     const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
-    let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSources);
+    let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSourceMap(initialGroundedSources));
     console.log(
       `[GeminiService] Ingredient search candidates: model=${parsedItems.length}, ingredient=${ingredientMatchedItems.length}, grounded=${rawItems.length}, sources=${groundedSources.size}`
     );
@@ -221112,13 +221120,13 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
           12e3,
           "Ingredient search recovery"
         );
-        rememberGroundedSources(recoveryResponse);
+        const recoveryGroundedSources = rememberGroundedSources(recoveryResponse);
         const recoveryOutputText = recoveryResponse.text || "";
         repairOutputs.push(recoveryOutputText);
         const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
         const recoveryItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(recoveryData.items) ? recoveryData.items : []),
-          groundedSources
+          groundedSourceMap(recoveryGroundedSources)
         );
         rawItems = [...rawItems, ...recoveryItems];
         wasRepaired = recoveryItems.length > 0;
@@ -221168,13 +221176,13 @@ ${isReadyMade ? "Return commercially available UK ready-made products only." : "
 REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's exclusions and variety requirement.`
         };
         const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt2, repairConfig);
-        rememberGroundedSources(repairResponse);
+        const repairGroundedSources = rememberGroundedSources(repairResponse);
         const repairOutputText2 = repairResponse.text || "";
         repairOutputs.push(repairOutputText2);
         const repairData = repairOutputText2 ? parseModelJson(repairOutputText2) : {};
         const repairItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []),
-          groundedSources
+          groundedSourceMap(repairGroundedSources)
         );
         const nonVegetarianRepair = allVegetarian ? repairItems.find((item) => !isClearlyVegetarian(item)) : null;
         if (allVegetarian && nonVegetarianRepair) {
@@ -221209,13 +221217,13 @@ Preserve every hard dietary, allergy, ethical, budget and heating-time rule. Use
 READY-MADE RECOVERY: The initial search was under-filled after source and product validation. Return only additional, distinct ready-made products that preserve the original intent and all hard constraints.`
             }
           );
-          rememberGroundedSources(readyMadeRecoveryResponse);
+          const readyMadeRecoveryGroundedSources = rememberGroundedSources(readyMadeRecoveryResponse);
           const recoveryOutputText = readyMadeRecoveryResponse.text || "";
           repairOutputs.push(recoveryOutputText);
           const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
           const recoveryItems = filterToGroundedSources(
             Array.isArray(recoveryData.items) ? recoveryData.items : [],
-            groundedSources
+            groundedSourceMap(readyMadeRecoveryGroundedSources)
           ).filter(isReadyMadeCandidate);
           rawItems = [...rawItems, ...recoveryItems];
           wasRepaired = wasRepaired || recoveryItems.length > 0;
@@ -221242,7 +221250,7 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
         wasRepaired = wasRepaired || fallbackItems.length > 0;
       }
     }
-    rawItems = filterToGroundedSources(dedupeItems(rawItems).slice(0, count), groundedSources);
+    rawItems = dedupeItems(rawItems).slice(0, count);
     const repairPrompt = repairPrompts.join("\n");
     const repairOutputText = repairOutputs.join("\n");
     let items = rawItems.map((item) => {
@@ -232884,6 +232892,59 @@ function isDeliverableSearchResult(result) {
   return recipes.length > 0 || readyMeals.length > 0 || result?.isEmpty === true || !!result?.budgetContradiction;
 }
 
+// src/lib/searchUtils.ts
+var normaliseIncomingSearchParams = (value) => {
+  const candidate = value && typeof value === "object" ? value : {};
+  const query2 = typeof candidate.query === "string" ? candidate.query.trim() : "";
+  const source = candidate.source === "ready-made" ? "ready-made" : "cook";
+  const params = { ...candidate, query: query2, source };
+  if (source === "cook") {
+    const ingredientIntent = detectIngredientIntent(query2);
+    if (ingredientIntent) {
+      params.ingredientIntent = ingredientIntent;
+      params.isLeftoverMode = true;
+    } else {
+      delete params.ingredientIntent;
+      if (params.strictIngredientMatch) delete params.strictIngredientMatch;
+    }
+  } else {
+    delete params.ingredientIntent;
+    delete params.strictIngredientMatch;
+  }
+  return params;
+};
+var queryConflictGroups = {
+  meat: ["beef", "steak", "burger", "mince", "lamb", "mutton", "pork", "bacon", "ham", "sausage", "chorizo", "chicken", "turkey", "duck", "goose", "venison"],
+  fish: ["fish", "salmon", "tuna", "cod", "haddock", "sardine", "mackerel", "trout", "anchovy", "prawn", "shrimp", "crab", "lobster", "mussel", "clam", "scallop", "squid"],
+  eggs: ["egg", "eggs", "omelette", "frittata", "quiche"],
+  dairy: ["milk", "cheese", "cheddar", "parmesan", "mozzarella", "butter", "cream", "yoghurt", "yogurt"],
+  gluten: ["wheat", "barley", "rye", "spelt", "flour", "bread", "breadcrumb", "breadcrumbs", "pasta", "couscous", "semolina", "bulgur", "oat", "oats", "malt", "seitan"],
+  nuts: ["almond", "almonds", "walnut", "walnuts", "cashew", "cashews", "hazelnut", "hazelnuts", "pecan", "pecans", "pistachio", "pistachios", "brazil nut", "brazil nuts", "macadamia", "macadamias", "tree nut", "tree nuts", "mixed nut", "mixed nuts"],
+  peanuts: ["peanut", "peanuts"],
+  soy: ["soy", "soya", "tofu", "tempeh", "edamame", "miso", "soy sauce", "soya sauce", "soy lecithin"],
+  sesame: ["sesame", "tahini"],
+  mustard: ["mustard"],
+  celery: ["celery"],
+  lupin: ["lupin"],
+  sulphites: ["sulphite", "sulfite", "sulphur dioxide", "sulfur dioxide"]
+};
+var allergyTerms = {
+  "Celery": queryConflictGroups.celery,
+  "Cereals containing gluten": queryConflictGroups.gluten,
+  "Crustaceans": ["prawn", "prawns", "shrimp", "crab", "lobster", "crayfish", "langoustine", "scampi"],
+  "Eggs": queryConflictGroups.eggs,
+  "Fish": queryConflictGroups.fish,
+  "Lupin": queryConflictGroups.lupin,
+  "Milk": queryConflictGroups.dairy,
+  "Molluscs": ["mussel", "mussels", "clam", "clams", "scallop", "scallops", "oyster", "oysters", "squid", "octopus", "snail", "snails", "whelk", "whelks", "cuttlefish"],
+  "Mustard": queryConflictGroups.mustard,
+  "Peanuts": queryConflictGroups.peanuts,
+  "Sesame": queryConflictGroups.sesame,
+  "Soybeans": queryConflictGroups.soy,
+  "Tree nuts": queryConflictGroups.nuts,
+  "Sulphur dioxide and sulphites": queryConflictGroups.sulphites
+};
+
 // src/lib/webhookSafety.ts
 var STRIPE_WEBHOOK_PROCESSING_LEASE_MS = 5 * 60 * 1e3;
 var TRANSACTIONAL_EMAIL_CLAIM_LEASE_MS = 5 * 60 * 1e3;
@@ -234187,9 +234248,22 @@ function createApp() {
     try {
       const searchIdentity = await verifySearchIdentity(req, res);
       if (!searchIdentity) return;
-      const { searchParams, preferences } = req.body;
-      if (!searchParams) {
+      const { searchParams: rawSearchParams, preferences } = req.body;
+      if (!rawSearchParams || typeof rawSearchParams !== "object") {
         throw new Error("Missing searchParams in request body");
+      }
+      const searchParams = normaliseIncomingSearchParams(rawSearchParams);
+      if (!searchParams.query) {
+        return res.status(400).json({
+          ok: false,
+          error: {
+            code: "SEARCH_QUERY_REQUIRED",
+            message: "Please enter a recipe or ingredient to search for.",
+            retryable: false,
+            status: 400,
+            category: "model"
+          }
+        });
       }
       const result = await generateDinnerSuggestions(searchParams, preferences);
       if (!isDeliverableSearchResult(result)) {

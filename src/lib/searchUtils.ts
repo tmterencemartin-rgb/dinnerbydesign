@@ -5,6 +5,36 @@ import { dietaryRuleAllowsOffal, queryExplicitlyRequestsOffal } from './offalPre
 import { filterCookingFatsForDiet } from './preferenceCompatibility';
 
 /**
+ * Rebuilds safety-relevant search intent from an untrusted request payload.
+ * The browser normally supplies this field, but server callers must not be
+ * able to omit it and bypass deterministic ingredient matching.
+ */
+export const normaliseIncomingSearchParams = (value: unknown): SearchParams => {
+  const candidate = value && typeof value === 'object'
+    ? value as Record<string, unknown>
+    : {};
+  const query = typeof candidate.query === 'string' ? candidate.query.trim() : '';
+  const source = candidate.source === 'ready-made' ? 'ready-made' : 'cook';
+  const params = { ...candidate, query, source } as SearchParams;
+
+  if (source === 'cook') {
+    const ingredientIntent = detectIngredientIntent(query);
+    if (ingredientIntent) {
+      params.ingredientIntent = ingredientIntent;
+      params.isLeftoverMode = true;
+    } else {
+      delete params.ingredientIntent;
+      if (params.strictIngredientMatch) delete params.strictIngredientMatch;
+    }
+  } else {
+    delete params.ingredientIntent;
+    delete params.strictIngredientMatch;
+  }
+
+  return params;
+};
+
+/**
  * Builds search parameters by combining user input, active filters, and persistent preferences.
  */
 export const buildSearchParams = (

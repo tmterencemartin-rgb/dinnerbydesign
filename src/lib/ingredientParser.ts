@@ -761,8 +761,9 @@ export function detectIngredientIntent(query: string): {
     .map(item => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, '').trim())
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
-  const unseparatedWords = categoryNormalisedQuery.split(/\s+/).filter(word => !/^and$/i.test(word));
-  const unseparatedIngredients = parseUnseparatedIngredientList(categoryNormalisedQuery);
+  const shortIngredientQuery = withoutLeadIn || categoryNormalisedQuery;
+  const unseparatedWords = shortIngredientQuery.split(/\s+/).filter(word => !/^and$/i.test(word));
+  const unseparatedIngredients = parseUnseparatedIngredientList(shortIngredientQuery);
   const categoryMetadata = Object.keys(categoryMinimums).length > 0 ? { categoryMinimums } : {};
   const isShortUnseparatedIngredientList =
     !hasListPunctuation
@@ -798,7 +799,13 @@ export function detectIngredientIntent(query: string): {
   }
 
   if (ingredients.length >= 2 && hasSimpleAndList) {
-    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    // A short "and" phrase is only an ingredient list when every part is in
+    // the supported ingredient catalogue. Otherwise ordinary dish names such
+    // as "fish and chips" or descriptive searches such as "quick and easy"
+    // can be mistaken for ingredient requests.
+    if (unseparatedIngredients.length === ingredients.length) {
+      return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    }
   }
 
   if (hasPreparation && ingredients.length > 0) {
