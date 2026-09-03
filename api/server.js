@@ -47258,13 +47258,13 @@ var require_verifier = __commonJS({
     module2.exports = verifier;
     var Enum = require_enum();
     var util = require_util3();
-    function invalid2(field2, expected) {
+    function invalid3(field2, expected) {
       return field2.name + ": " + expected + (field2.repeated && expected !== "array" ? "[]" : field2.map && expected !== "object" ? "{k:" + field2.keyType + "}" : "") + " expected";
     }
     function genVerifyValue(gen, field2, fieldIndex, ref) {
       if (field2.resolvedType) {
         if (field2.resolvedType instanceof Enum) {
-          gen("switch(%s){", ref)("default:")("return%j", invalid2(field2, "enum value"));
+          gen("switch(%s){", ref)("default:")("return%j", invalid3(field2, "enum value"));
           for (var keys = Object.keys(field2.resolvedType.values), j = 0; j < keys.length; ++j) gen("case %i:", field2.resolvedType.values[keys[j]]);
           gen("break")("}");
         } else {
@@ -47277,27 +47277,27 @@ var require_verifier = __commonJS({
           case "sint32":
           case "fixed32":
           case "sfixed32":
-            gen("if(!util.isInteger(%s))", ref)("return%j", invalid2(field2, "integer"));
+            gen("if(!util.isInteger(%s))", ref)("return%j", invalid3(field2, "integer"));
             break;
           case "int64":
           case "uint64":
           case "sint64":
           case "fixed64":
           case "sfixed64":
-            gen("if(!util.isInteger(%s)&&!(%s&&util.isInteger(%s.low)&&util.isInteger(%s.high)))", ref, ref, ref, ref)("return%j", invalid2(field2, "integer|Long"));
+            gen("if(!util.isInteger(%s)&&!(%s&&util.isInteger(%s.low)&&util.isInteger(%s.high)))", ref, ref, ref, ref)("return%j", invalid3(field2, "integer|Long"));
             break;
           case "float":
           case "double":
-            gen('if(typeof %s!=="number")', ref)("return%j", invalid2(field2, "number"));
+            gen('if(typeof %s!=="number")', ref)("return%j", invalid3(field2, "number"));
             break;
           case "bool":
-            gen('if(typeof %s!=="boolean")', ref)("return%j", invalid2(field2, "boolean"));
+            gen('if(typeof %s!=="boolean")', ref)("return%j", invalid3(field2, "boolean"));
             break;
           case "string":
-            gen("if(!util.isString(%s))", ref)("return%j", invalid2(field2, "string"));
+            gen("if(!util.isString(%s))", ref)("return%j", invalid3(field2, "string"));
             break;
           case "bytes":
-            gen('if(!(%s&&typeof %s.length==="number"||util.isString(%s)))', ref, ref, ref)("return%j", invalid2(field2, "buffer"));
+            gen('if(!(%s&&typeof %s.length==="number"||util.isString(%s)))', ref, ref, ref)("return%j", invalid3(field2, "buffer"));
             break;
         }
       }
@@ -47310,17 +47310,17 @@ var require_verifier = __commonJS({
         case "sint32":
         case "fixed32":
         case "sfixed32":
-          gen("if(!util.key32Re.test(%s))", ref)("return%j", invalid2(field2, "integer key"));
+          gen("if(!util.key32Re.test(%s))", ref)("return%j", invalid3(field2, "integer key"));
           break;
         case "int64":
         case "uint64":
         case "sint64":
         case "fixed64":
         case "sfixed64":
-          gen("if(!util.key64Re.test(%s))", ref)("return%j", invalid2(field2, "integer|Long key"));
+          gen("if(!util.key64Re.test(%s))", ref)("return%j", invalid3(field2, "integer|Long key"));
           break;
         case "bool":
-          gen("if(!util.key2Re.test(%s))", ref)("return%j", invalid2(field2, "boolean key"));
+          gen("if(!util.key2Re.test(%s))", ref)("return%j", invalid3(field2, "boolean key"));
           break;
       }
       return gen;
@@ -47334,11 +47334,11 @@ var require_verifier = __commonJS({
         var field2 = mtype._fieldsArray[i2].resolve(), ref = "m" + util.safeProp(field2.name);
         if (field2.optional) gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j)){", ref, field2.name);
         if (field2.map) {
-          gen("if(!util.isObject(%s))", ref)("return%j", invalid2(field2, "object"))("var k=Object.keys(%s)", ref)("for(var i=0;i<k.length;++i){");
+          gen("if(!util.isObject(%s))", ref)("return%j", invalid3(field2, "object"))("var k=Object.keys(%s)", ref)("for(var i=0;i<k.length;++i){");
           genVerifyKey(gen, field2, "k[i]");
           genVerifyValue(gen, field2, i2, ref + "[k[i]]")("}");
         } else if (field2.repeated) {
-          gen("if(!Array.isArray(%s))", ref)("return%j", invalid2(field2, "array"))("for(var i=0;i<%s.length;++i){", ref);
+          gen("if(!Array.isArray(%s))", ref)("return%j", invalid3(field2, "array"))("for(var i=0;i<%s.length;++i){", ref);
           genVerifyValue(gen, field2, i2, ref + "[i]")("}");
         } else {
           if (field2.partOf) {
@@ -189771,28 +189771,6 @@ var dietaryRuleAllowsCookingFat = (dietaryRule, fat) => {
 };
 var filterCookingFatsForDiet = (dietaryRule, fats) => fats.filter((fat) => dietaryRuleAllowsCookingFat(dietaryRule, fat));
 
-// src/lib/enrichmentRequest.ts
-function buildEnrichmentRequestBody(title, cuisine, mode, options2) {
-  return {
-    title,
-    cuisine,
-    mode,
-    strictIngredientMatch: options2?.strictIngredientMatch === true,
-    strictQuery: options2?.query || "",
-    sourceUrl: options2?.sourceUrl || null
-  };
-}
-function parseEnrichmentRequestOptions(body) {
-  if (!body || typeof body !== "object") return {};
-  const request = body;
-  const sourceUrl = typeof request.sourceUrl === "string" && request.sourceUrl.trim() ? request.sourceUrl : null;
-  return {
-    strictIngredientMatch: request.strictIngredientMatch === true,
-    query: typeof request.strictQuery === "string" ? request.strictQuery : "",
-    sourceUrl
-  };
-}
-
 // src/lib/groundingUtils.ts
 var TRUSTED_RECIPE_PUBLISHER_HOSTS = /* @__PURE__ */ new Set([
   "bbcgoodfood.com",
@@ -189873,6 +189851,58 @@ var isApprovedDirectRecipeUrl = (value) => {
   const canonicalUrl = canonicaliseGroundedUrl(value);
   return !!canonicalUrl && !isInternalGroundingUrl(canonicalUrl) && isTrustedRecipePublisherUrl(canonicalUrl) && isDirectHttpsContentUrl(canonicalUrl);
 };
+
+// src/lib/enrichmentRequest.ts
+var invalid = (code, message2) => ({
+  ok: false,
+  code,
+  message: message2
+});
+var validateEnrichmentRequestPayload = (body) => {
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return invalid("ENRICHMENT_REQUEST_INVALID", "The enrichment request is invalid.");
+  }
+  const request = body;
+  if (typeof request.title !== "string" || !request.title.trim() || request.title.trim().length > 240) {
+    return invalid("ENRICHMENT_REQUEST_INVALID", "The recipe title is invalid.");
+  }
+  if (typeof request.cuisine !== "string" || request.cuisine.trim().length > 120) {
+    return invalid("ENRICHMENT_REQUEST_INVALID", "The recipe cuisine is invalid.");
+  }
+  if (request.mode !== "cook" && request.mode !== "ready-made") {
+    return invalid("ENRICHMENT_REQUEST_INVALID", "The enrichment mode is invalid.");
+  }
+  if (Object.prototype.hasOwnProperty.call(request, "strictIngredientMatch") && typeof request.strictIngredientMatch !== "boolean") {
+    return invalid("ENRICHMENT_REQUEST_INVALID", "The ingredient matching setting is invalid.");
+  }
+  if (Object.prototype.hasOwnProperty.call(request, "strictQuery") && (typeof request.strictQuery !== "string" || request.strictQuery.trim().length > 500)) {
+    return invalid("ENRICHMENT_REQUEST_TOO_LARGE", "Please shorten the ingredient search and try again.");
+  }
+  if (request.sourceUrl !== void 0 && request.sourceUrl !== null && !isDirectHttpsContentUrl(request.sourceUrl)) {
+    return invalid("ENRICHMENT_SOURCE_INVALID", "The original recipe link is invalid.");
+  }
+  return { ok: true };
+};
+function buildEnrichmentRequestBody(title, cuisine, mode, options2) {
+  return {
+    title,
+    cuisine,
+    mode,
+    strictIngredientMatch: options2?.strictIngredientMatch === true,
+    strictQuery: options2?.query || "",
+    sourceUrl: options2?.sourceUrl || null
+  };
+}
+function parseEnrichmentRequestOptions(body) {
+  if (!body || typeof body !== "object") return {};
+  const request = body;
+  const sourceUrl = typeof request.sourceUrl === "string" && request.sourceUrl.trim() ? request.sourceUrl : null;
+  return {
+    strictIngredientMatch: request.strictIngredientMatch === true,
+    query: typeof request.strictQuery === "string" ? request.strictQuery : "",
+    sourceUrl
+  };
+}
 
 // src/lib/parseModelJson.ts
 var parseModelJson = (text) => {
@@ -233070,7 +233100,7 @@ var DIETARY_RULES = /* @__PURE__ */ new Set([
 var SALAD_PREFERENCES = /* @__PURE__ */ new Set(["all", "main-only", "side-only", "none"]);
 var SOURCES = /* @__PURE__ */ new Set(["cook", "ready-made"]);
 var isRecord = (value) => !!value && typeof value === "object" && !Array.isArray(value);
-var invalid = (code, message2) => ({
+var invalid2 = (code, message2) => ({
   ok: false,
   code,
   message: message2
@@ -233080,10 +233110,10 @@ function validateStringArrays(record, fields, label) {
     if (!Object.prototype.hasOwnProperty.call(record, field2)) continue;
     const value = record[field2];
     if (!Array.isArray(value)) {
-      return invalid("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
+      return invalid2("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
     }
     if (value.length > MAX_SEARCH_ARRAY_ITEMS || value.some((item) => typeof item !== "string" || item.length > MAX_SEARCH_ITEM_LENGTH)) {
-      return invalid("SEARCH_REQUEST_TOO_LARGE", `${label} contains too much filter information.`);
+      return invalid2("SEARCH_REQUEST_TOO_LARGE", `${label} contains too much filter information.`);
     }
   }
   return { ok: true };
@@ -233091,7 +233121,7 @@ function validateStringArrays(record, fields, label) {
 function validateScalarTypes(record, label) {
   for (const field2 of BOOLEAN_FIELDS) {
     if (Object.prototype.hasOwnProperty.call(record, field2) && typeof record[field2] !== "boolean") {
-      return invalid("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
+      return invalid2("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
     }
   }
   for (const field2 of NUMBER_FIELDS) {
@@ -233099,28 +233129,28 @@ function validateScalarTypes(record, label) {
     const value = record[field2];
     if (value === null && NULLABLE_NUMBER_FIELDS.has(field2)) continue;
     if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1e4) {
-      return invalid("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
+      return invalid2("SEARCH_REQUEST_INVALID", `${label} contains an invalid ${field2} value.`);
     }
   }
   return { ok: true };
 }
 function validateSearchParams(searchParams) {
   if (!isRecord(searchParams)) {
-    return invalid("SEARCH_REQUEST_INVALID", "The search request is invalid.");
+    return invalid2("SEARCH_REQUEST_INVALID", "The search request is invalid.");
   }
   if (typeof searchParams.query !== "string") {
-    return invalid("SEARCH_REQUEST_INVALID", "The search query must be text.");
+    return invalid2("SEARCH_REQUEST_INVALID", "The search query must be text.");
   }
   if (searchParams.query.trim().length > MAX_SEARCH_QUERY_LENGTH) {
-    return invalid("SEARCH_QUERY_TOO_LONG", "Please shorten the search query and try again.");
+    return invalid2("SEARCH_QUERY_TOO_LONG", "Please shorten the search query and try again.");
   }
   if (typeof searchParams.source !== "string" || !SOURCES.has(searchParams.source)) {
-    return invalid("SEARCH_REQUEST_INVALID", "The search source is invalid.");
+    return invalid2("SEARCH_REQUEST_INVALID", "The search source is invalid.");
   }
   if (Object.prototype.hasOwnProperty.call(searchParams, "count")) {
     const count = searchParams.count;
     if (typeof count !== "number" || !Number.isInteger(count) || count < 1 || count > 3) {
-      return invalid("SEARCH_REQUEST_INVALID", "The requested result count is invalid.");
+      return invalid2("SEARCH_REQUEST_INVALID", "The requested result count is invalid.");
     }
   }
   const arraysResult = validateStringArrays(searchParams, SEARCH_ARRAY_FIELDS, "The search request");
@@ -233130,20 +233160,20 @@ function validateSearchParams(searchParams) {
 function validatePreferences(preferences) {
   if (preferences === void 0 || preferences === null) return { ok: true };
   if (!isRecord(preferences)) {
-    return invalid("PREFERENCES_INVALID", "The saved preferences are invalid.");
+    return invalid2("PREFERENCES_INVALID", "The saved preferences are invalid.");
   }
   const arraysResult = validateStringArrays(preferences, PREFERENCE_ARRAY_FIELDS, "The saved preferences");
   if (!arraysResult.ok) return arraysResult;
   const scalarResult = validateScalarTypes(preferences, "The saved preferences");
   if (!scalarResult.ok) return scalarResult;
   if (Object.prototype.hasOwnProperty.call(preferences, "dietaryRule") && (typeof preferences.dietaryRule !== "string" || !DIETARY_RULES.has(preferences.dietaryRule))) {
-    return invalid("PREFERENCES_INVALID", "The saved dietary preference is invalid.");
+    return invalid2("PREFERENCES_INVALID", "The saved dietary preference is invalid.");
   }
   if (Object.prototype.hasOwnProperty.call(preferences, "saladPreference") && (typeof preferences.saladPreference !== "string" || !SALAD_PREFERENCES.has(preferences.saladPreference))) {
-    return invalid("PREFERENCES_INVALID", "The saved salad preference is invalid.");
+    return invalid2("PREFERENCES_INVALID", "The saved salad preference is invalid.");
   }
   if (Object.prototype.hasOwnProperty.call(preferences, "preferredMode") && (typeof preferences.preferredMode !== "string" || !SOURCES.has(preferences.preferredMode))) {
-    return invalid("PREFERENCES_INVALID", "The saved search mode is invalid.");
+    return invalid2("PREFERENCES_INVALID", "The saved search mode is invalid.");
   }
   return { ok: true };
 }
@@ -234598,6 +234628,19 @@ function createApp() {
   app2.post("/api/enrich-recipe", async (req, res) => {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
+      const validation = validateEnrichmentRequestPayload(req.body);
+      if ("code" in validation) {
+        return res.status(400).json({
+          ok: false,
+          error: {
+            code: validation.code,
+            message: validation.message,
+            retryable: false,
+            status: 400,
+            category: "request"
+          }
+        });
+      }
       const { title, cuisine, mode } = req.body;
       const result = await enrichRecipe(title, cuisine, mode, parseEnrichmentRequestOptions(req.body));
       res.json(result);

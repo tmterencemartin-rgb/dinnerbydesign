@@ -27,7 +27,7 @@ import {
   summariseAccountReconciliation,
 } from "../src/lib/accountReconciliation";
 import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
-import { parseEnrichmentRequestOptions } from "../src/lib/enrichmentRequest";
+import { parseEnrichmentRequestOptions, validateEnrichmentRequestPayload } from "../src/lib/enrichmentRequest";
 import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
 import { validateSearchRequestPayload } from "../src/lib/searchRequestValidation";
 import {
@@ -1755,6 +1755,19 @@ export function createApp() {
   app.post("/api/enrich-recipe", async (req, res) => {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
+      const validation = validateEnrichmentRequestPayload(req.body);
+      if ('code' in validation) {
+        return res.status(400).json({
+          ok: false,
+          error: {
+            code: validation.code,
+            message: validation.message,
+            retryable: false,
+            status: 400,
+            category: 'request'
+          }
+        });
+      }
       const { title, cuisine, mode } = req.body;
       const result = await enrichRecipe(title, cuisine, mode, parseEnrichmentRequestOptions(req.body));
       res.json(result);
