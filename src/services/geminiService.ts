@@ -9,7 +9,6 @@ import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../li
 import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
-import { auth, signInAnon } from '../firebase';
 import { COOKING_METHOD_ALIASES } from '../constants';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
@@ -639,8 +638,8 @@ const sanitizeRationaleMap = (value: any): Record<string, string> => Object.from
 const SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
 
 async function getSearchAuthToken(): Promise<string> {
-  const currentUser = auth.currentUser || (await signInAnon()).user;
-  return currentUser.getIdToken();
+  const authModule = await import('../lib/searchAuth');
+  return authModule.getSearchAuthToken();
 }
 
 async function fetchProxySuggestions(searchParams: SearchParams, preferences?: UserPreferences, signal?: AbortSignal): Promise<any> {
@@ -872,7 +871,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
       : '';
 
   const simplicityLogic = activeIsSimple 
-    ? `\nSIMPLICITY BIAS (Quick and easy recipes ACTIVE): 
+    ? `\nSIMPLICITY BIAS (Quick and easy recipes ACTIVE):
 - STRICTLY limit recipes to NO MORE THAN 4 ingredients.
 - Total time MUST be under 30 minutes.
 - Preparation steps must be minimal.`
@@ -890,7 +889,7 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
     ? `\nTRUSTED SOURCES (SOFT RANKING HINT ACTIVE):
 - The user has expressed a preference for these trusted UK recipe sources: ${activePreferredSourceNames.join(', ')}.
 - GENTLY FAVOUR recipes that could reasonably originate from or be attributed to these sources by applying a MODEST positive weight to results from them.
-- This is NOT A HARD FILTER. You MUST still prioritize the most relevant recipes for the query "${query}". 
+- This is NOT A HARD FILTER. You MUST still prioritize the most relevant recipes for the query "${query}".
 - Highly relevant recipes from other sources SHOULD still appear above weak matches from trusted sources.
 - NEVER return an empty or severely reduced result set solely because trusted sources have no good matches. If no good matches exist in trusted sources, return the best matches from all available UK sources.`
     : '';
@@ -1102,7 +1101,7 @@ ${saladLogic}${simplicityLogic}${preferredSourcesLogic}${freeRangeLogic}${cookin
 - The query "${query}" strictly violates any HARD DIETARY, RELIGIOUS, or ALLERGY constraint.
 ${isReadyMade ? `- ONLY commercially available UK ready-made products (branded or own-brand) from ${activeSupermarkets.length > 0 ? activeSupermarkets.join(' or ') : 'any major UK supermarket, e.g., Tesco, Waitrose, Sainsbury’s, Morrisons, Aldi, Asda, Lidl, Co-op, Marks & Spencer, Ocado'}. NO home recipes. Under NO circumstances return products from other supermarkets when preferred supermarkets are specified above.` : '- Home-cooking recipes only. NO "retailer" fields.'}
 
-BUDGET POLICY: 
+BUDGET POLICY:
 If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" under £2), do NOT return empty. Instead:
 1. Populate the 'budgetContradiction' object with the reason.
 2. Return the closest possible budget-friendly alternatives (e.g. Beef Mince or Stewing Beef for "Beef").
@@ -1111,7 +1110,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const finalSystemInstruction = systemInstruction + rejectionPolicy;
 
     // Dynamic prompt - minimal and direct
-    const prompt = `Search intent: "${query}". 
+    const prompt = `Search intent: "${query}".
     ${ingredientIntent?.isIngredientLed && parsedIngredients.length > 0 ? `Target Ingredients: MUST contain every specified parsed ingredient (${parsedIngredients.join(', ')}).${categoryMinimumInstruction} Minimise extra shopping and feature these ingredients prominently.` : ''}
     ${activeSaladPref === 'main-only' ? 'Requirement: MUST be a main-course salad.' : ''}
     ${activeSaladPref === 'side-only' ? 'Requirement: MUST be a side salad.' : ''}
@@ -1812,7 +1811,7 @@ export async function generateMatchRationales(
 
     const systemInstruction = `You are a match rationale generator for a dinner planning app.
 Provide objective, non-obvious explanations for why these specific items were suggested.
-NO subjective adjectives (tasty, delicious, premium). 
+NO subjective adjectives (tasty, delicious, premium).
 Return a short, plain-language reason only. Do not begin with or include "matches the query", "match:", or similar meta wording.
 Context: Query: "${searchParams.query}", Diet: ${preferences?.dietaryRule || "None"}
 

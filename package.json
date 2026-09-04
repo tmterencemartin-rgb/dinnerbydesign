@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.cts",
-    "build": "vite build && tsx scripts/generateSeoPages.ts && esbuild server.cts --bundle --platform=node --format=cjs --outfile=api/server.js",
+    "build": "vite build && tsx scripts/generateSeoPages.ts && esbuild server.cts --bundle --platform=node --format=cjs --outfile=api/server.js --external:dotenv --external:express --external:cors --external:firebase --external:firebase-admin --external:google-auth-library --external:@google/genai --external:resend --external:stripe",
     "start": "node api/server.js",
     "preview": "vite preview",
     "build:native": "VITE_API_BASE_URL=https://dinnerbydesign.app VITE_NATIVE_TEST_BUILD=true vite build",
