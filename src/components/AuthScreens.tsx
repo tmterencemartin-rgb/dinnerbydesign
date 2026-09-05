@@ -22,13 +22,15 @@ export const AuthLoading: React.FC = () => (
 export const AuthError: React.FC<{ error: string }> = ({ error }) => {
   const isOperationNotAllowed = error.includes('operation-not-allowed');
   // Hide raw technical codes for generic profile/account retrieval issues as requested
-  const isProfileError = error.includes('account settings') || error.includes('user profile');
+  const isProfileError = error.includes('account settings') || error.includes('user profile') || error.includes('account could not be loaded');
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center">
       <div className="w-full max-w-sm">
         <Wordmark className="mx-auto mb-6 text-[29.33px]" />
-        <h1 className="text-[20px] font-bold text-gray-900 tracking-tight mb-3">Authentication Error</h1>
+        <h1 className="text-[20px] font-bold text-gray-900 tracking-tight mb-3">
+          {isProfileError ? 'We could not load your account' : 'Authentication Error'}
+        </h1>
         <p className="text-[14px] text-gray-600 mb-8 leading-relaxed">
           {isOperationNotAllowed 
             ? "Your account access is currently restricted. Please contact support or try a different method." 

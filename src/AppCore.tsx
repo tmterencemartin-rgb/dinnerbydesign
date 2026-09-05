@@ -396,6 +396,7 @@ const AppContent = () => {
 
   // Handle high-latency profile sync to prevent flash of unstyled/empty content
   if (user && !user.isAnonymous && !profile && isAuthReady) {
+    if (authError) return <AuthError error={authError} />;
     return <AuthSyncing />;
   }
 

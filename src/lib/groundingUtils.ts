@@ -9,7 +9,6 @@ const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set([
   'tescorealfood.com',
   'tesco.com',
   'theguardian.com',
-  'mob.co.uk',
   'deliciousmagazine.co.uk',
   'thehappyfoodie.co.uk',
   'kitchensanctuary.com',
@@ -25,6 +24,12 @@ const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set([
   'thetimes.com',
   'thesundaytimes.co.uk',
   'goodhousekeeping.com'
+]);
+
+// These publishers require sign-in, payment, a trial or an app before a visitor
+// can rely on the recipe. Do not send DinnerByDesign visitors to that barrier.
+const BLOCKED_RECIPE_PUBLISHER_HOSTS = new Set([
+  'mob.co.uk'
 ]);
 
 export const canonicaliseGroundedUrl = (value: unknown): string | null => {
@@ -107,6 +112,14 @@ export const isTrustedRecipePublisherUrl = (value: unknown): boolean => {
   return TRUSTED_RECIPE_PUBLISHER_HOSTS.has(host);
 };
 
+export const isBlockedRecipePublisherUrl = (value: unknown): boolean => {
+  const canonicalUrl = canonicaliseGroundedUrl(value);
+  if (!canonicalUrl) return false;
+
+  const host = new URL(canonicalUrl).hostname.toLowerCase().replace(/^www\./, '');
+  return [...BLOCKED_RECIPE_PUBLISHER_HOSTS].some(domain => host === domain || host.endsWith(`.${domain}`));
+};
+
 export const isDirectHttpsContentUrl = (value: unknown): boolean => {
   const canonicalUrl = canonicaliseGroundedUrl(value);
   if (!canonicalUrl) return false;
@@ -123,6 +136,7 @@ export const isApprovedDirectRecipeUrl = (value: unknown): boolean => {
   const canonicalUrl = canonicaliseGroundedUrl(value);
   return !!canonicalUrl
     && !isInternalGroundingUrl(canonicalUrl)
+    && !isBlockedRecipePublisherUrl(canonicalUrl)
     && isTrustedRecipePublisherUrl(canonicalUrl)
     && isDirectHttpsContentUrl(canonicalUrl);
 };

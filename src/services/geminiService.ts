@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isBlockedRecipePublisherUrl, isDirectHttpsContentUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { COOKING_METHOD_ALIASES } from '../constants';
@@ -677,7 +677,7 @@ export const filterToGroundedSources = (items: any[], sources: Map<string, Groun
     }
 
     const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
-    if (!groundedSourceUrl || !isDirectHttpsContentUrl(groundedSourceUrl)) return false;
+    if (!groundedSourceUrl || isBlockedRecipePublisherUrl(groundedSourceUrl) || !isDirectHttpsContentUrl(groundedSourceUrl)) return false;
     item.sourceUrl = groundedSourceUrl;
     return true;
   })
@@ -1197,7 +1197,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, Mob, delicious. magazine, The Happy Foodie, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
 - FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.

@@ -80,6 +80,7 @@ import {
   syncShoppingListDocuments,
   updateShoppingItemDocument,
 } from '../lib/shoppingListWrites';
+
 import {
   addPantryItemDocument,
   removePantryItemDocument,
@@ -87,6 +88,20 @@ import {
 } from '../lib/pantryWrites';
 import { isSameRecipe } from '../lib/recipeUtils';
 import { clearGuestWorkspace, getGuestRecipeDocumentId, GuestWorkspace, readGuestWorkspace, writeGuestWorkspace } from '../lib/guestWorkspace';
+
+const withProfileLoadTimeout = async <T,>(operation: Promise<T>, label: string): Promise<T> => {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<T>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error(`${label} timed out`)), 12_000);
+      })
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+};
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -816,7 +831,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
           addLog(`AUTH: Checking for profile ${firebaseUser.uid}...`);
           // Using standard getDoc (with cache support) for maximum reliability in varying network conditions
-          const userDoc = await getDoc(userDocRef);
+          const userDoc = await withProfileLoadTimeout(getDoc(userDocRef), 'Account load');
           
           if (userDoc.exists()) {
             addLog(`AUTH: Profile found for ${firebaseUser.uid}`);
@@ -825,7 +840,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             // Preferences are stored in a subcollection document to match the blueprint/rules
             try {
               addLog('AUTH: Loading preferences...');
-              const prefsDoc = await getDoc(doc(db, 'users', firebaseUser.uid, 'profile', 'preferences'));
+              const prefsDoc = await withProfileLoadTimeout(
+                getDoc(doc(db, 'users', firebaseUser.uid, 'profile', 'preferences')),
+                'Preferences load'
+              );
               if (prefsDoc.exists()) {
                 addLog('AUTH: Preferences found.');
                 profileData.preferences = normaliseUserPreferences(prefsDoc.data() as UserPreferences);
@@ -908,7 +926,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           try {
             handleFirestoreError(err, OperationType.GET, `users/${firebaseUser.uid}`);
           } catch (jsonErr: any) {
-            setAuthErrorLogged(jsonErr.message);
+            setAuthErrorLogged('Your account could not be loaded. Please check your connection and try again.');
           }
         } finally {
           setLoading(false);

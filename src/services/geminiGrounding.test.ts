@@ -38,6 +38,17 @@ describe('Gemini search grounding filters', () => {
     expect(filterToGroundedSources([candidate], groundedSources)).toEqual([candidate]);
   });
 
+  it('rejects a grounded recipe page when the publisher requires a trial or sign-in', () => {
+    const groundedSources = new Map([
+      ['https://www.mob.co.uk/recipes/chicken-traybake', { url: 'https://www.mob.co.uk/recipes/chicken-traybake' }]
+    ]);
+
+    expect(filterToGroundedSources([{
+      title: 'Chicken traybake',
+      sourceUrl: 'https://www.mob.co.uk/recipes/chicken-traybake'
+    }], groundedSources)).toEqual([]);
+  });
+
   it('rejects grounded HTTP and search URLs', () => {
     const httpSource = new Map([
       ['http://example.com/recipes/scallops', { url: 'http://example.com/recipes/scallops' }]
