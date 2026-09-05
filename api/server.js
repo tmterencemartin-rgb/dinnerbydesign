@@ -145102,7 +145102,7 @@ var init_firebase_applet_config = __esm({
       projectId: "gen-lang-client-0925408841",
       appId: "1:302877651140:web:2a5ea3bfcef2c473165991",
       apiKey: "AIzaSyCqBh_8OYI5aP8etFl_cGtwRY8t87N2T-A",
-      authDomain: "gen-lang-client-0925408841.firebaseapp.com",
+      authDomain: "dinnerbydesign.app",
       firestoreDatabaseId: "ai-studio-ffdbb575-df5b-4ac3-a6ad-710b4076125a",
       storageBucket: "gen-lang-client-0925408841.firebasestorage.app",
       messagingSenderId: "302877651140",

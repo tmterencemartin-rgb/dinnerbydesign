@@ -3,6 +3,7 @@ import { useLocation } from 'wouter';
 import { 
   User as FirebaseUser,
   onAuthStateChanged,
+  getRedirectResult,
   getAuth,
   signInAnonymously,
   signInWithPopup,
@@ -661,11 +662,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Use auth.currentUser directly to avoid stale closured state
     const currentFirebaseUser = auth.currentUser;
     const isAnonymous = currentFirebaseUser?.isAnonymous || false;
+    const prefersRedirect = typeof window !== 'undefined' && (
+      window.matchMedia?.('(pointer: coarse)').matches ||
+      /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    );
     
     try {
       addLog(`AUTH: Initiating Google Sign-In. User: ${currentFirebaseUser?.uid}, Anon: ${isAnonymous}`);
       
       if (currentFirebaseUser && isAnonymous) {
+          if (prefersRedirect) {
+            addLog("AUTH: Using redirect to link the browser workspace on a mobile device.");
+            await linkWithRedirect(currentFirebaseUser, provider);
+            return false;
+          }
           addLog("AUTH: Attempting to link anonymous account...");
           try {
             const result = await linkWithPopup(currentFirebaseUser, provider);
@@ -729,6 +739,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         }
       } else {
+        if (prefersRedirect) {
+          addLog("AUTH: Using redirect sign-in on a mobile device.");
+          await signInWithRedirect(auth, provider);
+          return false;
+        }
         addLog("AUTH: Standard sign-in...");
         const result = await signInWithPopup(auth, provider);
         await migrateGuestWorkspaceToAccount(result.user);
@@ -767,17 +782,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return false;
         }
 
-        if (errorCode === 'auth/unauthorized-domain') {
-          setError(`Domain not authorized. Please add ${window.location.hostname} to Authorized Domains in Firebase Console.`);
-        } else {
-          setError(`Authentication failed: ${errorMessage}`);
-        }
-        return false;
+        const userMessage = errorCode === 'auth/unauthorized-domain'
+          ? 'Google sign-in needs a small service update. Please use email and password for now.'
+          : 'Google sign-in could not be completed. Please try again.';
+        setError(userMessage);
+        throw new Error(userMessage);
       }
     } finally {
       isAuthInProgress.current = false;
     }
   };
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (!isCurrent || !result?.user) return;
+        await migrateGuestWorkspaceToAccount(result.user);
+        setUser(result.user);
+        showToast('Signed in successfully!');
+      })
+      .catch((redirectError: any) => {
+        if (!isCurrent) return;
+        addLog(`AUTH ERROR: Redirect result failed code: ${redirectError?.code || 'unknown'}`);
+        setError('Google sign-in could not be completed. Please try again.');
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
 
   // Handle Firebase Auth
   useEffect(() => {
