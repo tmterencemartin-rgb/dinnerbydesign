@@ -130,11 +130,12 @@ Offal is excluded from ordinary suggestions by default.
 - Use plain-English empty states and errors.
 - Keep technical service status and routing details out of the ordinary interface.
 
-## Administrator three-way discovery test
+## Public three-way discovery
 
-The administrator-only three-way discovery test presents AI-created dinners, published recipes and ready-made options with equal prominence.
+The public three-way search presents AI-created dinners, published recipes and ready-made options with equal prominence.
 
-- AI-created dinners are original DinnerByDesign suggestions. They may show full ingredients and instructions during the test, but saving, scheduling, shopping, printing and email are not part of the test yet.
+- AI-created dinners are original DinnerByDesign suggestions. They may show full ingredients and instructions, but saving, scheduling, shopping, printing and email are not available for them yet.
 - Published recipes remain link-only. Show a title, publisher, short relevance note and original source link, but do not show, generate or send their ingredient list or method.
 - Ready-made options continue to link to the retailer product page.
-- `ADMIN_THREE_WAY_SEARCH_PILOT` is the immediate rollback switch. Setting it to `false` restores the existing two-route interface.
+- All three routes count towards the same guest-search allowance. A guest receives no more than three completed searches.
+- `THREE_WAY_SEARCH_PILOT` is the immediate rollback switch. Setting it to `false` restores the existing two-route interface.

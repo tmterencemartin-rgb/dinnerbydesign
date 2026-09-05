@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { SearchHeader } from './SearchHeader';
 
 describe('SearchHeader', () => {
-  it('names the published-source route for the administrator hand-off test', () => {
+  it('names the published-source route', () => {
     render(
       <SearchHeader
         source="cook"
@@ -12,7 +12,7 @@ describe('SearchHeader', () => {
         isDietaryRuleSuppressed={false}
         suppressedPermanentKeys={[]}
         clearSuppression={vi.fn()}
-        adminSourceHandoff
+        sourceHandoff
       />
     );
 
@@ -20,7 +20,7 @@ describe('SearchHeader', () => {
     expect(screen.getByText('open at the original source')).toBeTruthy();
   });
 
-  it('gives the three administrator test routes equal visibility', () => {
+  it('gives the three public search routes equal visibility', () => {
     render(
       <SearchHeader
         source="cook"
@@ -28,9 +28,9 @@ describe('SearchHeader', () => {
         isDietaryRuleSuppressed={false}
         suppressedPermanentKeys={[]}
         clearSuppression={vi.fn()}
-        adminThreeWayPilot
-        adminMode="ai-created"
-        onAdminModeChange={vi.fn()}
+        threeWaySearch
+        mode="ai-created"
+        onModeChange={vi.fn()}
       />
     );
 

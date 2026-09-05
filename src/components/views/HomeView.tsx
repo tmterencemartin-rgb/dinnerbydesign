@@ -33,7 +33,7 @@ import { CompactRecipeItem } from '../CompactRecipeItem';
 import { RecipeDetailOverlay } from '../RecipeDetailOverlay';
 import { SearchOnboardingHelper } from '../home/SearchOnboardingHelper';
 import { RecipeCompareModal } from '../RecipeCompareModal';
-import { InternalDinnerPilot } from '../home/InternalDinnerPilot';
+import { AiCreatedDinnerSearch } from '../home/InternalDinnerPilot';
 import { PublishedRecipeLinkCard } from '../home/PublishedRecipeLinkCard';
 
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
@@ -41,8 +41,8 @@ import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 import { isNativeApp, isNativeTestBuild } from '../../lib/platform';
 import { queryExplicitlyRequestsOffal } from '../../lib/offalPreference';
-import { ADMIN_SOURCE_HANDOFF_PILOT, ADMIN_THREE_WAY_SEARCH_PILOT, INTERNAL_DINNER_PILOT, SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
-import type { AdminSearchMode } from '../home/SearchHeader';
+import { SIMPLIFIED_GUEST_SEARCH_STATES, THREE_WAY_SEARCH_PILOT } from '../../config/features';
+import type { SearchMode } from '../home/SearchHeader';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -269,6 +269,7 @@ interface HomeViewProps {
   resetGuestSearchCount?: () => void;
   isGuestPreview?: boolean;
   isGuestSearchLimitReached?: boolean;
+  recordGuestSearchDelivery?: () => void;
 }
 
 
@@ -286,8 +287,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     updateProfile,
     savePreferences,
     accessStatus,
-    addLog,
-    isAdmin
+    addLog
   } = useAuth();
 
   const isReadOnly = accessStatus === 'read_only';
@@ -347,12 +347,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     guestSearchesRemaining = 3,
     resetGuestSearchCount,
     isGuestPreview = false,
-    isGuestSearchLimitReached = false
+    isGuestSearchLimitReached = false,
+    recordGuestSearchDelivery
   } = props;
 
   const isNative = isNativeApp();
   const isNativeTest = isNativeTestBuild();
-  const [adminSearchMode, setAdminSearchMode] = React.useState<AdminSearchMode>('published');
+  const [searchMode, setSearchMode] = React.useState<SearchMode>('published');
   const isSearching = status === 'searching';
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
   const resultsQuery = lastQuery || input;
@@ -376,9 +377,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const showNotBoringSummerSaladsPrompt =
     source === 'cook' && resultsCount === 0 && (!resultsQuery.trim() || isNotBoringSummerSaladsQuery(resultsQuery));
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
-  const useAdminThreeWaySearchPilot = ADMIN_THREE_WAY_SEARCH_PILOT && ADMIN_SOURCE_HANDOFF_PILOT && INTERNAL_DINNER_PILOT && isAdmin;
-  const isAiCreatedTest = useAdminThreeWaySearchPilot && adminSearchMode === 'ai-created';
-  const useAdminSourceHandoff = ADMIN_SOURCE_HANDOFF_PILOT && isAdmin && source === 'cook' && (!useAdminThreeWaySearchPilot || adminSearchMode === 'published');
+  const useThreeWaySearch = THREE_WAY_SEARCH_PILOT;
+  const isAiCreatedSearch = useThreeWaySearch && searchMode === 'ai-created';
+  const usePublishedSourceHandoff = useThreeWaySearch && source === 'cook' && searchMode === 'published';
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
   const hasPartialSourceBackedResults = source === 'cook'
@@ -438,7 +439,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     (!user || user.isAnonymous) &&
     (hasDismissedSearchOnboarding || isSearching);
   const useSimplifiedGuestSearchStates = SIMPLIFIED_GUEST_SEARCH_STATES && isGuestPreview;
-  const showSimplifiedGuestLimit = useSimplifiedGuestSearchStates && isGuestSearchLimitReached;
+  const showSimplifiedGuestLimit = useSimplifiedGuestSearchStates && isGuestSearchLimitReached && !isAiCreatedSearch;
   const showCompactGuestStarters =
     useSimplifiedGuestSearchStates &&
     guestSearchCount === 0 &&
@@ -844,11 +845,11 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <SearchHeader 
                 source={source}
                 setSource={setSource}
-                adminSourceHandoff={ADMIN_SOURCE_HANDOFF_PILOT && isAdmin}
-                adminThreeWayPilot={useAdminThreeWaySearchPilot}
-                adminMode={adminSearchMode}
-                onAdminModeChange={(mode) => {
-                  setAdminSearchMode(mode);
+                sourceHandoff={usePublishedSourceHandoff}
+                threeWaySearch={useThreeWaySearch}
+                mode={searchMode}
+                onModeChange={(mode) => {
+                  setSearchMode(mode);
                   if (mode === 'published') setSource('cook');
                   if (mode === 'ready-made') setSource('ready-made');
                 }}
@@ -862,13 +863,17 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               />
             </div>
 
-              {isAiCreatedTest ? (
+              {isAiCreatedSearch ? (
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
                     <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
                     <span>AI-created dinners are original DinnerByDesign suggestions. They do not use publisher recipes or source links.</span>
                   </div>
-                  <InternalDinnerPilot preferences={localPreferences} />
+                  <AiCreatedDinnerSearch
+                    preferences={localPreferences}
+                    disabled={isReadOnly || isGuestSearchLimitReached}
+                    onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
+                  />
                 </div>
               ) : (
               <div className="flex flex-col gap-3 relative w-full">
@@ -964,7 +969,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
                 {source === 'cook' ? (
                   <span>
-                    {useAdminSourceHandoff
+                    {usePublishedSourceHandoff
                       ? 'Published recipes open at their original source. DinnerByDesign does not show their ingredients or method.'
                       : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
                   </span>
@@ -1010,7 +1015,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
               )}
 
-              {!isAiCreatedTest && !useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
+              {!isAiCreatedSearch && !useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
                   {!hasDismissedSearchOnboarding && !isSearching && (
                     <SearchOnboardingHelper 
@@ -1037,7 +1042,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              {!isAiCreatedTest && showCompactGuestStarters && (
+              {!isAiCreatedSearch && showCompactGuestStarters && (
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
                   {COMPACT_GUEST_SEARCH_STARTERS.map(suggestion => (
@@ -1057,7 +1062,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             )}
           </div>
 
-          <div className={`flex flex-col gap-4 max-w-4xl mx-auto w-full ${isAiCreatedTest ? 'hidden' : ''}`}>
+          <div className={`flex flex-col gap-4 max-w-4xl mx-auto w-full ${isAiCreatedSearch ? 'hidden' : ''}`}>
             <SearchStatusRow 
               status={status}
               enriching={enriching}
@@ -1435,7 +1440,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
           </motion.div>
         )}
 
-        {!isAiCreatedTest && (source === 'cook' ? (currentRecipes && currentRecipes.length > 0) : (currentReadyMeals && currentReadyMeals.length > 0)) && (
+        {!isAiCreatedSearch && (source === 'cook' ? (currentRecipes && currentRecipes.length > 0) : (currentReadyMeals && currentReadyMeals.length > 0)) && (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1461,15 +1466,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     {resultsCount === 1 ? 'One source-backed recipe was found.' : `${resultsCount} source-backed recipes were found.`} We only show recipes with a direct original-recipe link.
                   </p>
                 )}
-                {useAdminSourceHandoff && (
+                {usePublishedSourceHandoff && (
                   <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                    Internal test: these published recipes open at their original sources. DinnerByDesign does not show their ingredients or method here.
+                    These published recipes open at their original sources. DinnerByDesign does not show their ingredients or method here.
                   </p>
                 )}
               </div>
             )}
 
-            {!useAdminSourceHandoff && compareItems.length > 0 && (
+            {!usePublishedSourceHandoff && compareItems.length > 0 && (
               <div className="bg-white border border-gray-100 rounded px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-dbd-accent">Compare</p>
@@ -1504,7 +1509,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
             <div className="border-y border-dbd-rule/70 bg-white divide-y divide-dbd-rule/70">
               {source === 'cook' ? (
-                useAdminSourceHandoff
+                usePublishedSourceHandoff
                   ? currentRecipes?.map(recipe => (
                     <PublishedRecipeLinkCard
                       key={recipe.id || `published-recipe-${recipe.title}`}

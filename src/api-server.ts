@@ -30,7 +30,7 @@ import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
 import { parseEnrichmentRequestOptions, validateEnrichmentRequestPayload } from "../src/lib/enrichmentRequest";
 import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
 import { normaliseUserPreferences } from "../src/lib/preferenceUtils";
-import { INTERNAL_DINNER_PILOT } from "../src/config/features";
+import { THREE_WAY_SEARCH_PILOT } from "../src/config/features";
 import { validateSearchRequestPayload } from "../src/lib/searchRequestValidation";
 import {
   getWebhookClaimDecision,
@@ -1577,13 +1577,13 @@ export function createApp() {
     }
   });
 
-  app.post("/api/admin/internal-dinner-pilot", async (req, res) => {
-    if (!INTERNAL_DINNER_PILOT) {
-      return res.status(404).json({ ok: false, error: "This internal test is currently switched off." });
+  app.post("/api/ai-created-dinners", async (req, res) => {
+    if (!THREE_WAY_SEARCH_PILOT) {
+      return res.status(404).json({ ok: false, error: "AI-created dinners are not available right now." });
     }
 
-    const admin = await verifyAdminRequest(req, res);
-    if (!admin) return;
+    const searchIdentity = await verifySearchIdentity(req, res);
+    if (!searchIdentity) return;
 
     const startedAt = Date.now();
     const brief = String(req.body?.brief || '').replace(/\s+/g, ' ').trim().slice(0, 500);
@@ -1594,36 +1594,59 @@ export function createApp() {
     const preferences = normaliseUserPreferences(req.body?.preferences);
     try {
       const choices = await generateInternalDinnerChoices(brief, preferences);
-      await recordAiUsageEvent({
-        type: 'internal_dinner_pilot',
-        source: 'internal',
-        model: ACTIVE_GEMINI_MODEL,
-        status: choices.length === 3 ? 'succeeded' : 'failed',
-        userId: admin.uid,
-        requestedCount: 3,
-        resultCount: choices.length,
-        queryLength: brief.length,
-        serverLatencyMs: Date.now() - startedAt,
-        estimatedCostUsd: 0,
-        ...(choices.length === 3 ? {} : { failureStage: 'underfilled_choices', errorCategory: 'model' })
-      });
-
       if (choices.length !== 3) {
+        await recordAiUsageEvent({
+          type: 'ai_created_dinner',
+          source: 'ai-created',
+          model: ACTIVE_GEMINI_MODEL,
+          status: 'failed',
+          userId: searchIdentity.uid,
+          requestedCount: 3,
+          resultCount: choices.length,
+          queryLength: brief.length,
+          serverLatencyMs: Date.now() - startedAt,
+          estimatedCostUsd: 0,
+          failureStage: 'underfilled_choices',
+          errorCategory: 'model'
+        });
         return res.status(503).json({
           ok: false,
           error: "We could not produce three distinct choices that meet every restriction. Try a broader brief or adjust the restrictions."
         });
       }
 
+      if (searchIdentity.isAnonymous) {
+        const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
+        if (usageCommit === "limit") {
+          return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
+        }
+        if (usageCommit === "unavailable") {
+          return res.status(503).json({ ok: false, error: "Your search could not be completed. Please try again in a moment." });
+        }
+      }
+
+      await recordAiUsageEvent({
+        type: 'ai_created_dinner',
+        source: 'ai-created',
+        model: ACTIVE_GEMINI_MODEL,
+        status: 'succeeded',
+        userId: searchIdentity.uid,
+        requestedCount: 3,
+        resultCount: choices.length,
+        queryLength: brief.length,
+        serverLatencyMs: Date.now() - startedAt,
+        estimatedCostUsd: 0
+      });
+
       return res.json({ choices });
     } catch (error: any) {
-      console.error('[InternalDinnerPilot] Generation failed:', error);
+      console.error('[AiCreatedDinners] Generation failed:', error);
       await recordAiUsageEvent({
-        type: 'internal_dinner_pilot',
-        source: 'internal',
+        type: 'ai_created_dinner',
+        source: 'ai-created',
         model: ACTIVE_GEMINI_MODEL,
         status: 'failed',
-        userId: admin.uid,
+        userId: searchIdentity.uid,
         requestedCount: 3,
         resultCount: 0,
         queryLength: brief.length,
@@ -1633,7 +1656,7 @@ export function createApp() {
       });
       return res.status(503).json({
         ok: false,
-        error: "Internal dinner creation is temporarily unavailable. Please try again shortly."
+        error: "AI-created dinners are temporarily unavailable. Please try again shortly."
       });
     }
   });

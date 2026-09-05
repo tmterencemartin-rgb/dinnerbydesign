@@ -547,7 +547,7 @@ export async function generateInternalDinnerChoices(
   preferences: UserPreferences
 ): Promise<InternalDinnerChoice[]> {
   if (typeof window !== 'undefined') {
-    throw new Error('Internal dinner creation is available through the secure service only.');
+    throw new Error('AI-created dinners are available through the secure service only.');
   }
 
   const safeBrief = String(brief || '').replace(/\s+/g, ' ').trim().slice(0, 500);

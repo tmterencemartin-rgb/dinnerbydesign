@@ -4,8 +4,10 @@ import { getApiUrl } from '../../lib/api';
 import { getSearchAuthToken } from '../../lib/searchAuth';
 import type { InternalDinnerChoice } from '../../lib/internalDinnerPilot';
 
-interface InternalDinnerPilotProps {
+interface AiCreatedDinnerSearchProps {
   preferences: unknown;
+  disabled?: boolean;
+  onGuestSearchDelivered?: () => void;
 }
 
 const choiceMeta = (choice: InternalDinnerChoice) => [
@@ -14,7 +16,11 @@ const choiceMeta = (choice: InternalDinnerChoice) => [
   choice.caloriesPerPortion ? `${choice.caloriesPerPortion} kcal pp` : null
 ].filter(Boolean).join(' · ');
 
-export const InternalDinnerPilot: React.FC<InternalDinnerPilotProps> = ({ preferences }) => {
+export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
+  preferences,
+  disabled = false,
+  onGuestSearchDelivered
+}) => {
   const [brief, setBrief] = useState('');
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -22,13 +28,13 @@ export const InternalDinnerPilot: React.FC<InternalDinnerPilotProps> = ({ prefer
 
   const generateChoices = async () => {
     const trimmedBrief = brief.trim();
-    if (!trimmedBrief || isGenerating) return;
+    if (!trimmedBrief || isGenerating || disabled) return;
 
     setIsGenerating(true);
     setError(null);
     try {
       const token = await getSearchAuthToken();
-      const response = await fetch(getApiUrl('/api/admin/internal-dinner-pilot'), {
+      const response = await fetch(getApiUrl('/api/ai-created-dinners'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,10 +43,11 @@ export const InternalDinnerPilot: React.FC<InternalDinnerPilotProps> = ({ prefer
         body: JSON.stringify({ brief: trimmedBrief, preferences })
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload?.error || 'Internal dinner creation could not be completed.');
+      if (!response.ok) throw new Error(payload?.error || 'AI-created dinners could not be completed.');
       setChoices(Array.isArray(payload?.choices) ? payload.choices : []);
+      onGuestSearchDelivered?.();
     } catch (requestError: any) {
-      setError(requestError?.message || 'Internal dinner creation could not be completed.');
+      setError(requestError?.message || 'AI-created dinners could not be completed.');
       setChoices([]);
     } finally {
       setIsGenerating(false);
@@ -48,16 +55,13 @@ export const InternalDinnerPilot: React.FC<InternalDinnerPilotProps> = ({ prefer
   };
 
   return (
-    <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="internal-dinner-pilot-heading">
+    <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="ai-created-dinner-heading">
       <div className="flex items-start gap-3">
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-dbd-accent" aria-hidden="true" />
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <h2 id="internal-dinner-pilot-heading" className="text-sm font-semibold text-dbd-ink">AI-created dinner</h2>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-accent">Administrator only</span>
-          </div>
+          <h2 id="ai-created-dinner-heading" className="text-sm font-semibold text-dbd-ink">AI-created dinners</h2>
           <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
-            Create three original choices from your brief and saved preferences. They do not use published recipes or source links. Saving, scheduling, shopping, printing and email remain outside this administrator test.
+            Create three original choices from your brief and saved preferences. They do not use published recipes or source links. Saving, scheduling, shopping, printing and email are not available for these choices yet.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
@@ -70,12 +74,12 @@ export const InternalDinnerPilot: React.FC<InternalDinnerPilotProps> = ({ prefer
               }}
               placeholder="For example: quick chicken dinner with peppers"
               className="min-h-10 min-w-0 flex-1 rounded border border-gray-200 bg-white px-3 text-sm text-dbd-ink outline-none transition-colors placeholder:text-gray-400 focus:border-dbd-accent"
-              disabled={isGenerating}
+              disabled={isGenerating || disabled}
             />
             <button
               type="button"
               onClick={() => void generateChoices()}
-              disabled={!brief.trim() || isGenerating}
+              disabled={!brief.trim() || isGenerating || disabled}
               className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded bg-dbd-accent px-4 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Sparkles className="h-4 w-4" aria-hidden="true" />}

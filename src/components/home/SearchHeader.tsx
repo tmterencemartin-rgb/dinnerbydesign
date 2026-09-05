@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { DinnerSource } from '../../types';
 
-export type AdminSearchMode = 'published' | 'ai-created' | 'ready-made';
+export type SearchMode = 'published' | 'ai-created' | 'ready-made';
 
 interface SearchHeaderProps {
   source: DinnerSource;
@@ -10,10 +10,10 @@ interface SearchHeaderProps {
   isDietaryRuleSuppressed: boolean;
   suppressedPermanentKeys: string[];
   clearSuppression: () => void;
-  adminSourceHandoff?: boolean;
-  adminThreeWayPilot?: boolean;
-  adminMode?: AdminSearchMode;
-  onAdminModeChange?: (mode: AdminSearchMode) => void;
+  sourceHandoff?: boolean;
+  threeWaySearch?: boolean;
+  mode?: SearchMode;
+  onModeChange?: (mode: SearchMode) => void;
 }
 
 export const SearchHeader: React.FC<SearchHeaderProps> = ({
@@ -22,13 +22,13 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
   isDietaryRuleSuppressed,
   suppressedPermanentKeys,
   clearSuppression,
-  adminSourceHandoff = false,
-  adminThreeWayPilot = false,
-  adminMode = 'published',
-  onAdminModeChange
+  sourceHandoff = false,
+  threeWaySearch = false,
+  mode = 'published',
+  onModeChange
 }) => {
-  if (adminThreeWayPilot) {
-    const modes: Array<{ id: AdminSearchMode; label: string; detail: string }> = [
+  if (threeWaySearch) {
+    const modes: Array<{ id: SearchMode; label: string; detail: string }> = [
       { id: 'ai-created', label: 'AI-created dinners', detail: 'tailored choices' },
       { id: 'published', label: 'Published recipes', detail: 'open original source' },
       { id: 'ready-made', label: 'Ready-made', detail: 'supermarket options' }
@@ -37,14 +37,14 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
     return (
       <div className="w-full flex flex-col items-center">
         <div className="w-full max-w-[620px] grid grid-cols-3 gap-1 rounded bg-gray-100/80 p-1">
-          {modes.map(mode => {
-            const isActive = adminMode === mode.id;
+          {modes.map(searchMode => {
+            const isActive = mode === searchMode.id;
             return (
               <button
-                key={mode.id}
-                id={`mode-${mode.id}`}
+                key={searchMode.id}
+                id={`mode-${searchMode.id}`}
                 type="button"
-                onClick={() => onAdminModeChange?.(mode.id)}
+                onClick={() => onModeChange?.(searchMode.id)}
                 className="relative z-10 min-w-0 rounded px-1 py-2.5 text-center transition-colors sm:px-2"
               >
                 {isActive && (
@@ -57,12 +57,12 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
                 <span className={`block text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${
                   isActive ? 'text-dbd-accent' : 'text-gray-500 hover:text-gray-600'
                 }`}>
-                  {mode.label}
+                  {searchMode.label}
                 </span>
                 <span className={`mt-1 block text-[9px] leading-tight sm:text-[10px] ${
                   isActive ? 'text-dbd-accent' : 'text-gray-500'
                 }`}>
-                  {mode.detail}
+                  {searchMode.detail}
                 </span>
               </button>
             );
@@ -91,12 +91,12 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
           <span className={`text-[12px] font-bold uppercase tracking-wider ${
             source === 'cook' ? 'text-dbd-accent' : 'text-gray-500 hover:text-gray-600'
           }`}>
-            {adminSourceHandoff ? 'Published recipes' : 'Homemade'}
+            {sourceHandoff ? 'Published recipes' : 'Homemade'}
           </span>
           <span className={`text-[10px] font-normal tracking-normal normal-case leading-tight block mt-1 ${
             source === 'cook' ? 'text-dbd-accent' : 'text-gray-500'
           }`}>
-            {adminSourceHandoff ? 'open at the original source' : 'recipes to cook'}
+            {sourceHandoff ? 'open at the original source' : 'recipes to cook'}
           </span>
         </button>
         

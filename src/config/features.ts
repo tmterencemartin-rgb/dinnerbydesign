@@ -1,14 +1,8 @@
 export const AFFORDABILITY_PLANNER_PILOT = true;
 export const SIMPLIFIED_GUEST_SEARCH_STATES = true;
-// Internal-only. This is intentionally separate from published recipe search
-// so it can be disabled without changing the established discovery journey.
-export const INTERNAL_DINNER_PILOT = true;
-// Administrator-only presentation test for source discovery. This leaves the
-// public recipe view unchanged while source-link cards are assessed internally.
-export const ADMIN_SOURCE_HANDOFF_PILOT = true;
-// Administrator-only comparison of three equally prominent discovery routes.
-// Set this to false to return immediately to the established two-route search UI.
-export const ADMIN_THREE_WAY_SEARCH_PILOT = true;
+// Public comparison of AI-created dinners, published recipes and ready-made
+// options. Set this to false to restore the established two-route search UI.
+export const THREE_WAY_SEARCH_PILOT = true;
 
 export const AFFORDABILITY_PLANNER_PRESET_KEY = 'dbd_affordability_planner_preset';
 export const AFFORDABILITY_PLANNER_PENDING_KEY = 'dbd_affordability_planner_pending';

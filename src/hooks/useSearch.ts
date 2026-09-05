@@ -1597,6 +1597,7 @@ export function useSearch() {
     guestSearchCount,
     guestSearchesRemaining: Math.max(0, GUEST_SEARCH_LIMIT - guestSearchCount),
     resetGuestSearchCount,
+    recordGuestSearchDelivery,
     isGuestPreview: !user || user.isAnonymous,
     isGuestSearchLimitReached: (!user || user.isAnonymous) && guestSearchCount >= GUEST_SEARCH_LIMIT,
     currentRecipes,
