@@ -27,10 +27,11 @@ const hasRequiredShape = (item: any): item is InternalDinnerChoice => (
 
 export function validateInternalDinnerChoices(
   rawChoices: unknown,
-  preferences: UserPreferences
+  preferences: UserPreferences,
+  existingChoices: InternalDinnerChoice[] = []
 ): InternalDinnerChoice[] {
-  const seenTitles = new Set<string>();
-  const seenMainIngredients = new Set<string>();
+  const seenTitles = new Set(existingChoices.map(choice => titleKey(choice.title)));
+  const seenMainIngredients = new Set(existingChoices.map(choice => titleKey(choice.ingredients[0] || '')));
 
   return (Array.isArray(rawChoices) ? rawChoices : [])
     .flatMap((item: any) => {

@@ -568,11 +568,8 @@ export async function generateInternalDinnerChoices(
     `Offal: ${preferences.includeOffal ? 'Allowed' : 'Excluded'}`
   ].join('\n');
 
-  const response = await callGeminiWithRetry(SEARCH_MODEL, `Dinner brief: "${safeBrief}".`, {
-    systemInstruction: `Create three distinct, practical home-cooking dinner choices for a UK household. These are original DinnerByDesign concepts, not claims about existing publisher recipes. Do not include source links, retailer claims, medical claims, or a preamble. Each choice needs realistic ingredients with quantities, clear numbered-style steps, an honest time estimate, an estimated cost per portion, and a short reason it fits. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction. Return fewer than three only if the hard restrictions make another distinct choice unsafe.\n\nHARD RESTRICTIONS:\n${restrictions}\n\nReturn JSON only.`,
-    temperature: 0.55,
-    responseMimeType: 'application/json',
-    responseSchema: {
+  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, or a preamble. Each choice needs realistic ingredients with quantities, clear numbered-style steps, an honest time estimate, an estimated cost per portion, and a short reason it fits. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction.\n\nHARD RESTRICTIONS:\n${restrictions}\n\nReturn JSON only.`;
+  const responseSchema = {
       type: Type.OBJECT,
       properties: {
         choices: {
@@ -600,11 +597,39 @@ export async function generateInternalDinnerChoices(
         }
       },
       required: ['choices']
-    }
-  }, 2);
+  };
 
-  const payload = parseModelJson(response?.text || '{}');
-  return validateInternalDinnerChoices(payload?.choices, preferences);
+  const requestChoices = async (request: string, instruction: string) => {
+    const response = await callGeminiWithRetry(SEARCH_MODEL, request, {
+      systemInstruction: instruction,
+      temperature: 0.55,
+      responseMimeType: 'application/json',
+      responseSchema
+    }, 2);
+    const payload = parseModelJson(response?.text || '{}');
+    return payload?.choices;
+  };
+
+  const initialChoices = validateInternalDinnerChoices(
+    await requestChoices(`Dinner brief: "${safeBrief}". Return exactly three choices.`, systemInstruction),
+    preferences
+  );
+
+  if (initialChoices.length === 3) return initialChoices;
+
+  const missingCount = 3 - initialChoices.length;
+  const excludedTitles = initialChoices.map(choice => choice.title).join('; ') || 'None';
+  const excludedMainIngredients = initialChoices.map(choice => choice.ingredients[0]).filter(Boolean).join('; ') || 'None';
+  const recoveredChoices = validateInternalDinnerChoices(
+    await requestChoices(
+      `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Do not use these main ingredients: ${excludedMainIngredients}.`,
+      `${systemInstruction}\n\nRECOVERY: The first response was under-filled after validation. Return exactly ${missingCount} additional, distinct choices that preserve every hard restriction.`
+    ),
+    preferences,
+    initialChoices
+  );
+
+  return [...initialChoices, ...recoveredChoices].slice(0, 3);
 }
 
 // Environment detection

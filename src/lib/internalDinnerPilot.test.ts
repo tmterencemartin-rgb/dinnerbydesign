@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { UserPreferences } from '../types';
+import type { Recipe, UserPreferences } from '../types';
 import { validateInternalDinnerChoices } from './internalDinnerPilot';
 
 const preferences: UserPreferences = {
@@ -10,14 +10,14 @@ const preferences: UserPreferences = {
   preferredSourceIds: [], preferredMode: 'cook', customCuisines: []
 };
 
-const validChoice = {
+const validChoice: Recipe = {
   title: 'Smoky lentil and pepper bowls',
   description: 'Warm lentils, roasted peppers and herby yoghurt make a satisfying weeknight dinner.',
   ingredients: ['Green lentils', 'Red pepper', 'Spinach', 'Greek yoghurt'],
   instructions: ['Roast the pepper until softened.', 'Warm the lentils and serve with spinach and yoghurt.'],
   cuisine: 'British-inspired', matchReason: 'Uses familiar ingredients in a quick, meat-free dinner.',
   totalServings: 2, totalTime: 30, costPerPortion: '£1.80', saladType: 'none',
-  isVegetarian: true, isPescatarian: true, isVegan: false
+  isVegetarian: true, isPescatarian: true, isVegan: false, dietFlagsVerified: true
 };
 
 describe('validateInternalDinnerChoices', () => {
@@ -45,5 +45,13 @@ describe('validateInternalDinnerChoices', () => {
       { ...validChoice, title: 'Spiced lentil and pepper bowls' }
     ], preferences);
     expect(results).toHaveLength(1);
+  });
+
+  it('rejects a recovery choice that repeats an existing main ingredient', () => {
+    const results = validateInternalDinnerChoices([
+      { ...validChoice, title: 'Lentil and kale bowls' },
+      { ...validChoice, title: 'Courgette and bean skillet', ingredients: ['Courgette', 'Butter beans', 'Tomato', 'Olive oil'] }
+    ], preferences, [validChoice]);
+    expect(results.map(choice => choice.title)).toEqual(['Courgette and bean skillet']);
   });
 });

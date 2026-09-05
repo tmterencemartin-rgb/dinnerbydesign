@@ -220683,9 +220683,9 @@ var toNumber = (value, fallback) => {
 };
 var titleKey = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2;
-function validateInternalDinnerChoices(rawChoices, preferences) {
-  const seenTitles = /* @__PURE__ */ new Set();
-  const seenMainIngredients = /* @__PURE__ */ new Set();
+function validateInternalDinnerChoices(rawChoices, preferences, existingChoices = []) {
+  const seenTitles = new Set(existingChoices.map((choice) => titleKey(choice.title)));
+  const seenMainIngredients = new Set(existingChoices.map((choice) => titleKey(choice.ingredients[0] || "")));
   return (Array.isArray(rawChoices) ? rawChoices : []).flatMap((item) => {
     if (!hasRequiredShape(item)) return [];
     const title = cleanText(item.title, 120);
@@ -221161,47 +221161,70 @@ async function generateInternalDinnerChoices(brief, preferences) {
     `Cooking fats: ${(preferences.cookingFats || []).join(", ") || "Any"}`,
     `Offal: ${preferences.includeOffal ? "Allowed" : "Excluded"}`
   ].join("\n");
-  const response = await callGeminiWithRetry(SEARCH_MODEL, `Dinner brief: "${safeBrief}".`, {
-    systemInstruction: `Create three distinct, practical home-cooking dinner choices for a UK household. These are original DinnerByDesign concepts, not claims about existing publisher recipes. Do not include source links, retailer claims, medical claims, or a preamble. Each choice needs realistic ingredients with quantities, clear numbered-style steps, an honest time estimate, an estimated cost per portion, and a short reason it fits. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction. Return fewer than three only if the hard restrictions make another distinct choice unsafe.
+  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, or a preamble. Each choice needs realistic ingredients with quantities, clear numbered-style steps, an honest time estimate, an estimated cost per portion, and a short reason it fits. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction.
 
 HARD RESTRICTIONS:
 ${restrictions}
 
-Return JSON only.`,
-    temperature: 0.55,
-    responseMimeType: "application/json",
-    responseSchema: {
-      type: Type.OBJECT,
-      properties: {
-        choices: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              title: { type: Type.STRING },
-              description: { type: Type.STRING },
-              ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
-              instructions: { type: Type.ARRAY, items: { type: Type.STRING } },
-              cuisine: { type: Type.STRING },
-              matchReason: { type: Type.STRING },
-              caloriesPerPortion: { type: Type.NUMBER },
-              costPerPortion: { type: Type.STRING },
-              totalServings: { type: Type.NUMBER },
-              totalTime: { type: Type.NUMBER },
-              saladType: { type: Type.STRING, enum: ["main", "side", "none"] },
-              isVegetarian: { type: Type.BOOLEAN },
-              isPescatarian: { type: Type.BOOLEAN },
-              isVegan: { type: Type.BOOLEAN }
-            },
-            required: ["title", "description", "ingredients", "instructions", "cuisine", "matchReason", "totalServings", "totalTime", "saladType", "isVegetarian", "isPescatarian", "isVegan"]
-          }
+Return JSON only.`;
+  const responseSchema = {
+    type: Type.OBJECT,
+    properties: {
+      choices: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            title: { type: Type.STRING },
+            description: { type: Type.STRING },
+            ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
+            instructions: { type: Type.ARRAY, items: { type: Type.STRING } },
+            cuisine: { type: Type.STRING },
+            matchReason: { type: Type.STRING },
+            caloriesPerPortion: { type: Type.NUMBER },
+            costPerPortion: { type: Type.STRING },
+            totalServings: { type: Type.NUMBER },
+            totalTime: { type: Type.NUMBER },
+            saladType: { type: Type.STRING, enum: ["main", "side", "none"] },
+            isVegetarian: { type: Type.BOOLEAN },
+            isPescatarian: { type: Type.BOOLEAN },
+            isVegan: { type: Type.BOOLEAN }
+          },
+          required: ["title", "description", "ingredients", "instructions", "cuisine", "matchReason", "totalServings", "totalTime", "saladType", "isVegetarian", "isPescatarian", "isVegan"]
         }
-      },
-      required: ["choices"]
-    }
-  }, 2);
-  const payload = parseModelJson(response?.text || "{}");
-  return validateInternalDinnerChoices(payload?.choices, preferences);
+      }
+    },
+    required: ["choices"]
+  };
+  const requestChoices = async (request, instruction) => {
+    const response = await callGeminiWithRetry(SEARCH_MODEL, request, {
+      systemInstruction: instruction,
+      temperature: 0.55,
+      responseMimeType: "application/json",
+      responseSchema
+    }, 2);
+    const payload = parseModelJson(response?.text || "{}");
+    return payload?.choices;
+  };
+  const initialChoices = validateInternalDinnerChoices(
+    await requestChoices(`Dinner brief: "${safeBrief}". Return exactly three choices.`, systemInstruction),
+    preferences
+  );
+  if (initialChoices.length === 3) return initialChoices;
+  const missingCount = 3 - initialChoices.length;
+  const excludedTitles = initialChoices.map((choice) => choice.title).join("; ") || "None";
+  const excludedMainIngredients = initialChoices.map((choice) => choice.ingredients[0]).filter(Boolean).join("; ") || "None";
+  const recoveredChoices = validateInternalDinnerChoices(
+    await requestChoices(
+      `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Do not use these main ingredients: ${excludedMainIngredients}.`,
+      `${systemInstruction}
+
+RECOVERY: The first response was under-filled after validation. Return exactly ${missingCount} additional, distinct choices that preserve every hard restriction.`
+    ),
+    preferences,
+    initialChoices
+  );
+  return [...initialChoices, ...recoveredChoices].slice(0, 3);
 }
 var isBrowser2 = typeof window !== "undefined";
 var estimateTokensFromText = (value) => {
@@ -235262,19 +235285,19 @@ function createApp() {
         type: "internal_dinner_pilot",
         source: "internal",
         model: ACTIVE_GEMINI_MODEL,
-        status: choices.length ? "succeeded" : "failed",
+        status: choices.length === 3 ? "succeeded" : "failed",
         userId: admin.uid,
         requestedCount: 3,
         resultCount: choices.length,
         queryLength: brief.length,
         serverLatencyMs: Date.now() - startedAt,
         estimatedCostUsd: 0,
-        ...choices.length ? {} : { failureStage: "no_safe_choices", errorCategory: "model" }
+        ...choices.length === 3 ? {} : { failureStage: "underfilled_choices", errorCategory: "model" }
       });
-      if (!choices.length) {
+      if (choices.length !== 3) {
         return res.status(503).json({
           ok: false,
-          error: "No suitable choices were produced. Try a broader brief or adjust the restrictions."
+          error: "We could not produce three distinct choices that meet every restriction. Try a broader brief or adjust the restrictions."
         });
       }
       return res.json({ choices });

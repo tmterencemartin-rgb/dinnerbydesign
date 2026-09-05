@@ -1598,20 +1598,20 @@ export function createApp() {
         type: 'internal_dinner_pilot',
         source: 'internal',
         model: ACTIVE_GEMINI_MODEL,
-        status: choices.length ? 'succeeded' : 'failed',
+        status: choices.length === 3 ? 'succeeded' : 'failed',
         userId: admin.uid,
         requestedCount: 3,
         resultCount: choices.length,
         queryLength: brief.length,
         serverLatencyMs: Date.now() - startedAt,
         estimatedCostUsd: 0,
-        ...(choices.length ? {} : { failureStage: 'no_safe_choices', errorCategory: 'model' })
+        ...(choices.length === 3 ? {} : { failureStage: 'underfilled_choices', errorCategory: 'model' })
       });
 
-      if (!choices.length) {
+      if (choices.length !== 3) {
         return res.status(503).json({
           ok: false,
-          error: "No suitable choices were produced. Try a broader brief or adjust the restrictions."
+          error: "We could not produce three distinct choices that meet every restriction. Try a broader brief or adjust the restrictions."
         });
       }
 
