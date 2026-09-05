@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { safeStorage } from '../lib/storage';
 
 import { AuthForm } from './AuthForm';
 import { Wordmark } from './Wordmark';
@@ -20,6 +19,7 @@ export const AuthLoading: React.FC = () => (
 );
 
 export const AuthError: React.FC<{ error: string }> = ({ error }) => {
+  const { signOut } = useAuth();
   const isOperationNotAllowed = error.includes('operation-not-allowed');
   // Hide raw technical codes for generic profile/account retrieval issues as requested
   const isProfileError = error.includes('account settings') || error.includes('user profile') || error.includes('account could not be loaded');
@@ -55,13 +55,10 @@ export const AuthError: React.FC<{ error: string }> = ({ error }) => {
             Retry
           </button>
           <button 
-            onClick={() => {
-              safeStorage.removeItem('dbd_has_started');
-              window.location.href = '/?view=landing';
-            }}
+            onClick={() => { void signOut(); }}
             className="w-full text-gray-500 py-3 rounded text-[13px] font-medium hover:text-gray-900 transition-colors"
           >
-            Back to landing page
+            Sign out and return to landing
           </button>
         </div>
       </div>
