@@ -44573,7 +44573,7 @@ var require_longbits = __commonJS({
       }
       return value.low || value.high ? new LongBits(value.low >>> 0, value.high >>> 0) : zero;
     };
-    LongBits.prototype.toNumber = function toNumber2(unsigned) {
+    LongBits.prototype.toNumber = function toNumber3(unsigned) {
       if (!unsigned && this.hi >>> 31) {
         var lo = ~this.lo + 1 >>> 0, hi = ~this.hi >>> 0;
         if (!lo)
@@ -45114,7 +45114,7 @@ var require_umd = __commonJS({
         LongPrototype.toInt = function toInt() {
           return this.unsigned ? this.low >>> 0 : this.low;
         };
-        LongPrototype.toNumber = function toNumber2() {
+        LongPrototype.toNumber = function toNumber3() {
           if (this.unsigned)
             return (this.high >>> 0) * TWO_PWR_32_DBL + (this.low >>> 0);
           return this.high * TWO_PWR_32_DBL + (this.low >>> 0);
@@ -135360,7 +135360,7 @@ var require_lodash2 = __commonJS({
       if (!value) {
         return value === 0 ? value : 0;
       }
-      value = toNumber2(value);
+      value = toNumber3(value);
       if (value === INFINITY || value === -INFINITY) {
         var sign2 = value < 0 ? -1 : 1;
         return sign2 * MAX_INTEGER;
@@ -135371,7 +135371,7 @@ var require_lodash2 = __commonJS({
       var result = toFinite(value), remainder = result % 1;
       return result === result ? remainder ? result - remainder : result : 0;
     }
-    function toNumber2(value) {
+    function toNumber3(value) {
       if (typeof value == "number") {
         return value;
       }
@@ -135446,7 +135446,7 @@ var require_lodash4 = __commonJS({
       if (!value) {
         return value === 0 ? value : 0;
       }
-      value = toNumber2(value);
+      value = toNumber3(value);
       if (value === INFINITY || value === -INFINITY) {
         var sign2 = value < 0 ? -1 : 1;
         return sign2 * MAX_INTEGER;
@@ -135457,7 +135457,7 @@ var require_lodash4 = __commonJS({
       var result = toFinite(value), remainder = result % 1;
       return result === result ? remainder ? result - remainder : result : 0;
     }
-    function toNumber2(value) {
+    function toNumber3(value) {
       if (typeof value == "number") {
         return value;
       }
@@ -135604,7 +135604,7 @@ var require_lodash8 = __commonJS({
       if (!value) {
         return value === 0 ? value : 0;
       }
-      value = toNumber2(value);
+      value = toNumber3(value);
       if (value === INFINITY || value === -INFINITY) {
         var sign2 = value < 0 ? -1 : 1;
         return sign2 * MAX_INTEGER;
@@ -135615,7 +135615,7 @@ var require_lodash8 = __commonJS({
       var result = toFinite(value), remainder = result % 1;
       return result === result ? remainder ? result - remainder : result : 0;
     }
-    function toNumber2(value) {
+    function toNumber3(value) {
       if (typeof value == "number") {
         return value;
       }
@@ -171873,7 +171873,7 @@ function toDouble(serializer, value) {
 function toInteger(value) {
   return { integerValue: "" + value };
 }
-function toNumber(serializer, value, options2) {
+function toNumber2(serializer, value, options2) {
   if (Number.isInteger(value) && options2?.preferIntegers) {
     return toInteger(value);
   }
@@ -173224,7 +173224,7 @@ function parseScalarValue(value, context2, options2) {
   if (value === null) {
     return { nullValue: "NULL_VALUE" };
   } else if (typeof value === "number") {
-    return toNumber(context2.serializer, value, options2);
+    return toNumber2(context2.serializer, value, options2);
   } else if (typeof value === "boolean") {
     return { booleanValue: value };
   } else if (typeof value === "string") {
@@ -185073,7 +185073,7 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
       _toProto(serializer) {
         return {
           ...super._toProto(serializer),
-          args: [toNumber(serializer, this.limit)]
+          args: [toNumber2(serializer, this.limit)]
         };
       }
     };
@@ -185095,7 +185095,7 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
       _toProto(serializer) {
         return {
           ...super._toProto(serializer),
-          args: [toNumber(serializer, this.offset)]
+          args: [toNumber2(serializer, this.offset)]
         };
       }
     };
@@ -220059,6 +220059,28 @@ var OFFAL_INCOMPATIBLE_DIETARY_RULES = /* @__PURE__ */ new Set([
   "vegan"
 ]);
 var dietaryRuleAllowsOffal = (dietaryRule) => !dietaryRule || !OFFAL_INCOMPATIBLE_DIETARY_RULES.has(dietaryRule);
+var DIRECT_OFFAL_PATTERN = /\b(offal|livers?|kidneys?|tripe|tongues?|sweetbreads?|black pudding|blood sausage)\b/i;
+var LIVER_PATE_PATTERN = /\b(?:liver|chicken|duck|pork)\s+p[aâ]t[eé]\b|\bp[aâ]t[eé]\b[^.]{0,40}\bliver\b/i;
+var ANIMAL_HEART_PATTERN = /\b(?:beef|ox|lamb|sheep|mutton|pork|pig|chicken|duck|turkey|venison|veal|calf)\s+hearts?\b|\b(?:braised|grilled|stuffed|sliced|slow[- ]cooked)\s+hearts?\b|\bhearts?\s+(?:stew|curry|recipe|dish)\b/i;
+var NON_OFFAL_HEART_PATTERN = /\b(?:artichoke|palm)\s+hearts?\b|\bheart[- ]healthy\b|\bheart health\b|\bhealthy heart\b/gi;
+var NON_OFFAL_KIDNEY_PATTERN = /\bkidney beans?\b/gi;
+var EXPLICIT_HEART_PATTERN = /^\s*hearts?(?:\s+(?:recipes?|stew|curry|dishes?|dinners?))?\s*$/i;
+var containsOffalLanguage = (value, allowStandaloneHeart) => {
+  const candidate = value.replace(NON_OFFAL_HEART_PATTERN, " ").replace(NON_OFFAL_KIDNEY_PATTERN, " ");
+  if (DIRECT_OFFAL_PATTERN.test(candidate) || LIVER_PATE_PATTERN.test(candidate)) return true;
+  if (ANIMAL_HEART_PATTERN.test(candidate)) return true;
+  return allowStandaloneHeart && (EXPLICIT_HEART_PATTERN.test(candidate) || /\b(?:cook(?:ing)?|prepare|braise|grill|buy)\s+(?:an?\s+)?hearts?\b/i.test(candidate));
+};
+var itemContainsOffal = (item) => {
+  const fields = [
+    item.title,
+    item.description || "",
+    "ingredients" in item ? (item.ingredients || []).join(" ") : "",
+    "mainProtein" in item ? item.mainProtein || "" : "",
+    item.mainIngredient || ""
+  ].join(" ");
+  return containsOffalLanguage(fields, false);
+};
 
 // src/lib/preferenceCompatibility.ts
 var DIETARY_COOKING_FAT_EXCLUSIONS = {
@@ -220262,6 +220284,31 @@ function estimateGeminiCostUsd(inputTokens, outputTokens) {
 }
 
 // src/constants.ts
+var DIETARY_EXCLUSION_MAP = {
+  "No Pork": ["pork", "bacon", "ham", "gammon", "prosciutto", "pancetta", "lard", "pig", "piglet", "sausage", "chorizo", "salami"],
+  "Milk": ["milk", "buttermilk", "milk powder", "milk solids", "cheese", "butter", "cream", "yogurt", "yoghurt", "dairy", "whey", "casein", "lactose", "lactalbumin", "ghee", "cream cheese", "cr\xE8me fra\xEEche"],
+  "Milk / Dairy": ["milk", "buttermilk", "milk powder", "milk solids", "cheese", "butter", "cream", "yogurt", "yoghurt", "dairy", "whey", "casein", "lactose", "lactalbumin", "ghee", "cream cheese", "cr\xE8me fra\xEEche"],
+  "Milk/Dairy": ["milk", "buttermilk", "milk powder", "milk solids", "cheese", "butter", "cream", "yogurt", "yoghurt", "dairy", "whey", "casein", "lactose", "lactalbumin", "ghee", "cream cheese", "cr\xE8me fra\xEEche"],
+  "Eggs": ["egg", "mayonnaise", "meringue", "albumin", "eggy"],
+  "Cereals containing gluten": ["wheat", "gluten", "barley", "rye", "spelt", "flour", "wheat flour", "bread", "breadcrumb", "breadcrumbs", "pasta", "couscous", "semolina", "bulgur", "oat", "oats", "malt", "malt extract", "seitan", "wheat starch"],
+  "Gluten / Wheat": ["wheat", "gluten", "barley", "rye", "spelt", "flour", "wheat flour", "bread", "breadcrumb", "breadcrumbs", "pasta", "couscous", "semolina", "bulgur", "oat", "oats", "malt", "malt extract", "seitan", "wheat starch"],
+  "Gluten/Wheat": ["wheat", "gluten", "barley", "rye", "spelt", "flour", "wheat flour", "bread", "breadcrumb", "breadcrumbs", "pasta", "couscous", "semolina", "bulgur", "oat", "oats", "malt", "malt extract", "seitan", "wheat starch"],
+  "Peanuts": ["peanut", "groundnut", "peanuts", "groundnuts"],
+  "Tree nuts": ["almond", "walnut", "cashew", "hazelnut", "pecan", "pistachio", "brazil nut", "macadamia", "hazelnuts", "walnuts", "cashews", "almonds", "pecans", "pistachios", "brazil nuts", "macadamias", "tree nut", "tree nuts", "mixed nut", "mixed nuts", "nut butter"],
+  "Tree Nuts": ["almond", "walnut", "cashew", "hazelnut", "pecan", "pistachio", "brazil nut", "macadamia", "hazelnuts", "walnuts", "cashews", "almonds", "pecans", "pistachios", "brazil nuts", "macadamias", "tree nut", "tree nuts", "mixed nut", "mixed nuts", "nut butter"],
+  "Sesame": ["sesame", "tahini", "sesame oil", "sesame seed", "sesame seeds"],
+  "Soybeans": ["soy", "soya", "tofu", "tempeh", "edamame", "miso", "soy sauce", "soya sauce", "soybean", "soybeans", "soy protein", "soya protein", "soy lecithin"],
+  "Soy": ["soy", "soya", "tofu", "tempeh", "edamame", "miso", "soy sauce", "soya sauce", "soybean", "soybeans", "soy protein", "soya protein", "soy lecithin"],
+  "Fish": ["fish", "fish sauce", "anchovy", "anchovy paste", "salmon", "cod", "tuna", "haddock", "trout", "bass", "mackerel", "sardine", "halibut", "anchovies", "bonito", "dashi", "worcestershire"],
+  "XFish": ["fish", "fish sauce", "anchovy", "anchovy paste", "salmon", "cod", "tuna", "haddock", "trout", "bass", "mackerel", "sardine", "halibut", "anchovies", "bonito", "dashi", "worcestershire"],
+  "Crustaceans": ["shrimp", "prawn", "crab", "lobster", "crayfish", "langoustine", "scampi", "krill"],
+  "Shellfish": ["shellfish", "shrimp", "prawn", "crab", "lobster", "mussel", "clam", "scallop", "oyster", "squid", "octopus", "langoustine", "mollusc", "crustacean"],
+  "Celery": ["celery", "celeriac", "celery seed", "celery seeds"],
+  "Lupin": ["lupin", "lupine", "lupin flour", "lupin seed", "lupin seeds"],
+  "Molluscs": ["mussel", "clam", "scallop", "oyster", "squid", "octopus", "snail", "whelk", "cuttlefish", "mollusc", "molluscs"],
+  "Mustard": ["mustard", "mustard seed", "dijon", "senf", "mustard seeds"],
+  "Sulphur dioxide and sulphites": ["sulphite", "sulfite", "sulphur dioxide", "sulfur dioxide", "e220", "preservative", "sulphites", "sulfites"]
+};
 var COOKING_METHOD_ALIASES = {
   "Air fryer": ["air-fried", "air fried", "air fryer"],
   "BBQ": ["barbecue", "barbecued", "barbeque", "barbecuing"],
@@ -220289,6 +220336,387 @@ var COOKING_METHOD_ALIASES = {
   "Stir fry": ["stir-fry", "stir-fried", "stir fry"],
   "Tray bake": ["tray-bake", "tray bake"]
 };
+
+// src/lib/dietarySafety.ts
+var KETO_EXCLUSIONS = [
+  "sugar",
+  "honey",
+  "syrup",
+  "flour",
+  "bread",
+  "pasta",
+  "rice",
+  "noodle",
+  "couscous",
+  "bulgur",
+  "quinoa",
+  "oat",
+  "barley",
+  "wheat",
+  "potato",
+  "sweet potato",
+  "corn",
+  "maize",
+  "bean",
+  "lentil",
+  "chickpea",
+  "pea",
+  "batter",
+  "breadcrumb",
+  "cereal",
+  "pastry",
+  "wrap",
+  "tortilla",
+  "pizza"
+];
+var PALEO_EXCLUSIONS = [
+  "sugar",
+  "syrup",
+  "flour",
+  "bread",
+  "pasta",
+  "rice",
+  "noodle",
+  "couscous",
+  "bulgur",
+  "quinoa",
+  "oat",
+  "barley",
+  "wheat",
+  "corn",
+  "maize",
+  "bean",
+  "lentil",
+  "chickpea",
+  "pea",
+  "peanut",
+  "soy",
+  "soya",
+  "tofu",
+  "tempeh",
+  "edamame",
+  "milk",
+  "cheese",
+  "butter",
+  "ghee",
+  "cream",
+  "yogurt",
+  "yoghurt",
+  "vegetable oil"
+];
+var MEAT_POULTRY = [
+  "beef",
+  "pork",
+  "lamb",
+  "bacon",
+  "ham",
+  "sausage",
+  "venison",
+  "veal",
+  "chorizo",
+  "salami",
+  "lard",
+  "gelatine",
+  "gelatin",
+  "chicken",
+  "turkey",
+  "duck",
+  "poultry",
+  "pepperoni",
+  "gammon",
+  "mutton",
+  "goose",
+  "pancetta",
+  "panchetta",
+  "prosciutto",
+  "black pudding",
+  "suet",
+  "dripping",
+  "bone broth",
+  "chicken stock",
+  "chicken broth",
+  "beef stock",
+  "beef broth",
+  "lamb stock",
+  "lamb broth",
+  "duck stock"
+];
+var FISH_SEAFOOD = [
+  "fish",
+  "salmon",
+  "tuna",
+  "cod",
+  "haddock",
+  "trout",
+  "bass",
+  "prawn",
+  "shrimp",
+  "crab",
+  "lobster",
+  "mussel",
+  "clam",
+  "oyster",
+  "scallop",
+  "squid",
+  "octopus",
+  "seafood",
+  "anchovy",
+  "anchovies",
+  "mackerel",
+  "sardine",
+  "fish sauce",
+  "oyster sauce",
+  "shrimp paste",
+  "anchovy paste",
+  "roe",
+  "caviar",
+  "calamari",
+  "scampi",
+  "langoustine",
+  "crayfish",
+  "bonito",
+  "dashi",
+  "worcestershire"
+];
+var ANIMAL_DERIVATIVES = [
+  "egg",
+  "milk",
+  "buttermilk",
+  "milk powder",
+  "milk solids",
+  "dairy",
+  "cheese",
+  "butter",
+  "honey",
+  "cream",
+  "yogurt",
+  "yoghurt",
+  "whey",
+  "casein",
+  "lactose",
+  "lactalbumin",
+  "mayo",
+  "mayonnaise",
+  "halloumi",
+  "parmesan",
+  "feta",
+  "mozzarella",
+  "paneer",
+  "ghee",
+  "rennet",
+  "beeswax",
+  "isinglass",
+  "carmine",
+  "shellac",
+  "albumen",
+  "pepsin"
+];
+var GLUTEN_SOURCES = [
+  "wheat",
+  "gluten",
+  "barley",
+  "rye",
+  "spelt",
+  "flour",
+  "bread",
+  "pasta",
+  "couscous",
+  "semolina",
+  "bulgur",
+  "oat",
+  "oats",
+  "malt",
+  "malt extract",
+  "seitan",
+  "wheat starch"
+];
+var matchesKeyword = (text, keyword) => {
+  const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").trim();
+  if (!safeKeyword) return false;
+  let baseKeyword = safeKeyword;
+  if (baseKeyword.endsWith("ies")) baseKeyword = baseKeyword.slice(0, -3) + "y";
+  else if (baseKeyword.endsWith("es")) baseKeyword = baseKeyword.slice(0, -2);
+  else if (baseKeyword.endsWith("s")) baseKeyword = baseKeyword.slice(0, -1);
+  return new RegExp(`\\b${baseKeyword}(s|es|ies)?\\b`, "i").test(text);
+};
+var containsKeyword = (text, keywords) => keywords.some((keyword) => matchesKeyword(text, keyword));
+var RELIGIOUS_EXCLUSION_MAP = {
+  "Prefer Halal-certified ingredients where available": ["pork", "bacon", "ham", "gammon", "lard", "gelatine", "gelatin", "alcohol", "wine", "beer", "rum", "brandy"],
+  "Halal-friendly": ["pork", "bacon", "ham", "gammon", "lard", "gelatine", "gelatin", "alcohol", "wine", "beer", "rum", "brandy"],
+  "Kosher-friendly": ["pork", "bacon", "ham", "gammon", "lard", "shellfish", "prawn", "shrimp", "crab", "lobster", "mussel", "clam", "scallop", "oyster", "squid", "octopus"],
+  "Prefer Fair Trade ingredients where available": [],
+  "Fair Trade preference": [],
+  "Fair Trade only": [],
+  "Prefer free-range ingredients where available": []
+};
+var preferenceTerms = (label, map) => {
+  const mapped = Object.entries(map).find(([key]) => key.toLowerCase() === label.trim().toLowerCase())?.[1] || [];
+  return [label, ...mapped];
+};
+function passesDietaryRule(recipe, rule) {
+  if (!rule || rule === "none") return true;
+  const fieldsToSearch = [
+    recipe.title,
+    recipe.description || "",
+    "ingredients" in recipe ? (recipe.ingredients || []).join(" ") : "",
+    "mainProtein" in recipe ? recipe.mainProtein || "" : "",
+    recipe.mainIngredient || ""
+  ].join(" ").toLowerCase();
+  const match2 = (kws) => containsKeyword(fieldsToSearch, kws);
+  const isVegetarian = recipe.isVegetarian !== void 0 ? recipe.isVegetarian : !match2(MEAT_POULTRY) && !match2(FISH_SEAFOOD);
+  const isPescatarian = recipe.isPescatarian !== void 0 ? recipe.isPescatarian : !match2(MEAT_POULTRY);
+  const isVegan = recipe.isVegan !== void 0 ? recipe.isVegan : !match2(MEAT_POULTRY) && !match2(FISH_SEAFOOD) && !match2(ANIMAL_DERIVATIVES);
+  const dietFlagsVerified = recipe.dietFlagsVerified !== void 0 ? recipe.dietFlagsVerified : true;
+  if (!dietFlagsVerified) return false;
+  switch (rule) {
+    case "vegetarian":
+      if (!isVegetarian) return false;
+      if (match2(MEAT_POULTRY) || match2(FISH_SEAFOOD)) return false;
+      return true;
+    case "pescatarian":
+      const flagAllowsPesca = !!(isPescatarian || isVegetarian || isVegan);
+      if (!flagAllowsPesca) return false;
+      if (match2(MEAT_POULTRY)) return false;
+      return true;
+    case "vegan":
+      if (!isVegan) return false;
+      if (match2(MEAT_POULTRY) || match2(FISH_SEAFOOD) || match2(ANIMAL_DERIVATIVES)) return false;
+      return true;
+    case "gluten-free":
+      return !match2(GLUTEN_SOURCES);
+    case "keto":
+      return !match2(KETO_EXCLUSIONS);
+    case "paleo":
+      return !match2(PALEO_EXCLUSIONS);
+    default:
+      return true;
+  }
+}
+function passesPortionConstraints(item, preferences) {
+  const explicitCalories = "caloriesPerPortion" in item ? item.caloriesPerPortion : item.calories;
+  const derivedCalories = explicitCalories ?? ("totalRecipeCalories" in item && item.totalRecipeCalories !== void 0 && item.totalServings && item.totalServings > 0 ? item.totalRecipeCalories / item.totalServings : null);
+  const calorieCeiling = preferences.calorieCeiling;
+  if (Number.isFinite(calorieCeiling) && calorieCeiling > 0) {
+    if (derivedCalories === null || derivedCalories === void 0 || !Number.isFinite(derivedCalories)) return false;
+    if (derivedCalories > calorieCeiling) return false;
+  }
+  const budgetLimit = preferences.budgetLimit;
+  if (Number.isFinite(budgetLimit) && budgetLimit > 0) {
+    let costPerPortion = null;
+    const costText = "costPerPortion" in item ? item.costPerPortion : void 0;
+    const priceText = "price" in item ? item.price : void 0;
+    const totalPriceText = "totalPrice" in item ? item.totalPrice : void 0;
+    if (costText) {
+      const match2 = costText.replace(/,/g, "").match(/[\d]+(?:\.\d+)?/);
+      if (match2) costPerPortion = parseFloat(match2[0]);
+    } else if (priceText) {
+      const match2 = priceText.replace(/,/g, "").match(/[\d]+(?:\.\d+)?/);
+      if (match2) costPerPortion = parseFloat(match2[0]);
+    } else if ("totalRecipeCost" in item && item.totalRecipeCost !== void 0 && item.totalServings && item.totalServings > 0) {
+      costPerPortion = item.totalRecipeCost / item.totalServings;
+    } else if (totalPriceText && item.totalServings && item.totalServings > 0) {
+      const match2 = totalPriceText.replace(/,/g, "").match(/[\d]+(?:\.\d+)?/);
+      if (match2) costPerPortion = parseFloat(match2[0]) / item.totalServings;
+    }
+    if (costPerPortion === null || !Number.isFinite(costPerPortion)) return false;
+    if (costPerPortion > budgetLimit) return false;
+  }
+  return true;
+}
+function passesHardConstraints(recipe, preferences) {
+  if (!passesDietaryRule(recipe, preferences.dietaryRule)) return false;
+  if (itemContainsOffal(recipe) && (!dietaryRuleAllowsOffal(preferences.dietaryRule) || preferences.includeOffal !== true)) return false;
+  const saladPreference = preferences.saladPreference || "all";
+  const isSalad = recipe.title.toLowerCase().includes("salad") || (recipe.description || "").toLowerCase().includes("salad") || recipe.saladType === "main" || recipe.saladType === "side";
+  if (saladPreference === "none") {
+    if (isSalad) return false;
+  } else if (saladPreference === "main-only") {
+    if (recipe.saladType) {
+      if (recipe.saladType !== "main") return false;
+    } else {
+      if (!isSalad) return false;
+    }
+  } else if (saladPreference === "side-only") {
+    if (recipe.saladType) {
+      if (recipe.saladType !== "side") return false;
+    } else {
+      if (!isSalad) return false;
+    }
+  }
+  if (!passesPortionConstraints(recipe, {
+    calorieCeiling: preferences.calorieCeiling,
+    budgetLimit: preferences.budgetLimit
+  })) return false;
+  if ("retailer" in recipe && preferences.supermarkets && preferences.supermarkets.length > 0) {
+    const mealRetailer = recipe.retailer?.toLowerCase().replace(/[^a-z0-9]/g, "").trim() || "";
+    const hasMatch = preferences.supermarkets.some((s2) => {
+      const target = s2.toLowerCase().replace(/[^a-z0-9]/g, "").trim();
+      return mealRetailer.includes(target) || target.includes(mealRetailer);
+    });
+    if (!hasMatch) return false;
+  }
+  const forbiddenKeywords = [
+    ...(preferences.allergies || []).flatMap((allergy) => preferenceTerms(allergy, DIETARY_EXCLUSION_MAP)),
+    ...preferences.exclusions || [],
+    ...(preferences.religiousEthical || []).flatMap((preference) => preferenceTerms(preference, RELIGIOUS_EXCLUSION_MAP)),
+    ...preferences.excludeIngredients || []
+  ].filter(Boolean);
+  if (forbiddenKeywords.length === 0) return true;
+  const fieldsToSearch = [
+    recipe.title,
+    recipe.description || "",
+    "ingredients" in recipe ? (recipe.ingredients || []).join(" ") : "",
+    "mainProtein" in recipe ? recipe.mainProtein || "" : "",
+    recipe.mainIngredient || ""
+  ].join(" ").toLowerCase();
+  return !forbiddenKeywords.some((kw) => {
+    return matchesKeyword(fieldsToSearch, kw);
+  });
+}
+
+// src/lib/internalDinnerPilot.ts
+var stringList = (value, minimum = 0) => (Array.isArray(value) ? value.map((item) => String(item || "").trim()).filter(Boolean).slice(0, 24) : []).filter((item) => item.length <= 240).slice(0, Math.max(minimum, 24));
+var cleanText = (value, limit2) => String(value || "").replace(/\s+/g, " ").trim().slice(0, limit2);
+var toNumber = (value, fallback) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+var titleKey = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2;
+function validateInternalDinnerChoices(rawChoices, preferences) {
+  const seenTitles = /* @__PURE__ */ new Set();
+  const seenMainIngredients = /* @__PURE__ */ new Set();
+  return (Array.isArray(rawChoices) ? rawChoices : []).flatMap((item) => {
+    if (!hasRequiredShape(item)) return [];
+    const title = cleanText(item.title, 120);
+    const key = titleKey(title);
+    if (!key || seenTitles.has(key)) return [];
+    const choice = {
+      title,
+      description: cleanText(item.description, 360),
+      ingredients: stringList(item.ingredients),
+      instructions: stringList(item.instructions),
+      cuisine: cleanText(item.cuisine, 80) || "Home cooking",
+      matchReason: cleanText(item.matchReason, 240),
+      caloriesPerPortion: Math.max(0, Math.round(toNumber(item.caloriesPerPortion, 0))) || void 0,
+      costPerPortion: cleanText(item.costPerPortion, 30) || void 0,
+      totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, preferences.servings || 2)))),
+      totalTime: Math.min(240, Math.max(5, Math.round(toNumber(item.totalTime, 30)))),
+      saladType: ["main", "side", "none"].includes(item.saladType) ? item.saladType : "none",
+      isVegetarian: item.isVegetarian === true,
+      isPescatarian: item.isPescatarian === true,
+      isVegan: item.isVegan === true,
+      dietFlagsVerified: true,
+      convenienceProfile: "scratch"
+    };
+    if (!passesHardConstraints(choice, preferences)) return [];
+    const mainIngredientKey = titleKey(choice.ingredients[0] || "");
+    if (!mainIngredientKey || seenMainIngredients.has(mainIngredientKey)) return [];
+    seenTitles.add(key);
+    seenMainIngredients.add(mainIngredientKey);
+    return [choice];
+  }).slice(0, 3);
+}
 
 // src/services/geminiService.ts
 var SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
@@ -220712,6 +221140,68 @@ async function callGeminiWithRetry(modelId, contents, config, retries = 4, delay
     }
   }
   throw lastError;
+}
+async function generateInternalDinnerChoices(brief, preferences) {
+  if (typeof window !== "undefined") {
+    throw new Error("Internal dinner creation is available through the secure service only.");
+  }
+  const safeBrief = String(brief || "").replace(/\s+/g, " ").trim().slice(0, 500);
+  if (!safeBrief) return [];
+  const restrictions = [
+    `Dietary rule: ${preferences.dietaryRule || "none"}`,
+    `Allergies: ${(preferences.allergies || []).join(", ") || "None"}`,
+    `Avoid: ${(preferences.exclusions || []).join(", ") || "None"}`,
+    `Religious or ethical requirements: ${(preferences.religiousEthical || []).join(", ") || "None"}`,
+    `Salad preference: ${preferences.saladPreference || "all"}`,
+    `Servings: ${preferences.servings || 2}`,
+    `Maximum time: ${preferences.readyToEatUnderMins || "None"} minutes`,
+    `Maximum cost per portion: ${preferences.budgetLimit ? `\xA3${preferences.budgetLimit}` : "None"}`,
+    `Maximum calories per portion: ${preferences.calorieCeiling || "None"}`,
+    `Cooking methods: ${(preferences.cookingMethods || []).join(", ") || "Any"}`,
+    `Cooking fats: ${(preferences.cookingFats || []).join(", ") || "Any"}`,
+    `Offal: ${preferences.includeOffal ? "Allowed" : "Excluded"}`
+  ].join("\n");
+  const response = await callGeminiWithRetry(SEARCH_MODEL, `Dinner brief: "${safeBrief}".`, {
+    systemInstruction: `Create three distinct, practical home-cooking dinner choices for a UK household. These are original DinnerByDesign concepts, not claims about existing publisher recipes. Do not include source links, retailer claims, medical claims, or a preamble. Each choice needs realistic ingredients with quantities, clear numbered-style steps, an honest time estimate, an estimated cost per portion, and a short reason it fits. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction. Return fewer than three only if the hard restrictions make another distinct choice unsafe.
+
+HARD RESTRICTIONS:
+${restrictions}
+
+Return JSON only.`,
+    temperature: 0.55,
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: Type.OBJECT,
+      properties: {
+        choices: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              title: { type: Type.STRING },
+              description: { type: Type.STRING },
+              ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
+              instructions: { type: Type.ARRAY, items: { type: Type.STRING } },
+              cuisine: { type: Type.STRING },
+              matchReason: { type: Type.STRING },
+              caloriesPerPortion: { type: Type.NUMBER },
+              costPerPortion: { type: Type.STRING },
+              totalServings: { type: Type.NUMBER },
+              totalTime: { type: Type.NUMBER },
+              saladType: { type: Type.STRING, enum: ["main", "side", "none"] },
+              isVegetarian: { type: Type.BOOLEAN },
+              isPescatarian: { type: Type.BOOLEAN },
+              isVegan: { type: Type.BOOLEAN }
+            },
+            required: ["title", "description", "ingredients", "instructions", "cuisine", "matchReason", "totalServings", "totalTime", "saladType", "isVegetarian", "isPescatarian", "isVegan"]
+          }
+        }
+      },
+      required: ["choices"]
+    }
+  }, 2);
+  const payload = parseModelJson(response?.text || "{}");
+  return validateInternalDinnerChoices(payload?.choices, preferences);
 }
 var isBrowser2 = typeof window !== "undefined";
 var estimateTokensFromText = (value) => {
@@ -221377,9 +221867,9 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
     const dedupeItems = (itemsToDedupe) => {
       const seenTitles = /* @__PURE__ */ new Set();
       return itemsToDedupe.filter((item) => {
-        const titleKey = String(item.title || "").trim().toLowerCase();
-        if (!titleKey || seenTitles.has(titleKey)) return false;
-        seenTitles.add(titleKey);
+        const titleKey2 = String(item.title || "").trim().toLowerCase();
+        if (!titleKey2 || seenTitles.has(titleKey2)) return false;
+        seenTitles.add(titleKey2);
         return true;
       });
     };
@@ -233187,6 +233677,120 @@ var allergyTerms = {
   "Sulphur dioxide and sulphites": queryConflictGroups.sulphites
 };
 
+// src/lib/preferenceUtils.ts
+var normaliseUserPreferences = (data) => {
+  if (!data) {
+    return {
+      dietaryRule: "none",
+      saladPreference: "all",
+      allergies: [],
+      nutritiousChoice: false,
+      isSimple: false,
+      isLowCost: false,
+      highOmega3: false,
+      highProtein: false,
+      includeOffal: false,
+      servings: 2,
+      calorieCeiling: null,
+      budgetLimit: null,
+      exclusions: [],
+      cuisinePreferences: [],
+      religiousEthical: [],
+      cookingMethods: [],
+      cookingFats: [],
+      readyToEatUnderMins: null,
+      preferredMode: "cook",
+      customCuisines: [],
+      preferredSupermarkets: [],
+      preferredSourceIds: []
+    };
+  }
+  let allergies = data.allergies || [];
+  let exclusions = data.exclusions || [];
+  if (data.allergiesExclusions && Array.isArray(data.allergiesExclusions)) {
+    const legacy = data.allergiesExclusions;
+    const allergyMap = {
+      "Dairy-Free": "Milk",
+      "Egg-Free": "Eggs",
+      "Gluten-Free": "Cereals containing gluten",
+      "Sesame": "Sesame",
+      "Shellfish": "Crustaceans",
+      "Soy-Free": "Soybeans"
+    };
+    legacy.forEach((item) => {
+      if (allergyMap[item]) {
+        if (!allergies.includes(allergyMap[item])) allergies.push(allergyMap[item]);
+      }
+    });
+  }
+  const legacyAllergyLabelMap = {
+    "Milk/Dairy": "Milk",
+    "Dairy": "Milk",
+    "Gluten/Wheat": "Cereals containing gluten",
+    "Soy": "Soybeans",
+    "Tree Nuts": "Tree nuts"
+  };
+  allergies = allergies.flatMap((item) => {
+    if (item === "Shellfish") {
+      return ["Crustaceans", "Molluscs"];
+    }
+    if (legacyAllergyLabelMap[item]) {
+      return [legacyAllergyLabelMap[item]];
+    }
+    return [item];
+  });
+  let saladPreference = data.saladPreference || "all";
+  if (data.saladPreference === "include") saladPreference = "all";
+  if (data.saladPreference === "exclude") saladPreference = "none";
+  let dietaryRule = data.dietaryRule || data.dietaryPreference || "none";
+  if (dietaryRule === "none" && data.dietTypes && Array.isArray(data.dietTypes) && data.dietTypes.length > 0) {
+    const mainRule = data.dietTypes[0].toLowerCase();
+    if (["vegan", "vegetarian", "paleo", "keto", "pescatarian", "gluten-free", "mediterranean"].includes(mainRule)) {
+      dietaryRule = mainRule;
+    }
+  }
+  return {
+    dietaryRule,
+    saladPreference,
+    allergies: [...new Set(allergies)],
+    nutritiousChoice: data.nutritiousChoice || false,
+    isSimple: data.isSimple || false,
+    isLowCost: data.isLowCost || false,
+    highOmega3: data.highOmega3 || false,
+    highProtein: data.highProtein || false,
+    includeOffal: data.includeOffal === true && dietaryRuleAllowsOffal(dietaryRule),
+    servings: data.servings || 2,
+    calorieCeiling: data.calorieCeiling !== void 0 ? data.calorieCeiling : data.caloryCeiling !== void 0 ? data.caloryCeiling : null,
+    budgetLimit: data.budgetLimit !== void 0 ? data.budgetLimit : null,
+    exclusions: [...new Set(exclusions)],
+    cuisinePreferences: (() => {
+      const prefs = new Set(data.cuisinePreferences || data.favouriteCuisines || data.favoriteCuisines || []);
+      if (data.broadStyle === "Mediterranean") prefs.add("Mediterranean");
+      if (data.broadStyle === "Middle Eastern") prefs.add("Middle Eastern");
+      return [...prefs];
+    })(),
+    religiousEthical: [...new Set((data.religiousEthical || []).map((item) => {
+      if (item === "Kosher") return "Kosher-friendly";
+      if (item === "Halal" || item === "Halal-friendly") return "Prefer Halal-certified ingredients where available";
+      if (item === "Fair Trade only" || item === "Fair Trade preference") return "Prefer Fair Trade ingredients where available";
+      return item;
+    }))],
+    cookingMethods: [...new Set(data.cookingMethods || [])],
+    cookingFats: filterCookingFatsForDiet(dietaryRule, [...new Set(data.cookingFats || [])]),
+    readyToEatUnderMins: data.readyToEatUnderMins || null,
+    preferredMode: data.preferredMode || "cook",
+    customCuisines: [...new Set(data.customCuisines || [])],
+    preferredSupermarkets: [...new Set((data.preferredSupermarkets || []).map((item) => {
+      if (item === "Sainsbury's") return "Sainsbury\u2019s";
+      return item;
+    }))],
+    preferredSourceIds: [...new Set(data.preferredSourceIds || [])]
+  };
+};
+
+// src/config/features.ts
+var INTERNAL_DINNER_PILOT = true;
+
 // src/lib/searchRequestValidation.ts
 var MAX_SEARCH_QUERY_LENGTH = 500;
 var MAX_SEARCH_ARRAY_ITEMS = 40;
@@ -234638,6 +235242,61 @@ function createApp() {
     } catch (error) {
       console.error("[ClientErrors] Failed to record browser error:", error);
       return res.status(500).json({ ok: false });
+    }
+  });
+  app2.post("/api/admin/internal-dinner-pilot", async (req, res) => {
+    if (!INTERNAL_DINNER_PILOT) {
+      return res.status(404).json({ ok: false, error: "This internal test is currently switched off." });
+    }
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+    const startedAt = Date.now();
+    const brief = String(req.body?.brief || "").replace(/\s+/g, " ").trim().slice(0, 500);
+    if (!brief) {
+      return res.status(400).json({ ok: false, error: "Add a dinner brief before generating choices." });
+    }
+    const preferences = normaliseUserPreferences(req.body?.preferences);
+    try {
+      const choices = await generateInternalDinnerChoices(brief, preferences);
+      await recordAiUsageEvent({
+        type: "internal_dinner_pilot",
+        source: "internal",
+        model: ACTIVE_GEMINI_MODEL,
+        status: choices.length ? "succeeded" : "failed",
+        userId: admin.uid,
+        requestedCount: 3,
+        resultCount: choices.length,
+        queryLength: brief.length,
+        serverLatencyMs: Date.now() - startedAt,
+        estimatedCostUsd: 0,
+        ...choices.length ? {} : { failureStage: "no_safe_choices", errorCategory: "model" }
+      });
+      if (!choices.length) {
+        return res.status(503).json({
+          ok: false,
+          error: "No suitable choices were produced. Try a broader brief or adjust the restrictions."
+        });
+      }
+      return res.json({ choices });
+    } catch (error) {
+      console.error("[InternalDinnerPilot] Generation failed:", error);
+      await recordAiUsageEvent({
+        type: "internal_dinner_pilot",
+        source: "internal",
+        model: ACTIVE_GEMINI_MODEL,
+        status: "failed",
+        userId: admin.uid,
+        requestedCount: 3,
+        resultCount: 0,
+        queryLength: brief.length,
+        serverLatencyMs: Date.now() - startedAt,
+        estimatedCostUsd: 0,
+        errorCategory: String(error?.category || error?.name || "model").slice(0, 80)
+      });
+      return res.status(503).json({
+        ok: false,
+        error: "Internal dinner creation is temporarily unavailable. Please try again shortly."
+      });
     }
   });
   app2.post("/api/generate-suggestions", async (req, res) => {

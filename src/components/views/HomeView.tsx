@@ -33,13 +33,14 @@ import { CompactRecipeItem } from '../CompactRecipeItem';
 import { RecipeDetailOverlay } from '../RecipeDetailOverlay';
 import { SearchOnboardingHelper } from '../home/SearchOnboardingHelper';
 import { RecipeCompareModal } from '../RecipeCompareModal';
+import { InternalDinnerPilot } from '../home/InternalDinnerPilot';
 
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 import { isNativeApp, isNativeTestBuild } from '../../lib/platform';
 import { queryExplicitlyRequestsOffal } from '../../lib/offalPreference';
-import { SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
+import { INTERNAL_DINNER_PILOT, SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -283,7 +284,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     updateProfile,
     savePreferences,
     accessStatus,
-    addLog
+    addLog,
+    isAdmin
   } = useAuth();
 
   const isReadOnly = accessStatus === 'read_only';
@@ -946,6 +948,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   <span>AI-powered search. Avoid private information.</span>
                 )}
               </div>
+
+              {INTERNAL_DINNER_PILOT && isAdmin && (
+                <InternalDinnerPilot preferences={localPreferences} />
+              )}
 
               {hasIngredientNoResults && (
                 <div

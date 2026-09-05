@@ -10,6 +10,7 @@ import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isDirectHttpsConten
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { COOKING_METHOD_ALIASES } from '../constants';
+import { validateInternalDinnerChoices, type InternalDinnerChoice } from '../lib/internalDinnerPilot';
 
 export const RECIPE_SCHEMA_VERSION = "1.2.0-thin";
 const SEARCH_PERMISSION_MESSAGE = "Recipe search is temporarily unavailable because the search service account needs attention. This is on our side, so please try again later.";
@@ -539,6 +540,71 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
     }
   }
   throw lastError;
+}
+
+export async function generateInternalDinnerChoices(
+  brief: string,
+  preferences: UserPreferences
+): Promise<InternalDinnerChoice[]> {
+  if (typeof window !== 'undefined') {
+    throw new Error('Internal dinner creation is available through the secure service only.');
+  }
+
+  const safeBrief = String(brief || '').replace(/\s+/g, ' ').trim().slice(0, 500);
+  if (!safeBrief) return [];
+
+  const restrictions = [
+    `Dietary rule: ${preferences.dietaryRule || 'none'}`,
+    `Allergies: ${(preferences.allergies || []).join(', ') || 'None'}`,
+    `Avoid: ${(preferences.exclusions || []).join(', ') || 'None'}`,
+    `Religious or ethical requirements: ${(preferences.religiousEthical || []).join(', ') || 'None'}`,
+    `Salad preference: ${preferences.saladPreference || 'all'}`,
+    `Servings: ${preferences.servings || 2}`,
+    `Maximum time: ${preferences.readyToEatUnderMins || 'None'} minutes`,
+    `Maximum cost per portion: ${preferences.budgetLimit ? `£${preferences.budgetLimit}` : 'None'}`,
+    `Maximum calories per portion: ${preferences.calorieCeiling || 'None'}`,
+    `Cooking methods: ${(preferences.cookingMethods || []).join(', ') || 'Any'}`,
+    `Cooking fats: ${(preferences.cookingFats || []).join(', ') || 'Any'}`,
+    `Offal: ${preferences.includeOffal ? 'Allowed' : 'Excluded'}`
+  ].join('\n');
+
+  const response = await callGeminiWithRetry(SEARCH_MODEL, `Dinner brief: "${safeBrief}".`, {
+    systemInstruction: `Create three distinct, practical home-cooking dinner choices for a UK household. These are original DinnerByDesign concepts, not claims about existing publisher recipes. Do not include source links, retailer claims, medical claims, or a preamble. Each choice needs realistic ingredients with quantities, clear numbered-style steps, an honest time estimate, an estimated cost per portion, and a short reason it fits. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction. Return fewer than three only if the hard restrictions make another distinct choice unsafe.\n\nHARD RESTRICTIONS:\n${restrictions}\n\nReturn JSON only.`,
+    temperature: 0.55,
+    responseMimeType: 'application/json',
+    responseSchema: {
+      type: Type.OBJECT,
+      properties: {
+        choices: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              title: { type: Type.STRING },
+              description: { type: Type.STRING },
+              ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
+              instructions: { type: Type.ARRAY, items: { type: Type.STRING } },
+              cuisine: { type: Type.STRING },
+              matchReason: { type: Type.STRING },
+              caloriesPerPortion: { type: Type.NUMBER },
+              costPerPortion: { type: Type.STRING },
+              totalServings: { type: Type.NUMBER },
+              totalTime: { type: Type.NUMBER },
+              saladType: { type: Type.STRING, enum: ['main', 'side', 'none'] },
+              isVegetarian: { type: Type.BOOLEAN },
+              isPescatarian: { type: Type.BOOLEAN },
+              isVegan: { type: Type.BOOLEAN }
+            },
+            required: ['title', 'description', 'ingredients', 'instructions', 'cuisine', 'matchReason', 'totalServings', 'totalTime', 'saladType', 'isVegetarian', 'isPescatarian', 'isVegan']
+          }
+        }
+      },
+      required: ['choices']
+    }
+  }, 2);
+
+  const payload = parseModelJson(response?.text || '{}');
+  return validateInternalDinnerChoices(payload?.choices, preferences);
 }
 
 // Environment detection

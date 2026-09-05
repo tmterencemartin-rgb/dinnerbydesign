@@ -8,7 +8,7 @@ import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth as getFirebaseAdminAuth } from "firebase-admin/auth";
 import { GoogleAuth } from "google-auth-library";
 import firebaseConfig from "../firebase-applet-config.json";
-import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales } from "../src/services/geminiService";
+import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales, generateInternalDinnerChoices } from "../src/services/geminiService";
 import { sendEmail } from "../src/lib/resend";
 import { getSimulatedEmailResult } from "../src/lib/emailDelivery";
 import { FIVE_DINNERS_FOR_TWO_UNDER_40, FIVE_DINNERS_FOR_TWO_UNDER_40_PATH, getFiveDinnersForTwoJsonLd, renderFiveDinnersForTwoInitialHtml } from "../src/content/seoMealPlans";
@@ -29,6 +29,8 @@ import {
 import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
 import { parseEnrichmentRequestOptions, validateEnrichmentRequestPayload } from "../src/lib/enrichmentRequest";
 import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
+import { normaliseUserPreferences } from "../src/lib/preferenceUtils";
+import { INTERNAL_DINNER_PILOT } from "../src/config/features";
 import { validateSearchRequestPayload } from "../src/lib/searchRequestValidation";
 import {
   getWebhookClaimDecision,
@@ -1572,6 +1574,67 @@ export function createApp() {
     } catch (error) {
       console.error('[ClientErrors] Failed to record browser error:', error);
       return res.status(500).json({ ok: false });
+    }
+  });
+
+  app.post("/api/admin/internal-dinner-pilot", async (req, res) => {
+    if (!INTERNAL_DINNER_PILOT) {
+      return res.status(404).json({ ok: false, error: "This internal test is currently switched off." });
+    }
+
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+
+    const startedAt = Date.now();
+    const brief = String(req.body?.brief || '').replace(/\s+/g, ' ').trim().slice(0, 500);
+    if (!brief) {
+      return res.status(400).json({ ok: false, error: "Add a dinner brief before generating choices." });
+    }
+
+    const preferences = normaliseUserPreferences(req.body?.preferences);
+    try {
+      const choices = await generateInternalDinnerChoices(brief, preferences);
+      await recordAiUsageEvent({
+        type: 'internal_dinner_pilot',
+        source: 'internal',
+        model: ACTIVE_GEMINI_MODEL,
+        status: choices.length ? 'succeeded' : 'failed',
+        userId: admin.uid,
+        requestedCount: 3,
+        resultCount: choices.length,
+        queryLength: brief.length,
+        serverLatencyMs: Date.now() - startedAt,
+        estimatedCostUsd: 0,
+        ...(choices.length ? {} : { failureStage: 'no_safe_choices', errorCategory: 'model' })
+      });
+
+      if (!choices.length) {
+        return res.status(503).json({
+          ok: false,
+          error: "No suitable choices were produced. Try a broader brief or adjust the restrictions."
+        });
+      }
+
+      return res.json({ choices });
+    } catch (error: any) {
+      console.error('[InternalDinnerPilot] Generation failed:', error);
+      await recordAiUsageEvent({
+        type: 'internal_dinner_pilot',
+        source: 'internal',
+        model: ACTIVE_GEMINI_MODEL,
+        status: 'failed',
+        userId: admin.uid,
+        requestedCount: 3,
+        resultCount: 0,
+        queryLength: brief.length,
+        serverLatencyMs: Date.now() - startedAt,
+        estimatedCostUsd: 0,
+        errorCategory: String(error?.category || error?.name || 'model').slice(0, 80)
+      });
+      return res.status(503).json({
+        ok: false,
+        error: "Internal dinner creation is temporarily unavailable. Please try again shortly."
+      });
     }
   });
 
