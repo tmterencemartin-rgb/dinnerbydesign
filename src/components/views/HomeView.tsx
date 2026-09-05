@@ -945,7 +945,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 ) : (
                   <span>AI-powered search. Avoid private information.</span>
                 )}
-                <a href="/privacy" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">Privacy</a>
               </div>
 
               {hasIngredientNoResults && (
