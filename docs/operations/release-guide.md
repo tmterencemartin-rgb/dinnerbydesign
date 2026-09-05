@@ -81,7 +81,7 @@ After the first backup reaches `READY`, set the Vercel variables above and redep
 ### Firebase
 
 - Keep `dinnerbydesign.app`, `www.dinnerbydesign.app`, `127.0.0.1` and `localhost` in the authorised-domain list where appropriate.
-- Google sign-in uses `dinnerbydesign.app` as the Firebase `authDomain`. Keep the transparent Vercel rewrites for `/__/auth/` and `/__/firebase/` in place, and authorise `https://dinnerbydesign.app/__/auth/handler` in the Google provider configuration. This keeps mobile redirect sign-in on the app domain.
+- Google sign-in uses `dinnerbydesign.app` as the Firebase `authDomain`. Keep the transparent Vercel rewrite for `/__/auth/` and the public `/__/firebase/init.json` configuration file in place, and authorise `https://dinnerbydesign.app/__/auth/handler` in the Google provider configuration. This keeps mobile redirect sign-in on the app domain.
 - Deploy the maintained `firestore.rules` before relying on a security-rule change.
 - Confirm that signed-out users and users with a different account cannot read another user's data.
 

@@ -61,10 +61,6 @@
       "destination": "https://gen-lang-client-0925408841.firebaseapp.com/__/auth/$1"
     },
     {
-      "source": "/__/firebase/(.*)",
-      "destination": "https://gen-lang-client-0925408841.firebaseapp.com/__/firebase/$1"
-    },
-    {
       "source": "/assets/(.*)",
       "destination": "/api/missing-asset"
     },
