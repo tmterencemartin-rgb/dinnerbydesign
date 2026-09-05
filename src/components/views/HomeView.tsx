@@ -41,7 +41,8 @@ import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 import { isNativeApp, isNativeTestBuild } from '../../lib/platform';
 import { queryExplicitlyRequestsOffal } from '../../lib/offalPreference';
-import { ADMIN_SOURCE_HANDOFF_PILOT, INTERNAL_DINNER_PILOT, SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
+import { ADMIN_SOURCE_HANDOFF_PILOT, ADMIN_THREE_WAY_SEARCH_PILOT, INTERNAL_DINNER_PILOT, SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
+import type { AdminSearchMode } from '../home/SearchHeader';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -351,6 +352,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
   const isNative = isNativeApp();
   const isNativeTest = isNativeTestBuild();
+  const [adminSearchMode, setAdminSearchMode] = React.useState<AdminSearchMode>('published');
   const isSearching = status === 'searching';
   const ingredientIntent = React.useMemo(() => detectIngredientIntent(input), [input]);
   const resultsQuery = lastQuery || input;
@@ -374,7 +376,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const showNotBoringSummerSaladsPrompt =
     source === 'cook' && resultsCount === 0 && (!resultsQuery.trim() || isNotBoringSummerSaladsQuery(resultsQuery));
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
-  const useAdminSourceHandoff = ADMIN_SOURCE_HANDOFF_PILOT && isAdmin && source === 'cook';
+  const useAdminThreeWaySearchPilot = ADMIN_THREE_WAY_SEARCH_PILOT && ADMIN_SOURCE_HANDOFF_PILOT && INTERNAL_DINNER_PILOT && isAdmin;
+  const isAiCreatedTest = useAdminThreeWaySearchPilot && adminSearchMode === 'ai-created';
+  const useAdminSourceHandoff = ADMIN_SOURCE_HANDOFF_PILOT && isAdmin && source === 'cook' && (!useAdminThreeWaySearchPilot || adminSearchMode === 'published');
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
   const hasPartialSourceBackedResults = source === 'cook'
@@ -841,6 +845,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 source={source}
                 setSource={setSource}
                 adminSourceHandoff={ADMIN_SOURCE_HANDOFF_PILOT && isAdmin}
+                adminThreeWayPilot={useAdminThreeWaySearchPilot}
+                adminMode={adminSearchMode}
+                onAdminModeChange={(mode) => {
+                  setAdminSearchMode(mode);
+                  if (mode === 'published') setSource('cook');
+                  if (mode === 'ready-made') setSource('ready-made');
+                }}
                 isDietaryRuleSuppressed={isDietaryRuleSuppressed}
                 suppressedPermanentKeys={suppressedPermanentKeys}
                 clearSuppression={() => {
@@ -851,6 +862,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               />
             </div>
 
+              {isAiCreatedTest ? (
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
+                    <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
+                    <span>AI-created dinners are original DinnerByDesign suggestions. They do not use publisher recipes or source links.</span>
+                  </div>
+                  <InternalDinnerPilot preferences={localPreferences} />
+                </div>
+              ) : (
               <div className="flex flex-col gap-3 relative w-full">
               <div className="flex gap-2 items-center w-full">
                 <div className="flex-grow min-w-0">
@@ -953,10 +973,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 )}
               </div>
 
-              {INTERNAL_DINNER_PILOT && isAdmin && (
-                <InternalDinnerPilot preferences={localPreferences} />
-              )}
-
               {hasIngredientNoResults && (
                 <div
                   className="flex items-start gap-1.5 rounded border border-dbd-accent/20 bg-white px-3 py-2.5 text-[10.5px] leading-4 text-dbd-accent"
@@ -992,8 +1008,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
 
               </div>
+              )}
 
-              {!useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
+              {!isAiCreatedTest && !useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
                   {!hasDismissedSearchOnboarding && !isSearching && (
                     <SearchOnboardingHelper 
@@ -1020,7 +1037,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              {showCompactGuestStarters && (
+              {!isAiCreatedTest && showCompactGuestStarters && (
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
                   {COMPACT_GUEST_SEARCH_STARTERS.map(suggestion => (
@@ -1040,7 +1057,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-4 max-w-4xl mx-auto w-full">
+          <div className={`flex flex-col gap-4 max-w-4xl mx-auto w-full ${isAiCreatedTest ? 'hidden' : ''}`}>
             <SearchStatusRow 
               status={status}
               enriching={enriching}
@@ -1418,7 +1435,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
           </motion.div>
         )}
 
-        {(source === 'cook' ? (currentRecipes && currentRecipes.length > 0) : (currentReadyMeals && currentReadyMeals.length > 0)) && (
+        {!isAiCreatedTest && (source === 'cook' ? (currentRecipes && currentRecipes.length > 0) : (currentReadyMeals && currentReadyMeals.length > 0)) && (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

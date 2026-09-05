@@ -129,3 +129,12 @@ Offal is excluded from ordinary suggestions by default.
 - Explain inherited filtering when the available choices might otherwise appear incomplete.
 - Use plain-English empty states and errors.
 - Keep technical service status and routing details out of the ordinary interface.
+
+## Administrator three-way discovery test
+
+The administrator-only three-way discovery test presents AI-created dinners, published recipes and ready-made options with equal prominence.
+
+- AI-created dinners are original DinnerByDesign suggestions. They may show full ingredients and instructions during the test, but saving, scheduling, shopping, printing and email are not part of the test yet.
+- Published recipes remain link-only. Show a title, publisher, short relevance note and original source link, but do not show, generate or send their ingredient list or method.
+- Ready-made options continue to link to the retailer product page.
+- `ADMIN_THREE_WAY_SEARCH_PILOT` is the immediate rollback switch. Setting it to `false` restores the existing two-route interface.

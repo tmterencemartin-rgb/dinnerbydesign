@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { DinnerSource } from '../../types';
 
+export type AdminSearchMode = 'published' | 'ai-created' | 'ready-made';
+
 interface SearchHeaderProps {
   source: DinnerSource;
   setSource: (source: DinnerSource) => void;
@@ -9,6 +11,9 @@ interface SearchHeaderProps {
   suppressedPermanentKeys: string[];
   clearSuppression: () => void;
   adminSourceHandoff?: boolean;
+  adminThreeWayPilot?: boolean;
+  adminMode?: AdminSearchMode;
+  onAdminModeChange?: (mode: AdminSearchMode) => void;
 }
 
 export const SearchHeader: React.FC<SearchHeaderProps> = ({
@@ -17,8 +22,56 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
   isDietaryRuleSuppressed,
   suppressedPermanentKeys,
   clearSuppression,
-  adminSourceHandoff = false
+  adminSourceHandoff = false,
+  adminThreeWayPilot = false,
+  adminMode = 'published',
+  onAdminModeChange
 }) => {
+  if (adminThreeWayPilot) {
+    const modes: Array<{ id: AdminSearchMode; label: string; detail: string }> = [
+      { id: 'ai-created', label: 'AI-created dinners', detail: 'tailored choices' },
+      { id: 'published', label: 'Published recipes', detail: 'open original source' },
+      { id: 'ready-made', label: 'Ready-made', detail: 'supermarket options' }
+    ];
+
+    return (
+      <div className="w-full flex flex-col items-center">
+        <div className="w-full max-w-[620px] grid grid-cols-3 gap-1 rounded bg-gray-100/80 p-1">
+          {modes.map(mode => {
+            const isActive = adminMode === mode.id;
+            return (
+              <button
+                key={mode.id}
+                id={`mode-${mode.id}`}
+                type="button"
+                onClick={() => onAdminModeChange?.(mode.id)}
+                className="relative z-10 min-w-0 rounded px-1 py-2.5 text-center transition-colors sm:px-2"
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeModePill"
+                    className="absolute inset-0 -z-10 rounded border border-[#f1ede9] bg-white"
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                <span className={`block text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${
+                  isActive ? 'text-dbd-accent' : 'text-gray-500 hover:text-gray-600'
+                }`}>
+                  {mode.label}
+                </span>
+                <span className={`mt-1 block text-[9px] leading-tight sm:text-[10px] ${
+                  isActive ? 'text-dbd-accent' : 'text-gray-500'
+                }`}>
+                  {mode.detail}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-full max-w-[420px] flex p-1 bg-gray-100/80 rounded relative">

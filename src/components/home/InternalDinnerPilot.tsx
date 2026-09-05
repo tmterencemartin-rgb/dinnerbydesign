@@ -57,7 +57,7 @@ export const InternalDinnerPilot: React.FC<InternalDinnerPilotProps> = ({ prefer
             <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-accent">Administrator only</span>
           </div>
           <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
-            Create three AI-made options. These are not published recipes, so they have no source links. Nothing is saved or added to a plan.
+            Create three original choices from your brief and saved preferences. They do not use published recipes or source links. Saving, scheduling, shopping, printing and email remain outside this administrator test.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
