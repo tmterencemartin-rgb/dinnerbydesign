@@ -10,7 +10,7 @@ vi.mock('../firebase', () => ({
   signInAnon: vi.fn()
 }));
 
-import { filterToGroundedSources } from './geminiService';
+import { filterToGroundedSources, getRecipePublisherKey, selectPublisherVariedRecipes } from './geminiService';
 
 describe('Gemini search grounding filters', () => {
   it('uses the current response source set so a metadata-free recovery can use an approved direct page', () => {
@@ -48,5 +48,15 @@ describe('Gemini search grounding filters', () => {
 
     expect(filterToGroundedSources([{ sourceUrl: 'http://example.com/recipes/scallops' }], httpSource)).toEqual([]);
     expect(filterToGroundedSources([{ sourceUrl: 'https://example.com/search?q=scallops' }], searchSource)).toEqual([]);
+  });
+
+  it('prefers different recipe publishers while retaining same-publisher fallbacks for narrow searches', () => {
+    const bbcFirst = { title: 'First BBC recipe', sourceUrl: 'https://www.bbcgoodfood.com/recipes/first' };
+    const bbcSecond = { title: 'Second BBC recipe', sourceUrl: 'https://www.bbcgoodfood.com/recipes/second' };
+    const guardian = { title: 'Guardian recipe', sourceUrl: 'https://www.theguardian.com/food/recipe' };
+
+    expect(getRecipePublisherKey('https://www.bbcgoodfood.com/recipes/first')).toBe('bbcgoodfood.com');
+    expect(selectPublisherVariedRecipes([bbcFirst, bbcSecond, guardian], 3)).toEqual([bbcFirst, guardian, bbcSecond]);
+    expect(selectPublisherVariedRecipes([bbcFirst, bbcSecond], 3)).toEqual([bbcFirst, bbcSecond]);
   });
 });

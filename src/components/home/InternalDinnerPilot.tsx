@@ -53,11 +53,11 @@ export const InternalDinnerPilot: React.FC<InternalDinnerPilotProps> = ({ prefer
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-dbd-accent" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <h2 id="internal-dinner-pilot-heading" className="text-sm font-semibold text-dbd-ink">Internal test: three AI-created dinner concepts</h2>
+            <h2 id="internal-dinner-pilot-heading" className="text-sm font-semibold text-dbd-ink">AI-created dinner</h2>
             <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-accent">Administrator only</span>
           </div>
           <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
-            These are AI-created concepts, not published recipes, so they have no source links. Nothing is saved or added to a plan.
+            Create three AI-made options. These are not published recipes, so they have no source links. Nothing is saved or added to a plan.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>

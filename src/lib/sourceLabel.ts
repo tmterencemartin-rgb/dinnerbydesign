@@ -3,16 +3,40 @@ const INTERNAL_GROUNDING_HOSTS = new Set([
   'vertexaisearch.googleapis.com'
 ]);
 
-export const getRecipeSourceLabel = (sourceUrl: unknown): string => {
-  if (typeof sourceUrl !== 'string' || !sourceUrl.trim()) return 'Source page';
+const PUBLISHER_LABELS: Array<[string, string]> = [
+  ['bbcgoodfood.com', 'BBC Good Food'],
+  ['bbc.co.uk', 'BBC Food'],
+  ['realfood.tesco.com', 'Tesco Real Food'],
+  ['waitrose.com', 'Waitrose'],
+  ['sainsburysmagazine.co.uk', "Sainsbury's Magazine"],
+  ['asda.com', 'Asda'],
+  ['theguardian.com', 'Guardian Feast'],
+  ['greatbritishchefs.com', 'Great British Chefs'],
+  ['deliciousmagazine.co.uk', 'delicious. magazine'],
+  ['thehappyfoodie.co.uk', 'The Happy Foodie'],
+  ['kitchensanctuary.com', 'Kitchen Sanctuary'],
+  ['diabetes.org.uk', 'Diabetes UK']
+];
+
+const sourceHost = (sourceUrl: unknown): string | null => {
+  if (typeof sourceUrl !== 'string' || !sourceUrl.trim()) return null;
 
   try {
     const host = new URL(sourceUrl).hostname.toLowerCase().replace(/^www\./, '');
-    if (INTERNAL_GROUNDING_HOSTS.has(host) || host.endsWith('.vertexaisearch.cloud.google.com')) {
-      return 'Source page';
-    }
-    return host || 'Source page';
+    return INTERNAL_GROUNDING_HOSTS.has(host) || host.endsWith('.vertexaisearch.cloud.google.com')
+      ? null
+      : host || null;
   } catch {
-    return 'Source page';
+    return null;
   }
+};
+
+export const getRecipeSourceLabel = (sourceUrl: unknown): string => {
+  return sourceHost(sourceUrl) || 'Source page';
+};
+
+export const getRecipeSourcePublisher = (sourceUrl: unknown): string => {
+  const host = sourceHost(sourceUrl);
+  if (!host) return 'Source page';
+  return PUBLISHER_LABELS.find(([domain]) => host === domain || host.endsWith(`.${domain}`))?.[1] || host;
 };

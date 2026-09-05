@@ -34,13 +34,14 @@ import { RecipeDetailOverlay } from '../RecipeDetailOverlay';
 import { SearchOnboardingHelper } from '../home/SearchOnboardingHelper';
 import { RecipeCompareModal } from '../RecipeCompareModal';
 import { InternalDinnerPilot } from '../home/InternalDinnerPilot';
+import { PublishedRecipeLinkCard } from '../home/PublishedRecipeLinkCard';
 
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { safeStorage } from '../../lib/storage';
 import { normaliseUserPreferences } from '../../lib/preferenceUtils';
 import { isNativeApp, isNativeTestBuild } from '../../lib/platform';
 import { queryExplicitlyRequestsOffal } from '../../lib/offalPreference';
-import { INTERNAL_DINNER_PILOT, SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
+import { ADMIN_SOURCE_HANDOFF_PILOT, INTERNAL_DINNER_PILOT, SIMPLIFIED_GUEST_SEARCH_STATES } from '../../config/features';
 
 const stripSearchLeadIn = (query: string) =>
   query
@@ -373,6 +374,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const showNotBoringSummerSaladsPrompt =
     source === 'cook' && resultsCount === 0 && (!resultsQuery.trim() || isNotBoringSummerSaladsQuery(resultsQuery));
   const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
+  const useAdminSourceHandoff = ADMIN_SOURCE_HANDOFF_PILOT && isAdmin && source === 'cook';
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
   const hasPartialSourceBackedResults = source === 'cook'
@@ -838,6 +840,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <SearchHeader 
                 source={source}
                 setSource={setSource}
+                adminSourceHandoff={ADMIN_SOURCE_HANDOFF_PILOT && isAdmin}
                 isDietaryRuleSuppressed={isDietaryRuleSuppressed}
                 suppressedPermanentKeys={suppressedPermanentKeys}
                 clearSuppression={() => {
@@ -941,8 +944,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
                 {source === 'cook' ? (
                   <span>
-                    AI-assisted search, with links to original{' '}
-                    <a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.
+                    {useAdminSourceHandoff
+                      ? 'Published recipes open at their original source. DinnerByDesign does not show their ingredients or method.'
+                      : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
                   </span>
                 ) : (
                   <span>AI-powered search. Avoid private information.</span>
@@ -1440,10 +1444,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     {resultsCount === 1 ? 'One source-backed recipe was found.' : `${resultsCount} source-backed recipes were found.`} We only show recipes with a direct original-recipe link.
                   </p>
                 )}
+                {useAdminSourceHandoff && (
+                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
+                    Internal test: these published recipes open at their original sources. DinnerByDesign does not show their ingredients or method here.
+                  </p>
+                )}
               </div>
             )}
 
-            {compareItems.length > 0 && (
+            {!useAdminSourceHandoff && compareItems.length > 0 && (
               <div className="bg-white border border-gray-100 rounded px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-dbd-accent">Compare</p>
@@ -1478,17 +1487,25 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
             <div className="border-y border-dbd-rule/70 bg-white divide-y divide-dbd-rule/70">
               {source === 'cook' ? (
-                currentRecipes?.map(recipe => (
-                  <CompactRecipeItem
-                    key={recipe.id || `compact-recipe-${recipe.title}`}
-                    item={recipe}
-                    source="cook"
-                    query={resultsQuery}
-                    onClick={() => setSelectedItem(recipe)}
-                    onCompare={() => handleCompareToggle(recipe)}
-                    isCompareSelected={isCompareSelected(recipe)}
-                  />
-                ))
+                useAdminSourceHandoff
+                  ? currentRecipes?.map(recipe => (
+                    <PublishedRecipeLinkCard
+                      key={recipe.id || `published-recipe-${recipe.title}`}
+                      recipe={recipe}
+                      query={resultsQuery}
+                    />
+                  ))
+                  : currentRecipes?.map(recipe => (
+                    <CompactRecipeItem
+                      key={recipe.id || `compact-recipe-${recipe.title}`}
+                      item={recipe}
+                      source="cook"
+                      query={resultsQuery}
+                      onClick={() => setSelectedItem(recipe)}
+                      onCompare={() => handleCompareToggle(recipe)}
+                      isCompareSelected={isCompareSelected(recipe)}
+                    />
+                  ))
               ) : (
                 currentReadyMeals?.map(readyMadeDinner => (
                   <CompactRecipeItem

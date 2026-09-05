@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getRecipeSourceLabel } from './sourceLabel';
+import { getRecipeSourceLabel, getRecipeSourcePublisher } from './sourceLabel';
 
 describe('getRecipeSourceLabel', () => {
   it('hides internal grounding hosts from users', () => {
@@ -8,5 +8,9 @@ describe('getRecipeSourceLabel', () => {
 
   it('keeps a normal source hostname readable', () => {
     expect(getRecipeSourceLabel('https://www.bbcgoodfood.com/recipes/example')).toBe('bbcgoodfood.com');
+  });
+
+  it('uses a readable publisher name when it is recognised', () => {
+    expect(getRecipeSourcePublisher('https://www.bbcgoodfood.com/recipes/example')).toBe('BBC Good Food');
   });
 });

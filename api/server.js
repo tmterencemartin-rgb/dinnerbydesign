@@ -220872,7 +220872,7 @@ function getAI() {
   }
   if (!apiKey) {
     console.error("[GeminiService] GEMINI_API_KEY is MISSING in environment (process.env.GEMINI_API_KEY)");
-    throw new GeminiServiceError("network", "GEMINI_API_KEY is not available. Please check your setup.");
+    throw new GeminiServiceError("network", "Recipe search is temporarily unavailable. Please try again shortly.");
   }
   if (!aiInstance || lastApiKeyUsed !== apiKey) {
     console.log(`[GeminiService] Initializing Gemini client (Mode: ${config.mode}, Key Length: ${apiKey.length})`);
@@ -221267,6 +221267,32 @@ var filterToGroundedSources = (items, sources) => items.filter((item) => {
   item.sourceUrl = groundedSourceUrl;
   return true;
 });
+var getRecipePublisherKey = (sourceUrl) => {
+  const canonicalUrl = canonicaliseGroundedUrl(sourceUrl);
+  if (!canonicalUrl) return null;
+  try {
+    return new URL(canonicalUrl).hostname.toLowerCase().replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+};
+var selectPublisherVariedRecipes = (items, count) => {
+  const firstFromPublisher = [];
+  const remainingItems = [];
+  const seenPublishers = /* @__PURE__ */ new Set();
+  for (const item of items) {
+    const publisher = getRecipePublisherKey(item?.sourceUrl);
+    if (publisher && !seenPublishers.has(publisher)) {
+      seenPublishers.add(publisher);
+      firstFromPublisher.push(item);
+    } else {
+      remainingItems.push(item);
+    }
+  }
+  return [...firstFromPublisher, ...remainingItems].slice(0, count);
+};
+var countRecipePublishers = (items) => new Set(items.map((item) => getRecipePublisherKey(item?.sourceUrl)).filter(Boolean)).size;
+var listRecipePublishers = (items) => [...new Set(items.map((item) => getRecipePublisherKey(item?.sourceUrl)).filter(Boolean))].join(", ") || "None";
 var sanitizeRealityChecks = (checks) => {
   if (!Array.isArray(checks)) return [];
   const allowedTones = /* @__PURE__ */ new Set(["positive", "caution", "neutral"]);
@@ -221620,6 +221646,7 @@ INTENT PARSING (CRITICAL):
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
 - sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, Mob, delicious. magazine, The Happy Foodie, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+- FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
 - FOR RECIPES (HOMEMADE): Provide an ACCURATE "totalServings" value for the standard full recipe yield. Use the recipe's usual number of adult portions, not the user's current shopping quantity.
@@ -221804,10 +221831,13 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     let wasRepaired = false;
     const repairPrompts = [];
     const repairOutputs = [];
-    if (ingredientIntent?.isIngredientLed && !isReadyMade && rawItems.length < count) {
+    const initialPublisherGap = !isReadyMade ? Math.max(0, count - countRecipePublishers(rawItems)) : 0;
+    if (ingredientIntent?.isIngredientLed && !isReadyMade && (rawItems.length < count || initialPublisherGap > 0)) {
+      const recoveryCount = Math.max(count - rawItems.length, initialPublisherGap);
       const recoveryPrompt = `Recover a recipe search for "${query2}".
-Return up to ${count} complete UK home-cooking recipe stubs.
+Return exactly ${recoveryCount} additional complete UK home-cooking recipe stubs.
 Every recipe must include all of these requested ingredients in its ingredients array: ${parsedIngredients.join(", ")}.${categoryMinimumInstruction}
+Use publishers other than these where suitable: ${listRecipePublishers(rawItems)}. Return no more than one recipe from each publisher.
 Use Google Search grounding and set sourceUrl to an exact grounded recipe page URL. Search natural combinations such as "pork and tomato recipes" where useful, while keeping every listed ingredient requirement. If grounding metadata is unavailable, use only a direct recipe page from the approved sources named in the system instructions.
 Return an empty items array only when no grounded page supports the request. Never use an ellipsis or placeholder.`;
       repairPrompts.push(recoveryPrompt);
@@ -221912,13 +221942,15 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
     for (let repairAttempt = 0; repairAttempt < maxRepairAttempts; repairAttempt += 1) {
       rawItems = dedupeItems(rawItems);
       const missingCount = Math.max(0, count - rawItems.length);
+      const publisherGap = !isReadyMade ? Math.max(0, count - countRecipePublishers(rawItems)) : 0;
       const allVegetarian = shouldEncourageRecipeVariety && rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
-      if (missingCount === 0 && !allVegetarian) break;
-      const repairCount = Math.max(1, missingCount);
+      if (missingCount === 0 && publisherGap === 0 && !allVegetarian) break;
+      const repairCount = Math.max(1, missingCount, publisherGap);
       const existingTitles = [...excludeTitles || [], ...rawItems.map((item) => String(item.title || "").trim())].filter(Boolean);
       const repairPrompt2 = `Search intent: "${query2}".
 Return exactly ${repairCount} additional ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs.
 Do not repeat any existing title: ${existingTitles.join(", ") || "None"}.
+${!isReadyMade && publisherGap > 0 ? `Use publishers other than these where suitable: ${listRecipePublishers(rawItems)}. Return no more than one recipe from each publisher.` : ""}
 ${allVegetarian ? "At least one added result must be a conventional non-vegetarian version where that is a normal fit for this dish. The user has not selected a vegetarian preference." : ""}
 ${isReadyMade ? "Return commercially available UK ready-made products only." : "Return home-cooking recipes only."}`;
       repairPrompts.push(repairPrompt2);
@@ -222003,7 +222035,8 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
         wasRepaired = wasRepaired || fallbackItems.length > 0;
       }
     }
-    rawItems = dedupeItems(rawItems).slice(0, count);
+    rawItems = dedupeItems(rawItems);
+    rawItems = isReadyMade ? rawItems.slice(0, count) : selectPublisherVariedRecipes(rawItems, count);
     const repairPrompt = repairPrompts.join("\n");
     const repairOutputText = repairOutputs.join("\n");
     let items = rawItems.map((item) => {

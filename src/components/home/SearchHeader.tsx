@@ -8,6 +8,7 @@ interface SearchHeaderProps {
   isDietaryRuleSuppressed: boolean;
   suppressedPermanentKeys: string[];
   clearSuppression: () => void;
+  adminSourceHandoff?: boolean;
 }
 
 export const SearchHeader: React.FC<SearchHeaderProps> = ({
@@ -15,7 +16,8 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
   setSource,
   isDietaryRuleSuppressed,
   suppressedPermanentKeys,
-  clearSuppression
+  clearSuppression,
+  adminSourceHandoff = false
 }) => {
   return (
     <div className="w-full flex flex-col items-center">
@@ -36,12 +38,12 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
           <span className={`text-[12px] font-bold uppercase tracking-wider ${
             source === 'cook' ? 'text-dbd-accent' : 'text-gray-500 hover:text-gray-600'
           }`}>
-            Homemade
+            {adminSourceHandoff ? 'Published recipes' : 'Homemade'}
           </span>
           <span className={`text-[10px] font-normal tracking-normal normal-case leading-tight block mt-1 ${
             source === 'cook' ? 'text-dbd-accent' : 'text-gray-500'
           }`}>
-            recipes to cook
+            {adminSourceHandoff ? 'open at the original source' : 'recipes to cook'}
           </span>
         </button>
         
