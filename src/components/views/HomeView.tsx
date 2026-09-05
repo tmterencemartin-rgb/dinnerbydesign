@@ -937,8 +937,14 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
               <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
                 <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
-                <span>{source === 'cook' ? 'AI-assisted search, with links to original recipe sources.' : 'AI-powered search. Avoid private information.'}</span>
-                {source === 'cook' && <a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">Recipe sources</a>}
+                {source === 'cook' ? (
+                  <span>
+                    AI-assisted search, with links to original{' '}
+                    <a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.
+                  </span>
+                ) : (
+                  <span>AI-powered search. Avoid private information.</span>
+                )}
                 <a href="/privacy" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">Privacy</a>
               </div>
 
