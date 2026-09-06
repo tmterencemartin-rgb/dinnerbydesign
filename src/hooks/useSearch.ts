@@ -39,7 +39,7 @@ type SearchDeliveryStatus = 'delivered' | 'failed';
 const STRICT_INGREDIENT_NO_RESULTS_MESSAGE =
   'No exact matches found. Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off “Use only these ingredients (strict)”.';
 const INGREDIENT_NO_RESULTS_MESSAGE =
-  'No source-backed recipes were found using all of the listed ingredients. Try adding another ingredient or broadening your search.';
+  'No source-backed recipes were found using all of the listed ingredients. Try removing or replacing an ingredient, or search for fewer ingredients. For example, search for “duck and potatoes” or “duck traybake” instead of “duck, potato, green bean and bacon”.';
 
 const isBroadChilliDishQuery = (query: string) => /\b(chilli|chili)\b/i.test(query)
   && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);

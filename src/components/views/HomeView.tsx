@@ -987,7 +987,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     </span>{' '}
                     {strictIngredientMatch
                       ? 'Add an ingredient or turn off strict search.'
-                      : 'Try adding another ingredient or broadening your search.'}
+                      : 'Try removing or replacing an ingredient, or search for fewer ingredients. For example, try “duck and potatoes” or “duck traybake”.'}
                   </span>
                 </div>
               )}
