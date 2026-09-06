@@ -964,7 +964,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {source === 'cook' ? (
                   <span>
                     {usePublishedSourceHandoff
-                      ? 'Published recipes open at their original source. DinnerByDesign does not show their ingredients or method.'
+                      ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
                       : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
                   </span>
                 ) : (
@@ -1458,11 +1458,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {hasPartialSourceBackedResults && (
                   <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
                     {resultsCount === 1 ? 'One source-backed recipe was found.' : `${resultsCount} source-backed recipes were found.`} We only show recipes with a direct original-recipe link.
-                  </p>
-                )}
-                {usePublishedSourceHandoff && (
-                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                    These published recipes open at their original sources. DinnerByDesign does not show their ingredients or method here.
                   </p>
                 )}
               </div>
