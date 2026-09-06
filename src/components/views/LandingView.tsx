@@ -447,7 +447,7 @@ export const LandingView: React.FC = () => {
             Choose original recipes created by DinnerByDesign AI, published recipes that open at their source, or ready-made supermarket dinner options.
           </p>
           <p>
-            Set your preferences once, and every search works from them automatically — diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources and preferred supermarkets, without retyping any of it. That's what makes results precise rather than generic: a search that already knows you're cooking for one and avoiding nuts doesn't need to be told twice. Revise your preferences any time, or override them for a single search.
+            Set your preferences once, and DinnerByDesign uses the relevant ones for each search, including diet, allergies, budget, servings, time and cooking methods. Published searches can also use your trusted sources, while Ready-made searches can use your preferred supermarkets. Change your preferences whenever you like, or adjust them for one search.
           </p>
           <p className="font-semibold text-dbd-ink">
             Less searching. More relevant dinners.
