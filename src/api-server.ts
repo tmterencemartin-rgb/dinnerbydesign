@@ -26,7 +26,7 @@ import {
   findRegisteredIdentitiesWithoutProfiles,
   summariseAccountReconciliation,
 } from "../src/lib/accountReconciliation";
-import { isDeliverableSearchResult } from "../src/lib/searchDelivery";
+import { hasDeliveredSearchChoices, isDeliverableSearchResult } from "../src/lib/searchDelivery";
 import { parseEnrichmentRequestOptions, validateEnrichmentRequestPayload } from "../src/lib/enrichmentRequest";
 import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
 import { normaliseUserPreferences } from "../src/lib/preferenceUtils";
@@ -1726,7 +1726,7 @@ export function createApp() {
         });
       }
 
-      if (searchIdentity.isAnonymous) {
+      if (searchIdentity.isAnonymous && hasDeliveredSearchChoices(result)) {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
         if (usageCommit === "limit") {
           return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });

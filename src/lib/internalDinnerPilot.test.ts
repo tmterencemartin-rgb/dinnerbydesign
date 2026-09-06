@@ -100,6 +100,19 @@ describe('validateInternalDinnerChoices', () => {
     expect(results).toEqual([]);
   });
 
+  it('rejects missing or implausible servings and timings instead of inventing estimates', () => {
+    const results = validateInternalDinnerChoices([
+      { ...validChoice, title: 'Missing servings', totalServings: undefined },
+      { ...validChoice, title: 'Fractional servings', totalServings: 2.5 },
+      { ...validChoice, title: 'Too many servings', totalServings: 13 },
+      { ...validChoice, title: 'Missing timing', totalTime: undefined },
+      { ...validChoice, title: 'Too short timing', totalTime: 4 },
+      { ...validChoice, title: 'Too long timing', totalTime: 241 }
+    ], preferences);
+
+    expect(results).toEqual([]);
+  });
+
   it('rejects unsafe protein steps, unsuitable oven temperatures and timings beyond the saved limit', () => {
     const unrestrictedPreferences = { ...preferences, dietaryRule: 'none' as const, readyToEatUnderMins: 25 };
     const results = validateInternalDinnerChoices([

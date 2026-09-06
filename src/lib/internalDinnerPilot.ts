@@ -27,9 +27,9 @@ const stringList = (value: unknown, minimum = 0): string[] => (
 const cleanText = (value: unknown, limit: number) => String(value || '').replace(/\s+/g, ' ').trim().slice(0, limit);
 const cleanInstruction = (value: string) => value.replace(/^\s*\d+\s*[.)]\s*/, '').trim();
 
-const toNumber = (value: unknown, fallback: number) => {
+const hasSensibleRecipeNumber = (value: unknown, minimum: number, maximum: number) => {
   const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
+  return Number.isInteger(parsed) && parsed >= minimum && parsed <= maximum;
 };
 
 const titleKey = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -86,7 +86,9 @@ const hasRequiredShape = (item: any): item is InternalDinnerChoice => (
   hasRealisticMetricIngredients(stringList(item?.ingredients)) &&
   hasSensibleOvenTemperature(stringList(item?.instructions)) &&
   hasSafeProteinCookingGuidance(stringList(item?.ingredients), stringList(item?.instructions)) &&
-  hasRealisticPriceEstimate(item?.costPerPortion)
+  hasRealisticPriceEstimate(item?.costPerPortion) &&
+  hasSensibleRecipeNumber(item?.totalServings, 1, 12) &&
+  hasSensibleRecipeNumber(item?.totalTime, 5, 240)
 );
 
 export function validateInternalDinnerChoices(
@@ -114,8 +116,9 @@ export function validateInternalDinnerChoices(
         cuisine: cleanText(item.cuisine, 80) || 'Home cooking',
         matchReason: cleanText(item.matchReason, 240),
         costPerPortion: cleanText(item.costPerPortion, 30) || undefined,
-        totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, applicablePreferences.servings || 2)))),
-        totalTime: Math.min(240, Math.max(5, Math.round(toNumber(item.totalTime, 30)))),
+        // Do not fill in missing data with a plausible-looking estimate.
+        totalServings: Number(item.totalServings),
+        totalTime: Number(item.totalTime),
         saladType: ['main', 'side', 'none'].includes(item.saladType) ? item.saladType : 'none',
         isVegetarian: item.isVegetarian === true,
         isPescatarian: item.isPescatarian === true,

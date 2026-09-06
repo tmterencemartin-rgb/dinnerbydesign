@@ -44573,7 +44573,7 @@ var require_longbits = __commonJS({
       }
       return value.low || value.high ? new LongBits(value.low >>> 0, value.high >>> 0) : zero;
     };
-    LongBits.prototype.toNumber = function toNumber3(unsigned) {
+    LongBits.prototype.toNumber = function toNumber2(unsigned) {
       if (!unsigned && this.hi >>> 31) {
         var lo = ~this.lo + 1 >>> 0, hi = ~this.hi >>> 0;
         if (!lo)
@@ -45114,7 +45114,7 @@ var require_umd = __commonJS({
         LongPrototype.toInt = function toInt() {
           return this.unsigned ? this.low >>> 0 : this.low;
         };
-        LongPrototype.toNumber = function toNumber3() {
+        LongPrototype.toNumber = function toNumber2() {
           if (this.unsigned)
             return (this.high >>> 0) * TWO_PWR_32_DBL + (this.low >>> 0);
           return this.high * TWO_PWR_32_DBL + (this.low >>> 0);
@@ -135360,7 +135360,7 @@ var require_lodash2 = __commonJS({
       if (!value) {
         return value === 0 ? value : 0;
       }
-      value = toNumber3(value);
+      value = toNumber2(value);
       if (value === INFINITY || value === -INFINITY) {
         var sign2 = value < 0 ? -1 : 1;
         return sign2 * MAX_INTEGER;
@@ -135371,7 +135371,7 @@ var require_lodash2 = __commonJS({
       var result = toFinite(value), remainder = result % 1;
       return result === result ? remainder ? result - remainder : result : 0;
     }
-    function toNumber3(value) {
+    function toNumber2(value) {
       if (typeof value == "number") {
         return value;
       }
@@ -135446,7 +135446,7 @@ var require_lodash4 = __commonJS({
       if (!value) {
         return value === 0 ? value : 0;
       }
-      value = toNumber3(value);
+      value = toNumber2(value);
       if (value === INFINITY || value === -INFINITY) {
         var sign2 = value < 0 ? -1 : 1;
         return sign2 * MAX_INTEGER;
@@ -135457,7 +135457,7 @@ var require_lodash4 = __commonJS({
       var result = toFinite(value), remainder = result % 1;
       return result === result ? remainder ? result - remainder : result : 0;
     }
-    function toNumber3(value) {
+    function toNumber2(value) {
       if (typeof value == "number") {
         return value;
       }
@@ -135604,7 +135604,7 @@ var require_lodash8 = __commonJS({
       if (!value) {
         return value === 0 ? value : 0;
       }
-      value = toNumber3(value);
+      value = toNumber2(value);
       if (value === INFINITY || value === -INFINITY) {
         var sign2 = value < 0 ? -1 : 1;
         return sign2 * MAX_INTEGER;
@@ -135615,7 +135615,7 @@ var require_lodash8 = __commonJS({
       var result = toFinite(value), remainder = result % 1;
       return result === result ? remainder ? result - remainder : result : 0;
     }
-    function toNumber3(value) {
+    function toNumber2(value) {
       if (typeof value == "number") {
         return value;
       }
@@ -171873,7 +171873,7 @@ function toDouble(serializer, value) {
 function toInteger(value) {
   return { integerValue: "" + value };
 }
-function toNumber2(serializer, value, options2) {
+function toNumber(serializer, value, options2) {
   if (Number.isInteger(value) && options2?.preferIntegers) {
     return toInteger(value);
   }
@@ -173224,7 +173224,7 @@ function parseScalarValue(value, context2, options2) {
   if (value === null) {
     return { nullValue: "NULL_VALUE" };
   } else if (typeof value === "number") {
-    return toNumber2(context2.serializer, value, options2);
+    return toNumber(context2.serializer, value, options2);
   } else if (typeof value === "boolean") {
     return { booleanValue: value };
   } else if (typeof value === "string") {
@@ -185073,7 +185073,7 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
       _toProto(serializer) {
         return {
           ...super._toProto(serializer),
-          args: [toNumber2(serializer, this.limit)]
+          args: [toNumber(serializer, this.limit)]
         };
       }
     };
@@ -185095,7 +185095,7 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
       _toProto(serializer) {
         return {
           ...super._toProto(serializer),
-          args: [toNumber2(serializer, this.offset)]
+          args: [toNumber(serializer, this.offset)]
         };
       }
     };
@@ -220832,9 +220832,9 @@ var getAiCreatedRecipePreferences = (preferences) => ({
 var stringList = (value, minimum = 0) => (Array.isArray(value) ? value.map((item) => String(item || "").trim()).filter(Boolean).slice(0, 24) : []).filter((item) => item.length <= 240).slice(0, Math.max(minimum, 24));
 var cleanText = (value, limit2) => String(value || "").replace(/\s+/g, " ").trim().slice(0, limit2);
 var cleanInstruction = (value) => value.replace(/^\s*\d+\s*[.)]\s*/, "").trim();
-var toNumber = (value, fallback) => {
+var hasSensibleRecipeNumber = (value, minimum, maximum) => {
   const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
+  return Number.isInteger(parsed) && parsed >= minimum && parsed <= maximum;
 };
 var titleKey = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 var choiceFingerprint = (choice) => [
@@ -220873,7 +220873,7 @@ var hasRealisticPriceEstimate = (value) => {
   const price = Number(match2[1]);
   return Number.isFinite(price) && price >= 0.2 && price <= 25;
 };
-var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2 && hasRealisticMetricIngredients(stringList(item?.ingredients)) && hasSensibleOvenTemperature(stringList(item?.instructions)) && hasSafeProteinCookingGuidance(stringList(item?.ingredients), stringList(item?.instructions)) && hasRealisticPriceEstimate(item?.costPerPortion);
+var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2 && hasRealisticMetricIngredients(stringList(item?.ingredients)) && hasSensibleOvenTemperature(stringList(item?.instructions)) && hasSafeProteinCookingGuidance(stringList(item?.ingredients), stringList(item?.instructions)) && hasRealisticPriceEstimate(item?.costPerPortion) && hasSensibleRecipeNumber(item?.totalServings, 1, 12) && hasSensibleRecipeNumber(item?.totalTime, 5, 240);
 function validateInternalDinnerChoices(rawChoices, preferences, existingChoices = []) {
   const applicablePreferences = getAiCreatedRecipePreferences(preferences);
   const seenTitles = new Set(existingChoices.map((choice) => titleKey(choice.title)));
@@ -220891,8 +220891,9 @@ function validateInternalDinnerChoices(rawChoices, preferences, existingChoices 
       cuisine: cleanText(item.cuisine, 80) || "Home cooking",
       matchReason: cleanText(item.matchReason, 240),
       costPerPortion: cleanText(item.costPerPortion, 30) || void 0,
-      totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, applicablePreferences.servings || 2)))),
-      totalTime: Math.min(240, Math.max(5, Math.round(toNumber(item.totalTime, 30)))),
+      // Do not fill in missing data with a plausible-looking estimate.
+      totalServings: Number(item.totalServings),
+      totalTime: Number(item.totalTime),
       saladType: ["main", "side", "none"].includes(item.saladType) ? item.saladType : "none",
       isVegetarian: item.isVegetarian === true,
       isPescatarian: item.isPescatarian === true,
@@ -233894,10 +233895,13 @@ function summariseAccountReconciliation(identities, profileIds) {
 }
 
 // src/lib/searchDelivery.ts
-function isDeliverableSearchResult(result) {
+function hasDeliveredSearchChoices(result) {
   const recipes = Array.isArray(result?.recipes) ? result.recipes : [];
   const readyMeals = Array.isArray(result?.readyMeals) ? result.readyMeals : [];
-  return recipes.length > 0 || readyMeals.length > 0 || result?.isEmpty === true || !!result?.budgetContradiction;
+  return recipes.length > 0 || readyMeals.length > 0;
+}
+function isDeliverableSearchResult(result) {
+  return hasDeliveredSearchChoices(result) || result?.isEmpty === true || !!result?.budgetContradiction;
 }
 
 // src/lib/searchUtils.ts
@@ -235660,7 +235664,7 @@ function createApp() {
           }
         });
       }
-      if (searchIdentity.isAnonymous) {
+      if (searchIdentity.isAnonymous && hasDeliveredSearchChoices(result)) {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
         if (usageCommit === "limit") {
           return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
