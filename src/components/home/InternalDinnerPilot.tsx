@@ -175,7 +175,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
       {hasPartialChoices && <p className="mt-3 text-[12px] font-medium text-dbd-ink-3">We found fewer than three distinct choices that meet your current preferences. You can use these, or try a broader brief for more variety.</p>}
 
       {choices.length > 0 && (
-        <div className="mx-4 mt-4 grid gap-3 lg:grid-cols-3" aria-live="polite">
+        <div className="mt-4 grid gap-3 lg:grid-cols-3" aria-live="polite">
           {choices.map((choice, index) => (
             <article key={`${choice.title}-${index}`} className="rounded border border-gray-200 bg-white p-3">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-dbd-accent">Choice {index + 1}</p>
