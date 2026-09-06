@@ -441,13 +441,13 @@ export const LandingView: React.FC = () => {
         </h1>
         <div className="text-[14px] sm:text-[18px] text-dbd-ink-2 max-w-3xl leading-relaxed mx-auto font-sans font-normal mb-10 space-y-5">
           <p>
-            DinnerByDesign helps you plan varied dinners around what you already have. Reuse ingredients across the week, and see estimated shopping costs before you buy.
+            DinnerByDesign plans varied dinners around what you already have. Reuse ingredients across the week and see estimated shopping costs before you buy.
           </p>
           <p>
-            Choose original recipes created by DinnerByDesign AI, published recipes that open at their source, or ready-made supermarket dinner options.
+            Choose original recipes from DinnerByDesign AI, published recipes that open at their source, or ready-made supermarket dinners.
           </p>
           <p>
-            Set your preferences once, and DinnerByDesign uses the relevant ones for each search, including diet, allergies, budget, servings, time and cooking methods. Published searches can also use your trusted sources, while Ready-made searches can use your preferred supermarkets. Change your preferences whenever you like, or adjust them for one search.
+            Set preferences once — diet, allergies, budget, servings, time, cooking method — and DinnerByDesign applies the relevant ones to each search. Published searches can also draw on your trusted sources; ready-made searches can use your preferred supermarkets. Adjust preferences any time, or just for one search.
           </p>
           <p className="font-semibold text-dbd-ink">
             Less searching. More relevant dinners.
