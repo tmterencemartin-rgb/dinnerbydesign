@@ -568,7 +568,7 @@ export async function generateInternalDinnerChoices(
     `Offal: ${preferences.includeOffal ? 'Allowed' : 'Excluded'}`
   ].join('\n');
 
-  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in °C only, between 120°C and 240°C. If a choice contains meat, poultry or fish, include a clear instruction to cook it thoroughly before serving. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction.\n\nHARD RESTRICTIONS:\n${restrictions}\n\nReturn JSON only.`;
+  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use as many ingredients and steps as the recipe needs. Do not default every choice to four items: most should have five to eight ingredients and four to six steps, while a genuinely simple dinner may be shorter. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in °C only, between 120°C and 240°C. If a choice contains meat, poultry or fish, include a clear instruction to cook it thoroughly before serving. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. A core ingredient may appear in more than one choice when the cooking approach or flavour direction is genuinely different.\n\nHARD RESTRICTIONS:\n${restrictions}\n\nReturn JSON only.`;
   const responseSchema = {
       type: Type.OBJECT,
       properties: {
@@ -618,10 +618,12 @@ export async function generateInternalDinnerChoices(
 
   const missingCount = 3 - initialChoices.length;
   const excludedTitles = initialChoices.map(choice => choice.title).join('; ') || 'None';
-  const excludedMainIngredients = initialChoices.map(choice => choice.ingredients[0]).filter(Boolean).join('; ') || 'None';
+  const excludedApproaches = initialChoices
+    .map(choice => `${choice.title}: ${choice.instructions[0] || choice.cuisine}`)
+    .join('; ') || 'None';
   const recoveredChoices = validateInternalDinnerChoices(
     await requestChoices(
-      `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Do not use these main ingredients: ${excludedMainIngredients}.`,
+      `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Use a different cooking approach or flavour direction from: ${excludedApproaches}.`,
       `${systemInstruction}\n\nRECOVERY: The first response was under-filled after validation. Return exactly ${missingCount} additional, distinct choices that preserve every hard restriction.`
     ),
     preferences,

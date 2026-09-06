@@ -1611,7 +1611,7 @@ export function createApp() {
         });
         return res.status(503).json({
           ok: false,
-          error: "We could not produce three distinct choices that meet every restriction. Try a broader brief or adjust the restrictions."
+          error: "We could not create three sufficiently different choices this time. Please try again."
         });
       }
 

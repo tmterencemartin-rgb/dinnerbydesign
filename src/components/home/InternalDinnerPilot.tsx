@@ -180,7 +180,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
               {choice.matchReason && <p className="mt-2 text-[11px] leading-4 text-dbd-ink-3">{choice.matchReason}</p>}
               <p className="mt-3 text-[10px] font-medium uppercase tracking-wide text-dbd-ink-3">Ingredients</p>
               <ul className="mt-1 space-y-1 text-[11px] leading-4 text-dbd-ink-2">
-                {choice.ingredients.slice(0, 6).map(ingredient => <li key={ingredient}>{ingredient}</li>)}
+                {choice.ingredients.map(ingredient => <li key={ingredient}>{ingredient}</li>)}
               </ul>
               <p className="mt-3 text-[10px] font-medium uppercase tracking-wide text-dbd-ink-3">Method</p>
               <ol className="mt-1 list-decimal space-y-1 pl-4 text-[11px] leading-4 text-dbd-ink-2">

@@ -39,7 +39,7 @@ describe('validateInternalDinnerChoices', () => {
     expect(results).toHaveLength(1);
   });
 
-  it('rejects choices that merely rename the same main ingredient', () => {
+  it('rejects a renamed copy of the same choice', () => {
     const results = validateInternalDinnerChoices([
       validChoice,
       { ...validChoice, title: 'Spiced lentil and pepper bowls' }
@@ -58,12 +58,16 @@ describe('validateInternalDinnerChoices', () => {
     ]);
   });
 
-  it('rejects a recovery choice that repeats an existing main ingredient', () => {
+  it('keeps choices that share an ingredient when their cooking approaches differ', () => {
     const results = validateInternalDinnerChoices([
-      { ...validChoice, title: 'Lentil and kale bowls' },
+      {
+        ...validChoice,
+        title: 'Lentil and kale bowls',
+        instructions: ['Warm the lentils with the kale and spinach.', 'Finish with yoghurt and roasted pepper.']
+      },
       { ...validChoice, title: 'Courgette and bean skillet', ingredients: ['1 courgette', '400g butter beans', '2 tomatoes', '1 tbsp olive oil'] }
     ], preferences, [validChoice]);
-    expect(results.map(choice => choice.title)).toEqual(['Courgette and bean skillet']);
+    expect(results.map(choice => choice.title)).toEqual(['Lentil and kale bowls', 'Courgette and bean skillet']);
   });
 
   it('rejects unmeasured or imperial ingredient lists and implausible price estimates', () => {

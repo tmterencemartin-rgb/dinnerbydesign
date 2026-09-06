@@ -18,6 +18,11 @@ const toNumber = (value: unknown, fallback: number) => {
 };
 
 const titleKey = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const choiceFingerprint = (choice: Pick<InternalDinnerChoice, 'ingredients' | 'instructions' | 'cuisine'>) => [
+  titleKey(choice.ingredients.join(' ')),
+  titleKey(choice.instructions.join(' ')),
+  titleKey(choice.cuisine)
+].join('|');
 
 const IMPERIAL_MEASURE_PATTERN = /\b(?:oz|ounces?|lb|lbs|pounds?|cups?|fahrenheit|°\s*f)\b/i;
 const METRIC_MEASURE_PATTERN = /\b\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\b/i;
@@ -71,7 +76,7 @@ export function validateInternalDinnerChoices(
   existingChoices: InternalDinnerChoice[] = []
 ): InternalDinnerChoice[] {
   const seenTitles = new Set(existingChoices.map(choice => titleKey(choice.title)));
-  const seenMainIngredients = new Set(existingChoices.map(choice => titleKey(choice.ingredients[0] || '')));
+  const seenChoiceFingerprints = new Set(existingChoices.map(choiceFingerprint));
 
   return (Array.isArray(rawChoices) ? rawChoices : [])
     .flatMap((item: any) => {
@@ -101,10 +106,10 @@ export function validateInternalDinnerChoices(
 
       if (!passesHardConstraints(choice, preferences)) return [];
       if (preferences.readyToEatUnderMins && choice.totalTime > preferences.readyToEatUnderMins) return [];
-      const mainIngredientKey = titleKey(choice.ingredients[0] || '');
-      if (!mainIngredientKey || seenMainIngredients.has(mainIngredientKey)) return [];
+      const fingerprint = choiceFingerprint(choice);
+      if (!fingerprint || seenChoiceFingerprints.has(fingerprint)) return [];
       seenTitles.add(key);
-      seenMainIngredients.add(mainIngredientKey);
+      seenChoiceFingerprints.add(fingerprint);
       return [choice];
     })
     .slice(0, 3);

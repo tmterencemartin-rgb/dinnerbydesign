@@ -220725,6 +220725,11 @@ var toNumber = (value, fallback) => {
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 var titleKey = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+var choiceFingerprint = (choice) => [
+  titleKey(choice.ingredients.join(" ")),
+  titleKey(choice.instructions.join(" ")),
+  titleKey(choice.cuisine)
+].join("|");
 var IMPERIAL_MEASURE_PATTERN = /\b(?:oz|ounces?|lb|lbs|pounds?|cups?|fahrenheit|°\s*f)\b/i;
 var METRIC_MEASURE_PATTERN = /\b\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\b/i;
 var QUANTITY_PATTERN = /^\s*(?:\d+(?:[./]\d+)?|½|¼|¾|one\b|two\b|three\b|four\b|half\b)/i;
@@ -220757,7 +220762,7 @@ var hasRealisticPriceEstimate = (value) => {
 var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2 && hasRealisticMetricIngredients(stringList(item?.ingredients)) && hasSensibleOvenTemperature(stringList(item?.instructions)) && hasSafeProteinCookingGuidance(stringList(item?.ingredients), stringList(item?.instructions)) && hasRealisticPriceEstimate(item?.costPerPortion);
 function validateInternalDinnerChoices(rawChoices, preferences, existingChoices = []) {
   const seenTitles = new Set(existingChoices.map((choice) => titleKey(choice.title)));
-  const seenMainIngredients = new Set(existingChoices.map((choice) => titleKey(choice.ingredients[0] || "")));
+  const seenChoiceFingerprints = new Set(existingChoices.map(choiceFingerprint));
   return (Array.isArray(rawChoices) ? rawChoices : []).flatMap((item) => {
     if (!hasRequiredShape(item)) return [];
     const title = cleanText(item.title, 120);
@@ -220782,10 +220787,10 @@ function validateInternalDinnerChoices(rawChoices, preferences, existingChoices 
     };
     if (!passesHardConstraints(choice, preferences)) return [];
     if (preferences.readyToEatUnderMins && choice.totalTime > preferences.readyToEatUnderMins) return [];
-    const mainIngredientKey = titleKey(choice.ingredients[0] || "");
-    if (!mainIngredientKey || seenMainIngredients.has(mainIngredientKey)) return [];
+    const fingerprint = choiceFingerprint(choice);
+    if (!fingerprint || seenChoiceFingerprints.has(fingerprint)) return [];
     seenTitles.add(key);
-    seenMainIngredients.add(mainIngredientKey);
+    seenChoiceFingerprints.add(fingerprint);
     return [choice];
   }).slice(0, 3);
 }
@@ -221233,7 +221238,7 @@ async function generateInternalDinnerChoices(brief, preferences) {
     `Cooking fats: ${(preferences.cookingFats || []).join(", ") || "Any"}`,
     `Offal: ${preferences.includeOffal ? "Allowed" : "Excluded"}`
   ].join("\n");
-  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in \xB0C only, between 120\xB0C and 240\xB0C. If a choice contains meat, poultry or fish, include a clear instruction to cook it thoroughly before serving. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction.
+  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use as many ingredients and steps as the recipe needs. Do not default every choice to four items: most should have five to eight ingredients and four to six steps, while a genuinely simple dinner may be shorter. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in \xB0C only, between 120\xB0C and 240\xB0C. If a choice contains meat, poultry or fish, include a clear instruction to cook it thoroughly before serving. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. A core ingredient may appear in more than one choice when the cooking approach or flavour direction is genuinely different.
 
 HARD RESTRICTIONS:
 ${restrictions}
@@ -221284,10 +221289,10 @@ Return JSON only.`;
   if (initialChoices.length === 3) return initialChoices;
   const missingCount = 3 - initialChoices.length;
   const excludedTitles = initialChoices.map((choice) => choice.title).join("; ") || "None";
-  const excludedMainIngredients = initialChoices.map((choice) => choice.ingredients[0]).filter(Boolean).join("; ") || "None";
+  const excludedApproaches = initialChoices.map((choice) => `${choice.title}: ${choice.instructions[0] || choice.cuisine}`).join("; ") || "None";
   const recoveredChoices = validateInternalDinnerChoices(
     await requestChoices(
-      `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Do not use these main ingredients: ${excludedMainIngredients}.`,
+      `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Use a different cooking approach or flavour direction from: ${excludedApproaches}.`,
       `${systemInstruction}
 
 RECOVERY: The first response was under-filled after validation. Return exactly ${missingCount} additional, distinct choices that preserve every hard restriction.`
@@ -235413,7 +235418,7 @@ function createApp() {
         });
         return res.status(503).json({
           ok: false,
-          error: "We could not produce three distinct choices that meet every restriction. Try a broader brief or adjust the restrictions."
+          error: "We could not create three sufficiently different choices this time. Please try again."
         });
       }
       if (searchIdentity.isAnonymous) {
