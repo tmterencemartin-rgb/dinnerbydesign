@@ -10,6 +10,7 @@ const stringList = (value: unknown, minimum = 0): string[] => (
 ).filter(item => item.length <= 240).slice(0, Math.max(minimum, 24));
 
 const cleanText = (value: unknown, limit: number) => String(value || '').replace(/\s+/g, ' ').trim().slice(0, limit);
+const cleanInstruction = (value: string) => value.replace(/^\s*\d+\s*[.)]\s*/, '').trim();
 
 const toNumber = (value: unknown, fallback: number) => {
   const parsed = Number(value);
@@ -18,11 +19,50 @@ const toNumber = (value: unknown, fallback: number) => {
 
 const titleKey = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
+const IMPERIAL_MEASURE_PATTERN = /\b(?:oz|ounces?|lb|lbs|pounds?|cups?|fahrenheit|°\s*f)\b/i;
+const METRIC_MEASURE_PATTERN = /\b\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\b/i;
+const QUANTITY_PATTERN = /^\s*(?:\d+(?:[./]\d+)?|½|¼|¾|one\b|two\b|three\b|four\b|half\b)/i;
+const OVEN_TEMPERATURE_PATTERN = /(\d{2,3})\s*°?\s*c\b/gi;
+const ANIMAL_PROTEIN_PATTERN = /\b(?:chicken|turkey|poultry|beef|pork|lamb|duck|fish|salmon|cod|haddock|tuna|prawn|seafood|sausage|mince)\b/i;
+const COOK_THOROUGHLY_PATTERN = /\b(?:cook(?:ed)?\s+through|piping\s+hot|no\s+pink|opaque\s+and\s+flake|flakes?\s+easily)\b/i;
+
+const hasRealisticMetricIngredients = (ingredients: string[]): boolean => {
+  if (ingredients.some(ingredient => IMPERIAL_MEASURE_PATTERN.test(ingredient))) return false;
+  const quantifiedIngredients = ingredients.filter(ingredient => QUANTITY_PATTERN.test(ingredient));
+  return quantifiedIngredients.length >= Math.min(3, Math.ceil(ingredients.length * 0.6))
+    && ingredients.some(ingredient => METRIC_MEASURE_PATTERN.test(ingredient));
+};
+
+const hasSensibleOvenTemperature = (instructions: string[]): boolean => {
+  const method = instructions.join(' ');
+  if (IMPERIAL_MEASURE_PATTERN.test(method)) return false;
+  const temperatures = [...method.matchAll(OVEN_TEMPERATURE_PATTERN)].map(match => Number(match[1]));
+  if (/\b(?:oven|roast|bake)\b/i.test(method) && temperatures.length === 0) return false;
+  return temperatures.every(temperature => temperature >= 120 && temperature <= 240);
+};
+
+const hasSafeProteinCookingGuidance = (ingredients: string[], instructions: string[]): boolean => {
+  if (!ANIMAL_PROTEIN_PATTERN.test(ingredients.join(' '))) return true;
+  return COOK_THOROUGHLY_PATTERN.test(instructions.join(' '));
+};
+
+const hasRealisticPriceEstimate = (value: unknown): boolean => {
+  const costText = cleanText(value, 30);
+  const match = costText.match(/£\s*(\d+(?:\.\d{1,2})?)/);
+  if (!match) return false;
+  const price = Number(match[1]);
+  return Number.isFinite(price) && price >= 0.2 && price <= 25;
+};
+
 const hasRequiredShape = (item: any): item is InternalDinnerChoice => (
   cleanText(item?.title, 120).length >= 4 &&
   cleanText(item?.description, 360).length >= 20 &&
   stringList(item?.ingredients).length >= 3 &&
-  stringList(item?.instructions).length >= 2
+  stringList(item?.instructions).length >= 2 &&
+  hasRealisticMetricIngredients(stringList(item?.ingredients)) &&
+  hasSensibleOvenTemperature(stringList(item?.instructions)) &&
+  hasSafeProteinCookingGuidance(stringList(item?.ingredients), stringList(item?.instructions)) &&
+  hasRealisticPriceEstimate(item?.costPerPortion)
 );
 
 export function validateInternalDinnerChoices(
@@ -45,10 +85,9 @@ export function validateInternalDinnerChoices(
         title,
         description: cleanText(item.description, 360),
         ingredients: stringList(item.ingredients),
-        instructions: stringList(item.instructions),
+        instructions: stringList(item.instructions).map(cleanInstruction).filter(Boolean),
         cuisine: cleanText(item.cuisine, 80) || 'Home cooking',
         matchReason: cleanText(item.matchReason, 240),
-        caloriesPerPortion: Math.max(0, Math.round(toNumber(item.caloriesPerPortion, 0))) || undefined,
         costPerPortion: cleanText(item.costPerPortion, 30) || undefined,
         totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, preferences.servings || 2)))),
         totalTime: Math.min(240, Math.max(5, Math.round(toNumber(item.totalTime, 30)))),
@@ -61,6 +100,7 @@ export function validateInternalDinnerChoices(
       };
 
       if (!passesHardConstraints(choice, preferences)) return [];
+      if (preferences.readyToEatUnderMins && choice.totalTime > preferences.readyToEatUnderMins) return [];
       const mainIngredientKey = titleKey(choice.ingredients[0] || '');
       if (!mainIngredientKey || seenMainIngredients.has(mainIngredientKey)) return [];
       seenTitles.add(key);

@@ -15,7 +15,7 @@ export const PublishedRecipeLinkCard: React.FC<PublishedRecipeLinkCardProps> = (
   const note = getDisplayMatchReason(recipe.matchReason, recipe.title, query);
 
   return (
-    <article className="border-y border-dbd-rule/70 bg-white px-3 py-3 sm:px-4 sm:py-4">
+    <article className="border-y border-dbd-rule/70 bg-white px-1 py-3 sm:px-1 sm:py-4">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-dbd-accent">Published recipe</p>
       <h3 className="mt-1 text-[15px] font-semibold leading-5 text-dbd-ink">{recipe.title}</h3>
       <p className="mt-1 text-[11px] font-medium text-dbd-ink-3">From {publisher}</p>

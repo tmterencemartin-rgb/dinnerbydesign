@@ -1441,7 +1441,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             className="space-y-1.5 sm:space-y-3 pb-16 bg-transparent max-w-4xl mx-auto w-full"
           >
             {resultsHeading && (
-              <div className="border-b border-dbd-rule/60 px-3 pb-2 sm:px-4 sm:pb-2.5">
+              <div className="border-b border-dbd-rule/60 px-1 pb-2 sm:px-1 sm:pb-2.5">
                 <h2 className="text-[13px] sm:text-[15px] font-bold text-dbd-ink tracking-tight leading-snug">
                   {resultsHeading}
                 </h2>

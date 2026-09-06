@@ -86,6 +86,16 @@ interface ClientErrorEvent {
   createdAt?: Timestamp | null;
 }
 
+interface AiRecipeFeedbackEvent {
+  id: string;
+  feedbackKind?: 'rating' | 'problem' | string;
+  rating?: -1 | 0 | 1 | number;
+  problemType?: string;
+  recipeTitle?: string;
+  userId?: string;
+  createdAt?: Timestamp | null;
+}
+
 interface AdminAccessEvent {
   id: string;
   event?: string;
@@ -129,8 +139,10 @@ export const AdminDashboard: React.FC = () => {
   const [searchDeliveryEvents, setSearchDeliveryEvents] = useState<SearchDeliveryEvent[]>([]);
   const [searchCanaryEvents, setSearchCanaryEvents] = useState<SearchCanaryEvent[]>([]);
   const [clientErrorEvents, setClientErrorEvents] = useState<ClientErrorEvent[]>([]);
+  const [aiRecipeFeedbackEvents, setAiRecipeFeedbackEvents] = useState<AiRecipeFeedbackEvent[]>([]);
   const [adminAccessEvents, setAdminAccessEvents] = useState<AdminAccessEvent[]>([]);
   const [clientErrorsOpen, setClientErrorsOpen] = useState(false);
+  const [aiRecipeFeedbackOpen, setAiRecipeFeedbackOpen] = useState(false);
   const [monitoringOpen, setMonitoringOpen] = useState(false);
   const [searchWindow, setSearchWindow] = useState<'24h' | '7d' | 'all'>('24h');
   const [searchSourceFilter, setSearchSourceFilter] = useState<'all' | 'cook' | 'ready-made'>('all');
@@ -467,6 +479,21 @@ export const AdminDashboard: React.FC = () => {
           ...doc.data(),
           id: doc.id
         })) as ClientErrorEvent[]);
+
+        try {
+          const feedbackSnapshot = await getDocs(query(
+            collection(db, 'feedback'),
+            orderBy('createdAt', 'desc'),
+            limit(80)
+          ));
+          setAiRecipeFeedbackEvents(feedbackSnapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          })) as AiRecipeFeedbackEvent[]);
+        } catch (error) {
+          console.warn('AI recipe feedback is unavailable:', error);
+          setAiRecipeFeedbackEvents([]);
+        }
 
         try {
           const adminAccessSnapshot = await getDocs(query(
@@ -1591,6 +1618,49 @@ export const AdminDashboard: React.FC = () => {
                   <p>Last administrator dashboard access: {latestAdminAccess ? `${formatDateTime(latestAdminAccess.createdAt)} · ${latestAdminAccess.deviceClass || 'unknown'}` : 'Not recorded yet'}.</p>
                   <p>Backup verification is read-only and activates after a Firestore daily schedule, backup-viewer permission and the monitoring flag are configured.</p>
                 </div>
+              </div>}
+            </div>
+            <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
+              <button
+                type="button"
+                onClick={() => setAiRecipeFeedbackOpen(previous => !previous)}
+                aria-expanded={aiRecipeFeedbackOpen}
+                aria-controls="ai-recipe-feedback-panel"
+                className="flex w-full items-center justify-between gap-3 text-left"
+              >
+                <span>
+                  <span className="flex items-center gap-1.5">
+                    <Activity className="h-4 w-4 text-gray-500" aria-hidden="true" />
+                    <span className="text-[13px] font-bold text-gray-950">AI-created recipe feedback</span>
+                  </span>
+                  <span className="mt-1 block text-[11px] font-medium text-gray-500">Ratings and flagged problems, retained with the recipe details for review.</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <span className="rounded bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-gray-500">{aiRecipeFeedbackEvents.length} recent</span>
+                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${aiRecipeFeedbackOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </span>
+              </button>
+              {aiRecipeFeedbackOpen && <div id="ai-recipe-feedback-panel" className="mt-3 border-t border-gray-100 pt-3">
+                {aiRecipeFeedbackEvents.length === 0 ? (
+                  <p className="text-[11px] font-medium text-gray-500">No AI-created recipe feedback has been recorded.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {aiRecipeFeedbackEvents.slice(0, 12).map(event => (
+                      <div key={event.id} className="rounded border border-gray-100 bg-white p-2.5">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-tight text-gray-500">
+                            {event.feedbackKind === 'problem'
+                              ? `Flagged: ${event.problemType?.replaceAll('_', ' ') || 'other'}`
+                              : event.rating && event.rating > 0 ? 'Rated useful' : 'Rated needs work'}
+                          </span>
+                          <span className="text-[10px] font-medium text-gray-500">{formatDateTime(event.createdAt)}</span>
+                        </div>
+                        <p className="mt-1 text-[11px] font-semibold leading-4 text-gray-800">{event.recipeTitle || 'Untitled recipe'}</p>
+                        <p className="mt-1 font-mono text-[10px] text-gray-500">User {formatShortId(event.userId || 'unknown')}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>}
             </div>
             <div className="rounded border border-gray-200 bg-gray-50/40 p-3">

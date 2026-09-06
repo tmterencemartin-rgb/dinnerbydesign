@@ -13,8 +13,8 @@ const preferences: UserPreferences = {
 const validChoice: Recipe = {
   title: 'Smoky lentil and pepper bowls',
   description: 'Warm lentils, roasted peppers and herby yoghurt make a satisfying weeknight dinner.',
-  ingredients: ['Green lentils', 'Red pepper', 'Spinach', 'Greek yoghurt'],
-  instructions: ['Roast the pepper until softened.', 'Warm the lentils and serve with spinach and yoghurt.'],
+  ingredients: ['200g green lentils', '1 red pepper', '100g spinach', '150g Greek yoghurt'],
+  instructions: ['Roast the pepper at 200°C until softened.', 'Warm the lentils and serve with spinach and yoghurt.'],
   cuisine: 'British-inspired', matchReason: 'Uses familiar ingredients in a quick, meat-free dinner.',
   totalServings: 2, totalTime: 30, costPerPortion: '£1.80', saladType: 'none',
   isVegetarian: true, isPescatarian: true, isVegan: false, dietFlagsVerified: true
@@ -24,8 +24,8 @@ describe('validateInternalDinnerChoices', () => {
   it('keeps three distinct choices that meet hard constraints', () => {
     const results = validateInternalDinnerChoices([
       validChoice,
-      { ...validChoice, title: 'Tomato and bean traybake', ingredients: ['Butter beans', 'Tomato', 'Courgette', 'Olive oil'] },
-      { ...validChoice, title: 'Mushroom barley skillet', ingredients: ['Pearl barley', 'Mushrooms', 'Kale', 'Vegetable stock'] }
+      { ...validChoice, title: 'Tomato and bean traybake', ingredients: ['400g butter beans', '2 tomatoes', '1 courgette', '1 tbsp olive oil'] },
+      { ...validChoice, title: 'Mushroom barley skillet', ingredients: ['150g pearl barley', '250g mushrooms', '100g kale', '500ml vegetable stock'] }
     ], preferences);
     expect(results).toHaveLength(3);
   });
@@ -34,7 +34,7 @@ describe('validateInternalDinnerChoices', () => {
     const results = validateInternalDinnerChoices([
       validChoice,
       { ...validChoice, title: 'Smoky Lentil and Pepper Bowls' },
-      { ...validChoice, title: 'Chicken and pepper bowls', ingredients: ['Chicken', 'Pepper', 'Spinach', 'Yoghurt'], isVegetarian: false, isPescatarian: false }
+      { ...validChoice, title: 'Chicken and pepper bowls', ingredients: ['300g chicken', '1 pepper', '100g spinach', '150g yoghurt'], instructions: ['Cook the chicken until piping hot throughout.', 'Warm the vegetables and serve with yoghurt.'], isVegetarian: false, isPescatarian: false }
     ], preferences);
     expect(results).toHaveLength(1);
   });
@@ -47,11 +47,43 @@ describe('validateInternalDinnerChoices', () => {
     expect(results).toHaveLength(1);
   });
 
+  it('removes source numbering from method steps', () => {
+    const results = validateInternalDinnerChoices([
+      { ...validChoice, instructions: ['1. Roast the pepper at 200°C until softened.', '2) Warm the lentils and serve with spinach and yoghurt.'] }
+    ], preferences);
+
+    expect(results[0]?.instructions).toEqual([
+      'Roast the pepper at 200°C until softened.',
+      'Warm the lentils and serve with spinach and yoghurt.'
+    ]);
+  });
+
   it('rejects a recovery choice that repeats an existing main ingredient', () => {
     const results = validateInternalDinnerChoices([
       { ...validChoice, title: 'Lentil and kale bowls' },
-      { ...validChoice, title: 'Courgette and bean skillet', ingredients: ['Courgette', 'Butter beans', 'Tomato', 'Olive oil'] }
+      { ...validChoice, title: 'Courgette and bean skillet', ingredients: ['1 courgette', '400g butter beans', '2 tomatoes', '1 tbsp olive oil'] }
     ], preferences, [validChoice]);
     expect(results.map(choice => choice.title)).toEqual(['Courgette and bean skillet']);
+  });
+
+  it('rejects unmeasured or imperial ingredient lists and implausible price estimates', () => {
+    const results = validateInternalDinnerChoices([
+      { ...validChoice, title: 'Unmeasured lentils', ingredients: ['Lentils', 'Pepper', 'Spinach', 'Yoghurt'] },
+      { ...validChoice, title: 'Imperial lentils', ingredients: ['8 oz lentils', '1 red pepper', '100g spinach', '150g yoghurt'] },
+      { ...validChoice, title: 'Overpriced lentils', costPerPortion: '£40.00' }
+    ], preferences);
+
+    expect(results).toEqual([]);
+  });
+
+  it('rejects unsafe protein steps, unsuitable oven temperatures and timings beyond the saved limit', () => {
+    const unrestrictedPreferences = { ...preferences, dietaryRule: 'none' as const, readyToEatUnderMins: 25 };
+    const results = validateInternalDinnerChoices([
+      { ...validChoice, title: 'Chicken without safety step', ingredients: ['300g chicken', '1 red pepper', '100g spinach', '150g yoghurt'], instructions: ['Fry the chicken.', 'Stir through the vegetables and yoghurt.'], isVegetarian: false, isPescatarian: false },
+      { ...validChoice, title: 'Hot traybake', ingredients: ['300g chicken', '1 red pepper', '100g spinach', '150g yoghurt'], instructions: ['Bake at 300°C until piping hot throughout.', 'Serve with the yoghurt.'], isVegetarian: false, isPescatarian: false },
+      { ...validChoice, title: 'Slow traybake', ingredients: ['300g chicken', '1 red pepper', '100g spinach', '150g yoghurt'], instructions: ['Bake at 200°C until piping hot throughout.', 'Serve with the yoghurt.'], totalTime: 40, isVegetarian: false, isPescatarian: false }
+    ], unrestrictedPreferences);
+
+    expect(results).toEqual([]);
   });
 });

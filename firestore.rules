@@ -297,7 +297,13 @@ service cloud.firestore {
     }
 
     match /feedback/{feedbackId} {
-      allow create: if isAuthenticated();
+      allow create: if isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.type == 'ai_created_recipe' &&
+        (request.resource.data.feedbackKind == 'rating' || request.resource.data.feedbackKind == 'problem') &&
+        (request.resource.data.rating == -1 || request.resource.data.rating == 0 || request.resource.data.rating == 1) &&
+        request.resource.data.problemType is string && request.resource.data.problemType.size() <= 40 &&
+        request.resource.data.recipeTitle is string && request.resource.data.recipeTitle.size() <= 120;
       allow read: if isAdmin();
     }
 

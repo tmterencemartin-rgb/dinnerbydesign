@@ -220719,12 +220719,42 @@ function passesHardConstraints(recipe, preferences) {
 // src/lib/internalDinnerPilot.ts
 var stringList = (value, minimum = 0) => (Array.isArray(value) ? value.map((item) => String(item || "").trim()).filter(Boolean).slice(0, 24) : []).filter((item) => item.length <= 240).slice(0, Math.max(minimum, 24));
 var cleanText = (value, limit2) => String(value || "").replace(/\s+/g, " ").trim().slice(0, limit2);
+var cleanInstruction = (value) => value.replace(/^\s*\d+\s*[.)]\s*/, "").trim();
 var toNumber = (value, fallback) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 var titleKey = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2;
+var IMPERIAL_MEASURE_PATTERN = /\b(?:oz|ounces?|lb|lbs|pounds?|cups?|fahrenheit|°\s*f)\b/i;
+var METRIC_MEASURE_PATTERN = /\b\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\b/i;
+var QUANTITY_PATTERN = /^\s*(?:\d+(?:[./]\d+)?|½|¼|¾|one\b|two\b|three\b|four\b|half\b)/i;
+var OVEN_TEMPERATURE_PATTERN = /(\d{2,3})\s*°?\s*c\b/gi;
+var ANIMAL_PROTEIN_PATTERN = /\b(?:chicken|turkey|poultry|beef|pork|lamb|duck|fish|salmon|cod|haddock|tuna|prawn|seafood|sausage|mince)\b/i;
+var COOK_THOROUGHLY_PATTERN = /\b(?:cook(?:ed)?\s+through|piping\s+hot|no\s+pink|opaque\s+and\s+flake|flakes?\s+easily)\b/i;
+var hasRealisticMetricIngredients = (ingredients) => {
+  if (ingredients.some((ingredient) => IMPERIAL_MEASURE_PATTERN.test(ingredient))) return false;
+  const quantifiedIngredients = ingredients.filter((ingredient) => QUANTITY_PATTERN.test(ingredient));
+  return quantifiedIngredients.length >= Math.min(3, Math.ceil(ingredients.length * 0.6)) && ingredients.some((ingredient) => METRIC_MEASURE_PATTERN.test(ingredient));
+};
+var hasSensibleOvenTemperature = (instructions) => {
+  const method = instructions.join(" ");
+  if (IMPERIAL_MEASURE_PATTERN.test(method)) return false;
+  const temperatures = [...method.matchAll(OVEN_TEMPERATURE_PATTERN)].map((match2) => Number(match2[1]));
+  if (/\b(?:oven|roast|bake)\b/i.test(method) && temperatures.length === 0) return false;
+  return temperatures.every((temperature) => temperature >= 120 && temperature <= 240);
+};
+var hasSafeProteinCookingGuidance = (ingredients, instructions) => {
+  if (!ANIMAL_PROTEIN_PATTERN.test(ingredients.join(" "))) return true;
+  return COOK_THOROUGHLY_PATTERN.test(instructions.join(" "));
+};
+var hasRealisticPriceEstimate = (value) => {
+  const costText = cleanText(value, 30);
+  const match2 = costText.match(/£\s*(\d+(?:\.\d{1,2})?)/);
+  if (!match2) return false;
+  const price = Number(match2[1]);
+  return Number.isFinite(price) && price >= 0.2 && price <= 25;
+};
+var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2 && hasRealisticMetricIngredients(stringList(item?.ingredients)) && hasSensibleOvenTemperature(stringList(item?.instructions)) && hasSafeProteinCookingGuidance(stringList(item?.ingredients), stringList(item?.instructions)) && hasRealisticPriceEstimate(item?.costPerPortion);
 function validateInternalDinnerChoices(rawChoices, preferences, existingChoices = []) {
   const seenTitles = new Set(existingChoices.map((choice) => titleKey(choice.title)));
   const seenMainIngredients = new Set(existingChoices.map((choice) => titleKey(choice.ingredients[0] || "")));
@@ -220737,10 +220767,9 @@ function validateInternalDinnerChoices(rawChoices, preferences, existingChoices 
       title,
       description: cleanText(item.description, 360),
       ingredients: stringList(item.ingredients),
-      instructions: stringList(item.instructions),
+      instructions: stringList(item.instructions).map(cleanInstruction).filter(Boolean),
       cuisine: cleanText(item.cuisine, 80) || "Home cooking",
       matchReason: cleanText(item.matchReason, 240),
-      caloriesPerPortion: Math.max(0, Math.round(toNumber(item.caloriesPerPortion, 0))) || void 0,
       costPerPortion: cleanText(item.costPerPortion, 30) || void 0,
       totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, preferences.servings || 2)))),
       totalTime: Math.min(240, Math.max(5, Math.round(toNumber(item.totalTime, 30)))),
@@ -220752,6 +220781,7 @@ function validateInternalDinnerChoices(rawChoices, preferences, existingChoices 
       convenienceProfile: "scratch"
     };
     if (!passesHardConstraints(choice, preferences)) return [];
+    if (preferences.readyToEatUnderMins && choice.totalTime > preferences.readyToEatUnderMins) return [];
     const mainIngredientKey = titleKey(choice.ingredients[0] || "");
     if (!mainIngredientKey || seenMainIngredients.has(mainIngredientKey)) return [];
     seenTitles.add(key);
@@ -221203,7 +221233,7 @@ async function generateInternalDinnerChoices(brief, preferences) {
     `Cooking fats: ${(preferences.cookingFats || []).join(", ") || "Any"}`,
     `Offal: ${preferences.includeOffal ? "Allowed" : "Excluded"}`
   ].join("\n");
-  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, or a preamble. Each choice needs realistic ingredients with quantities, clear numbered-style steps, an honest time estimate, an estimated cost per portion, and a short reason it fits. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction.
+  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in \xB0C only, between 120\xB0C and 240\xB0C. If a choice contains meat, poultry or fish, include a clear instruction to cook it thoroughly before serving. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. Every choice must differ meaningfully in its main ingredient, cooking approach, or flavour direction.
 
 HARD RESTRICTIONS:
 ${restrictions}
@@ -221223,7 +221253,6 @@ Return JSON only.`;
             instructions: { type: Type.ARRAY, items: { type: Type.STRING } },
             cuisine: { type: Type.STRING },
             matchReason: { type: Type.STRING },
-            caloriesPerPortion: { type: Type.NUMBER },
             costPerPortion: { type: Type.STRING },
             totalServings: { type: Type.NUMBER },
             totalTime: { type: Type.NUMBER },
@@ -221232,7 +221261,7 @@ Return JSON only.`;
             isPescatarian: { type: Type.BOOLEAN },
             isVegan: { type: Type.BOOLEAN }
           },
-          required: ["title", "description", "ingredients", "instructions", "cuisine", "matchReason", "totalServings", "totalTime", "saladType", "isVegetarian", "isPescatarian", "isVegan"]
+          required: ["title", "description", "ingredients", "instructions", "cuisine", "matchReason", "costPerPortion", "totalServings", "totalTime", "saladType", "isVegetarian", "isPescatarian", "isVegan"]
         }
       }
     },

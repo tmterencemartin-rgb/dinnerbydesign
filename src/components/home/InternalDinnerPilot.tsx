@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Flag, Loader2, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
 import { getSearchAuthToken } from '../../lib/searchAuth';
 import type { InternalDinnerChoice } from '../../lib/internalDinnerPilot';
 import { RecipeActionRow } from '../RecipeActionRow';
 import { useAuth } from '../../contexts/AuthContext';
 import { isSameRecipe } from '../../lib/recipeUtils';
+import { db } from '../../firebase';
 
 interface AiCreatedDinnerSearchProps {
   preferences: unknown;
@@ -15,9 +17,19 @@ interface AiCreatedDinnerSearchProps {
 
 const choiceMeta = (choice: InternalDinnerChoice) => [
   `${choice.totalTime} mins`,
-  choice.costPerPortion,
-  choice.caloriesPerPortion ? `${choice.caloriesPerPortion} kcal pp` : null
+  choice.costPerPortion ? `Estimated ${choice.costPerPortion}` : null
 ].filter(Boolean).join(' · ');
+
+type FeedbackKind = 'rating' | 'problem';
+type ProblemType = 'quantity_or_timing' | 'dietary_or_allergy' | 'cooking_instruction' | 'price_estimate' | 'other';
+
+const problemLabels: Record<ProblemType, string> = {
+  quantity_or_timing: 'Quantity or timing',
+  dietary_or_allergy: 'Dietary or allergy concern',
+  cooking_instruction: 'Cooking instruction',
+  price_estimate: 'Price estimate',
+  other: 'Other'
+};
 
 export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   preferences,
@@ -28,7 +40,10 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const { accessStatus, planner, removeRecipe, saveRecipe, savedRecipes, showToast, updatePlanner } = useAuth();
+  const [problemChoiceKey, setProblemChoiceKey] = useState<string | null>(null);
+  const [feedbackState, setFeedbackState] = useState<Record<string, string>>({});
+  const [submittingFeedbackKey, setSubmittingFeedbackKey] = useState<string | null>(null);
+  const { accessStatus, planner, removeRecipe, saveRecipe, savedRecipes, showToast, updatePlanner, user } = useAuth();
 
   const saveChoice = async (choice: InternalDinnerChoice) => {
     const savedId = await saveRecipe(choice);
@@ -47,6 +62,51 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
     const result = await updatePlanner(day, choice);
     if (!result) throw new Error('Schedule did not return a recipe id.');
     showToast(`Scheduled for ${day}. Shopping list updated.`);
+  };
+
+  const submitFeedback = async (
+    choice: InternalDinnerChoice,
+    choiceKey: string,
+    feedbackKind: FeedbackKind,
+    rating: -1 | 0 | 1,
+    problemType: ProblemType | 'none'
+  ) => {
+    if (!user) {
+      showToast('Sign in to rate or flag a recipe.');
+      return;
+    }
+
+    setSubmittingFeedbackKey(choiceKey);
+    try {
+      await addDoc(collection(db, 'feedback'), {
+        type: 'ai_created_recipe',
+        feedbackKind,
+        rating,
+        problemType,
+        recipeTitle: choice.title,
+        recipeSnapshot: {
+          ingredients: choice.ingredients,
+          instructions: choice.instructions,
+          totalServings: choice.totalServings,
+          totalTime: choice.totalTime,
+          costPerPortion: choice.costPerPortion || null
+        },
+        userId: user.uid,
+        createdAt: serverTimestamp()
+      });
+      setFeedbackState(previous => ({
+        ...previous,
+        [choiceKey]: feedbackKind === 'rating'
+          ? (rating > 0 ? 'Rated useful' : 'Rated needs work')
+          : 'Problem flagged'
+      }));
+      setProblemChoiceKey(null);
+      showToast(feedbackKind === 'rating' ? 'Thanks for the rating.' : 'Thanks, the problem has been flagged.');
+    } catch {
+      showToast('We could not save that feedback. Please try again.');
+    } finally {
+      setSubmittingFeedbackKey(null);
+    }
   };
 
   const generateChoices = async () => {
@@ -79,15 +139,13 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
 
   return (
     <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="ai-created-recipe-heading">
-      <div className="flex items-start gap-3">
-        <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-dbd-accent" aria-hidden="true" />
-        <div className="min-w-0 flex-1">
-          <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
-          <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
-            Create three original recipes from your brief and saved preferences. They do not use published recipes or source links.
-          </p>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
+      <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
+      <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-dbd-accent">Created by DinnerByDesign AI</p>
+      <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
+        Original recipes shaped around your brief and saved preferences, with UK metric quantities, timings and price estimates.
+      </p>
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+        <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
             <input
               id="internal-dinner-brief"
               value={brief}
@@ -108,13 +166,11 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
               {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Sparkles className="h-4 w-4" aria-hidden="true" />}
               {isGenerating ? 'Creating' : 'Create three choices'}
             </button>
-          </div>
-          {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
-        </div>
       </div>
+      {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
 
       {choices.length > 0 && (
-        <div className="mt-4 grid gap-3 lg:grid-cols-3" aria-live="polite">
+        <div className="mx-4 mt-4 grid gap-3 lg:grid-cols-3" aria-live="polite">
           {choices.map((choice, index) => (
             <article key={`${choice.title}-${index}`} className="rounded border border-gray-200 bg-white p-3">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-dbd-accent">Choice {index + 1}</p>
@@ -130,7 +186,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
               <ol className="mt-1 list-decimal space-y-1 pl-4 text-[11px] leading-4 text-dbd-ink-2">
                 {choice.instructions.map((step, stepIndex) => <li key={`${choice.title}-${stepIndex}`}>{step}</li>)}
               </ol>
-              <p className="mt-3 text-[10px] leading-4 text-dbd-ink-3">Check quantities and allergen suitability before cooking.</p>
+              <p className="mt-3 text-[10px] leading-4 text-dbd-ink-3">Estimates only. Check ingredients for allergies and cook meat, poultry and fish thoroughly before serving.</p>
               <div className="mt-3">
                 <RecipeActionRow
                   recipe={choice}
@@ -144,6 +200,60 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
                   saveDisabled={accessStatus === 'read_only'}
                 />
               </div>
+              {(() => {
+                const choiceKey = `${choice.title}-${index}`;
+                const isSubmitting = submittingFeedbackKey === choiceKey;
+                return (
+                  <div className="mt-3 border-t border-gray-100 pt-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-medium text-dbd-ink-3">Was this useful?</span>
+                      <button
+                        type="button"
+                        onClick={() => void submitFeedback(choice, choiceKey, 'rating', 1, 'none')}
+                        disabled={isSubmitting}
+                        className="inline-flex items-center gap-1 rounded border border-gray-200 px-2 py-1 text-[10px] font-semibold text-dbd-ink-2 hover:border-dbd-accent hover:text-dbd-accent disabled:opacity-50"
+                        aria-label={`Rate ${choice.title} as useful`}
+                      >
+                        <ThumbsUp className="h-3 w-3" aria-hidden="true" /> Useful
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void submitFeedback(choice, choiceKey, 'rating', -1, 'none')}
+                        disabled={isSubmitting}
+                        className="inline-flex items-center gap-1 rounded border border-gray-200 px-2 py-1 text-[10px] font-semibold text-dbd-ink-2 hover:border-dbd-accent hover:text-dbd-accent disabled:opacity-50"
+                        aria-label={`Rate ${choice.title} as needing work`}
+                      >
+                        <ThumbsDown className="h-3 w-3" aria-hidden="true" /> Needs work
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setProblemChoiceKey(current => current === choiceKey ? null : choiceKey)}
+                        disabled={isSubmitting}
+                        className="inline-flex items-center gap-1 text-[10px] font-semibold text-dbd-ink-3 hover:text-dbd-accent disabled:opacity-50"
+                        aria-expanded={problemChoiceKey === choiceKey}
+                      >
+                        <Flag className="h-3 w-3" aria-hidden="true" /> Flag a problem
+                      </button>
+                    </div>
+                    {problemChoiceKey === choiceKey && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {(Object.keys(problemLabels) as ProblemType[]).map(problemType => (
+                          <button
+                            key={problemType}
+                            type="button"
+                            onClick={() => void submitFeedback(choice, choiceKey, 'problem', 0, problemType)}
+                            disabled={isSubmitting}
+                            className="rounded bg-gray-50 px-2 py-1 text-[10px] font-medium text-dbd-ink-2 hover:bg-dbd-accent/10 hover:text-dbd-accent disabled:opacity-50"
+                          >
+                            {problemLabels[problemType]}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <p className="mt-2 text-[10px] leading-4 text-dbd-ink-3">{feedbackState[choiceKey] || 'Feedback is reviewed to improve future AI-created recipes.'}</p>
+                  </div>
+                );
+              })()}
             </article>
           ))}
         </div>
