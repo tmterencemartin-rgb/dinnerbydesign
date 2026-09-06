@@ -529,7 +529,13 @@ export const LandingView: React.FC = () => {
                   <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5">supermarket options</span>
                 </button>
                   </div>
-                  <p className="mb-6 text-center text-[11px] leading-4 text-dbd-ink-3">AI-created recipes are original DinnerByDesign suggestions. Published recipes open at their original source.</p>
+                  <p className="mb-6 text-center text-[11px] leading-4 text-dbd-ink-3">
+                    {sandboxSource === 'ai-created'
+                      ? 'AI-created recipes are original DinnerByDesign suggestions, shaped around your brief and preferences.'
+                      : sandboxSource === 'published'
+                        ? 'Published recipes open at their original source.'
+                        : 'Ready-made dinners are supermarket options. Check the product page for ingredients, allergens and heating instructions.'}
+                  </p>
 
                   {/* Fake Interactive Input String block */}
                   <div className="max-w-2xl mx-auto flex border border-dbd-rule bg-white shadow-sm overflow-hidden select-none hover:border-dbd-accent transition-all">
