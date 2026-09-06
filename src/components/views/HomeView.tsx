@@ -1219,6 +1219,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               onSave={handleSaveFilters}
               onReset={handleReset}
               source={source}
+              mode={searchMode}
               maxCalories={maxCalories}
               setMaxCalories={setMaxCalories}
               maxTotalTime={maxTotalTime}

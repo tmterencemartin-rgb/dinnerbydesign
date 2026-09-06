@@ -129,6 +129,7 @@ Offal is excluded from ordinary suggestions by default.
 - Explain inherited filtering when the available choices might otherwise appear incomplete.
 - Use plain-English empty states and errors.
 - Keep technical service status and routing details out of the ordinary interface.
+- Keep one saved preference set, but show only the controls relevant to the selected search mode. AI-created recipes use dietary, ingredient, time, cost, cuisine, cooking-method, cooking-fat, simplicity and lower-cost preferences. They do not use calorie or nutrition targets, trusted sources or preferred supermarkets because they do not provide verified nutrition figures or external listings. Published searches use trusted sources but not supermarkets. Ready-made searches use preferred supermarkets, and use cuisine rather than cooking-method or cooking-fat preferences.
 
 ## Public three-way discovery
 

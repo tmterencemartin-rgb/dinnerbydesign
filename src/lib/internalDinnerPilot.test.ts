@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Recipe, UserPreferences } from '../types';
-import { validateInternalDinnerChoices } from './internalDinnerPilot';
+import { getAiCreatedRecipePreferences, validateInternalDinnerChoices } from './internalDinnerPilot';
 
 const preferences: UserPreferences = {
   dietaryRule: 'vegetarian', saladPreference: 'all', allergies: [], nutritiousChoice: false,
@@ -68,6 +68,26 @@ describe('validateInternalDinnerChoices', () => {
       { ...validChoice, title: 'Courgette and bean skillet', ingredients: ['1 courgette', '400g butter beans', '2 tomatoes', '1 tbsp olive oil'] }
     ], preferences, [validChoice]);
     expect(results.map(choice => choice.title)).toEqual(['Lentil and kale bowls', 'Courgette and bean skillet']);
+  });
+
+  it('does not apply calorie or source settings to AI-created recipes', () => {
+    const applicable = getAiCreatedRecipePreferences({
+      ...preferences,
+      calorieCeiling: 500,
+      nutritiousChoice: true,
+      highOmega3: true,
+      highProtein: true,
+      preferredSourceIds: ['bbc-good-food'],
+      preferredSupermarkets: ['Tesco']
+    });
+
+    expect(applicable.calorieCeiling).toBeNull();
+    expect(applicable.nutritiousChoice).toBe(false);
+    expect(applicable.highOmega3).toBe(false);
+    expect(applicable.highProtein).toBe(false);
+    expect(applicable.preferredSourceIds).toEqual([]);
+    expect(applicable.preferredSupermarkets).toEqual([]);
+    expect(validateInternalDinnerChoices([validChoice], { ...preferences, calorieCeiling: 500 })).toHaveLength(1);
   });
 
   it('rejects unmeasured or imperial ingredient lists and implausible price estimates', () => {

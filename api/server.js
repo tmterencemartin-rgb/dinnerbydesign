@@ -220717,6 +220717,15 @@ function passesHardConstraints(recipe, preferences) {
 }
 
 // src/lib/internalDinnerPilot.ts
+var getAiCreatedRecipePreferences = (preferences) => ({
+  ...preferences,
+  calorieCeiling: null,
+  nutritiousChoice: false,
+  highOmega3: false,
+  highProtein: false,
+  preferredSupermarkets: [],
+  preferredSourceIds: []
+});
 var stringList = (value, minimum = 0) => (Array.isArray(value) ? value.map((item) => String(item || "").trim()).filter(Boolean).slice(0, 24) : []).filter((item) => item.length <= 240).slice(0, Math.max(minimum, 24));
 var cleanText = (value, limit2) => String(value || "").replace(/\s+/g, " ").trim().slice(0, limit2);
 var cleanInstruction = (value) => value.replace(/^\s*\d+\s*[.)]\s*/, "").trim();
@@ -220761,6 +220770,7 @@ var hasRealisticPriceEstimate = (value) => {
 };
 var hasRequiredShape = (item) => cleanText(item?.title, 120).length >= 4 && cleanText(item?.description, 360).length >= 20 && stringList(item?.ingredients).length >= 3 && stringList(item?.instructions).length >= 2 && hasRealisticMetricIngredients(stringList(item?.ingredients)) && hasSensibleOvenTemperature(stringList(item?.instructions)) && hasSafeProteinCookingGuidance(stringList(item?.ingredients), stringList(item?.instructions)) && hasRealisticPriceEstimate(item?.costPerPortion);
 function validateInternalDinnerChoices(rawChoices, preferences, existingChoices = []) {
+  const applicablePreferences = getAiCreatedRecipePreferences(preferences);
   const seenTitles = new Set(existingChoices.map((choice) => titleKey(choice.title)));
   const seenChoiceFingerprints = new Set(existingChoices.map(choiceFingerprint));
   return (Array.isArray(rawChoices) ? rawChoices : []).flatMap((item) => {
@@ -220776,7 +220786,7 @@ function validateInternalDinnerChoices(rawChoices, preferences, existingChoices 
       cuisine: cleanText(item.cuisine, 80) || "Home cooking",
       matchReason: cleanText(item.matchReason, 240),
       costPerPortion: cleanText(item.costPerPortion, 30) || void 0,
-      totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, preferences.servings || 2)))),
+      totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, applicablePreferences.servings || 2)))),
       totalTime: Math.min(240, Math.max(5, Math.round(toNumber(item.totalTime, 30)))),
       saladType: ["main", "side", "none"].includes(item.saladType) ? item.saladType : "none",
       isVegetarian: item.isVegetarian === true,
@@ -220785,8 +220795,8 @@ function validateInternalDinnerChoices(rawChoices, preferences, existingChoices 
       dietFlagsVerified: true,
       convenienceProfile: "scratch"
     };
-    if (!passesHardConstraints(choice, preferences)) return [];
-    if (preferences.readyToEatUnderMins && choice.totalTime > preferences.readyToEatUnderMins) return [];
+    if (!passesHardConstraints(choice, applicablePreferences)) return [];
+    if (applicablePreferences.readyToEatUnderMins && choice.totalTime > applicablePreferences.readyToEatUnderMins) return [];
     const fingerprint = choiceFingerprint(choice);
     if (!fingerprint || seenChoiceFingerprints.has(fingerprint)) return [];
     seenTitles.add(key);
@@ -221224,19 +221234,22 @@ async function generateInternalDinnerChoices(brief, preferences) {
   }
   const safeBrief = String(brief || "").replace(/\s+/g, " ").trim().slice(0, 500);
   if (!safeBrief) return [];
+  const applicablePreferences = getAiCreatedRecipePreferences(preferences);
   const restrictions = [
-    `Dietary rule: ${preferences.dietaryRule || "none"}`,
-    `Allergies: ${(preferences.allergies || []).join(", ") || "None"}`,
-    `Avoid: ${(preferences.exclusions || []).join(", ") || "None"}`,
-    `Religious or ethical requirements: ${(preferences.religiousEthical || []).join(", ") || "None"}`,
-    `Salad preference: ${preferences.saladPreference || "all"}`,
-    `Servings: ${preferences.servings || 2}`,
-    `Maximum time: ${preferences.readyToEatUnderMins || "None"} minutes`,
-    `Maximum cost per portion: ${preferences.budgetLimit ? `\xA3${preferences.budgetLimit}` : "None"}`,
-    `Maximum calories per portion: ${preferences.calorieCeiling || "None"}`,
-    `Cooking methods: ${(preferences.cookingMethods || []).join(", ") || "Any"}`,
-    `Cooking fats: ${(preferences.cookingFats || []).join(", ") || "Any"}`,
-    `Offal: ${preferences.includeOffal ? "Allowed" : "Excluded"}`
+    `Dietary rule: ${applicablePreferences.dietaryRule || "none"}`,
+    `Allergies: ${(applicablePreferences.allergies || []).join(", ") || "None"}`,
+    `Avoid: ${(applicablePreferences.exclusions || []).join(", ") || "None"}`,
+    `Religious or ethical requirements: ${(applicablePreferences.religiousEthical || []).join(", ") || "None"}`,
+    `Salad preference: ${applicablePreferences.saladPreference || "all"}`,
+    `Servings: ${applicablePreferences.servings || 2}`,
+    `Maximum time: ${applicablePreferences.readyToEatUnderMins || "None"} minutes`,
+    `Maximum cost per portion: ${applicablePreferences.budgetLimit ? `\xA3${applicablePreferences.budgetLimit}` : "None"}`,
+    `Cuisine preferences: ${(applicablePreferences.cuisinePreferences || []).join(", ") || "Any"}`,
+    `Cooking methods: ${(applicablePreferences.cookingMethods || []).join(", ") || "Any"}`,
+    `Cooking fats: ${(applicablePreferences.cookingFats || []).join(", ") || "Any"}`,
+    `Prefer simple recipes: ${applicablePreferences.isSimple ? "Yes" : "No"}`,
+    `Prefer lower-cost recipes: ${applicablePreferences.isLowCost ? "Yes" : "No"}`,
+    `Offal: ${applicablePreferences.includeOffal ? "Allowed" : "Excluded"}`
   ].join("\n");
   const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use as many ingredients and steps as the recipe needs. Do not default every choice to four items: most should have five to eight ingredients and four to six steps, while a genuinely simple dinner may be shorter. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in \xB0C only, between 120\xB0C and 240\xB0C. If a choice contains meat, poultry or fish, include a clear instruction to cook it thoroughly before serving. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. A core ingredient may appear in more than one choice when the cooking approach or flavour direction is genuinely different.
 
@@ -221284,7 +221297,7 @@ Return JSON only.`;
   };
   const initialChoices = validateInternalDinnerChoices(
     await requestChoices(`Dinner brief: "${safeBrief}". Return exactly three choices.`, systemInstruction),
-    preferences
+    applicablePreferences
   );
   if (initialChoices.length === 3) return initialChoices;
   const missingCount = 3 - initialChoices.length;
@@ -221297,7 +221310,7 @@ Return JSON only.`;
 
 RECOVERY: The first response was under-filled after validation. Return exactly ${missingCount} additional, distinct choices that preserve every hard restriction.`
     ),
-    preferences,
+    applicablePreferences,
     initialChoices
   );
   return [...initialChoices, ...recoveredChoices].slice(0, 3);
@@ -221536,14 +221549,14 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const activeMaxTime = searchParams.maxTotalTime || preferences?.readyToEatUnderMins || null;
   const activeCalorieLimit = searchParams.maxCalories || preferences?.calorieCeiling || null;
   const activeBudgetLimit = searchParams.maxCostPerPortion || preferences?.budgetLimit || null;
-  const activeCookingMethods = searchParams.cookingMethods || preferences?.cookingMethods || [];
+  const activeCookingMethods = isReadyMade ? [] : searchParams.cookingMethods || preferences?.cookingMethods || [];
   const activeCookingMethodHints = activeCookingMethods.length > 0 ? activeCookingMethods.map((method) => {
     const aliases = COOKING_METHOD_ALIASES[method] || [];
     return aliases.length > 0 ? `${method} (also: ${aliases.join(", ")})` : method;
   }).join("; ") : "Any";
   const activeCookingFats = filterCookingFatsForDiet(
     activeDietaryRule,
-    searchParams.cookingFats || preferences?.cookingFats || []
+    isReadyMade ? [] : searchParams.cookingFats || preferences?.cookingFats || []
   );
   const activeReligious = [.../* @__PURE__ */ new Set([
     ...preferences?.religiousEthical || [],

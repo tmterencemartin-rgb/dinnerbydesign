@@ -511,21 +511,21 @@ export const LandingView: React.FC = () => {
                   onClick={() => selectSandboxSource('ai-created')}
                   className={`py-2 px-2 text-center cursor-pointer transition-all ${sandboxSource === 'ai-created' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                 >
-                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">AI-created</span>
+                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">AI-created recipes</span>
                   <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5">tailored choices</span>
                 </button>
                 <button 
                   onClick={() => selectSandboxSource('published')}
                   className={`py-2 px-2 text-center cursor-pointer transition-all ${sandboxSource === 'published' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                 >
-                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">Published</span>
+                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">Published recipes</span>
                   <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5">open original source</span>
                 </button>
                 <button 
                   onClick={() => selectSandboxSource('ready-made')}
                   className={`py-2 px-2 text-center cursor-pointer transition-all ${sandboxSource === 'ready-made' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                 >
-                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">Ready-made</span>
+                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">Ready-made dinners</span>
                   <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5">supermarket options</span>
                 </button>
                   </div>

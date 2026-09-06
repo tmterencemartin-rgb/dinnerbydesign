@@ -8,12 +8,14 @@ import { useAuth } from '../../contexts/AuthContext';
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { dietaryRuleAllowsOffal } from '../../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../../lib/preferenceCompatibility';
+import type { SearchMode } from './SearchHeader';
 
 interface FilterOverlayProps {
   onClose: () => void;
   onSave: () => void;
   onReset: () => void;
   source: 'cook' | 'ready-made';
+  mode: SearchMode;
   
   // State from HomeView
   maxCalories: string;
@@ -71,7 +73,7 @@ interface FilterOverlayProps {
 
 export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
   const {
-    onClose, onSave, onReset, source,
+    onClose, onSave, onReset, source, mode,
     maxCalories, setMaxCalories,
     maxTotalTime, handleTotalTimeChange,
     maxHeatingTime, setMaxHeatingTime,
@@ -99,6 +101,16 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
   } = props;
 
   const { savePreferences, profile, showToast } = useAuth();
+  const isAiCreatedMode = mode === 'ai-created';
+  const isReadyMadeMode = mode === 'ready-made';
+  const showsSourcesOrStores = !isAiCreatedMode;
+  const showsCaloriesAndNutrition = !isAiCreatedMode;
+  const showsCookingMethodAndFats = !isReadyMadeMode;
+  const modePreferenceDescription = isAiCreatedMode
+    ? 'AI-created recipes use the applicable dietary, ingredient, time, cost and cooking preferences. Calorie and nutrition targets are not used because their estimates are not verified.'
+    : isReadyMadeMode
+      ? 'Ready-made searches use the applicable dietary, ingredient, time, cost and retailer preferences. Check the retailer page and packaging before buying or preparing a product.'
+      : 'Published searches use the applicable preferences to narrow and rank original source links. Check the publisher page for the final ingredient and nutrition details.';
 
   const dialogRef = React.useRef<HTMLDivElement>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -177,7 +189,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
 
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
     dietary: true,
-    sources: source === 'ready-made',
+    sources: isReadyMadeMode,
     timeBudget: false,
     cooking: false,
     goals: false,
@@ -316,19 +328,19 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     localAllergies.length +
     localReligiousEthical.length +
     localExcludeIngredients.length +
-    (source === 'cook' ? localPreferredSourceIds.length : localSupermarkets.length) +
+    (showsSourcesOrStores ? (source === 'cook' ? localPreferredSourceIds.length : localSupermarkets.length) : 0) +
     ((source === 'cook' ? localMaxTotalTime : localMaxHeatingTime) ? 1 : 0) +
     (localServings !== '2' ? 1 : 0) +
-    (localMaxCalories ? 1 : 0) +
+    (showsCaloriesAndNutrition && localMaxCalories ? 1 : 0) +
     (localMaxCostPerPortion ? 1 : 0) +
     localCuisines.length +
-    localCookingMethods.length +
-    localCookingFats.length +
-    (localNutritiousChoice ? 1 : 0) +
+    (showsCookingMethodAndFats ? localCookingMethods.length : 0) +
+    (showsCookingMethodAndFats ? localCookingFats.length : 0) +
+    (showsCaloriesAndNutrition && localNutritiousChoice ? 1 : 0) +
     (localIsSimple ? 1 : 0) +
     (localIsLowCost ? 1 : 0) +
-    (localHighOmega3 ? 1 : 0) +
-    (localHighProtein ? 1 : 0) +
+    (showsCaloriesAndNutrition && localHighOmega3 ? 1 : 0) +
+    (showsCaloriesAndNutrition && localHighProtein ? 1 : 0) +
     (localIncludeOffal ? 1 : 0);
 
   return (
@@ -365,7 +377,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </button>
           </div>
           <div className="text-[12.5px] mt-2 text-gray-500 leading-relaxed font-medium">
-            Set your preferences once. Every search uses them — diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources, preferred supermarkets. Nothing gets retyped. A search that knows you're cooking for one and avoiding nuts won't ask twice. Revise any time. Override for a single search.
+            {modePreferenceDescription}
           </div>
           <div className="mt-3 flex items-center justify-between gap-3">
             <span className="text-[11px] font-semibold text-gray-500">
@@ -627,7 +639,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
             </div>
 
             {/* Category 2: Sources & Stores */}
-            <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
+            {showsSourcesOrStores && <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
               <button
                 type="button"
                 onClick={() => toggleSection('sources')}
@@ -746,7 +758,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   )}
                 </div>
               )}
-            </div>
+            </div>}
 
             {/* Category 3: Time, Portions & Budget */}
             <div className="border border-gray-100 rounded-md overflow-hidden bg-white">
@@ -761,7 +773,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   {(() => {
                     const readyTimeActive = (source === 'cook' ? localMaxTotalTime : localMaxHeatingTime) ? 1 : 0;
                     const portionsActive = localServings !== '2' ? 1 : 0;
-                    const calActive = localMaxCalories ? 1 : 0;
+                    const calActive = showsCaloriesAndNutrition && localMaxCalories ? 1 : 0;
                     const costActive = localMaxCostPerPortion ? 1 : 0;
                     const cnt = readyTimeActive + portionsActive + calActive + costActive;
                     return cnt > 0 ? (
@@ -815,8 +827,9 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className={`grid grid-cols-1 ${showsCaloriesAndNutrition ? 'sm:grid-cols-2' : ''} gap-3`}>
                     {/* Calories */}
+                    {showsCaloriesAndNutrition &&
                     <div className="space-y-1.5">
                       <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Max calories</label>
                       <div className="relative">
@@ -829,7 +842,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-medium text-gray-500 uppercase">kcal</span>
                       </div>
-                    </div>
+                    </div>}
 
                     {/* Price */}
                     <div className="space-y-1.5">
@@ -868,9 +881,9 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
               >
                 <div className="flex items-center gap-2.5">
                   <Utensils className="w-4 h-4 text-gray-500" />
-                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Cooking preferences</span>
+                  <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">{isReadyMadeMode ? 'Taste preferences' : 'Cooking preferences'}</span>
                   {(() => {
-                    const cnt = localCuisines.length + localCookingMethods.length + localCookingFats.length;
+                    const cnt = localCuisines.length + (showsCookingMethodAndFats ? localCookingMethods.length + localCookingFats.length : 0);
                     return cnt > 0 ? (
                       <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
                     ) : null;
@@ -922,6 +935,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   </div>
 
                   {/* Cooking Methods */}
+                  {showsCookingMethodAndFats && <>
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-semibold text-gray-500 tracking-[0.02em] pl-0.5">Cooking methods</label>
                     <div className="relative mt-1">
@@ -992,6 +1006,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       </div>
                     )}
                   </div>
+                  </>}
                 </div>
               )}
             </div>
@@ -1007,11 +1022,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                   <Heart className="w-4 h-4 text-gray-500" />
                   <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Priorities</span>
                   {(() => {
-                    const cnt = (localNutritiousChoice ? 1 : 0) + 
+                    const cnt = (showsCaloriesAndNutrition && localNutritiousChoice ? 1 : 0) +
                                   (localIsSimple ? 1 : 0) + 
                                   (localIsLowCost ? 1 : 0) + 
-                                  (localHighOmega3 ? 1 : 0) +
-                                  (localHighProtein ? 1 : 0);
+                                  (showsCaloriesAndNutrition && localHighOmega3 ? 1 : 0) +
+                                  (showsCaloriesAndNutrition && localHighProtein ? 1 : 0);
                     return cnt > 0 ? (
                       <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full">{cnt}</span>
                     ) : null;
@@ -1032,37 +1047,42 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                       label: 'Wholesome Recipes', 
                       active: localNutritiousChoice, 
                       toggle: () => setLocalNutritiousChoice(!localNutritiousChoice), 
-                      tooltip: 'Prioritises recipes that are nutrient-dense and less processed as a default search preference.' 
+                      tooltip: 'Prioritises recipes that are nutrient-dense and less processed as a default search preference.',
+                      supported: showsCaloriesAndNutrition
                     },
                     { 
                       id: 'simple', 
                       label: 'Quick & Easy', 
                       active: localIsSimple, 
                       toggle: () => setLocalIsSimple(!localIsSimple), 
-                      tooltip: 'Prioritises recipes with fewer ingredients and steps as a default search preference.' 
+                      tooltip: 'Prioritises recipes with fewer ingredients and steps as a default search preference.',
+                      supported: true
                     },
                     { 
                       id: 'low-cost', 
                       label: 'Low Cost', 
                       active: localIsLowCost, 
                       toggle: () => setLocalIsLowCost(!localIsLowCost), 
-                      tooltip: 'Prioritises budget-friendly options based on typical market pricing.' 
+                      tooltip: 'Prioritises budget-friendly options based on typical market pricing.',
+                      supported: true
                     },
                     { 
                       id: 'omega3', 
                       label: 'High Omega-3', 
                       active: localHighOmega3, 
                       toggle: () => setLocalHighOmega3(!localHighOmega3), 
-                      tooltip: 'Prioritises heart-healthy ingredients rich in essential fatty acids (e.g. oily fish).' 
+                      tooltip: 'Prioritises heart-healthy ingredients rich in essential fatty acids (e.g. oily fish).',
+                      supported: showsCaloriesAndNutrition
                     },
                     { 
                       id: 'protein', 
                       label: 'High Protein', 
                       active: localHighProtein, 
                       toggle: () => setLocalHighProtein(!localHighProtein), 
-                      tooltip: 'Prioritises recipes with a higher protein-to-calorie ratio to support your nutrition goals.' 
+                      tooltip: 'Prioritises recipes with a higher protein-to-calorie ratio to support your nutrition goals.',
+                      supported: showsCaloriesAndNutrition
                     }
-                  ].map(item => (
+                  ].filter(item => item.supported).map(item => (
                     <div 
                       key={item.id} 
                       className="flex items-start justify-between p-3 bg-gray-50/70 border border-gray-100 rounded hover:border-gray-200 transition-colors gap-3"

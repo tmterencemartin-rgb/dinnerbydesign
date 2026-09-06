@@ -3,6 +3,21 @@ import { passesHardConstraints } from './dietarySafety';
 
 export type InternalDinnerChoice = Recipe;
 
+/**
+ * AI-created recipes do not provide verified nutrition data or use external
+ * publishers and retailers. Keep those saved preferences intact, while
+ * removing them from this specific generation route.
+ */
+export const getAiCreatedRecipePreferences = (preferences: UserPreferences): UserPreferences => ({
+  ...preferences,
+  calorieCeiling: null,
+  nutritiousChoice: false,
+  highOmega3: false,
+  highProtein: false,
+  preferredSupermarkets: [],
+  preferredSourceIds: []
+});
+
 const stringList = (value: unknown, minimum = 0): string[] => (
   Array.isArray(value)
     ? value.map(item => String(item || '').trim()).filter(Boolean).slice(0, 24)
@@ -75,6 +90,7 @@ export function validateInternalDinnerChoices(
   preferences: UserPreferences,
   existingChoices: InternalDinnerChoice[] = []
 ): InternalDinnerChoice[] {
+  const applicablePreferences = getAiCreatedRecipePreferences(preferences);
   const seenTitles = new Set(existingChoices.map(choice => titleKey(choice.title)));
   const seenChoiceFingerprints = new Set(existingChoices.map(choiceFingerprint));
 
@@ -94,7 +110,7 @@ export function validateInternalDinnerChoices(
         cuisine: cleanText(item.cuisine, 80) || 'Home cooking',
         matchReason: cleanText(item.matchReason, 240),
         costPerPortion: cleanText(item.costPerPortion, 30) || undefined,
-        totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, preferences.servings || 2)))),
+        totalServings: Math.min(12, Math.max(1, Math.round(toNumber(item.totalServings, applicablePreferences.servings || 2)))),
         totalTime: Math.min(240, Math.max(5, Math.round(toNumber(item.totalTime, 30)))),
         saladType: ['main', 'side', 'none'].includes(item.saladType) ? item.saladType : 'none',
         isVegetarian: item.isVegetarian === true,
@@ -104,8 +120,8 @@ export function validateInternalDinnerChoices(
         convenienceProfile: 'scratch'
       };
 
-      if (!passesHardConstraints(choice, preferences)) return [];
-      if (preferences.readyToEatUnderMins && choice.totalTime > preferences.readyToEatUnderMins) return [];
+      if (!passesHardConstraints(choice, applicablePreferences)) return [];
+      if (applicablePreferences.readyToEatUnderMins && choice.totalTime > applicablePreferences.readyToEatUnderMins) return [];
       const fingerprint = choiceFingerprint(choice);
       if (!fingerprint || seenChoiceFingerprints.has(fingerprint)) return [];
       seenTitles.add(key);
