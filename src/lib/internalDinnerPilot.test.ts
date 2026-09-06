@@ -110,4 +110,28 @@ describe('validateInternalDinnerChoices', () => {
 
     expect(results).toEqual([]);
   });
+
+  it('accepts a duck choice when its method gives clear poultry safety guidance', () => {
+    const results = validateInternalDinnerChoices([
+      {
+        ...validChoice,
+        title: 'Roast duck with potatoes and French beans',
+        description: 'Crisp roast duck with herby potatoes and tender French beans makes a straightforward dinner for two.',
+        ingredients: ['2 duck legs (about 500g)', '500g potatoes', '160g French beans', '1 tbsp rapeseed oil'],
+        instructions: [
+          'Roast the duck legs at 200°C until piping hot and with no pink flesh remaining.',
+          'Roast the potatoes with the oil until crisp, then steam the French beans and serve.'
+        ],
+        cuisine: 'British-inspired',
+        matchReason: 'Uses duck, potatoes and French beans in a simple roast dinner.',
+        totalTime: 55,
+        costPerPortion: '£4.80',
+        isVegetarian: false,
+        isPescatarian: false,
+        isVegan: false
+      }
+    ], { ...preferences, dietaryRule: 'none' });
+
+    expect(results).toHaveLength(1);
+  });
 });
