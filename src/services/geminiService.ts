@@ -634,7 +634,25 @@ export async function generateInternalDinnerChoices(
     initialChoices
   );
 
-  return [...initialChoices, ...recoveredChoices].slice(0, 3);
+  let completedChoices = [...initialChoices, ...recoveredChoices].slice(0, 3);
+
+  // A single-choice recovery is more dependable when an otherwise valid first
+  // response has been reduced by the safety checks. Keep the attempts bounded
+  // and retain every valid choice rather than returning an empty result.
+  for (let attempt = 0; attempt < 2 && completedChoices.length < 3; attempt += 1) {
+    const excluded = completedChoices.map(choice => choice.title).join('; ') || 'None';
+    const additionalChoice = validateInternalDinnerChoices(
+      await requestChoices(
+        `Dinner brief: "${safeBrief}". Return exactly one additional choice. Do not repeat: ${excluded}. Use a clearly different cooking approach or flavour direction.`,
+        `${systemInstruction}\n\nFINAL RECOVERY: Return exactly one practical, distinct choice that preserves every hard restriction.`
+      ),
+      applicablePreferences,
+      completedChoices
+    );
+    completedChoices = [...completedChoices, ...additionalChoice].slice(0, 3);
+  }
+
+  return completedChoices;
 }
 
 // Environment detection

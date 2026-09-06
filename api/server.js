@@ -221313,7 +221313,22 @@ RECOVERY: The first response was under-filled after validation. Return exactly $
     applicablePreferences,
     initialChoices
   );
-  return [...initialChoices, ...recoveredChoices].slice(0, 3);
+  let completedChoices = [...initialChoices, ...recoveredChoices].slice(0, 3);
+  for (let attempt = 0; attempt < 2 && completedChoices.length < 3; attempt += 1) {
+    const excluded = completedChoices.map((choice) => choice.title).join("; ") || "None";
+    const additionalChoice = validateInternalDinnerChoices(
+      await requestChoices(
+        `Dinner brief: "${safeBrief}". Return exactly one additional choice. Do not repeat: ${excluded}. Use a clearly different cooking approach or flavour direction.`,
+        `${systemInstruction}
+
+FINAL RECOVERY: Return exactly one practical, distinct choice that preserves every hard restriction.`
+      ),
+      applicablePreferences,
+      completedChoices
+    );
+    completedChoices = [...completedChoices, ...additionalChoice].slice(0, 3);
+  }
+  return completedChoices;
 }
 var isBrowser2 = typeof window !== "undefined";
 var estimateTokensFromText = (value) => {
@@ -235414,7 +235429,7 @@ function createApp() {
     const preferences = normaliseUserPreferences(req.body?.preferences);
     try {
       const choices = await generateInternalDinnerChoices(brief, preferences);
-      if (choices.length !== 3) {
+      if (choices.length === 0) {
         await recordAiUsageEvent({
           type: "ai_created_dinner",
           source: "ai-created",
@@ -235431,9 +235446,10 @@ function createApp() {
         });
         return res.status(503).json({
           ok: false,
-          error: "We could not create three sufficiently different choices this time. Please try again."
+          error: "We could not create a suitable choice this time. Please try a broader brief or adjust your preferences."
         });
       }
+      const partialChoices = choices.length < 3;
       if (searchIdentity.isAnonymous) {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
         if (usageCommit === "limit") {
@@ -235451,11 +235467,12 @@ function createApp() {
         userId: searchIdentity.uid,
         requestedCount: 3,
         resultCount: choices.length,
+        partial: partialChoices,
         queryLength: brief.length,
         serverLatencyMs: Date.now() - startedAt,
         estimatedCostUsd: 0
       });
-      return res.json({ choices });
+      return res.json({ choices, partial: partialChoices });
     } catch (error) {
       console.error("[AiCreatedDinners] Generation failed:", error);
       await recordAiUsageEvent({

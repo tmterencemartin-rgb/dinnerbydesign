@@ -38,6 +38,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
 }) => {
   const [brief, setBrief] = useState('');
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
+  const [hasPartialChoices, setHasPartialChoices] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [problemChoiceKey, setProblemChoiceKey] = useState<string | null>(null);
@@ -115,6 +116,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
 
     setIsGenerating(true);
     setError(null);
+    setHasPartialChoices(false);
     try {
       const token = await getSearchAuthToken();
       const response = await fetch(getApiUrl('/api/ai-created-dinners'), {
@@ -127,7 +129,9 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload?.error || 'AI-created dinners could not be completed.');
-      setChoices(Array.isArray(payload?.choices) ? payload.choices : []);
+      const deliveredChoices = Array.isArray(payload?.choices) ? payload.choices : [];
+      setChoices(deliveredChoices);
+      setHasPartialChoices(payload?.partial === true || (deliveredChoices.length > 0 && deliveredChoices.length < 3));
       onGuestSearchDelivered?.();
     } catch (requestError: any) {
       setError(requestError?.message || 'AI-created dinners could not be completed.');
@@ -168,6 +172,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
             </button>
       </div>
       {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
+      {hasPartialChoices && <p className="mt-3 text-[12px] font-medium text-dbd-ink-3">We found fewer than three distinct choices that meet your current preferences. You can use these, or try a broader brief for more variety.</p>}
 
       {choices.length > 0 && (
         <div className="mx-4 mt-4 grid gap-3 lg:grid-cols-3" aria-live="polite">

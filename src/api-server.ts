@@ -1594,7 +1594,7 @@ export function createApp() {
     const preferences = normaliseUserPreferences(req.body?.preferences);
     try {
       const choices = await generateInternalDinnerChoices(brief, preferences);
-      if (choices.length !== 3) {
+      if (choices.length === 0) {
         await recordAiUsageEvent({
           type: 'ai_created_dinner',
           source: 'ai-created',
@@ -1611,9 +1611,11 @@ export function createApp() {
         });
         return res.status(503).json({
           ok: false,
-          error: "We could not create three sufficiently different choices this time. Please try again."
+          error: "We could not create a suitable choice this time. Please try a broader brief or adjust your preferences."
         });
       }
+
+      const partialChoices = choices.length < 3;
 
       if (searchIdentity.isAnonymous) {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
@@ -1633,12 +1635,13 @@ export function createApp() {
         userId: searchIdentity.uid,
         requestedCount: 3,
         resultCount: choices.length,
+        partial: partialChoices,
         queryLength: brief.length,
         serverLatencyMs: Date.now() - startedAt,
         estimatedCostUsd: 0
       });
 
-      return res.json({ choices });
+      return res.json({ choices, partial: partialChoices });
     } catch (error: any) {
       console.error('[AiCreatedDinners] Generation failed:', error);
       await recordAiUsageEvent({
