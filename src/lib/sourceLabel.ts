@@ -14,6 +14,14 @@ const PUBLISHER_LABELS: Array<[string, string]> = [
   ['greatbritishchefs.com', 'Great British Chefs'],
   ['deliciousmagazine.co.uk', 'delicious. magazine'],
   ['thehappyfoodie.co.uk', 'The Happy Foodie'],
+  ['deliaonline.com', 'Delia Online'],
+  ['nigella.com', 'Nigella Lawson'],
+  ['foodnetwork.co.uk', 'Food Network UK'],
+  ['pinchofnom.com', 'Pinch of Nom'],
+  ['maryberry.co.uk', 'Mary Berry'],
+  ['greatbritishrecipes.com', 'Great British Recipes'],
+  ['recipetineats.com', 'RecipeTin Eats'],
+  ['gressinghamduck.co.uk', 'Gressingham Duck'],
   ['kitchensanctuary.com', 'Kitchen Sanctuary'],
   ['diabetes.org.uk', 'Diabetes UK']
 ];

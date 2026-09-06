@@ -152,7 +152,7 @@ export interface UserPreferences {
   cookingFats: string[];        // 15. Cooking fat
   readyToEatUnderMins: number | null; // 16. Ready to eat in under (mins)
   preferredSupermarkets: string[]; // 17. Preferred supermarkets
-  preferredSourceIds: string[]; // 18. Trusted sources
+  preferredSourceIds: string[]; // Trusted source IDs
   preferredMode: DinnerSource;  // Default mode
   customCuisines: string[];     // User added cuisines (legacy fallback)
 }

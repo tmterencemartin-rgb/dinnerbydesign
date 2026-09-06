@@ -52,6 +52,14 @@ describe('grounded source URL reconciliation', () => {
     expect(isApprovedDirectRecipeUrl('https://www.thetimes.com/life-style/food-drink/recipe/chicken-pie-0')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.thesundaytimes.co.uk/thedish/recipe/chicken-pie')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.goodhousekeeping.com/uk/food/recipes/a12345/chicken-pie/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.deliaonline.com/recipes/chicken-casserole')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.nigella.com/recipes/chicken-with-chorizo-and-cannellini-beans')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://foodnetwork.co.uk/recipes/roast-chicken')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://pinchofnom.com/recipes/chicken-curry/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://maryberry.co.uk/recipes/chicken-valencia')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://greatbritishrecipes.com/chicken-casserole/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.recipetineats.com/chicken-stroganoff/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.gressinghamduck.co.uk/recipes/duck-breast-with-cherry-sauce/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
   });

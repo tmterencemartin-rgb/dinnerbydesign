@@ -218050,6 +218050,46 @@ var PREFERRED_SOURCES = [
     description: "Cookbook-driven recipes from well-known authors and new releases."
   },
   {
+    id: "delia_online",
+    label: "Delia Online",
+    description: "Classic British recipes with detailed, dependable guidance."
+  },
+  {
+    id: "nigella_lawson",
+    label: "Nigella Lawson",
+    description: "Generous, flavour-led recipes from Nigella\u2019s official collection."
+  },
+  {
+    id: "food_network_uk",
+    label: "Food Network UK",
+    description: "A wide range of recipes from chefs and food writers."
+  },
+  {
+    id: "pinch_of_nom",
+    label: "Pinch of Nom",
+    description: "Straightforward, lower-calorie recipes for everyday cooking."
+  },
+  {
+    id: "mary_berry",
+    label: "Mary Berry",
+    description: "Well-known British recipes from Mary Berry\u2019s official collection."
+  },
+  {
+    id: "great_british_recipes",
+    label: "Great British Recipes",
+    description: "Traditional and modern recipes from across the British Isles."
+  },
+  {
+    id: "recipetin_eats",
+    label: "RecipeTin Eats",
+    description: "Clear, flavour-led recipes using familiar ingredients."
+  },
+  {
+    id: "gressingham_duck",
+    label: "Gressingham Duck",
+    description: "Duck recipes and cooking ideas from the producer."
+  },
+  {
     id: "kitchen_sanctuary",
     label: "Kitchen Sanctuary",
     description: "Tried-and-tested comfort food with clear instructions and videos."
@@ -220103,6 +220143,14 @@ var TRUSTED_RECIPE_PUBLISHER_HOSTS = /* @__PURE__ */ new Set([
   "theguardian.com",
   "deliciousmagazine.co.uk",
   "thehappyfoodie.co.uk",
+  "deliaonline.com",
+  "nigella.com",
+  "foodnetwork.co.uk",
+  "pinchofnom.com",
+  "maryberry.co.uk",
+  "greatbritishrecipes.com",
+  "recipetineats.com",
+  "gressinghamduck.co.uk",
   "kitchensanctuary.com",
   "diabetes.org.uk",
   "slimmingworld.co.uk",
@@ -221753,7 +221801,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
 - FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.

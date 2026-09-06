@@ -36,6 +36,46 @@ export const PREFERRED_SOURCES: PreferredSource[] = [
     description: "Cookbook-driven recipes from well-known authors and new releases."
   },
   {
+    id: "delia_online",
+    label: "Delia Online",
+    description: "Classic British recipes with detailed, dependable guidance."
+  },
+  {
+    id: "nigella_lawson",
+    label: "Nigella Lawson",
+    description: "Generous, flavour-led recipes from Nigella’s official collection."
+  },
+  {
+    id: "food_network_uk",
+    label: "Food Network UK",
+    description: "A wide range of recipes from chefs and food writers."
+  },
+  {
+    id: "pinch_of_nom",
+    label: "Pinch of Nom",
+    description: "Straightforward, lower-calorie recipes for everyday cooking."
+  },
+  {
+    id: "mary_berry",
+    label: "Mary Berry",
+    description: "Well-known British recipes from Mary Berry’s official collection."
+  },
+  {
+    id: "great_british_recipes",
+    label: "Great British Recipes",
+    description: "Traditional and modern recipes from across the British Isles."
+  },
+  {
+    id: "recipetin_eats",
+    label: "RecipeTin Eats",
+    description: "Clear, flavour-led recipes using familiar ingredients."
+  },
+  {
+    id: "gressingham_duck",
+    label: "Gressingham Duck",
+    description: "Duck recipes and cooking ideas from the producer."
+  },
+  {
     id: "kitchen_sanctuary",
     label: "Kitchen Sanctuary",
     description: "Tried-and-tested comfort food with clear instructions and videos."
