@@ -218040,11 +218040,6 @@ var PREFERRED_SOURCES = [
     description: "More adventurous and global recipes from the Guardian\u2019s food writers."
   },
   {
-    id: "mob",
-    label: "Mob",
-    description: "Younger, fast-moving recipes focused on bold flavour and simple prep."
-  },
-  {
     id: "delicious_magazine",
     label: "delicious. magazine",
     description: "Polished midweek and weekend recipes with good how-to detail."
