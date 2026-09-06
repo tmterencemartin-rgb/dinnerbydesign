@@ -76,6 +76,41 @@ export const PREFERRED_SOURCES: PreferredSource[] = [
     description: "Duck recipes and cooking ideas from the producer."
   },
   {
+    id: "annas_kitchen_table",
+    label: "Anna's Kitchen Table",
+    description: "Greek Cypriot recipes and home cooking ideas from Anna Christoforou."
+  },
+  {
+    id: "the_independent",
+    label: "The Independent",
+    description: "Recipes and food writing from The Independent."
+  },
+  {
+    id: "recipes_made_easy",
+    label: "Recipes Made Easy",
+    description: "Approachable home recipes with clear instructions."
+  },
+  {
+    id: "riverford",
+    label: "Riverford Organic Farmers",
+    description: "Seasonal recipes designed around fruit and vegetables."
+  },
+  {
+    id: "ottolenghi",
+    label: "Ottolenghi",
+    description: "Vegetable-led and Middle Eastern-inspired recipes from Ottolenghi."
+  },
+  {
+    id: "coop",
+    label: "Co-op",
+    description: "Everyday recipes using familiar supermarket ingredients."
+  },
+  {
+    id: "james_martin",
+    label: "James Martin",
+    description: "British recipes from James Martin’s official collection."
+  },
+  {
     id: "kitchen_sanctuary",
     label: "Kitchen Sanctuary",
     description: "Tried-and-tested comfort food with clear instructions and videos."

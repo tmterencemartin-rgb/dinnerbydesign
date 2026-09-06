@@ -60,6 +60,13 @@ describe('grounded source URL reconciliation', () => {
     expect(isApprovedDirectRecipeUrl('https://greatbritishrecipes.com/chicken-casserole/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.recipetineats.com/chicken-stroganoff/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.gressinghamduck.co.uk/recipes/duck-breast-with-cherry-sauce/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.annaskitchentable.co.uk/recipes/kleftiko')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.independent.co.uk/life-style/food-and-drink/recipes/easy-spring-recipes-what-to-cook-tonight-b2948169.html')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.recipesmadeeasy.co.uk/recipes/chicken-casserole/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.riverford.co.uk/recipes/vegetable-pasta')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://ottolenghi.co.uk/pages/recipes/spicy-mushroom-lasagne')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.coop.co.uk/recipes/chicken-curry')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.jamesmartinchef.co.uk/recipes/chicken-thighs-cooked-in-coconut-and-white-poppy-seeds/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
   });

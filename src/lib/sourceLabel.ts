@@ -22,6 +22,13 @@ const PUBLISHER_LABELS: Array<[string, string]> = [
   ['greatbritishrecipes.com', 'Great British Recipes'],
   ['recipetineats.com', 'RecipeTin Eats'],
   ['gressinghamduck.co.uk', 'Gressingham Duck'],
+  ['annaskitchentable.co.uk', "Anna's Kitchen Table"],
+  ['independent.co.uk', 'The Independent'],
+  ['recipesmadeeasy.co.uk', 'Recipes Made Easy'],
+  ['riverford.co.uk', 'Riverford Organic Farmers'],
+  ['ottolenghi.co.uk', 'Ottolenghi'],
+  ['coop.co.uk', 'Co-op'],
+  ['jamesmartinchef.co.uk', 'James Martin'],
   ['kitchensanctuary.com', 'Kitchen Sanctuary'],
   ['diabetes.org.uk', 'Diabetes UK']
 ];
