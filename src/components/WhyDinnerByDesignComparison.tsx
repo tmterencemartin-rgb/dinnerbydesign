@@ -114,10 +114,6 @@ export const WhyDinnerByDesignComparison: React.FC<WhyDinnerByDesignComparisonPr
         </div>}
       </div>
 
-      <p className="mt-4 text-xs leading-5 text-dbd-ink-3">
-        Published recipes come from named UK publisher sources and open at their original source. AI-created recipes are original DinnerByDesign suggestions, rather than publisher recipes.
-      </p>
-
       {compact && onTryFreeSearch && (
         <button
           type="button"
