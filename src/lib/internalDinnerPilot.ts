@@ -44,7 +44,8 @@ const METRIC_MEASURE_PATTERN = /\b\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\b/i;
 const QUANTITY_PATTERN = /^\s*(?:\d+(?:[./]\d+)?|½|¼|¾|one\b|two\b|three\b|four\b|half\b)/i;
 const OVEN_TEMPERATURE_PATTERN = /(\d{2,3})\s*°?\s*c\b/gi;
 const ANIMAL_PROTEIN_PATTERN = /\b(?:chicken|turkey|poultry|beef|pork|lamb|duck|fish|salmon|cod|haddock|tuna|prawn|seafood|sausage|mince)\b/i;
-const COOK_THOROUGHLY_PATTERN = /\b(?:cook(?:ed)?\s+through|piping\s+hot|no\s+pink|opaque\s+and\s+flake|flakes?\s+easily)\b/i;
+const COOK_THOROUGHLY_PATTERN = /\b(?:cook(?:ed)?\s+(?:all\s+the\s+way\s+)?through|cook(?:ed)?\s+thoroughly|fully\s+cook(?:ed)?|piping\s+hot|no\s+pink|opaque\s+and\s+flake|flakes?\s+easily)\b/i;
+const SAFE_POULTRY_TEMPERATURE_PATTERN = /\b(?:75|80)\s*°?\s*c\b|\b70\s*°?\s*c\s*(?:for\s*)?(?:at\s+least\s*)?2\s*(?:minutes?|mins?)\b/i;
 
 const hasRealisticMetricIngredients = (ingredients: string[]): boolean => {
   if (ingredients.some(ingredient => IMPERIAL_MEASURE_PATTERN.test(ingredient))) return false;
@@ -56,14 +57,17 @@ const hasRealisticMetricIngredients = (ingredients: string[]): boolean => {
 const hasSensibleOvenTemperature = (instructions: string[]): boolean => {
   const method = instructions.join(' ');
   if (IMPERIAL_MEASURE_PATTERN.test(method)) return false;
-  const temperatures = [...method.matchAll(OVEN_TEMPERATURE_PATTERN)].map(match => Number(match[1]));
-  if (/\b(?:oven|roast|bake)\b/i.test(method) && temperatures.length === 0) return false;
-  return temperatures.every(temperature => temperature >= 120 && temperature <= 240);
+  const ovenTemperatures = [...method.matchAll(OVEN_TEMPERATURE_PATTERN)]
+    .map(match => Number(match[1]))
+    .filter(temperature => temperature >= 120);
+  if (/\b(?:oven|roast|bake)\b/i.test(method) && ovenTemperatures.length === 0) return false;
+  return ovenTemperatures.every(temperature => temperature <= 240);
 };
 
 const hasSafeProteinCookingGuidance = (ingredients: string[], instructions: string[]): boolean => {
   if (!ANIMAL_PROTEIN_PATTERN.test(ingredients.join(' '))) return true;
-  return COOK_THOROUGHLY_PATTERN.test(instructions.join(' '));
+  const method = instructions.join(' ');
+  return COOK_THOROUGHLY_PATTERN.test(method) || SAFE_POULTRY_TEMPERATURE_PATTERN.test(method);
 };
 
 const hasRealisticPriceEstimate = (value: unknown): boolean => {

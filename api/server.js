@@ -220744,7 +220744,8 @@ var METRIC_MEASURE_PATTERN = /\b\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\b/i;
 var QUANTITY_PATTERN = /^\s*(?:\d+(?:[./]\d+)?|½|¼|¾|one\b|two\b|three\b|four\b|half\b)/i;
 var OVEN_TEMPERATURE_PATTERN = /(\d{2,3})\s*°?\s*c\b/gi;
 var ANIMAL_PROTEIN_PATTERN = /\b(?:chicken|turkey|poultry|beef|pork|lamb|duck|fish|salmon|cod|haddock|tuna|prawn|seafood|sausage|mince)\b/i;
-var COOK_THOROUGHLY_PATTERN = /\b(?:cook(?:ed)?\s+through|piping\s+hot|no\s+pink|opaque\s+and\s+flake|flakes?\s+easily)\b/i;
+var COOK_THOROUGHLY_PATTERN = /\b(?:cook(?:ed)?\s+(?:all\s+the\s+way\s+)?through|cook(?:ed)?\s+thoroughly|fully\s+cook(?:ed)?|piping\s+hot|no\s+pink|opaque\s+and\s+flake|flakes?\s+easily)\b/i;
+var SAFE_POULTRY_TEMPERATURE_PATTERN = /\b(?:75|80)\s*°?\s*c\b|\b70\s*°?\s*c\s*(?:for\s*)?(?:at\s+least\s*)?2\s*(?:minutes?|mins?)\b/i;
 var hasRealisticMetricIngredients = (ingredients) => {
   if (ingredients.some((ingredient) => IMPERIAL_MEASURE_PATTERN.test(ingredient))) return false;
   const quantifiedIngredients = ingredients.filter((ingredient) => QUANTITY_PATTERN.test(ingredient));
@@ -220753,13 +220754,14 @@ var hasRealisticMetricIngredients = (ingredients) => {
 var hasSensibleOvenTemperature = (instructions) => {
   const method = instructions.join(" ");
   if (IMPERIAL_MEASURE_PATTERN.test(method)) return false;
-  const temperatures = [...method.matchAll(OVEN_TEMPERATURE_PATTERN)].map((match2) => Number(match2[1]));
-  if (/\b(?:oven|roast|bake)\b/i.test(method) && temperatures.length === 0) return false;
-  return temperatures.every((temperature) => temperature >= 120 && temperature <= 240);
+  const ovenTemperatures = [...method.matchAll(OVEN_TEMPERATURE_PATTERN)].map((match2) => Number(match2[1])).filter((temperature) => temperature >= 120);
+  if (/\b(?:oven|roast|bake)\b/i.test(method) && ovenTemperatures.length === 0) return false;
+  return ovenTemperatures.every((temperature) => temperature <= 240);
 };
 var hasSafeProteinCookingGuidance = (ingredients, instructions) => {
   if (!ANIMAL_PROTEIN_PATTERN.test(ingredients.join(" "))) return true;
-  return COOK_THOROUGHLY_PATTERN.test(instructions.join(" "));
+  const method = instructions.join(" ");
+  return COOK_THOROUGHLY_PATTERN.test(method) || SAFE_POULTRY_TEMPERATURE_PATTERN.test(method);
 };
 var hasRealisticPriceEstimate = (value) => {
   const costText = cleanText(value, 30);
@@ -221251,7 +221253,7 @@ async function generateInternalDinnerChoices(brief, preferences) {
     `Prefer lower-cost recipes: ${applicablePreferences.isLowCost ? "Yes" : "No"}`,
     `Offal: ${applicablePreferences.includeOffal ? "Allowed" : "Excluded"}`
   ].join("\n");
-  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use as many ingredients and steps as the recipe needs. Do not default every choice to four items: most should have five to eight ingredients and four to six steps, while a genuinely simple dinner may be shorter. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in \xB0C only, between 120\xB0C and 240\xB0C. If a choice contains meat, poultry or fish, include a clear instruction to cook it thoroughly before serving. For poultry, including duck, state that it must be piping hot and have no pink flesh remaining before serving. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. A core ingredient may appear in more than one choice when the cooking approach or flavour direction is genuinely different.
+  const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use as many ingredients and steps as the recipe needs. Do not default every choice to four items: most should have five to eight ingredients and four to six steps, while a genuinely simple dinner may be shorter. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in \xB0C only, between 120\xB0C and 240\xB0C. If a choice contains meat, poultry or fish, include clear cooking safety guidance. For poultry, including duck, say it is cooked all the way through, or give a safe core temperature such as 75\xB0C for 30 seconds or 70\xB0C for 2 minutes. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. A core ingredient may appear in more than one choice when the cooking approach or flavour direction is genuinely different.
 
 HARD RESTRICTIONS:
 ${restrictions}

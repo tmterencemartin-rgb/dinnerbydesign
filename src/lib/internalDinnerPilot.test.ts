@@ -111,7 +111,7 @@ describe('validateInternalDinnerChoices', () => {
     expect(results).toEqual([]);
   });
 
-  it('accepts a duck choice when its method gives clear poultry safety guidance', () => {
+  it('accepts recognised poultry safety guidance for duck', () => {
     const results = validateInternalDinnerChoices([
       {
         ...validChoice,
@@ -119,7 +119,7 @@ describe('validateInternalDinnerChoices', () => {
         description: 'Crisp roast duck with herby potatoes and tender French beans makes a straightforward dinner for two.',
         ingredients: ['2 duck legs (about 500g)', '500g potatoes', '160g French beans', '1 tbsp rapeseed oil'],
         instructions: [
-          'Roast the duck legs at 200°C until piping hot and with no pink flesh remaining.',
+          'Roast the duck legs at 200°C until the thickest part reaches 75°C for 30 seconds.',
           'Roast the potatoes with the oil until crisp, then steam the French beans and serve.'
         ],
         cuisine: 'British-inspired',
