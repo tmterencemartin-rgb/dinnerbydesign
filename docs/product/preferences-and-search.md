@@ -135,7 +135,7 @@ Offal is excluded from ordinary suggestions by default.
 The public three-way search presents AI-created dinners, published recipes and ready-made options with equal prominence.
 
 - AI-created recipes are original DinnerByDesign suggestions. They show full ingredients and instructions and can be saved, scheduled, added to the shopping list, printed and emailed.
-- Published recipes remain link-only. Show a title, publisher, short relevance note and original source link, but do not show, generate or send their ingredient list or method.
+- Published recipes remain link-only. Show a title, publisher, short relevance note and original source link, but do not show, generate or send their ingredient list or method. Before showing a trusted publisher link, exclude pages the publisher explicitly reports as missing or redirects away from a direct recipe page. Do not hide a source merely because its publisher blocks an automated availability check.
 - Ready-made options continue to link to the retailer product page.
 - All three routes count towards the same guest-search allowance. A guest receives no more than three completed searches.
 - `THREE_WAY_SEARCH_PILOT` is the immediate rollback switch. Setting it to `false` restores the existing two-route interface.

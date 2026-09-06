@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isBlockedRecipePublisherUrl, isDirectHttpsContentUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, isBlockedRecipePublisherUrl, isDirectHttpsContentUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { COOKING_METHOD_ALIASES } from '../constants';
@@ -682,6 +682,15 @@ export const filterToGroundedSources = (items: any[], sources: Map<string, Groun
     return true;
   })
 );
+
+const filterUnavailablePublishedRecipeSources = async (items: any[]): Promise<any[]> => {
+  const confirmedItems = await Promise.all(items.map(async item => {
+    const sourceUrl = await confirmPublisherRecipePageUrl(item?.sourceUrl);
+    return sourceUrl ? { ...item, sourceUrl } : null;
+  }));
+
+  return confirmedItems.filter((item): item is any => item !== null);
+};
 
 export const getRecipePublisherKey = (sourceUrl: unknown): string | null => {
   const canonicalUrl = canonicaliseGroundedUrl(sourceUrl);
@@ -1391,6 +1400,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     );
     const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
     let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSourceMap(initialGroundedSources));
+    if (!isReadyMade) rawItems = await filterUnavailablePublishedRecipeSources(rawItems);
     console.log(
       `[GeminiService] Ingredient search candidates: model=${parsedItems.length}, ingredient=${ingredientMatchedItems.length}, grounded=${rawItems.length}, sources=${groundedSources.size}`
     );
@@ -1479,10 +1489,11 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
         const recoveryOutputText = recoveryResponse.text || '';
         repairOutputs.push(recoveryOutputText);
         const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
-        const recoveryItems = filterToGroundedSources(
+        let recoveryItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(recoveryData.items) ? recoveryData.items : []),
           groundedSourceMap(recoveryGroundedSources)
         );
+        if (!isReadyMade) recoveryItems = await filterUnavailablePublishedRecipeSources(recoveryItems);
         rawItems = [...rawItems, ...recoveryItems];
         wasRepaired = recoveryItems.length > 0;
       } catch (recoveryError) {
@@ -1545,10 +1556,11 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         const repairOutputText = repairResponse.text || '';
         repairOutputs.push(repairOutputText);
         const repairData = repairOutputText ? parseModelJson(repairOutputText) : {};
-        const repairItems = filterToGroundedSources(
+        let repairItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []),
           groundedSourceMap(repairGroundedSources)
         );
+        if (!isReadyMade) repairItems = await filterUnavailablePublishedRecipeSources(repairItems);
         const nonVegetarianRepair = allVegetarian
           ? repairItems.find((item: any) => !isClearlyVegetarian(item))
           : null;
@@ -1617,10 +1629,11 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
         ...(excludeTitles || []),
         ...rawItems.map((item: any) => String(item.title || '').trim())
       ].filter(Boolean).map(title => title.toLowerCase()));
-      const fallbackItems = filterToGroundedSources(
+      let fallbackItems = filterToGroundedSources(
         eligibleChilliFallbacks.filter(item => !existingTitles.has(item.title.toLowerCase())),
         groundedSources
       );
+      fallbackItems = await filterUnavailablePublishedRecipeSources(fallbackItems);
       const allVegetarian = rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
 
       if (allVegetarian && rawItems.length >= count && fallbackItems.length > 0) {

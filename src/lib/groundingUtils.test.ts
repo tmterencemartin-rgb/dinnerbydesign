@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { canonicaliseGroundedUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
+import { describe, expect, it, vi } from 'vitest';
+import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   const groundedSources = [
@@ -62,5 +62,40 @@ describe('grounded source URL reconciliation', () => {
     expect(isDirectHttpsContentUrl('https://user:password@example.com/recipes/scallops')).toBe(false);
     expect(isDirectHttpsContentUrl('https://example.com/search?q=scallops')).toBe(false);
     expect(isDirectHttpsContentUrl('https://example.com/collections/weeknight')).toBe(false);
+  });
+
+  it('rejects a trusted publisher page that explicitly reports it is missing', async () => {
+    const request = vi.fn().mockResolvedValue({
+      status: 404,
+      url: 'https://www.bbcgoodfood.com/recipes/healthy-one-pan-roast-chicken'
+    });
+
+    await expect(confirmPublisherRecipePageUrl(
+      'https://www.bbcgoodfood.com/recipes/healthy-one-pan-roast-chicken',
+      request
+    )).resolves.toBeNull();
+    expect(request).toHaveBeenCalledWith(
+      'https://www.bbcgoodfood.com/recipes/healthy-one-pan-roast-chicken',
+      expect.objectContaining({ method: 'HEAD', redirect: 'follow' })
+    );
+  });
+
+  it('retains a trusted publisher page when an automated check is blocked', async () => {
+    const request = vi.fn().mockRejectedValue(new Error('Blocked'));
+    const sourceUrl = 'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake';
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBe(sourceUrl);
+  });
+
+  it('rejects a publisher redirect that no longer resolves to a recipe page', async () => {
+    const request = vi.fn().mockResolvedValue({
+      status: 200,
+      url: 'https://www.bbcgoodfood.com/'
+    });
+
+    await expect(confirmPublisherRecipePageUrl(
+      'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake',
+      request
+    )).resolves.toBeNull();
   });
 });

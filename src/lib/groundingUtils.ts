@@ -140,3 +140,58 @@ export const isApprovedDirectRecipeUrl = (value: unknown): boolean => {
     && isTrustedRecipePublisherUrl(canonicalUrl)
     && isDirectHttpsContentUrl(canonicalUrl);
 };
+
+type PublisherPageResponse = Pick<Response, 'status' | 'url'>;
+type PublisherPageRequest = (url: string, init: RequestInit) => Promise<PublisherPageResponse>;
+
+const PUBLISHER_PAGE_TIMEOUT_MS = 4_000;
+
+const samePublisher = (left: string, right: string): boolean => {
+  const leftHost = new URL(left).hostname.toLowerCase().replace(/^www\./, '');
+  const rightHost = new URL(right).hostname.toLowerCase().replace(/^www\./, '');
+  return leftHost === rightHost;
+};
+
+/**
+ * Reject pages a trusted publisher explicitly reports as missing. A temporary
+ * publisher block, rate limit or server error leaves the existing result in
+ * place, as those responses do not establish that the page has gone away.
+ */
+export const confirmPublisherRecipePageUrl = async (
+  value: unknown,
+  request: PublisherPageRequest = fetch
+): Promise<string | null> => {
+  const sourceUrl = canonicaliseGroundedUrl(value);
+  if (!sourceUrl || !isTrustedRecipePublisherUrl(sourceUrl)) return sourceUrl;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
+
+  try {
+    let response = await request(sourceUrl, {
+      method: 'HEAD',
+      redirect: 'follow',
+      signal: controller.signal
+    });
+
+    if (response.status === 405 || response.status === 501) {
+      response = await request(sourceUrl, {
+        method: 'GET',
+        redirect: 'follow',
+        signal: controller.signal
+      });
+    }
+
+    if (response.status === 404 || response.status === 410) return null;
+
+    const resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+    if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
+    return resolvedUrl;
+  } catch {
+    // Some publishers block automated checks. Their response is inconclusive,
+    // so keep the already-approved source rather than hiding a usable recipe.
+    return sourceUrl;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};

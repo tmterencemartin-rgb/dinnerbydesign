@@ -220187,6 +220187,40 @@ var isApprovedDirectRecipeUrl = (value) => {
   const canonicalUrl = canonicaliseGroundedUrl(value);
   return !!canonicalUrl && !isInternalGroundingUrl(canonicalUrl) && !isBlockedRecipePublisherUrl(canonicalUrl) && isTrustedRecipePublisherUrl(canonicalUrl) && isDirectHttpsContentUrl(canonicalUrl);
 };
+var PUBLISHER_PAGE_TIMEOUT_MS = 4e3;
+var samePublisher = (left, right) => {
+  const leftHost = new URL(left).hostname.toLowerCase().replace(/^www\./, "");
+  const rightHost = new URL(right).hostname.toLowerCase().replace(/^www\./, "");
+  return leftHost === rightHost;
+};
+var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
+  const sourceUrl = canonicaliseGroundedUrl(value);
+  if (!sourceUrl || !isTrustedRecipePublisherUrl(sourceUrl)) return sourceUrl;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
+  try {
+    let response = await request(sourceUrl, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: controller.signal
+    });
+    if (response.status === 405 || response.status === 501) {
+      response = await request(sourceUrl, {
+        method: "GET",
+        redirect: "follow",
+        signal: controller.signal
+      });
+    }
+    if (response.status === 404 || response.status === 410) return null;
+    const resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+    if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
+    return resolvedUrl;
+  } catch {
+    return sourceUrl;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
 
 // src/lib/enrichmentRequest.ts
 var invalid = (code, message2) => ({
@@ -221275,6 +221309,13 @@ var filterToGroundedSources = (items, sources) => items.filter((item) => {
   item.sourceUrl = groundedSourceUrl;
   return true;
 });
+var filterUnavailablePublishedRecipeSources = async (items) => {
+  const confirmedItems = await Promise.all(items.map(async (item) => {
+    const sourceUrl = await confirmPublisherRecipePageUrl(item?.sourceUrl);
+    return sourceUrl ? { ...item, sourceUrl } : null;
+  }));
+  return confirmedItems.filter((item) => item !== null);
+};
 var getRecipePublisherKey = (sourceUrl) => {
   const canonicalUrl = canonicaliseGroundedUrl(sourceUrl);
   if (!canonicalUrl) return null;
@@ -221833,6 +221874,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const filterIngredientLedItems = (candidateItems) => ingredientIntent?.isIngredientLed && !isReadyMade ? candidateItems.filter((item) => matchesRequestedIngredientSearch(item, query2)) : candidateItems;
     const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
     let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSourceMap(initialGroundedSources));
+    if (!isReadyMade) rawItems = await filterUnavailablePublishedRecipeSources(rawItems);
     console.log(
       `[GeminiService] Ingredient search candidates: model=${parsedItems.length}, ingredient=${ingredientMatchedItems.length}, grounded=${rawItems.length}, sources=${groundedSources.size}`
     );
@@ -221915,10 +221957,11 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
         const recoveryOutputText = recoveryResponse.text || "";
         repairOutputs.push(recoveryOutputText);
         const recoveryData = recoveryOutputText ? parseModelJson(recoveryOutputText) : {};
-        const recoveryItems = filterToGroundedSources(
+        let recoveryItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(recoveryData.items) ? recoveryData.items : []),
           groundedSourceMap(recoveryGroundedSources)
         );
+        if (!isReadyMade) recoveryItems = await filterUnavailablePublishedRecipeSources(recoveryItems);
         rawItems = [...rawItems, ...recoveryItems];
         wasRepaired = recoveryItems.length > 0;
       } catch (recoveryError) {
@@ -221973,10 +222016,11 @@ REPAIR REQUEST: Generate exactly ${repairCount} additional results for this requ
         const repairOutputText2 = repairResponse.text || "";
         repairOutputs.push(repairOutputText2);
         const repairData = repairOutputText2 ? parseModelJson(repairOutputText2) : {};
-        const repairItems = filterToGroundedSources(
+        let repairItems = filterToGroundedSources(
           filterIngredientLedItems(Array.isArray(repairData.items) ? repairData.items : []),
           groundedSourceMap(repairGroundedSources)
         );
+        if (!isReadyMade) repairItems = await filterUnavailablePublishedRecipeSources(repairItems);
         const nonVegetarianRepair = allVegetarian ? repairItems.find((item) => !isClearlyVegetarian(item)) : null;
         if (allVegetarian && nonVegetarianRepair) {
           rawItems = [...rawItems.slice(0, -1), nonVegetarianRepair, ...repairItems.filter((item) => item !== nonVegetarianRepair)];
@@ -222030,10 +222074,11 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
         ...excludeTitles || [],
         ...rawItems.map((item) => String(item.title || "").trim())
       ].filter(Boolean).map((title) => title.toLowerCase()));
-      const fallbackItems = filterToGroundedSources(
+      let fallbackItems = filterToGroundedSources(
         eligibleChilliFallbacks.filter((item) => !existingTitles.has(item.title.toLowerCase())),
         groundedSources
       );
+      fallbackItems = await filterUnavailablePublishedRecipeSources(fallbackItems);
       const allVegetarian = rawItems.length > 0 && rawItems.every(isClearlyVegetarian);
       if (allVegetarian && rawItems.length >= count && fallbackItems.length > 0) {
         rawItems = [...rawItems.slice(0, count - 1), fallbackItems[0]];
