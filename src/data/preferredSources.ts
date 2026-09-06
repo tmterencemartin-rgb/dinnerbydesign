@@ -111,6 +111,21 @@ export const PREFERRED_SOURCES: PreferredSource[] = [
     description: "British recipes from James Martin’s official collection."
   },
   {
+    id: "dont_go_bacon_my_heart",
+    label: "Don't Go Bacon My Heart",
+    description: "Comforting, flavour-led recipes with detailed instructions."
+  },
+  {
+    id: "krumpli",
+    label: "Krumpli",
+    description: "Home recipes inspired by British and international cooking."
+  },
+  {
+    id: "our_modern_kitchen",
+    label: "Our Modern Kitchen",
+    description: "Family-friendly recipes for everyday cooking and sharing."
+  },
+  {
     id: "kitchen_sanctuary",
     label: "Kitchen Sanctuary",
     description: "Tried-and-tested comfort food with clear instructions and videos."

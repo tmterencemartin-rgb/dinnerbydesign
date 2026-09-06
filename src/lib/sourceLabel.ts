@@ -29,6 +29,9 @@ const PUBLISHER_LABELS: Array<[string, string]> = [
   ['ottolenghi.co.uk', 'Ottolenghi'],
   ['coop.co.uk', 'Co-op'],
   ['jamesmartinchef.co.uk', 'James Martin'],
+  ['dontgobaconmyheart.co.uk', "Don't Go Bacon My Heart"],
+  ['krumpli.co.uk', 'Krumpli'],
+  ['ourmodernkitchen.com', 'Our Modern Kitchen'],
   ['kitchensanctuary.com', 'Kitchen Sanctuary'],
   ['diabetes.org.uk', 'Diabetes UK']
 ];

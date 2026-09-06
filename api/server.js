@@ -218125,6 +218125,21 @@ var PREFERRED_SOURCES = [
     description: "British recipes from James Martin\u2019s official collection."
   },
   {
+    id: "dont_go_bacon_my_heart",
+    label: "Don't Go Bacon My Heart",
+    description: "Comforting, flavour-led recipes with detailed instructions."
+  },
+  {
+    id: "krumpli",
+    label: "Krumpli",
+    description: "Home recipes inspired by British and international cooking."
+  },
+  {
+    id: "our_modern_kitchen",
+    label: "Our Modern Kitchen",
+    description: "Family-friendly recipes for everyday cooking and sharing."
+  },
+  {
     id: "kitchen_sanctuary",
     label: "Kitchen Sanctuary",
     description: "Tried-and-tested comfort food with clear instructions and videos."
@@ -220193,6 +220208,9 @@ var TRUSTED_RECIPE_PUBLISHER_HOSTS = /* @__PURE__ */ new Set([
   "ottolenghi.co.uk",
   "coop.co.uk",
   "jamesmartinchef.co.uk",
+  "dontgobaconmyheart.co.uk",
+  "krumpli.co.uk",
+  "ourmodernkitchen.com",
   "kitchensanctuary.com",
   "diabetes.org.uk",
   "slimmingworld.co.uk",
@@ -221843,7 +221861,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Don't Go Bacon My Heart, Krumpli, Our Modern Kitchen, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
 - FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
