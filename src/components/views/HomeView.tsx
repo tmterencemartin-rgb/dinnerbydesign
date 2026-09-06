@@ -380,6 +380,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const useThreeWaySearch = THREE_WAY_SEARCH_PILOT;
   const isAiCreatedSearch = useThreeWaySearch && searchMode === 'ai-created';
   const usePublishedSourceHandoff = useThreeWaySearch && source === 'cook' && searchMode === 'published';
+  const showPublishedSourceHandoffNotice = usePublishedSourceHandoff && resultsCount > 0 && !isSearching;
   const showFullLoader = isSearching && (!currentRecipes || currentRecipes.length === 0) && (!currentReadyMeals || currentReadyMeals.length === 0);
   const showInlineStatus = (isSearching && !showFullLoader) || enriching;
   const hasPartialSourceBackedResults = source === 'cook'
@@ -959,18 +960,20 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {renderStrictIngredientToggle('h-9 px-3 text-[10px]')}
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
-                <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
-                {source === 'cook' ? (
-                  <span>
-                    {usePublishedSourceHandoff
-                      ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
-                      : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
-                  </span>
-                ) : (
-                  <span>AI-powered search. Avoid private information.</span>
-                )}
-              </div>
+              {(!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
+                <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
+                  <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  {source === 'cook' ? (
+                    <span>
+                      {usePublishedSourceHandoff
+                        ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
+                        : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
+                    </span>
+                  ) : (
+                    <span>AI-powered search. Avoid private information.</span>
+                  )}
+                </div>
+              )}
 
               {hasIngredientNoResults && (
                 <div

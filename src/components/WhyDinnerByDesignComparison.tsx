@@ -10,7 +10,7 @@ type ComparisonRow = {
 export const WHY_DINNER_BY_DESIGN_ROWS: ComparisonRow[] = [
   { capability: 'Remembers preferences between searches', scope: 'search' },
   { capability: 'Applies preferences automatically', scope: 'search' },
-  { capability: 'Uses named UK publisher sources', scope: 'search' },
+  { capability: 'Offers published sources, original AI recipes and ready-made options', scope: 'search' },
   { capability: 'Provides estimated cost per portion', scope: 'search' },
   { capability: 'Compares cost, time, portions and nutrition in one place', scope: 'search' },
   { capability: 'Saves recipes for later', scope: 'planning' },
@@ -115,7 +115,7 @@ export const WhyDinnerByDesignComparison: React.FC<WhyDinnerByDesignComparisonPr
       </div>
 
       <p className="mt-4 text-xs leading-5 text-dbd-ink-3">
-        DinnerByDesign draws recipes from named UK publishers only. A general LLM search is not normally limited to UK sources unless the user specifies that requirement.
+        Published recipes come from named UK publisher sources and open at their original source. AI-created recipes are original DinnerByDesign suggestions, rather than publisher recipes.
       </p>
 
       {compact && onTryFreeSearch && (

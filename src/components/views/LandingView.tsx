@@ -12,8 +12,7 @@ import {
   ArrowDown as ArrowDownIcon,
   Globe as GlobeIcon,
   Menu as MenuIcon,
-  X as XIcon,
-  Sparkles as SparklesIcon
+  X as XIcon
 } from 'lucide-react';
 
 const LOGO_EASE: [number, number, number, number] = [0.215, 0.61, 0.355, 1];
@@ -57,15 +56,15 @@ export const LandingView: React.FC = () => {
   // Scroll tracking & responsive menus
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
-  const [sandboxQuery, setSandboxQuery] = useState('Leftover chicken');
-  const [sandboxSource, setSandboxSource] = useState<'cook' | 'ready-made'>('cook');
+  const [sandboxQuery, setSandboxQuery] = useState('Quick chicken dinner');
+  const [sandboxSource, setSandboxSource] = useState<'ai-created' | 'published' | 'ready-made'>('ai-created');
   const [isSandboxSearching, setIsSandboxSearching] = useState(false);
   const [subscriptionEmail, setSubscriptionEmail] = useState('');
   const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
   const [emailSuccess, setEmailSuccess] = useState(false);
 
   // Predefined datasets for the interactive sandbox mockup
-  const mockCookData: Record<string, { title: string; meta: string; source: string }[]> = {
+  const mockPublishedData: Record<string, { title: string; meta: string; source: string }[]> = {
     'Leftover chicken': [
       { title: 'Leftover chicken pasta bake', meta: '35 min · serves 4 · ~£4.80', source: 'BBC Food' },
       { title: 'Leftover chicken fried rice', meta: '25 min · serves 4 · ~£3.60', source: 'Good Food' },
@@ -115,6 +114,24 @@ export const LandingView: React.FC = () => {
       { title: 'Creamy Spiced Red Lentil Dhal', meta: '25 min · serves 4 · ~£1.80', source: 'Budget Bytes' },
       { title: 'Simple Tomato & Basil Pasta', meta: '15 min · serves 2 · ~£1.10', source: 'Tesco' },
       { title: 'Zesty Chickpea & Spinach Stew', meta: '20 min · serves 2 · ~£2.20', source: 'BBC Food' }
+    ]
+  };
+
+  const mockAiCreatedData: Record<string, { title: string; meta: string; source: string }[]> = {
+    'Quick chicken dinner': [
+      { title: 'Lemon chicken, pepper and couscous', meta: '30 min · serves 2 · estimated £3.20 pp', source: 'DinnerByDesign AI' },
+      { title: 'Paprika chicken with potatoes and greens', meta: '35 min · serves 2 · estimated £3.40 pp', source: 'DinnerByDesign AI' },
+      { title: 'Chicken, tomato and butter bean skillet', meta: '25 min · serves 2 · estimated £3.10 pp', source: 'DinnerByDesign AI' }
+    ],
+    'Pork, tomatoes and potatoes': [
+      { title: 'Herby pork and tomato traybake', meta: '45 min · serves 2 · estimated £3.60 pp', source: 'DinnerByDesign AI' },
+      { title: 'Smoky pork and potato skillet', meta: '35 min · serves 2 · estimated £3.50 pp', source: 'DinnerByDesign AI' },
+      { title: 'Pork, tomato and rosemary stew', meta: '50 min · serves 2 · estimated £3.40 pp', source: 'DinnerByDesign AI' }
+    ],
+    'Vegetarian weeknight dinner': [
+      { title: 'Roasted vegetable and butter bean couscous', meta: '35 min · serves 2 · estimated £2.40 pp', source: 'DinnerByDesign AI' },
+      { title: 'Tomato, spinach and lentil pasta', meta: '30 min · serves 2 · estimated £2.10 pp', source: 'DinnerByDesign AI' },
+      { title: 'Crisp potato and chickpea salad bowls', meta: '30 min · serves 2 · estimated £2.30 pp', source: 'DinnerByDesign AI' }
     ]
   };
 
@@ -264,10 +281,14 @@ export const LandingView: React.FC = () => {
     }, 450);
   };
 
-  const selectSandboxSource = (source: 'cook' | 'ready-made') => {
+  const selectSandboxSource = (source: 'ai-created' | 'published' | 'ready-made') => {
     setIsSandboxSearching(true);
     setSandboxSource(source);
-    setSandboxQuery(source === 'ready-made' ? READY_MADE_SANDBOX_TAGS[0] : 'Leftover chicken');
+    setSandboxQuery(source === 'ready-made'
+      ? READY_MADE_SANDBOX_TAGS[0]
+      : source === 'published'
+        ? 'Leftover chicken'
+        : 'Quick chicken dinner');
     setTimeout(() => {
       setIsSandboxSearching(false);
     }, 400);
@@ -287,9 +308,11 @@ export const LandingView: React.FC = () => {
   };
 
   // Get current state records
-  const currentResultList = sandboxSource === 'cook'
-    ? (mockCookData[sandboxQuery] || mockCookData['Leftover chicken'])
-    : (mockReadyMadeData[sandboxQuery] || mockReadyMadeData['Leftover chicken']);
+  const currentResultList = sandboxSource === 'ai-created'
+    ? (mockAiCreatedData[sandboxQuery] || mockAiCreatedData['Quick chicken dinner'])
+    : sandboxSource === 'published'
+      ? (mockPublishedData[sandboxQuery] || mockPublishedData['Leftover chicken'])
+      : (mockReadyMadeData[sandboxQuery] || mockReadyMadeData['Leftover chicken']);
 
   return (
     <div className="native-scroll-root flex flex-col bg-dbd-surface hover:scrollbar-hide min-h-screen text-dbd-ink font-sans selection:bg-dbd-accent selection:text-white antialiased">
@@ -421,6 +444,9 @@ export const LandingView: React.FC = () => {
             DinnerByDesign helps you plan varied dinners around what you already have. Reuse ingredients across the week, and see estimated shopping costs before you buy.
           </p>
           <p>
+            Choose original recipes created by DinnerByDesign AI, published recipes that open at their source, or ready-made supermarket dinner options.
+          </p>
+          <p>
             Set your preferences once, and every search works from them automatically — diet, allergies, budget, calories, portions, time, cooking method, nutrition goals, trusted sources and preferred supermarkets, without retyping any of it. That's what makes results precise rather than generic: a search that already knows you're cooking for one and avoiding nuts doesn't need to be told twice. Revise your preferences any time, or override them for a single search.
           </p>
           <p className="font-semibold text-dbd-ink">
@@ -480,23 +506,30 @@ export const LandingView: React.FC = () => {
               <div className="relative">
                 <div className="lg:pr-72">
 
-                  {/* Recipe Source Toggle (HOMEMADE / READY-MADE) */}
-                  <div className="flex justify-center mb-6 max-w-sm sm:max-w-md mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono font-semibold">
-                <button 
-                  onClick={() => selectSandboxSource('cook')}
-                  className={`flex-1 py-2 px-3 text-center cursor-pointer transition-all ${sandboxSource === 'cook' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
+                  <div className="grid grid-cols-3 justify-center mb-3 max-w-xl mx-auto border border-dbd-rule/80 bg-dbd-surface-2/60 p-1 font-ibm-plex-mono font-semibold">
+                <button
+                  onClick={() => selectSandboxSource('ai-created')}
+                  className={`py-2 px-2 text-center cursor-pointer transition-all ${sandboxSource === 'ai-created' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                 >
-                  <span className="block text-[12px] leading-tight uppercase font-bold tracking-wider">Homemade</span>
-                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5 lowercase">recipes to cook</span>
+                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">AI-created</span>
+                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5">tailored choices</span>
+                </button>
+                <button 
+                  onClick={() => selectSandboxSource('published')}
+                  className={`py-2 px-2 text-center cursor-pointer transition-all ${sandboxSource === 'published' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
+                >
+                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">Published</span>
+                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5">open original source</span>
                 </button>
                 <button 
                   onClick={() => selectSandboxSource('ready-made')}
-                  className={`flex-1 py-2 px-3 text-center cursor-pointer transition-all ${sandboxSource === 'ready-made' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
+                  className={`py-2 px-2 text-center cursor-pointer transition-all ${sandboxSource === 'ready-made' ? 'bg-white shadow text-dbd-accent font-bold border-0' : 'text-dbd-ink-3 hover:text-dbd-ink'}`}
                 >
-                  <span className="block text-[12px] leading-tight uppercase font-bold tracking-wider">Ready-Made</span>
-                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5 lowercase">supermarket options</span>
+                  <span className="block text-[10px] sm:text-[11px] leading-tight uppercase font-bold tracking-wider">Ready-made</span>
+                  <span className="block text-[9px] text-dbd-ink-3 leading-none font-sans font-normal mt-0.5">supermarket options</span>
                 </button>
                   </div>
+                  <p className="mb-6 text-center text-[11px] leading-4 text-dbd-ink-3">AI-created recipes are original DinnerByDesign suggestions. Published recipes open at their original source.</p>
 
                   {/* Fake Interactive Input String block */}
                   <div className="max-w-2xl mx-auto flex border border-dbd-rule bg-white shadow-sm overflow-hidden select-none hover:border-dbd-accent transition-all">
@@ -521,7 +554,9 @@ export const LandingView: React.FC = () => {
                 <div className="flex flex-wrap gap-x-3 gap-y-2 sm:gap-2">
                   {(sandboxSource === 'ready-made'
                     ? READY_MADE_SANDBOX_TAGS
-                    : ['Leftover chicken', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50']
+                    : sandboxSource === 'published'
+                      ? ['Leftover chicken', 'Minced Beef', 'Spaghetti', 'Jamie Oliver', 'Air Fryer', 'Lobster', 'Plaice', 'Vegetarian', 'Pork bones', 'Less than £2.50']
+                      : ['Quick chicken dinner', 'Pork, tomatoes and potatoes', 'Vegetarian weeknight dinner']
                   ).map((tag, index) => (
                     <button
                       key={tag}
@@ -539,11 +574,11 @@ export const LandingView: React.FC = () => {
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[11px] font-mono text-dbd-ink-3 font-semibold">
                   {isSandboxSearching ? (
-                    <span className="text-dbd-accent animate-pulse font-medium">Re-indexing published records...</span>
+                    <span className="text-dbd-accent animate-pulse font-medium">{sandboxSource === 'ai-created' ? 'Creating tailored choices...' : sandboxSource === 'published' ? 'Finding published recipes...' : 'Finding supermarket options...'}</span>
                   ) : (
                     <>
                       <span className="sm:hidden">{currentResultList.length} matches</span>
-                      <span className="hidden sm:inline">{currentResultList.length} recipes • verified in 0.54s</span>
+                      <span className="hidden sm:inline">{currentResultList.length} {sandboxSource === 'ai-created' ? 'original choices' : sandboxSource === 'published' ? 'published recipes' : 'supermarket options'}</span>
                     </>
                   )}
                 </span>
@@ -555,7 +590,7 @@ export const LandingView: React.FC = () => {
                       <div className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-xs select-none">
                     <div className="text-center">
                       <div className="w-6 h-6 border-2 border-dbd-accent border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                      <p className="text-[11px] text-dbd-ink-3 font-mono">Costing ingredients & verifying links...</p>
+                      <p className="text-[11px] text-dbd-ink-3 font-mono">{sandboxSource === 'ai-created' ? 'Creating choices around your brief...' : 'Checking available options...'}</p>
                     </div>
                       </div>
                     ) : null}
@@ -575,7 +610,7 @@ export const LandingView: React.FC = () => {
                               {recipe.meta}
                             </p>
                             <span className="inline-flex w-fit shrink-0 mt-0.5 text-[8.5px] sm:text-[9px] font-ibm-plex-mono font-semibold uppercase tracking-wider leading-none text-dbd-ink-3 bg-dbd-surface px-2 py-1 border border-dbd-rule rounded-sm group-hover/card:border-dbd-accent group-hover/card:text-dbd-accent group-hover/card:bg-dbd-accent-light transition-all">
-                              from {recipe.source}
+                              {sandboxSource === 'ai-created' ? 'Created by DinnerByDesign AI' : sandboxSource === 'published' ? `opens at ${recipe.source}` : `from ${recipe.source}`}
                             </span>
                           </div>
                         </div>
@@ -627,7 +662,7 @@ export const LandingView: React.FC = () => {
             I live on my own, which means smaller portions, odd quantities and a lot of ingredients I can't use up before they go off. As food prices keep rising, I found myself doing what most people do, on their own or with a family to feed: looking for cheaper options, trying to make ingredients stretch further, and still throwing away more than I'd like. I built DinnerByDesign to help me deal with those problems, and to help anyone else managing some version of the same thing.
           </p>
           <p className="mt-3 sm:mt-5 text-[15px] sm:text-[17px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-            My app starts with what you already have, points you towards practical recipes from established sources, and helps you plan dinners with cost and waste in mind.
+            My app starts with what you already have, lets you choose between original AI-created recipes, published sources and ready-made options, and helps you plan dinners with cost and waste in mind.
           </p>
           <p className="mt-4 sm:mt-6 text-[13px] font-ibm-plex-mono font-semibold text-dbd-accent">
             Terence, Head chef
@@ -709,7 +744,7 @@ export const LandingView: React.FC = () => {
                   </h4>
                 </div>
                 <p className="col-start-2 text-[13px] sm:text-[14px] text-dbd-ink-2 leading-relaxed font-sans font-normal">
-                  One set of ingredients returns verified, costed recipes or ready-made supermarket options.
+                  Choose original AI-created recipes, published recipes that open at source, or ready-made supermarket options.
                 </p>
               </div>
             </div>
@@ -789,11 +824,11 @@ export const LandingView: React.FC = () => {
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Fast, focused results</strong>: get tailored dinner ideas in seconds.</span>
+                <span><strong>AI-created recipe choices</strong>: get three original recipes shaped around your brief and saved preferences, ready to save, schedule, shop, print or email.</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
-                <span><strong>Compare cost and nutrition</strong>: see estimated cost-per-portion, calories and nutritional breakdowns for each dinner, and compare cost, time, source, servings and ingredients side by side. <button type="button" onClick={() => setView('nutrition-methodology')} className="font-semibold text-dbd-accent hover:underline">How nutrition is estimated.</button></span>
+                <span><strong>Compare the details that matter</strong>: compare estimated cost, time, source, servings and ingredients side by side. Nutrition information is shown where it can be estimated. <button type="button" onClick={() => setView('nutrition-methodology')} className="font-semibold text-dbd-accent hover:underline">How nutrition is estimated.</button></span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckIcon className="w-5 h-5 text-dbd-accent shrink-0 mt-0.5" />
@@ -923,6 +958,10 @@ export const LandingView: React.FC = () => {
               {
                 question: 'Can I search by ingredients I already have?',
                 answer: 'Yes. Search from ingredients in your fridge or cupboard, then use preferences to narrow results by diet, budget, time and cooking method.'
+              },
+              {
+                question: 'What are AI-created recipes?',
+                answer: 'They are original DinnerByDesign AI recipes shaped around your brief and saved preferences, rather than publisher recipes. Times and prices are estimates, so check quantities, allergens and cooking instructions before you start.'
               },
               {
                 question: 'Does it include supermarket ready-made options?',
