@@ -29,9 +29,9 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
 }) => {
   if (threeWaySearch) {
     const modes: Array<{ id: SearchMode; label: string; detail: string }> = [
-      { id: 'ai-created', label: 'AI-created dinners', detail: 'tailored choices' },
+      { id: 'ai-created', label: 'AI-created recipes', detail: 'tailored choices' },
       { id: 'published', label: 'Published recipes', detail: 'open original source' },
-      { id: 'ready-made', label: 'Ready-made', detail: 'supermarket options' }
+      { id: 'ready-made', label: 'Ready-made dinners', detail: 'supermarket options' }
     ];
 
     return (

@@ -34,8 +34,8 @@ describe('SearchHeader', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: /AI-created dinners/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /AI-created recipes/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Published recipes/i })).toBeTruthy();
-    expect(screen.getByRole('button', { name: /Ready-made/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /Ready-made dinners/i })).toBeTruthy();
   });
 });

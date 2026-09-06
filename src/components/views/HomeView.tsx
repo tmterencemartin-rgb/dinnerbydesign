@@ -864,17 +864,11 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             </div>
 
               {isAiCreatedSearch ? (
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
-                    <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
-                    <span>AI-created dinners are original DinnerByDesign suggestions. They do not use publisher recipes or source links.</span>
-                  </div>
-                  <AiCreatedDinnerSearch
-                    preferences={localPreferences}
-                    disabled={isReadOnly || isGuestSearchLimitReached}
-                    onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
-                  />
-                </div>
+                <AiCreatedDinnerSearch
+                  preferences={localPreferences}
+                  disabled={isReadOnly || isGuestSearchLimitReached}
+                  onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
+                />
               ) : (
               <div className="flex flex-col gap-3 relative w-full">
               <div className="flex gap-2 items-center w-full">
