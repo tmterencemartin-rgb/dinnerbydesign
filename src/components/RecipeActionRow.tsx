@@ -15,6 +15,8 @@ interface RecipeActionRowProps {
   onRemove: () => void;
   onDaySelect: (day: string) => void;
   planner: SavedRecipe[];
+  allowScheduling?: boolean;
+  saveDisabled?: boolean;
 }
 
 export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({ 
@@ -24,7 +26,9 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
   onSave, 
   onRemove, 
   onDaySelect, 
-  planner 
+  planner,
+  allowScheduling = false,
+  saveDisabled = false
 }) => {
   const [isEmailing, setIsEmailing] = useState(false);
   const [isChoosingDay, setIsChoosingDay] = useState(false);
@@ -44,6 +48,8 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
     await Promise.resolve(onDaySelect(day));
     setIsChoosingDay(false);
   };
+
+  const handleSchedule = () => setIsChoosingDay(true);
 
   const handleEmailRecipe = async () => {
     if (!user || !user.email) {
@@ -184,10 +190,11 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
 
   return (
     <div className="flex flex-col gap-0.5 w-full">
-      <div className="grid grid-cols-3 items-stretch gap-1.5 sm:gap-2">
+      <div className={`grid items-stretch gap-1.5 sm:gap-2 ${allowScheduling ? 'grid-cols-4' : 'grid-cols-3'}`}>
         <button 
           onClick={handleSaveAndSchedule}
-          className={`w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 rounded-none sm:rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border-b sm:border ${
+          disabled={saveDisabled}
+          className={`w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 rounded-none sm:rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border-b sm:border disabled:cursor-not-allowed disabled:opacity-50 ${
             isSaved 
               ? 'bg-transparent sm:bg-accent text-accent sm:text-white border-accent hover:bg-accent/5 sm:hover:bg-accent/90'
               : 'bg-white text-gray-700 border-gray-100 hover:bg-gray-50'
@@ -202,6 +209,18 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
           )}
           <span>{!isSaved ? 'Save' : scheduledDate ? 'Scheduled' : 'Saved'}</span>
         </button>
+
+        {allowScheduling && (
+          <button
+            type="button"
+            onClick={handleSchedule}
+            disabled={saveDisabled}
+            className="w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border-b sm:border border-gray-100 rounded-none sm:rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 whitespace-nowrap"
+          >
+            <CalendarCheck className="hidden sm:block w-3.5 h-3.5" />
+            <span>{scheduledDate ? 'Reschedule' : 'Schedule'}</span>
+          </button>
+        )}
         
         <button 
           onClick={handleEmailRecipe}

@@ -3,6 +3,9 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { getApiUrl } from '../../lib/api';
 import { getSearchAuthToken } from '../../lib/searchAuth';
 import type { InternalDinnerChoice } from '../../lib/internalDinnerPilot';
+import { RecipeActionRow } from '../RecipeActionRow';
+import { useAuth } from '../../contexts/AuthContext';
+import { isSameRecipe } from '../../lib/recipeUtils';
 
 interface AiCreatedDinnerSearchProps {
   preferences: unknown;
@@ -25,6 +28,26 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const { accessStatus, planner, removeRecipe, saveRecipe, savedRecipes, showToast, updatePlanner } = useAuth();
+
+  const saveChoice = async (choice: InternalDinnerChoice) => {
+    const savedId = await saveRecipe(choice);
+    if (!savedId) throw new Error('Save did not return a recipe id.');
+    showToast('Recipe saved.');
+  };
+
+  const removeChoice = async (choice: InternalDinnerChoice) => {
+    const saved = savedRecipes.find(recipe => isSameRecipe(recipe, choice));
+    if (!saved?.id) return;
+    await removeRecipe(saved.id);
+    showToast('Recipe removed from saved.');
+  };
+
+  const scheduleChoice = async (day: string, choice: InternalDinnerChoice) => {
+    const result = await updatePlanner(day, choice);
+    if (!result) throw new Error('Schedule did not return a recipe id.');
+    showToast(`Scheduled for ${day}. Shopping list updated.`);
+  };
 
   const generateChoices = async () => {
     const trimmedBrief = brief.trim();
@@ -55,13 +78,13 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   };
 
   return (
-    <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="ai-created-dinner-heading">
+    <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="ai-created-recipe-heading">
       <div className="flex items-start gap-3">
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-dbd-accent" aria-hidden="true" />
         <div className="min-w-0 flex-1">
-          <h2 id="ai-created-dinner-heading" className="text-sm font-semibold text-dbd-ink">AI-created dinners</h2>
+          <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
           <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
-            Create three original choices from your brief and saved preferences. They do not use published recipes or source links. Saving, scheduling, shopping, printing and email are not available for these choices yet.
+            Create three original recipes from your brief and saved preferences. They do not use published recipes or source links.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
@@ -108,6 +131,19 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
                 {choice.instructions.map((step, stepIndex) => <li key={`${choice.title}-${stepIndex}`}>{step}</li>)}
               </ol>
               <p className="mt-3 text-[10px] leading-4 text-dbd-ink-3">Check quantities and allergen suitability before cooking.</p>
+              <div className="mt-3">
+                <RecipeActionRow
+                  recipe={choice}
+                  isSaved={savedRecipes.some(recipe => isSameRecipe(recipe, choice))}
+                  scheduledDate={planner.find(recipe => isSameRecipe(recipe, choice))?.scheduledDate}
+                  onSave={() => saveChoice(choice)}
+                  onRemove={() => void removeChoice(choice)}
+                  onDaySelect={(day) => scheduleChoice(day, choice)}
+                  planner={planner}
+                  allowScheduling
+                  saveDisabled={accessStatus === 'read_only'}
+                />
+              </div>
             </article>
           ))}
         </div>
