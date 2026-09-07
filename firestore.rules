@@ -90,6 +90,15 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isAnonymousIdentity() {
+      return isAuthenticated() &&
+             request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
+    function isRegisteredIdentity() {
+      return isAuthenticated() && !isAnonymousIdentity();
+    }
+
     function isAdmin() {
       return isAuthenticated() &&
              request.auth.token.get('email', '') in [
@@ -132,7 +141,7 @@ service cloud.firestore {
     }
 
     function canWrite(uid) {
-      return isOwner(uid) && !isReadOnly();
+      return isRegisteredIdentity() && isOwner(uid) && !isReadOnly();
     }
 
     function hasRequiredFields(fields) {
@@ -266,7 +275,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isOwner(userId) && isValidUserCreate(request.resource.data);
+      allow create: if isRegisteredIdentity() && isOwner(userId) && isValidUserCreate(request.resource.data);
       allow update: if isAdmin() ||
                     (isOwner(userId) && isValidUserUpdate(request.resource.data, resource.data));
       allow delete: if isOwner(userId) || isAdmin();
