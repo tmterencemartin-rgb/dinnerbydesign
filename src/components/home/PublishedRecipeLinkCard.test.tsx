@@ -22,11 +22,12 @@ const recipe: Recipe = {
 };
 
 describe('PublishedRecipeLinkCard', () => {
-  it('shows an outbound publisher link without recipe content', () => {
+  it('shows a compact outbound publisher link without recipe content or duplicated source text', () => {
     render(<PublishedRecipeLinkCard recipe={recipe} query="chicken and lemon" />);
 
     expect(screen.getByText('Roast chicken with lemon')).toBeTruthy();
-    expect(screen.getByText('From BBC Good Food')).toBeTruthy();
+    expect(screen.queryByText('From BBC Good Food')).toBeNull();
+    expect(screen.queryByText('Published recipe')).toBeNull();
     expect(screen.getByRole('link', { name: 'Open Roast chicken with lemon at BBC Good Food' }).getAttribute('href'))
       .toBe(recipe.sourceUrl);
     expect(screen.queryByText('Chicken')).toBeNull();
