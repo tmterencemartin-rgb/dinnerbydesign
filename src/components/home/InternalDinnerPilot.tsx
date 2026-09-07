@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Flag, Loader2, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
-import { getSearchAuthToken } from '../../lib/searchAuth';
+import { getSearchSecurityHeaders } from '../../lib/searchAuth';
 import type { InternalDinnerChoice } from '../../lib/internalDinnerPilot';
 import { RecipeActionRow } from '../RecipeActionRow';
 import { useAuth } from '../../contexts/AuthContext';
@@ -118,12 +118,12 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
     setError(null);
     setHasPartialChoices(false);
     try {
-      const token = await getSearchAuthToken();
+      const searchSecurityHeaders = await getSearchSecurityHeaders();
       const response = await fetch(getApiUrl('/api/ai-created-dinners'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
+          ...searchSecurityHeaders
         },
         body: JSON.stringify({ brief: trimmedBrief, preferences })
       });

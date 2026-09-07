@@ -839,9 +839,9 @@ const sanitizeRationaleMap = (value: any): Record<string, string> => Object.from
 
 const SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
 
-async function getSearchAuthToken(): Promise<string> {
+async function getSearchSecurityHeaders(): Promise<Record<string, string>> {
   const authModule = await import('../lib/searchAuth');
-  return authModule.getSearchAuthToken();
+  return authModule.getSearchSecurityHeaders();
 }
 
 async function fetchProxySuggestions(searchParams: SearchParams, preferences?: UserPreferences, signal?: AbortSignal): Promise<any> {
@@ -860,12 +860,12 @@ async function fetchProxySuggestions(searchParams: SearchParams, preferences?: U
   try {
     const url = getApiUrl('/api/generate-suggestions');
     console.log(`[Diagnostic] Fetching ${url} (Origin: ${window.location.origin})`);
-    const token = await getSearchAuthToken();
+    const searchSecurityHeaders = await getSearchSecurityHeaders();
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
+        ...searchSecurityHeaders
       },
       body: JSON.stringify({ searchParams, preferences }),
       signal: controller.signal

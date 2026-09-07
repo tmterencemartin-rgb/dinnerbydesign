@@ -171,6 +171,8 @@ When a user lists ingredients:
 
 - `SIMPLIFIED_GUEST_SEARCH_STATES` in `src/config/features.ts` gates the simplified new, returning and exhausted guest Search states.
 - Anonymous Firebase identities exist only to enforce the guest-search allowance. Keep guest work in the browser and do not allow anonymous identities to create or update persistent user, preference, saved-recipe, shopping or pantry records. Anonymous recipe feedback remains permitted.
+- The server also rate-limits guest searches by an HMAC of the client address, without storing the raw address. `GUEST_RATE_LIMIT_SECRET` is server-only and must never be committed or exposed to the client.
+- Firebase App Check begins in monitoring mode. Register all web and native app variants before enabling Firestore, Authentication or API enforcement. Do not enable `FIREBASE_APP_CHECK_ENFORCE_API` until request metrics show that current visitors receive App Check tokens.
 - Keep the existing guest Search interface available behind the `false` flag path. Set the flag to `false` for an immediate rollback without deleting either implementation.
 - When the free-search allowance is exhausted, replace inactive Search controls with one account panel while leaving any existing results visible below it.
 - New guests may see no more than three compact starter searches. Returning guests should see a quiet remaining-search count rather than the full onboarding panel.

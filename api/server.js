@@ -12,16 +12,16 @@ var __esm = (fn, res, err) => function __init() {
     throw err = [e2], e2;
   }
 };
-var __commonJS = (cb, mod4) => function __require() {
+var __commonJS = (cb, mod5) => function __require() {
   try {
-    return mod4 || (0, cb[__getOwnPropNames(cb)[0]])((mod4 = { exports: {} }).exports, mod4), mod4.exports;
+    return mod5 || (0, cb[__getOwnPropNames(cb)[0]])((mod5 = { exports: {} }).exports, mod5), mod5.exports;
   } catch (e2) {
-    throw mod4 = 0, e2;
+    throw mod5 = 0, e2;
   }
 };
 var __export = (target, all) => {
-  for (var name5 in all)
-    __defProp(target, name5, { get: all[name5], enumerable: true });
+  for (var name6 in all)
+    __defProp(target, name6, { get: all[name6], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -31,15 +31,15 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod4, isNodeMode, target) => (target = mod4 != null ? __create(__getProtoOf(mod4)) : {}, __copyProps(
+var __toESM = (mod5, isNodeMode, target) => (target = mod5 != null ? __create(__getProtoOf(mod5)) : {}, __copyProps(
   // If the importer is in node compatibility mode or this is not an ESM
   // file that has been converted to a CommonJS file using a Babel-
   // compatible transform (i.e. "__esModule" has not been set), then set
   // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod4 || !mod4.__esModule ? __defProp(target, "default", { value: mod4, enumerable: true }) : target,
-  mod4
+  isNodeMode || !mod5 || !mod5.__esModule ? __defProp(target, "default", { value: mod5, enumerable: true }) : target,
+  mod5
 ));
-var __toCommonJS = (mod4) => __copyProps(__defProp({}, "__esModule", { value: true }), mod4);
+var __toCommonJS = (mod5) => __copyProps(__defProp({}, "__esModule", { value: true }), mod5);
 
 // node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
@@ -469,9 +469,9 @@ var require_ms = __commonJS({
       }
       return ms + " ms";
     }
-    function plural(ms, msAbs, n, name5) {
+    function plural(ms, msAbs, n, name6) {
       var isPlural = msAbs >= n * 1.5;
-      return Math.round(ms / n) + " " + name5 + (isPlural ? "s" : "");
+      return Math.round(ms / n) + " " + name6 + (isPlural ? "s" : "");
     }
   }
 });
@@ -624,14 +624,14 @@ var require_common = __commonJS({
         createDebug.enable("");
         return namespaces;
       }
-      function enabled(name5) {
+      function enabled(name6) {
         for (const skip of createDebug.skips) {
-          if (matchesTemplate(name5, skip)) {
+          if (matchesTemplate(name6, skip)) {
             return false;
           }
         }
         for (const ns of createDebug.names) {
-          if (matchesTemplate(name5, ns)) {
+          if (matchesTemplate(name6, ns)) {
             return true;
           }
         }
@@ -947,15 +947,15 @@ var require_node = __commonJS({
       return "colors" in exports2.inspectOpts ? Boolean(exports2.inspectOpts.colors) : tty.isatty(process.stderr.fd);
     }
     function formatArgs(args) {
-      const { namespace: name5, useColors: useColors2 } = this;
+      const { namespace: name6, useColors: useColors2 } = this;
       if (useColors2) {
         const c = this.color;
         const colorCode = "\x1B[3" + (c < 8 ? c : "8;5;" + c);
-        const prefix = `  ${colorCode};1m${name5} \x1B[0m`;
+        const prefix = `  ${colorCode};1m${name6} \x1B[0m`;
         args[0] = prefix + args[0].split("\n").join("\n" + prefix);
         args.push(colorCode + "m+" + module2.exports.humanize(this.diff) + "\x1B[0m");
       } else {
-        args[0] = getDate() + name5 + " " + args[0];
+        args[0] = getDate() + name6 + " " + args[0];
       }
     }
     function getDate() {
@@ -1601,8 +1601,8 @@ var require_http_errors = __commonJS({
       inherits(HttpError, Error);
       return HttpError;
     }
-    function createClientErrorConstructor(HttpError, name5, code) {
-      var className = toClassName(name5);
+    function createClientErrorConstructor(HttpError, name6, code) {
+      var className = toClassName(name6);
       function ClientError(message2) {
         var msg = message2 != null ? message2 : statuses.message[code];
         var err = new Error(msg);
@@ -1640,8 +1640,8 @@ var require_http_errors = __commonJS({
         return val instanceof Error && typeof val.expose === "boolean" && typeof val.statusCode === "number" && val.status === val.statusCode;
       };
     }
-    function createServerErrorConstructor(HttpError, name5, code) {
-      var className = toClassName(name5);
+    function createServerErrorConstructor(HttpError, name6, code) {
+      var className = toClassName(name6);
       function ServerError(message2) {
         var msg = message2 != null ? message2 : statuses.message[code];
         var err = new Error(msg);
@@ -1668,33 +1668,33 @@ var require_http_errors = __commonJS({
       ServerError.prototype.expose = false;
       return ServerError;
     }
-    function nameFunc(func, name5) {
+    function nameFunc(func, name6) {
       var desc = Object.getOwnPropertyDescriptor(func, "name");
       if (desc && desc.configurable) {
-        desc.value = name5;
+        desc.value = name6;
         Object.defineProperty(func, "name", desc);
       }
     }
     function populateConstructorExports(exports3, codes, HttpError) {
       codes.forEach(function forEachCode(code) {
         var CodeError;
-        var name5 = toIdentifier(statuses.message[code]);
+        var name6 = toIdentifier(statuses.message[code]);
         switch (codeClass(code)) {
           case 400:
-            CodeError = createClientErrorConstructor(HttpError, name5, code);
+            CodeError = createClientErrorConstructor(HttpError, name6, code);
             break;
           case 500:
-            CodeError = createServerErrorConstructor(HttpError, name5, code);
+            CodeError = createServerErrorConstructor(HttpError, name6, code);
             break;
         }
         if (CodeError) {
           exports3[code] = CodeError;
-          exports3[name5] = CodeError;
+          exports3[name6] = CodeError;
         }
       });
     }
-    function toClassName(name5) {
-      return name5.slice(-5) === "Error" ? name5 : name5 + "Error";
+    function toClassName(name6) {
+      return name6.slice(-5) === "Error" ? name6 : name6 + "Error";
     }
   }
 });
@@ -15948,8 +15948,8 @@ var require_read = __commonJS({
     var zlib2 = require("node:zlib");
     var hasBody = require_type_is().hasBody;
     var { getCharset } = require_utils();
-    module2.exports = read;
-    function read(req, res, next, parse, debug, options2) {
+    module2.exports = read2;
+    function read2(req, res, next, parse, debug, options2) {
       if (onFinished.isFinished(req)) {
         debug("body already parsed");
         next();
@@ -16100,7 +16100,7 @@ var require_json = __commonJS({
   "node_modules/body-parser/lib/types/json.js"(exports2, module2) {
     "use strict";
     var debug = require_src()("body-parser:json");
-    var read = require_read();
+    var read2 = require_read();
     var { normalizeOptions } = require_utils();
     module2.exports = json2;
     var FIRST_CHAR_REGEXP = /^[\x20\x09\x0a\x0d]*([^\x20\x09\x0a\x0d])/;
@@ -16115,7 +16115,7 @@ var require_json = __commonJS({
         isValidCharset: (charset) => charset.slice(0, 4) === "utf-"
       };
       return function jsonParser(req, res, next) {
-        read(req, res, next, parse, debug, readOptions);
+        read2(req, res, next, parse, debug, readOptions);
       };
     }
     function createJsonParser(options2) {
@@ -16199,7 +16199,7 @@ var require_raw = __commonJS({
   "node_modules/body-parser/lib/types/raw.js"(exports2, module2) {
     "use strict";
     var debug = require_src()("body-parser:raw");
-    var read = require_read();
+    var read2 = require_read();
     var { normalizeOptions, passthrough } = require_utils();
     module2.exports = raw;
     function raw(options2) {
@@ -16210,7 +16210,7 @@ var require_raw = __commonJS({
         skipCharset: true
       };
       return function rawParser(req, res, next) {
-        read(req, res, next, passthrough, debug, readOptions);
+        read2(req, res, next, passthrough, debug, readOptions);
       };
     }
   }
@@ -16221,13 +16221,13 @@ var require_text = __commonJS({
   "node_modules/body-parser/lib/types/text.js"(exports2, module2) {
     "use strict";
     var debug = require_src()("body-parser:text");
-    var read = require_read();
+    var read2 = require_read();
     var { normalizeOptions, passthrough } = require_utils();
     module2.exports = text;
     function text(options2) {
       const normalizedOptions = normalizeOptions(options2, "text/plain");
       return function textParser(req, res, next) {
-        read(req, res, next, passthrough, debug, normalizedOptions);
+        read2(req, res, next, passthrough, debug, normalizedOptions);
       };
     }
   }
@@ -16387,9 +16387,9 @@ var require_object_inspect = __commonJS({
         return inspect_(value, opts, depth + 1, seen);
       }
       if (typeof obj === "function" && !isRegExp(obj)) {
-        var name5 = nameOf(obj);
+        var name6 = nameOf(obj);
         var keys = arrObjKeys(obj, inspect2);
-        return "[Function" + (name5 ? ": " + name5 : " (anonymous)") + "]" + (keys.length > 0 ? " { " + $join.call(keys, ", ") + " }" : "");
+        return "[Function" + (name6 ? ": " + name6 : " (anonymous)") + "]" + (keys.length > 0 ? " { " + $join.call(keys, ", ") + " }" : "");
       }
       if (isSymbol(obj)) {
         var symString = hasShammedSymbols ? $replace.call(String(obj), /^(Symbol\(.*\))_[^)]*$/, "$1") : symToString.call(obj);
@@ -17481,26 +17481,26 @@ var require_get_intrinsic = __commonJS({
       }
     }
     var errorProto;
-    var doEval = function doEval2(name5) {
+    var doEval = function doEval2(name6) {
       var value;
-      if (name5 === "%AsyncFunction%") {
+      if (name6 === "%AsyncFunction%") {
         value = getEvalledConstructor("async function () {}");
-      } else if (name5 === "%GeneratorFunction%") {
+      } else if (name6 === "%GeneratorFunction%") {
         value = getEvalledConstructor("function* () {}");
-      } else if (name5 === "%AsyncGeneratorFunction%") {
+      } else if (name6 === "%AsyncGeneratorFunction%") {
         value = getEvalledConstructor("async function* () {}");
-      } else if (name5 === "%AsyncGenerator%") {
+      } else if (name6 === "%AsyncGenerator%") {
         var fn = doEval2("%AsyncGeneratorFunction%");
         if (fn) {
           value = fn.prototype;
         }
-      } else if (name5 === "%AsyncIteratorPrototype%") {
+      } else if (name6 === "%AsyncIteratorPrototype%") {
         var gen = doEval2("%AsyncGenerator%");
         if (gen && getProto) {
           value = getProto(gen.prototype);
         }
       }
-      INTRINSICS[name5] = value;
+      INTRINSICS[name6] = value;
       return value;
     };
     var LEGACY_ALIASES = {
@@ -17580,8 +17580,8 @@ var require_get_intrinsic = __commonJS({
       });
       return result;
     };
-    var getBaseIntrinsic = function getBaseIntrinsic2(name5, allowMissing) {
-      var intrinsicName = name5;
+    var getBaseIntrinsic = function getBaseIntrinsic2(name6, allowMissing) {
+      var intrinsicName = name6;
       var alias;
       if (hasOwn2(LEGACY_ALIASES, intrinsicName)) {
         alias = LEGACY_ALIASES[intrinsicName];
@@ -17593,7 +17593,7 @@ var require_get_intrinsic = __commonJS({
           value = doEval(intrinsicName);
         }
         if (typeof value === "undefined" && !allowMissing) {
-          throw new $TypeError("intrinsic " + name5 + " exists, but is not available. Please file an issue!");
+          throw new $TypeError("intrinsic " + name6 + " exists, but is not available. Please file an issue!");
         }
         return {
           alias,
@@ -17601,19 +17601,19 @@ var require_get_intrinsic = __commonJS({
           value
         };
       }
-      throw new $SyntaxError("intrinsic " + name5 + " does not exist!");
+      throw new $SyntaxError("intrinsic " + name6 + " does not exist!");
     };
-    module2.exports = function GetIntrinsic(name5, allowMissing) {
-      if (typeof name5 !== "string" || name5.length === 0) {
+    module2.exports = function GetIntrinsic(name6, allowMissing) {
+      if (typeof name6 !== "string" || name6.length === 0) {
         throw new $TypeError("intrinsic name must be a non-empty string");
       }
       if (arguments.length > 1 && typeof allowMissing !== "boolean") {
         throw new $TypeError('"allowMissing" argument must be a boolean');
       }
-      if ($exec(/^%?[^%]*%?$/, name5) === null) {
+      if ($exec(/^%?[^%]*%?$/, name6) === null) {
         throw new $SyntaxError("`%` may not be present anywhere but at the beginning and end of the intrinsic name");
       }
-      var parts = stringToPath(name5);
+      var parts = stringToPath(name6);
       var intrinsicBaseName = parts.length > 0 ? parts[0] : "";
       var intrinsic = getBaseIntrinsic("%" + intrinsicBaseName + "%", allowMissing);
       var intrinsicRealName = intrinsic.name;
@@ -17641,7 +17641,7 @@ var require_get_intrinsic = __commonJS({
         } else if (value != null) {
           if (!(part in value)) {
             if (!allowMissing) {
-              throw new $TypeError("base intrinsic for " + name5 + " exists, but the property is not available.");
+              throw new $TypeError("base intrinsic for " + name6 + " exists, but the property is not available.");
             }
             return void undefined2;
           }
@@ -17674,12 +17674,12 @@ var require_call_bound = __commonJS({
     var GetIntrinsic = require_get_intrinsic();
     var callBindBasic = require_call_bind_apply_helpers();
     var $indexOf = callBindBasic([GetIntrinsic("%String.prototype.indexOf%")]);
-    module2.exports = function callBoundIntrinsic(name5, allowMissing) {
+    module2.exports = function callBoundIntrinsic(name6, allowMissing) {
       var intrinsic = (
         /** @type {(this: unknown, ...args: unknown[]) => unknown} */
-        GetIntrinsic(name5, !!allowMissing)
+        GetIntrinsic(name6, !!allowMissing)
       );
-      if (typeof intrinsic === "function" && $indexOf(name5, ".prototype.") > -1) {
+      if (typeof intrinsic === "function" && $indexOf(name6, ".prototype.") > -1) {
         return callBindBasic(
           /** @type {const} */
           [intrinsic]
@@ -18825,7 +18825,7 @@ var require_urlencoded = __commonJS({
     "use strict";
     var createError2 = require_http_errors();
     var debug = require_src()("body-parser:urlencoded");
-    var read = require_read();
+    var read2 = require_read();
     var qs2 = require_lib2();
     var { normalizeOptions } = require_utils();
     module2.exports = urlencoded;
@@ -18841,7 +18841,7 @@ var require_urlencoded = __commonJS({
         isValidCharset: (charset) => charset === "utf-8" || charset === "iso-8859-1"
       };
       return function urlencodedParser(req, res, next) {
-        read(req, res, next, parse, debug, readOptions);
+        read2(req, res, next, parse, debug, readOptions);
       };
     }
     function createQueryParser(options2) {
@@ -18931,12 +18931,12 @@ var require_merge_descriptors = __commonJS({
       if (!source) {
         throw new TypeError("The `source` argument is required.");
       }
-      for (const name5 of Object.getOwnPropertyNames(source)) {
-        if (!overwrite && Object.hasOwn(destination, name5)) {
+      for (const name6 of Object.getOwnPropertyNames(source)) {
+        if (!overwrite && Object.hasOwn(destination, name6)) {
           continue;
         }
-        const descriptor = Object.getOwnPropertyDescriptor(source, name5);
-        Object.defineProperty(destination, name5, descriptor);
+        const descriptor = Object.getOwnPropertyDescriptor(source, name6);
+        Object.defineProperty(destination, name6, descriptor);
       }
       return destination;
     }
@@ -19183,7 +19183,7 @@ var require_finalhandler = __commonJS({
       return status;
     }
     function send(req, res, status, headers, message2) {
-      function write() {
+      function write2() {
         var body = createHtmlDocument(message2);
         res.statusCode = status;
         if (req.httpVersionMajor < 2) {
@@ -19206,11 +19206,11 @@ var require_finalhandler = __commonJS({
         res.end(body, "utf8");
       }
       if (isFinished(req)) {
-        write();
+        write2();
         return;
       }
       req.unpipe();
-      onFinished(req, write);
+      onFinished(req, write2);
       req.resume();
     }
   }
@@ -19229,39 +19229,39 @@ var require_view = __commonJS({
     var join = path3.join;
     var resolve = path3.resolve;
     module2.exports = View;
-    function View(name5, options2) {
+    function View(name6, options2) {
       var opts = options2 || {};
       this.defaultEngine = opts.defaultEngine;
-      this.ext = extname(name5);
-      this.name = name5;
+      this.ext = extname(name6);
+      this.name = name6;
       this.root = opts.root;
       if (!this.ext && !this.defaultEngine) {
         throw new Error("No default engine was specified and no extension was provided.");
       }
-      var fileName = name5;
+      var fileName = name6;
       if (!this.ext) {
         this.ext = this.defaultEngine[0] !== "." ? "." + this.defaultEngine : this.defaultEngine;
         fileName += this.ext;
       }
       if (!opts.engines[this.ext]) {
-        var mod4 = this.ext.slice(1);
-        debug('require "%s"', mod4);
-        var fn = require(mod4).__express;
+        var mod5 = this.ext.slice(1);
+        debug('require "%s"', mod5);
+        var fn = require(mod5).__express;
         if (typeof fn !== "function") {
-          throw new Error('Module "' + mod4 + '" does not provide a view engine.');
+          throw new Error('Module "' + mod5 + '" does not provide a view engine.');
         }
         opts.engines[this.ext] = fn;
       }
       this.engine = opts.engines[this.ext];
       this.path = this.lookup(fileName);
     }
-    View.prototype.lookup = function lookup(name5) {
+    View.prototype.lookup = function lookup(name6) {
       var path4;
       var roots = [].concat(this.root);
-      debug('lookup "%s"', name5);
+      debug('lookup "%s"', name6);
       for (var i2 = 0; i2 < roots.length && !path4; i2++) {
         var root = roots[i2];
-        var loc = resolve(root, name5);
+        var loc = resolve(root, name6);
         var dir = dirname(loc);
         var file = basename3(loc);
         path4 = this.resolve(dir, file);
@@ -20477,8 +20477,8 @@ var require_once = __commonJS({
         f3.called = true;
         return f3.value = fn.apply(this, arguments);
       };
-      var name5 = fn.name || "Function wrapped with `once`";
-      f3.onceError = name5 + " shouldn't be called more than once";
+      var name6 = fn.name || "Function wrapped with `once`";
+      f3.onceError = name6 + " shouldn't be called more than once";
       f3.called = false;
       return f3;
     }
@@ -20567,10 +20567,10 @@ var require_dist3 = __commonJS({
           }
           if (value === ":" || value === "*") {
             const type = value === ":" ? "param" : "wildcard";
-            let name5 = "";
+            let name6 = "";
             if (ID_START.test(chars[index])) {
               do {
-                name5 += chars[index++];
+                name6 += chars[index++];
               } while (ID_CONTINUE.test(chars[index]));
             } else if (chars[index] === '"') {
               let quoteStart = index;
@@ -20582,17 +20582,17 @@ var require_dist3 = __commonJS({
                 }
                 if (chars[index] === "\\")
                   index++;
-                name5 += chars[index];
+                name6 += chars[index];
               }
               if (quoteStart) {
                 throw new PathError(`Unterminated quote at index ${quoteStart}`, str);
               }
             }
-            if (!name5) {
+            if (!name6) {
               throw new PathError(`Missing parameter name at index ${index}`, str);
             }
             writePath();
-            output.push({ type, name: name5 });
+            output.push({ type, name: name6 });
             continue;
           }
           if (value === "{") {
@@ -20854,13 +20854,13 @@ var require_dist3 = __commonJS({
     function stringify2(data) {
       return stringifyTokens(data.tokens, 0);
     }
-    function stringifyName(name5, next) {
-      if (!ID.test(name5))
-        return JSON.stringify(name5);
+    function stringifyName(name6, next) {
+      if (!ID.test(name6))
+        return JSON.stringify(name6);
       if ((next === null || next === void 0 ? void 0 : next.type) === "text" && ID_CONTINUE.test(next.value[0])) {
-        return JSON.stringify(name5);
+        return JSON.stringify(name6);
       }
-      return name5;
+      return name6;
     }
   }
 });
@@ -20891,11 +20891,11 @@ var require_layer = __commonJS({
       function matcher(_path) {
         if (_path instanceof RegExp) {
           const keys = [];
-          let name5 = 0;
+          let name6 = 0;
           let m2;
           while (m2 = MATCHING_GROUP_REGEXP.exec(_path.source)) {
             keys.push({
-              name: m2[1] || name5++,
+              name: m2[1] || name6++,
               offset: m2.index
             });
           }
@@ -21036,11 +21036,11 @@ var require_route = __commonJS({
       if (this.methods._all) {
         return true;
       }
-      let name5 = typeof method === "string" ? method.toLowerCase() : method;
-      if (name5 === "head" && !this.methods.head) {
-        name5 = "get";
+      let name6 = typeof method === "string" ? method.toLowerCase() : method;
+      if (name6 === "head" && !this.methods.head) {
+        name6 = "get";
       }
-      return Boolean(this.methods[name5]);
+      return Boolean(this.methods[name6]);
     };
     Route.prototype._methods = function _methods() {
       const methods2 = Object.keys(this.methods);
@@ -21169,11 +21169,11 @@ var require_router = __commonJS({
     }
     Router.prototype = function() {
     };
-    Router.prototype.param = function param(name5, fn) {
-      if (!name5) {
+    Router.prototype.param = function param(name6, fn) {
+      if (!name6) {
         throw new TypeError("argument name is required");
       }
-      if (typeof name5 !== "string") {
+      if (typeof name6 !== "string") {
         throw new TypeError("argument name must be a string");
       }
       if (!fn) {
@@ -21182,9 +21182,9 @@ var require_router = __commonJS({
       if (typeof fn !== "function") {
         throw new TypeError("argument fn must be a function");
       }
-      let params = this.params[name5];
+      let params = this.params[name6];
       if (!params) {
-        params = this.params[name5] = [];
+        params = this.params[name6] = [];
       }
       params.push(fn);
       return this;
@@ -21670,14 +21670,14 @@ var require_application = __commonJS({
       this.engines[extension2] = fn;
       return this;
     };
-    app2.param = function param(name5, fn) {
-      if (Array.isArray(name5)) {
-        for (var i2 = 0; i2 < name5.length; i2++) {
-          this.param(name5[i2], fn);
+    app2.param = function param(name6, fn) {
+      if (Array.isArray(name6)) {
+        for (var i2 = 0; i2 < name6.length; i2++) {
+          this.param(name6[i2], fn);
         }
         return this;
       }
-      this.router.param(name5, fn);
+      this.router.param(name6, fn);
       return this;
     };
     app2.set = function set(setting, val) {
@@ -21736,7 +21736,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app2.render = function render2(name5, options2, callback) {
+    app2.render = function render2(name6, options2, callback) {
       var cache2 = this.cache;
       var done = callback;
       var engines = this.engines;
@@ -21751,23 +21751,23 @@ var require_application = __commonJS({
         renderOptions.cache = this.enabled("view cache");
       }
       if (renderOptions.cache) {
-        view = cache2[name5];
+        view = cache2[name6];
       }
       if (!view) {
         var View2 = this.get("view");
-        view = new View2(name5, {
+        view = new View2(name6, {
           defaultEngine: this.get("view engine"),
           root: this.get("views"),
           engines
         });
         if (!view.path) {
           var dirs = Array.isArray(view.root) && view.root.length > 1 ? 'directories "' + view.root.slice(0, -1).join('", "') + '" or "' + view.root[view.root.length - 1] + '"' : 'directory "' + view.root + '"';
-          var err = new Error('Failed to lookup view "' + name5 + '" in views ' + dirs);
+          var err = new Error('Failed to lookup view "' + name6 + '" in views ' + dirs);
           err.view = view;
           return done(err);
         }
         if (renderOptions.cache) {
-          cache2[name5] = view;
+          cache2[name6] = view;
         }
       }
       tryRender(view, renderOptions, done);
@@ -22555,14 +22555,14 @@ var require_request = __commonJS({
     var proxyaddr = require_proxy_addr();
     var req = Object.create(http4.IncomingMessage.prototype);
     module2.exports = req;
-    req.get = req.header = function header(name5) {
-      if (!name5) {
+    req.get = req.header = function header(name6) {
+      if (!name6) {
         throw new TypeError("name argument is required to req.get");
       }
-      if (typeof name5 !== "string") {
+      if (typeof name6 !== "string") {
         throw new TypeError("name must be a string to req.get");
       }
-      var lc = name5.toLowerCase();
+      var lc = name6.toLowerCase();
       switch (lc) {
         case "referer":
         case "referrer":
@@ -22679,8 +22679,8 @@ var require_request = __commonJS({
       var val = this.get("X-Requested-With") || "";
       return val.toLowerCase() === "xmlhttprequest";
     });
-    function defineGetter(obj, name5, getter) {
-      Object.defineProperty(obj, name5, {
+    function defineGetter(obj, name6, getter) {
+      Object.defineProperty(obj, name6, {
         configurable: true,
         enumerable: true,
         get: getter
@@ -22730,15 +22730,15 @@ var require_content_disposition = __commonJS({
       if (typeof fallback === "string" && NON_LATIN1_REGEXP.test(fallback)) {
         throw new TypeError("fallback must be ISO-8859-1 string");
       }
-      var name5 = basename3(filename);
-      var isQuotedString = TEXT_REGEXP.test(name5);
-      var fallbackName = typeof fallback !== "string" ? fallback && getlatin1(name5) : basename3(fallback);
-      var hasFallback = typeof fallbackName === "string" && fallbackName !== name5;
-      if (hasFallback || !isQuotedString || HEX_ESCAPE_REGEXP.test(name5)) {
-        params["filename*"] = name5;
+      var name6 = basename3(filename);
+      var isQuotedString = TEXT_REGEXP.test(name6);
+      var fallbackName = typeof fallback !== "string" ? fallback && getlatin1(name6) : basename3(fallback);
+      var hasFallback = typeof fallbackName === "string" && fallbackName !== name6;
+      if (hasFallback || !isQuotedString || HEX_ESCAPE_REGEXP.test(name6)) {
+        params["filename*"] = name6;
       }
       if (isQuotedString || hasFallback) {
-        params.filename = hasFallback ? fallbackName : name5;
+        params.filename = hasFallback ? fallbackName : name6;
       }
       return params;
     }
@@ -22934,19 +22934,19 @@ var require_cookie = __commonJS({
       }
       return min;
     }
-    function serialize(name5, val, opt) {
+    function serialize(name6, val, opt) {
       var enc = opt && opt.encode || encodeURIComponent;
       if (typeof enc !== "function") {
         throw new TypeError("option encode is invalid");
       }
-      if (!cookieNameRegExp.test(name5)) {
+      if (!cookieNameRegExp.test(name6)) {
         throw new TypeError("argument name is invalid");
       }
       var value = enc(val);
       if (!cookieValueRegExp.test(value)) {
         throw new TypeError("argument val is invalid");
       }
-      var str = name5 + "=" + value;
+      var str = name6 + "=" + value;
       if (!opt) return str;
       if (null != opt.maxAge) {
         var maxAge = Math.floor(opt.maxAge);
@@ -23469,11 +23469,11 @@ var require_send = __commonJS({
       var count = typeof emitter.listenerCount !== "function" ? emitter.listeners(type).length : emitter.listenerCount(type);
       return count > 0;
     }
-    function normalizeList(val, name5) {
+    function normalizeList(val, name6) {
       var list = [].concat(val || []);
       for (var i2 = 0; i2 < list.length; i2++) {
         if (typeof list[i2] !== "string") {
-          throw new TypeError(name5 + " must be array of strings or false");
+          throw new TypeError(name6 + " must be array of strings or false");
         }
       }
       return list;
@@ -23792,22 +23792,22 @@ var require_response = __commonJS({
     };
     res.download = function download(path4, filename, options2, callback) {
       var done = callback;
-      var name5 = filename;
+      var name6 = filename;
       var opts = options2 || null;
       if (typeof filename === "function") {
         done = filename;
-        name5 = null;
+        name6 = null;
         opts = null;
       } else if (typeof options2 === "function") {
         done = options2;
         opts = null;
       }
       if (typeof filename === "object" && (typeof options2 === "function" || options2 === void 0)) {
-        name5 = null;
+        name6 = null;
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name5 || path4)
+        "Content-Disposition": contentDisposition(name6 || path4)
       };
       if (opts && opts.headers) {
         var keys = Object.keys(opts.headers);
@@ -23884,12 +23884,12 @@ var require_response = __commonJS({
     res.get = function(field2) {
       return this.getHeader(field2);
     };
-    res.clearCookie = function clearCookie(name5, options2) {
+    res.clearCookie = function clearCookie(name6, options2) {
       const opts = { path: "/", ...options2, expires: /* @__PURE__ */ new Date(1) };
       delete opts.maxAge;
-      return this.cookie(name5, "", opts);
+      return this.cookie(name6, "", opts);
     };
-    res.cookie = function(name5, value, options2) {
+    res.cookie = function(name6, value, options2) {
       var opts = { ...options2 };
       var secret = this.req.secret;
       var signed = opts.signed;
@@ -23910,7 +23910,7 @@ var require_response = __commonJS({
       if (opts.path == null) {
         opts.path = "/";
       }
-      this.append("Set-Cookie", cookie.serialize(name5, String(val), opts));
+      this.append("Set-Cookie", cookie.serialize(name6, String(val), opts));
       return this;
     };
     res.location = function location(url) {
@@ -24532,18 +24532,18 @@ var require_extend = __commonJS({
         target[options2.name] = options2.newValue;
       }
     };
-    var getProperty = function getProperty2(obj, name5) {
-      if (name5 === "__proto__") {
-        if (!hasOwn2.call(obj, name5)) {
+    var getProperty = function getProperty2(obj, name6) {
+      if (name6 === "__proto__") {
+        if (!hasOwn2.call(obj, name6)) {
           return void 0;
         } else if (gOPD) {
-          return gOPD(obj, name5).value;
+          return gOPD(obj, name6).value;
         }
       }
-      return obj[name5];
+      return obj[name6];
     };
     module2.exports = function extend() {
-      var options2, name5, src, copy, copyIsArray, clone2;
+      var options2, name6, src, copy, copyIsArray, clone2;
       var target = arguments[0];
       var i2 = 1;
       var length = arguments.length;
@@ -24559,9 +24559,9 @@ var require_extend = __commonJS({
       for (; i2 < length; ++i2) {
         options2 = arguments[i2];
         if (options2 != null) {
-          for (name5 in options2) {
-            src = getProperty(target, name5);
-            copy = getProperty(options2, name5);
+          for (name6 in options2) {
+            src = getProperty(target, name6);
+            copy = getProperty(options2, name6);
             if (target !== copy) {
               if (deep && copy && (isPlainObject3(copy) || (copyIsArray = isArray2(copy)))) {
                 if (copyIsArray) {
@@ -24570,9 +24570,9 @@ var require_extend = __commonJS({
                 } else {
                   clone2 = src && isPlainObject3(src) ? src : {};
                 }
-                setProperty(target, { name: name5, newValue: extend(deep, clone2, copy) });
+                setProperty(target, { name: name6, newValue: extend(deep, clone2, copy) });
               } else if (typeof copy !== "undefined") {
-                setProperty(target, { name: name5, newValue: copy });
+                setProperty(target, { name: name6, newValue: copy });
               }
             }
           }
@@ -24709,8 +24709,8 @@ var require_util = __commonJS({
 var require_common2 = __commonJS({
   "node_modules/gaxios/build/cjs/src/common.js"(exports2) {
     "use strict";
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GaxiosError = exports2.GAXIOS_ERROR_SYMBOL = void 0;
@@ -25086,13 +25086,13 @@ var require_helpers = __commonJS({
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports2 && exports2.__importStar || function(mod4) {
-      if (mod4 && mod4.__esModule) return mod4;
+    var __importStar = exports2 && exports2.__importStar || function(mod5) {
+      if (mod5 && mod5.__esModule) return mod5;
       var result = {};
-      if (mod4 != null) {
-        for (var k in mod4) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod4, k)) __createBinding(result, mod4, k);
+      if (mod5 != null) {
+        for (var k in mod5) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod5, k)) __createBinding(result, mod5, k);
       }
-      __setModuleDefault(result, mod4);
+      __setModuleDefault(result, mod5);
       return result;
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -25156,13 +25156,13 @@ var require_dist4 = __commonJS({
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports2 && exports2.__importStar || function(mod4) {
-      if (mod4 && mod4.__esModule) return mod4;
+    var __importStar = exports2 && exports2.__importStar || function(mod5) {
+      if (mod5 && mod5.__esModule) return mod5;
       var result = {};
-      if (mod4 != null) {
-        for (var k in mod4) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod4, k)) __createBinding(result, mod4, k);
+      if (mod5 != null) {
+        for (var k in mod5) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod5, k)) __createBinding(result, mod5, k);
       }
-      __setModuleDefault(result, mod4);
+      __setModuleDefault(result, mod5);
       return result;
     };
     var __exportStar = exports2 && exports2.__exportStar || function(m2, exports3) {
@@ -25203,29 +25203,29 @@ var require_dist4 = __commonJS({
       // accurate when `addRequest()` is next called. We achieve this by creating a
       // fake socket and adding it to `sockets[origin]` and incrementing
       // `totalSocketCount`.
-      incrementSockets(name5) {
+      incrementSockets(name6) {
         if (this.maxSockets === Infinity && this.maxTotalSockets === Infinity) {
           return null;
         }
-        if (!this.sockets[name5]) {
-          this.sockets[name5] = [];
+        if (!this.sockets[name6]) {
+          this.sockets[name6] = [];
         }
         const fakeSocket = new net.Socket({ writable: false });
-        this.sockets[name5].push(fakeSocket);
+        this.sockets[name6].push(fakeSocket);
         this.totalSocketCount++;
         return fakeSocket;
       }
-      decrementSockets(name5, socket) {
-        if (!this.sockets[name5] || socket === null) {
+      decrementSockets(name6, socket) {
+        if (!this.sockets[name6] || socket === null) {
           return;
         }
-        const sockets = this.sockets[name5];
+        const sockets = this.sockets[name6];
         const index = sockets.indexOf(socket);
         if (index !== -1) {
           sockets.splice(index, 1);
           this.totalSocketCount--;
           if (sockets.length === 0) {
-            delete this.sockets[name5];
+            delete this.sockets[name6];
           }
         }
       }
@@ -25243,10 +25243,10 @@ var require_dist4 = __commonJS({
           ...options2,
           secureEndpoint: this.isSecureEndpoint(options2)
         };
-        const name5 = this.getName(connectOpts);
-        const fakeSocket = this.incrementSockets(name5);
+        const name6 = this.getName(connectOpts);
+        const fakeSocket = this.incrementSockets(name6);
         Promise.resolve().then(() => this.connect(req, connectOpts)).then((socket) => {
-          this.decrementSockets(name5, fakeSocket);
+          this.decrementSockets(name6, fakeSocket);
           if (socket instanceof http4.Agent) {
             try {
               return socket.addRequest(req, connectOpts);
@@ -25257,7 +25257,7 @@ var require_dist4 = __commonJS({
           this[INTERNAL].currentSocket = socket;
           super.createSocket(req, options2, cb);
         }, (err) => {
-          this.decrementSockets(name5, fakeSocket);
+          this.decrementSockets(name6, fakeSocket);
           cb(err);
         });
       }
@@ -25294,8 +25294,8 @@ var require_dist4 = __commonJS({
 var require_parse_proxy_response = __commonJS({
   "node_modules/https-proxy-agent/dist/parse-proxy-response.js"(exports2) {
     "use strict";
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseProxyResponse = void 0;
@@ -25305,17 +25305,17 @@ var require_parse_proxy_response = __commonJS({
       return new Promise((resolve, reject) => {
         let buffersLength = 0;
         const buffers = [];
-        function read() {
+        function read2() {
           const b = socket.read();
           if (b)
             ondata(b);
           else
-            socket.once("readable", read);
+            socket.once("readable", read2);
         }
         function cleanup() {
           socket.removeListener("end", onend);
           socket.removeListener("error", onerror);
-          socket.removeListener("readable", read);
+          socket.removeListener("readable", read2);
         }
         function onend() {
           cleanup();
@@ -25334,7 +25334,7 @@ var require_parse_proxy_response = __commonJS({
           const endOfHeaders = buffered.indexOf("\r\n\r\n");
           if (endOfHeaders === -1) {
             debug("have not received end of HTTP headers yet...");
-            read();
+            read2();
             return;
           }
           const headerParts = buffered.slice(0, endOfHeaders).toString("ascii").split("\r\n");
@@ -25379,7 +25379,7 @@ var require_parse_proxy_response = __commonJS({
         }
         socket.on("error", onerror);
         socket.on("end", onend);
-        read();
+        read2();
       });
     }
     exports2.parseProxyResponse = parseProxyResponse;
@@ -25408,17 +25408,17 @@ var require_dist5 = __commonJS({
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports2 && exports2.__importStar || function(mod4) {
-      if (mod4 && mod4.__esModule) return mod4;
+    var __importStar = exports2 && exports2.__importStar || function(mod5) {
+      if (mod5 && mod5.__esModule) return mod5;
       var result = {};
-      if (mod4 != null) {
-        for (var k in mod4) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod4, k)) __createBinding(result, mod4, k);
+      if (mod5 != null) {
+        for (var k in mod5) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod5, k)) __createBinding(result, mod5, k);
       }
-      __setModuleDefault(result, mod4);
+      __setModuleDefault(result, mod5);
       return result;
     };
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.HttpsProxyAgent = void 0;
@@ -25485,8 +25485,8 @@ var require_dist5 = __commonJS({
         if (!headers["Proxy-Connection"]) {
           headers["Proxy-Connection"] = this.keepAlive ? "Keep-Alive" : "close";
         }
-        for (const name5 of Object.keys(headers)) {
-          payload += `${name5}: ${headers[name5]}\r
+        for (const name6 of Object.keys(headers)) {
+          payload += `${name6}: ${headers[name6]}\r
 `;
         }
         const proxyResponsePromise = (0, parse_proxy_response_1.parseProxyResponse)(socket);
@@ -25583,8 +25583,8 @@ var init_dist = __esm({
 // node_modules/web-streams-polyfill/dist/ponyfill.es2018.js
 var require_ponyfill_es2018 = __commonJS({
   "node_modules/web-streams-polyfill/dist/ponyfill.es2018.js"(exports2, module2) {
-    (function(global2, factory) {
-      typeof exports2 === "object" && typeof module2 !== "undefined" ? factory(exports2) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.WebStreamsPolyfill = {}));
+    (function(global2, factory2) {
+      typeof exports2 === "object" && typeof module2 !== "undefined" ? factory2(exports2) : typeof define === "function" && define.amd ? define(["exports"], factory2) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory2(global2.WebStreamsPolyfill = {}));
     })(exports2, (function(exports3) {
       "use strict";
       function noop3() {
@@ -25594,10 +25594,10 @@ var require_ponyfill_es2018 = __commonJS({
         return typeof x2 === "object" && x2 !== null || typeof x2 === "function";
       }
       const rethrowAssertionErrorRejection = noop3;
-      function setFunctionName(fn, name5) {
+      function setFunctionName(fn, name6) {
         try {
           Object.defineProperty(fn, "name", {
-            value: name5,
+            value: name6,
             configurable: true
           });
         } catch (_a3) {
@@ -25776,8 +25776,8 @@ var require_ponyfill_es2018 = __commonJS({
         stream._reader = void 0;
         reader._ownerReadableStream = void 0;
       }
-      function readerLockException(name5) {
-        return new TypeError("Cannot " + name5 + " a stream using a released reader");
+      function readerLockException(name6) {
+        return new TypeError("Cannot " + name6 + " a stream using a released reader");
       }
       function defaultReaderClosedPromiseInitialize(reader) {
         reader._closedPromise = newPromise((resolve, reject) => {
@@ -26033,8 +26033,8 @@ var require_ponyfill_es2018 = __commonJS({
           readRequest._errorSteps(e2);
         });
       }
-      function defaultReaderBrandCheckException(name5) {
-        return new TypeError(`ReadableStreamDefaultReader.prototype.${name5} can only be used on a ReadableStreamDefaultReader`);
+      function defaultReaderBrandCheckException(name6) {
+        return new TypeError(`ReadableStreamDefaultReader.prototype.${name6} can only be used on a ReadableStreamDefaultReader`);
       }
       const AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(async function* () {
       }).prototype);
@@ -26136,8 +26136,8 @@ var require_ponyfill_es2018 = __commonJS({
           return false;
         }
       }
-      function streamAsyncIteratorBrandCheckException(name5) {
-        return new TypeError(`ReadableStreamAsyncIterator.${name5} can only be used on a ReadableSteamAsyncIterator`);
+      function streamAsyncIteratorBrandCheckException(name6) {
+        return new TypeError(`ReadableStreamAsyncIterator.${name6} can only be used on a ReadableSteamAsyncIterator`);
       }
       const NumberIsNaN = Number.isNaN || function(x2) {
         return x2 !== x2;
@@ -26952,11 +26952,11 @@ var require_ponyfill_es2018 = __commonJS({
         request._associatedReadableByteStreamController = controller;
         request._view = view;
       }
-      function byobRequestBrandCheckException(name5) {
-        return new TypeError(`ReadableStreamBYOBRequest.prototype.${name5} can only be used on a ReadableStreamBYOBRequest`);
+      function byobRequestBrandCheckException(name6) {
+        return new TypeError(`ReadableStreamBYOBRequest.prototype.${name6} can only be used on a ReadableStreamBYOBRequest`);
       }
-      function byteStreamControllerBrandCheckException(name5) {
-        return new TypeError(`ReadableByteStreamController.prototype.${name5} can only be used on a ReadableByteStreamController`);
+      function byteStreamControllerBrandCheckException(name6) {
+        return new TypeError(`ReadableByteStreamController.prototype.${name6} can only be used on a ReadableByteStreamController`);
       }
       function convertReaderOptions(options2, context2) {
         assertDictionary(options2, context2);
@@ -27157,8 +27157,8 @@ var require_ponyfill_es2018 = __commonJS({
           readIntoRequest._errorSteps(e2);
         });
       }
-      function byobReaderBrandCheckException(name5) {
-        return new TypeError(`ReadableStreamBYOBReader.prototype.${name5} can only be used on a ReadableStreamBYOBReader`);
+      function byobReaderBrandCheckException(name6) {
+        return new TypeError(`ReadableStreamBYOBReader.prototype.${name6} can only be used on a ReadableStreamBYOBReader`);
       }
       function ExtractHighWaterMark(strategy, defaultHWM) {
         const { highWaterMark } = strategy;
@@ -27196,12 +27196,12 @@ var require_ponyfill_es2018 = __commonJS({
         const close = original === null || original === void 0 ? void 0 : original.close;
         const start = original === null || original === void 0 ? void 0 : original.start;
         const type = original === null || original === void 0 ? void 0 : original.type;
-        const write = original === null || original === void 0 ? void 0 : original.write;
+        const write2 = original === null || original === void 0 ? void 0 : original.write;
         return {
           abort: abort === void 0 ? void 0 : convertUnderlyingSinkAbortCallback(abort, original, `${context2} has member 'abort' that`),
           close: close === void 0 ? void 0 : convertUnderlyingSinkCloseCallback(close, original, `${context2} has member 'close' that`),
           start: start === void 0 ? void 0 : convertUnderlyingSinkStartCallback(start, original, `${context2} has member 'start' that`),
-          write: write === void 0 ? void 0 : convertUnderlyingSinkWriteCallback(write, original, `${context2} has member 'write' that`),
+          write: write2 === void 0 ? void 0 : convertUnderlyingSinkWriteCallback(write2, original, `${context2} has member 'write' that`),
           type
         };
       }
@@ -28034,17 +28034,17 @@ var require_ponyfill_es2018 = __commonJS({
         WritableStreamDefaultControllerClearAlgorithms(controller);
         WritableStreamStartErroring(stream, error);
       }
-      function streamBrandCheckException$2(name5) {
-        return new TypeError(`WritableStream.prototype.${name5} can only be used on a WritableStream`);
+      function streamBrandCheckException$2(name6) {
+        return new TypeError(`WritableStream.prototype.${name6} can only be used on a WritableStream`);
       }
-      function defaultControllerBrandCheckException$2(name5) {
-        return new TypeError(`WritableStreamDefaultController.prototype.${name5} can only be used on a WritableStreamDefaultController`);
+      function defaultControllerBrandCheckException$2(name6) {
+        return new TypeError(`WritableStreamDefaultController.prototype.${name6} can only be used on a WritableStreamDefaultController`);
       }
-      function defaultWriterBrandCheckException(name5) {
-        return new TypeError(`WritableStreamDefaultWriter.prototype.${name5} can only be used on a WritableStreamDefaultWriter`);
+      function defaultWriterBrandCheckException(name6) {
+        return new TypeError(`WritableStreamDefaultWriter.prototype.${name6} can only be used on a WritableStreamDefaultWriter`);
       }
-      function defaultWriterLockException(name5) {
-        return new TypeError("Cannot " + name5 + " a stream using a released writer");
+      function defaultWriterLockException(name6) {
+        return new TypeError("Cannot " + name6 + " a stream using a released writer");
       }
       function defaultWriterClosedPromiseInitialize(writer) {
         writer._closedPromise = newPromise((resolve, reject) => {
@@ -28153,9 +28153,9 @@ var require_ponyfill_es2018 = __commonJS({
         return isDOMExceptionConstructor(ctor) ? ctor : void 0;
       }
       function createPolyfill() {
-        const ctor = function DOMException4(message2, name5) {
+        const ctor = function DOMException4(message2, name6) {
           this.message = message2 || "";
-          this.name = name5 || "Error";
+          this.name = name6 || "Error";
           if (Error.captureStackTrace) {
             Error.captureStackTrace(this, this.constructor);
           }
@@ -28578,8 +28578,8 @@ var require_ponyfill_es2018 = __commonJS({
         }
         SetUpReadableStreamDefaultController(stream, controller, startAlgorithm, pullAlgorithm, cancelAlgorithm, highWaterMark, sizeAlgorithm);
       }
-      function defaultControllerBrandCheckException$1(name5) {
-        return new TypeError(`ReadableStreamDefaultController.prototype.${name5} can only be used on a ReadableStreamDefaultController`);
+      function defaultControllerBrandCheckException$1(name6) {
+        return new TypeError(`ReadableStreamDefaultController.prototype.${name6} can only be used on a ReadableStreamDefaultController`);
       }
       function ReadableStreamTee(stream, cloneForBranch2) {
         if (IsReadableByteStreamController(stream._readableStreamController)) {
@@ -29305,8 +29305,8 @@ var require_ponyfill_es2018 = __commonJS({
           ReadableStreamBYOBReaderErrorReadIntoRequests(reader, e2);
         }
       }
-      function streamBrandCheckException$1(name5) {
-        return new TypeError(`ReadableStream.prototype.${name5} can only be used on a ReadableStream`);
+      function streamBrandCheckException$1(name6) {
+        return new TypeError(`ReadableStream.prototype.${name6} can only be used on a ReadableStream`);
       }
       function convertQueuingStrategyInit(init, context2) {
         assertDictionary(init, context2);
@@ -29355,8 +29355,8 @@ var require_ponyfill_es2018 = __commonJS({
           configurable: true
         });
       }
-      function byteLengthBrandCheckException(name5) {
-        return new TypeError(`ByteLengthQueuingStrategy.prototype.${name5} can only be used on a ByteLengthQueuingStrategy`);
+      function byteLengthBrandCheckException(name6) {
+        return new TypeError(`ByteLengthQueuingStrategy.prototype.${name6} can only be used on a ByteLengthQueuingStrategy`);
       }
       function IsByteLengthQueuingStrategy(x2) {
         if (!typeIsObject(x2)) {
@@ -29407,8 +29407,8 @@ var require_ponyfill_es2018 = __commonJS({
           configurable: true
         });
       }
-      function countBrandCheckException(name5) {
-        return new TypeError(`CountQueuingStrategy.prototype.${name5} can only be used on a CountQueuingStrategy`);
+      function countBrandCheckException(name6) {
+        return new TypeError(`CountQueuingStrategy.prototype.${name6} can only be used on a CountQueuingStrategy`);
       }
       function IsCountQueuingStrategy(x2) {
         if (!typeIsObject(x2)) {
@@ -29815,8 +29815,8 @@ var require_ponyfill_es2018 = __commonJS({
         });
         return controller._finishPromise;
       }
-      function defaultControllerBrandCheckException(name5) {
-        return new TypeError(`TransformStreamDefaultController.prototype.${name5} can only be used on a TransformStreamDefaultController`);
+      function defaultControllerBrandCheckException(name6) {
+        return new TypeError(`TransformStreamDefaultController.prototype.${name6} can only be used on a TransformStreamDefaultController`);
       }
       function defaultControllerFinishPromiseResolve(controller) {
         if (controller._finishPromise_resolve === void 0) {
@@ -29835,8 +29835,8 @@ var require_ponyfill_es2018 = __commonJS({
         controller._finishPromise_resolve = void 0;
         controller._finishPromise_reject = void 0;
       }
-      function streamBrandCheckException(name5) {
-        return new TypeError(`TransformStream.prototype.${name5} can only be used on a TransformStream`);
+      function streamBrandCheckException(name6) {
+        return new TypeError(`TransformStream.prototype.${name6} can only be used on a TransformStream`);
       }
       exports3.ByteLengthQueuingStrategy = ByteLengthQueuingStrategy;
       exports3.CountQueuingStrategy = CountQueuingStrategy;
@@ -29879,7 +29879,7 @@ var require_streams2 = __commonJS({
     try {
       const { Blob: Blob4 } = require("buffer");
       if (Blob4 && !Blob4.prototype.stream) {
-        Blob4.prototype.stream = function name5(params) {
+        Blob4.prototype.stream = function name6(params) {
           let position = 0;
           const blob = this;
           return new ReadableStream({
@@ -30557,27 +30557,27 @@ var init_multipart_parser = __esm({
         const bufferLength = data.length;
         let c;
         let cl;
-        const mark = (name5) => {
-          this[name5 + "Mark"] = i2;
+        const mark = (name6) => {
+          this[name6 + "Mark"] = i2;
         };
-        const clear = (name5) => {
-          delete this[name5 + "Mark"];
+        const clear = (name6) => {
+          delete this[name6 + "Mark"];
         };
         const callback = (callbackSymbol, start, end, ui8a) => {
           if (start === void 0 || start !== end) {
             this[callbackSymbol](ui8a && ui8a.subarray(start, end));
           }
         };
-        const dataCallback = (name5, clear2) => {
-          const markSymbol = name5 + "Mark";
+        const dataCallback = (name6, clear2) => {
+          const markSymbol = name6 + "Mark";
           if (!(markSymbol in this)) {
             return;
           }
           if (clear2) {
-            callback(name5, this[markSymbol], i2, data);
+            callback(name6, this[markSymbol], i2, data);
             delete this[markSymbol];
           } else {
-            callback(name5, this[markSymbol], data.length, data);
+            callback(name6, this[markSymbol], data.length, data);
             this[markSymbol] = 0;
           }
         };
@@ -30877,8 +30877,8 @@ var init_body = __esm({
         if (ct.startsWith("application/x-www-form-urlencoded")) {
           const formData = new FormData2();
           const parameters = new URLSearchParams(await this.text());
-          for (const [name5, value] of parameters) {
-            formData.append(name5, value);
+          for (const [name6, value] of parameters) {
+            formData.append(name6, value);
           }
           return formData;
         }
@@ -31022,10 +31022,10 @@ function fromRawHeaders(headers = []) {
         result.push(array2.slice(index, index + 2));
       }
       return result;
-    }, []).filter(([name5, value]) => {
+    }, []).filter(([name6, value]) => {
       try {
-        validateHeaderName(name5);
-        validateHeaderValue(name5, String(value));
+        validateHeaderName(name6);
+        validateHeaderValue(name6, String(value));
         return true;
       } catch {
         return false;
@@ -31038,16 +31038,16 @@ var init_headers = __esm({
   "node_modules/node-fetch/src/headers.js"() {
     import_node_util2 = require("node:util");
     import_node_http = __toESM(require("node:http"), 1);
-    validateHeaderName = typeof import_node_http.default.validateHeaderName === "function" ? import_node_http.default.validateHeaderName : (name5) => {
-      if (!/^[\^`\-\w!#$%&'*+.|~]+$/.test(name5)) {
-        const error = new TypeError(`Header name must be a valid HTTP token [${name5}]`);
+    validateHeaderName = typeof import_node_http.default.validateHeaderName === "function" ? import_node_http.default.validateHeaderName : (name6) => {
+      if (!/^[\^`\-\w!#$%&'*+.|~]+$/.test(name6)) {
+        const error = new TypeError(`Header name must be a valid HTTP token [${name6}]`);
         Object.defineProperty(error, "code", { value: "ERR_INVALID_HTTP_TOKEN" });
         throw error;
       }
     };
-    validateHeaderValue = typeof import_node_http.default.validateHeaderValue === "function" ? import_node_http.default.validateHeaderValue : (name5, value) => {
+    validateHeaderValue = typeof import_node_http.default.validateHeaderValue === "function" ? import_node_http.default.validateHeaderValue : (name6, value) => {
       if (/[^\t\u0020-\u007E\u0080-\u00FF]/.test(value)) {
-        const error = new TypeError(`Invalid character in header content ["${name5}"]`);
+        const error = new TypeError(`Invalid character in header content ["${name6}"]`);
         Object.defineProperty(error, "code", { value: "ERR_INVALID_CHAR" });
         throw error;
       }
@@ -31063,8 +31063,8 @@ var init_headers = __esm({
         let result = [];
         if (init instanceof _Headers) {
           const raw = init.raw();
-          for (const [name5, values] of Object.entries(raw)) {
-            result.push(...values.map((value) => [name5, value]));
+          for (const [name6, values] of Object.entries(raw)) {
+            result.push(...values.map((value) => [name6, value]));
           }
         } else if (init == null) {
         } else if (typeof init === "object" && !import_node_util2.types.isBoxedPrimitive(init)) {
@@ -31090,10 +31090,10 @@ var init_headers = __esm({
         } else {
           throw new TypeError("Failed to construct 'Headers': The provided value is not of type '(sequence<sequence<ByteString>> or record<ByteString, ByteString>)");
         }
-        result = result.length > 0 ? result.map(([name5, value]) => {
-          validateHeaderName(name5);
-          validateHeaderValue(name5, String(value));
-          return [String(name5).toLowerCase(), String(value)];
+        result = result.length > 0 ? result.map(([name6, value]) => {
+          validateHeaderName(name6);
+          validateHeaderValue(name6, String(value));
+          return [String(name6).toLowerCase(), String(value)];
         }) : void 0;
         super(result);
         return new Proxy(this, {
@@ -31101,23 +31101,23 @@ var init_headers = __esm({
             switch (p) {
               case "append":
               case "set":
-                return (name5, value) => {
-                  validateHeaderName(name5);
-                  validateHeaderValue(name5, String(value));
+                return (name6, value) => {
+                  validateHeaderName(name6);
+                  validateHeaderValue(name6, String(value));
                   return URLSearchParams.prototype[p].call(
                     target,
-                    String(name5).toLowerCase(),
+                    String(name6).toLowerCase(),
                     String(value)
                   );
                 };
               case "delete":
               case "has":
               case "getAll":
-                return (name5) => {
-                  validateHeaderName(name5);
+                return (name6) => {
+                  validateHeaderName(name6);
                   return URLSearchParams.prototype[p].call(
                     target,
-                    String(name5).toLowerCase()
+                    String(name6).toLowerCase()
                   );
                 };
               case "keys":
@@ -31137,33 +31137,33 @@ var init_headers = __esm({
       toString() {
         return Object.prototype.toString.call(this);
       }
-      get(name5) {
-        const values = this.getAll(name5);
+      get(name6) {
+        const values = this.getAll(name6);
         if (values.length === 0) {
           return null;
         }
         let value = values.join(", ");
-        if (/^content-encoding$/i.test(name5)) {
+        if (/^content-encoding$/i.test(name6)) {
           value = value.toLowerCase();
         }
         return value;
       }
       forEach(callback, thisArg = void 0) {
-        for (const name5 of this.keys()) {
-          Reflect.apply(callback, thisArg, [this.get(name5), name5, this]);
+        for (const name6 of this.keys()) {
+          Reflect.apply(callback, thisArg, [this.get(name6), name6, this]);
         }
       }
       *values() {
-        for (const name5 of this.keys()) {
-          yield this.get(name5);
+        for (const name6 of this.keys()) {
+          yield this.get(name6);
         }
       }
       /**
        * @type {() => IterableIterator<[string, string]>}
        */
       *entries() {
-        for (const name5 of this.keys()) {
-          yield [name5, this.get(name5)];
+        for (const name6 of this.keys()) {
+          yield [name6, this.get(name6)];
         }
       }
       [Symbol.iterator]() {
@@ -31852,8 +31852,8 @@ async function fetch2(url, options_) {
               referrerPolicy: request.referrerPolicy
             };
             if (!isDomainOrSubdomain(request.url, locationURL) || !isSameProtocol(request.url, locationURL)) {
-              for (const name5 of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
-                requestOptions.headers.delete(name5);
+              for (const name6 of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
+                requestOptions.headers.delete(name6);
               }
             }
             if (response_.statusCode !== 303 && request.body && options_.body instanceof import_node_stream2.default.Readable) {
@@ -32027,8 +32027,8 @@ var init_src = __esm({
 var require_gaxios = __commonJS({
   "node_modules/gaxios/build/cjs/src/gaxios.js"(exports2) {
     "use strict";
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     var _a2;
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -33841,9 +33841,9 @@ var require_bignumber = __commonJS({
         for (i2 = 0; i2 < j; i2++) if (xc[i2] != yc[i2]) return xc[i2] > yc[i2] ^ a ? 1 : -1;
         return k == l ? 0 : k > l ^ a ? 1 : -1;
       }
-      function intCheck(n, min, max, name5) {
+      function intCheck(n, min, max, name6) {
         if (n < min || n > max || n !== mathfloor(n)) {
-          throw Error(bignumberError + (name5 || "Argument") + (typeof n == "number" ? n < min || n > max ? " out of range: " : " not an integer: " : " not a primitive number: ") + String(n));
+          throw Error(bignumberError + (name6 || "Argument") + (typeof n == "number" ? n < min || n > max ? " out of range: " : " not an integer: " : " not a primitive number: ") + String(n));
         }
       }
       function isOdd(n) {
@@ -34443,13 +34443,13 @@ var require_logging_utils = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -34530,12 +34530,12 @@ var require_logging_utils = __commonJS({
             this.setFilters();
             this.filtersSet = true;
           }
-          let logger2 = this.cached.get(namespace);
-          if (!logger2) {
-            logger2 = this.makeLogger(namespace);
-            this.cached.set(namespace, logger2);
+          let logger3 = this.cached.get(namespace);
+          if (!logger3) {
+            logger3 = this.makeLogger(namespace);
+            this.cached.set(namespace, logger3);
           }
-          logger2(fields, ...args);
+          logger3(fields, ...args);
         } catch (e2) {
           console.error(e2);
         }
@@ -34680,7 +34680,7 @@ var require_logging_utils = __commonJS({
       } else if (cachedBackend === void 0) {
         cachedBackend = getNodeBackend();
       }
-      const logger2 = (() => {
+      const logger3 = (() => {
         let previousBackend = void 0;
         const newLogger = new AdhocDebugLogger(namespace, (fields, ...args) => {
           if (previousBackend !== cachedBackend) {
@@ -34695,8 +34695,8 @@ var require_logging_utils = __commonJS({
         });
         return newLogger;
       })();
-      loggerCache.set(namespace, logger2);
-      return logger2.func;
+      loggerCache.set(namespace, logger3);
+      return logger3.func;
     }
   }
 });
@@ -34757,13 +34757,13 @@ var require_src4 = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -34784,14 +34784,14 @@ var require_src4 = __commonJS({
     var gaxios_1 = require_src2();
     var jsonBigint = require_json_bigint();
     var gcp_residency_1 = require_gcp_residency();
-    var logger2 = __importStar(require_src3());
+    var logger3 = __importStar(require_src3());
     exports2.BASE_PATH = "/computeMetadata/v1";
     exports2.HOST_ADDRESS = "http://169.254.169.254";
     exports2.SECONDARY_HOST_ADDRESS = "http://metadata.google.internal.";
     exports2.HEADER_NAME = "Metadata-Flavor";
     exports2.HEADER_VALUE = "Google";
     exports2.HEADERS = Object.freeze({ [exports2.HEADER_NAME]: exports2.HEADER_VALUE });
-    var log = logger2.log("gcp-metadata");
+    var log = logger3.log("gcp-metadata");
     exports2.METADATA_SERVER_DETECTION = Object.freeze({
       "assume-present": "don't try to ping the metadata server, but assume it's present",
       none: "don't try to ping the metadata server, but don't try to use it either",
@@ -36966,7 +36966,7 @@ var require_data_stream = __commonJS({
       throw new TypeError("Unexpected data type (" + typeof data + ")");
     }
     util.inherits(DataStream, Stream4);
-    DataStream.prototype.write = function write(data) {
+    DataStream.prototype.write = function write2(data) {
       this.buffer = Buffer4.concat([this.buffer, Buffer4.from(data)]);
       this.emit("data", data);
     };
@@ -37516,7 +37516,7 @@ var require_getToken = __commonJS({
   "node_modules/google-auth-library/build/src/gtoken/getToken.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getToken = getToken;
+    exports2.getToken = getToken2;
     var jwsSign_1 = require_jwsSign();
     var GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
     var GOOGLE_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
@@ -37535,7 +37535,7 @@ var require_getToken = __commonJS({
         }
       };
     };
-    async function getToken(tokenOptions) {
+    async function getToken2(tokenOptions) {
       if (!tokenOptions.transporter) {
         throw new Error("No transporter set.");
       }
@@ -38543,8 +38543,8 @@ var require_impersonated = __commonJS({
        */
       async sign(blobToSign) {
         await this.sourceClient.getAccessToken();
-        const name5 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
-        const u = `${this.endpoint}/v1/${name5}:signBlob`;
+        const name6 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
+        const u = `${this.endpoint}/v1/${name6}:signBlob`;
         const body = {
           delegates: this.delegates,
           payload: Buffer.from(blobToSign).toString("base64")
@@ -38567,8 +38567,8 @@ var require_impersonated = __commonJS({
       async refreshToken() {
         try {
           await this.sourceClient.getAccessToken();
-          const name5 = "projects/-/serviceAccounts/" + this.targetPrincipal;
-          const u = `${this.endpoint}/v1/${name5}:generateAccessToken`;
+          const name6 = "projects/-/serviceAccounts/" + this.targetPrincipal;
+          const u = `${this.endpoint}/v1/${name6}:generateAccessToken`;
           const body = {
             delegates: this.delegates,
             scope: this.targetScopes,
@@ -38616,8 +38616,8 @@ var require_impersonated = __commonJS({
        */
       async fetchIdToken(targetAudience, options2) {
         await this.sourceClient.getAccessToken();
-        const name5 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
-        const u = `${this.endpoint}/v1/${name5}:generateIdToken`;
+        const name6 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
+        const u = `${this.endpoint}/v1/${name6}:generateIdToken`;
         const body = {
           delegates: this.delegates,
           audience: targetAudience,
@@ -42833,8 +42833,8 @@ var require_utils4 = __commonJS({
     var sdkVersion;
     function getSdkVersion() {
       if (!sdkVersion) {
-        const { version: version7 } = require_package3();
-        sdkVersion = version7;
+        const { version: version8 } = require_package3();
+        sdkVersion = version8;
       }
       return sdkVersion;
     }
@@ -43101,13 +43101,13 @@ var require_firebase_app = __commonJS({
     };
     exports2.FirebaseAppInternals = FirebaseAppInternals;
     var FirebaseApp = class {
-      constructor(options2, name5, autoInit = false, appStore) {
+      constructor(options2, name6, autoInit = false, appStore) {
         this.appStore = appStore;
         this.services_ = {};
         this.isDeleted_ = false;
         this.autoInit_ = false;
         this.customCredential_ = true;
-        this.name_ = name5;
+        this.name_ = name6;
         this.options_ = (0, deep_copy_1.deepCopy)(options2);
         this.autoInit_ = autoInit;
         if (!validator.isNonNullObject(this.options_)) {
@@ -43151,8 +43151,8 @@ var require_firebase_app = __commonJS({
       /**
        * @internal
        */
-      getOrInitService(name5, init) {
-        return this.ensureService_(name5, () => init(this));
+      getOrInitService(name6, init) {
+        return this.ensureService_(name6, () => init(this));
       }
       /**
        * Returns `true` if this app was initialized with auto-initialization.
@@ -43764,7 +43764,7 @@ var require_object_hash = __commonJS({
     };
     function typeHasher(options2, writeTo, context2) {
       context2 = context2 || [];
-      var write = function(str) {
+      var write2 = function(str) {
         if (writeTo.update) {
           return writeTo.update(str, "utf8");
         } else {
@@ -43799,14 +43799,14 @@ var require_object_hash = __commonJS({
             context2.push(object);
           }
           if (typeof Buffer !== "undefined" && Buffer.isBuffer && Buffer.isBuffer(object)) {
-            write("buffer:");
-            return write(object);
+            write2("buffer:");
+            return write2(object);
           }
           if (objType !== "object" && objType !== "function" && objType !== "asyncfunction") {
             if (this["_" + objType]) {
               this["_" + objType](object);
             } else if (options2.ignoreUnknown) {
-              return write("[" + objType + "]");
+              return write2("[" + objType + "]");
             } else {
               throw new Error('Unknown object type "' + objType + '"');
             }
@@ -43823,22 +43823,22 @@ var require_object_hash = __commonJS({
                 return !options2.excludeKeys(key);
               });
             }
-            write("object:" + keys.length + ":");
+            write2("object:" + keys.length + ":");
             var self2 = this;
             return keys.forEach(function(key) {
               self2.dispatch(key);
-              write(":");
+              write2(":");
               if (!options2.excludeValues) {
                 self2.dispatch(object[key]);
               }
-              write(",");
+              write2(",");
             });
           }
         },
         _array: function(arr, unordered) {
           unordered = typeof unordered !== "undefined" ? unordered : options2.unorderedArrays !== false;
           var self2 = this;
-          write("array:" + arr.length + ":");
+          write2("array:" + arr.length + ":");
           if (!unordered || arr.length <= 1) {
             return arr.forEach(function(entry) {
               return self2.dispatch(entry);
@@ -43858,23 +43858,23 @@ var require_object_hash = __commonJS({
           return this._array(entries, false);
         },
         _date: function(date) {
-          return write("date:" + date.toJSON());
+          return write2("date:" + date.toJSON());
         },
         _symbol: function(sym) {
-          return write("symbol:" + sym.toString());
+          return write2("symbol:" + sym.toString());
         },
         _error: function(err) {
-          return write("error:" + err.toString());
+          return write2("error:" + err.toString());
         },
         _boolean: function(bool) {
-          return write("bool:" + bool.toString());
+          return write2("bool:" + bool.toString());
         },
         _string: function(string) {
-          write("string:" + string.length + ":");
-          write(string.toString());
+          write2("string:" + string.length + ":");
+          write2(string.toString());
         },
         _function: function(fn) {
-          write("fn:");
+          write2("fn:");
           if (isNativeFunction(fn)) {
             this.dispatch("[native]");
           } else {
@@ -43888,140 +43888,140 @@ var require_object_hash = __commonJS({
           }
         },
         _number: function(number) {
-          return write("number:" + number.toString());
+          return write2("number:" + number.toString());
         },
         _xml: function(xml) {
-          return write("xml:" + xml.toString());
+          return write2("xml:" + xml.toString());
         },
         _null: function() {
-          return write("Null");
+          return write2("Null");
         },
         _undefined: function() {
-          return write("Undefined");
+          return write2("Undefined");
         },
         _regexp: function(regex) {
-          return write("regex:" + regex.toString());
+          return write2("regex:" + regex.toString());
         },
         _uint8array: function(arr) {
-          write("uint8array:");
+          write2("uint8array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _uint8clampedarray: function(arr) {
-          write("uint8clampedarray:");
+          write2("uint8clampedarray:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _int8array: function(arr) {
-          write("int8array:");
+          write2("int8array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _uint16array: function(arr) {
-          write("uint16array:");
+          write2("uint16array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _int16array: function(arr) {
-          write("int16array:");
+          write2("int16array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _uint32array: function(arr) {
-          write("uint32array:");
+          write2("uint32array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _int32array: function(arr) {
-          write("int32array:");
+          write2("int32array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _float32array: function(arr) {
-          write("float32array:");
+          write2("float32array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _float64array: function(arr) {
-          write("float64array:");
+          write2("float64array:");
           return this.dispatch(Array.prototype.slice.call(arr));
         },
         _arraybuffer: function(arr) {
-          write("arraybuffer:");
+          write2("arraybuffer:");
           return this.dispatch(new Uint8Array(arr));
         },
         _url: function(url) {
-          return write("url:" + url.toString(), "utf8");
+          return write2("url:" + url.toString(), "utf8");
         },
         _map: function(map) {
-          write("map:");
+          write2("map:");
           var arr = Array.from(map);
           return this._array(arr, options2.unorderedSets !== false);
         },
         _set: function(set) {
-          write("set:");
+          write2("set:");
           var arr = Array.from(set);
           return this._array(arr, options2.unorderedSets !== false);
         },
         _file: function(file) {
-          write("file:");
+          write2("file:");
           return this.dispatch([file.name, file.size, file.type, file.lastModfied]);
         },
         _blob: function() {
           if (options2.ignoreUnknown) {
-            return write("[blob]");
+            return write2("[blob]");
           }
           throw Error('Hashing Blob objects is currently not supported\n(see https://github.com/puleos/object-hash/issues/26)\nUse "options.replacer" or "options.ignoreUnknown"\n');
         },
         _domwindow: function() {
-          return write("domwindow");
+          return write2("domwindow");
         },
         _bigint: function(number) {
-          return write("bigint:" + number.toString());
+          return write2("bigint:" + number.toString());
         },
         /* Node.js standard native objects */
         _process: function() {
-          return write("process");
+          return write2("process");
         },
         _timer: function() {
-          return write("timer");
+          return write2("timer");
         },
         _pipe: function() {
-          return write("pipe");
+          return write2("pipe");
         },
         _tcp: function() {
-          return write("tcp");
+          return write2("tcp");
         },
         _udp: function() {
-          return write("udp");
+          return write2("udp");
         },
         _tty: function() {
-          return write("tty");
+          return write2("tty");
         },
         _statwatcher: function() {
-          return write("statwatcher");
+          return write2("statwatcher");
         },
         _securecontext: function() {
-          return write("securecontext");
+          return write2("securecontext");
         },
         _connection: function() {
-          return write("connection");
+          return write2("connection");
         },
         _zlib: function() {
-          return write("zlib");
+          return write2("zlib");
         },
         _context: function() {
-          return write("context");
+          return write2("context");
         },
         _nodescript: function() {
-          return write("nodescript");
+          return write2("nodescript");
         },
         _httpparser: function() {
-          return write("httpparser");
+          return write2("httpparser");
         },
         _dataview: function() {
-          return write("dataview");
+          return write2("dataview");
         },
         _signal: function() {
-          return write("signal");
+          return write2("signal");
         },
         _fsevent: function() {
-          return write("fsevent");
+          return write2("fsevent");
         },
         _tlswrap: function() {
-          return write("tlswrap");
+          return write2("tlswrap");
         }
       };
     }
@@ -44230,8 +44230,8 @@ var require_eventemitter = __commonJS({
 var require_float = __commonJS({
   "node_modules/@protobufjs/float/index.js"(exports2, module2) {
     "use strict";
-    module2.exports = factory(factory);
-    function factory(exports3) {
+    module2.exports = factory2(factory2);
+    function factory2(exports3) {
       if (typeof Float32Array !== "undefined") (function() {
         var f32 = new Float32Array([-0]), f8b = new Uint8Array(f32.buffer), le = f8b[3] === 128;
         function writeFloat_f32_cpy(val, buf, pos) {
@@ -44628,23 +44628,23 @@ var require_longbits = __commonJS({
 // node_modules/long/umd/index.js
 var require_umd = __commonJS({
   "node_modules/long/umd/index.js"(exports2, module2) {
-    (function(global2, factory) {
+    (function(global2, factory2) {
       function preferDefault(exports3) {
         return exports3.default || exports3;
       }
       if (typeof define === "function" && define.amd) {
         define([], function() {
           var exports3 = {};
-          factory(exports3);
+          factory2(exports3);
           return preferDefault(exports3);
         });
       } else if (typeof exports2 === "object") {
-        factory(exports2);
+        factory2(exports2);
         if (typeof module2 === "object") module2.exports = preferDefault(exports2);
       } else {
         (function() {
           var exports3 = {};
-          factory(exports3);
+          factory2(exports3);
           global2.Long = preferDefault(exports3);
         })();
       }
@@ -45717,7 +45717,7 @@ var require_minimal = __commonJS({
     util.lcFirst = function lcFirst(str) {
       return str.charAt(0).toLowerCase() + str.substring(1);
     };
-    function newError(name5) {
+    function newError(name6) {
       function CustomError(message2, properties) {
         if (!(this instanceof CustomError))
           return new CustomError(message2, properties);
@@ -45740,7 +45740,7 @@ var require_minimal = __commonJS({
         },
         name: {
           get: function get() {
-            return name5;
+            return name6;
           },
           set: void 0,
           enumerable: false,
@@ -45774,9 +45774,9 @@ var require_minimal = __commonJS({
       };
     };
     util.oneOfSetter = function setOneOf(fieldNames) {
-      return function(name5) {
+      return function(name6) {
         for (var i2 = 0; i2 < fieldNames.length; ++i2)
-          if (fieldNames[i2] !== name5)
+          if (fieldNames[i2] !== name6)
             delete this[fieldNames[i2]];
       };
     };
@@ -46472,15 +46472,15 @@ var require_codegen = __commonJS({
       return Codegen;
     }
     codegen.verbose = false;
-    function safeFunctionName(name5) {
-      if (!name5)
+    function safeFunctionName(name6) {
+      if (!name6)
         return "";
-      name5 = String(name5).replace(/[^\w$]/g, "");
-      if (!name5)
+      name6 = String(name6).replace(/[^\w$]/g, "");
+      if (!name6)
         return "";
-      if (/^\d/.test(name5))
-        name5 = "_" + name5;
-      return reservedRe.test(name5) ? name5 + "_" : name5;
+      if (/^\d/.test(name6))
+        name6 = "_" + name6;
+      return reservedRe.test(name6) ? name6 + "_" : name6;
     }
   }
 });
@@ -46649,9 +46649,9 @@ var require_namespace = __commonJS({
     var Type2;
     var Service;
     var Enum;
-    Namespace.fromJSON = function fromJSON2(name5, json2, depth) {
+    Namespace.fromJSON = function fromJSON2(name6, json2, depth) {
       depth = util.checkDepth(depth);
-      return new Namespace(name5, json2.options).addJSON(json2.nested, depth);
+      return new Namespace(name6, json2.options).addJSON(json2.nested, depth);
     };
     function arrayToJSON(array2, toJSONOptions) {
       if (!(array2 && array2.length))
@@ -46670,16 +46670,16 @@ var require_namespace = __commonJS({
       }
       return false;
     };
-    Namespace.isReservedName = function isReservedName(reserved, name5) {
+    Namespace.isReservedName = function isReservedName(reserved, name6) {
       if (reserved) {
         for (var i2 = 0; i2 < reserved.length; ++i2)
-          if (reserved[i2] === name5)
+          if (reserved[i2] === name6)
             return true;
       }
       return false;
     };
-    function Namespace(name5, options2) {
-      ReflectionObject.call(this, name5, options2);
+    function Namespace(name6, options2) {
+      ReflectionObject.call(this, name6, options2);
       this.nested = void 0;
       this._nestedArray = null;
       this._lookupCache = /* @__PURE__ */ Object.create(null);
@@ -46722,13 +46722,13 @@ var require_namespace = __commonJS({
       }
       return this;
     };
-    Namespace.prototype.get = function get(name5) {
-      return this.nested && Object.prototype.hasOwnProperty.call(this.nested, name5) ? this.nested[name5] : null;
+    Namespace.prototype.get = function get(name6) {
+      return this.nested && Object.prototype.hasOwnProperty.call(this.nested, name6) ? this.nested[name6] : null;
     };
-    Namespace.prototype.getEnum = function getEnum(name5) {
-      if (this.nested && Object.prototype.hasOwnProperty.call(this.nested, name5) && this.nested[name5] instanceof Enum)
-        return this.nested[name5].values;
-      throw Error("no such enum: " + name5);
+    Namespace.prototype.getEnum = function getEnum(name6) {
+      if (this.nested && Object.prototype.hasOwnProperty.call(this.nested, name6) && this.nested[name6] instanceof Enum)
+        return this.nested[name6].values;
+      throw Error("no such enum: " + name6);
     };
     Namespace.prototype.add = function add(object) {
       if (!(object instanceof Field2 && object.extend !== void 0 || object instanceof Type2 || object instanceof OneOf || object instanceof Enum || object instanceof Service || object instanceof Namespace))
@@ -46924,16 +46924,16 @@ var require_mapfield = __commonJS({
     ((MapField.prototype = Object.create(Field2.prototype)).constructor = MapField).className = "MapField";
     var types3 = require_types();
     var util = require_util3();
-    function MapField(name5, id, keyType, type, options2, comment) {
-      Field2.call(this, name5, id, type, void 0, void 0, options2, comment);
+    function MapField(name6, id, keyType, type, options2, comment) {
+      Field2.call(this, name6, id, type, void 0, void 0, options2, comment);
       if (!util.isString(keyType))
         throw TypeError("keyType must be a string");
       this.keyType = keyType;
       this.resolvedKeyType = null;
       this.map = true;
     }
-    MapField.fromJSON = function fromJSON2(name5, json2) {
-      return new MapField(name5, json2.id, json2.keyType, json2.type, json2.options, json2.comment);
+    MapField.fromJSON = function fromJSON2(name6, json2) {
+      return new MapField(name6, json2.id, json2.keyType, json2.type, json2.options, json2.comment);
     };
     MapField.prototype.toJSON = function toJSON(toJSONOptions) {
       var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
@@ -46979,7 +46979,7 @@ var require_method = __commonJS({
     var ReflectionObject = require_object();
     ((Method.prototype = Object.create(ReflectionObject.prototype)).constructor = Method).className = "Method";
     var util = require_util3();
-    function Method(name5, type, requestType, responseType, requestStream, responseStream, options2, comment, parsedOptions) {
+    function Method(name6, type, requestType, responseType, requestStream, responseStream, options2, comment, parsedOptions) {
       if (util.isObject(requestStream)) {
         options2 = requestStream;
         requestStream = responseStream = void 0;
@@ -46993,7 +46993,7 @@ var require_method = __commonJS({
         throw TypeError("requestType must be a string");
       if (!util.isString(responseType))
         throw TypeError("responseType must be a string");
-      ReflectionObject.call(this, name5, options2);
+      ReflectionObject.call(this, name6, options2);
       this.type = type || "rpc";
       this.requestType = requestType;
       this.requestStream = requestStream ? true : void 0;
@@ -47004,8 +47004,8 @@ var require_method = __commonJS({
       this.comment = comment;
       this.parsedOptions = parsedOptions;
     }
-    Method.fromJSON = function fromJSON2(name5, json2) {
-      return new Method(name5, json2.type, json2.requestType, json2.responseType, json2.requestStream, json2.responseStream, json2.options, json2.comment, json2.parsedOptions);
+    Method.fromJSON = function fromJSON2(name6, json2) {
+      return new Method(name6, json2.type, json2.requestType, json2.responseType, json2.requestStream, json2.responseStream, json2.options, json2.comment, json2.parsedOptions);
     };
     Method.prototype.toJSON = function toJSON(toJSONOptions) {
       var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
@@ -47049,14 +47049,14 @@ var require_service2 = __commonJS({
     var Method = require_method();
     var util = require_util3();
     var rpc = require_rpc();
-    function Service(name5, options2) {
-      Namespace.call(this, name5, options2);
+    function Service(name6, options2) {
+      Namespace.call(this, name6, options2);
       this.methods = {};
       this._methodsArray = null;
     }
-    Service.fromJSON = function fromJSON2(name5, json2, depth) {
+    Service.fromJSON = function fromJSON2(name6, json2, depth) {
       depth = util.checkDepth(depth);
-      var service = new Service(name5, json2.options);
+      var service = new Service(name6, json2.options);
       if (json2.methods)
         for (var names = Object.keys(json2.methods), i2 = 0; i2 < names.length; ++i2)
           service.add(Method.fromJSON(names[i2], json2.methods[names[i2]]));
@@ -47094,8 +47094,8 @@ var require_service2 = __commonJS({
       service._methodsArray = null;
       return service;
     }
-    Service.prototype.get = function get(name5) {
-      return Object.prototype.hasOwnProperty.call(this.methods, name5) ? this.methods[name5] : Namespace.prototype.get.call(this, name5);
+    Service.prototype.get = function get(name6) {
+      return Object.prototype.hasOwnProperty.call(this.methods, name6) ? this.methods[name6] : Namespace.prototype.get.call(this, name6);
     };
     Service.prototype.resolveAll = function resolveAll() {
       if (!this._needsRecursiveResolve) return this;
@@ -47573,8 +47573,8 @@ var require_wrappers = __commonJS({
     wrappers[".google.protobuf.Any"] = {
       fromObject: function(object, depth) {
         if (object && object["@type"]) {
-          var name5 = object["@type"].substring(object["@type"].lastIndexOf("/") + 1);
-          var type = this.lookup(name5);
+          var name6 = object["@type"].substring(object["@type"].lastIndexOf("/") + 1);
+          var type = this.lookup(name6);
           if (type) {
             var type_url = object["@type"].charAt(0) === "." ? object["@type"].slice(1) : object["@type"];
             if (type_url.indexOf("/") === -1) {
@@ -47595,11 +47595,11 @@ var require_wrappers = __commonJS({
           throw Error("max depth exceeded");
         var googleApi = "type.googleapis.com/";
         var prefix = "";
-        var name5 = "";
+        var name6 = "";
         if (options2 && options2.json && message2.type_url && message2.value) {
-          name5 = message2.type_url.substring(message2.type_url.lastIndexOf("/") + 1);
+          name6 = message2.type_url.substring(message2.type_url.lastIndexOf("/") + 1);
           prefix = message2.type_url.substring(0, message2.type_url.lastIndexOf("/") + 1);
-          var type = this.lookup(name5);
+          var type = this.lookup(name6);
           if (type)
             message2 = type.decode(message2.value, void 0, void 0, depth + 1);
         }
@@ -47609,8 +47609,8 @@ var require_wrappers = __commonJS({
           if (prefix === "") {
             prefix = googleApi;
           }
-          name5 = prefix + messageName;
-          object["@type"] = name5;
+          name6 = prefix + messageName;
+          object["@type"] = name6;
           return object;
         }
         return this.toObject(message2, options2, depth);
@@ -47640,9 +47640,9 @@ var require_type2 = __commonJS({
     var verifier = require_verifier();
     var converter = require_converter();
     var wrappers = require_wrappers();
-    function Type2(name5, options2) {
-      name5 = name5.replace(/\W/g, "");
-      Namespace.call(this, name5, options2);
+    function Type2(name6, options2) {
+      name6 = name6.replace(/\W/g, "");
+      Namespace.call(this, name6, options2);
       this.fields = {};
       this.oneofs = void 0;
       this.extensions = void 0;
@@ -47745,12 +47745,12 @@ var require_type2 = __commonJS({
       delete type.verify;
       return type;
     }
-    Type2.fromJSON = function fromJSON2(name5, json2, depth) {
+    Type2.fromJSON = function fromJSON2(name6, json2, depth) {
       if (depth === void 0)
         depth = 0;
       if (depth > util.nestingLimit)
         throw Error("max depth exceeded");
-      var type = new Type2(name5, json2.options);
+      var type = new Type2(name6, json2.options);
       type.extensions = json2.extensions;
       type.reserved = json2.reserved;
       var names = Object.keys(json2.fields), i2 = 0;
@@ -47832,13 +47832,13 @@ var require_type2 = __commonJS({
       });
       return this;
     };
-    Type2.prototype.get = function get(name5) {
-      if (Object.prototype.hasOwnProperty.call(this.fields, name5))
-        return this.fields[name5];
-      if (this.oneofs && Object.prototype.hasOwnProperty.call(this.oneofs, name5))
-        return this.oneofs[name5];
-      if (this.nested && Object.prototype.hasOwnProperty.call(this.nested, name5))
-        return this.nested[name5];
+    Type2.prototype.get = function get(name6) {
+      if (Object.prototype.hasOwnProperty.call(this.fields, name6))
+        return this.fields[name6];
+      if (this.oneofs && Object.prototype.hasOwnProperty.call(this.oneofs, name6))
+        return this.oneofs[name6];
+      if (this.nested && Object.prototype.hasOwnProperty.call(this.nested, name6))
+        return this.nested[name6];
       return null;
     };
     Type2.prototype.add = function add(object) {
@@ -47898,8 +47898,8 @@ var require_type2 = __commonJS({
     Type2.prototype.isReservedId = function isReservedId(id) {
       return Namespace.isReservedId(this.reserved, id);
     };
-    Type2.prototype.isReservedName = function isReservedName(name5) {
-      return Namespace.isReservedName(this.reserved, name5);
+    Type2.prototype.isReservedName = function isReservedName(name6) {
+      return Namespace.isReservedName(this.reserved, name6);
     };
     Type2.prototype.create = function create(properties) {
       return new this.ctor(properties);
@@ -48267,8 +48267,8 @@ var require_util3 = __commonJS({
       }
       return object;
     };
-    util.isReserved = function isReserved(name5) {
-      return reservedRe.test(name5);
+    util.isReserved = function isReserved(name6) {
+      return reservedRe.test(name6);
     };
     util.safeProp = function safeProp(prop) {
       if (!/^[$\w_]+$/.test(prop) || reservedRe.test(prop))
@@ -48541,14 +48541,14 @@ var require_field = __commonJS({
     var util = require_util3();
     var Type2;
     var ruleRe = /^required|optional|repeated$/;
-    Field2.fromJSON = function fromJSON2(name5, json2) {
-      var field2 = new Field2(name5, json2.id, json2.type, json2.rule, json2.extend, json2.options, json2.comment);
+    Field2.fromJSON = function fromJSON2(name6, json2) {
+      var field2 = new Field2(name6, json2.id, json2.type, json2.rule, json2.extend, json2.options, json2.comment);
       if (json2.edition)
         field2._edition = json2.edition;
       field2._defaultEdition = "proto3";
       return field2;
     };
-    function Field2(name5, id, type, rule, extend, options2, comment) {
+    function Field2(name6, id, type, rule, extend, options2, comment) {
       if (util.isObject(rule)) {
         comment = extend;
         options2 = rule;
@@ -48558,7 +48558,7 @@ var require_field = __commonJS({
         options2 = extend;
         extend = void 0;
       }
-      ReflectionObject.call(this, name5, options2);
+      ReflectionObject.call(this, name6, options2);
       if (!util.isInteger(id) || id < 0)
         throw TypeError("id must be a non-negative integer");
       if (!util.isString(type))
@@ -48620,8 +48620,8 @@ var require_field = __commonJS({
         this._features.field_presence !== "IMPLICIT";
       }
     });
-    Field2.prototype.setOption = function setOption(name5, value, ifNotSet) {
-      return ReflectionObject.prototype.setOption.call(this, name5, value, ifNotSet);
+    Field2.prototype.setOption = function setOption(name6, value, ifNotSet) {
+      return ReflectionObject.prototype.setOption.call(this, name6, value, ifNotSet);
     };
     Field2.prototype.toJSON = function toJSON(toJSONOptions) {
       var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
@@ -48735,20 +48735,20 @@ var require_oneof = __commonJS({
     ((OneOf.prototype = Object.create(ReflectionObject.prototype)).constructor = OneOf).className = "OneOf";
     var Field2 = require_field();
     var util = require_util3();
-    function OneOf(name5, fieldNames, options2, comment) {
+    function OneOf(name6, fieldNames, options2, comment) {
       if (!Array.isArray(fieldNames)) {
         options2 = fieldNames;
         fieldNames = void 0;
       }
-      ReflectionObject.call(this, name5, options2);
+      ReflectionObject.call(this, name6, options2);
       if (!(fieldNames === void 0 || Array.isArray(fieldNames)))
         throw TypeError("fieldNames must be an Array");
       this.oneof = fieldNames || [];
       this.fieldsArray = [];
       this.comment = comment;
     }
-    OneOf.fromJSON = function fromJSON2(name5, json2) {
-      return new OneOf(name5, json2.oneof, json2.options, json2.comment);
+    OneOf.fromJSON = function fromJSON2(name6, json2) {
+      return new OneOf(name6, json2.oneof, json2.options, json2.comment);
     };
     OneOf.prototype.toJSON = function toJSON(toJSONOptions) {
       var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
@@ -48846,14 +48846,14 @@ var require_object = __commonJS({
     var editions2023Defaults = { enum_type: "OPEN", field_presence: "EXPLICIT", json_format: "ALLOW", message_encoding: "LENGTH_PREFIXED", repeated_field_encoding: "PACKED", utf8_validation: "VERIFY" };
     var proto2Defaults = { enum_type: "CLOSED", field_presence: "EXPLICIT", json_format: "LEGACY_BEST_EFFORT", message_encoding: "LENGTH_PREFIXED", repeated_field_encoding: "EXPANDED", utf8_validation: "NONE" };
     var proto3Defaults = { enum_type: "OPEN", field_presence: "IMPLICIT", json_format: "ALLOW", message_encoding: "LENGTH_PREFIXED", repeated_field_encoding: "PACKED", utf8_validation: "VERIFY" };
-    function ReflectionObject(name5, options2) {
-      if (!util.isString(name5))
+    function ReflectionObject(name6, options2) {
+      if (!util.isString(name6))
         throw TypeError("name must be a string");
       if (options2 && !util.isObject(options2))
         throw TypeError("options must be an object");
       this.options = options2;
       this.parsedOptions = null;
-      this.name = name5;
+      this.name = name6;
       this._edition = null;
       this._defaultEdition = "proto2";
       this._features = {};
@@ -48970,26 +48970,26 @@ var require_object = __commonJS({
     ReflectionObject.prototype._inferLegacyProtoFeatures = function _inferLegacyProtoFeatures() {
       return {};
     };
-    ReflectionObject.prototype.getOption = function getOption(name5) {
+    ReflectionObject.prototype.getOption = function getOption(name6) {
       if (this.options)
-        return this.options[name5];
+        return this.options[name6];
       return void 0;
     };
-    ReflectionObject.prototype.setOption = function setOption(name5, value, ifNotSet) {
-      if (name5 === "__proto__")
+    ReflectionObject.prototype.setOption = function setOption(name6, value, ifNotSet) {
+      if (name6 === "__proto__")
         return this;
       if (!this.options)
         this.options = {};
-      if (/^features\./.test(name5)) {
-        util.setProperty(this.options, name5, value, ifNotSet);
-      } else if (!ifNotSet || this.options[name5] === void 0) {
-        if (this.getOption(name5) !== value) this.resolved = false;
-        this.options[name5] = value;
+      if (/^features\./.test(name6)) {
+        util.setProperty(this.options, name6, value, ifNotSet);
+      } else if (!ifNotSet || this.options[name6] === void 0) {
+        if (this.getOption(name6) !== value) this.resolved = false;
+        this.options[name6] = value;
       }
       return this;
     };
-    ReflectionObject.prototype.setParsedOption = function setParsedOption(name5, value, propName) {
-      if (name5 === "__proto__")
+    ReflectionObject.prototype.setParsedOption = function setParsedOption(name6, value, propName) {
+      if (name6 === "__proto__")
         return this;
       if (!this.parsedOptions) {
         this.parsedOptions = [];
@@ -48997,19 +48997,19 @@ var require_object = __commonJS({
       var parsedOptions = this.parsedOptions;
       if (propName) {
         var opt = parsedOptions.find(function(opt2) {
-          return Object.prototype.hasOwnProperty.call(opt2, name5);
+          return Object.prototype.hasOwnProperty.call(opt2, name6);
         });
         if (opt) {
-          var newValue = opt[name5];
+          var newValue = opt[name6];
           util.setProperty(newValue, propName, value);
         } else {
           opt = {};
-          opt[name5] = util.setProperty({}, propName, value);
+          opt[name6] = util.setProperty({}, propName, value);
           parsedOptions.push(opt);
         }
       } else {
         var newOpt = {};
-        newOpt[name5] = value;
+        newOpt[name6] = value;
         parsedOptions.push(newOpt);
       }
       return this;
@@ -49047,8 +49047,8 @@ var require_enum = __commonJS({
     ((Enum.prototype = Object.create(ReflectionObject.prototype)).constructor = Enum).className = "Enum";
     var Namespace = require_namespace();
     var util = require_util3();
-    function Enum(name5, values, options2, comment, comments, valuesOptions) {
-      ReflectionObject.call(this, name5, options2);
+    function Enum(name6, values, options2, comment, comments, valuesOptions) {
+      ReflectionObject.call(this, name6, options2);
       if (values && typeof values !== "object")
         throw TypeError("values must be an object");
       this.valuesById = {};
@@ -49073,8 +49073,8 @@ var require_enum = __commonJS({
       });
       return this;
     };
-    Enum.fromJSON = function fromJSON2(name5, json2) {
-      var enm = new Enum(name5, json2.values, json2.options, json2.comment, json2.comments);
+    Enum.fromJSON = function fromJSON2(name6, json2) {
+      var enm = new Enum(name6, json2.values, json2.options, json2.comment, json2.comments);
       enm.reserved = json2.reserved;
       if (json2.edition)
         enm._edition = json2.edition;
@@ -49100,51 +49100,51 @@ var require_enum = __commonJS({
         keepComments ? this.comments : void 0
       ]);
     };
-    Enum.prototype.add = function add(name5, id, comment, options2) {
-      if (!util.isString(name5))
+    Enum.prototype.add = function add(name6, id, comment, options2) {
+      if (!util.isString(name6))
         throw TypeError("name must be a string");
       if (!util.isInteger(id))
         throw TypeError("id must be an integer");
-      if (name5 === "__proto__")
+      if (name6 === "__proto__")
         return this;
-      if (this.values[name5] !== void 0)
-        throw Error("duplicate name '" + name5 + "' in " + this);
+      if (this.values[name6] !== void 0)
+        throw Error("duplicate name '" + name6 + "' in " + this);
       if (this.isReservedId(id))
         throw Error("id " + id + " is reserved in " + this);
-      if (this.isReservedName(name5))
-        throw Error("name '" + name5 + "' is reserved in " + this);
+      if (this.isReservedName(name6))
+        throw Error("name '" + name6 + "' is reserved in " + this);
       if (this.valuesById[id] !== void 0) {
         if (!(this.options && this.options.allow_alias))
           throw Error("duplicate id " + id + " in " + this);
-        this.values[name5] = id;
+        this.values[name6] = id;
       } else
-        this.valuesById[this.values[name5] = id] = name5;
+        this.valuesById[this.values[name6] = id] = name6;
       if (options2) {
         if (this.valuesOptions === void 0)
           this.valuesOptions = {};
-        this.valuesOptions[name5] = options2 || null;
+        this.valuesOptions[name6] = options2 || null;
       }
-      this.comments[name5] = comment || null;
+      this.comments[name6] = comment || null;
       return this;
     };
-    Enum.prototype.remove = function remove(name5) {
-      if (!util.isString(name5))
+    Enum.prototype.remove = function remove(name6) {
+      if (!util.isString(name6))
         throw TypeError("name must be a string");
-      var val = this.values[name5];
+      var val = this.values[name6];
       if (val == null)
-        throw Error("name '" + name5 + "' does not exist in " + this);
+        throw Error("name '" + name6 + "' does not exist in " + this);
       delete this.valuesById[val];
-      delete this.values[name5];
-      delete this.comments[name5];
+      delete this.values[name6];
+      delete this.comments[name6];
       if (this.valuesOptions)
-        delete this.valuesOptions[name5];
+        delete this.valuesOptions[name6];
       return this;
     };
     Enum.prototype.isReservedId = function isReservedId(id) {
       return Namespace.isReservedId(this.reserved, id);
     };
-    Enum.prototype.isReservedName = function isReservedName(name5) {
-      return Namespace.isReservedName(this.reserved, name5);
+    Enum.prototype.isReservedName = function isReservedName(name6) {
+      return Namespace.isReservedName(this.reserved, name6);
     };
   }
 });
@@ -49532,8 +49532,8 @@ var require_parse3 = __commonJS({
       var ptr = root;
       var topLevelObjects = [];
       var topLevelOptions = {};
-      var applyCase = options2.keepCase ? function(name5) {
-        return name5;
+      var applyCase = options2.keepCase ? function(name6) {
+        return name6;
       } : util.camelCase;
       function resolveFileFeatures() {
         topLevelObjects.forEach((obj) => {
@@ -49544,11 +49544,11 @@ var require_parse3 = __commonJS({
           });
         });
       }
-      function illegal(token2, name5, insideTryCatch) {
+      function illegal(token2, name6, insideTryCatch) {
         var filename = parse.filename;
         if (!insideTryCatch)
           parse.filename = null;
-        return Error("illegal " + (name5 || "token") + " '" + token2 + "' (" + (filename ? filename + ", " : "") + "line " + tn.line + ")");
+        return Error("illegal " + (name6 || "token") + " '" + token2 + "' (" + (filename ? filename + ", " : "") + "line " + tn.line + ")");
       }
       function readString() {
         var values = [], token2;
@@ -49609,9 +49609,9 @@ var require_parse3 = __commonJS({
           }
         } while (skip(",", true));
         var dummy = { options: void 0 };
-        dummy.setOption = function(name5, value) {
+        dummy.setOption = function(name6, value) {
           if (this.options === void 0) this.options = {};
-          this.options[name5] = value;
+          this.options[name6] = value;
         };
         ifBlock(
           dummy,
@@ -49827,12 +49827,12 @@ var require_parse3 = __commonJS({
         }
         if (!typeRefRe.test(type))
           throw illegal(type, "type");
-        var name5 = next();
-        if (!nameRe.test(name5))
-          throw illegal(name5, "name");
-        name5 = applyCase(name5);
+        var name6 = next();
+        if (!nameRe.test(name6))
+          throw illegal(name6, "name");
+        name6 = applyCase(name6);
         skip("=");
-        var field2 = new Field2(name5, parseId(next()), type, rule, extend);
+        var field2 = new Field2(name6, parseId(next()), type, rule, extend);
         ifBlock(field2, function parseField_block(token2) {
           if (token2 === "option") {
             parseOption(field2, token2);
@@ -49843,7 +49843,7 @@ var require_parse3 = __commonJS({
           parseInlineOptions(field2);
         });
         if (rule === "proto3_optional") {
-          var oneof = new OneOf("_" + name5);
+          var oneof = new OneOf("_" + name6);
           field2.setOption("proto3_optional", true);
           oneof.add(field2);
           parent.add(oneof);
@@ -49862,17 +49862,17 @@ var require_parse3 = __commonJS({
         if (edition >= 2023) {
           throw illegal("group");
         }
-        var name5 = next();
-        if (!nameRe.test(name5))
-          throw illegal(name5, "name");
-        var fieldName = util.lcFirst(name5);
-        if (name5 === fieldName)
-          name5 = util.ucFirst(name5);
+        var name6 = next();
+        if (!nameRe.test(name6))
+          throw illegal(name6, "name");
+        var fieldName = util.lcFirst(name6);
+        if (name6 === fieldName)
+          name6 = util.ucFirst(name6);
         skip("=");
         var id = parseId(next());
-        var type = new Type2(name5);
+        var type = new Type2(name6);
         type.group = true;
-        var field2 = new Field2(fieldName, id, name5, rule);
+        var field2 = new Field2(fieldName, id, name6, rule);
         field2.filename = parse.filename;
         ifBlock(type, function parseGroup_block(token2) {
           switch (token2) {
@@ -49917,11 +49917,11 @@ var require_parse3 = __commonJS({
         if (!typeRefRe.test(valueType))
           throw illegal(valueType, "type");
         skip(">");
-        var name5 = next();
-        if (!nameRe.test(name5))
-          throw illegal(name5, "name");
+        var name6 = next();
+        if (!nameRe.test(name6))
+          throw illegal(name6, "name");
         skip("=");
-        var field2 = new MapField(applyCase(name5), parseId(next()), keyType, valueType);
+        var field2 = new MapField(applyCase(name6), parseId(next()), keyType, valueType);
         ifBlock(field2, function parseMapField_block(token2) {
           if (token2 === "option") {
             parseOption(field2, token2);
@@ -49978,11 +49978,11 @@ var require_parse3 = __commonJS({
         var value = parseId(next(), true), dummy = {
           options: void 0
         };
-        dummy.getOption = function(name5) {
-          return this.options[name5];
+        dummy.getOption = function(name6) {
+          return this.options[name6];
         };
-        dummy.setOption = function(name5, value2) {
-          ReflectionObject.prototype.setOption.call(dummy, name5, value2);
+        dummy.setOption = function(name6, value2) {
+          ReflectionObject.prototype.setOption.call(dummy, name6, value2);
         };
         dummy.setParsedOption = function() {
           return void 0;
@@ -50028,13 +50028,13 @@ var require_parse3 = __commonJS({
           }
           token2 = next();
         }
-        var name5 = propName ? option.concat(propName) : option;
-        var optionValue = parseOptionValue(parent, name5);
+        var name6 = propName ? option.concat(propName) : option;
+        var optionValue = parseOptionValue(parent, name6);
         propName = propName && propName[0] === "." ? propName.slice(1) : propName;
         option = option && option[option.length - 1] === "." ? option.slice(0, -1) : option;
         setParsedOption(parent, option, optionValue, propName);
       }
-      function parseOptionValue(parent, name5, depth) {
+      function parseOptionValue(parent, name6, depth) {
         if (depth === void 0)
           depth = 0;
         if (depth > util.recursionLimit)
@@ -50052,7 +50052,7 @@ var require_parse3 = __commonJS({
             var propName = token;
             skip(":", true);
             if (peek() === "{") {
-              value = parseOptionValue(parent, name5 + "." + token, depth + 1);
+              value = parseOptionValue(parent, name6 + "." + token, depth + 1);
             } else if (peek() === "[") {
               value = [];
               var lastValue;
@@ -50063,12 +50063,12 @@ var require_parse3 = __commonJS({
                 } while (skip(",", true));
                 skip("]");
                 if (typeof lastValue !== "undefined") {
-                  setOption(parent, name5 + "." + token, lastValue);
+                  setOption(parent, name6 + "." + token, lastValue);
                 }
               }
             } else {
               value = readValue(true);
-              setOption(parent, name5 + "." + token, value);
+              setOption(parent, name6 + "." + token, value);
             }
             var prevValue = objectResult[propName];
             if (prevValue)
@@ -50081,20 +50081,20 @@ var require_parse3 = __commonJS({
           return objectResult;
         }
         var simpleValue = readValue(true);
-        setOption(parent, name5, simpleValue);
+        setOption(parent, name6, simpleValue);
         return simpleValue;
       }
-      function setOption(parent, name5, value) {
-        if (ptr === parent && /^features\./.test(name5)) {
-          topLevelOptions[name5] = value;
+      function setOption(parent, name6, value) {
+        if (ptr === parent && /^features\./.test(name6)) {
+          topLevelOptions[name6] = value;
           return;
         }
         if (parent.setOption)
-          parent.setOption(name5, value);
+          parent.setOption(name6, value);
       }
-      function setParsedOption(parent, name5, value, propName) {
+      function setParsedOption(parent, name6, value, propName) {
         if (parent.setParsedOption)
-          parent.setParsedOption(name5, value, propName);
+          parent.setParsedOption(name6, value, propName);
       }
       function parseInlineOptions(parent) {
         if (skip("[", true)) {
@@ -50132,7 +50132,7 @@ var require_parse3 = __commonJS({
         var type = token2;
         if (!nameRe.test(token2 = next()))
           throw illegal(token2, "name");
-        var name5 = token2, requestType, requestStream, responseType, responseStream;
+        var name6 = token2, requestType, requestStream, responseType, responseStream;
         skip("(");
         if (skip("stream", true))
           requestStream = true;
@@ -50148,7 +50148,7 @@ var require_parse3 = __commonJS({
           throw illegal(token2);
         responseType = token2;
         skip(")");
-        var method = new Method(name5, type, requestType, responseType, requestStream, responseStream);
+        var method = new Method(name6, type, requestType, responseType, requestStream, responseStream);
         method.comment = commentText;
         ifBlock(method, function parseMethod_block(token3) {
           if (token3 === "option") {
@@ -50238,12 +50238,12 @@ var require_common3 = __commonJS({
     "use strict";
     module2.exports = common;
     var commonRe = /\/|\./;
-    function common(name5, json2) {
-      if (!commonRe.test(name5)) {
-        name5 = "google/protobuf/" + name5 + ".proto";
+    function common(name6, json2) {
+      if (!commonRe.test(name6)) {
+        name6 = "google/protobuf/" + name6 + ".proto";
         json2 = { nested: { google: { nested: { protobuf: { nested: json2 } } } } };
       }
-      common[name5] = json2;
+      common[name6] = json2;
     }
     common("any", {
       /**
@@ -51073,8 +51073,8 @@ var require_gax = __commonJS({
       let codes = null;
       if (retryCodes && "retry_codes_name" in methodConfig) {
         const retryCodesName = methodConfig["retry_codes_name"];
-        codes = (retryCodes[retryCodesName] || []).map((name5) => {
-          return Number(retryNames[name5]);
+        codes = (retryCodes[retryCodesName] || []).map((name6) => {
+          return Number(retryNames[name6]);
         });
       }
       let backoffSettings = null;
@@ -51181,13 +51181,13 @@ var require_routingHeader = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -53174,7 +53174,7 @@ var require_src7 = __commonJS({
          */
       }, {
         key: "getToken",
-        value: function getToken(callback) {
+        value: function getToken2(callback) {
           var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
           if (_typeof(callback) === "object") {
             opts = callback;
@@ -54112,8 +54112,8 @@ var require_impersonated2 = __commonJS({
        */
       async sign(blobToSign) {
         await this.sourceClient.getAccessToken();
-        const name5 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
-        const u = `${this.endpoint}/v1/${name5}:signBlob`;
+        const name6 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
+        const u = `${this.endpoint}/v1/${name6}:signBlob`;
         const body = {
           delegates: this.delegates,
           payload: Buffer.from(blobToSign).toString("base64")
@@ -54136,8 +54136,8 @@ var require_impersonated2 = __commonJS({
       async refreshToken() {
         try {
           await this.sourceClient.getAccessToken();
-          const name5 = "projects/-/serviceAccounts/" + this.targetPrincipal;
-          const u = `${this.endpoint}/v1/${name5}:generateAccessToken`;
+          const name6 = "projects/-/serviceAccounts/" + this.targetPrincipal;
+          const u = `${this.endpoint}/v1/${name6}:generateAccessToken`;
           const body = {
             delegates: this.delegates,
             scope: this.targetScopes,
@@ -54185,8 +54185,8 @@ var require_impersonated2 = __commonJS({
        */
       async fetchIdToken(targetAudience, options2) {
         await this.sourceClient.getAccessToken();
-        const name5 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
-        const u = `${this.endpoint}/v1/${name5}:generateIdToken`;
+        const name6 = `projects/-/serviceAccounts/${this.targetPrincipal}`;
+        const u = `${this.endpoint}/v1/${name6}:generateIdToken`;
         const body = {
           delegates: this.delegates,
           audience: targetAudience,
@@ -58179,13 +58179,13 @@ var require_googleError = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -59164,10 +59164,10 @@ var require_errors = __commonJS({
         return str.indexOf(search, start) !== -1;
       }
     }
-    createErrorType("ERR_INVALID_OPT_VALUE", function(name5, value) {
-      return 'The value "' + value + '" is invalid for option "' + name5 + '"';
+    createErrorType("ERR_INVALID_OPT_VALUE", function(name6, value) {
+      return 'The value "' + value + '" is invalid for option "' + name6 + '"';
     }, TypeError);
-    createErrorType("ERR_INVALID_ARG_TYPE", function(name5, expected, actual) {
+    createErrorType("ERR_INVALID_ARG_TYPE", function(name6, expected, actual) {
       let determiner;
       if (typeof expected === "string" && startsWith(expected, "not ")) {
         determiner = "must not be";
@@ -59176,22 +59176,22 @@ var require_errors = __commonJS({
         determiner = "must be";
       }
       let msg;
-      if (endsWith(name5, " argument")) {
-        msg = `The ${name5} ${determiner} ${oneOf(expected, "type")}`;
+      if (endsWith(name6, " argument")) {
+        msg = `The ${name6} ${determiner} ${oneOf(expected, "type")}`;
       } else {
-        const type = includes(name5, ".") ? "property" : "argument";
-        msg = `The "${name5}" ${type} ${determiner} ${oneOf(expected, "type")}`;
+        const type = includes(name6, ".") ? "property" : "argument";
+        msg = `The "${name6}" ${type} ${determiner} ${oneOf(expected, "type")}`;
       }
       msg += `. Received type ${typeof actual}`;
       return msg;
     }, TypeError);
     createErrorType("ERR_STREAM_PUSH_AFTER_EOF", "stream.push() after EOF");
-    createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name5) {
-      return "The " + name5 + " method is not implemented";
+    createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name6) {
+      return "The " + name6 + " method is not implemented";
     });
     createErrorType("ERR_STREAM_PREMATURE_CLOSE", "Premature close");
-    createErrorType("ERR_STREAM_DESTROYED", function(name5) {
-      return "Cannot call " + name5 + " after a stream was destroyed";
+    createErrorType("ERR_STREAM_DESTROYED", function(name6) {
+      return "Cannot call " + name6 + " after a stream was destroyed";
     });
     createErrorType("ERR_MULTIPLE_CALLBACK", "Callback called multiple times");
     createErrorType("ERR_STREAM_CANNOT_PIPE", "Cannot pipe, not readable");
@@ -59217,8 +59217,8 @@ var require_state = __commonJS({
       var hwm = highWaterMarkFrom(options2, isDuplex, duplexKey);
       if (hwm != null) {
         if (!(isFinite(hwm) && Math.floor(hwm) === hwm) || hwm < 0) {
-          var name5 = isDuplex ? duplexKey : "highWaterMark";
-          throw new ERR_INVALID_OPT_VALUE(name5, hwm);
+          var name6 = isDuplex ? duplexKey : "highWaterMark";
+          throw new ERR_INVALID_OPT_VALUE(name6, hwm);
         }
         return Math.floor(hwm);
       }
@@ -65399,13 +65399,13 @@ var require_longrunning = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -67066,13 +67066,13 @@ var require_operationsClient = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -67085,7 +67085,7 @@ var require_operationsClient = __commonJS({
     var operationProtoJson = require_operations2();
     var transcoding_1 = require_transcoding();
     exports2.SERVICE_ADDRESS = "longrunning.googleapis.com";
-    var version7 = require_package5().version;
+    var version8 = require_package5().version;
     var DEFAULT_SERVICE_PORT = 443;
     var CODE_GEN_NAME_VERSION = "gapic/0.7.1";
     exports2.ALL_SCOPES = [];
@@ -67104,9 +67104,9 @@ var require_operationsClient = __commonJS({
         if (opts.libName && opts.libVersion) {
           googleApiClient.push(opts.libName + "/" + opts.libVersion);
         }
-        googleApiClient.push(CODE_GEN_NAME_VERSION, "gax/" + version7);
+        googleApiClient.push(CODE_GEN_NAME_VERSION, "gax/" + version8);
         if (opts.fallback) {
-          googleApiClient.push("gl-web/" + version7);
+          googleApiClient.push("gl-web/" + version8);
         } else {
           googleApiClient.push("grpc/" + gaxGrpc.grpcVersion);
         }
@@ -67496,13 +67496,13 @@ var require_fallbackRest = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -67731,13 +67731,13 @@ var require_fallbackServiceStub = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -74159,13 +74159,13 @@ var require_iamService = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -74175,7 +74175,7 @@ var require_iamService = __commonJS({
     var routingHeader = __importStar(require_routingHeader());
     var gapicConfig = __importStar(require_iam_policy_service_client_config());
     var fallback = __importStar(require_fallback());
-    var version7 = require_package5().version;
+    var version8 = require_package5().version;
     var jsonProtos = require_iam_service2();
     var IamClient = class {
       _terminated = false;
@@ -74197,15 +74197,15 @@ var require_iamService = __commonJS({
           apiEndpoint: options2.apiEndpoint,
           fallback: options2.fallback
         }, options2);
-        version7 = opts.fallback ? fallback.version : version7;
+        version8 = opts.fallback ? fallback.version : version8;
         opts.scopes = this.constructor.scopes;
         this._opts = opts;
         this.auth = gaxGrpc.auth;
-        const clientHeader = [`gax/${version7}`, `gapic/${version7}`];
+        const clientHeader = [`gax/${version8}`, `gapic/${version8}`];
         if (typeof process !== "undefined" && "versions" in process) {
           clientHeader.push(`gl-node/${process.versions.node}`);
         } else {
-          clientHeader.push(`gl-web/${version7}`);
+          clientHeader.push(`gl-web/${version8}`);
         }
         if (!opts.fallback) {
           clientHeader.push(`grpc/${gaxGrpc.grpcVersion}`);
@@ -74443,13 +74443,13 @@ var require_locationService = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -74462,7 +74462,7 @@ var require_locationService = __commonJS({
     var pageDescriptor_1 = require_pageDescriptor();
     var jsonProtos = require_locations2();
     var gapicConfig = __importStar(require_locations_client_config());
-    var version7 = require_package5().version;
+    var version8 = require_package5().version;
     var LocationsClient = class {
       _terminated = false;
       _opts;
@@ -74533,11 +74533,11 @@ var require_locationService = __commonJS({
         if (servicePath === staticMembers.servicePath) {
           this.auth.defaultScopes = staticMembers.scopes;
         }
-        const clientHeader = [`gax/${version7}`, `gapic/${version7}`];
+        const clientHeader = [`gax/${version8}`, `gapic/${version8}`];
         if (typeof process !== "undefined" && "versions" in process) {
           clientHeader.push(`gl-node/${process.versions.node}`);
         } else {
-          clientHeader.push(`gl-web/${version7}`);
+          clientHeader.push(`gl-web/${version8}`);
         }
         if (!opts.fallback) {
           clientHeader.push(`grpc/${gaxGrpc.grpcVersion}`);
@@ -74802,18 +74802,18 @@ var require_fallback = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.fallback = exports2.GoogleError = exports2.operation = exports2.Operation = exports2.warn = exports2.protobufMinimal = exports2.protobuf = exports2.LocationProtos = exports2.IamProtos = exports2.operationsProtos = exports2.protobufFromJSON = exports2.GrpcClient = exports2.defaultToObjectOptions = exports2.makeUUID = exports2.LocationsClient = exports2.IamClient = exports2.OperationsClient = exports2.StreamType = exports2.StreamDescriptor = exports2.PageDescriptor = exports2.LongrunningDescriptor = exports2.BundleDescriptor = exports2.version = exports2.createDefaultBackoffSettings = exports2.RetryOptions = exports2.constructSettings = exports2.CallSettings = exports2.routingHeader = exports2.PathTemplate = void 0;
@@ -75334,8 +75334,8 @@ var require_logging = __commonJS({
       return _logger;
     };
     exports2.getLogger = getLogger;
-    var setLogger = (logger2) => {
-      _logger = logger2;
+    var setLogger = (logger3) => {
+      _logger = logger3;
     };
     exports2.setLogger = setLogger;
     var setLoggerVerbosity = (verbosity) => {
@@ -76562,8 +76562,8 @@ var require_service_config = __commonJS({
       if (!("name" in obj) || !Array.isArray(obj.name)) {
         throw new Error("Invalid method config: invalid name array");
       }
-      for (const name5 of obj.name) {
-        result.name.push(validateName(name5));
+      for (const name6 of obj.name) {
+        result.name.push(validateName(name6));
       }
       if ("waitForReady" in obj) {
         if (typeof obj.waitForReady !== "boolean") {
@@ -76673,13 +76673,13 @@ var require_service_config = __commonJS({
       }
       const seenMethodNames = [];
       for (const methodConfig of result.methodConfig) {
-        for (const name5 of methodConfig.name) {
+        for (const name6 of methodConfig.name) {
           for (const seenName of seenMethodNames) {
-            if (name5.service === seenName.service && name5.method === seenName.method) {
-              throw new Error(`Invalid service config: duplicate name ${name5.service}/${name5.method}`);
+            if (name6.service === seenName.service && name6.method === seenName.method) {
+              throw new Error(`Invalid service config: duplicate name ${name6.service}/${name6.method}`);
             }
           }
-          seenMethodNames.push(name5);
+          seenMethodNames.push(name6);
         }
       }
       return result;
@@ -77169,20 +77169,20 @@ var require_resolving_load_balancer = __commonJS({
       "EMPTY"
     ];
     function hasMatchingName(service, method, methodConfig, matchLevel) {
-      for (const name5 of methodConfig.name) {
+      for (const name6 of methodConfig.name) {
         switch (matchLevel) {
           case "EMPTY":
-            if (!name5.service && !name5.method) {
+            if (!name6.service && !name6.method) {
               return true;
             }
             break;
           case "SERVICE":
-            if (name5.service === service && !name5.method) {
+            if (name6.service === service && !name6.method) {
               return true;
             }
             break;
           case "SERVICE_AND_METHOD":
-            if (name5.service === service && name5.method === method) {
+            if (name6.service === service && name6.method === method) {
               return true;
             }
         }
@@ -79417,13 +79417,13 @@ var require_make_client = __commonJS({
       }
       class ServiceClientImpl extends client_1.Client {
       }
-      Object.keys(methods).forEach((name5) => {
-        if (isPrototypePolluted(name5)) {
+      Object.keys(methods).forEach((name6) => {
+        if (isPrototypePolluted(name6)) {
           return;
         }
-        const attrs = methods[name5];
+        const attrs = methods[name6];
         let methodType;
-        if (typeof name5 === "string" && name5.charAt(0) === "$") {
+        if (typeof name6 === "string" && name6.charAt(0) === "$") {
           throw new Error("Method names cannot start with $");
         }
         if (attrs.requestStream) {
@@ -79442,10 +79442,10 @@ var require_make_client = __commonJS({
         const serialize = attrs.requestSerialize;
         const deserialize = attrs.responseDeserialize;
         const methodFunc = partial(requesterFuncs[methodType], attrs.path, serialize, deserialize);
-        ServiceClientImpl.prototype[name5] = methodFunc;
-        Object.assign(ServiceClientImpl.prototype[name5], attrs);
+        ServiceClientImpl.prototype[name6] = methodFunc;
+        Object.assign(ServiceClientImpl.prototype[name6], attrs);
         if (attrs.originalName && !isPrototypePolluted(attrs.originalName)) {
-          ServiceClientImpl.prototype[attrs.originalName] = ServiceClientImpl.prototype[name5];
+          ServiceClientImpl.prototype[attrs.originalName] = ServiceClientImpl.prototype[name6];
         }
       });
       ServiceClientImpl.service = methods;
@@ -81545,8 +81545,8 @@ var require_descriptor3 = __commonJS({
       var values = {};
       if (descriptor.value)
         for (var i2 = 0; i2 < descriptor.value.length; ++i2) {
-          var name5 = descriptor.value[i2].name, value = descriptor.value[i2].number || 0;
-          values[name5 && name5.length ? name5 : "NAME" + value] = value;
+          var name6 = descriptor.value[i2].name, value = descriptor.value[i2].number || 0;
+          values[name6 && name6.length ? name6 : "NAME" + value] = value;
         }
       var enm = new Enum(
         descriptor.name && descriptor.name.length ? descriptor.name : "Enum" + unnamedEnumIndex++,
@@ -82301,11 +82301,11 @@ var require_src10 = __commonJS({
       oneofs: true,
       json: true
     };
-    function joinName(baseName, name5) {
+    function joinName(baseName, name6) {
       if (baseName === "") {
-        return name5;
+        return name6;
       } else {
-        return baseName + "." + name5;
+        return baseName + "." + name6;
       }
     }
     function isHandledReflectionObject(obj) {
@@ -82320,8 +82320,8 @@ var require_src10 = __commonJS({
         return [[objName, obj]];
       } else {
         if (isNamespaceBase(obj) && typeof obj.nested !== "undefined") {
-          return Object.keys(obj.nested).map((name5) => {
-            return getAllHandledReflectionObjects(obj.nested[name5], objName);
+          return Object.keys(obj.nested).map((name6) => {
+            return getAllHandledReflectionObjects(obj.nested[name6], objName);
           }).reduce((accumulator, currentValue) => accumulator.concat(currentValue), []);
         }
       }
@@ -82377,10 +82377,10 @@ var require_src10 = __commonJS({
         options: mapMethodOptions(method.parsedOptions)
       };
     }
-    function createServiceDefinition(service, name5, options2, fileDescriptors) {
+    function createServiceDefinition(service, name6, options2, fileDescriptors) {
       const def = {};
       for (const method of service.methodsArray) {
-        def[method.name] = createMethodDefinition(method, name5, options2, fileDescriptors);
+        def[method.name] = createMethodDefinition(method, name6, options2, fileDescriptors);
       }
       return def;
     }
@@ -82402,9 +82402,9 @@ var require_src10 = __commonJS({
         fileDescriptorProtos: fileDescriptors
       };
     }
-    function createDefinition(obj, name5, options2, fileDescriptors) {
+    function createDefinition(obj, name6, options2, fileDescriptors) {
       if (obj instanceof Protobuf.Service) {
-        return createServiceDefinition(obj, name5, options2, fileDescriptors);
+        return createServiceDefinition(obj, name6, options2, fileDescriptors);
       } else if (obj instanceof Protobuf.Type) {
         return createMessageDefinition(obj, options2, fileDescriptors);
       } else if (obj instanceof Protobuf.Enum) {
@@ -82418,8 +82418,8 @@ var require_src10 = __commonJS({
       root.resolveAll();
       const descriptorList = root.toDescriptor("proto3").file;
       const bufferList = descriptorList.map((value) => Buffer.from(descriptor.FileDescriptorProto.encode(value).finish()));
-      for (const [name5, obj] of getAllHandledReflectionObjects(root, "")) {
-        def[name5] = createDefinition(obj, name5, options2, bufferList);
+      for (const [name6, obj] of getAllHandledReflectionObjects(root, "")) {
+        def[name6] = createDefinition(obj, name6, options2, bufferList);
       }
       return def;
     }
@@ -82667,9 +82667,9 @@ var require_channelz = __commonJS({
         return nextId++;
       }
       const entityMap = entityMaps[kind];
-      return (name5, getInfo, channelzEnabled) => {
+      return (name6, getInfo, channelzEnabled) => {
         const id = getNextId();
-        const ref = { id, name: name5, kind };
+        const ref = { id, name: name6, kind };
         if (channelzEnabled) {
           entityMap.setElement(id, { ref, getInfo });
         }
@@ -83534,7 +83534,7 @@ var require_filter_stack = __commonJS({
         return new _FilterStackFactory([...this.factories]);
       }
       createFilter() {
-        return new FilterStack(this.factories.map((factory) => factory.createFilter()));
+        return new FilterStack(this.factories.map((factory2) => factory2.createFilter()));
       }
     };
     exports2.FilterStackFactory = FilterStackFactory;
@@ -84072,17 +84072,17 @@ var require_subchannel = __commonJS({
       addDataWatcher(dataWatcher) {
         throw new Error("Not implemented");
       }
-      getOrCreateDataProducer(name5, createDataProducer) {
-        const existingProducer = this.dataProducers.get(name5);
+      getOrCreateDataProducer(name6, createDataProducer) {
+        const existingProducer = this.dataProducers.get(name6);
         if (existingProducer) {
           return existingProducer;
         }
         const newProducer = createDataProducer(this);
-        this.dataProducers.set(name5, newProducer);
+        this.dataProducers.set(name6, newProducer);
         return newProducer;
       }
-      removeDataProducer(name5) {
-        this.dataProducers.delete(name5);
+      removeDataProducer(name6) {
+        this.dataProducers.delete(name6);
       }
     };
     exports2.Subchannel = Subchannel;
@@ -84707,9 +84707,9 @@ var require_subchannel_call = __commonJS({
     var constants_2 = require_constants();
     var TRACER_NAME = "subchannel_call";
     function getSystemErrorName(errno) {
-      for (const [name5, num] of Object.entries(os.constants.errno)) {
+      for (const [name6, num] of Object.entries(os.constants.errno)) {
         if (num === errno) {
-          return name5;
+          return name6;
         }
       }
       return "Unknown system error " + errno;
@@ -88150,33 +88150,33 @@ var require_orca = __commonJS({
        * @param name
        * @param value
        */
-      recordRequestCostMetric(name5, value) {
+      recordRequestCostMetric(name6, value) {
         if (!this.message.request_cost) {
           this.message.request_cost = {};
         }
-        this.message.request_cost[name5] = value;
+        this.message.request_cost[name6] = value;
       }
       /**
        * Records a request cost metric measurement for the call.
        * @param name
        * @param value
        */
-      recordUtilizationMetric(name5, value) {
+      recordUtilizationMetric(name6, value) {
         if (!this.message.utilization) {
           this.message.utilization = {};
         }
-        this.message.utilization[name5] = value;
+        this.message.utilization[name6] = value;
       }
       /**
        * Records an opaque named metric measurement for the call.
        * @param name
        * @param value
        */
-      recordNamedMetric(name5, value) {
+      recordNamedMetric(name6, value) {
         if (!this.message.named_metrics) {
           this.message.named_metrics = {};
         }
-        this.message.named_metrics[name5] = value;
+        this.message.named_metrics[name6] = value;
       }
       /**
        * Records the CPU utilization metric measurement for the call.
@@ -88235,18 +88235,18 @@ var require_orca = __commonJS({
           }
         };
       }
-      putUtilizationMetric(name5, value) {
+      putUtilizationMetric(name6, value) {
         if (!this.message.utilization) {
           this.message.utilization = {};
         }
-        this.message.utilization[name5] = value;
+        this.message.utilization[name6] = value;
       }
       setAllUtilizationMetrics(metrics2) {
         this.message.utilization = Object.assign({}, metrics2);
       }
-      deleteUtilizationMetric(name5) {
+      deleteUtilizationMetric(name6) {
         var _a2;
-        (_a2 = this.message.utilization) === null || _a2 === void 0 ? true : delete _a2[name5];
+        (_a2 = this.message.utilization) === null || _a2 === void 0 ? true : delete _a2[name6];
       }
       setCpuUtilizationMetric(value) {
         this.message.cpu_utilization = value;
@@ -89374,8 +89374,8 @@ var require_server = __commonJS({
           if (serviceKeys.length === 0) {
             throw new Error("Cannot add an empty service to a server");
           }
-          serviceKeys.forEach((name5) => {
-            const attrs = service[name5];
+          serviceKeys.forEach((name6) => {
+            const attrs = service[name6];
             let methodType;
             if (attrs.requestStream) {
               if (attrs.responseStream) {
@@ -89390,7 +89390,7 @@ var require_server = __commonJS({
                 methodType = "unary";
               }
             }
-            let implFn = implementation[name5];
+            let implFn = implementation[name6];
             let impl;
             if (implFn === void 0 && typeof attrs.originalName === "string") {
               implFn = implementation[attrs.originalName];
@@ -89398,7 +89398,7 @@ var require_server = __commonJS({
             if (implFn !== void 0) {
               impl = implFn.bind(implementation);
             } else {
-              impl = getDefaultHandler(methodType, name5);
+              impl = getDefaultHandler(methodType, name6);
             }
             const success = this.register(attrs.path, impl, attrs.responseSerialize, attrs.requestDeserialize, methodType);
             if (success === false) {
@@ -89411,8 +89411,8 @@ var require_server = __commonJS({
             throw new Error("removeService() requires object as argument");
           }
           const serviceKeys = Object.keys(service);
-          serviceKeys.forEach((name5) => {
-            const attrs = service[name5];
+          serviceKeys.forEach((name6) => {
+            const attrs = service[name6];
             this.unregister(attrs.path);
           });
         }
@@ -89893,21 +89893,21 @@ var require_server = __commonJS({
           (0, channelz_1.unregisterChannelzRef)(this.channelzRef);
           this.shutdown = true;
         }
-        register(name5, handler2, serialize, deserialize, type) {
-          if (this.handlers.has(name5)) {
+        register(name6, handler2, serialize, deserialize, type) {
+          if (this.handlers.has(name6)) {
             return false;
           }
-          this.handlers.set(name5, {
+          this.handlers.set(name6, {
             func: handler2,
             serialize,
             deserialize,
             type,
-            path: name5
+            path: name6
           });
           return true;
         }
-        unregister(name5) {
-          return this.handlers.delete(name5);
+        unregister(name6) {
+          return this.handlers.delete(name6);
         }
         /**
          * @deprecated No longer needed as of version 1.10.x
@@ -92507,9 +92507,9 @@ var require_load_balancer_weighted_round_robin = __commonJS({
         this.updatesPaused = true;
         this.latestConfig = lbConfig;
         for (const endpoint of maybeEndpointList.value) {
-          const name5 = (0, subchannel_address_1.endpointToString)(endpoint);
-          seenEndpointNames.add(name5);
-          let entry = this.children.get(name5);
+          const name6 = (0, subchannel_address_1.endpointToString)(endpoint);
+          seenEndpointNames.add(name6);
+          let entry = this.children.get(name6);
           if (!entry) {
             entry = {
               child: new load_balancer_pick_first_1.LeafLoadBalancer(endpoint, (0, load_balancer_1.createChildChannelControlHelper)(this.channelControlHelper, {
@@ -92539,7 +92539,7 @@ var require_load_balancer_weighted_round_robin = __commonJS({
               weight: 0,
               oobMetricsListener: null
             };
-            this.children.set(name5, entry);
+            this.children.set(name6, entry);
           }
           if (lbConfig.getEnableOobLoadReport()) {
             entry.oobMetricsListener = (loadReport) => {
@@ -92701,8 +92701,8 @@ var require_src11 = __commonJS({
       throw new Error("Not available in this library. Use @grpc/proto-loader and loadPackageDefinition instead");
     };
     exports2.load = load;
-    var setLogger = (logger2) => {
-      logging.setLogger(logger2);
+    var setLogger = (logger3) => {
+      logging.setLogger(logger3);
     };
     exports2.setLogger = setLogger;
     var setLogVerbosity = (verbosity) => {
@@ -92948,18 +92948,18 @@ var require_grpc = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GoogleProtoFilesRoot = exports2.GrpcClient = exports2.ClientStub = void 0;
@@ -93411,13 +93411,13 @@ var require_src12 = __commonJS({
         };
         return ownKeys(o);
       };
-      return function(mod4) {
-        if (mod4 && mod4.__esModule) return mod4;
+      return function(mod5) {
+        if (mod5 && mod5.__esModule) return mod5;
         var result = {};
-        if (mod4 != null) {
-          for (var k = ownKeys(mod4), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod4, k[i2]);
+        if (mod5 != null) {
+          for (var k = ownKeys(mod5), i2 = 0; i2 < k.length; i2++) if (k[i2] !== "default") __createBinding(result, mod5, k[i2]);
         }
-        __setModuleDefault(result, mod4);
+        __setModuleDefault(result, mod5);
         return result;
       };
     })();
@@ -94137,14 +94137,14 @@ var require_logger = __commonJS({
   "node_modules/@google-cloud/firestore/build/src/logger.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.logger = logger2;
+    exports2.logger = logger3;
     exports2.setLogFunction = setLogFunction2;
     exports2.setLibVersion = setLibVersion;
     var util = require("util");
     var validate_1 = require_validate();
     var libVersion;
     var logFunction = null;
-    function logger2(methodName, requestTag, logMessage, ...additionalArgs) {
+    function logger3(methodName, requestTag, logMessage, ...additionalArgs) {
       requestTag = requestTag || "#####";
       if (logFunction) {
         const formattedMessage = util.format(logMessage, ...additionalArgs);
@@ -94152,13 +94152,13 @@ var require_logger = __commonJS({
         logFunction(`Firestore (${libVersion}) ${time} ${requestTag} [${methodName}]: ` + formattedMessage);
       }
     }
-    function setLogFunction2(logger3) {
-      if (logger3 !== null)
-        (0, validate_1.validateFunction)("logger", logger3);
-      logFunction = logger3;
+    function setLogFunction2(logger4) {
+      if (logger4 !== null)
+        (0, validate_1.validateFunction)("logger", logger4);
+      logFunction = logger4;
     }
-    function setLibVersion(version7) {
-      libVersion = version7;
+    function setLibVersion(version8) {
+      libVersion = version8;
     }
   }
 });
@@ -95690,7 +95690,7 @@ var require_expression = __commonJS({
     exports2.subtract = subtract;
     exports2.multiply = multiply;
     exports2.divide = divide;
-    exports2.mod = mod4;
+    exports2.mod = mod5;
     exports2.map = map;
     exports2._mapValue = _mapValue;
     exports2.array = array2;
@@ -97459,8 +97459,8 @@ var require_expression = __commonJS({
        * @returns A new `AliasedExpression` that wraps this
        *     expression and associates it with the provided alias.
        */
-      as(name5) {
-        return new AliasedExpression2(this, name5);
+      as(name6) {
+        return new AliasedExpression2(this, name6);
       }
     };
     exports2.Expression = Expression2;
@@ -97484,8 +97484,8 @@ var require_expression = __commonJS({
           return expr._validateUserData(ignoreUndefinedProperties);
         });
       }
-      constructor(name5, params) {
-        this.name = name5;
+      constructor(name6, params) {
+        this.name = name6;
         this.params = params;
       }
       /**
@@ -97502,8 +97502,8 @@ var require_expression = __commonJS({
        * @returns A new `AliasedAggregate` that wraps this
        *     AggregateFunction and associates it with the provided alias.
        */
-      as(name5) {
-        return new AliasedAggregate2(this, name5);
+      as(name6) {
+        return new AliasedAggregate2(this, name6);
       }
       /**
        * @private
@@ -98047,7 +98047,7 @@ var require_expression = __commonJS({
       const normalizedRight = (0, pipeline_util_1.valueToDefaultExpr)(divisor);
       return normalizedLeft.divide(normalizedRight);
     }
-    function mod4(left, right) {
+    function mod5(left, right) {
       const normalizedLeft = (0, pipeline_util_1.fieldOrExpression)(left);
       const normalizedRight = (0, pipeline_util_1.valueToDefaultExpr)(right);
       return normalizedLeft.mod(normalizedRight);
@@ -98515,9 +98515,9 @@ var require_expression = __commonJS({
       /**
        * @hideconstructor
        */
-      constructor(name5) {
+      constructor(name6) {
         super();
-        this.name = name5;
+        this.name = name6;
       }
       /**
        * @internal
@@ -98534,8 +98534,8 @@ var require_expression = __commonJS({
       }
     };
     exports2.VariableExpression = VariableExpression;
-    function variable(name5) {
-      return new VariableExpression(name5);
+    function variable(name6) {
+      return new VariableExpression(name6);
     }
     function currentDocument() {
       return new FunctionExpression2("current_document", []);
@@ -102334,12 +102334,12 @@ var require_watch = __commonJS({
         const deletes = [];
         const adds = [];
         const updates = [];
-        this.changeMap.forEach((value, name5) => {
+        this.changeMap.forEach((value, name6) => {
           if (value === REMOVED) {
-            if (this.docMap.has(name5)) {
-              deletes.push(name5);
+            if (this.docMap.has(name6)) {
+              deletes.push(name6);
             }
-          } else if (this.docMap.has(name5)) {
+          } else if (this.docMap.has(name6)) {
             value.readTime = readTime;
             updates.push(value.build());
           } else {
@@ -102533,8 +102533,8 @@ var require_watch = __commonJS({
             }
           }
           const document2 = proto.documentChange.document;
-          const name5 = document2.name;
-          const relativeName = path_1.QualifiedResourcePath.fromSlashSeparatedString(name5).relativeName;
+          const name6 = document2.name;
+          const relativeName = path_1.QualifiedResourcePath.fromSlashSeparatedString(name6).relativeName;
           if (changed) {
             (0, logger_1.logger)("Watch.onData", this.requestTag, "Received document change");
             const ref = this.firestore.doc(relativeName);
@@ -102549,8 +102549,8 @@ var require_watch = __commonJS({
           }
         } else if (proto.documentDelete || proto.documentRemove) {
           (0, logger_1.logger)("Watch.onData", this.requestTag, "Processing remove event");
-          const name5 = (proto.documentDelete || proto.documentRemove).document;
-          const relativeName = path_1.QualifiedResourcePath.fromSlashSeparatedString(name5).relativeName;
+          const name6 = (proto.documentDelete || proto.documentRemove).document;
+          const relativeName = path_1.QualifiedResourcePath.fromSlashSeparatedString(name6).relativeName;
           this.changeMap.set(relativeName, REMOVED);
         } else if (proto.filter) {
           (0, logger_1.logger)("Watch.onData", this.requestTag, "Processing filter update");
@@ -102602,13 +102602,13 @@ var require_watch = __commonJS({
        * @private
        * @internal
        */
-      deleteDoc(name5) {
-        assert(this.docMap.has(name5), "Document to delete does not exist");
-        const oldDocument = this.docMap.get(name5);
+      deleteDoc(name6) {
+        assert(this.docMap.has(name6), "Document to delete does not exist");
+        const oldDocument = this.docMap.get(name6);
         const existing = this.docTree.find(oldDocument);
         const oldIndex = existing.index;
         this.docTree = existing.remove();
-        this.docMap.delete(name5);
+        this.docMap.delete(name6);
         return new document_change_1.DocumentChange(ChangeType.removed, oldDocument, oldIndex, -1);
       }
       /**
@@ -102618,11 +102618,11 @@ var require_watch = __commonJS({
        * @internal
        */
       addDoc(newDocument) {
-        const name5 = newDocument.ref.path;
-        assert(!this.docMap.has(name5), "Document to add already exists");
+        const name6 = newDocument.ref.path;
+        assert(!this.docMap.has(name6), "Document to add already exists");
         this.docTree = this.docTree.insert(newDocument, null);
         const newIndex = this.docTree.find(newDocument).index;
-        this.docMap.set(name5, newDocument);
+        this.docMap.set(name6, newDocument);
         return new document_change_1.DocumentChange(ChangeType.added, newDocument, -1, newIndex);
       }
       /**
@@ -102632,11 +102632,11 @@ var require_watch = __commonJS({
        * @internal
        */
       modifyDoc(newDocument) {
-        const name5 = newDocument.ref.path;
-        assert(this.docMap.has(name5), "Document to modify does not exist");
-        const oldDocument = this.docMap.get(name5);
+        const name6 = newDocument.ref.path;
+        assert(this.docMap.has(name6), "Document to modify does not exist");
+        const oldDocument = this.docMap.get(name6);
         if (!oldDocument.updateTime.isEqual(newDocument.updateTime)) {
-          const removeChange = this.deleteDoc(name5);
+          const removeChange = this.deleteDoc(name6);
           const addChange = this.addDoc(newDocument);
           return new document_change_1.DocumentChange(ChangeType.modified, newDocument, removeChange.oldIndex, addChange.newIndex);
         }
@@ -102655,8 +102655,8 @@ var require_watch = __commonJS({
         changeSet.deletes.sort((name1, name22) => {
           return this.getComparator()(this.docMap.get(name1), this.docMap.get(name22));
         });
-        changeSet.deletes.forEach((name5) => {
-          const change = this.deleteDoc(name5);
+        changeSet.deletes.forEach((name6) => {
+          const change = this.deleteDoc(name6);
           appliedChanges.push(change);
         });
         changeSet.adds.sort(this.getComparator());
@@ -105305,8 +105305,8 @@ var require_stage = __commonJS({
        * @private
        * @internal
        */
-      constructor(name5, params, rawOptions) {
-        this.name = name5;
+      constructor(name6, params, rawOptions) {
+        this.name = name6;
         this.params = params;
         this.rawOptions = rawOptions;
       }
@@ -105914,7 +105914,7 @@ var require_pipelines = __commonJS({
        * @param options - An object of key value pairs that specifies optional parameters for the stage.
        * @returns A new `Pipeline` object with this stage appended to the stage list.
        */
-      rawStage(name5, params, options2) {
+      rawStage(name6, params, options2) {
         const expressionParams = params.map((value) => {
           if (value instanceof expression_1.Expression) {
             return value;
@@ -105926,7 +105926,7 @@ var require_pipelines = __commonJS({
             return (0, expression_1.constant)(value);
           }
         });
-        return this._addStage(new stage_1.RawStage(name5, expressionParams, options2 ?? {}));
+        return this._addStage(new stage_1.RawStage(name6, expressionParams, options2 ?? {}));
       }
       /**
        * Executes this pipeline and returns a Promise to represent the asynchronous operation.
@@ -113974,12 +113974,12 @@ var require_write_batch = __commonJS({
         const precondition = new document_1.Precondition({ exists: false });
         const op = () => {
           const document2 = document_1.DocumentSnapshot.fromObject(ref, firestoreData);
-          const write = document2.toWriteProto();
+          const write2 = document2.toWriteProto();
           if (!transform.isEmpty) {
-            write.updateTransforms = transform.toProto(this._serializer);
+            write2.updateTransforms = transform.toProto(this._serializer);
           }
-          write.currentDocument = precondition.toProto();
-          return write;
+          write2.currentDocument = precondition.toProto();
+          return write2;
         };
         this._ops.push({ docPath: documentRef.path, op });
         return this;
@@ -114017,11 +114017,11 @@ var require_write_batch = __commonJS({
         this.verifyNotCommitted();
         const conditions = new document_1.Precondition(precondition);
         const op = () => {
-          const write = { delete: ref.formattedName };
+          const write2 = { delete: ref.formattedName };
           if (!conditions.isEmpty) {
-            write.currentDocument = conditions.toProto();
+            write2.currentDocument = conditions.toProto();
           }
-          return write;
+          return write2;
         };
         this._ops.push({ docPath: documentRef.path, op });
         return this;
@@ -114093,14 +114093,14 @@ var require_write_batch = __commonJS({
           } else if (mergeLeaves) {
             documentMask = document_1.DocumentMask.fromObject(firestoreData);
           }
-          const write = document2.toWriteProto();
+          const write2 = document2.toWriteProto();
           if (!transform.isEmpty) {
-            write.updateTransforms = transform.toProto(this._serializer);
+            write2.updateTransforms = transform.toProto(this._serializer);
           }
           if (mergePaths || mergeLeaves) {
-            write.updateMask = documentMask.toProto();
+            write2.updateMask = documentMask.toProto();
           }
-          return write;
+          return write2;
         };
         this._ops.push({ docPath: documentRef.path, op });
         return this;
@@ -114199,13 +114199,13 @@ var require_write_batch = __commonJS({
         const documentMask = document_1.DocumentMask.fromUpdateMap(updateMap);
         const op = () => {
           const document2 = document_1.DocumentSnapshot.fromUpdateMap(documentRef, updateMap);
-          const write = document2.toWriteProto();
-          write.updateMask = documentMask.toProto();
+          const write2 = document2.toWriteProto();
+          write2.updateMask = documentMask.toProto();
           if (!transform.isEmpty) {
-            write.updateTransforms = transform.toProto(this._serializer);
+            write2.updateTransforms = transform.toProto(this._serializer);
           }
-          write.currentDocument = precondition.toProto();
-          return write;
+          write2.currentDocument = precondition.toProto();
+          return write2;
         };
         this._ops.push({ docPath: documentRef.path, op });
         return this;
@@ -115265,17 +115265,17 @@ var require_bundle = __commonJS({
           this.latestReadTime = snap.readTime;
         }
       }
-      addNamedQuery(name5, querySnap) {
-        if (this.namedQueries.has(name5)) {
-          throw new Error(`Query name conflict: ${name5} has already been added.`);
+      addNamedQuery(name6, querySnap) {
+        if (this.namedQueries.has(name6)) {
+          throw new Error(`Query name conflict: ${name6} has already been added.`);
         }
-        this.namedQueries.set(name5, {
-          name: name5,
+        this.namedQueries.set(name6, {
+          name: name6,
           bundledQuery: querySnap.query._toBundledQuery(),
           readTime: querySnap.readTime.toProto().timestampValue
         });
         for (const snap of querySnap.docs) {
-          this.addBundledDocument(snap, name5);
+          this.addBundledDocument(snap, name6);
         }
         if (querySnap.readTime > this.latestReadTime) {
           this.latestReadTime = querySnap.readTime;
@@ -116868,8 +116868,8 @@ var require_span = __commonJS({
       end() {
         this.span?.end();
       }
-      addEvent(name5, attributes) {
-        this.span = this.span?.addEvent(name5, attributes);
+      addEvent(name6, attributes) {
+        this.span = this.span?.addEvent(name6, attributes);
         return this;
       }
       setAttributes(attributes) {
@@ -116890,10 +116890,10 @@ var require_disabled_trace_util = __commonJS({
     var span_1 = require_span();
     var DisabledTraceUtil = class {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      startSpan(name5) {
+      startSpan(name6) {
         return new span_1.Span();
       }
-      startActiveSpan(name5, fn, attributes) {
+      startActiveSpan(name6, fn, attributes) {
         const emptySpan = new span_1.Span();
         return fn(emptySpan);
       }
@@ -117035,11 +117035,11 @@ var init_global_utils = __esm({
 
 // node_modules/@opentelemetry/api/build/esm/diag/ComponentLogger.js
 function logProxy(funcName, namespace, args) {
-  const logger2 = getGlobal("diag");
-  if (!logger2) {
+  const logger3 = getGlobal("diag");
+  if (!logger3) {
     return;
   }
-  return logger2[funcName](namespace, ...args);
+  return logger3[funcName](namespace, ...args);
 }
 var DiagComponentLogger;
 var init_ComponentLogger = __esm({
@@ -117085,17 +117085,17 @@ var init_types = __esm({
 });
 
 // node_modules/@opentelemetry/api/build/esm/diag/internal/logLevelLogger.js
-function createLogLevelDiagLogger(maxLevel, logger2) {
+function createLogLevelDiagLogger(maxLevel, logger3) {
   if (maxLevel < DiagLogLevel.NONE) {
     maxLevel = DiagLogLevel.NONE;
   } else if (maxLevel > DiagLogLevel.ALL) {
     maxLevel = DiagLogLevel.ALL;
   }
-  logger2 = logger2 || {};
+  logger3 = logger3 || {};
   function _filterFunc(funcName, theLevel) {
-    const theFunc = logger2[funcName];
+    const theFunc = logger3[funcName];
     if (typeof theFunc === "function" && maxLevel >= theLevel) {
-      return theFunc.bind(logger2);
+      return theFunc.bind(logger3);
     }
     return function() {
     };
@@ -117138,16 +117138,16 @@ var init_diag = __esm({
       constructor() {
         function _logProxy(funcName) {
           return function(...args) {
-            const logger2 = getGlobal("diag");
-            if (!logger2)
+            const logger3 = getGlobal("diag");
+            if (!logger3)
               return;
-            return logger2[funcName](...args);
+            return logger3[funcName](...args);
           };
         }
         const self2 = this;
-        const setLogger = (logger2, optionsOrLogLevel = { logLevel: DiagLogLevel.INFO }) => {
+        const setLogger = (logger3, optionsOrLogLevel = { logLevel: DiagLogLevel.INFO }) => {
           var _a2, _b, _c;
-          if (logger2 === self2) {
+          if (logger3 === self2) {
             const err = new Error("Cannot use diag as the logger for itself. Please use a DiagLogger implementation like ConsoleDiagLogger or a custom implementation");
             self2.error((_a2 = err.stack) !== null && _a2 !== void 0 ? _a2 : err.message);
             return false;
@@ -117158,7 +117158,7 @@ var init_diag = __esm({
             };
           }
           const oldLogger = getGlobal("diag");
-          const newLogger = createLogLevelDiagLogger((_b = optionsOrLogLevel.logLevel) !== null && _b !== void 0 ? _b : DiagLogLevel.INFO, logger2);
+          const newLogger = createLogLevelDiagLogger((_b = optionsOrLogLevel.logLevel) !== null && _b !== void 0 ? _b : DiagLogLevel.INFO, logger3);
           if (oldLogger && !optionsOrLogLevel.suppressOverrideMessage) {
             const stack = (_c = new Error().stack) !== null && _c !== void 0 ? _c : "<failed to generate stacktrace>";
             oldLogger.warn(`Current logger will be overwritten from ${stack}`);
@@ -117839,7 +117839,7 @@ var init_NoopTracer = __esm({
     contextApi = ContextAPI.getInstance();
     NoopTracer = class {
       // startSpan starts a noop span.
-      startSpan(name5, options2, context2 = contextApi.active()) {
+      startSpan(name6, options2, context2 = contextApi.active()) {
         const root = Boolean(options2 === null || options2 === void 0 ? void 0 : options2.root);
         if (root) {
           return new NonRecordingSpan();
@@ -117851,7 +117851,7 @@ var init_NoopTracer = __esm({
           return new NonRecordingSpan();
         }
       }
-      startActiveSpan(name5, arg2, arg3, arg4) {
+      startActiveSpan(name6, arg2, arg3, arg4) {
         let opts;
         let ctx;
         let fn;
@@ -117868,7 +117868,7 @@ var init_NoopTracer = __esm({
           fn = arg4;
         }
         const parentContext = ctx !== null && ctx !== void 0 ? ctx : contextApi.active();
-        const span = this.startSpan(name5, opts, parentContext);
+        const span = this.startSpan(name6, opts, parentContext);
         const contextWithSpanSet = setSpan(parentContext, span);
         return contextApi.with(contextWithSpanSet, fn, void 0, span);
       }
@@ -117883,14 +117883,14 @@ var init_ProxyTracer = __esm({
     init_NoopTracer();
     NOOP_TRACER = new NoopTracer();
     ProxyTracer = class {
-      constructor(provider, name5, version7, options2) {
+      constructor(provider, name6, version8, options2) {
         this._provider = provider;
-        this.name = name5;
-        this.version = version7;
+        this.name = name6;
+        this.version = version8;
         this.options = options2;
       }
-      startSpan(name5, options2, context2) {
-        return this._getTracer().startSpan(name5, options2, context2);
+      startSpan(name6, options2, context2) {
+        return this._getTracer().startSpan(name6, options2, context2);
       }
       startActiveSpan(_name, _options, _context, _fn) {
         const tracer = this._getTracer();
@@ -117939,9 +117939,9 @@ var init_ProxyTracerProvider = __esm({
       /**
        * Get a {@link ProxyTracer}
        */
-      getTracer(name5, version7, options2) {
+      getTracer(name6, version8, options2) {
         var _a2;
-        return (_a2 = this.getDelegateTracer(name5, version7, options2)) !== null && _a2 !== void 0 ? _a2 : new ProxyTracer(this, name5, version7, options2);
+        return (_a2 = this.getDelegateTracer(name6, version8, options2)) !== null && _a2 !== void 0 ? _a2 : new ProxyTracer(this, name6, version8, options2);
       }
       getDelegate() {
         var _a2;
@@ -117953,9 +117953,9 @@ var init_ProxyTracerProvider = __esm({
       setDelegate(delegate) {
         this._delegate = delegate;
       }
-      getDelegateTracer(name5, version7, options2) {
+      getDelegateTracer(name6, version8, options2) {
         var _a2;
-        return (_a2 = this._delegate) === null || _a2 === void 0 ? void 0 : _a2.getTracer(name5, version7, options2);
+        return (_a2 = this._delegate) === null || _a2 === void 0 ? void 0 : _a2.getTracer(name6, version8, options2);
       }
     };
   }
@@ -118165,8 +118165,8 @@ var init_metrics = __esm({
       /**
        * Returns a meter from the global meter provider.
        */
-      getMeter(name5, version7, options2) {
-        return this.getMeterProvider().getMeter(name5, version7, options2);
+      getMeter(name6, version8, options2) {
+        return this.getMeterProvider().getMeter(name6, version8, options2);
       }
       /** Remove the global meter provider */
       disable() {
@@ -118359,8 +118359,8 @@ var init_trace = __esm({
       /**
        * Returns a tracer from the global tracer provider.
        */
-      getTracer(name5, version7) {
-        return this.getTracerProvider().getTracer(name5, version7);
+      getTracer(name6, version8) {
+        return this.getTracerProvider().getTracer(name6, version8);
       }
       /** Remove the global tracer provider */
       disable() {
@@ -118790,7 +118790,7 @@ var require_firestore_admin_client = __commonJS({
     var jsonProtos = require_admin_v1();
     var google_gax_1 = require_src12();
     var gapicConfig = require_firestore_admin_client_config();
-    var version7 = require_package7().version;
+    var version8 = require_package7().version;
     var FirestoreAdminClient = class {
       _terminated = false;
       _opts;
@@ -118885,7 +118885,7 @@ var require_firestore_admin_client = __commonJS({
           this.auth.defaultScopes = staticMembers.scopes;
         }
         this.locationsClient = new this._gaxModule.LocationsClient(this._gaxGrpc, opts);
-        const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version7}`];
+        const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version8}`];
         if (typeof process === "object" && "versions" in process) {
           clientHeader.push(`gl-node/${process.versions.node}`);
         } else {
@@ -119828,9 +119828,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.create_index.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_CreateIndex_async
        */
-      async checkCreateIndexProgress(name5) {
+      async checkCreateIndexProgress(name6) {
         this._log.info("createIndex long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.createIndex, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -119874,9 +119874,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.update_field.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_UpdateField_async
        */
-      async checkUpdateFieldProgress(name5) {
+      async checkUpdateFieldProgress(name6) {
         this._log.info("updateField long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.updateField, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -119920,9 +119920,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.export_documents.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_ExportDocuments_async
        */
-      async checkExportDocumentsProgress(name5) {
+      async checkExportDocumentsProgress(name6) {
         this._log.info("exportDocuments long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.exportDocuments, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -119966,9 +119966,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.import_documents.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_ImportDocuments_async
        */
-      async checkImportDocumentsProgress(name5) {
+      async checkImportDocumentsProgress(name6) {
         this._log.info("importDocuments long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.importDocuments, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -120012,9 +120012,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.bulk_delete_documents.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_BulkDeleteDocuments_async
        */
-      async checkBulkDeleteDocumentsProgress(name5) {
+      async checkBulkDeleteDocumentsProgress(name6) {
         this._log.info("bulkDeleteDocuments long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.bulkDeleteDocuments, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -120058,9 +120058,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.create_database.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_CreateDatabase_async
        */
-      async checkCreateDatabaseProgress(name5) {
+      async checkCreateDatabaseProgress(name6) {
         this._log.info("createDatabase long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.createDatabase, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -120104,9 +120104,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.update_database.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_UpdateDatabase_async
        */
-      async checkUpdateDatabaseProgress(name5) {
+      async checkUpdateDatabaseProgress(name6) {
         this._log.info("updateDatabase long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.updateDatabase, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -120150,9 +120150,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.delete_database.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_DeleteDatabase_async
        */
-      async checkDeleteDatabaseProgress(name5) {
+      async checkDeleteDatabaseProgress(name6) {
         this._log.info("deleteDatabase long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.deleteDatabase, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -120196,9 +120196,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.restore_database.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_RestoreDatabase_async
        */
-      async checkRestoreDatabaseProgress(name5) {
+      async checkRestoreDatabaseProgress(name6) {
         this._log.info("restoreDatabase long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.restoreDatabase, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -120261,9 +120261,9 @@ var require_firestore_admin_client = __commonJS({
        * @example <caption>include:samples/generated/v1/firestore_admin.clone_database.js</caption>
        * region_tag:firestore_v1_generated_FirestoreAdmin_CloneDatabase_async
        */
-      async checkCloneDatabaseProgress(name5) {
+      async checkCloneDatabaseProgress(name6) {
         this._log.info("cloneDatabase long-running");
-        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name5 });
+        const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({ name: name6 });
         const [operation] = await this.operationsClient.getOperation(request);
         const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.cloneDatabase, this._gaxModule.createDefaultBackoffSettings());
         return decodeOperation;
@@ -121164,7 +121164,7 @@ var require_firestore_client = __commonJS({
     var jsonProtos = require_v1();
     var google_gax_1 = require_src12();
     var gapicConfig = require_firestore_client_config();
-    var version7 = require_package7().version;
+    var version8 = require_package7().version;
     var FirestoreClient = class {
       _terminated = false;
       _opts;
@@ -121257,7 +121257,7 @@ var require_firestore_client = __commonJS({
           this.auth.defaultScopes = staticMembers.scopes;
         }
         this.locationsClient = new this._gaxModule.LocationsClient(this._gaxGrpc, opts);
-        const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version7}`];
+        const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version8}`];
         if (typeof process === "object" && "versions" in process) {
           clientHeader.push(`gl-node/${process.versions.node}`);
         } else {
@@ -122668,8 +122668,8 @@ var require_enabled_trace_util = __commonJS({
         otelSpan.recordException(error);
         otelSpan.end();
       }
-      startActiveSpan(name5, fn, attributes) {
-        return this.tracer.startActiveSpan(name5, {
+      startActiveSpan(name6, fn, attributes) {
+        return this.tracer.startActiveSpan(name6, {
           attributes
         }, (otelSpan) => {
           this.addCommonAttributes(otelSpan);
@@ -122693,8 +122693,8 @@ var require_enabled_trace_util = __commonJS({
           }
         });
       }
-      startSpan(name5) {
-        const otelSpan = this.tracer.startSpan(name5, void 0, api_1.context.active());
+      startSpan(name6) {
+        const otelSpan = this.tracer.startSpan(name6, void 0, api_1.context.active());
         this.addCommonAttributes(otelSpan);
         return new span_1.Span(otelSpan);
       }
@@ -122831,7 +122831,7 @@ var require_firestore_client2 = __commonJS({
     var jsonProtos = require_v1beta1();
     var google_gax_1 = require_src12();
     var gapicConfig = require_firestore_client_config2();
-    var version7 = require_package7().version;
+    var version8 = require_package7().version;
     var FirestoreClient = class {
       _terminated = false;
       _opts;
@@ -122922,7 +122922,7 @@ var require_firestore_client2 = __commonJS({
         if (servicePath === this._servicePath) {
           this.auth.defaultScopes = staticMembers.scopes;
         }
-        const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version7}`];
+        const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version8}`];
         if (typeof process === "object" && "versions" in process) {
           clientHeader.push(`gl-node/${process.versions.node}`);
         } else {
@@ -124648,8 +124648,8 @@ var require_src13 = __commonJS({
        * and the timestamp associated with the built bundle to tell if it has been loaded already.
        * If not specified, a random identifier will be used.
        */
-      bundle(name5) {
-        return new bundle_1.BundleBuilder(name5 || (0, util_1.autoId)());
+      bundle(name6) {
+        return new bundle_1.BundleBuilder(name6 || (0, util_1.autoId)());
       }
       /**
        * Function executed by {@link Firestore#runTransaction} within the transaction
@@ -126265,14 +126265,14 @@ var require_PartStream = __commonJS({
 var require_getLimit = __commonJS({
   "node_modules/@fastify/busboy/lib/utils/getLimit.js"(exports2, module2) {
     "use strict";
-    module2.exports = function getLimit(limits, name5, defaultLimit) {
-      if (!limits || limits[name5] === void 0 || limits[name5] === null) {
+    module2.exports = function getLimit(limits, name6, defaultLimit) {
+      if (!limits || limits[name6] === void 0 || limits[name6] === null) {
         return defaultLimit;
       }
-      if (typeof limits[name5] !== "number" || isNaN(limits[name5])) {
-        throw new TypeError("Limit " + name5 + " is not a valid number");
+      if (typeof limits[name6] !== "number" || isNaN(limits[name6])) {
+        throw new TypeError("Limit " + name6 + " is not a valid number");
       }
-      return limits[name5];
+      return limits[name6];
     };
   }
 });
@@ -128436,9 +128436,9 @@ var require_api_request = __commonJS({
       const headers = {};
       headerLines.slice(1).forEach((line) => {
         const colonPos = line.indexOf(":");
-        const name5 = line.substring(0, colonPos).trim().toLowerCase();
+        const name6 = line.substring(0, colonPos).trim().toLowerCase();
         const value = line.substring(colonPos + 1).trim();
-        headers[name5] = value;
+        headers[name6] = value;
       });
       let data = responseText.substring(endOfHeaderPos + 4);
       if (data.endsWith("\n")) {
@@ -130980,9 +130980,9 @@ var require_auth_api_request = __commonJS({
        * @param emulatorHost - Optional emulator host captured at init time.
        * @constructor
        */
-      constructor(app2, version7 = "v1", emHost) {
+      constructor(app2, version8 = "v1", emHost) {
         this.app = app2;
-        this.version = version7;
+        this.version = version8;
         if (emHost) {
           this.urlFormat = utils.formatString(FIREBASE_AUTH_EMULATOR_BASE_URL_FORMAT, {
             host: emHost
@@ -131033,10 +131033,10 @@ var require_auth_api_request = __commonJS({
        * @param emHost - Optional emulator host captured at init time.
        * @constructor
        */
-      constructor(app2, version7, tenantId, emHost) {
-        super(app2, version7, emHost);
+      constructor(app2, version8, tenantId, emHost) {
+        super(app2, version8, emHost);
         this.app = app2;
-        this.version = version7;
+        this.version = version8;
         this.tenantId = tenantId;
         if (emHost) {
           this.urlFormat = utils.formatString(FIREBASE_AUTH_EMULATOR_TENANT_URL_FORMAT, {
@@ -133001,11 +133001,11 @@ var require_re = __commonJS({
       }
       return value;
     };
-    var createToken = (name5, value, isGlobal) => {
+    var createToken = (name6, value, isGlobal) => {
       const safe = makeSafeRegex(value);
       const index = R++;
-      debug(name5, index, value);
-      t2[name5] = index;
+      debug(name6, index, value);
+      t2[name6] = index;
       src[index] = value;
       safeSrc[index] = safe;
       re2[index] = new RegExp(value, isGlobal ? "g" : void 0);
@@ -133126,31 +133126,31 @@ var require_semver = __commonJS({
       return true;
     };
     var SemVer = class _SemVer {
-      constructor(version7, options2) {
+      constructor(version8, options2) {
         options2 = parseOptions(options2);
-        if (version7 instanceof _SemVer) {
-          if (version7.loose === !!options2.loose && version7.includePrerelease === !!options2.includePrerelease) {
-            return version7;
+        if (version8 instanceof _SemVer) {
+          if (version8.loose === !!options2.loose && version8.includePrerelease === !!options2.includePrerelease) {
+            return version8;
           } else {
-            version7 = version7.version;
+            version8 = version8.version;
           }
-        } else if (typeof version7 !== "string") {
-          throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version7}".`);
+        } else if (typeof version8 !== "string") {
+          throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version8}".`);
         }
-        if (version7.length > MAX_LENGTH) {
+        if (version8.length > MAX_LENGTH) {
           throw new TypeError(
             `version is longer than ${MAX_LENGTH} characters`
           );
         }
-        debug("SemVer", version7, options2);
+        debug("SemVer", version8, options2);
         this.options = options2;
         this.loose = !!options2.loose;
         this.includePrerelease = !!options2.includePrerelease;
-        const m2 = version7.trim().match(options2.loose ? re2[t2.LOOSE] : re2[t2.FULL]);
+        const m2 = version8.trim().match(options2.loose ? re2[t2.LOOSE] : re2[t2.FULL]);
         if (!m2) {
-          throw new TypeError(`Invalid Version: ${version7}`);
+          throw new TypeError(`Invalid Version: ${version8}`);
         }
-        this.raw = version7;
+        this.raw = version8;
         this.major = +m2[1];
         this.minor = +m2[2];
         this.patch = +m2[3];
@@ -133401,12 +133401,12 @@ var require_parse4 = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/functions/parse.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var parse = (version7, options2, throwErrors = false) => {
-      if (version7 instanceof SemVer) {
-        return version7;
+    var parse = (version8, options2, throwErrors = false) => {
+      if (version8 instanceof SemVer) {
+        return version8;
       }
       try {
-        return new SemVer(version7, options2);
+        return new SemVer(version8, options2);
       } catch (er) {
         if (!throwErrors) {
           return null;
@@ -133423,8 +133423,8 @@ var require_valid = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/functions/valid.js"(exports2, module2) {
     "use strict";
     var parse = require_parse4();
-    var valid = (version7, options2) => {
-      const v = parse(version7, options2);
+    var valid = (version8, options2) => {
+      const v = parse(version8, options2);
       return v ? v.version : null;
     };
     module2.exports = valid;
@@ -133436,8 +133436,8 @@ var require_clean = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/functions/clean.js"(exports2, module2) {
     "use strict";
     var parse = require_parse4();
-    var clean = (version7, options2) => {
-      const s2 = parse(version7.trim().replace(/^[=v]+/, ""), options2);
+    var clean = (version8, options2) => {
+      const s2 = parse(version8.trim().replace(/^[=v]+/, ""), options2);
       return s2 ? s2.version : null;
     };
     module2.exports = clean;
@@ -133449,7 +133449,7 @@ var require_inc = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/functions/inc.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var inc = (version7, release, options2, identifier, identifierBase) => {
+    var inc = (version8, release, options2, identifier, identifierBase) => {
       if (typeof options2 === "string") {
         identifierBase = identifier;
         identifier = options2;
@@ -133457,7 +133457,7 @@ var require_inc = __commonJS({
       }
       try {
         return new SemVer(
-          version7 instanceof SemVer ? version7.version : version7,
+          version8 instanceof SemVer ? version8.version : version8,
           options2
         ).inc(release, identifier, identifierBase).version;
       } catch (er) {
@@ -133547,8 +133547,8 @@ var require_prerelease = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/functions/prerelease.js"(exports2, module2) {
     "use strict";
     var parse = require_parse4();
-    var prerelease = (version7, options2) => {
-      const parsed = parse(version7, options2);
+    var prerelease = (version8, options2) => {
+      const parsed = parse(version8, options2);
       return parsed && parsed.prerelease.length ? parsed.prerelease : null;
     };
     module2.exports = prerelease;
@@ -133736,24 +133736,24 @@ var require_coerce = __commonJS({
     var SemVer = require_semver();
     var parse = require_parse4();
     var { safeRe: re2, t: t2 } = require_re();
-    var coerce = (version7, options2) => {
-      if (version7 instanceof SemVer) {
-        return version7;
+    var coerce = (version8, options2) => {
+      if (version8 instanceof SemVer) {
+        return version8;
       }
-      if (typeof version7 === "number") {
-        version7 = String(version7);
+      if (typeof version8 === "number") {
+        version8 = String(version8);
       }
-      if (typeof version7 !== "string") {
+      if (typeof version8 !== "string") {
         return null;
       }
       options2 = options2 || {};
       let match2 = null;
       if (!options2.rtl) {
-        match2 = version7.match(options2.includePrerelease ? re2[t2.COERCEFULL] : re2[t2.COERCE]);
+        match2 = version8.match(options2.includePrerelease ? re2[t2.COERCEFULL] : re2[t2.COERCE]);
       } else {
         const coerceRtlRegex = options2.includePrerelease ? re2[t2.COERCERTLFULL] : re2[t2.COERCERTL];
         let next;
-        while ((next = coerceRtlRegex.exec(version7)) && (!match2 || match2.index + match2[0].length !== version7.length)) {
+        while ((next = coerceRtlRegex.exec(version8)) && (!match2 || match2.index + match2[0].length !== version8.length)) {
           if (!match2 || next.index + next[0].length !== match2.index + match2[0].length) {
             match2 = next;
           }
@@ -133782,32 +133782,32 @@ var require_truncate = __commonJS({
     var parse = require_parse4();
     var constants = require_constants3();
     var SemVer = require_semver();
-    var truncate = (version7, truncation, options2) => {
+    var truncate = (version8, truncation, options2) => {
       if (!constants.RELEASE_TYPES.includes(truncation)) {
         return null;
       }
-      const clonedVersion = cloneInputVersion(version7, options2);
+      const clonedVersion = cloneInputVersion(version8, options2);
       return clonedVersion && doTruncation(clonedVersion, truncation);
     };
-    var cloneInputVersion = (version7, options2) => {
-      const versionStringToParse = version7 instanceof SemVer ? version7.version : version7;
+    var cloneInputVersion = (version8, options2) => {
+      const versionStringToParse = version8 instanceof SemVer ? version8.version : version8;
       return parse(versionStringToParse, options2);
     };
-    var doTruncation = (version7, truncation) => {
+    var doTruncation = (version8, truncation) => {
       if (isPrerelease(truncation)) {
-        return version7.version;
+        return version8.version;
       }
-      version7.prerelease = [];
+      version8.prerelease = [];
       switch (truncation) {
         case "major":
-          version7.minor = 0;
-          version7.patch = 0;
+          version8.minor = 0;
+          version8.patch = 0;
           break;
         case "minor":
-          version7.patch = 0;
+          version8.patch = 0;
           break;
       }
-      return version7.format();
+      return version8.format();
     };
     var isPrerelease = (type) => {
       return type.startsWith("pre");
@@ -133979,19 +133979,19 @@ var require_range2 = __commonJS({
         });
       }
       // if ANY of the sets match ALL of its comparators, then pass
-      test(version7) {
-        if (!version7) {
+      test(version8) {
+        if (!version8) {
           return false;
         }
-        if (typeof version7 === "string") {
+        if (typeof version8 === "string") {
           try {
-            version7 = new SemVer(version7, this.options);
+            version8 = new SemVer(version8, this.options);
           } catch (er) {
             return false;
           }
         }
         for (let i2 = 0; i2 < this.set.length; i2++) {
-          if (testSet(this.set[i2], version7, this.options)) {
+          if (testSet(this.set[i2], version8, this.options)) {
             return true;
           }
         }
@@ -134212,13 +134212,13 @@ var require_range2 = __commonJS({
       }
       return `${from} ${to}`.trim();
     };
-    var testSet = (set, version7, options2) => {
+    var testSet = (set, version8, options2) => {
       for (let i2 = 0; i2 < set.length; i2++) {
-        if (!set[i2].test(version7)) {
+        if (!set[i2].test(version8)) {
           return false;
         }
       }
-      if (version7.prerelease.length && !options2.includePrerelease) {
+      if (version8.prerelease.length && !options2.includePrerelease) {
         for (let i2 = 0; i2 < set.length; i2++) {
           debug(set[i2].semver);
           if (set[i2].semver === Comparator.ANY) {
@@ -134226,7 +134226,7 @@ var require_range2 = __commonJS({
           }
           if (set[i2].semver.prerelease.length > 0) {
             const allowed2 = set[i2].semver;
-            if (allowed2.major === version7.major && allowed2.minor === version7.minor && allowed2.patch === version7.patch) {
+            if (allowed2.major === version8.major && allowed2.minor === version8.minor && allowed2.patch === version8.patch) {
               return true;
             }
           }
@@ -134287,19 +134287,19 @@ var require_comparator = __commonJS({
       toString() {
         return this.value;
       }
-      test(version7) {
-        debug("Comparator.test", version7, this.options.loose);
-        if (this.semver === ANY || version7 === ANY) {
+      test(version8) {
+        debug("Comparator.test", version8, this.options.loose);
+        if (this.semver === ANY || version8 === ANY) {
           return true;
         }
-        if (typeof version7 === "string") {
+        if (typeof version8 === "string") {
           try {
-            version7 = new SemVer(version7, this.options);
+            version8 = new SemVer(version8, this.options);
           } catch (er) {
             return false;
           }
         }
-        return cmp(version7, this.operator, this.semver, this.options);
+        return cmp(version8, this.operator, this.semver, this.options);
       }
       intersects(comp, options2) {
         if (!(comp instanceof _Comparator)) {
@@ -134356,13 +134356,13 @@ var require_satisfies = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/functions/satisfies.js"(exports2, module2) {
     "use strict";
     var Range = require_range2();
-    var satisfies = (version7, range, options2) => {
+    var satisfies = (version8, range, options2) => {
       try {
         range = new Range(range, options2);
       } catch (er) {
         return false;
       }
-      return range.test(version7);
+      return range.test(version8);
     };
     module2.exports = satisfies;
   }
@@ -134524,8 +134524,8 @@ var require_outside = __commonJS({
     var lt = require_lt();
     var lte = require_lte();
     var gte = require_gte();
-    var outside = (version7, range, hilo, options2) => {
-      version7 = new SemVer(version7, options2);
+    var outside = (version8, range, hilo, options2) => {
+      version8 = new SemVer(version8, options2);
       range = new Range(range, options2);
       let gtfn, ltefn, ltfn, comp, ecomp;
       switch (hilo) {
@@ -134546,7 +134546,7 @@ var require_outside = __commonJS({
         default:
           throw new TypeError('Must provide a hilo val of "<" or ">"');
       }
-      if (satisfies(version7, range, options2)) {
+      if (satisfies(version8, range, options2)) {
         return false;
       }
       for (let i2 = 0; i2 < range.set.length; ++i2) {
@@ -134568,9 +134568,9 @@ var require_outside = __commonJS({
         if (high.operator === comp || high.operator === ecomp) {
           return false;
         }
-        if ((!low.operator || low.operator === comp) && ltefn(version7, low.semver)) {
+        if ((!low.operator || low.operator === comp) && ltefn(version8, low.semver)) {
           return false;
-        } else if (low.operator === ecomp && ltfn(version7, low.semver)) {
+        } else if (low.operator === ecomp && ltfn(version8, low.semver)) {
           return false;
         }
       }
@@ -134585,7 +134585,7 @@ var require_gtr = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/ranges/gtr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
-    var gtr = (version7, range, options2) => outside(version7, range, ">", options2);
+    var gtr = (version8, range, options2) => outside(version8, range, ">", options2);
     module2.exports = gtr;
   }
 });
@@ -134595,7 +134595,7 @@ var require_ltr = __commonJS({
   "node_modules/jsonwebtoken/node_modules/semver/ranges/ltr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
-    var ltr = (version7, range, options2) => outside(version7, range, "<", options2);
+    var ltr = (version8, range, options2) => outside(version8, range, "<", options2);
     module2.exports = ltr;
   }
 });
@@ -134625,12 +134625,12 @@ var require_simplify = __commonJS({
       let first = null;
       let prev = null;
       const v = versions.sort((a, b) => compare(a, b, options2));
-      for (const version7 of v) {
-        const included = satisfies(version7, range, options2);
+      for (const version8 of v) {
+        const included = satisfies(version8, range, options2);
         if (included) {
-          prev = version7;
+          prev = version8;
           if (!first) {
-            first = version7;
+            first = version8;
           }
         } else {
           if (prev) {
@@ -136132,8 +136132,8 @@ function checkEncCryptoKey(key, alg, usage) {
 var unusable, isAlgorithm;
 var init_crypto_key = __esm({
   "node_modules/jose/dist/webapi/lib/crypto_key.js"() {
-    unusable = (name5, prop = "algorithm.name") => new TypeError(`CryptoKey does not support this operation, its ${prop} must be ${name5}`);
-    isAlgorithm = (algorithm, name5) => algorithm.name === name5;
+    unusable = (name6, prop = "algorithm.name") => new TypeError(`CryptoKey does not support this operation, its ${prop} must be ${name6}`);
+    isAlgorithm = (algorithm, name6) => algorithm.name === name6;
   }
 });
 
@@ -136533,9 +136533,9 @@ var init_content_encryption = __esm({
 });
 
 // node_modules/jose/dist/webapi/lib/helpers.js
-function assertNotSet(value, name5) {
+function assertNotSet(value, name6) {
   if (value) {
-    throw new TypeError(`${name5} can only be called once`);
+    throw new TypeError(`${name6} can only be called once`);
   }
 }
 function decodeBase64url(value, label, ErrorClass) {
@@ -137259,13 +137259,13 @@ ${newlined}
       expectTag(state, 6, "Expected curve OID");
       const curveOidLen = parseLength(state);
       const curveOid = getSubarray(state, curveOidLen);
-      for (const { name: name5, oid } of [
+      for (const { name: name6, oid } of [
         { name: "P-256", oid: [42, 134, 72, 206, 61, 3, 1, 7] },
         { name: "P-384", oid: [43, 129, 4, 0, 34] },
         { name: "P-521", oid: [43, 129, 4, 0, 35] }
       ]) {
         if (bytesEqual(curveOid, oid)) {
-          return name5;
+          return name6;
         }
       }
       throw new Error("Unsupported named curve");
@@ -137886,9 +137886,9 @@ var init_check_key_type = __esm({
 });
 
 // node_modules/jose/dist/webapi/lib/deflate.js
-function supported(name5) {
-  if (typeof globalThis[name5] === "undefined") {
-    throw new JOSENotSupported(`JWE "zip" (Compression Algorithm) Header Parameter requires the ${name5} API.`);
+function supported(name6) {
+  if (typeof globalThis[name6] === "undefined") {
+    throw new JOSENotSupported(`JWE "zip" (Compression Algorithm) Header Parameter requires the ${name6} API.`);
   }
 }
 async function compress(input) {
@@ -141515,8 +141515,8 @@ var require_freeze = __commonJS({
 var require_sync = __commonJS({
   "node_modules/lru-memoizer/lib/sync.js"(exports2) {
     "use strict";
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.syncMemoizer = void 0;
@@ -141601,8 +141601,8 @@ var require_sync = __commonJS({
 var require_async = __commonJS({
   "node_modules/lru-memoizer/lib/async.js"(exports2) {
     "use strict";
-    var __importDefault = exports2 && exports2.__importDefault || function(mod4) {
-      return mod4 && mod4.__esModule ? mod4 : { "default": mod4 };
+    var __importDefault = exports2 && exports2.__importDefault || function(mod5) {
+      return mod5 && mod5.__esModule ? mod5 : { "default": mod5 };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.asyncMemoizer = void 0;
@@ -142323,12 +142323,12 @@ var require_index_min2 = __commonJS({
 // node_modules/jwks-rsa/src/wrappers/cache.js
 var require_cache = __commonJS({
   "node_modules/jwks-rsa/src/wrappers/cache.js"(exports2, module2) {
-    var logger2 = require_src()("jwks");
+    var logger3 = require_src()("jwks");
     var memoizer = require_lib4();
     var { LRUCache } = require_index_min2();
     var { promisify: promisify2, callbackify } = require("util");
     function cacheWrapper(client, { cacheMaxEntries = 5, cacheMaxAge = 6e5, cacheMaxAgeFallback, onStaleCacheFallback }) {
-      logger2(`Configured caching of signing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}${cacheMaxAgeFallback ? ` / Fallback: ${cacheMaxAgeFallback}` : ""}`);
+      logger3(`Configured caching of signing keys. Max: ${cacheMaxEntries} / Age: ${cacheMaxAge}${cacheMaxAgeFallback ? ` / Fallback: ${cacheMaxAgeFallback}` : ""}`);
       let load;
       if (cacheMaxAgeFallback) {
         const staleCache = new LRUCache({ max: cacheMaxEntries });
@@ -142342,13 +142342,13 @@ var require_cache = __commonJS({
             if (err.isEndpointUnavailable) {
               const stale = staleCache.get(kid);
               if (stale && Date.now() - stale.fetchedAt < cacheMaxAge + cacheMaxAgeFallback) {
-                logger2(`JWKS endpoint unavailable, serving stale signing key for '${kid}': ${err.message}`);
+                logger3(`JWKS endpoint unavailable, serving stale signing key for '${kid}': ${err.message}`);
                 if (onStaleCacheFallback) {
                   onStaleCacheFallback(err, kid, stale.key);
                 }
                 return stale.key;
               }
-              logger2(`JWKS endpoint unavailable and no valid stale entry for '${kid}', fallback window expired or key never fetched`);
+              logger3(`JWKS endpoint unavailable and no valid stale entry for '${kid}', fallback window expired or key never fetched`);
             }
             throw err;
           }
@@ -142641,21 +142641,21 @@ var require_JwksRateLimitError = __commonJS({
 // node_modules/jwks-rsa/src/wrappers/rateLimit.js
 var require_rateLimit = __commonJS({
   "node_modules/jwks-rsa/src/wrappers/rateLimit.js"(exports2, module2) {
-    var logger2 = require_src()("jwks");
+    var logger3 = require_src()("jwks");
     var { RateLimiter } = require_limiter();
     var JwksRateLimitError = require_JwksRateLimitError();
     function rateLimitWrapper(client, { jwksRequestsPerMinute = 10 }) {
       const getSigningKey = client.getSigningKey.bind(client);
       const limiter = new RateLimiter(jwksRequestsPerMinute, "minute", true);
-      logger2(`Configured rate limiting to JWKS endpoint at ${jwksRequestsPerMinute}/minute`);
+      logger3(`Configured rate limiting to JWKS endpoint at ${jwksRequestsPerMinute}/minute`);
       return async (kid) => await new Promise((resolve, reject) => {
         limiter.removeTokens(1, async (err, remaining) => {
           if (err) {
             reject(err);
           }
-          logger2("Requests to the JWKS endpoint available for the next minute:", remaining);
+          logger3("Requests to the JWKS endpoint available for the next minute:", remaining);
           if (remaining < 0) {
-            logger2("Too many requests to the JWKS endpoint");
+            logger3("Too many requests to the JWKS endpoint");
             reject(new JwksRateLimitError("Too many requests to the JWKS endpoint"));
           } else {
             try {
@@ -142746,7 +142746,7 @@ var require_SigningKeyNotFoundError = __commonJS({
 // node_modules/jwks-rsa/src/JwksClient.js
 var require_JwksClient = __commonJS({
   "node_modules/jwks-rsa/src/JwksClient.js"(exports2, module2) {
-    var logger2 = require_src()("jwks");
+    var logger3 = require_src()("jwks");
     var { retrieveSigningKeys } = require_utils5();
     var { request, cacheSigningKey, rateLimitSigningKey, getKeysInterceptor, callbackSupport } = require_wrappers3();
     var JwksError = require_JwksError();
@@ -142771,7 +142771,7 @@ var require_JwksClient = __commonJS({
         this.getSigningKey = callbackSupport(this, options2);
       }
       async getKeys() {
-        logger2(`Fetching keys from '${this.options.jwksUri}'`);
+        logger3(`Fetching keys from '${this.options.jwksUri}'`);
         try {
           const res = await request({
             uri: this.options.jwksUri,
@@ -142780,11 +142780,11 @@ var require_JwksClient = __commonJS({
             timeout: this.options.timeout,
             fetcher: this.options.fetcher
           });
-          logger2("Keys:", res.keys);
+          logger3("Keys:", res.keys);
           return res.keys;
         } catch (err) {
           const { errorMsg } = err;
-          logger2("Failure:", errorMsg || err);
+          logger3("Failure:", errorMsg || err);
           const error = errorMsg ? new JwksError(errorMsg) : err;
           error.isEndpointUnavailable = true;
           throw error;
@@ -142799,22 +142799,22 @@ var require_JwksClient = __commonJS({
         if (!signingKeys.length) {
           throw new JwksError("The JWKS endpoint did not contain any signing keys");
         }
-        logger2("Signing Keys:", signingKeys);
+        logger3("Signing Keys:", signingKeys);
         return signingKeys;
       }
       async getSigningKey(kid) {
-        logger2(`Fetching signing key for '${kid}'`);
+        logger3(`Fetching signing key for '${kid}'`);
         const keys = await this.getSigningKeys();
         const kidDefined = kid !== void 0 && kid !== null;
         if (!kidDefined && keys.length > 1) {
-          logger2("No KID specified and JWKS endpoint returned more than 1 key");
+          logger3("No KID specified and JWKS endpoint returned more than 1 key");
           throw new SigningKeyNotFoundError("No KID specified and JWKS endpoint returned more than 1 key");
         }
         const key = keys.find((k) => !kidDefined || k.kid === kid);
         if (key) {
           return key;
         } else {
-          logger2(`Unable to find a signing key that matches '${kid}'`);
+          logger3(`Unable to find a signing key that matches '${kid}'`);
           throw new SigningKeyNotFoundError(`Unable to find a signing key that matches '${kid}'`);
         }
       }
@@ -145090,6 +145090,674 @@ var require_auth2 = __commonJS({
     } });
     Object.defineProperty(exports2, "AuthErrorCode", { enumerable: true, get: function() {
       return error_1.AuthErrorCode;
+    } });
+  }
+});
+
+// node_modules/firebase-admin/lib/app-check/error.js
+var require_error6 = __commonJS({
+  "node_modules/firebase-admin/lib/app-check/error.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.FirebaseAppCheckError = exports2.AppCheckErrorCode = exports2.APP_CHECK_ERROR_CODE_MAPPING = void 0;
+    var error_1 = require_error();
+    exports2.APP_CHECK_ERROR_CODE_MAPPING = {
+      ABORTED: "aborted",
+      INVALID_ARGUMENT: "invalid-argument",
+      INVALID_CREDENTIAL: "invalid-credential",
+      INTERNAL: "internal-error",
+      PERMISSION_DENIED: "permission-denied",
+      UNAUTHENTICATED: "unauthenticated",
+      NOT_FOUND: "not-found",
+      UNKNOWN: "unknown-error"
+    };
+    exports2.AppCheckErrorCode = {
+      ABORTED: "aborted",
+      INVALID_ARGUMENT: "invalid-argument",
+      INVALID_CREDENTIAL: "invalid-credential",
+      INTERNAL: "internal-error",
+      PERMISSION_DENIED: "permission-denied",
+      UNAUTHENTICATED: "unauthenticated",
+      NOT_FOUND: "not-found",
+      APP_CHECK_TOKEN_EXPIRED: "app-check-token-expired",
+      UNKNOWN: "unknown-error"
+    };
+    var FirebaseAppCheckError2 = class extends error_1.FirebaseError {
+      /**
+       * @param info - The error code info.
+       * @param message - The error message. If provided, this will override the default message.
+       */
+      constructor(info, message2) {
+        super({
+          code: `app-check/${info.code}`,
+          message: message2 || info.message,
+          httpResponse: info.httpResponse,
+          cause: info.cause
+        });
+        this.codePrefix = "app-check";
+      }
+    };
+    exports2.FirebaseAppCheckError = FirebaseAppCheckError2;
+  }
+});
+
+// node_modules/firebase-admin/lib/app-check/app-check-api-client-internal.js
+var require_app_check_api_client_internal = __commonJS({
+  "node_modules/firebase-admin/lib/app-check/app-check-api-client-internal.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AppCheckApiClient = void 0;
+    var api_request_1 = require_api_request();
+    var error_1 = require_error();
+    var error_2 = require_error6();
+    var utils = require_utils4();
+    var validator = require_validator();
+    var FIREBASE_APP_CHECK_V1_API_URL_FORMAT = "https://firebaseappcheck.googleapis.com/v1/projects/{projectId}/apps/{appId}:exchangeCustomToken";
+    var ONE_TIME_USE_TOKEN_VERIFICATION_URL_FORMAT = "https://firebaseappcheck.googleapis.com/v1beta/projects/{projectId}:verifyAppCheckToken";
+    var FIREBASE_APP_CHECK_CONFIG_HEADERS = {
+      "X-Firebase-Client": `fire-admin-node/${utils.getSdkVersion()}`
+    };
+    var AppCheckApiClient = class {
+      constructor(app2) {
+        this.app = app2;
+        if (!validator.isNonNullObject(app2) || !("options" in app2)) {
+          throw new error_2.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "First argument passed to admin.appCheck() must be a valid Firebase app instance."
+          });
+        }
+        this.httpClient = new api_request_1.AuthorizedHttpClient(app2);
+      }
+      /**
+       * Exchange a signed custom token to App Check token
+       *
+       * @param customToken - The custom token to be exchanged.
+       * @param appId - The mobile App ID.
+       * @returns A promise that fulfills with a `AppCheckToken`.
+       */
+      exchangeToken(customToken, appId, options2) {
+        if (!validator.isNonEmptyString(appId)) {
+          throw new error_2.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "`appId` must be a non-empty string."
+          });
+        }
+        if (!validator.isNonEmptyString(customToken)) {
+          throw new error_2.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "`customToken` must be a non-empty string."
+          });
+        }
+        if (typeof options2?.limitedUse !== "undefined" && !validator.isBoolean(options2.limitedUse)) {
+          throw new error_2.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "`limitedUse` must be a boolean value."
+          });
+        }
+        if (typeof options2?.jti !== "undefined") {
+          if (!validator.isString(options2.jti)) {
+            throw new error_2.FirebaseAppCheckError({
+              code: "invalid-argument",
+              message: "`jti` must be a string value."
+            });
+          }
+          if (!options2.limitedUse) {
+            throw new error_2.FirebaseAppCheckError({
+              code: "invalid-argument",
+              message: "`jti` cannot be specified without setting `limitedUse` to `true`."
+            });
+          }
+        }
+        return this.getUrl(appId).then((url) => {
+          const request = {
+            method: "POST",
+            url,
+            headers: FIREBASE_APP_CHECK_CONFIG_HEADERS,
+            data: {
+              customToken,
+              ...options2?.limitedUse !== void 0 && { limitedUse: options2.limitedUse },
+              ...options2?.jti !== void 0 && { jti: options2.jti }
+            }
+          };
+          return this.httpClient.send(request);
+        }).then((resp) => {
+          return this.toAppCheckToken(resp);
+        }).catch((err) => {
+          throw this.toFirebaseError(err);
+        });
+      }
+      verifyReplayProtection(token) {
+        if (!validator.isNonEmptyString(token)) {
+          throw new error_2.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "`token` must be a non-empty string."
+          });
+        }
+        return this.getVerifyTokenUrl().then((url) => {
+          const request = {
+            method: "POST",
+            url,
+            headers: FIREBASE_APP_CHECK_CONFIG_HEADERS,
+            data: { app_check_token: token }
+          };
+          return this.httpClient.send(request);
+        }).then((resp) => {
+          if (typeof resp.data.alreadyConsumed !== "undefined" && !validator.isBoolean(resp.data?.alreadyConsumed)) {
+            throw new error_2.FirebaseAppCheckError({
+              code: "invalid-argument",
+              message: "`alreadyConsumed` must be a boolean value.",
+              httpResponse: (0, error_1.toHttpResponse)(resp)
+            });
+          }
+          return resp.data.alreadyConsumed || false;
+        }).catch((err) => {
+          throw this.toFirebaseError(err);
+        });
+      }
+      getUrl(appId) {
+        return this.getProjectId().then((projectId) => {
+          const urlParams = {
+            projectId,
+            appId
+          };
+          const baseUrl = utils.formatString(FIREBASE_APP_CHECK_V1_API_URL_FORMAT, urlParams);
+          return utils.formatString(baseUrl);
+        });
+      }
+      getVerifyTokenUrl() {
+        return this.getProjectId().then((projectId) => {
+          const urlParams = {
+            projectId
+          };
+          const baseUrl = utils.formatString(ONE_TIME_USE_TOKEN_VERIFICATION_URL_FORMAT, urlParams);
+          return utils.formatString(baseUrl);
+        });
+      }
+      getProjectId() {
+        if (this.projectId) {
+          return Promise.resolve(this.projectId);
+        }
+        return utils.findProjectId(this.app).then((projectId) => {
+          if (!validator.isNonEmptyString(projectId)) {
+            throw new error_2.FirebaseAppCheckError({
+              code: "unknown-error",
+              message: "Failed to determine project ID. Initialize the SDK with service account credentials or set project ID as an app option. Alternatively, set the GOOGLE_CLOUD_PROJECT environment variable."
+            });
+          }
+          this.projectId = projectId;
+          return projectId;
+        });
+      }
+      toFirebaseError(err) {
+        if (err instanceof error_1.FirebaseError) {
+          return err;
+        }
+        const response = err.response;
+        if (!response.isJson()) {
+          return new error_2.FirebaseAppCheckError({
+            code: "unknown-error",
+            message: `Unexpected response with status: ${response.status} and body: ${response.text}`,
+            httpResponse: (0, error_1.toHttpResponse)(response),
+            cause: err
+          });
+        }
+        const error = response.data.error || {};
+        let code = "unknown-error";
+        if (error.status && error.status in error_2.APP_CHECK_ERROR_CODE_MAPPING) {
+          code = error_2.APP_CHECK_ERROR_CODE_MAPPING[error.status];
+        }
+        const message2 = error.message || "Unknown server error";
+        return new error_2.FirebaseAppCheckError({ code, message: message2, httpResponse: (0, error_1.toHttpResponse)(response), cause: err });
+      }
+      /**
+       * Creates an AppCheckToken from the API response.
+       *
+       * @param resp - API response object.
+       * @returns An AppCheckToken instance.
+       */
+      toAppCheckToken(resp) {
+        const token = resp.data.token;
+        const ttlMillis = this.stringToMilliseconds(resp.data.ttl);
+        return {
+          token,
+          ttlMillis
+        };
+      }
+      /**
+       * Converts a duration string with the suffix `s` to milliseconds.
+       *
+       * @param duration - The duration as a string with the suffix "s" preceded by the
+       * number of seconds, with fractional seconds. For example, 3 seconds with 0 nanoseconds
+       * is expressed as "3s", while 3 seconds and 1 nanosecond is expressed as "3.000000001s",
+       * and 3 seconds and 1 microsecond is expressed as "3.000001s".
+       *
+       * @returns The duration in milliseconds.
+       */
+      stringToMilliseconds(duration) {
+        if (!validator.isNonEmptyString(duration) || !duration.endsWith("s")) {
+          throw new error_2.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "`ttl` must be a valid duration string with the suffix `s`."
+          });
+        }
+        const seconds = duration.slice(0, -1);
+        return Math.floor(Number(seconds) * 1e3);
+      }
+    };
+    exports2.AppCheckApiClient = AppCheckApiClient;
+  }
+});
+
+// node_modules/firebase-admin/lib/app-check/token-generator.js
+var require_token_generator2 = __commonJS({
+  "node_modules/firebase-admin/lib/app-check/token-generator.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AppCheckTokenGenerator = void 0;
+    exports2.appCheckErrorFromCryptoSignerError = appCheckErrorFromCryptoSignerError;
+    var validator = require_validator();
+    var utils_1 = require_utils4();
+    var crypto_signer_1 = require_crypto_signer();
+    var error_1 = require_error6();
+    var error_2 = require_error();
+    var ONE_MINUTE_IN_SECONDS = 60;
+    var ONE_MINUTE_IN_MILLIS = ONE_MINUTE_IN_SECONDS * 1e3;
+    var ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1e3;
+    var FIREBASE_APP_CHECK_AUDIENCE = "https://firebaseappcheck.googleapis.com/google.firebase.appcheck.v1.TokenExchangeService";
+    var AppCheckTokenGenerator = class {
+      /**
+       * The AppCheckTokenGenerator class constructor.
+       *
+       * @param signer - The CryptoSigner instance for this token generator.
+       * @constructor
+       */
+      constructor(signer) {
+        if (!validator.isNonNullObject(signer)) {
+          throw new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "INTERNAL ASSERT: Must provide a CryptoSigner to use AppCheckTokenGenerator."
+          });
+        }
+        this.signer = signer;
+      }
+      /**
+       * Creates a new custom token that can be exchanged to an App Check token.
+       *
+       * @param appId - The Application ID to use for the generated token.
+       *
+       * @returns A Promise fulfilled with a custom token signed with a service account key
+       * that can be exchanged to an App Check token.
+       */
+      createCustomToken(appId, options2) {
+        if (!validator.isNonEmptyString(appId)) {
+          throw new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "`appId` must be a non-empty string."
+          });
+        }
+        let customOptions = {};
+        if (typeof options2 !== "undefined") {
+          customOptions = this.validateTokenOptions(options2);
+        }
+        return this.signer.getAccountId().then((account) => {
+          const header = {
+            alg: this.signer.algorithm,
+            typ: "JWT"
+          };
+          const iat = Math.floor(Date.now() / 1e3);
+          const body = {
+            iss: account,
+            sub: account,
+            app_id: appId,
+            aud: FIREBASE_APP_CHECK_AUDIENCE,
+            exp: iat + ONE_MINUTE_IN_SECONDS * 5,
+            iat,
+            ...customOptions
+          };
+          const token = `${this.encodeSegment(header)}.${this.encodeSegment(body)}`;
+          return this.signer.sign(Buffer.from(token)).then((signature) => {
+            return `${token}.${this.encodeSegment(signature)}`;
+          });
+        }).catch((err) => {
+          throw appCheckErrorFromCryptoSignerError(err);
+        });
+      }
+      encodeSegment(segment) {
+        const buffer = segment instanceof Buffer ? segment : Buffer.from(JSON.stringify(segment));
+        return (0, utils_1.toWebSafeBase64)(buffer).replace(/=+$/, "");
+      }
+      /**
+       * Checks if a given `AppCheckTokenOptions` object is valid. If successful, returns an object with
+       * custom properties.
+       *
+       * @param options - An options object to be validated.
+       * @returns A custom object with ttl converted to protobuf Duration string format.
+       */
+      validateTokenOptions(options2) {
+        if (!validator.isNonNullObject(options2)) {
+          throw new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "AppCheckTokenOptions must be a non-null object."
+          });
+        }
+        if (typeof options2.ttlMillis !== "undefined") {
+          if (!validator.isNumber(options2.ttlMillis)) {
+            throw new error_1.FirebaseAppCheckError({
+              code: "invalid-argument",
+              message: "ttlMillis must be a duration in milliseconds."
+            });
+          }
+          if (options2.ttlMillis < ONE_MINUTE_IN_MILLIS * 30 || options2.ttlMillis > ONE_DAY_IN_MILLIS * 7) {
+            throw new error_1.FirebaseAppCheckError({
+              code: "invalid-argument",
+              message: "ttlMillis must be a duration in milliseconds between 30 minutes and 7 days (inclusive)."
+            });
+          }
+          return { ttl: (0, utils_1.transformMillisecondsToSecondsString)(options2.ttlMillis) };
+        }
+        return {};
+      }
+    };
+    exports2.AppCheckTokenGenerator = AppCheckTokenGenerator;
+    function appCheckErrorFromCryptoSignerError(err) {
+      if (!(err instanceof crypto_signer_1.CryptoSignerError)) {
+        return err;
+      }
+      if (err.code === crypto_signer_1.CryptoSignerErrorCode.SERVER_ERROR && validator.isNonNullObject(err.cause)) {
+        const httpError = err.cause;
+        const errorResponse = httpError.response.data;
+        if (errorResponse?.error) {
+          const status = errorResponse.error.status;
+          const description = errorResponse.error.message || "Unknown server error";
+          let code = "unknown-error";
+          if (status && status in error_1.APP_CHECK_ERROR_CODE_MAPPING) {
+            code = error_1.APP_CHECK_ERROR_CODE_MAPPING[status];
+          }
+          return new error_1.FirebaseAppCheckError({
+            code,
+            message: `Error returned from server while signing a custom token: ${description}`,
+            httpResponse: (0, error_2.toHttpResponse)(httpError.response),
+            cause: err
+          });
+        }
+        return new error_1.FirebaseAppCheckError({
+          code: "internal-error",
+          message: "Error returned from server.",
+          httpResponse: (0, error_2.toHttpResponse)(httpError.response),
+          cause: err
+        });
+      }
+      return new error_1.FirebaseAppCheckError({
+        code: mapToAppCheckErrorCode(err.code),
+        message: err.message,
+        cause: err
+      });
+    }
+    function mapToAppCheckErrorCode(code) {
+      switch (code) {
+        case crypto_signer_1.CryptoSignerErrorCode.INVALID_CREDENTIAL:
+          return "invalid-credential";
+        case crypto_signer_1.CryptoSignerErrorCode.INVALID_ARGUMENT:
+          return "invalid-argument";
+        default:
+          return "internal-error";
+      }
+    }
+  }
+});
+
+// node_modules/firebase-admin/lib/app-check/token-verifier.js
+var require_token_verifier2 = __commonJS({
+  "node_modules/firebase-admin/lib/app-check/token-verifier.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AppCheckTokenVerifier = void 0;
+    var validator = require_validator();
+    var util = require_utils4();
+    var error_1 = require_error6();
+    var jwt_1 = require_jwt();
+    var APP_CHECK_ISSUER = "https://firebaseappcheck.googleapis.com/";
+    var JWKS_URL = "https://firebaseappcheck.googleapis.com/v1/jwks";
+    var AppCheckTokenVerifier = class {
+      constructor(app2) {
+        this.app = app2;
+        this.signatureVerifier = jwt_1.PublicKeySignatureVerifier.withJwksUrl(JWKS_URL, app2.options.httpAgent);
+      }
+      /**
+       * Verifies the format and signature of a Firebase App Check token.
+       *
+       * @param token - The Firebase Auth JWT token to verify.
+       * @returns A promise fulfilled with the decoded claims of the Firebase App Check token.
+       */
+      verifyToken(token) {
+        if (!validator.isString(token)) {
+          throw new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "App check token must be a non-null string."
+          });
+        }
+        return this.ensureProjectId().then((projectId) => {
+          return this.decodeAndVerify(token, projectId);
+        }).then((decoded) => {
+          const decodedAppCheckToken = decoded.payload;
+          decodedAppCheckToken.app_id = decodedAppCheckToken.sub;
+          return decodedAppCheckToken;
+        });
+      }
+      ensureProjectId() {
+        return util.findProjectId(this.app).then((projectId) => {
+          if (!validator.isNonEmptyString(projectId)) {
+            throw new error_1.FirebaseAppCheckError({
+              code: "invalid-credential",
+              message: "Must initialize app with a cert credential or set your Firebase project ID as the GOOGLE_CLOUD_PROJECT environment variable to verify an App Check token."
+            });
+          }
+          return projectId;
+        });
+      }
+      decodeAndVerify(token, projectId) {
+        return this.safeDecode(token).then((decodedToken) => {
+          this.verifyContent(decodedToken, projectId);
+          return this.verifySignature(token).then(() => decodedToken);
+        });
+      }
+      safeDecode(jwtToken) {
+        return (0, jwt_1.decodeJwt)(jwtToken).catch(() => {
+          const errorMessage = "Decoding App Check token failed. Make sure you passed the entire string JWT which represents the Firebase App Check token.";
+          throw new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: errorMessage
+          });
+        });
+      }
+      /**
+       * Verifies the content of a Firebase App Check JWT.
+       *
+       * @param fullDecodedToken - The decoded JWT.
+       * @param projectId - The Firebase Project Id.
+       */
+      verifyContent(fullDecodedToken, projectId) {
+        const header = fullDecodedToken.header;
+        const payload = fullDecodedToken.payload;
+        const projectIdMatchMessage = " Make sure the App Check token comes from the same Firebase project as the service account used to authenticate this SDK.";
+        const scopedProjectId = `projects/${projectId}`;
+        let errorMessage;
+        if (header.alg !== jwt_1.ALGORITHM_RS256) {
+          errorMessage = 'The provided App Check token has incorrect algorithm. Expected "' + jwt_1.ALGORITHM_RS256 + '" but got "' + header.alg + '".';
+        } else if (!validator.isNonEmptyArray(payload.aud) || !payload.aud.includes(scopedProjectId)) {
+          errorMessage = 'The provided App Check token has incorrect "aud" (audience) claim. Expected "' + scopedProjectId + '" but got "' + payload.aud + '".' + projectIdMatchMessage;
+        } else if (typeof payload.iss !== "string" || !payload.iss.startsWith(APP_CHECK_ISSUER)) {
+          errorMessage = 'The provided App Check token has incorrect "iss" (issuer) claim.';
+        } else if (typeof payload.sub !== "string") {
+          errorMessage = 'The provided App Check token has no "sub" (subject) claim.';
+        } else if (payload.sub === "") {
+          errorMessage = 'The provided App Check token has an empty string "sub" (subject) claim.';
+        }
+        if (errorMessage) {
+          throw new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: errorMessage
+          });
+        }
+      }
+      verifySignature(jwtToken) {
+        return this.signatureVerifier.verify(jwtToken).catch((error) => {
+          throw this.mapJwtErrorToAppCheckError(error);
+        });
+      }
+      /**
+       * Maps JwtError to FirebaseAppCheckError
+       *
+       * @param error - JwtError to be mapped.
+       * @returns FirebaseAppCheckError instance.
+       */
+      mapJwtErrorToAppCheckError(error) {
+        if (error.code === jwt_1.JwtErrorCode.TOKEN_EXPIRED) {
+          const errorMessage = "The provided App Check token has expired. Get a fresh App Check token from your client app and try again.";
+          return new error_1.FirebaseAppCheckError({
+            code: "app-check-token-expired",
+            message: errorMessage,
+            cause: error
+          });
+        } else if (error.code === jwt_1.JwtErrorCode.INVALID_SIGNATURE) {
+          const errorMessage = "The provided App Check token has invalid signature.";
+          return new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: errorMessage,
+            cause: error
+          });
+        } else if (error.code === jwt_1.JwtErrorCode.NO_MATCHING_KID) {
+          const errorMessage = 'The provided App Check token has "kid" claim which does not correspond to a known public key. Most likely the provided App Check token is expired, so get a fresh token from your client app and try again.';
+          return new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: errorMessage,
+            cause: error
+          });
+        }
+        return new error_1.FirebaseAppCheckError({
+          code: "invalid-argument",
+          message: error.message,
+          cause: error
+        });
+      }
+    };
+    exports2.AppCheckTokenVerifier = AppCheckTokenVerifier;
+  }
+});
+
+// node_modules/firebase-admin/lib/app-check/app-check.js
+var require_app_check = __commonJS({
+  "node_modules/firebase-admin/lib/app-check/app-check.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AppCheck = void 0;
+    var validator = require_validator();
+    var app_check_api_client_internal_1 = require_app_check_api_client_internal();
+    var error_1 = require_error6();
+    var token_generator_1 = require_token_generator2();
+    var token_verifier_1 = require_token_verifier2();
+    var crypto_signer_1 = require_crypto_signer();
+    var AppCheck2 = class {
+      /**
+       * @param app - The app for this AppCheck service.
+       * @constructor
+       * @internal
+       */
+      constructor(app2) {
+        this.app = app2;
+        this.client = new app_check_api_client_internal_1.AppCheckApiClient(app2);
+        try {
+          this.tokenGenerator = new token_generator_1.AppCheckTokenGenerator((0, crypto_signer_1.cryptoSignerFromApp)(app2));
+        } catch (err) {
+          throw (0, token_generator_1.appCheckErrorFromCryptoSignerError)(err);
+        }
+        this.appCheckTokenVerifier = new token_verifier_1.AppCheckTokenVerifier(app2);
+      }
+      /**
+       * Creates a new {@link AppCheckToken} that can be sent
+       * back to a client.
+       *
+       * @param appId - The app ID to use as the JWT app_id.
+       * @param options - Optional options object when creating a new App Check Token.
+       *
+       * @returns A promise that fulfills with a `AppCheckToken`.
+       */
+      createToken(appId, options2) {
+        return this.tokenGenerator.createCustomToken(appId, options2).then((customToken) => {
+          return this.client.exchangeToken(customToken, appId, options2);
+        });
+      }
+      /**
+       * Verifies a Firebase App Check token (JWT). If the token is valid, the promise is
+       * fulfilled with the token's decoded claims; otherwise, the promise is
+       * rejected.
+       *
+       * @param appCheckToken - The App Check token to verify.
+       * @param options - Optional {@link VerifyAppCheckTokenOptions} object when verifying an App Check Token.
+       *
+       * @returns A promise fulfilled with the token's decoded claims
+       *   if the App Check token is valid; otherwise, a rejected promise.
+       */
+      verifyToken(appCheckToken, options2) {
+        this.validateVerifyAppCheckTokenOptions(options2);
+        return this.appCheckTokenVerifier.verifyToken(appCheckToken).then((decodedToken) => {
+          if (options2?.consume) {
+            return this.client.verifyReplayProtection(appCheckToken).then((alreadyConsumed) => {
+              return {
+                alreadyConsumed,
+                appId: decodedToken.app_id,
+                token: decodedToken
+              };
+            });
+          }
+          return {
+            appId: decodedToken.app_id,
+            token: decodedToken
+          };
+        });
+      }
+      validateVerifyAppCheckTokenOptions(options2) {
+        if (typeof options2 === "undefined") {
+          return;
+        }
+        if (!validator.isNonNullObject(options2)) {
+          throw new error_1.FirebaseAppCheckError({
+            code: "invalid-argument",
+            message: "VerifyAppCheckTokenOptions must be a non-null object."
+          });
+        }
+      }
+    };
+    exports2.AppCheck = AppCheck2;
+  }
+});
+
+// node_modules/firebase-admin/lib/app-check/index.js
+var require_app_check2 = __commonJS({
+  "node_modules/firebase-admin/lib/app-check/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AppCheckErrorCode = exports2.FirebaseAppCheckError = exports2.AppCheck = void 0;
+    exports2.getAppCheck = getAppCheck2;
+    var app_1 = require_app();
+    var app_check_1 = require_app_check();
+    var app_check_2 = require_app_check();
+    Object.defineProperty(exports2, "AppCheck", { enumerable: true, get: function() {
+      return app_check_2.AppCheck;
+    } });
+    function getAppCheck2(app2) {
+      if (typeof app2 === "undefined") {
+        app2 = (0, app_1.getApp)();
+      }
+      const firebaseApp = app2;
+      return firebaseApp.getOrInitService("appCheck", (app3) => new app_check_1.AppCheck(app3));
+    }
+    var error_1 = require_error6();
+    Object.defineProperty(exports2, "FirebaseAppCheckError", { enumerable: true, get: function() {
+      return error_1.FirebaseAppCheckError;
+    } });
+    Object.defineProperty(exports2, "AppCheckErrorCode", { enumerable: true, get: function() {
+      return error_1.AppCheckErrorCode;
     } });
   }
 });
@@ -147509,9 +148177,9 @@ var require_extension = __commonJS({
   "node_modules/ws/lib/extension.js"(exports2, module2) {
     "use strict";
     var { tokenChars } = require_validation();
-    function push(dest, name5, elem) {
-      if (dest[name5] === void 0) dest[name5] = [elem];
-      else dest[name5].push(elem);
+    function push(dest, name6, elem) {
+      if (dest[name6] === void 0) dest[name6] = [elem];
+      else dest[name6].push(elem);
     }
     function parse(header) {
       const offers = /* @__PURE__ */ Object.create(null);
@@ -147537,12 +148205,12 @@ var require_extension = __commonJS({
               throw new SyntaxError(`Unexpected character at index ${i2}`);
             }
             if (end === -1) end = i2;
-            const name5 = header.slice(start, end);
+            const name6 = header.slice(start, end);
             if (code === 44) {
-              push(offers, name5, params);
+              push(offers, name6, params);
               params = /* @__PURE__ */ Object.create(null);
             } else {
-              extensionName = name5;
+              extensionName = name6;
             }
             start = end = -1;
           } else {
@@ -148904,7 +149572,7 @@ var require_websocket_server = __commonJS({
         socket.on("error", socketOnError);
         const key = req.headers["sec-websocket-key"];
         const upgrade = req.headers.upgrade;
-        const version7 = +req.headers["sec-websocket-version"];
+        const version8 = +req.headers["sec-websocket-version"];
         if (req.method !== "GET") {
           const message2 = "Invalid HTTP method";
           abortHandshakeOrEmitwsClientError(this, req, socket, 405, message2);
@@ -148920,7 +149588,7 @@ var require_websocket_server = __commonJS({
           abortHandshakeOrEmitwsClientError(this, req, socket, 400, message2);
           return;
         }
-        if (version7 !== 13 && version7 !== 8) {
+        if (version8 !== 13 && version8 !== 8) {
           const message2 = "Missing or invalid Sec-WebSocket-Version header";
           abortHandshakeOrEmitwsClientError(this, req, socket, 400, message2, {
             "Sec-WebSocket-Version": "13, 8"
@@ -148964,7 +149632,7 @@ var require_websocket_server = __commonJS({
         }
         if (this.options.verifyClient) {
           const info = {
-            origin: req.headers[`${version7 === 8 ? "sec-websocket-origin" : "origin"}`],
+            origin: req.headers[`${version8 === 8 ? "sec-websocket-origin" : "origin"}`],
             secure: !!(req.socket.authorized || req.socket.encrypted),
             req
           };
@@ -149396,6 +150064,17 @@ function implementsAnyMethods(obj, methods) {
 }
 function noop2() {
 }
+function calculateBackoffMillis(backoffCount, intervalMillis = DEFAULT_INTERVAL_MILLIS, backoffFactor = DEFAULT_BACKOFF_FACTOR) {
+  const currBaseValue = intervalMillis * Math.pow(backoffFactor, backoffCount);
+  const randomWait = Math.round(
+    // A fraction of the backoff value to add/subtract.
+    // Deviation: changes multiplication order to improve readability.
+    RANDOM_FACTOR * currBaseValue * // A random float (rounded to int by Math.round above) in the range [-1, 1]. Determines
+    // if we add or subtract.
+    (Math.random() - 0.5) * 2
+  );
+  return Math.min(MAX_VALUE_MILLIS, currBaseValue + randomWait);
+}
 function getModularInstance(service) {
   if (service && service._delegate) {
     return service._delegate;
@@ -149417,7 +150096,7 @@ async function pingServer(endpoint) {
   });
   return result.ok;
 }
-var CONSTANTS, stringToByteArray$1, byteArrayToString, base64, DecodeBase64StringError, base64Encode, base64urlEncodeWithoutPadding, base64Decode, getDefaultsFromGlobal, getDefaultsFromEnvVariable, getDefaultsFromCookie, getDefaults, getDefaultEmulatorHost, getDefaultAppConfig, Deferred, ERROR_NAME, FirebaseError2, ErrorFactory, PATTERN, ObserverProxy, MAX_VALUE_MILLIS;
+var CONSTANTS, stringToByteArray$1, byteArrayToString, base64, DecodeBase64StringError, base64Encode, base64urlEncodeWithoutPadding, base64Decode, getDefaultsFromGlobal, getDefaultsFromEnvVariable, getDefaultsFromCookie, getDefaults, getDefaultEmulatorHost, getDefaultAppConfig, Deferred, ERROR_NAME, FirebaseError2, ErrorFactory, PATTERN, ObserverProxy, DEFAULT_INTERVAL_MILLIS, DEFAULT_BACKOFF_FACTOR, MAX_VALUE_MILLIS, RANDOM_FACTOR;
 var init_index_node_esm = __esm({
   "node_modules/@firebase/util/dist/node-esm/index.node.esm.js"() {
     init_postinstall();
@@ -149917,7 +150596,10 @@ var init_index_node_esm = __esm({
         });
       }
     };
+    DEFAULT_INTERVAL_MILLIS = 1e3;
+    DEFAULT_BACKOFF_FACTOR = 2;
     MAX_VALUE_MILLIS = 4 * 60 * 60 * 1e3;
+    RANDOM_FACTOR = 0.5;
     CONSTANTS.NODE_CLIENT = true;
   }
 });
@@ -149940,8 +150622,8 @@ var init_index_esm = __esm({
        * @param instanceFactory Service factory responsible for creating the public interface
        * @param type whether the service provided by the component is public or private
        */
-      constructor(name5, instanceFactory, type) {
-        this.name = name5;
+      constructor(name6, instanceFactory, type) {
+        this.name = name6;
         this.instanceFactory = instanceFactory;
         this.type = type;
         this.multipleInstances = false;
@@ -149968,8 +150650,8 @@ var init_index_esm = __esm({
     };
     DEFAULT_ENTRY_NAME = "[DEFAULT]";
     Provider = class {
-      constructor(name5, container) {
-        this.name = name5;
+      constructor(name6, container) {
+        this.name = name6;
         this.container = container;
         this.component = null;
         this.instances = /* @__PURE__ */ new Map();
@@ -150166,8 +150848,8 @@ var init_index_esm = __esm({
       }
     };
     ComponentContainer = class {
-      constructor(name5) {
-        this.name = name5;
+      constructor(name6) {
+        this.name = name6;
         this.providers = /* @__PURE__ */ new Map();
       }
       /**
@@ -150200,12 +150882,12 @@ var init_index_esm = __esm({
        * Firebase SDKs providing services should extend NameServiceMapping interface to register
        * themselves.
        */
-      getProvider(name5) {
-        if (this.providers.has(name5)) {
-          return this.providers.get(name5);
+      getProvider(name6) {
+        if (this.providers.has(name6)) {
+          return this.providers.get(name6);
         }
-        const provider = new Provider(name5, this);
-        this.providers.set(name5, provider);
+        const provider = new Provider(name6, this);
+        this.providers.set(name6, provider);
         return provider;
       }
       getProviders() {
@@ -150263,8 +150945,8 @@ var init_index_esm2 = __esm({
        *
        * @param name The name that the logs will be associated with
        */
-      constructor(name5) {
-        this.name = name5;
+      constructor(name6) {
+        this.name = name6;
         this._logLevel = defaultLogLevel;
         this._logHandler = defaultLogHandler;
         this._userLogHandler = null;
@@ -150472,8 +151154,8 @@ var init_wrap_idb_value = __esm({
 });
 
 // node_modules/idb/build/index.js
-function openDB(name5, version7, { blocked, upgrade, blocking, terminated } = {}) {
-  const request = indexedDB.open(name5, version7);
+function openDB(name6, version8, { blocked, upgrade, blocking, terminated } = {}) {
+  const request = indexedDB.open(name6, version8);
   const openPromise = wrap4(request);
   if (upgrade) {
     request.addEventListener("upgradeneeded", (event) => {
@@ -150569,12 +151251,12 @@ function _registerComponent(component) {
   }
   return true;
 }
-function _getProvider(app2, name5) {
+function _getProvider(app2, name6) {
   const heartbeatController = app2.container.getProvider("heartbeat").getImmediate({ optional: true });
   if (heartbeatController) {
     void heartbeatController.triggerHeartbeat();
   }
-  return app2.container.getProvider(name5);
+  return app2.container.getProvider(name6);
 }
 function _isFirebaseServerApp(obj) {
   if (obj === null || obj === void 0) {
@@ -150585,18 +151267,18 @@ function _isFirebaseServerApp(obj) {
 function initializeApp2(_options, rawConfig = {}) {
   let options2 = _options;
   if (typeof rawConfig !== "object") {
-    const name6 = rawConfig;
-    rawConfig = { name: name6 };
+    const name7 = rawConfig;
+    rawConfig = { name: name7 };
   }
   const config = {
     name: DEFAULT_ENTRY_NAME2,
     automaticDataCollectionEnabled: true,
     ...rawConfig
   };
-  const name5 = config.name;
-  if (typeof name5 !== "string" || !name5) {
+  const name6 = config.name;
+  if (typeof name6 !== "string" || !name6) {
     throw ERROR_FACTORY.create("bad-app-name", {
-      appName: String(name5)
+      appName: String(name6)
     });
   }
   options2 || (options2 = getDefaultAppConfig());
@@ -150606,42 +151288,42 @@ function initializeApp2(_options, rawConfig = {}) {
       /* AppError.NO_OPTIONS */
     );
   }
-  const existingApp = _apps.get(name5);
+  const existingApp = _apps.get(name6);
   if (existingApp) {
     if (deepEqual(options2, existingApp.options) && deepEqual(config, existingApp.config)) {
       return existingApp;
     } else {
-      throw ERROR_FACTORY.create("duplicate-app", { appName: name5 });
+      throw ERROR_FACTORY.create("duplicate-app", { appName: name6 });
     }
   }
-  const container = new ComponentContainer(name5);
+  const container = new ComponentContainer(name6);
   for (const component of _components.values()) {
     container.addComponent(component);
   }
   const newApp = new FirebaseAppImpl(options2, config, container);
-  _apps.set(name5, newApp);
+  _apps.set(name6, newApp);
   return newApp;
 }
-function getApp2(name5 = DEFAULT_ENTRY_NAME2) {
-  const app2 = _apps.get(name5);
-  if (!app2 && name5 === DEFAULT_ENTRY_NAME2 && getDefaultAppConfig()) {
+function getApp2(name6 = DEFAULT_ENTRY_NAME2) {
+  const app2 = _apps.get(name6);
+  if (!app2 && name6 === DEFAULT_ENTRY_NAME2 && getDefaultAppConfig()) {
     return initializeApp2();
   }
   if (!app2) {
-    throw ERROR_FACTORY.create("no-app", { appName: name5 });
+    throw ERROR_FACTORY.create("no-app", { appName: name6 });
   }
   return app2;
 }
-function registerVersion(libraryKeyOrName, version7, variant) {
+function registerVersion(libraryKeyOrName, version8, variant) {
   let library = PLATFORM_LOG_STRING[libraryKeyOrName] ?? libraryKeyOrName;
   if (variant) {
     library += `-${variant}`;
   }
   const libraryMismatch = library.match(/\s|\//);
-  const versionMismatch = version7.match(/\s|\//);
+  const versionMismatch = version8.match(/\s|\//);
   if (libraryMismatch || versionMismatch) {
     const warning = [
-      `Unable to register library "${library}" with version "${version7}":`
+      `Unable to register library "${library}" with version "${version8}":`
     ];
     if (libraryMismatch) {
       warning.push(`library name "${library}" contains illegal characters (whitespace or "/")`);
@@ -150650,14 +151332,14 @@ function registerVersion(libraryKeyOrName, version7, variant) {
       warning.push("and");
     }
     if (versionMismatch) {
-      warning.push(`version name "${version7}" contains illegal characters (whitespace or "/")`);
+      warning.push(`version name "${version8}" contains illegal characters (whitespace or "/")`);
     }
     logger.warn(warning.join(" "));
     return;
   }
   _registerComponent(new Component(
     `${library}-version`,
-    () => ({ library, version: version7 }),
+    () => ({ library, version: version8 }),
     "VERSION"
     /* ComponentType.VERSION */
   ));
@@ -151182,8 +151864,8 @@ function _errorWithCustomMessage(auth2, code, message2) {
     ...prodErrorMap(),
     [code]: message2
   };
-  const factory = new ErrorFactory("auth", "Firebase", errorMap);
-  return factory.create(code, {
+  const factory2 = new ErrorFactory("auth", "Firebase", errorMap);
+  return factory2.create(code, {
     appName: auth2.name
   });
 }
@@ -152975,9 +153657,9 @@ var init_totp_65577477 = __esm({
         this.persistence = persistence;
         this.auth = auth2;
         this.userKey = userKey;
-        const { config, name: name5 } = this.auth;
-        this.fullUserKey = _persistenceKeyName(this.userKey, config.apiKey, name5);
-        this.fullPersistenceKey = _persistenceKeyName("persistence", config.apiKey, name5);
+        const { config, name: name6 } = this.auth;
+        this.fullUserKey = _persistenceKeyName(this.userKey, config.apiKey, name6);
+        this.fullPersistenceKey = _persistenceKeyName("persistence", config.apiKey, name6);
         this.boundEventHandler = auth2._onStorageEvent.bind(auth2);
         this.persistence._addListener(this.fullUserKey, this.boundEventHandler);
       }
@@ -155479,8 +156161,8 @@ var require_logging2 = __commonJS({
       return _logger;
     };
     exports2.getLogger = getLogger;
-    var setLogger = (logger2) => {
-      _logger = logger2;
+    var setLogger = (logger3) => {
+      _logger = logger3;
     };
     exports2.setLogger = setLogger;
     var setLoggerVerbosity = (verbosity) => {
@@ -155533,7 +156215,7 @@ var require_logging2 = __commonJS({
 });
 
 // node_modules/@grpc/grpc-js/build/src/error.js
-var require_error6 = __commonJS({
+var require_error7 = __commonJS({
   "node_modules/@grpc/grpc-js/build/src/error.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -155564,7 +156246,7 @@ var require_metadata2 = __commonJS({
     exports2.Metadata = void 0;
     var logging_1 = require_logging2();
     var constants_1 = require_constants5();
-    var error_1 = require_error6();
+    var error_1 = require_error7();
     var LEGAL_KEY_REGEX = /^[0-9a-z_.-]+$/;
     var LEGAL_NON_BINARY_VALUE_REGEX = /^[ -~]*$/;
     function isLegalKey(key) {
@@ -156282,8 +156964,8 @@ var require_service_config2 = __commonJS({
       if (!("name" in obj) || !Array.isArray(obj.name)) {
         throw new Error("Invalid method config: invalid name array");
       }
-      for (const name5 of obj.name) {
-        result.name.push(validateName(name5));
+      for (const name6 of obj.name) {
+        result.name.push(validateName(name6));
       }
       if ("waitForReady" in obj) {
         if (typeof obj.waitForReady !== "boolean") {
@@ -156378,13 +157060,13 @@ var require_service_config2 = __commonJS({
       }
       const seenMethodNames = [];
       for (const methodConfig of result.methodConfig) {
-        for (const name5 of methodConfig.name) {
+        for (const name6 of methodConfig.name) {
           for (const seenName of seenMethodNames) {
-            if (name5.service === seenName.service && name5.method === seenName.method) {
-              throw new Error(`Invalid service config: duplicate name ${name5.service}/${name5.method}`);
+            if (name6.service === seenName.service && name6.method === seenName.method) {
+              throw new Error(`Invalid service config: duplicate name ${name6.service}/${name6.method}`);
             }
           }
-          seenMethodNames.push(name5);
+          seenMethodNames.push(name6);
         }
       }
       return result;
@@ -156984,20 +157666,20 @@ var require_resolving_load_balancer2 = __commonJS({
       "EMPTY"
     ];
     function hasMatchingName(service, method, methodConfig, matchLevel) {
-      for (const name5 of methodConfig.name) {
+      for (const name6 of methodConfig.name) {
         switch (matchLevel) {
           case "EMPTY":
-            if (!name5.service && !name5.method) {
+            if (!name6.service && !name6.method) {
               return true;
             }
             break;
           case "SERVICE":
-            if (name5.service === service && !name5.method) {
+            if (name6.service === service && !name6.method) {
               return true;
             }
             break;
           case "SERVICE_AND_METHOD":
-            if (name5.service === service && name5.method === method) {
+            if (name6.service === service && name6.method === method) {
               return true;
             }
         }
@@ -157520,7 +158202,7 @@ var require_client_interceptors2 = __commonJS({
     var metadata_1 = require_metadata2();
     var call_interface_1 = require_call_interface2();
     var constants_1 = require_constants5();
-    var error_1 = require_error6();
+    var error_1 = require_error7();
     var InterceptorConfigurationError = class _InterceptorConfigurationError extends Error {
       constructor(message2) {
         super(message2);
@@ -158252,13 +158934,13 @@ var require_make_client2 = __commonJS({
       }
       class ServiceClientImpl extends client_1.Client {
       }
-      Object.keys(methods).forEach((name5) => {
-        if (isPrototypePolluted(name5)) {
+      Object.keys(methods).forEach((name6) => {
+        if (isPrototypePolluted(name6)) {
           return;
         }
-        const attrs = methods[name5];
+        const attrs = methods[name6];
         let methodType;
-        if (typeof name5 === "string" && name5.charAt(0) === "$") {
+        if (typeof name6 === "string" && name6.charAt(0) === "$") {
           throw new Error("Method names cannot start with $");
         }
         if (attrs.requestStream) {
@@ -158277,10 +158959,10 @@ var require_make_client2 = __commonJS({
         const serialize = attrs.requestSerialize;
         const deserialize = attrs.responseDeserialize;
         const methodFunc = partial(requesterFuncs[methodType], attrs.path, serialize, deserialize);
-        ServiceClientImpl.prototype[name5] = methodFunc;
-        Object.assign(ServiceClientImpl.prototype[name5], attrs);
+        ServiceClientImpl.prototype[name6] = methodFunc;
+        Object.assign(ServiceClientImpl.prototype[name6], attrs);
         if (attrs.originalName && !isPrototypePolluted(attrs.originalName)) {
-          ServiceClientImpl.prototype[attrs.originalName] = ServiceClientImpl.prototype[name5];
+          ServiceClientImpl.prototype[attrs.originalName] = ServiceClientImpl.prototype[name6];
         }
       });
       ServiceClientImpl.service = methods;
@@ -158424,11 +159106,11 @@ var require_src15 = __commonJS({
       oneofs: true,
       json: true
     };
-    function joinName(baseName, name5) {
+    function joinName(baseName, name6) {
       if (baseName === "") {
-        return name5;
+        return name6;
       } else {
-        return baseName + "." + name5;
+        return baseName + "." + name6;
       }
     }
     function isHandledReflectionObject(obj) {
@@ -158443,8 +159125,8 @@ var require_src15 = __commonJS({
         return [[objName, obj]];
       } else {
         if (isNamespaceBase(obj) && typeof obj.nested !== "undefined") {
-          return Object.keys(obj.nested).map((name5) => {
-            return getAllHandledReflectionObjects(obj.nested[name5], objName);
+          return Object.keys(obj.nested).map((name6) => {
+            return getAllHandledReflectionObjects(obj.nested[name6], objName);
           }).reduce((accumulator, currentValue) => accumulator.concat(currentValue), []);
         }
       }
@@ -158500,10 +159182,10 @@ var require_src15 = __commonJS({
         options: mapMethodOptions(method.parsedOptions)
       };
     }
-    function createServiceDefinition(service, name5, options2, fileDescriptors) {
+    function createServiceDefinition(service, name6, options2, fileDescriptors) {
       const def = {};
       for (const method of service.methodsArray) {
-        def[method.name] = createMethodDefinition(method, name5, options2, fileDescriptors);
+        def[method.name] = createMethodDefinition(method, name6, options2, fileDescriptors);
       }
       return def;
     }
@@ -158523,9 +159205,9 @@ var require_src15 = __commonJS({
         fileDescriptorProtos: fileDescriptors
       };
     }
-    function createDefinition(obj, name5, options2, fileDescriptors) {
+    function createDefinition(obj, name6, options2, fileDescriptors) {
       if (obj instanceof Protobuf.Service) {
-        return createServiceDefinition(obj, name5, options2, fileDescriptors);
+        return createServiceDefinition(obj, name6, options2, fileDescriptors);
       } else if (obj instanceof Protobuf.Type) {
         return createMessageDefinition(obj, fileDescriptors);
       } else if (obj instanceof Protobuf.Enum) {
@@ -158539,8 +159221,8 @@ var require_src15 = __commonJS({
       root.resolveAll();
       const descriptorList = root.toDescriptor("proto3").file;
       const bufferList = descriptorList.map((value) => Buffer.from(descriptor.FileDescriptorProto.encode(value).finish()));
-      for (const [name5, obj] of getAllHandledReflectionObjects(root, "")) {
-        def[name5] = createDefinition(obj, name5, options2, bufferList);
+      for (const [name6, obj] of getAllHandledReflectionObjects(root, "")) {
+        def[name6] = createDefinition(obj, name6, options2, bufferList);
       }
       return def;
     }
@@ -158785,17 +159467,17 @@ var require_channelz2 = __commonJS({
     var subchannels = [];
     var servers = [];
     var sockets = [];
-    function registerChannelzChannel(name5, getInfo, channelzEnabled) {
+    function registerChannelzChannel(name6, getInfo, channelzEnabled) {
       const id = getNextId();
-      const ref = { id, name: name5, kind: "channel" };
+      const ref = { id, name: name6, kind: "channel" };
       if (channelzEnabled) {
         channels[id] = { ref, getInfo };
       }
       return ref;
     }
-    function registerChannelzSubchannel(name5, getInfo, channelzEnabled) {
+    function registerChannelzSubchannel(name6, getInfo, channelzEnabled) {
       const id = getNextId();
-      const ref = { id, name: name5, kind: "subchannel" };
+      const ref = { id, name: name6, kind: "subchannel" };
       if (channelzEnabled) {
         subchannels[id] = { ref, getInfo };
       }
@@ -158809,9 +159491,9 @@ var require_channelz2 = __commonJS({
       }
       return ref;
     }
-    function registerChannelzSocket(name5, getInfo, channelzEnabled) {
+    function registerChannelzSocket(name6, getInfo, channelzEnabled) {
       const id = getNextId();
-      const ref = { id, name: name5, kind: "socket" };
+      const ref = { id, name: name6, kind: "socket" };
       if (channelzEnabled) {
         sockets[id] = { ref, getInfo };
       }
@@ -159997,9 +160679,9 @@ var require_subchannel_call2 = __commonJS({
     var constants_2 = require_constants5();
     var TRACER_NAME = "subchannel_call";
     function getSystemErrorName(errno) {
-      for (const [name5, num] of Object.entries(os.constants.errno)) {
+      for (const [name6, num] of Object.entries(os.constants.errno)) {
         if (num === errno) {
-          return name5;
+          return name6;
         }
       }
       return "Unknown system error " + errno;
@@ -160986,7 +161668,7 @@ var require_filter_stack2 = __commonJS({
         return new _FilterStackFactory([...this.factories]);
       }
       createFilter() {
-        return new FilterStack(this.factories.map((factory) => factory.createFilter()));
+        return new FilterStack(this.factories.map((factory2) => factory2.createFilter()));
       }
     };
     exports2.FilterStackFactory = FilterStackFactory;
@@ -162990,7 +163672,7 @@ var require_server_call2 = __commonJS({
     var metadata_1 = require_metadata2();
     var stream_decoder_1 = require_stream_decoder2();
     var logging = require_logging2();
-    var error_1 = require_error6();
+    var error_1 = require_error7();
     var TRACER_NAME = "server_call";
     function trace2(text) {
       logging.trace(constants_1.LogVerbosity.DEBUG, TRACER_NAME, text);
@@ -163823,8 +164505,8 @@ var require_server2 = __commonJS({
         if (serviceKeys.length === 0) {
           throw new Error("Cannot add an empty service to a server");
         }
-        serviceKeys.forEach((name5) => {
-          const attrs = service[name5];
+        serviceKeys.forEach((name6) => {
+          const attrs = service[name6];
           let methodType;
           if (attrs.requestStream) {
             if (attrs.responseStream) {
@@ -163839,7 +164521,7 @@ var require_server2 = __commonJS({
               methodType = "unary";
             }
           }
-          let implFn = implementation[name5];
+          let implFn = implementation[name6];
           let impl;
           if (implFn === void 0 && typeof attrs.originalName === "string") {
             implFn = implementation[attrs.originalName];
@@ -163847,7 +164529,7 @@ var require_server2 = __commonJS({
           if (implFn !== void 0) {
             impl = implFn.bind(implementation);
           } else {
-            impl = getDefaultHandler(methodType, name5);
+            impl = getDefaultHandler(methodType, name6);
           }
           const success = this.register(attrs.path, impl, attrs.responseSerialize, attrs.requestDeserialize, methodType);
           if (success === false) {
@@ -163860,8 +164542,8 @@ var require_server2 = __commonJS({
           throw new Error("removeService() requires object as argument");
         }
         const serviceKeys = Object.keys(service);
-        serviceKeys.forEach((name5) => {
-          const attrs = service[name5];
+        serviceKeys.forEach((name6) => {
+          const attrs = service[name6];
           this.unregister(attrs.path);
         });
       }
@@ -164136,21 +164818,21 @@ var require_server2 = __commonJS({
           (0, channelz_1.unregisterChannelzRef)(this.channelzRef);
         }
       }
-      register(name5, handler2, serialize, deserialize, type) {
-        if (this.handlers.has(name5)) {
+      register(name6, handler2, serialize, deserialize, type) {
+        if (this.handlers.has(name6)) {
           return false;
         }
-        this.handlers.set(name5, {
+        this.handlers.set(name6, {
           func: handler2,
           serialize,
           deserialize,
           type,
-          path: name5
+          path: name6
         });
         return true;
       }
-      unregister(name5) {
-        return this.handlers.delete(name5);
+      unregister(name6) {
+        return this.handlers.delete(name6);
       }
       start() {
         if (this.http2ServerList.length === 0 || this.http2ServerList.every(({ server: http2Server }) => http2Server.listening !== true)) {
@@ -165875,8 +166557,8 @@ var require_src16 = __commonJS({
       throw new Error("Not available in this library. Use @grpc/proto-loader and loadPackageDefinition instead");
     };
     exports2.load = load;
-    var setLogger = (logger2) => {
-      logging.setLogger(logger2);
+    var setLogger = (logger3) => {
+      logging.setLogger(logger3);
     };
     exports2.setLogger = setLogger;
     var setLogVerbosity = (verbosity) => {
@@ -168633,15 +169315,15 @@ var init_index_esm4 = __esm({
       // unicodeTable() returns the Unicode RangeTable identified by name
       // and the table of additional fold-equivalent code points.
       // Returns null if |name| does not identify a Unicode character range.
-      static unicodeTable(name5) {
-        if (name5 === "Any") {
+      static unicodeTable(name6) {
+        if (name6 === "Any") {
           return Pair.of(_Parser.ANY_TABLE(), _Parser.ANY_TABLE());
         }
-        if (UnicodeTables.CATEGORIES.has(name5)) {
-          return Pair.of(UnicodeTables.CATEGORIES.get(name5), UnicodeTables.FOLD_CATEGORIES.get(name5));
+        if (UnicodeTables.CATEGORIES.has(name6)) {
+          return Pair.of(UnicodeTables.CATEGORIES.get(name6), UnicodeTables.FOLD_CATEGORIES.get(name6));
         }
-        if (UnicodeTables.SCRIPTS.has(name5)) {
-          return Pair.of(UnicodeTables.SCRIPTS.get(name5), UnicodeTables.FOLD_SCRIPT.get(name5));
+        if (UnicodeTables.SCRIPTS.has(name6)) {
+          return Pair.of(UnicodeTables.SCRIPTS.get(name6), UnicodeTables.FOLD_SCRIPT.get(name6));
         }
         return null;
       }
@@ -168739,12 +169421,12 @@ var init_index_esm4 = __esm({
       // PCRE limits names to 32 bytes.
       // Python rejects names starting with digits.
       // We don't enforce either of those.
-      static isValidCaptureName(name5) {
-        if (name5.length === 0) {
+      static isValidCaptureName(name6) {
+        if (name6.length === 0) {
           return false;
         }
-        for (let i2 = 0; i2 < name5.length; i2++) {
-          const c = name5.codePointAt(i2);
+        for (let i2 = 0; i2 < name6.length; i2++) {
+          const c = name6.codePointAt(i2);
           if (c !== Codepoint.CODES.get("_") && !Utils.isalnum(c)) {
             return false;
           }
@@ -169537,19 +170219,19 @@ var init_index_esm4 = __esm({
           if (end < 0) {
             throw new RE2JSSyntaxException(_Parser.ERR_INVALID_NAMED_CAPTURE, s2);
           }
-          const name5 = s2.substring(begin, end);
-          t2.skipString(name5);
+          const name6 = s2.substring(begin, end);
+          t2.skipString(name6);
           t2.skip(begin + 1);
-          if (!_Parser.isValidCaptureName(name5)) {
+          if (!_Parser.isValidCaptureName(name6)) {
             throw new RE2JSSyntaxException(_Parser.ERR_INVALID_NAMED_CAPTURE, s2.substring(0, end + 1));
           }
           const re2 = this.op(Regexp.Op.LEFT_PAREN);
           re2.cap = ++this.numCap;
-          if (this.namedGroups[name5]) {
-            throw new RE2JSSyntaxException(_Parser.ERR_DUPLICATE_NAMED_CAPTURE, name5);
+          if (this.namedGroups[name6]) {
+            throw new RE2JSSyntaxException(_Parser.ERR_DUPLICATE_NAMED_CAPTURE, name6);
           }
-          this.namedGroups[name5] = this.numCap;
-          re2.name = name5;
+          this.namedGroups[name6] = this.numCap;
+          re2.name = name6;
           return;
         }
         t2.skip(2);
@@ -169701,11 +170383,11 @@ var init_index_esm4 = __esm({
         if (i2 < 0) {
           return false;
         }
-        const name5 = cls.substring(0, i2 + 2);
-        t2.skipString(name5);
-        const g = POSIX_GROUPS.has(name5) ? POSIX_GROUPS.get(name5) : null;
+        const name6 = cls.substring(0, i2 + 2);
+        t2.skipString(name6);
+        const g = POSIX_GROUPS.has(name6) ? POSIX_GROUPS.get(name6) : null;
         if (g === null) {
-          throw new RE2JSSyntaxException(_Parser.ERR_INVALID_CHAR_RANGE, name5);
+          throw new RE2JSSyntaxException(_Parser.ERR_INVALID_CHAR_RANGE, name6);
         }
         cc.appendGroup(g, (this.flags & RE2Flags.FOLD_CASE) !== 0);
         return true;
@@ -169733,9 +170415,9 @@ var init_index_esm4 = __esm({
           throw new RE2JSSyntaxException(_Parser.ERR_INVALID_CHAR_RANGE, t2.rest());
         }
         c = t2.pop();
-        let name5;
+        let name6;
         if (c !== Codepoint.CODES.get("{")) {
-          name5 = Utils.runeToString(c);
+          name6 = Utils.runeToString(c);
         } else {
           const rest = t2.rest();
           const end = rest.indexOf("}");
@@ -169743,15 +170425,15 @@ var init_index_esm4 = __esm({
             t2.rewindTo(startPos);
             throw new RE2JSSyntaxException(_Parser.ERR_INVALID_CHAR_RANGE, t2.rest());
           }
-          name5 = rest.substring(0, end);
-          t2.skipString(name5);
+          name6 = rest.substring(0, end);
+          t2.skipString(name6);
           t2.skip(1);
         }
-        if (!(name5.length === 0) && name5.codePointAt(0) === Codepoint.CODES.get("^")) {
+        if (!(name6.length === 0) && name6.codePointAt(0) === Codepoint.CODES.get("^")) {
           sign2 = 0 - sign2;
-          name5 = name5.substring(1);
+          name6 = name6.substring(1);
         }
-        const pair = _Parser.unicodeTable(name5);
+        const pair = _Parser.unicodeTable(name6);
         if (pair === null) {
           throw new RE2JSSyntaxException(_Parser.ERR_INVALID_CHAR_RANGE, t2.from(startPos));
         }
@@ -171011,8 +171693,8 @@ var init_index_esm4 = __esm({
 });
 
 // node_modules/@firebase/firestore/dist/common-cc96d03b.node.mjs
-function setSDKVersion(version7) {
-  SDK_VERSION4 = version7;
+function setSDKVersion(version8) {
+  SDK_VERSION4 = version8;
 }
 function formatJSON(value) {
   return (0, import_util7.inspect)(value, { depth: 100 });
@@ -171240,8 +171922,8 @@ async function ignoreIfPrimaryLeaseLoss(err) {
 }
 function getAndroidVersion(ua) {
   const androidVersionRegex = ua.match(/Android ([\d.]+)/i);
-  const version7 = androidVersionRegex ? androidVersionRegex[1].split(".").slice(0, 2).join(".") : "-1";
-  return Number(version7);
+  const version8 = androidVersionRegex ? androidVersionRegex[1].split(".").slice(0, 2).join(".") : "-1";
+  return Number(version8);
 }
 function isIndexedDbTransactionError(e2) {
   return e2.name === "IndexedDbTransactionError";
@@ -172648,12 +173330,12 @@ function toBytes(serializer, bytes) {
     return bytes.toUint8Array();
   }
 }
-function toVersion(serializer, version7) {
-  return toTimestamp(serializer, version7.toTimestamp());
+function toVersion(serializer, version8) {
+  return toTimestamp(serializer, version8.toTimestamp());
 }
-function fromVersion(version7) {
-  hardAssert(!!version7, 49232);
-  return SnapshotVersion.fromTimestamp(fromTimestamp(version7));
+function fromVersion(version8) {
+  hardAssert(!!version8, 49232);
+  return SnapshotVersion.fromTimestamp(fromTimestamp(version8));
 }
 function toResourceName(databaseId, path3) {
   return toResourcePath(databaseId, path3).canonicalString();
@@ -172662,8 +173344,8 @@ function toResourcePath(databaseId, path3) {
   const resourcePath = fullyQualifiedPrefixPath(databaseId).child("documents");
   return path3 === void 0 ? resourcePath : resourcePath.child(path3);
 }
-function fromResourceName(name5) {
-  const resource = ResourcePath.fromString(name5);
+function fromResourceName(name6) {
+  const resource = ResourcePath.fromString(name6);
   hardAssert(isValidResourceName(resource), 10190, { key: resource.toString() });
   return resource;
 }
@@ -172673,8 +173355,8 @@ function toName(serializer, key) {
 function toQueryPath(serializer, path3) {
   return toResourceName(serializer.databaseId, path3);
 }
-function fromQueryPath(name5) {
-  const resourceName2 = fromResourceName(name5);
+function fromQueryPath(name6) {
+  const resourceName2 = fromResourceName(name6);
   if (resourceName2.length === 4) {
     return ResourcePath.emptyPath();
   }
@@ -174559,7 +175241,7 @@ function initializeFirestore2(app2, settings, databaseId) {
     instanceIdentifier: databaseId
   });
 }
-var import_util7, import_crypto, grpc, protoLoader, User, version4, SDK_VERSION4, logClient2, Code, FirestoreError, Deferred2, OAuthToken, EmptyAuthCredentialsProvider, FirebaseAuthCredentialsProvider, FirstPartyToken, FirstPartyAuthCredentialsProvider, AppCheckToken, FirebaseAppCheckTokenProvider, AutoId, MIN_SURROGATE$1, MAX_SURROGATE$1, DOCUMENT_KEY_NAME, UPDATE_TIME_NAME, CREATE_TIME_NAME, BasePath, ResourcePath, identifierRegExp, FieldPath$1, DocumentKey, MIN_SECONDS, MS_TO_NANOS, Timestamp2, SnapshotVersion, INITIAL_LARGEST_BATCH_ID, FieldIndex, IndexOffset, PRIMARY_LEASE_LOST_ERROR_MSG, PersistenceTransaction, PersistencePromise, INITIAL_BACKFILL_DELAY_MS, REGULAR_BACKFILL_DELAY_MS, ListenSequence, escapeChar, encodedSeparatorChar, encodedNul, encodedEscape, DbRemoteDocumentStore$1, DbPrimaryClientStore, DbMutationQueueStore, DbMutationBatchStore, DbDocumentMutationStore, DbRemoteDocumentStore, DbRemoteDocumentGlobalStore, DbTargetStore, DbTargetDocumentStore, DbTargetGlobalStore, DbCollectionParentStore, DbClientMetadataStore, DbBundleStore, DbNamedQueryStore, DbIndexConfigurationStore, DbIndexStateStore, DbIndexEntryStore, DbDocumentOverlayStore, DbGlobalsStore, V1_STORES, V3_STORES, V4_STORES, V6_STORES, V8_STORES, V11_STORES, V12_STORES, V13_STORES, V14_STORES, V15_STORES, V17_STORES, SortedMap, SortedMapIterator, LLRBNode, LLRBEmptyNode, SortedSet, SortedSetIterator, FieldMask, ByteString, ISO_TIMESTAMP_REG_EXP, SERVER_TIMESTAMP_SENTINEL, TYPE_KEY$1, PREVIOUS_VALUE_KEY, LOCAL_WRITE_TIME_KEY, DEFAULT_DATABASE_NAME, DatabaseId, BATCHID_UNKNOWN, TYPE_KEY, MAX_VALUE_TYPE, MAX_VALUE, VECTOR_VALUE_SENTINEL, VECTOR_MAP_VECTORS_KEY, MIN_VALUE, TRUE_VALUE, FALSE_VALUE, MIN_VECTOR_VALUE, ObjectValue, TransformOperation, ServerTimestampTransform, ArrayUnionTransformOperation, ArrayRemoveTransformOperation, NumericTransformOperation, NumericIncrementTransformOperation, NumericMinimumTransformOperation, NumericMaximumTransformOperation, Precondition, Mutation, SetMutation, PatchMutation, DeleteMutation, Bound, Filter2, FieldFilter, CompositeFilter, KeyFieldFilter, KeyFieldInFilter, KeyFieldNotInFilter, ArrayContainsFilter, InFilter, NotInFilter, ArrayContainsAnyFilter, OrderBy, MutableDocument, TargetImpl, QueryImpl, RpcCode, ObjectMap, EMPTY_MUTABLE_DOCUMENT_MAP, EMPTY_DOCUMENT_MAP, EMPTY_DOCUMENT_VERSION_MAP, EMPTY_DOCUMENT_KEY_SET, EMPTY_TARGET_ID_SET, MAX_64_BIT_UNSIGNED_INTEGER, DIRECTIONS, OPERATORS, COMPOSITE_OPERATORS, JsonProtoSerializer, Bytes, FieldPath2, FieldValue2, GeoPoint2, NoopConnectivityMonitor, StreamBridge, lastUniqueDebugId, grpcVersion, LOG_TAG$f, X_GOOG_API_CLIENT_VALUE, GrpcConnection, options, nested, protos, protos$1, protoLoaderOptions, LOG_TAG$e, DEFAULT_BACKOFF_INITIAL_DELAY_MS, DEFAULT_BACKOFF_FACTOR, DEFAULT_BACKOFF_MAX_DELAY_MS, ExponentialBackoff, IDLE_TIMEOUT_MS, HEALTHY_TIMEOUT_MS, Datastore, DatastoreImpl, LOG_TAG$c, datastoreInstances, GC_DID_NOT_RUN, LRU_COLLECTION_DISABLED, LRU_DEFAULT_CACHE_SIZE_BYTES, LruParams, LOG_TAG$b, LRU_MINIMUM_CACHE_SIZE_BYTES, INITIAL_GC_DELAY_MS, REGULAR_GC_DELAY_MS, RollingSequenceNumberBuffer, LruScheduler, LruGarbageCollectorImpl, DEFAULT_HOST, DEFAULT_SSL, MIN_LONG_POLLING_TIMEOUT_SECONDS, MAX_LONG_POLLING_TIMEOUT_SECONDS, DEFAULT_AUTO_DETECT_LONG_POLLING, FirestoreSettingsImpl, Firestore$1, Query2, DocumentReference2, CollectionReference2, VectorValue, RESERVED_FIELD_REGEX, ParseContextImpl, UserDataReader, FIELD_PATH_RESERVED, OptionsUtil, Expression, AggregateFunction, AliasedAggregate, AliasedExpression, ListOfExprs, Field, Constant, FunctionExpression, BooleanExpression, BooleanFunctionExpression, BooleanConstant, BooleanField, Ordering, Stage, AddFields, Aggregate, Distinct, CollectionSource, CollectionGroupSource, DatabaseSource, DocumentsSource, Where, Limit, Offset, Select, Sort, Replace, CorePipeline, EvaluateResult, CoreField, CoreConstant, CoreListOfExprs, LongMaxValue, LongMinValue, BigIntOrDoubleArithmetics, CoreAdd, CoreSubtract, CoreMultiply, CoreDivide, CoreMod, CoreAnd, CoreNot, CoreOr, CoreXor, CoreEqAny, CoreNotEqAny, CoreIsNan, CoreIsNotNan, CoreIsNull, CoreIsNotNull, CoreIsError, CoreExists, CoreCond, CoreLogicalMaximum, CoreLogicalMinimum, ComparisonBase, CoreEq, CoreNeq, CoreLt, CoreLte, CoreGt, CoreGte, CoreArrayConcat, CoreArrayReverse, CoreArrayContains, CoreArrayContainsAll, CoreArrayContainsAny, CoreArrayLength, CoreArrayElement, CoreReverse, CoreReplaceFirst, CoreReplaceAll, CoreCharLength, CoreByteLength, StringSearchFunctionBase, CoreLike, CoreRegexContains, CoreRegexMatch, CoreStrContains, CoreStartsWith, CoreEndsWith, CoreToLower, CoreToUpper, CoreTrim, CoreStrConcat, CoreMapGet, DistanceBase, CoreCosineDistance, CoreDotProduct, CoreEuclideanDistance, CoreVectorLength, TIMESTAMP_MIN_SECONDS, TIMESTAMP_MAX_SECONDS, MILLISECONDS_PER_SECOND, MICROSECONDS_PER_SECOND, TIMESTAMP_MIN_MILLISECONDS, TIMESTAMP_MAX_MILLISECONDS, TIMESTAMP_MIN_MICROSECONDS, TIMESTAMP_MAX_MICROSECONDS, UnixToTimestamp, CoreUnixMicrosToTimestamp, CoreUnixMillisToTimestamp, CoreUnixSecondsToTimestamp, TimestampToUnix, CoreTimestampToUnixMicros, CoreTimestampToUnixMillis, CoreTimestampToUnixSeconds, TimestampArithmetic, CoreTimestampAdd, CoreTimestampSub, MutationBatch, Overlay, LocalSerializer, INDEX_TYPE_NULL, INDEX_TYPE_BOOLEAN, INDEX_TYPE_NAN, INDEX_TYPE_NUMBER, INDEX_TYPE_TIMESTAMP, INDEX_TYPE_STRING, INDEX_TYPE_BLOB, INDEX_TYPE_REFERENCE, INDEX_TYPE_GEOPOINT, INDEX_TYPE_ARRAY, INDEX_TYPE_VECTOR, INDEX_TYPE_MAP, INDEX_TYPE_REFERENCE_SEGMENT, NOT_TRUNCATED, FirestoreIndexValueWriter, MemoryIndexManager, MemoryCollectionParentIndex, EMPTY_VALUE, OFFSET, TargetIdGenerator, RemoteDocumentChangeBuffer, OverlayedDocument, LocalDocumentsView, MemoryBundleCache, MemoryDocumentOverlayCache, MemoryGlobalsCache, ReferenceSet, DocReference, MemoryMutationQueue, MIN_LONG_VALUE, MemoryRemoteDocumentCacheImpl, MemoryRemoteDocumentChangeBuffer, MemoryTargetCache, LOG_TAG$9, MemoryPersistence, MemoryTransaction, MemoryEagerDelegate, MemoryLruDelegate, MAX_CLIENT_AGE_MS, LOG_TAG$7, RESUME_TOKEN_MAX_AGE_MICROS, LocalStoreImpl, QueryContext, DEFAULT_INDEX_AUTO_CREATION_MIN_COLLECTION_SIZE, QueryEngine, LocalClientState, MemorySharedClientState, LOG_TAG$5, MAX_WATCH_STREAM_FAILURES, ONLINE_STATE_TIMEOUT_MS, OnlineStateTracker, LOG_TAG$4, RemoteStoreImpl, DelayedOperation, EventManagerImpl, ListenerDataSource, LocalViewChanges, LOG_TAG$2, SyncEngineImpl, MemoryOfflineComponentProvider, LruGcMemoryOfflineComponentProvider, OnlineComponentProvider, LOG_TAG, AsyncQueueImpl, CACHE_SIZE_UNLIMITED, Firestore2;
+var import_util7, import_crypto, grpc, protoLoader, User, version4, SDK_VERSION4, logClient2, Code, FirestoreError, Deferred2, OAuthToken, EmptyAuthCredentialsProvider, FirebaseAuthCredentialsProvider, FirstPartyToken, FirstPartyAuthCredentialsProvider, AppCheckToken, FirebaseAppCheckTokenProvider, AutoId, MIN_SURROGATE$1, MAX_SURROGATE$1, DOCUMENT_KEY_NAME, UPDATE_TIME_NAME, CREATE_TIME_NAME, BasePath, ResourcePath, identifierRegExp, FieldPath$1, DocumentKey, MIN_SECONDS, MS_TO_NANOS, Timestamp2, SnapshotVersion, INITIAL_LARGEST_BATCH_ID, FieldIndex, IndexOffset, PRIMARY_LEASE_LOST_ERROR_MSG, PersistenceTransaction, PersistencePromise, INITIAL_BACKFILL_DELAY_MS, REGULAR_BACKFILL_DELAY_MS, ListenSequence, escapeChar, encodedSeparatorChar, encodedNul, encodedEscape, DbRemoteDocumentStore$1, DbPrimaryClientStore, DbMutationQueueStore, DbMutationBatchStore, DbDocumentMutationStore, DbRemoteDocumentStore, DbRemoteDocumentGlobalStore, DbTargetStore, DbTargetDocumentStore, DbTargetGlobalStore, DbCollectionParentStore, DbClientMetadataStore, DbBundleStore, DbNamedQueryStore, DbIndexConfigurationStore, DbIndexStateStore, DbIndexEntryStore, DbDocumentOverlayStore, DbGlobalsStore, V1_STORES, V3_STORES, V4_STORES, V6_STORES, V8_STORES, V11_STORES, V12_STORES, V13_STORES, V14_STORES, V15_STORES, V17_STORES, SortedMap, SortedMapIterator, LLRBNode, LLRBEmptyNode, SortedSet, SortedSetIterator, FieldMask, ByteString, ISO_TIMESTAMP_REG_EXP, SERVER_TIMESTAMP_SENTINEL, TYPE_KEY$1, PREVIOUS_VALUE_KEY, LOCAL_WRITE_TIME_KEY, DEFAULT_DATABASE_NAME, DatabaseId, BATCHID_UNKNOWN, TYPE_KEY, MAX_VALUE_TYPE, MAX_VALUE, VECTOR_VALUE_SENTINEL, VECTOR_MAP_VECTORS_KEY, MIN_VALUE, TRUE_VALUE, FALSE_VALUE, MIN_VECTOR_VALUE, ObjectValue, TransformOperation, ServerTimestampTransform, ArrayUnionTransformOperation, ArrayRemoveTransformOperation, NumericTransformOperation, NumericIncrementTransformOperation, NumericMinimumTransformOperation, NumericMaximumTransformOperation, Precondition, Mutation, SetMutation, PatchMutation, DeleteMutation, Bound, Filter2, FieldFilter, CompositeFilter, KeyFieldFilter, KeyFieldInFilter, KeyFieldNotInFilter, ArrayContainsFilter, InFilter, NotInFilter, ArrayContainsAnyFilter, OrderBy, MutableDocument, TargetImpl, QueryImpl, RpcCode, ObjectMap, EMPTY_MUTABLE_DOCUMENT_MAP, EMPTY_DOCUMENT_MAP, EMPTY_DOCUMENT_VERSION_MAP, EMPTY_DOCUMENT_KEY_SET, EMPTY_TARGET_ID_SET, MAX_64_BIT_UNSIGNED_INTEGER, DIRECTIONS, OPERATORS, COMPOSITE_OPERATORS, JsonProtoSerializer, Bytes, FieldPath2, FieldValue2, GeoPoint2, NoopConnectivityMonitor, StreamBridge, lastUniqueDebugId, grpcVersion, LOG_TAG$f, X_GOOG_API_CLIENT_VALUE, GrpcConnection, options, nested, protos, protos$1, protoLoaderOptions, LOG_TAG$e, DEFAULT_BACKOFF_INITIAL_DELAY_MS, DEFAULT_BACKOFF_FACTOR2, DEFAULT_BACKOFF_MAX_DELAY_MS, ExponentialBackoff, IDLE_TIMEOUT_MS, HEALTHY_TIMEOUT_MS, Datastore, DatastoreImpl, LOG_TAG$c, datastoreInstances, GC_DID_NOT_RUN, LRU_COLLECTION_DISABLED, LRU_DEFAULT_CACHE_SIZE_BYTES, LruParams, LOG_TAG$b, LRU_MINIMUM_CACHE_SIZE_BYTES, INITIAL_GC_DELAY_MS, REGULAR_GC_DELAY_MS, RollingSequenceNumberBuffer, LruScheduler, LruGarbageCollectorImpl, DEFAULT_HOST, DEFAULT_SSL, MIN_LONG_POLLING_TIMEOUT_SECONDS, MAX_LONG_POLLING_TIMEOUT_SECONDS, DEFAULT_AUTO_DETECT_LONG_POLLING, FirestoreSettingsImpl, Firestore$1, Query2, DocumentReference2, CollectionReference2, VectorValue, RESERVED_FIELD_REGEX, ParseContextImpl, UserDataReader, FIELD_PATH_RESERVED, OptionsUtil, Expression, AggregateFunction, AliasedAggregate, AliasedExpression, ListOfExprs, Field, Constant, FunctionExpression, BooleanExpression, BooleanFunctionExpression, BooleanConstant, BooleanField, Ordering, Stage, AddFields, Aggregate, Distinct, CollectionSource, CollectionGroupSource, DatabaseSource, DocumentsSource, Where, Limit, Offset, Select, Sort, Replace, CorePipeline, EvaluateResult, CoreField, CoreConstant, CoreListOfExprs, LongMaxValue, LongMinValue, BigIntOrDoubleArithmetics, CoreAdd, CoreSubtract, CoreMultiply, CoreDivide, CoreMod, CoreAnd, CoreNot, CoreOr, CoreXor, CoreEqAny, CoreNotEqAny, CoreIsNan, CoreIsNotNan, CoreIsNull, CoreIsNotNull, CoreIsError, CoreExists, CoreCond, CoreLogicalMaximum, CoreLogicalMinimum, ComparisonBase, CoreEq, CoreNeq, CoreLt, CoreLte, CoreGt, CoreGte, CoreArrayConcat, CoreArrayReverse, CoreArrayContains, CoreArrayContainsAll, CoreArrayContainsAny, CoreArrayLength, CoreArrayElement, CoreReverse, CoreReplaceFirst, CoreReplaceAll, CoreCharLength, CoreByteLength, StringSearchFunctionBase, CoreLike, CoreRegexContains, CoreRegexMatch, CoreStrContains, CoreStartsWith, CoreEndsWith, CoreToLower, CoreToUpper, CoreTrim, CoreStrConcat, CoreMapGet, DistanceBase, CoreCosineDistance, CoreDotProduct, CoreEuclideanDistance, CoreVectorLength, TIMESTAMP_MIN_SECONDS, TIMESTAMP_MAX_SECONDS, MILLISECONDS_PER_SECOND, MICROSECONDS_PER_SECOND, TIMESTAMP_MIN_MILLISECONDS, TIMESTAMP_MAX_MILLISECONDS, TIMESTAMP_MIN_MICROSECONDS, TIMESTAMP_MAX_MICROSECONDS, UnixToTimestamp, CoreUnixMicrosToTimestamp, CoreUnixMillisToTimestamp, CoreUnixSecondsToTimestamp, TimestampToUnix, CoreTimestampToUnixMicros, CoreTimestampToUnixMillis, CoreTimestampToUnixSeconds, TimestampArithmetic, CoreTimestampAdd, CoreTimestampSub, MutationBatch, Overlay, LocalSerializer, INDEX_TYPE_NULL, INDEX_TYPE_BOOLEAN, INDEX_TYPE_NAN, INDEX_TYPE_NUMBER, INDEX_TYPE_TIMESTAMP, INDEX_TYPE_STRING, INDEX_TYPE_BLOB, INDEX_TYPE_REFERENCE, INDEX_TYPE_GEOPOINT, INDEX_TYPE_ARRAY, INDEX_TYPE_VECTOR, INDEX_TYPE_MAP, INDEX_TYPE_REFERENCE_SEGMENT, NOT_TRUNCATED, FirestoreIndexValueWriter, MemoryIndexManager, MemoryCollectionParentIndex, EMPTY_VALUE, OFFSET, TargetIdGenerator, RemoteDocumentChangeBuffer, OverlayedDocument, LocalDocumentsView, MemoryBundleCache, MemoryDocumentOverlayCache, MemoryGlobalsCache, ReferenceSet, DocReference, MemoryMutationQueue, MIN_LONG_VALUE, MemoryRemoteDocumentCacheImpl, MemoryRemoteDocumentChangeBuffer, MemoryTargetCache, LOG_TAG$9, MemoryPersistence, MemoryTransaction, MemoryEagerDelegate, MemoryLruDelegate, MAX_CLIENT_AGE_MS, LOG_TAG$7, RESUME_TOKEN_MAX_AGE_MICROS, LocalStoreImpl, QueryContext, DEFAULT_INDEX_AUTO_CREATION_MIN_COLLECTION_SIZE, QueryEngine, LocalClientState, MemorySharedClientState, LOG_TAG$5, MAX_WATCH_STREAM_FAILURES, ONLINE_STATE_TIMEOUT_MS, OnlineStateTracker, LOG_TAG$4, RemoteStoreImpl, DelayedOperation, EventManagerImpl, ListenerDataSource, LocalViewChanges, LOG_TAG$2, SyncEngineImpl, MemoryOfflineComponentProvider, LruGcMemoryOfflineComponentProvider, OnlineComponentProvider, LOG_TAG, AsyncQueueImpl, CACHE_SIZE_UNLIMITED, Firestore2;
 var init_common_cc96d03b_node = __esm({
   "node_modules/@firebase/firestore/dist/common-cc96d03b.node.mjs"() {
     init_index_esm3();
@@ -174930,19 +175612,19 @@ var init_common_cc96d03b_node = __esm({
         this.tokenListener = (tokenResult) => {
           asyncQueue.enqueueRetryable(() => onTokenChanged(tokenResult));
         };
-        const registerAppCheck = (appCheck) => {
+        const registerAppCheck2 = (appCheck2) => {
           logDebug("FirebaseAppCheckTokenProvider", "AppCheck detected");
-          this.appCheck = appCheck;
+          this.appCheck = appCheck2;
           if (this.tokenListener) {
             this.appCheck.addTokenListener(this.tokenListener);
           }
         };
-        this.appCheckProvider.onInit((appCheck) => registerAppCheck(appCheck));
+        this.appCheckProvider.onInit((appCheck2) => registerAppCheck2(appCheck2));
         setTimeout(() => {
           if (!this.appCheck) {
-            const appCheck = this.appCheckProvider.getImmediate({ optional: true });
-            if (appCheck) {
-              registerAppCheck(appCheck);
+            const appCheck2 = this.appCheckProvider.getImmediate({ optional: true });
+            if (appCheck2) {
+              registerAppCheck2(appCheck2);
             } else {
               logDebug("FirebaseAppCheckTokenProvider", "AppCheck not yet detected");
             }
@@ -175266,8 +175948,8 @@ var init_common_cc96d03b_node = __esm({
       static fromPath(path3) {
         return new _DocumentKey(ResourcePath.fromString(path3));
       }
-      static fromName(name5) {
-        return new _DocumentKey(ResourcePath.fromString(name5).popFirst(5));
+      static fromName(name6) {
+        return new _DocumentKey(ResourcePath.fromString(name6).popFirst(5));
       }
       static empty() {
         return new _DocumentKey(ResourcePath.emptyPath());
@@ -176607,8 +177289,8 @@ var init_common_cc96d03b_node = __esm({
         return new _Precondition(void 0, exists);
       }
       /** Creates a new Precondition based on a version a document exists at. */
-      static updateTime(version7) {
-        return new _Precondition(version7);
+      static updateTime(version8) {
+        return new _Precondition(version8);
       }
       /** Returns whether this Precondition is empty. */
       get isNone() {
@@ -176855,10 +177537,10 @@ var init_common_cc96d03b_node = __esm({
       }
     };
     MutableDocument = class _MutableDocument {
-      constructor(key, documentType, version7, readTime, createTime, data, documentState) {
+      constructor(key, documentType, version8, readTime, createTime, data, documentState) {
         this.key = key;
         this.documentType = documentType;
-        this.version = version7;
+        this.version = version8;
         this.readTime = readTime;
         this.createTime = createTime;
         this.data = data;
@@ -176887,12 +177569,12 @@ var init_common_cc96d03b_node = __esm({
        * Creates a new document that is known to exist with the given data at the
        * given version.
        */
-      static newFoundDocument(documentKey, version7, createTime, value) {
+      static newFoundDocument(documentKey, version8, createTime, value) {
         return new _MutableDocument(
           documentKey,
           1,
           /* version */
-          version7,
+          version8,
           /* readTime */
           SnapshotVersion.min(),
           /* createTime */
@@ -176903,12 +177585,12 @@ var init_common_cc96d03b_node = __esm({
         );
       }
       /** Creates a new document that is known to not exist at the given version. */
-      static newNoDocument(documentKey, version7) {
+      static newNoDocument(documentKey, version8) {
         return new _MutableDocument(
           documentKey,
           2,
           /* version */
-          version7,
+          version8,
           /* readTime */
           SnapshotVersion.min(),
           /* createTime */
@@ -176923,12 +177605,12 @@ var init_common_cc96d03b_node = __esm({
        * whose data is not known (e.g. a document that was updated without a known
        * base document).
        */
-      static newUnknownDocument(documentKey, version7) {
+      static newUnknownDocument(documentKey, version8) {
         return new _MutableDocument(
           documentKey,
           3,
           /* version */
-          version7,
+          version8,
           /* readTime */
           SnapshotVersion.min(),
           /* createTime */
@@ -176942,11 +177624,11 @@ var init_common_cc96d03b_node = __esm({
        * Changes the document type to indicate that it exists and that its version
        * and data are known.
        */
-      convertToFoundDocument(version7, value) {
+      convertToFoundDocument(version8, value) {
         if (this.createTime.isEqual(SnapshotVersion.min()) && (this.documentType === 2 || this.documentType === 0)) {
-          this.createTime = version7;
+          this.createTime = version8;
         }
-        this.version = version7;
+        this.version = version8;
         this.documentType = 1;
         this.data = value;
         this.documentState = 0;
@@ -176956,8 +177638,8 @@ var init_common_cc96d03b_node = __esm({
        * Changes the document type to indicate that it doesn't exist at the given
        * version.
        */
-      convertToNoDocument(version7) {
-        this.version = version7;
+      convertToNoDocument(version8) {
+        this.version = version8;
         this.documentType = 2;
         this.data = ObjectValue.empty();
         this.documentState = 0;
@@ -176968,8 +177650,8 @@ var init_common_cc96d03b_node = __esm({
        * that its data is not known (e.g. a document that was updated without a known
        * base document).
        */
-      convertToUnknownDocument(version7) {
-        this.version = version7;
+      convertToUnknownDocument(version8) {
+        this.version = version8;
         this.documentType = 3;
         this.data = ObjectValue.empty();
         this.documentState = 2;
@@ -182187,10 +182869,10 @@ var init_common_cc96d03b_node = __esm({
     };
     LOG_TAG$e = "ExponentialBackoff";
     DEFAULT_BACKOFF_INITIAL_DELAY_MS = 1e3;
-    DEFAULT_BACKOFF_FACTOR = 1.5;
+    DEFAULT_BACKOFF_FACTOR2 = 1.5;
     DEFAULT_BACKOFF_MAX_DELAY_MS = 60 * 1e3;
     ExponentialBackoff = class {
-      constructor(queue, timerId, initialDelayMs = DEFAULT_BACKOFF_INITIAL_DELAY_MS, backoffFactor = DEFAULT_BACKOFF_FACTOR, maxDelayMs = DEFAULT_BACKOFF_MAX_DELAY_MS) {
+      constructor(queue, timerId, initialDelayMs = DEFAULT_BACKOFF_INITIAL_DELAY_MS, backoffFactor = DEFAULT_BACKOFF_FACTOR2, maxDelayMs = DEFAULT_BACKOFF_MAX_DELAY_MS) {
         this.queue = queue;
         this.timerId = timerId;
         this.initialDelayMs = initialDelayMs;
@@ -184410,13 +185092,13 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
        * @returns A new {@link @firebase/firestore/pipelines#AliasedExpression} that wraps this
        *     expression and associates it with the provided alias.
        */
-      as(name5) {
-        return new AliasedExpression(this, name5, "as");
+      as(name6) {
+        return new AliasedExpression(this, name6, "as");
       }
     };
     AggregateFunction = class _AggregateFunction {
-      constructor(name5, params) {
-        this.name = name5;
+      constructor(name6, params) {
+        this.name = name6;
         this.params = params;
         this.exprType = "AggregateFunction";
         this._protoValueType = "ProtoValue";
@@ -184425,8 +185107,8 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
        * @internal
        * @private
        */
-      static _create(name5, params, methodName) {
-        const af = new _AggregateFunction(name5, params);
+      static _create(name6, params, methodName) {
+        const af = new _AggregateFunction(name6, params);
         af._methodName = methodName;
         return af;
       }
@@ -184445,8 +185127,8 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
        * @returns A new {@link @firebase/firestore/pipelines#AliasedAggregate} that wraps this
        *     AggregateFunction and associates it with the provided alias.
        */
-      as(name5) {
-        return new AliasedAggregate(this, name5, "as");
+      as(name6) {
+        return new AliasedAggregate(this, name6, "as");
       }
       /**
        * @private
@@ -184646,9 +185328,9 @@ Total Duration: ${removedDocumentsTs - startTs}ms`;
       /**
        * @hideconstructor
        */
-      constructor(name5, params, methodName, options2) {
+      constructor(name6, params, methodName, options2) {
         super();
-        this.name = name5;
+        this.name = name6;
         this.params = params;
         this.expressionType = "Function";
         this._optionsProto = void 0;
@@ -190098,6 +190780,1007 @@ var init_clientErrorTelemetry = __esm({
   }
 });
 
+// node_modules/@firebase/app-check/dist/esm/index.esm.js
+function getStateReference(app2) {
+  return APP_CHECK_STATES.get(app2) || { ...DEFAULT_STATE };
+}
+function setInitialState(app2, state) {
+  APP_CHECK_STATES.set(app2, state);
+  return APP_CHECK_STATES.get(app2);
+}
+function getDebugState() {
+  return DEBUG_STATE;
+}
+function sleep2(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+function getRecaptcha(isEnterprise2 = false) {
+  if (isEnterprise2) {
+    return self.grecaptcha?.enterprise;
+  }
+  return self.grecaptcha;
+}
+function ensureActivated(app2) {
+  if (!getStateReference(app2).activated) {
+    throw ERROR_FACTORY2.create("use-before-activation", {
+      appName: app2.name
+    });
+  }
+}
+function getDurationString(durationInMillis) {
+  const totalSeconds = Math.round(durationInMillis / 1e3);
+  const days = Math.floor(totalSeconds / (3600 * 24));
+  const hours = Math.floor((totalSeconds - days * 3600 * 24) / 3600);
+  const minutes = Math.floor((totalSeconds - days * 3600 * 24 - hours * 3600) / 60);
+  const seconds = totalSeconds - days * 3600 * 24 - hours * 3600 - minutes * 60;
+  let result = "";
+  if (days) {
+    result += pad(days) + "d:";
+  }
+  if (hours) {
+    result += pad(hours) + "h:";
+  }
+  result += pad(minutes) + "m:" + pad(seconds) + "s";
+  return result;
+}
+function pad(value) {
+  if (value === 0) {
+    return "00";
+  }
+  return value >= 10 ? value.toString() : "0" + value;
+}
+async function exchangeToken({ url, body }, heartbeatServiceProvider) {
+  const headers = {
+    "Content-Type": "application/json"
+  };
+  const heartbeatService = heartbeatServiceProvider.getImmediate({
+    optional: true
+  });
+  if (heartbeatService) {
+    const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
+    if (heartbeatsHeader) {
+      headers["X-Firebase-Client"] = heartbeatsHeader;
+    }
+  }
+  const options2 = {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers
+  };
+  let response;
+  try {
+    response = await fetch(url, options2);
+  } catch (originalError) {
+    throw ERROR_FACTORY2.create("fetch-network-error", {
+      originalErrorMessage: originalError?.message
+    });
+  }
+  if (response.status !== 200) {
+    throw ERROR_FACTORY2.create("fetch-status-error", {
+      httpStatus: response.status
+    });
+  }
+  let responseBody;
+  try {
+    responseBody = await response.json();
+  } catch (originalError) {
+    throw ERROR_FACTORY2.create("fetch-parse-error", {
+      originalErrorMessage: originalError?.message
+    });
+  }
+  const match2 = responseBody.ttl.match(/^([\d.]+)(s)$/);
+  if (!match2 || !match2[2] || isNaN(Number(match2[1]))) {
+    throw ERROR_FACTORY2.create("fetch-parse-error", {
+      originalErrorMessage: `ttl field (timeToLive) is not in standard Protobuf Duration format: ${responseBody.ttl}`
+    });
+  }
+  const timeToLiveAsNumber = Number(match2[1]) * 1e3;
+  const now = Date.now();
+  return {
+    token: responseBody.token,
+    expireTimeMillis: now + timeToLiveAsNumber,
+    issuedAtTimeMillis: now
+  };
+}
+function getExchangeRecaptchaEnterpriseTokenRequest(app2, reCAPTCHAToken) {
+  const { projectId, appId, apiKey } = app2.options;
+  return {
+    url: `${BASE_ENDPOINT}/projects/${projectId}/apps/${appId}:${EXCHANGE_RECAPTCHA_ENTERPRISE_TOKEN_METHOD}?key=${apiKey}`,
+    body: {
+      "recaptcha_enterprise_token": reCAPTCHAToken
+    }
+  };
+}
+function getExchangeDebugTokenRequest(app2, debugToken) {
+  const { projectId, appId, apiKey } = app2.options;
+  return {
+    url: `${BASE_ENDPOINT}/projects/${projectId}/apps/${appId}:${EXCHANGE_DEBUG_TOKEN_METHOD}?key=${apiKey}`,
+    body: {
+      // eslint-disable-next-line
+      debug_token: debugToken
+    }
+  };
+}
+function getDBPromise() {
+  if (dbPromise2) {
+    return dbPromise2;
+  }
+  dbPromise2 = new Promise((resolve, reject) => {
+    try {
+      const request = indexedDB.open(DB_NAME2, DB_VERSION2);
+      request.onsuccess = (event) => {
+        resolve(event.target.result);
+      };
+      request.onerror = (event) => {
+        reject(ERROR_FACTORY2.create("storage-open", {
+          originalErrorMessage: event.target.error?.message
+        }));
+      };
+      request.onupgradeneeded = (event) => {
+        const db2 = event.target.result;
+        switch (event.oldVersion) {
+          case 0:
+            db2.createObjectStore(STORE_NAME2, {
+              keyPath: "compositeKey"
+            });
+        }
+      };
+    } catch (e2) {
+      reject(ERROR_FACTORY2.create("storage-open", {
+        originalErrorMessage: e2?.message
+      }));
+    }
+  });
+  return dbPromise2;
+}
+function readTokenFromIndexedDB(app2) {
+  return read(computeKey2(app2));
+}
+function writeTokenToIndexedDB(app2, token) {
+  return write(computeKey2(app2), token);
+}
+function writeDebugTokenToIndexedDB(token) {
+  return write(DEBUG_TOKEN_KEY, token);
+}
+function readDebugTokenFromIndexedDB() {
+  return read(DEBUG_TOKEN_KEY);
+}
+async function write(key, value) {
+  const db2 = await getDBPromise();
+  const transaction = db2.transaction(STORE_NAME2, "readwrite");
+  const store = transaction.objectStore(STORE_NAME2);
+  const request = store.put({
+    compositeKey: key,
+    value
+  });
+  return new Promise((resolve, reject) => {
+    request.onsuccess = (_event) => {
+      resolve();
+    };
+    transaction.onerror = (event) => {
+      reject(ERROR_FACTORY2.create("storage-set", {
+        originalErrorMessage: event.target.error?.message
+      }));
+    };
+  });
+}
+async function read(key) {
+  const db2 = await getDBPromise();
+  const transaction = db2.transaction(STORE_NAME2, "readonly");
+  const store = transaction.objectStore(STORE_NAME2);
+  const request = store.get(key);
+  return new Promise((resolve, reject) => {
+    request.onsuccess = (event) => {
+      const result = event.target.result;
+      if (result) {
+        resolve(result.value);
+      } else {
+        resolve(void 0);
+      }
+    };
+    transaction.onerror = (event) => {
+      reject(ERROR_FACTORY2.create("storage-get", {
+        originalErrorMessage: event.target.error?.message
+      }));
+    };
+  });
+}
+function computeKey2(app2) {
+  return `${app2.options.appId}-${app2.name}`;
+}
+async function readTokenFromStorage(app2) {
+  if (isIndexedDBAvailable()) {
+    let token = void 0;
+    try {
+      token = await readTokenFromIndexedDB(app2);
+    } catch (e2) {
+      logger2.warn(`Failed to read token from IndexedDB. Error: ${e2}`);
+    }
+    return token;
+  }
+  return void 0;
+}
+function writeTokenToStorage(app2, token) {
+  if (isIndexedDBAvailable()) {
+    return writeTokenToIndexedDB(app2, token).catch((e2) => {
+      logger2.warn(`Failed to write token to IndexedDB. Error: ${e2}`);
+    });
+  }
+  return Promise.resolve();
+}
+async function readOrCreateDebugTokenFromStorage() {
+  let existingDebugToken = void 0;
+  try {
+    existingDebugToken = await readDebugTokenFromIndexedDB();
+  } catch (_e) {
+  }
+  if (!existingDebugToken) {
+    const newToken = crypto.randomUUID();
+    writeDebugTokenToIndexedDB(newToken).catch((e2) => logger2.warn(`Failed to persist debug token to IndexedDB. Error: ${e2}`));
+    return newToken;
+  } else {
+    return existingDebugToken;
+  }
+}
+function isDebugMode() {
+  const debugState = getDebugState();
+  return debugState.enabled;
+}
+async function getDebugToken() {
+  const state = getDebugState();
+  if (state.enabled && state.token) {
+    return state.token.promise;
+  } else {
+    throw Error(`
+            Can't get debug token in production mode.
+        `);
+  }
+}
+function initializeDebugMode() {
+  const globals = getGlobal2();
+  const debugState = getDebugState();
+  debugState.initialized = true;
+  if (typeof globals.FIREBASE_APPCHECK_DEBUG_TOKEN !== "string" && globals.FIREBASE_APPCHECK_DEBUG_TOKEN !== true) {
+    return;
+  }
+  debugState.enabled = true;
+  const deferredToken = new Deferred();
+  debugState.token = deferredToken;
+  if (typeof globals.FIREBASE_APPCHECK_DEBUG_TOKEN === "string") {
+    deferredToken.resolve(globals.FIREBASE_APPCHECK_DEBUG_TOKEN);
+  } else {
+    deferredToken.resolve(readOrCreateDebugTokenFromStorage());
+  }
+}
+function formatDummyToken(tokenErrorData) {
+  return base64.encodeString(
+    JSON.stringify(tokenErrorData),
+    /* webSafe= */
+    false
+  );
+}
+async function getToken$2(appCheck2, forceRefresh = false, shouldLogErrors = false) {
+  const app2 = appCheck2.app;
+  ensureActivated(app2);
+  const state = getStateReference(app2);
+  let token = state.token;
+  let error = void 0;
+  if (token && !isValid(token)) {
+    state.token = void 0;
+    token = void 0;
+  }
+  if (!token) {
+    const cachedToken = await state.cachedTokenPromise;
+    if (cachedToken) {
+      if (isValid(cachedToken)) {
+        token = cachedToken;
+      } else {
+        await writeTokenToStorage(app2, void 0);
+      }
+    }
+  }
+  if (!forceRefresh && token && isValid(token)) {
+    return {
+      token: token.token
+    };
+  }
+  let shouldCallListeners = false;
+  if (isDebugMode()) {
+    try {
+      const debugToken = await getDebugToken();
+      if (!state.exchangeTokenPromise) {
+        state.exchangeTokenPromise = exchangeToken(getExchangeDebugTokenRequest(app2, debugToken), appCheck2.heartbeatServiceProvider).finally(() => {
+          state.exchangeTokenPromise = void 0;
+        });
+        shouldCallListeners = true;
+      }
+      const tokenFromDebugExchange = await state.exchangeTokenPromise;
+      await writeTokenToStorage(app2, tokenFromDebugExchange);
+      state.token = tokenFromDebugExchange;
+      return { token: tokenFromDebugExchange.token };
+    } catch (e2) {
+      if (e2.code === `appCheck/${"throttled"}` || e2.code === `appCheck/${"initial-throttle"}`) {
+        logger2.warn(e2.message);
+      } else if (shouldLogErrors) {
+        logger2.error(e2);
+      }
+      return makeDummyTokenResult(e2);
+    }
+  }
+  try {
+    if (!state.exchangeTokenPromise) {
+      state.exchangeTokenPromise = state.provider.getToken().finally(() => {
+        state.exchangeTokenPromise = void 0;
+      });
+      shouldCallListeners = true;
+    }
+    token = await getStateReference(app2).exchangeTokenPromise;
+  } catch (e2) {
+    if (e2.code === `appCheck/${"throttled"}` || e2.code === `appCheck/${"initial-throttle"}`) {
+      logger2.warn(e2.message);
+    } else if (shouldLogErrors) {
+      logger2.error(e2);
+    }
+    error = e2;
+  }
+  let interopTokenResult;
+  if (!token) {
+    interopTokenResult = makeDummyTokenResult(error);
+  } else if (error) {
+    if (isValid(token)) {
+      interopTokenResult = {
+        token: token.token,
+        internalError: error
+      };
+    } else {
+      interopTokenResult = makeDummyTokenResult(error);
+    }
+  } else {
+    interopTokenResult = {
+      token: token.token
+    };
+    state.token = token;
+    await writeTokenToStorage(app2, token);
+  }
+  if (shouldCallListeners) {
+    notifyTokenListeners(app2, interopTokenResult);
+  }
+  return interopTokenResult;
+}
+async function getLimitedUseToken$1(appCheck2) {
+  const app2 = appCheck2.app;
+  ensureActivated(app2);
+  const { provider } = getStateReference(app2);
+  if (isDebugMode()) {
+    const debugToken = await getDebugToken();
+    const request = getExchangeDebugTokenRequest(app2, debugToken);
+    request.body["limited_use"] = true;
+    const { token } = await exchangeToken(request, appCheck2.heartbeatServiceProvider);
+    return { token };
+  } else {
+    const { token } = await provider.getToken(
+      true
+      /* isLimitedUse */
+    );
+    return { token };
+  }
+}
+function addTokenListener(appCheck2, type, listener, onError) {
+  const { app: app2 } = appCheck2;
+  const state = getStateReference(app2);
+  const tokenObserver = {
+    next: listener,
+    error: onError,
+    type
+  };
+  state.tokenObservers = [...state.tokenObservers, tokenObserver];
+  if (state.token && isValid(state.token)) {
+    const validToken = state.token;
+    Promise.resolve().then(() => {
+      listener({ token: validToken.token });
+      initTokenRefresher(appCheck2);
+    }).catch(() => {
+    });
+  }
+  void state.cachedTokenPromise.then(() => initTokenRefresher(appCheck2));
+}
+function removeTokenListener(app2, listener) {
+  const state = getStateReference(app2);
+  const newObservers = state.tokenObservers.filter((tokenObserver) => tokenObserver.next !== listener);
+  if (newObservers.length === 0 && state.tokenRefresher && state.tokenRefresher.isRunning()) {
+    state.tokenRefresher.stop();
+  }
+  state.tokenObservers = newObservers;
+}
+function initTokenRefresher(appCheck2) {
+  const { app: app2 } = appCheck2;
+  const state = getStateReference(app2);
+  let refresher = state.tokenRefresher;
+  if (!refresher) {
+    refresher = createTokenRefresher(appCheck2);
+    state.tokenRefresher = refresher;
+  }
+  if (!refresher.isRunning() && state.isTokenAutoRefreshEnabled) {
+    refresher.start();
+  }
+}
+function createTokenRefresher(appCheck2) {
+  const { app: app2 } = appCheck2;
+  return new Refresher(
+    // Keep in mind when this fails for any reason other than the ones
+    // for which we should retry, it will effectively stop the proactive refresh.
+    async () => {
+      const state = getStateReference(app2);
+      let result;
+      if (!state.token) {
+        result = await getToken$2(appCheck2);
+      } else {
+        result = await getToken$2(appCheck2, true);
+      }
+      if (result.error) {
+        throw result.error;
+      }
+      if (result.internalError) {
+        throw result.internalError;
+      }
+    },
+    () => {
+      return true;
+    },
+    () => {
+      const state = getStateReference(app2);
+      if (state.token) {
+        let nextRefreshTimeMillis = state.token.issuedAtTimeMillis + (state.token.expireTimeMillis - state.token.issuedAtTimeMillis) * 0.5 + 5 * 60 * 1e3;
+        const latestAllowableRefresh = state.token.expireTimeMillis - 5 * 60 * 1e3;
+        nextRefreshTimeMillis = Math.min(nextRefreshTimeMillis, latestAllowableRefresh);
+        return Math.max(0, nextRefreshTimeMillis - Date.now());
+      } else {
+        return 0;
+      }
+    },
+    TOKEN_REFRESH_TIME.RETRIAL_MIN_WAIT,
+    TOKEN_REFRESH_TIME.RETRIAL_MAX_WAIT
+  );
+}
+function notifyTokenListeners(app2, token) {
+  const observers = getStateReference(app2).tokenObservers;
+  for (const observer of observers) {
+    try {
+      if (observer.type === "EXTERNAL" && token.error != null) {
+        observer.error(token.error);
+      } else {
+        observer.next(token);
+      }
+    } catch (e2) {
+    }
+  }
+}
+function isValid(token) {
+  return token.expireTimeMillis - Date.now() > 0;
+}
+function makeDummyTokenResult(error) {
+  return {
+    token: formatDummyToken(defaultTokenErrorData),
+    error
+  };
+}
+function factory(app2, heartbeatServiceProvider) {
+  return new AppCheckService(app2, heartbeatServiceProvider);
+}
+function internalFactory(appCheck2) {
+  return {
+    getToken: (forceRefresh) => getToken$2(appCheck2, forceRefresh),
+    getLimitedUseToken: () => getLimitedUseToken$1(appCheck2),
+    addTokenListener: (listener) => addTokenListener(appCheck2, "INTERNAL", listener),
+    removeTokenListener: (listener) => removeTokenListener(appCheck2.app, listener)
+  };
+}
+function initializeEnterprise(app2, siteKey) {
+  const initialized = new Deferred();
+  const state = getStateReference(app2);
+  state.reCAPTCHAState = { initialized };
+  const divId = makeDiv(app2);
+  const grecaptcha = getRecaptcha(true);
+  if (!grecaptcha) {
+    loadReCAPTCHAEnterpriseScript(() => {
+      const grecaptcha2 = getRecaptcha(true);
+      if (!grecaptcha2) {
+        throw new Error("no recaptcha");
+      }
+      queueWidgetRender(app2, siteKey, grecaptcha2, divId, initialized);
+    });
+  } else {
+    queueWidgetRender(app2, siteKey, grecaptcha, divId, initialized);
+  }
+  return initialized.promise;
+}
+function queueWidgetRender(app2, siteKey, grecaptcha, container, initialized) {
+  grecaptcha.ready(() => {
+    renderInvisibleWidget(app2, siteKey, grecaptcha, container);
+    initialized.resolve(grecaptcha);
+  });
+}
+function makeDiv(app2) {
+  const divId = `fire_app_check_${app2.name}`;
+  const invisibleDiv = document.createElement("div");
+  invisibleDiv.id = divId;
+  invisibleDiv.style.display = "none";
+  document.body.appendChild(invisibleDiv);
+  return divId;
+}
+async function getToken$1(app2) {
+  ensureActivated(app2);
+  const reCAPTCHAState = getStateReference(app2).reCAPTCHAState;
+  const recaptcha = await reCAPTCHAState.initialized.promise;
+  return new Promise((resolve, _reject) => {
+    const reCAPTCHAState2 = getStateReference(app2).reCAPTCHAState;
+    recaptcha.ready(() => {
+      resolve(
+        // widgetId is guaranteed to be available if reCAPTCHAState.initialized.promise resolved.
+        recaptcha.execute(reCAPTCHAState2.widgetId, {
+          action: "fire_app_check"
+        })
+      );
+    });
+  });
+}
+function renderInvisibleWidget(app2, siteKey, grecaptcha, container) {
+  const widgetId = grecaptcha.render(container, {
+    sitekey: siteKey,
+    size: "invisible",
+    // Success callback - set state
+    callback: () => {
+      getStateReference(app2).reCAPTCHAState.succeeded = true;
+    },
+    // Failure callback - set state
+    "error-callback": () => {
+      getStateReference(app2).reCAPTCHAState.succeeded = false;
+    }
+  });
+  const state = getStateReference(app2);
+  state.reCAPTCHAState = {
+    ...state.reCAPTCHAState,
+    // state.reCAPTCHAState is set in the initialize()
+    widgetId
+  };
+}
+function loadReCAPTCHAEnterpriseScript(onload) {
+  const script = document.createElement("script");
+  script.src = RECAPTCHA_ENTERPRISE_URL + "?render=explicit";
+  script.onload = onload;
+  document.head.appendChild(script);
+}
+function setBackoff(httpStatus, throttleData) {
+  if (httpStatus === 404 || httpStatus === 403) {
+    return {
+      backoffCount: 1,
+      allowRequestsAfter: Date.now() + ONE_DAY,
+      httpStatus
+    };
+  } else {
+    const backoffCount = throttleData ? throttleData.backoffCount : 0;
+    const backoffMillis = calculateBackoffMillis(backoffCount, 1e3, 2);
+    return {
+      backoffCount: backoffCount + 1,
+      allowRequestsAfter: Date.now() + backoffMillis,
+      httpStatus
+    };
+  }
+}
+function throwIfThrottled(throttleData) {
+  if (throttleData) {
+    if (Date.now() - throttleData.allowRequestsAfter <= 0) {
+      throw ERROR_FACTORY2.create("throttled", {
+        time: getDurationString(throttleData.allowRequestsAfter - Date.now()),
+        httpStatus: throttleData.httpStatus
+      });
+    }
+  }
+}
+function initializeAppCheck(app2 = getApp2(), options2) {
+  app2 = getModularInstance(app2);
+  if (!getDebugState().initialized) {
+    initializeDebugMode();
+  }
+  if (isDebugMode()) {
+    void getDebugToken().then((token) => (
+      // Not using logger because I don't think we ever want this accidentally hidden.
+      console.log(`App Check debug token: ${token}. You will need to add it to your app's App Check settings in the Firebase console for it to work.`)
+    ));
+  }
+  let defaultProvider;
+  if (!options2?.provider && app2.options.recaptchaSiteKey) {
+    defaultProvider = new ReCaptchaEnterpriseProvider(app2.options.recaptchaSiteKey);
+  }
+  if (!options2?.provider && !defaultProvider) {
+    throw ERROR_FACTORY2.create(
+      "no-provider"
+      /* AppCheckError.NO_PROVIDER */
+    );
+  }
+  const initOptions = {
+    ...options2,
+    provider: options2?.provider || defaultProvider
+  };
+  const componentProvider = _getProvider(app2, "app-check");
+  if (componentProvider.isInitialized()) {
+    const existingInstance = componentProvider.getImmediate();
+    const existingOptions = componentProvider.getOptions();
+    if (existingOptions.isTokenAutoRefreshEnabled === initOptions.isTokenAutoRefreshEnabled && existingOptions.provider?.isEqual(initOptions.provider)) {
+      return existingInstance;
+    } else {
+      if (typeof getStateReference(app2).internallyInitializedBy === "string") {
+        throw ERROR_FACTORY2.create("already-internally-initialized", {
+          initializerName: getStateReference(app2).internallyInitializedBy
+        });
+      }
+      throw ERROR_FACTORY2.create("already-initialized", {
+        appName: app2.name
+      });
+    }
+  }
+  const appCheck2 = componentProvider.initialize({ options: initOptions });
+  _activate(app2, initOptions.provider, initOptions.isTokenAutoRefreshEnabled);
+  if (getStateReference(app2).isTokenAutoRefreshEnabled) {
+    addTokenListener(appCheck2, "INTERNAL", () => {
+    });
+  }
+  return appCheck2;
+}
+function _activate(app2, provider, isTokenAutoRefreshEnabled = false) {
+  const state = setInitialState(app2, { ...DEFAULT_STATE });
+  state.activated = true;
+  state.provider = provider;
+  state.cachedTokenPromise = readTokenFromStorage(app2).then((cachedToken) => {
+    if (cachedToken && isValid(cachedToken)) {
+      state.token = cachedToken;
+      notifyTokenListeners(app2, { token: cachedToken.token });
+    }
+    return cachedToken;
+  });
+  state.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled && app2.automaticDataCollectionEnabled;
+  if (!app2.automaticDataCollectionEnabled && isTokenAutoRefreshEnabled) {
+    logger2.warn("`isTokenAutoRefreshEnabled` is true but `automaticDataCollectionEnabled` was set to false during `initializeApp()`. This blocks automatic token refresh.");
+  }
+  state.provider.initialize(app2);
+}
+async function getToken(appCheckInstance, forceRefresh) {
+  const result = await getToken$2(appCheckInstance, forceRefresh);
+  if (result.error) {
+    throw result.error;
+  }
+  if (result.internalError) {
+    throw result.internalError;
+  }
+  return { token: result.token };
+}
+function registerAppCheck() {
+  _registerComponent(new Component(
+    APP_CHECK_NAME,
+    (container) => {
+      const app2 = container.getProvider("app").getImmediate();
+      const heartbeatServiceProvider = container.getProvider("heartbeat");
+      return factory(app2, heartbeatServiceProvider);
+    },
+    "PUBLIC"
+    /* ComponentType.PUBLIC */
+  ).setInstantiationMode(
+    "EXPLICIT"
+    /* InstantiationMode.EXPLICIT */
+  ).setInstanceCreatedCallback((container, _identifier, _appcheckService) => {
+    container.getProvider(APP_CHECK_NAME_INTERNAL).initialize();
+  }));
+  _registerComponent(new Component(
+    APP_CHECK_NAME_INTERNAL,
+    (container) => {
+      const appCheck2 = container.getProvider("app-check").getImmediate();
+      return internalFactory(appCheck2);
+    },
+    "PUBLIC"
+    /* ComponentType.PUBLIC */
+  ).setInstantiationMode(
+    "EXPLICIT"
+    /* InstantiationMode.EXPLICIT */
+  ));
+  registerVersion(name5, version6);
+}
+var APP_CHECK_STATES, DEFAULT_STATE, DEBUG_STATE, BASE_ENDPOINT, EXCHANGE_RECAPTCHA_ENTERPRISE_TOKEN_METHOD, EXCHANGE_DEBUG_TOKEN_METHOD, TOKEN_REFRESH_TIME, ONE_DAY, Refresher, ERRORS2, ERROR_FACTORY2, DB_NAME2, DB_VERSION2, STORE_NAME2, DEBUG_TOKEN_KEY, dbPromise2, logger2, defaultTokenErrorData, AppCheckService, name5, version6, RECAPTCHA_ENTERPRISE_URL, ReCaptchaEnterpriseProvider, APP_CHECK_NAME, APP_CHECK_NAME_INTERNAL;
+var init_index_esm5 = __esm({
+  "node_modules/@firebase/app-check/dist/esm/index.esm.js"() {
+    init_index_esm3();
+    init_index_esm();
+    init_index_node_esm();
+    init_index_esm2();
+    APP_CHECK_STATES = /* @__PURE__ */ new Map();
+    DEFAULT_STATE = {
+      activated: false,
+      tokenObservers: []
+    };
+    DEBUG_STATE = {
+      initialized: false,
+      enabled: false
+    };
+    BASE_ENDPOINT = "https://content-firebaseappcheck.googleapis.com/v1";
+    EXCHANGE_RECAPTCHA_ENTERPRISE_TOKEN_METHOD = "exchangeRecaptchaEnterpriseToken";
+    EXCHANGE_DEBUG_TOKEN_METHOD = "exchangeDebugToken";
+    TOKEN_REFRESH_TIME = {
+      /**
+       * The offset time before token natural expiration to run the refresh.
+       * This is currently 5 minutes.
+       */
+      OFFSET_DURATION: 5 * 60 * 1e3,
+      /**
+       * This is the first retrial wait after an error. This is currently
+       * 30 seconds.
+       */
+      RETRIAL_MIN_WAIT: 30 * 1e3,
+      /**
+       * This is the maximum retrial wait, currently 16 minutes.
+       */
+      RETRIAL_MAX_WAIT: 16 * 60 * 1e3
+    };
+    ONE_DAY = 24 * 60 * 60 * 1e3;
+    Refresher = class {
+      constructor(operation, retryPolicy, getWaitDuration, lowerBound, upperBound) {
+        this.operation = operation;
+        this.retryPolicy = retryPolicy;
+        this.getWaitDuration = getWaitDuration;
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+        this.pending = null;
+        this.nextErrorWaitInterval = lowerBound;
+        if (lowerBound > upperBound) {
+          throw new Error("Proactive refresh lower bound greater than upper bound!");
+        }
+      }
+      start() {
+        this.nextErrorWaitInterval = this.lowerBound;
+        this.process(true).catch(() => {
+        });
+      }
+      stop() {
+        if (this.pending) {
+          this.pending.reject("cancelled");
+          this.pending = null;
+        }
+      }
+      isRunning() {
+        return !!this.pending;
+      }
+      async process(hasSucceeded) {
+        this.stop();
+        try {
+          this.pending = new Deferred();
+          this.pending.promise.catch((_e) => {
+          });
+          await sleep2(this.getNextRun(hasSucceeded));
+          this.pending.resolve();
+          await this.pending.promise;
+          this.pending = new Deferred();
+          this.pending.promise.catch((_e) => {
+          });
+          await this.operation();
+          this.pending.resolve();
+          await this.pending.promise;
+          this.process(true).catch(() => {
+          });
+        } catch (error) {
+          if (this.retryPolicy(error)) {
+            this.process(false).catch(() => {
+            });
+          } else {
+            this.stop();
+          }
+        }
+      }
+      getNextRun(hasSucceeded) {
+        if (hasSucceeded) {
+          this.nextErrorWaitInterval = this.lowerBound;
+          return this.getWaitDuration();
+        } else {
+          const currentErrorWaitInterval = this.nextErrorWaitInterval;
+          this.nextErrorWaitInterval *= 2;
+          if (this.nextErrorWaitInterval > this.upperBound) {
+            this.nextErrorWaitInterval = this.upperBound;
+          }
+          return currentErrorWaitInterval;
+        }
+      }
+    };
+    ERRORS2 = {
+      [
+        "already-initialized"
+        /* AppCheckError.ALREADY_INITIALIZED */
+      ]: "You have already called initializeAppCheck() for FirebaseApp {$appName} with different options. To avoid this error, call initializeAppCheck() with the same options as when it was originally called. This will return the already initialized instance.",
+      [
+        "already-internally-initialized"
+        /* AppCheckError.ALREADY_INTERNALLY_INITIALIZED */
+      ]: "App Check has already been automatically initialized by {$initializerName} with default options. If you want to initialize App Check with custom options, call initializeAppCheck() with those options before initializing {$initializerName}.",
+      [
+        "use-before-activation"
+        /* AppCheckError.USE_BEFORE_ACTIVATION */
+      ]: "App Check is being used before initializeAppCheck() is called for FirebaseApp {$appName}. Call initializeAppCheck() before instantiating other Firebase services.",
+      [
+        "fetch-network-error"
+        /* AppCheckError.FETCH_NETWORK_ERROR */
+      ]: "Fetch failed to connect to a network. Check Internet connection. Original error: {$originalErrorMessage}.",
+      [
+        "fetch-parse-error"
+        /* AppCheckError.FETCH_PARSE_ERROR */
+      ]: "Fetch client could not parse response. Original error: {$originalErrorMessage}.",
+      [
+        "fetch-status-error"
+        /* AppCheckError.FETCH_STATUS_ERROR */
+      ]: "Fetch server returned an HTTP error status. HTTP status: {$httpStatus}.",
+      [
+        "storage-open"
+        /* AppCheckError.STORAGE_OPEN */
+      ]: "Error thrown when opening storage. Original error: {$originalErrorMessage}.",
+      [
+        "storage-get"
+        /* AppCheckError.STORAGE_GET */
+      ]: "Error thrown when reading from storage. Original error: {$originalErrorMessage}.",
+      [
+        "storage-set"
+        /* AppCheckError.STORAGE_WRITE */
+      ]: "Error thrown when writing to storage. Original error: {$originalErrorMessage}.",
+      [
+        "recaptcha-error"
+        /* AppCheckError.RECAPTCHA_ERROR */
+      ]: "ReCAPTCHA error.",
+      [
+        "no-provider"
+        /* AppCheckError.NO_PROVIDER */
+      ]: "No attestation provider was passed to initializeAppCheck() and no ReCAPTCHA Enterprise site key was found in the Firebase config.",
+      [
+        "initial-throttle"
+        /* AppCheckError.INITIAL_THROTTLE */
+      ]: `{$httpStatus} error. Attempts allowed again after {$time}`,
+      [
+        "throttled"
+        /* AppCheckError.THROTTLED */
+      ]: `Requests throttled due to previous {$httpStatus} error. Attempts allowed again after {$time}`
+    };
+    ERROR_FACTORY2 = new ErrorFactory("appCheck", "AppCheck", ERRORS2);
+    DB_NAME2 = "firebase-app-check-database";
+    DB_VERSION2 = 1;
+    STORE_NAME2 = "firebase-app-check-store";
+    DEBUG_TOKEN_KEY = "debug-token";
+    dbPromise2 = null;
+    logger2 = new Logger("@firebase/app-check");
+    defaultTokenErrorData = { error: "UNKNOWN_ERROR" };
+    AppCheckService = class {
+      constructor(app2, heartbeatServiceProvider) {
+        this.app = app2;
+        this.heartbeatServiceProvider = heartbeatServiceProvider;
+      }
+      _delete() {
+        const { tokenObservers } = getStateReference(this.app);
+        for (const tokenObserver of tokenObservers) {
+          removeTokenListener(this.app, tokenObserver.next);
+        }
+        return Promise.resolve();
+      }
+    };
+    name5 = "@firebase/app-check";
+    version6 = "0.12.0";
+    RECAPTCHA_ENTERPRISE_URL = "https://www.google.com/recaptcha/enterprise.js";
+    ReCaptchaEnterpriseProvider = class _ReCaptchaEnterpriseProvider {
+      /**
+       * Create a ReCaptchaEnterpriseProvider instance.
+       * @param siteKey - reCAPTCHA Enterprise score-based site key.
+       */
+      constructor(_siteKey) {
+        this._siteKey = _siteKey;
+        this._throttleData = null;
+      }
+      /**
+       * Returns an App Check token.
+       * @internal
+       */
+      async getToken(isLimitedUse = false) {
+        throwIfThrottled(this._throttleData);
+        const attestedClaimsToken = await getToken$1(this._app).catch((_e) => {
+          throw ERROR_FACTORY2.create(
+            "recaptcha-error"
+            /* AppCheckError.RECAPTCHA_ERROR */
+          );
+        });
+        if (!getStateReference(this._app).reCAPTCHAState?.succeeded) {
+          throw ERROR_FACTORY2.create(
+            "recaptcha-error"
+            /* AppCheckError.RECAPTCHA_ERROR */
+          );
+        }
+        let result;
+        try {
+          const request = getExchangeRecaptchaEnterpriseTokenRequest(this._app, attestedClaimsToken);
+          if (isLimitedUse) {
+            request.body["limited_use"] = true;
+          }
+          result = await exchangeToken(request, this._heartbeatServiceProvider);
+        } catch (e2) {
+          if (e2.code?.includes(
+            "fetch-status-error"
+            /* AppCheckError.FETCH_STATUS_ERROR */
+          )) {
+            this._throttleData = setBackoff(Number(e2.customData?.httpStatus), this._throttleData);
+            throw ERROR_FACTORY2.create("initial-throttle", {
+              time: getDurationString(this._throttleData.allowRequestsAfter - Date.now()),
+              httpStatus: this._throttleData.httpStatus
+            });
+          } else {
+            throw e2;
+          }
+        }
+        this._throttleData = null;
+        return result;
+      }
+      /**
+       * @internal
+       */
+      initialize(app2) {
+        this._app = app2;
+        this._heartbeatServiceProvider = _getProvider(app2, "heartbeat");
+        initializeEnterprise(app2, this._siteKey).catch(() => {
+        });
+      }
+      /**
+       * @internal
+       */
+      isEqual(otherProvider) {
+        if (otherProvider instanceof _ReCaptchaEnterpriseProvider) {
+          return this._siteKey === otherProvider._siteKey;
+        } else {
+          return false;
+        }
+      }
+    };
+    APP_CHECK_NAME = "app-check";
+    APP_CHECK_NAME_INTERNAL = "app-check-internal";
+    registerAppCheck();
+  }
+});
+
+// node_modules/firebase/app-check/dist/index.mjs
+var init_dist5 = __esm({
+  "node_modules/firebase/app-check/dist/index.mjs"() {
+    init_index_esm5();
+  }
+});
+
+// src/lib/appCheck.ts
+function initialiseAppCheck(app2, isNativeRuntime2) {
+  const siteKey = typeof process !== "undefined" ? String(process.env.VITE_FIREBASE_APP_CHECK_SITE_KEY || "").trim() : "";
+  if (!siteKey || isNativeRuntime2 || appCheck) return;
+  try {
+    appCheck = initializeAppCheck(app2, {
+      provider: new ReCaptchaEnterpriseProvider(siteKey),
+      isTokenAutoRefreshEnabled: true
+    });
+  } catch (error) {
+    console.warn("[AppCheck] Initialisation was unavailable.", error);
+  }
+}
+async function getAppCheckToken() {
+  if (!appCheck) return null;
+  try {
+    return (await getToken(appCheck)).token;
+  } catch (error) {
+    console.warn("[AppCheck] Token could not be obtained.", error);
+    return null;
+  }
+}
+var appCheck;
+var init_appCheck = __esm({
+  "src/lib/appCheck.ts"() {
+    init_dist5();
+    appCheck = null;
+  }
+});
+
 // src/firebase.ts
 var app, isNativeRuntime, auth, db, signInAnon;
 var init_firebase = __esm({
@@ -190107,11 +191790,13 @@ var init_firebase = __esm({
     init_dist4();
     init_firebase_applet_config();
     init_clientErrorTelemetry();
+    init_appCheck();
     app = initializeApp2(firebase_applet_config_default);
     isNativeRuntime = () => {
       const capacitor = globalThis.Capacitor;
       return Boolean(capacitor?.isNativePlatform?.());
     };
+    initialiseAppCheck(app, isNativeRuntime());
     auth = (() => {
       try {
         const isNative = isNativeRuntime();
@@ -190134,15 +191819,24 @@ var init_firebase = __esm({
 // src/lib/searchAuth.ts
 var searchAuth_exports = {};
 __export(searchAuth_exports, {
-  getSearchAuthToken: () => getSearchAuthToken
+  getSearchAuthToken: () => getSearchAuthToken,
+  getSearchSecurityHeaders: () => getSearchSecurityHeaders
 });
 async function getSearchAuthToken() {
   const currentUser = auth.currentUser || (await signInAnon()).user;
   return currentUser.getIdToken();
 }
+async function getSearchSecurityHeaders() {
+  const [token, appCheckToken] = await Promise.all([getSearchAuthToken(), getAppCheckToken()]);
+  return {
+    Authorization: `Bearer ${token}`,
+    ...appCheckToken ? { "X-Firebase-AppCheck": appCheckToken } : {}
+  };
+}
 var init_searchAuth = __esm({
   "src/lib/searchAuth.ts"() {
     init_firebase();
+    init_appCheck();
   }
 });
 
@@ -190397,9 +192091,9 @@ var require_base642 = __commonJS({
 // node_modules/fast-sha256/sha256.js
 var require_sha256 = __commonJS({
   "node_modules/fast-sha256/sha256.js"(exports2, module2) {
-    (function(root, factory) {
+    (function(root, factory2) {
       var exports3 = {};
-      factory(exports3);
+      factory2(exports3);
       var sha256 = exports3["default"];
       for (var k in exports3) {
         sha256[k] = exports3[k];
@@ -190657,28 +192351,28 @@ var require_sha256 = __commonJS({
             this.outer = new Hash();
             this.blockSize = this.inner.blockSize;
             this.digestLength = this.inner.digestLength;
-            var pad = new Uint8Array(this.blockSize);
+            var pad2 = new Uint8Array(this.blockSize);
             if (key.length > this.blockSize) {
-              new Hash().update(key).finish(pad).clean();
+              new Hash().update(key).finish(pad2).clean();
             } else {
               for (var i2 = 0; i2 < key.length; i2++) {
-                pad[i2] = key[i2];
+                pad2[i2] = key[i2];
               }
             }
-            for (var i2 = 0; i2 < pad.length; i2++) {
-              pad[i2] ^= 54;
+            for (var i2 = 0; i2 < pad2.length; i2++) {
+              pad2[i2] ^= 54;
             }
-            this.inner.update(pad);
-            for (var i2 = 0; i2 < pad.length; i2++) {
-              pad[i2] ^= 54 ^ 92;
+            this.inner.update(pad2);
+            for (var i2 = 0; i2 < pad2.length; i2++) {
+              pad2[i2] ^= 54 ^ 92;
             }
-            this.outer.update(pad);
+            this.outer.update(pad2);
             this.istate = new Uint32Array(8);
             this.ostate = new Uint32Array(8);
             this.inner._saveState(this.istate);
             this.outer._saveState(this.ostate);
-            for (var i2 = 0; i2 < pad.length; i2++) {
-              pad[i2] = 0;
+            for (var i2 = 0; i2 < pad2.length; i2++) {
+              pad2[i2] = 0;
             }
           }
           HMAC2.prototype.reset = function() {
@@ -190882,8 +192576,8 @@ var require_dist6 = __commonJS({
         const passedSignatures = msgSignature.split(" ");
         const encoder3 = new globalThis.TextEncoder();
         for (const versionedSignature of passedSignatures) {
-          const [version7, signature] = versionedSignature.split(",");
-          if (version7 !== "v1") {
+          const [version8, signature] = versionedSignature.split(",");
+          if (version8 !== "v1") {
             continue;
           }
           if ((0, timing_safe_equal_1.timingSafeEqual)(encoder3.encode(signature), encoder3.encode(expectedSignature))) {
@@ -191654,11 +193348,11 @@ function callbackifyPromiseWithTimeout(promise, callback) {
   }
   return promise;
 }
-function pascalToCamelCase(name5) {
-  if (name5 === "OAuth") {
+function pascalToCamelCase(name6) {
+  if (name6 === "OAuth") {
     return "oauth";
   } else {
-    return name5[0].toLowerCase() + name5.substring(1);
+    return name6[0].toLowerCase() + name6.substring(1);
   }
 }
 function emitWarning(warning) {
@@ -191690,12 +193384,12 @@ function flattenAndStringify(data) {
   step(data, null);
   return result;
 }
-function validateInteger(name5, n, defaultVal) {
+function validateInteger(name6, n, defaultVal) {
   if (!Number.isInteger(n)) {
     if (defaultVal !== void 0) {
       return defaultVal;
     } else {
-      throw new Error(`${name5} must be an integer`);
+      throw new Error(`${name6} must be an integer`);
     }
   }
   return n;
@@ -192876,12 +194570,12 @@ var init_apiVersion = __esm({
 
 // node_modules/stripe/esm/ResourceNamespace.js
 function ResourceNamespace(stripe, resources) {
-  for (const name5 in resources) {
-    if (!Object.prototype.hasOwnProperty.call(resources, name5)) {
+  for (const name6 in resources) {
+    if (!Object.prototype.hasOwnProperty.call(resources, name6)) {
       continue;
     }
-    const camelCaseName = name5[0].toLowerCase() + name5.substring(1);
-    const resource = new resources[name5](stripe);
+    const camelCaseName = name6[0].toLowerCase() + name6.substring(1);
+    const resource = new resources[name6](stripe);
     this[camelCaseName] = resource;
   }
 }
@@ -196898,11 +198592,11 @@ function createStripe(platformFunctions, requestSender = defaultRequestSenderFac
      * This may be removed in the future.
      */
     _prepResources() {
-      for (const name5 in resources_exports) {
-        if (!Object.prototype.hasOwnProperty.call(resources_exports, name5)) {
+      for (const name6 in resources_exports) {
+        if (!Object.prototype.hasOwnProperty.call(resources_exports, name6)) {
           continue;
         }
-        this[pascalToCamelCase(name5)] = new resources_exports[name5](this);
+        this[pascalToCamelCase(name6)] = new resources_exports[name6](this);
       }
     },
     /**
@@ -197065,6 +198759,13 @@ var UserInfo = import_auth.default.UserInfo;
 var UserMetadata = import_auth.default.UserMetadata;
 var UserRecord = import_auth.default.UserRecord;
 var getAuth = import_auth.default.getAuth;
+
+// node_modules/firebase-admin/lib/esm/app-check/index.js
+var import_app_check = __toESM(require_app_check2(), 1);
+var AppCheck = import_app_check.default.AppCheck;
+var AppCheckErrorCode = import_app_check.default.AppCheckErrorCode;
+var FirebaseAppCheckError = import_app_check.default.FirebaseAppCheckError;
+var getAppCheck = import_app_check.default.getAppCheck;
 
 // src/api-server.ts
 var import_google_auth_library2 = __toESM(require_src5(), 1);
@@ -198880,11 +200581,11 @@ function resourceName(client, resourceName2, resourcePrefix, splitsAfterPrefix =
   }
   return resourceName2;
 }
-function tCachedContentName(apiClient, name5) {
-  if (typeof name5 !== "string") {
+function tCachedContentName(apiClient, name6) {
+  if (typeof name6 !== "string") {
     throw new Error("name must be a string");
   }
-  return resourceName(apiClient, name5, "cachedContents");
+  return resourceName(apiClient, name6, "cachedContents");
 }
 function tTuningJobStatus(status) {
   switch (status) {
@@ -198914,39 +200615,39 @@ function isVideo(origin) {
 }
 function tFileName(fromName) {
   var _a2;
-  let name5;
+  let name6;
   if (_isFile(fromName)) {
-    name5 = fromName.name;
+    name6 = fromName.name;
   }
   if (isVideo(fromName)) {
-    name5 = fromName.uri;
-    if (name5 === void 0) {
+    name6 = fromName.uri;
+    if (name6 === void 0) {
       return void 0;
     }
   }
   if (isGeneratedVideo(fromName)) {
-    name5 = (_a2 = fromName.video) === null || _a2 === void 0 ? void 0 : _a2.uri;
-    if (name5 === void 0) {
+    name6 = (_a2 = fromName.video) === null || _a2 === void 0 ? void 0 : _a2.uri;
+    if (name6 === void 0) {
       return void 0;
     }
   }
   if (typeof fromName === "string") {
-    name5 = fromName;
+    name6 = fromName;
   }
-  if (name5 === void 0) {
+  if (name6 === void 0) {
     throw new Error("Could not extract file name from the provided input.");
   }
-  if (name5.startsWith("https://")) {
-    const suffix = name5.split("files/")[1];
+  if (name6.startsWith("https://")) {
+    const suffix = name6.split("files/")[1];
     const match2 = suffix.match(/[a-z0-9]+/);
     if (match2 === null) {
-      throw new Error(`Could not extract file name from URI ${name5}`);
+      throw new Error(`Could not extract file name from URI ${name6}`);
     }
-    name5 = match2[0];
-  } else if (name5.startsWith("files/")) {
-    name5 = name5.split("files/")[1];
+    name6 = match2[0];
+  } else if (name6.startsWith("files/")) {
+    name6 = name6.split("files/")[1];
   }
-  return name5;
+  return name6;
 }
 function tModelsUrl(apiClient, baseModels) {
   let res;
@@ -199107,8 +200808,8 @@ function tRecvBatchJobDestination(dest) {
   }
   return dest;
 }
-function tBatchJobName(apiClient, name5) {
-  const nameString = name5;
+function tBatchJobName(apiClient, name6) {
+  const nameString = name6;
   if (!apiClient.isVertexAI()) {
     const mldevPattern = /batches\/[^/]+$/;
     if (mldevPattern.test(nameString)) {
@@ -200492,15 +202193,15 @@ var PagedItem;
   PagedItem2["PAGED_ITEM_SKILLS"] = "skills";
 })(PagedItem || (PagedItem = {}));
 var Pager = class {
-  constructor(name5, request, response, params) {
+  constructor(name6, request, response, params) {
     this.pageInternal = [];
     this.paramsInternal = {};
     this.requestInternal = request;
-    this.init(name5, response, params);
+    this.init(name6, response, params);
   }
-  init(name5, response, params) {
+  init(name6, response, params) {
     var _a2, _b;
-    this.nameInternal = name5;
+    this.nameInternal = name6;
     this.pageInternal = response[this.nameInternal] || [];
     this.sdkHttpResponseInternal = response === null || response === void 0 ? void 0 : response.sdkHttpResponse;
     this.idxInternal = 0;
@@ -202401,15 +204102,15 @@ function extractCuratedHistory(comprehensiveHistory) {
       i2++;
     } else {
       const modelOutput = [];
-      let isValid = true;
+      let isValid2 = true;
       while (i2 < length && comprehensiveHistory[i2].role === "model") {
         modelOutput.push(comprehensiveHistory[i2]);
-        if (isValid && !isValidContent(comprehensiveHistory[i2])) {
-          isValid = false;
+        if (isValid2 && !isValidContent(comprehensiveHistory[i2])) {
+          isValid2 = false;
         }
         i2++;
       }
-      if (isValid) {
+      if (isValid2) {
         curatedHistory.push(...modelOutput);
       } else {
         curatedHistory.pop();
@@ -213368,80 +215069,80 @@ var ClientSDK = class {
 };
 var jsonLikeContentTypeRE = /^(application|text)\/([^+]+\+)*json.*/;
 var jsonlLikeContentTypeRE = /^(application|text)\/([^+]+\+)*(jsonl|x-ndjson)\b.*/;
-async function logRequest(logger2, req) {
-  if (!logger2) {
+async function logRequest(logger3, req) {
+  if (!logger3) {
     return;
   }
   const contentType = req.headers.get("content-type");
   const ct = (contentType === null || contentType === void 0 ? void 0 : contentType.split(";")[0]) || "";
-  logger2.group(`> Request: ${req.method} ${req.url}`);
-  logger2.group("Headers:");
+  logger3.group(`> Request: ${req.method} ${req.url}`);
+  logger3.group("Headers:");
   for (const [k, v] of req.headers.entries()) {
-    logger2.log(`${k}: ${v}`);
+    logger3.log(`${k}: ${v}`);
   }
-  logger2.groupEnd();
-  logger2.group("Body:");
+  logger3.groupEnd();
+  logger3.group("Body:");
   switch (true) {
     case jsonLikeContentTypeRE.test(ct):
-      logger2.log(await req.clone().json());
+      logger3.log(await req.clone().json());
       break;
     case ct.startsWith("text/"):
-      logger2.log(await req.clone().text());
+      logger3.log(await req.clone().text());
       break;
     case ct === "multipart/form-data": {
       const body = await req.clone().formData();
       for (const [k, v] of body) {
         const vlabel = v instanceof Blob ? "<Blob>" : v;
-        logger2.log(`${k}: ${vlabel}`);
+        logger3.log(`${k}: ${vlabel}`);
       }
       break;
     }
     default:
-      logger2.log(`<${contentType}>`);
+      logger3.log(`<${contentType}>`);
       break;
   }
-  logger2.groupEnd();
-  logger2.groupEnd();
+  logger3.groupEnd();
+  logger3.groupEnd();
 }
-async function logResponse(logger2, res, req) {
-  if (!logger2) {
+async function logResponse(logger3, res, req) {
+  if (!logger3) {
     return;
   }
   const contentType = res.headers.get("content-type");
   const ct = (contentType === null || contentType === void 0 ? void 0 : contentType.split(";")[0]) || "";
-  logger2.group(`< Response: ${req.method} ${req.url}`);
-  logger2.log("Status Code:", res.status, res.statusText);
-  logger2.group("Headers:");
+  logger3.group(`< Response: ${req.method} ${req.url}`);
+  logger3.log("Status Code:", res.status, res.statusText);
+  logger3.group("Headers:");
   for (const [k, v] of res.headers.entries()) {
-    logger2.log(`${k}: ${v}`);
+    logger3.log(`${k}: ${v}`);
   }
-  logger2.groupEnd();
-  logger2.group("Body:");
+  logger3.groupEnd();
+  logger3.group("Body:");
   switch (true) {
     case (matchContentType(res, "application/json") || jsonLikeContentTypeRE.test(ct) && !jsonlLikeContentTypeRE.test(ct)):
-      logger2.log(await res.clone().json());
+      logger3.log(await res.clone().json());
       break;
     case (matchContentType(res, "application/jsonl") || jsonlLikeContentTypeRE.test(ct)):
     case matchContentType(res, "text/event-stream"):
-      logger2.log(`<${contentType}>`);
+      logger3.log(`<${contentType}>`);
       break;
     case matchContentType(res, "text/*"):
-      logger2.log(await res.clone().text());
+      logger3.log(await res.clone().text());
       break;
     case matchContentType(res, "multipart/form-data"): {
       const body = await res.clone().formData();
       for (const [k, v] of body) {
         const vlabel = v instanceof Blob ? "<Blob>" : v;
-        logger2.log(`${k}: ${vlabel}`);
+        logger3.log(`${k}: ${vlabel}`);
       }
       break;
     }
     default:
-      logger2.log(`<${contentType}>`);
+      logger3.log(`<${contentType}>`);
       break;
   }
-  logger2.groupEnd();
-  logger2.groupEnd();
+  logger3.groupEnd();
+  logger3.groupEnd();
 }
 var GoogleGenAiDefaultError = class extends GoogleGenAiError {
   constructor(message2, httpMeta) {
@@ -215523,9 +217224,9 @@ function toGoogleGenAIRequestOptions(options2, streaming = false) {
   }
   return nextOptions;
 }
-function warnIgnoredOption(name5, value) {
+function warnIgnoredOption(name6, value) {
   if (value !== void 0 && value !== null) {
-    console.warn(`GoogleGenAI.interactions: request option ${name5} is not supported by the Google GenAI interactions bridge and will be ignored.`);
+    console.warn(`GoogleGenAI.interactions: request option ${name6} is not supported by the Google GenAI interactions bridge and will be ignored.`);
   }
 }
 async function unwrapWithSdkHttpResponse(promise) {
@@ -215779,10 +217480,10 @@ var NodeDownloader = class {
 };
 async function downloadFile(params, apiClient) {
   var _a2, _b, _c;
-  const name5 = tFileName(params.file);
-  if (name5 !== void 0) {
+  const name6 = tFileName(params.file);
+  if (name6 !== void 0) {
     return await apiClient.request({
-      path: `files/${name5}:download`,
+      path: `files/${name6}:download`,
       httpMethod: "GET",
       queryParams: {
         "alt": "media"
@@ -221570,9 +223271,9 @@ var sanitizeRationaleMap = (value) => Object.fromEntries(
   ])
 );
 var SEARCH_MODEL = ACTIVE_GEMINI_MODEL;
-async function getSearchAuthToken2() {
+async function getSearchSecurityHeaders2() {
   const authModule = await Promise.resolve().then(() => (init_searchAuth(), searchAuth_exports));
-  return authModule.getSearchAuthToken();
+  return authModule.getSearchSecurityHeaders();
 }
 async function fetchProxySuggestions(searchParams, preferences, signal) {
   const controller = new AbortController();
@@ -221589,12 +223290,12 @@ async function fetchProxySuggestions(searchParams, preferences, signal) {
   try {
     const url = getApiUrl("/api/generate-suggestions");
     console.log(`[Diagnostic] Fetching ${url} (Origin: ${window.location.origin})`);
-    const token = await getSearchAuthToken2();
+    const searchSecurityHeaders = await getSearchSecurityHeaders2();
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...token ? { Authorization: `Bearer ${token}` } : {}
+        ...searchSecurityHeaders
       },
       body: JSON.stringify({ searchParams, preferences }),
       signal: controller.signal
@@ -226441,7 +228142,7 @@ var PostalMime = class _PostalMime {
 
 // node_modules/resend/dist/index.mjs
 var import_standardwebhooks = __toESM(require_dist6(), 1);
-var version6 = "6.14.0";
+var version7 = "6.14.0";
 function buildPaginationQuery(options2) {
   const searchParams = new URLSearchParams();
   if (options2.limit !== void 0) searchParams.set("limit", options2.limit.toString());
@@ -226844,9 +228545,9 @@ var ContactImports = class {
       properties: columnMap.properties
     };
   }
-  appendField(formData, name5, value) {
+  appendField(formData, name6, value) {
     if (value === null) return;
-    formData.append(name5, typeof value === "string" ? value : JSON.stringify(value));
+    formData.append(name6, typeof value === "string" ? value : JSON.stringify(value));
   }
 };
 var ContactSegments = class {
@@ -227483,7 +229184,7 @@ var Webhooks2 = class {
   }
 };
 var defaultBaseUrl = "https://api.resend.com";
-var defaultUserAgent = `resend-node:${version6}`;
+var defaultUserAgent = `resend-node:${version7}`;
 function getDefaultBaseUrl() {
   return typeof process !== "undefined" && process.env ? process.env.RESEND_BASE_URL || defaultBaseUrl : defaultBaseUrl;
 }
@@ -234269,6 +235970,24 @@ var validateSearchRequestPayload = (searchParams, preferences) => {
   return validatePreferences(preferences);
 };
 
+// src/lib/guestSearchRateLimit.ts
+var import_node_crypto = require("node:crypto");
+var GUEST_SEARCH_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
+var GUEST_SEARCH_RATE_LIMIT_MAXIMUM = 12;
+function createGuestSearchRateLimitId(clientIp, secret) {
+  return (0, import_node_crypto.createHmac)("sha256", secret).update(clientIp.trim() || "unknown").digest("base64url");
+}
+function isGuestSearchRateLimitAvailable(window2, now) {
+  if (!window2 || now - window2.windowStartedAtMs >= GUEST_SEARCH_RATE_LIMIT_WINDOW_MS) return true;
+  return window2.count < GUEST_SEARCH_RATE_LIMIT_MAXIMUM;
+}
+function nextGuestSearchRateWindow(window2, now) {
+  if (!window2 || now - window2.windowStartedAtMs >= GUEST_SEARCH_RATE_LIMIT_WINDOW_MS) {
+    return { count: 1, windowStartedAtMs: now };
+  }
+  return { count: window2.count + 1, windowStartedAtMs: window2.windowStartedAtMs };
+}
+
 // src/lib/webhookSafety.ts
 var STRIPE_WEBHOOK_PROCESSING_LEASE_MS = 5 * 60 * 1e3;
 var TRANSACTIONAL_EMAIL_CLAIM_LEASE_MS = 5 * 60 * 1e3;
@@ -234331,8 +236050,6 @@ var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;
 var contactAttempts = /* @__PURE__ */ new Map();
 var GUEST_SEARCH_LIMIT = 3;
-var GUEST_IP_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
-var GUEST_IP_RATE_LIMIT_MAXIMUM = 12;
 var guestSearchAttemptsByIp = /* @__PURE__ */ new Map();
 var CLIENT_ERROR_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CLIENT_ERROR_RATE_LIMIT_MAXIMUM = 30;
@@ -234520,6 +236237,10 @@ function getAdminAuth() {
   ensureFirebaseAdminApp();
   return getAuth();
 }
+function getAdminAppCheck() {
+  ensureFirebaseAdminApp();
+  return getAppCheck();
+}
 async function verifyAdminRequest(req, res) {
   const authorization = req.get("authorization") || "";
   const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
@@ -234551,12 +236272,33 @@ function getRecentGuestIpAttempts(req) {
   return {
     clientIp,
     now,
-    recent: (guestSearchAttemptsByIp.get(clientIp) || []).filter((attempt) => now - attempt < GUEST_IP_RATE_LIMIT_WINDOW_MS)
+    recent: (guestSearchAttemptsByIp.get(clientIp) || []).filter((attempt) => now - attempt < GUEST_SEARCH_RATE_LIMIT_WINDOW_MS)
   };
 }
-function hasGuestIpCapacity(req) {
+function getGuestRateLimitSecret() {
+  return String(process.env.GUEST_RATE_LIMIT_SECRET || "").trim();
+}
+function getGuestRateLimitRef(req) {
+  const secret = getGuestRateLimitSecret();
+  if (!secret) return null;
+  return getDb().collection("guestSearchRateLimits").doc(createGuestSearchRateLimitId(getClientIp(req), secret));
+}
+function getGuestRateWindow(snapshot) {
+  if (!snapshot.exists) return null;
+  const data = snapshot.data();
+  const startedAt = data?.windowStartedAt;
+  const windowStartedAtMs = typeof startedAt?.toMillis === "function" ? startedAt.toMillis() : 0;
+  if (!Number.isFinite(windowStartedAtMs) || windowStartedAtMs <= 0) return null;
+  return { count: Number(data?.count || 0), windowStartedAtMs };
+}
+async function hasGuestIpCapacity(req) {
+  const rateLimitRef = getGuestRateLimitRef(req);
+  if (rateLimitRef) {
+    const snapshot = await rateLimitRef.get();
+    return isGuestSearchRateLimitAvailable(getGuestRateWindow(snapshot), Date.now());
+  }
   const { recent } = getRecentGuestIpAttempts(req);
-  return recent.length < GUEST_IP_RATE_LIMIT_MAXIMUM;
+  return recent.length < 12;
 }
 function recordGuestIpAttempt(req) {
   const { clientIp, now, recent } = getRecentGuestIpAttempts(req);
@@ -234574,7 +236316,7 @@ async function verifySearchIdentity(req, res) {
     const decoded = await getAdminAuth().verifyIdToken(token);
     const isAnonymous = decoded.firebase?.sign_in_provider === "anonymous";
     if (!isAnonymous) return { uid: decoded.uid, isAnonymous: false };
-    if (!hasGuestIpCapacity(req)) {
+    if (!await hasGuestIpCapacity(req)) {
       res.status(429).json({ ok: false, error: "Guest search access is temporarily limited. Please create an account to continue." });
       return null;
     }
@@ -234594,10 +236336,23 @@ async function verifySearchIdentity(req, res) {
 async function commitGuestSearchUsage(req, uid) {
   try {
     const usageRef = getDb().collection("guestSearchUsage").doc(uid);
+    const rateLimitRef = getGuestRateLimitRef(req);
     const usage = await getDb().runTransaction(async (transaction) => {
       const snapshot = await transaction.get(usageRef);
       const count = Number(snapshot.data()?.count || 0);
       if (count >= GUEST_SEARCH_LIMIT) return { allowed: false, count };
+      const now = Date.now();
+      if (rateLimitRef) {
+        const rateLimitSnapshot = await transaction.get(rateLimitRef);
+        const currentWindow = getGuestRateWindow(rateLimitSnapshot);
+        if (!isGuestSearchRateLimitAvailable(currentWindow, now)) return { allowed: false, count, rateLimited: true };
+        const nextWindow = nextGuestSearchRateWindow(currentWindow, now);
+        transaction.set(rateLimitRef, {
+          count: nextWindow.count,
+          windowStartedAt: Timestamp.fromMillis(nextWindow.windowStartedAtMs),
+          updatedAt: FieldValue.serverTimestamp()
+        }, { merge: true });
+      }
       const next = count + 1;
       transaction.set(usageRef, {
         count: next,
@@ -234606,12 +236361,28 @@ async function commitGuestSearchUsage(req, uid) {
       }, { merge: true });
       return { allowed: true, count: next };
     });
-    if (!usage.allowed) return "limit";
+    if (!usage.allowed) return usage.rateLimited ? "rate_limit" : "limit";
     recordGuestIpAttempt(req);
     return "committed";
   } catch (error) {
     console.error("[SearchAuth] Failed to commit guest search usage:", error);
     return "unavailable";
+  }
+}
+async function verifySearchAppCheck(req, res) {
+  if (String(process.env.FIREBASE_APP_CHECK_ENFORCE_API || "").toLowerCase() !== "true") return true;
+  const token = String(req.get("x-firebase-appcheck") || "").trim();
+  if (!token) {
+    res.status(401).json({ ok: false, error: "Please refresh the page and try again." });
+    return false;
+  }
+  try {
+    await getAdminAppCheck().verifyToken(token);
+    return true;
+  } catch (error) {
+    console.error("[AppCheck] Request verification failed:", error);
+    res.status(401).json({ ok: false, error: "Please refresh the page and try again." });
+    return false;
   }
 }
 async function listAllAuthenticationIdentities() {
@@ -235569,6 +237340,7 @@ function createApp() {
     if (!THREE_WAY_SEARCH_PILOT) {
       return res.status(404).json({ ok: false, error: "AI-created dinners are not available right now." });
     }
+    if (!await verifySearchAppCheck(req, res)) return;
     const searchIdentity = await verifySearchIdentity(req, res);
     if (!searchIdentity) return;
     const startedAt = Date.now();
@@ -235604,6 +237376,9 @@ function createApp() {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
         if (usageCommit === "limit") {
           return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
+        }
+        if (usageCommit === "rate_limit") {
+          return res.status(429).json({ ok: false, error: "Guest search access is temporarily limited. Please create an account to continue." });
         }
         if (usageCommit === "unavailable") {
           return res.status(503).json({ ok: false, error: "Your search could not be completed. Please try again in a moment." });
@@ -235649,6 +237424,7 @@ function createApp() {
     const requestStartedAt = Date.now();
     const requestId = normaliseSearchRequestId(req.body?.requestId || req.body?.searchParams?.telemetryRequestId);
     try {
+      if (!await verifySearchAppCheck(req, res)) return;
       const searchIdentity = await verifySearchIdentity(req, res);
       if (!searchIdentity) return;
       const { searchParams: rawSearchParams, preferences } = req.body;
@@ -235709,6 +237485,18 @@ function createApp() {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
         if (usageCommit === "limit") {
           return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
+        }
+        if (usageCommit === "rate_limit") {
+          return res.status(429).json({
+            ok: false,
+            error: {
+              code: "GUEST_SEARCH_RATE_LIMITED",
+              message: "Guest search access is temporarily limited. Please create an account to continue.",
+              retryable: true,
+              status: 429,
+              category: "rate_limit"
+            }
+          });
         }
         if (usageCommit === "unavailable") {
           return res.status(503).json({
@@ -236464,14 +238252,14 @@ function createApp() {
     if (!isTrustedContactOrigin(req)) {
       return res.status(403).json({ ok: false, error: "This enquiry could not be sent from this site." });
     }
-    const name5 = String(req.body?.name || "").trim();
+    const name6 = String(req.body?.name || "").trim();
     const email = String(req.body?.email || "").trim().toLowerCase();
     const message2 = String(req.body?.message || "").trim();
     const company = String(req.body?.company || "").trim();
     if (company) {
       return res.status(200).json({ ok: true });
     }
-    if (!name5 || !email || !message2 || name5.length > 120 || email.length > 254 || message2.length > 4e3) {
+    if (!name6 || !email || !message2 || name6.length > 120 || email.length > 254 || message2.length > 4e3) {
       return res.status(400).json({ ok: false, error: "Please enter your name, email address and message." });
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -236480,17 +238268,17 @@ function createApp() {
     if (!hasContactRateLimitCapacity(req)) {
       return res.status(429).json({ ok: false, error: "Please wait a little while before sending another enquiry." });
     }
-    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml12(name5)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml12(email)}">${escapeHtml12(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml12(message2)}</div></div>`;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937"><h1 style="margin:0 0 20px;font-size:22px">New DinnerByDesign enquiry</h1><p><strong>Name:</strong> ${escapeHtml12(name6)}</p><p><strong>Email:</strong> <a href="mailto:${escapeHtml12(email)}">${escapeHtml12(email)}</a></p><p style="margin:24px 0 8px"><strong>Message:</strong></p><div style="white-space:pre-wrap;line-height:1.6">${escapeHtml12(message2)}</div></div>`;
     try {
       const response = await sendTrackedEmail({
         to: CONTACT_RECIPIENT,
-        subject: `DinnerByDesign enquiry from ${name5}`,
+        subject: `DinnerByDesign enquiry from ${name6}`,
         html,
         replyTo: email
       }, {
         type: "contact_enquiry",
         source: "public_contact_form",
-        metadata: { name: name5, replyTo: email }
+        metadata: { name: name6, replyTo: email }
       });
       return res.status(200).json({ ok: true, response });
     } catch (error) {
@@ -237330,6 +239118,7 @@ firebase-admin/lib/auth/auth.js:
 firebase-admin/lib/app/error.js:
 firebase-admin/lib/firestore/error.js:
 firebase-admin/lib/auth/error.js:
+firebase-admin/lib/app-check/error.js:
   (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2026 Google LLC
@@ -237370,6 +239159,10 @@ firebase-admin/lib/app/lifecycle.js:
 firebase-admin/lib/app/credential-factory.js:
 firebase-admin/lib/app/index.js:
 firebase-admin/lib/utils/crypto-signer.js:
+firebase-admin/lib/app-check/app-check-api-client-internal.js:
+firebase-admin/lib/app-check/token-generator.js:
+firebase-admin/lib/app-check/app-check.js:
+firebase-admin/lib/app-check/index.js:
   (*! firebase-admin v14.2.0 *)
   (*!
    * @license
@@ -238034,6 +239827,7 @@ firebase-admin/lib/auth/project-config.js:
 
 firebase-admin/lib/utils/jwt.js:
 firebase-admin/lib/auth/base-auth.js:
+firebase-admin/lib/app-check/token-verifier.js:
   (*! firebase-admin v14.2.0 *)
   (*!
    * Copyright 2021 Google LLC
@@ -238626,6 +240420,40 @@ re2js/build/index.esm.js:
   (**
    * @license
    * Copyright 2017 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *   http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *)
+  (**
+   * @license
+   * Copyright 2021 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *   http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *)
+
+@firebase/app-check/dist/esm/index.esm.js:
+  (**
+   * @license
+   * Copyright 2020 Google LLC
    *
    * Licensed under the Apache License, Version 2.0 (the "License");
    * you may not use this file except in compliance with the License.

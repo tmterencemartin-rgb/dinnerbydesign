@@ -13,12 +13,15 @@ import { initializeFirestore, memoryLocalCache, doc, getDoc, setDoc, collection,
 
 import firebaseConfig from '../firebase-applet-config.json';
 import { reportClientError } from './lib/clientErrorTelemetry';
+import { initialiseAppCheck } from './lib/appCheck';
 
 const app = initializeApp(firebaseConfig);
 const isNativeRuntime = () => {
   const capacitor = (globalThis as any).Capacitor;
   return Boolean(capacitor?.isNativePlatform?.());
 };
+
+initialiseAppCheck(app, isNativeRuntime());
 
 export const auth = (() => {
   try {

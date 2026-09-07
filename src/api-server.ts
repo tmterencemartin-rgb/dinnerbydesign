@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth as getFirebaseAdminAuth } from "firebase-admin/auth";
+import { getAppCheck as getFirebaseAdminAppCheck } from "firebase-admin/app-check";
 import { GoogleAuth } from "google-auth-library";
 import firebaseConfig from "../firebase-applet-config.json";
 import { generateDinnerSuggestions, enrichRecipe, generateMatchRationales, generateInternalDinnerChoices } from "../src/services/geminiService";
@@ -32,6 +33,12 @@ import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
 import { normaliseUserPreferences } from "../src/lib/preferenceUtils";
 import { THREE_WAY_SEARCH_PILOT } from "../src/config/features";
 import { validateSearchRequestPayload } from "../src/lib/searchRequestValidation";
+import {
+  GUEST_SEARCH_RATE_LIMIT_WINDOW_MS,
+  createGuestSearchRateLimitId,
+  isGuestSearchRateLimitAvailable,
+  nextGuestSearchRateWindow,
+} from "../src/lib/guestSearchRateLimit";
 import {
   getWebhookClaimDecision,
   isFreshEmailClaim,
@@ -73,8 +80,6 @@ const CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const CONTACT_RATE_LIMIT_MAXIMUM = 4;
 const contactAttempts = new Map<string, number[]>();
 const GUEST_SEARCH_LIMIT = 3;
-const GUEST_IP_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
-const GUEST_IP_RATE_LIMIT_MAXIMUM = 12;
 const guestSearchAttemptsByIp = new Map<string, number[]>();
 const CLIENT_ERROR_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const CLIENT_ERROR_RATE_LIMIT_MAXIMUM = 30;
@@ -321,6 +326,11 @@ function getAdminAuth() {
   return getFirebaseAdminAuth();
 }
 
+function getAdminAppCheck() {
+  ensureFirebaseAdminApp();
+  return getFirebaseAdminAppCheck();
+}
+
 async function verifyAdminRequest(req: express.Request, res: express.Response) {
   const authorization = req.get("authorization") || "";
   const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
@@ -357,13 +367,37 @@ function getRecentGuestIpAttempts(req: express.Request) {
     clientIp,
     now,
     recent: (guestSearchAttemptsByIp.get(clientIp) || [])
-    .filter(attempt => now - attempt < GUEST_IP_RATE_LIMIT_WINDOW_MS),
+    .filter(attempt => now - attempt < GUEST_SEARCH_RATE_LIMIT_WINDOW_MS),
   };
 }
 
-function hasGuestIpCapacity(req: express.Request) {
+function getGuestRateLimitSecret() {
+  return String(process.env.GUEST_RATE_LIMIT_SECRET || '').trim();
+}
+
+function getGuestRateLimitRef(req: express.Request) {
+  const secret = getGuestRateLimitSecret();
+  if (!secret) return null;
+  return getDb().collection('guestSearchRateLimits').doc(createGuestSearchRateLimitId(getClientIp(req), secret));
+}
+
+function getGuestRateWindow(snapshot: FirebaseFirestore.DocumentSnapshot): { count: number; windowStartedAtMs: number } | null {
+  if (!snapshot.exists) return null;
+  const data = snapshot.data();
+  const startedAt = data?.windowStartedAt;
+  const windowStartedAtMs = typeof startedAt?.toMillis === 'function' ? startedAt.toMillis() : 0;
+  if (!Number.isFinite(windowStartedAtMs) || windowStartedAtMs <= 0) return null;
+  return { count: Number(data?.count || 0), windowStartedAtMs };
+}
+
+async function hasGuestIpCapacity(req: express.Request) {
+  const rateLimitRef = getGuestRateLimitRef(req);
+  if (rateLimitRef) {
+    const snapshot = await rateLimitRef.get();
+    return isGuestSearchRateLimitAvailable(getGuestRateWindow(snapshot), Date.now());
+  }
   const { recent } = getRecentGuestIpAttempts(req);
-  return recent.length < GUEST_IP_RATE_LIMIT_MAXIMUM;
+  return recent.length < 12;
 }
 
 function recordGuestIpAttempt(req: express.Request) {
@@ -386,7 +420,7 @@ async function verifySearchIdentity(req: express.Request, res: express.Response)
     const isAnonymous = decoded.firebase?.sign_in_provider === "anonymous";
 
     if (!isAnonymous) return { uid: decoded.uid, isAnonymous: false };
-    if (!hasGuestIpCapacity(req)) {
+    if (!await hasGuestIpCapacity(req)) {
       res.status(429).json({ ok: false, error: "Guest search access is temporarily limited. Please create an account to continue." });
       return null;
     }
@@ -409,10 +443,24 @@ async function verifySearchIdentity(req: express.Request, res: express.Response)
 async function commitGuestSearchUsage(req: express.Request, uid: string) {
   try {
     const usageRef = getDb().collection("guestSearchUsage").doc(uid);
+    const rateLimitRef = getGuestRateLimitRef(req);
     const usage = await getDb().runTransaction(async transaction => {
       const snapshot = await transaction.get(usageRef);
       const count = Number(snapshot.data()?.count || 0);
       if (count >= GUEST_SEARCH_LIMIT) return { allowed: false, count };
+
+      const now = Date.now();
+      if (rateLimitRef) {
+        const rateLimitSnapshot = await transaction.get(rateLimitRef);
+        const currentWindow = getGuestRateWindow(rateLimitSnapshot);
+        if (!isGuestSearchRateLimitAvailable(currentWindow, now)) return { allowed: false, count, rateLimited: true };
+        const nextWindow = nextGuestSearchRateWindow(currentWindow, now);
+        transaction.set(rateLimitRef, {
+          count: nextWindow.count,
+          windowStartedAt: Timestamp.fromMillis(nextWindow.windowStartedAtMs),
+          updatedAt: FieldValue.serverTimestamp(),
+        }, { merge: true });
+      }
 
       const next = count + 1;
       transaction.set(usageRef, {
@@ -423,12 +471,29 @@ async function commitGuestSearchUsage(req: express.Request, uid: string) {
       return { allowed: true, count: next };
     });
 
-    if (!usage.allowed) return "limit" as const;
+    if (!usage.allowed) return usage.rateLimited ? "rate_limit" as const : "limit" as const;
     recordGuestIpAttempt(req);
     return "committed" as const;
   } catch (error) {
     console.error("[SearchAuth] Failed to commit guest search usage:", error);
     return "unavailable" as const;
+  }
+}
+
+async function verifySearchAppCheck(req: express.Request, res: express.Response) {
+  if (String(process.env.FIREBASE_APP_CHECK_ENFORCE_API || '').toLowerCase() !== 'true') return true;
+  const token = String(req.get('x-firebase-appcheck') || '').trim();
+  if (!token) {
+    res.status(401).json({ ok: false, error: 'Please refresh the page and try again.' });
+    return false;
+  }
+  try {
+    await getAdminAppCheck().verifyToken(token);
+    return true;
+  } catch (error) {
+    console.error('[AppCheck] Request verification failed:', error);
+    res.status(401).json({ ok: false, error: 'Please refresh the page and try again.' });
+    return false;
   }
 }
 
@@ -1582,6 +1647,7 @@ export function createApp() {
       return res.status(404).json({ ok: false, error: "AI-created dinners are not available right now." });
     }
 
+    if (!await verifySearchAppCheck(req, res)) return;
     const searchIdentity = await verifySearchIdentity(req, res);
     if (!searchIdentity) return;
 
@@ -1621,6 +1687,9 @@ export function createApp() {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
         if (usageCommit === "limit") {
           return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
+        }
+        if (usageCommit === "rate_limit") {
+          return res.status(429).json({ ok: false, error: "Guest search access is temporarily limited. Please create an account to continue." });
         }
         if (usageCommit === "unavailable") {
           return res.status(503).json({ ok: false, error: "Your search could not be completed. Please try again in a moment." });
@@ -1669,6 +1738,7 @@ export function createApp() {
     const requestStartedAt = Date.now();
     const requestId = normaliseSearchRequestId(req.body?.requestId || req.body?.searchParams?.telemetryRequestId);
     try {
+      if (!await verifySearchAppCheck(req, res)) return;
       const searchIdentity = await verifySearchIdentity(req, res);
       if (!searchIdentity) return;
       const { searchParams: rawSearchParams, preferences } = req.body;
@@ -1730,6 +1800,18 @@ export function createApp() {
         const usageCommit = await commitGuestSearchUsage(req, searchIdentity.uid);
         if (usageCommit === "limit") {
           return res.status(403).json({ ok: false, error: "You've used your 3 free searches. Create an account to start your 7-day trial." });
+        }
+        if (usageCommit === "rate_limit") {
+          return res.status(429).json({
+            ok: false,
+            error: {
+              code: "GUEST_SEARCH_RATE_LIMITED",
+              message: "Guest search access is temporarily limited. Please create an account to continue.",
+              retryable: true,
+              status: 429,
+              category: "rate_limit"
+            }
+          });
         }
         if (usageCommit === "unavailable") {
           return res.status(503).json({
