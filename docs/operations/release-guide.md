@@ -85,6 +85,12 @@ After the first backup reaches `READY`, set the Vercel variables above and redep
 - Deploy the maintained `firestore.rules` before relying on a security-rule change.
 - Confirm that signed-out users and users with a different account cannot read another user's data.
 
+### Firestore audit logging
+
+- Data read and Data write audit logging is enabled only for the Firestore/Datastore API. It was enabled on 7 September 2026 and does not recreate earlier activity.
+- In Logs Explorer, filter Firestore records with `protoPayload.serviceName="firestore.googleapis.com"`. Review caller identity, source IP, method and resource before drawing a conclusion from an alert.
+- Keep project-wide Data Access logging disabled unless a wider audit requirement is agreed, as it produces more log volume and cost.
+
 ### Stripe
 
 - Use live keys only in production.
