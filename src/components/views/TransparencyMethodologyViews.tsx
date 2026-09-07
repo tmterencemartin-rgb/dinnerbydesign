@@ -77,6 +77,7 @@ export const RecipeMethodologyView: React.FC<MethodologyProps> = ({ setView }) =
     </Section>
     <Section title="Where recipes come from">
       <p>DinnerByDesign uses Google Search to find published recipes. Where Google supplies an exact source link, that link is used. If it does not, DinnerByDesign accepts only a direct recipe page from an approved publisher, never a search-results or category page. The publisher owns that recipe and its current ingredients, method and other details.</p>
+      <p>We include publishers only when a direct recipe page is accessible. A publisher may be left out when a page requires a subscription, sign-in or app hand-off, or does not reliably open as a direct recipe link.</p>
       <p>Preferred publishers are a ranking preference, not a guarantee. They can influence relevance, but a stronger source-backed match from another publisher may still appear.</p>
       <p>A source link does not mean that the publisher created, approved or endorsed DinnerByDesign’s summary, or that DinnerByDesign has a commercial relationship with that publisher.</p>
     </Section>

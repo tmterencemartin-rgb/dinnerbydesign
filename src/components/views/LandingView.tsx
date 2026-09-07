@@ -970,6 +970,10 @@ export const LandingView: React.FC = () => {
                 answer: 'They are original DinnerByDesign AI recipes shaped around your brief and saved preferences, rather than publisher recipes. Times and prices are estimates, so check quantities, allergens and cooking instructions before you start.'
               },
               {
+                question: 'Why aren’t some publishers included?',
+                answer: 'We show published recipes only when we can link directly to an accessible recipe page. Some publishers are not included when their pages require a subscription, sign-in, app hand-off or do not reliably open as a direct recipe link.'
+              },
+              {
                 question: 'Does it include supermarket ready-made options?',
                 answer: 'Yes. Ready-made mode helps find convenient supermarket options and turns each result into a practical dinner kit with sides and simple upgrades.'
               },

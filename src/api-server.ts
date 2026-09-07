@@ -3002,6 +3002,14 @@ export function createApp() {
                   },
                   {
                     "@type": "Question",
+                    "name": "Why aren’t some publishers included?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "We show published recipes only when we can link directly to an accessible recipe page. Some publishers are not included when their pages require a subscription, sign-in, app hand-off or do not reliably open as a direct recipe link."
+                    }
+                  },
+                  {
+                    "@type": "Question",
                     "name": "Does it include supermarket ready-made options?",
                     "acceptedAnswer": {
                       "@type": "Answer",
