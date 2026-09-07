@@ -220291,6 +220291,7 @@ var isApprovedDirectRecipeUrl = (value) => {
   return !!canonicalUrl && !isInternalGroundingUrl(canonicalUrl) && !isBlockedRecipePublisherUrl(canonicalUrl) && isTrustedRecipePublisherUrl(canonicalUrl) && isDirectHttpsContentUrl(canonicalUrl);
 };
 var PUBLISHER_PAGE_TIMEOUT_MS = 4e3;
+var ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
 var samePublisher = (left, right) => {
   const leftHost = new URL(left).hostname.toLowerCase().replace(/^www\./, "");
   const rightHost = new URL(right).hostname.toLowerCase().replace(/^www\./, "");
@@ -220311,12 +220312,28 @@ var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
       response = await request(sourceUrl, {
         method: "GET",
         redirect: "follow",
+        headers: { Range: "bytes=0-65535", Accept: "text/html,application/xhtml+xml" },
         signal: controller.signal
       });
     }
-    if (response.status === 404 || response.status === 410) return null;
-    const resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+    if ([401, 402, 404, 410].includes(response.status)) return null;
+    let resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
     if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
+    if (typeof response.text !== "function") {
+      response = await request(sourceUrl, {
+        method: "GET",
+        redirect: "follow",
+        headers: { Range: "bytes=0-65535", Accept: "text/html,application/xhtml+xml" },
+        signal: controller.signal
+      });
+      if ([401, 402, 404, 410].includes(response.status)) return null;
+      resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+      if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
+    }
+    if (typeof response.text === "function") {
+      const pageExcerpt = (await response.text()).slice(0, 65536);
+      if (ACCESS_BARRIER_PATTERN.test(pageExcerpt)) return null;
+    }
     return resolvedUrl;
   } catch {
     return sourceUrl;
@@ -221473,7 +221490,7 @@ var filterToGroundedSources = (items, sources) => items.filter((item) => {
     return true;
   }
   const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
-  if (!groundedSourceUrl || isBlockedRecipePublisherUrl(groundedSourceUrl) || !isDirectHttpsContentUrl(groundedSourceUrl)) return false;
+  if (!groundedSourceUrl || !isApprovedDirectRecipeUrl(groundedSourceUrl)) return false;
   item.sourceUrl = groundedSourceUrl;
   return true;
 });

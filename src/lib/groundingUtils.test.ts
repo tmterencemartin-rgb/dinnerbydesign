@@ -116,4 +116,28 @@ describe('grounded source URL reconciliation', () => {
       request
     )).resolves.toBeNull();
   });
+
+  it('rejects a trusted recipe page that asks a visitor to start a free trial', async () => {
+    const sourceUrl = 'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake';
+    const request = vi.fn()
+      .mockResolvedValueOnce({ status: 200, url: sourceUrl })
+      .mockResolvedValueOnce({
+        status: 200,
+        url: sourceUrl,
+        text: async () => '<main><h1>Start your free trial to view this recipe</h1></main>'
+      });
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBeNull();
+    expect(request).toHaveBeenLastCalledWith(sourceUrl, expect.objectContaining({
+      method: 'GET',
+      redirect: 'follow'
+    }));
+  });
+
+  it('rejects a trusted recipe page that requires payment or sign-in', async () => {
+    const sourceUrl = 'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake';
+    const request = vi.fn().mockResolvedValue({ status: 402, url: sourceUrl });
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBeNull();
+  });
 });

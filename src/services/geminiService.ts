@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, isBlockedRecipePublisherUrl, isDirectHttpsContentUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { COOKING_METHOD_ALIASES } from '../constants';
@@ -700,7 +700,7 @@ export const filterToGroundedSources = (items: any[], sources: Map<string, Groun
     }
 
     const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
-    if (!groundedSourceUrl || isBlockedRecipePublisherUrl(groundedSourceUrl) || !isDirectHttpsContentUrl(groundedSourceUrl)) return false;
+    if (!groundedSourceUrl || !isApprovedDirectRecipeUrl(groundedSourceUrl)) return false;
     item.sourceUrl = groundedSourceUrl;
     return true;
   })

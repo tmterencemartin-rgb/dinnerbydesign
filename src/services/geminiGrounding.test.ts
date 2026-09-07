@@ -29,13 +29,13 @@ describe('Gemini search grounding filters', () => {
     }]);
   });
 
-  it('accepts a non-approved publisher only when its grounded URL is a direct HTTPS page', () => {
+  it('rejects a grounded publisher outside the approved source list', () => {
     const groundedSources = new Map([
       ['https://example.com/recipes/scallops', { url: 'https://example.com/recipes/scallops' }]
     ]);
     const candidate = { title: 'Grounded recipe', sourceUrl: 'https://example.com/recipes/scallops' };
 
-    expect(filterToGroundedSources([candidate], groundedSources)).toEqual([candidate]);
+    expect(filterToGroundedSources([candidate], groundedSources)).toEqual([]);
   });
 
   it('rejects a grounded recipe page when the publisher requires a trial or sign-in', () => {

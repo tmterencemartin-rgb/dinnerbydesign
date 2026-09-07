@@ -159,10 +159,11 @@ export const isApprovedDirectRecipeUrl = (value: unknown): boolean => {
     && isDirectHttpsContentUrl(canonicalUrl);
 };
 
-type PublisherPageResponse = Pick<Response, 'status' | 'url'>;
+type PublisherPageResponse = Pick<Response, 'status' | 'url'> & Partial<Pick<Response, 'text'>>;
 type PublisherPageRequest = (url: string, init: RequestInit) => Promise<PublisherPageResponse>;
 
 const PUBLISHER_PAGE_TIMEOUT_MS = 4_000;
+const ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
 
 const samePublisher = (left: string, right: string): boolean => {
   const leftHost = new URL(left).hostname.toLowerCase().replace(/^www\./, '');
@@ -171,9 +172,10 @@ const samePublisher = (left: string, right: string): boolean => {
 };
 
 /**
- * Reject pages a trusted publisher explicitly reports as missing. A temporary
- * publisher block, rate limit or server error leaves the existing result in
- * place, as those responses do not establish that the page has gone away.
+ * Reject pages a trusted publisher explicitly reports as missing or gated.
+ * A temporary publisher block, rate limit or server error leaves the existing
+ * result in place, as those responses do not establish that the page has gone
+ * away or that a visitor cannot use it.
  */
 export const confirmPublisherRecipePageUrl = async (
   value: unknown,
@@ -196,14 +198,36 @@ export const confirmPublisherRecipePageUrl = async (
       response = await request(sourceUrl, {
         method: 'GET',
         redirect: 'follow',
+        headers: { Range: 'bytes=0-65535', Accept: 'text/html,application/xhtml+xml' },
         signal: controller.signal
       });
     }
 
-    if (response.status === 404 || response.status === 410) return null;
+    if ([401, 402, 404, 410].includes(response.status)) return null;
 
-    const resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+    let resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
     if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
+
+    // HEAD cannot reveal a trial or sign-in wall. Inspect a deliberately small
+    // page response, while treating a blocked automated check as inconclusive.
+    if (typeof response.text !== 'function') {
+      response = await request(sourceUrl, {
+        method: 'GET',
+        redirect: 'follow',
+        headers: { Range: 'bytes=0-65535', Accept: 'text/html,application/xhtml+xml' },
+        signal: controller.signal
+      });
+
+      if ([401, 402, 404, 410].includes(response.status)) return null;
+      resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+      if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
+    }
+
+    if (typeof response.text === 'function') {
+      const pageExcerpt = (await response.text()).slice(0, 65_536);
+      if (ACCESS_BARRIER_PATTERN.test(pageExcerpt)) return null;
+    }
+
     return resolvedUrl;
   } catch {
     // Some publishers block automated checks. Their response is inconclusive,
