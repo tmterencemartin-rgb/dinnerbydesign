@@ -961,8 +961,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
 
               {(!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
-                <div className="flex flex-wrap items-center gap-x-1 gap-y-1 px-1 text-[10.5px] leading-4 text-gray-600">
-                  <Info className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <div className="text-[10.5px] leading-4 text-gray-600">
                   {source === 'cook' ? (
                     <span>
                       {usePublishedSourceHandoff
