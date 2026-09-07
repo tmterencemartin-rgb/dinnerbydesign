@@ -44,6 +44,14 @@ describe('preferenceUtils', () => {
       expect(normalised.preferredSupermarkets).toEqual(['Tesco', 'Sainsbury’s']);
     });
 
+    it('removes retired published-recipe source preferences', () => {
+      const normalised = normaliseUserPreferences({
+        preferredSourceIds: ['bbc_good_food', 'waitrose', 'the_telegraph', 'the_times_sunday_times']
+      });
+
+      expect(normalised.preferredSourceIds).toEqual(['bbc_good_food']);
+    });
+
     it('handles missing data with defaults', () => {
       const normalised = normaliseUserPreferences(null);
       expect(normalised.dietaryRule).toBe('none');

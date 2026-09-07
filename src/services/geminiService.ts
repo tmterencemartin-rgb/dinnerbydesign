@@ -754,7 +754,7 @@ export const hasExplicitRecipeProteinIntent = (query: string, isIngredientLed = 
 const PUBLISHER_RECOVERY_PRIORITY_HOSTS = [
   'bbcgoodfood.com',
   'bbc.co.uk',
-  'tescorealfood.com',
+  'realfood.tesco.com',
   'theguardian.com',
   'deliciousmagazine.co.uk',
   'thehappyfoodie.co.uk',
@@ -762,7 +762,6 @@ const PUBLISHER_RECOVERY_PRIORITY_HOSTS = [
   'nigella.com',
   'hairybikers.com',
   'greatbritishrecipes.com',
-  'waitrose.com',
   'jamesmartinchef.co.uk'
 ] as const;
 

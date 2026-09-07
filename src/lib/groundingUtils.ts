@@ -7,6 +7,7 @@ export const APPROVED_RECIPE_PUBLISHER_HOSTS = [
   'bbcgoodfood.com',
   'bbc.co.uk',
   'tescorealfood.com',
+  'realfood.tesco.com',
   'tesco.com',
   'theguardian.com',
   'deliciousmagazine.co.uk',
@@ -34,23 +35,24 @@ export const APPROVED_RECIPE_PUBLISHER_HOSTS = [
   'diabetes.org.uk',
   'slimmingworld.co.uk',
   'jamieoliver.com',
-  'waitrose.com',
   'asda.com',
   'sainsburysmagazine.co.uk',
   'olivemagazine.com',
   'greatbritishchefs.com',
-  'telegraph.co.uk',
-  'thetimes.com',
-  'thesundaytimes.co.uk',
   'goodhousekeeping.com'
 ] as const;
 
 const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set<string>(APPROVED_RECIPE_PUBLISHER_HOSTS);
 
-// These publishers require sign-in, payment, a trial or an app before a visitor
-// can rely on the recipe. Do not send DinnerByDesign visitors to that barrier.
+// These publishers are not suitable for automatic published-recipe results.
+// They currently require a trial, payment or an app hand-off that cannot be
+// relied on to reach a usable recipe page for every visitor.
 const BLOCKED_RECIPE_PUBLISHER_HOSTS = new Set([
-  'mob.co.uk'
+  'mob.co.uk',
+  'waitrose.com',
+  'telegraph.co.uk',
+  'thetimes.com',
+  'thesundaytimes.co.uk'
 ]);
 
 export const canonicaliseGroundedUrl = (value: unknown): string | null => {
@@ -167,6 +169,12 @@ type PublisherPageRequest = (url: string, init: RequestInit) => Promise<Publishe
 
 const PUBLISHER_PAGE_TIMEOUT_MS = 4_000;
 const ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
+const MISSING_PAGE_PATTERN = /\b(?:page|recipe)\s+not\s+found\b|\b404\s+(?:error|not found)\b/i;
+const GENERIC_INDEX_TITLE_PATTERN = /^(?:recipes?|recipe archive|food & drink)\s*(?:[|–-]|$)/i;
+
+const extractPageTitle = (html: string): string => (
+  html.match(/<title[^>]*>\s*([^<]+?)\s*<\/title>/i)?.[1]?.trim() || ''
+);
 
 const samePublisher = (left: string, right: string): boolean => {
   const leftHost = new URL(left).hostname.toLowerCase().replace(/^www\./, '');
@@ -175,7 +183,7 @@ const samePublisher = (left: string, right: string): boolean => {
 };
 
 /**
- * Reject pages a trusted publisher explicitly reports as missing or gated.
+ * Reject pages a trusted publisher explicitly reports as missing, generic or gated.
  * A temporary publisher block, rate limit or server error leaves the existing
  * result in place, as those responses do not establish that the page has gone
  * away or that a visitor cannot use it.
@@ -191,44 +199,39 @@ export const confirmPublisherRecipePageUrl = async (
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
 
   try {
-    let response = await request(sourceUrl, {
+    const headResponse = await request(sourceUrl, {
       method: 'HEAD',
       redirect: 'follow',
       signal: controller.signal
     });
 
-    if (response.status === 405 || response.status === 501) {
-      response = await request(sourceUrl, {
-        method: 'GET',
-        redirect: 'follow',
-        headers: { Range: 'bytes=0-65535', Accept: 'text/html,application/xhtml+xml' },
-        signal: controller.signal
-      });
-    }
+    if ([401, 402, 404, 410].includes(headResponse.status)) return null;
 
-    if ([401, 402, 404, 410].includes(response.status)) return null;
-
-    let resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+    let resolvedUrl = canonicaliseGroundedUrl(headResponse.url) || sourceUrl;
     if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
 
-    // HEAD cannot reveal a trial or sign-in wall. Inspect a deliberately small
-    // page response, while treating a blocked automated check as inconclusive.
-    if (typeof response.text !== 'function') {
-      response = await request(sourceUrl, {
-        method: 'GET',
-        redirect: 'follow',
-        headers: { Range: 'bytes=0-65535', Accept: 'text/html,application/xhtml+xml' },
-        signal: controller.signal
-      });
+    // A HEAD response never contains the visitor-facing content, even though
+    // the Fetch Response object exposes a text() method. Always follow a
+    // successful header check with a deliberately small page request.
+    const pageResponse = await request(sourceUrl, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: { Range: 'bytes=0-65535', Accept: 'text/html,application/xhtml+xml' },
+      signal: controller.signal
+    });
 
-      if ([401, 402, 404, 410].includes(response.status)) return null;
-      resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
-      if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
-    }
+    if ([401, 402, 404, 410].includes(pageResponse.status)) return null;
+    resolvedUrl = canonicaliseGroundedUrl(pageResponse.url) || sourceUrl;
+    if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
 
-    if (typeof response.text === 'function') {
-      const pageExcerpt = (await response.text()).slice(0, 65_536);
-      if (ACCESS_BARRIER_PATTERN.test(pageExcerpt)) return null;
+    if (typeof pageResponse.text === 'function') {
+      const pageExcerpt = (await pageResponse.text()).slice(0, 65_536);
+      const pageTitle = extractPageTitle(pageExcerpt);
+      if (
+        ACCESS_BARRIER_PATTERN.test(pageExcerpt)
+        || MISSING_PAGE_PATTERN.test(pageExcerpt)
+        || GENERIC_INDEX_TITLE_PATTERN.test(pageTitle)
+      ) return null;
     }
 
     return resolvedUrl;

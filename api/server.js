@@ -218170,11 +218170,6 @@ var PREFERRED_SOURCES = [
     description: "Quick, diabetes-friendly and low-GI ideas from BBC recipe collections."
   },
   {
-    id: "waitrose",
-    label: "Waitrose",
-    description: "Supermarket recipes ranging from quick everyday dishes to seasonal cooking."
-  },
-  {
     id: "asda",
     label: "Asda",
     description: "Practical supermarket recipes and cooking ideas built around accessible ingredients."
@@ -218193,16 +218188,6 @@ var PREFERRED_SOURCES = [
     id: "great_british_chefs",
     label: "Great British Chefs",
     description: "Chef-led recipes, from accessible cooking to more ambitious dishes."
-  },
-  {
-    id: "the_telegraph",
-    label: "The Telegraph",
-    description: "Food writing and recipes from The Telegraph's cookery coverage."
-  },
-  {
-    id: "the_times_sunday_times",
-    label: "The Times & Sunday Times",
-    description: "Recipes and food writing from The Times and Sunday Times."
   },
   {
     id: "good_housekeeping",
@@ -220194,6 +220179,7 @@ var APPROVED_RECIPE_PUBLISHER_HOSTS = [
   "bbcgoodfood.com",
   "bbc.co.uk",
   "tescorealfood.com",
+  "realfood.tesco.com",
   "tesco.com",
   "theguardian.com",
   "deliciousmagazine.co.uk",
@@ -220221,19 +220207,19 @@ var APPROVED_RECIPE_PUBLISHER_HOSTS = [
   "diabetes.org.uk",
   "slimmingworld.co.uk",
   "jamieoliver.com",
-  "waitrose.com",
   "asda.com",
   "sainsburysmagazine.co.uk",
   "olivemagazine.com",
   "greatbritishchefs.com",
-  "telegraph.co.uk",
-  "thetimes.com",
-  "thesundaytimes.co.uk",
   "goodhousekeeping.com"
 ];
 var TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set(APPROVED_RECIPE_PUBLISHER_HOSTS);
 var BLOCKED_RECIPE_PUBLISHER_HOSTS = /* @__PURE__ */ new Set([
-  "mob.co.uk"
+  "mob.co.uk",
+  "waitrose.com",
+  "telegraph.co.uk",
+  "thetimes.com",
+  "thesundaytimes.co.uk"
 ]);
 var canonicaliseGroundedUrl = (value) => {
   if (typeof value !== "string" || !/^https?:\/\//i.test(value.trim())) return null;
@@ -220299,6 +220285,9 @@ var isApprovedDirectRecipeUrl = (value) => {
 };
 var PUBLISHER_PAGE_TIMEOUT_MS = 4e3;
 var ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
+var MISSING_PAGE_PATTERN = /\b(?:page|recipe)\s+not\s+found\b|\b404\s+(?:error|not found)\b/i;
+var GENERIC_INDEX_TITLE_PATTERN = /^(?:recipes?|recipe archive|food & drink)\s*(?:[|–-]|$)/i;
+var extractPageTitle = (html) => html.match(/<title[^>]*>\s*([^<]+?)\s*<\/title>/i)?.[1]?.trim() || "";
 var samePublisher = (left, right) => {
   const leftHost = new URL(left).hostname.toLowerCase().replace(/^www\./, "");
   const rightHost = new URL(right).hostname.toLowerCase().replace(/^www\./, "");
@@ -220310,36 +220299,27 @@ var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
   try {
-    let response = await request(sourceUrl, {
+    const headResponse = await request(sourceUrl, {
       method: "HEAD",
       redirect: "follow",
       signal: controller.signal
     });
-    if (response.status === 405 || response.status === 501) {
-      response = await request(sourceUrl, {
-        method: "GET",
-        redirect: "follow",
-        headers: { Range: "bytes=0-65535", Accept: "text/html,application/xhtml+xml" },
-        signal: controller.signal
-      });
-    }
-    if ([401, 402, 404, 410].includes(response.status)) return null;
-    let resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
+    if ([401, 402, 404, 410].includes(headResponse.status)) return null;
+    let resolvedUrl = canonicaliseGroundedUrl(headResponse.url) || sourceUrl;
     if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
-    if (typeof response.text !== "function") {
-      response = await request(sourceUrl, {
-        method: "GET",
-        redirect: "follow",
-        headers: { Range: "bytes=0-65535", Accept: "text/html,application/xhtml+xml" },
-        signal: controller.signal
-      });
-      if ([401, 402, 404, 410].includes(response.status)) return null;
-      resolvedUrl = canonicaliseGroundedUrl(response.url) || sourceUrl;
-      if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
-    }
-    if (typeof response.text === "function") {
-      const pageExcerpt = (await response.text()).slice(0, 65536);
-      if (ACCESS_BARRIER_PATTERN.test(pageExcerpt)) return null;
+    const pageResponse = await request(sourceUrl, {
+      method: "GET",
+      redirect: "follow",
+      headers: { Range: "bytes=0-65535", Accept: "text/html,application/xhtml+xml" },
+      signal: controller.signal
+    });
+    if ([401, 402, 404, 410].includes(pageResponse.status)) return null;
+    resolvedUrl = canonicaliseGroundedUrl(pageResponse.url) || sourceUrl;
+    if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
+    if (typeof pageResponse.text === "function") {
+      const pageExcerpt = (await pageResponse.text()).slice(0, 65536);
+      const pageTitle = extractPageTitle(pageExcerpt);
+      if (ACCESS_BARRIER_PATTERN.test(pageExcerpt) || MISSING_PAGE_PATTERN.test(pageExcerpt) || GENERIC_INDEX_TITLE_PATTERN.test(pageTitle)) return null;
     }
     return resolvedUrl;
   } catch {
@@ -221536,7 +221516,7 @@ var hasExplicitRecipeProteinIntent = (query2, isIngredientLed = false) => isIngr
 var PUBLISHER_RECOVERY_PRIORITY_HOSTS = [
   "bbcgoodfood.com",
   "bbc.co.uk",
-  "tescorealfood.com",
+  "realfood.tesco.com",
   "theguardian.com",
   "deliciousmagazine.co.uk",
   "thehappyfoodie.co.uk",
@@ -221544,7 +221524,6 @@ var PUBLISHER_RECOVERY_PRIORITY_HOSTS = [
   "nigella.com",
   "hairybikers.com",
   "greatbritishrecipes.com",
-  "waitrose.com",
   "jamesmartinchef.co.uk"
 ];
 var buildPublisherFocusedRecoveryInstruction = (query2, usedPublishers = []) => {
@@ -234019,6 +233998,7 @@ var allergyTerms = {
 };
 
 // src/lib/preferenceUtils.ts
+var ACTIVE_PREFERRED_SOURCE_IDS = new Set(PREFERRED_SOURCES.map((source) => source.id));
 var normaliseUserPreferences = (data) => {
   if (!data) {
     return {
@@ -234125,7 +234105,7 @@ var normaliseUserPreferences = (data) => {
       if (item === "Sainsbury's") return "Sainsbury\u2019s";
       return item;
     }))],
-    preferredSourceIds: [...new Set(data.preferredSourceIds || [])]
+    preferredSourceIds: [...new Set(data.preferredSourceIds || [])].filter((sourceId) => ACTIVE_PREFERRED_SOURCE_IDS.has(sourceId))
   };
 };
 

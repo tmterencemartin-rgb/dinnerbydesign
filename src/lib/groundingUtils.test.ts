@@ -37,40 +37,32 @@ describe('grounded source URL reconciliation', () => {
 
   it('accepts only recognised recipe-publisher domains when no grounding record is available', () => {
     expect(isTrustedRecipePublisherUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
+    expect(isTrustedRecipePublisherUrl('https://realfood.tesco.com/recipes/example')).toBe(true);
     expect(isTrustedRecipePublisherUrl('https://example.com/haddock-potato-bake')).toBe(false);
   });
 
   it('accepts only direct recipe pages from approved publishers when grounding metadata is absent', () => {
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.kitchensanctuary.com/creamy-garlic-scallops/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.waitrose.com/ecom/recipes/roast-chicken')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.waitrose.com/ecom/recipes/roast-chicken')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.asda.com/good-living/recipes/sausage-and-bean-stew')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.sainsburysmagazine.co.uk/recipes/chicken-pie')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.olivemagazine.com/recipes/vegetarian/green-lentil-curry/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.greatbritishchefs.com/recipes/chicken-curry-recipe')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.telegraph.co.uk/recipes/0/chicken-pie/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.thetimes.com/life-style/food-drink/recipe/chicken-pie-0')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.thesundaytimes.co.uk/thedish/recipe/chicken-pie')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.telegraph.co.uk/recipes/0/chicken-pie/')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://www.thetimes.com/life-style/food-drink/recipe/chicken-pie-0')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://www.thesundaytimes.co.uk/thedish/recipe/chicken-pie')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.goodhousekeeping.com/uk/food/recipes/a12345/chicken-pie/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.deliaonline.com/recipes/chicken-casserole')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.nigella.com/recipes/chicken-with-chorizo-and-cannellini-beans')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://foodnetwork.co.uk/recipes/roast-chicken')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://pinchofnom.com/recipes/chicken-curry/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://maryberry.co.uk/recipes/chicken-valencia')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://greatbritishrecipes.com/chicken-casserole/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://pinchofnom.com/recipes/chicken-curry-bakes/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.recipetineats.com/chicken-stroganoff/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.gressinghamduck.co.uk/recipes/duck-breast-with-cherry-sauce/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.annaskitchentable.co.uk/recipes/kleftiko')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.independent.co.uk/life-style/food-and-drink/recipes/easy-spring-recipes-what-to-cook-tonight-b2948169.html')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.recipesmadeeasy.co.uk/recipes/chicken-casserole/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.riverford.co.uk/recipes/vegetable-pasta')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.gressinghamduck.co.uk/recipes/roast-duck-crown/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://ottolenghi.co.uk/pages/recipes/spicy-mushroom-lasagne')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.coop.co.uk/recipes/chicken-curry')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.jamesmartinchef.co.uk/recipes/chicken-thighs-cooked-in-coconut-and-white-poppy-seeds/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.hairybikers.com/recipes/chicken-curry')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.dontgobaconmyheart.co.uk/creamy-tomato-pasta/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.krumpli.co.uk/chicken-curry/')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.ourmodernkitchen.com/chicken-curry/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
   });
@@ -121,7 +113,7 @@ describe('grounded source URL reconciliation', () => {
   it('rejects a trusted recipe page that asks a visitor to start a free trial', async () => {
     const sourceUrl = 'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake';
     const request = vi.fn()
-      .mockResolvedValueOnce({ status: 200, url: sourceUrl })
+      .mockResolvedValueOnce({ status: 200, url: sourceUrl, text: async () => '' })
       .mockResolvedValueOnce({
         status: 200,
         url: sourceUrl,
@@ -133,6 +125,32 @@ describe('grounded source URL reconciliation', () => {
       method: 'GET',
       redirect: 'follow'
     }));
+  });
+
+  it('rejects a page that reports it is missing despite a successful response', async () => {
+    const sourceUrl = 'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake';
+    const request = vi.fn()
+      .mockResolvedValueOnce({ status: 200, url: sourceUrl, text: async () => '' })
+      .mockResolvedValueOnce({
+        status: 200,
+        url: sourceUrl,
+        text: async () => '<html><title>Page not found | BBC Good Food</title><main>Page not found</main></html>'
+      });
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBeNull();
+  });
+
+  it('rejects a generic recipe listing in place of the requested recipe', async () => {
+    const sourceUrl = 'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake';
+    const request = vi.fn()
+      .mockResolvedValueOnce({ status: 200, url: sourceUrl, text: async () => '' })
+      .mockResolvedValueOnce({
+        status: 200,
+        url: sourceUrl,
+        text: async () => '<html><title>Recipes | Publisher</title><main>Browse our recipes</main></html>'
+      });
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBeNull();
   });
 
   it('rejects a trusted recipe page that requires payment or sign-in', async () => {

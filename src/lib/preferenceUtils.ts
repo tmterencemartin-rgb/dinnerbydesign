@@ -1,6 +1,9 @@
 import { UserPreferences, DietaryRule, SaladPreference } from '../types';
+import { PREFERRED_SOURCES } from '../data/preferredSources';
 import { dietaryRuleAllowsOffal } from './offalPreference';
 import { filterCookingFatsForDiet } from './preferenceCompatibility';
+
+const ACTIVE_PREFERRED_SOURCE_IDS = new Set(PREFERRED_SOURCES.map(source => source.id));
 
 /**
  * Normalises user preferences from potentially legacy data formats.
@@ -125,6 +128,7 @@ export const normaliseUserPreferences = (data: any): UserPreferences => {
       return item;
     }) as string[])],
     preferredSourceIds: [...new Set((data.preferredSourceIds || []) as string[])]
+      .filter(sourceId => ACTIVE_PREFERRED_SOURCE_IDS.has(sourceId))
   };
 };
 
