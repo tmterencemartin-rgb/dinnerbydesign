@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { APPROVED_RECIPE_PUBLISHER_HOSTS, canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { COOKING_METHOD_ALIASES } from '../constants';
@@ -746,6 +746,47 @@ export const selectPublisherVariedRecipes = (items: any[], count: number): any[]
   return [...firstFromPublisher, ...remainingItems].slice(0, count);
 };
 
+export const hasExplicitRecipeProteinIntent = (query: string, isIngredientLed = false): boolean => (
+  isIngredientLed
+  || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|mackerel|prawn|shrimp|tofu|liver|offal|kidney|heart|tongue|tripe|sweetbreads|black pudding|blood sausage)\b/i.test(query)
+);
+
+const PUBLISHER_RECOVERY_PRIORITY_HOSTS = [
+  'bbcgoodfood.com',
+  'bbc.co.uk',
+  'tescorealfood.com',
+  'theguardian.com',
+  'deliciousmagazine.co.uk',
+  'thehappyfoodie.co.uk',
+  'deliaonline.com',
+  'nigella.com',
+  'hairybikers.com',
+  'greatbritishrecipes.com',
+  'waitrose.com',
+  'jamesmartinchef.co.uk'
+] as const;
+
+export const buildPublisherFocusedRecoveryInstruction = (
+  query: string,
+  usedPublishers: string[] = []
+): string => {
+  const used = new Set(usedPublishers.map(publisher => publisher.toLowerCase()));
+  const hosts = [
+    ...PUBLISHER_RECOVERY_PRIORITY_HOSTS,
+    ...APPROVED_RECIPE_PUBLISHER_HOSTS
+  ].filter((host, index, allHosts) => (
+    !used.has(host) && allHosts.indexOf(host) === index
+  )).slice(0, 8);
+  const quotedQuery = query.replace(/["\r\n]/g, ' ').trim();
+  const searchTerms = hosts.map(host => `site:${host} "${quotedQuery}"`).join(', ');
+
+  return `SOURCE-FOCUSED RECOVERY:
+- The initial published-recipe search is under-filled. Search unused approved publisher sites before returning fewer choices.
+- Use focused Google searches such as: ${searchTerms}.
+- Return only an exact direct recipe page that the current search grounds. Do not use a search page, category page, recipe collection, homepage or an invented URL.
+- Keep every dietary, allergy, ingredient, budget and time restriction from the original request.`;
+};
+
 const countRecipePublishers = (items: any[]): number => (
   new Set(items.map(item => getRecipePublisherKey(item?.sourceUrl)).filter(Boolean)).size
 );
@@ -999,8 +1040,10 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   const activePreferredSourceNames = activePreferredSourceIds.length > 0
     ? PREFERRED_SOURCES.filter(s => activePreferredSourceIds.includes(s.id)).map(s => s.label)
     : [];
-  const hasExplicitDietOrProteinIntent = Boolean(ingredientIntent?.isIngredientLed)
-    || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|mackerel|prawn|shrimp|tofu)\b/i.test(query);
+  const hasExplicitDietOrProteinIntent = hasExplicitRecipeProteinIntent(
+    query,
+    Boolean(ingredientIntent?.isIngredientLed)
+  );
   const shouldEncourageRecipeVariety = !isReadyMade && activeDietaryRule === 'none' && !hasExplicitDietOrProteinIntent;
   const isBroadChilliDishSearch = /\b(chilli|chili)\b/i.test(query)
     && !/\b(fresh|red|green|bird['’]?s[- ]eye|flakes?|powder|sauce|oil|pepper|peppers)\b/i.test(query);
@@ -1229,7 +1272,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Don't Go Bacon My Heart, Krumpli, Our Modern Kitchen, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Hairy Bikers, Don't Go Bacon My Heart, Krumpli, Our Modern Kitchen, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
 - FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
@@ -1560,19 +1603,25 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
 
       const repairCount = Math.max(1, missingCount, publisherGap);
       const existingTitles = [...(excludeTitles || []), ...rawItems.map((item: any) => String(item.title || '').trim())].filter(Boolean);
+      const publisherFocusedRecovery = !isReadyMade
+        ? buildPublisherFocusedRecoveryInstruction(
+          query,
+          rawItems.map(item => getRecipePublisherKey(item?.sourceUrl)).filter((publisher): publisher is string => Boolean(publisher))
+        )
+        : '';
       const repairPrompt = `Search intent: "${query}".
 Return exactly ${repairCount} additional ${isReadyMade ? 'UK supermarket ready-made products' : 'recipe'} stubs.
 Do not repeat any existing title: ${existingTitles.join(', ') || 'None'}.
 ${!isReadyMade && publisherGap > 0 ? `Use publishers other than these where suitable: ${listRecipePublishers(rawItems)}. Return no more than one recipe from each publisher.` : ''}
 ${allVegetarian ? 'At least one added result must be a conventional non-vegetarian version where that is a normal fit for this dish. The user has not selected a vegetarian preference.' : ''}
-${isReadyMade ? 'Return commercially available UK ready-made products only.' : 'Return home-cooking recipes only.'}`;
+${isReadyMade ? 'Return commercially available UK ready-made products only.' : `Return home-cooking recipes only.\n${publisherFocusedRecovery}`}`;
       repairPrompts.push(repairPrompt);
 
       try {
         const repairConfig = {
           ...config,
           systemInstruction: `${finalSystemInstruction}
-REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's exclusions and variety requirement.`
+REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's source, exclusion and variety requirements.`
         };
         const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt, repairConfig);
         const repairGroundedSources = rememberGroundedSources(repairResponse);

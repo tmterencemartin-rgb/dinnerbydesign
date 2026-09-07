@@ -10,7 +10,7 @@ vi.mock('../firebase', () => ({
   signInAnon: vi.fn()
 }));
 
-import { filterToGroundedSources, getRecipePublisherKey, selectPublisherVariedRecipes } from './geminiService';
+import { buildPublisherFocusedRecoveryInstruction, filterToGroundedSources, getRecipePublisherKey, hasExplicitRecipeProteinIntent, selectPublisherVariedRecipes } from './geminiService';
 
 describe('Gemini search grounding filters', () => {
   it('uses the current response source set so a metadata-free recovery can use an approved direct page', () => {
@@ -69,5 +69,19 @@ describe('Gemini search grounding filters', () => {
     expect(getRecipePublisherKey('https://www.bbcgoodfood.com/recipes/first')).toBe('bbcgoodfood.com');
     expect(selectPublisherVariedRecipes([bbcFirst, bbcSecond, guardian], 3)).toEqual([bbcFirst, guardian, bbcSecond]);
     expect(selectPublisherVariedRecipes([bbcFirst, bbcSecond], 3)).toEqual([bbcFirst, bbcSecond]);
+  });
+
+  it('treats an explicit offal search as a protein request rather than a broad search', () => {
+    expect(hasExplicitRecipeProteinIntent('liver recipes')).toBe(true);
+    expect(hasExplicitRecipeProteinIntent('kidney recipes')).toBe(true);
+    expect(hasExplicitRecipeProteinIntent('dinner ideas')).toBe(false);
+  });
+
+  it('uses unused approved publishers for a thin published-recipe search', () => {
+    const instruction = buildPublisherFocusedRecoveryInstruction('liver recipes', ['bbcgoodfood.com']);
+
+    expect(instruction).toContain('site:hairybikers.com "liver recipes"');
+    expect(instruction).not.toContain('site:bbcgoodfood.com');
+    expect(instruction).toContain('exact direct recipe page');
   });
 });

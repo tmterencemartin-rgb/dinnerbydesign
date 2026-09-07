@@ -16,5 +16,6 @@ describe('getRecipeSourceLabel', () => {
     expect(getRecipeSourcePublisher('https://www.recipetineats.com/example')).toBe('RecipeTin Eats');
     expect(getRecipeSourcePublisher('https://ottolenghi.co.uk/pages/recipes/example')).toBe('Ottolenghi');
     expect(getRecipeSourcePublisher('https://www.coop.co.uk/recipes/example')).toBe('Co-op');
+    expect(getRecipeSourcePublisher('https://www.hairybikers.com/recipes/example')).toBe('Hairy Bikers');
   });
 });

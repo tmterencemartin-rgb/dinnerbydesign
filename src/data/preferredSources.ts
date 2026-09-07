@@ -111,6 +111,11 @@ export const PREFERRED_SOURCES: PreferredSource[] = [
     description: "British recipes from James Martin’s official collection."
   },
   {
+    id: "hairy_bikers",
+    label: "Hairy Bikers",
+    description: "British recipes from the Hairy Bikers’ official collection."
+  },
+  {
     id: "dont_go_bacon_my_heart",
     label: "Don't Go Bacon My Heart",
     description: "Comforting, flavour-led recipes with detailed instructions."

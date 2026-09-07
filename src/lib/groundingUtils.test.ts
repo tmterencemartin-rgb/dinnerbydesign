@@ -67,6 +67,7 @@ describe('grounded source URL reconciliation', () => {
     expect(isApprovedDirectRecipeUrl('https://ottolenghi.co.uk/pages/recipes/spicy-mushroom-lasagne')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.coop.co.uk/recipes/chicken-curry')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.jamesmartinchef.co.uk/recipes/chicken-thighs-cooked-in-coconut-and-white-poppy-seeds/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.hairybikers.com/recipes/chicken-curry')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.dontgobaconmyheart.co.uk/creamy-tomato-pasta/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.krumpli.co.uk/chicken-curry/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.ourmodernkitchen.com/chicken-curry/')).toBe(true);

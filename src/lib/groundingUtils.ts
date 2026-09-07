@@ -3,7 +3,7 @@ export type GroundedSource = {
   title?: string;
 };
 
-const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set([
+export const APPROVED_RECIPE_PUBLISHER_HOSTS = [
   'bbcgoodfood.com',
   'bbc.co.uk',
   'tescorealfood.com',
@@ -26,6 +26,7 @@ const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set([
   'ottolenghi.co.uk',
   'coop.co.uk',
   'jamesmartinchef.co.uk',
+  'hairybikers.com',
   'dontgobaconmyheart.co.uk',
   'krumpli.co.uk',
   'ourmodernkitchen.com',
@@ -42,7 +43,9 @@ const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set([
   'thetimes.com',
   'thesundaytimes.co.uk',
   'goodhousekeeping.com'
-]);
+] as const;
+
+const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set<string>(APPROVED_RECIPE_PUBLISHER_HOSTS);
 
 // These publishers require sign-in, payment, a trial or an app before a visitor
 // can rely on the recipe. Do not send DinnerByDesign visitors to that barrier.
