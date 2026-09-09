@@ -1142,10 +1142,11 @@ export const AdminDashboard: React.FC = () => {
 
   const summaryStats = React.useMemo(() => {
     const paid = users.filter(user => getAccessStatus(user) === 'paid').length;
-    const permanentAccess = users.filter(user => !!user.permanentAccess).length;
+    // Keep the paid breakdown mutually exclusive with the headline total.
+    const permanentAccess = users.filter(user => getAccessStatus(user) === 'paid' && !!user.permanentAccess).length;
+    const paidSubscriptionAccess = paid - permanentAccess;
     const trial = users.filter(user => getAccessStatus(user) === 'trial').length;
     const readOnly = users.filter(user => getAccessStatus(user) === 'read_only').length;
-    const stripeLinked = users.filter(user => !!user.subscription?.stripeCustomerId).length;
     const paymentIssues = users.filter(hasPaymentIssue).length;
     const subscriptionEmails = users.filter(user => !!user.subscriptionConfirmationEmailSent).length;
     const totalSearches = users.reduce((sum, user) => sum + getSearchCount(user), 0);
@@ -1167,9 +1168,9 @@ export const AdminDashboard: React.FC = () => {
       total: users.length,
       paid,
       permanentAccess,
+      paidSubscriptionAccess,
       trial,
       readOnly,
-      stripeLinked,
       paymentIssues,
       subscriptionEmails,
       totalSearches,
@@ -1451,7 +1452,7 @@ export const AdminDashboard: React.FC = () => {
               <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
               {[
                 { label: 'App profiles', value: summaryStats.total, detail: `${summaryStats.trial} trial / ${summaryStats.readOnly} read only`, icon: Users },
-                { label: 'Paid access', value: summaryStats.paid, detail: `${summaryStats.stripeLinked} Stripe / ${summaryStats.permanentAccess} permanent`, icon: CreditCard },
+                { label: 'Paid access', value: summaryStats.paid, detail: `${summaryStats.paidSubscriptionAccess} paid subscription / ${summaryStats.permanentAccess} permanent`, icon: CreditCard },
                 { label: 'Payment issues', value: summaryStats.paymentIssues, detail: 'Past due, unpaid, incomplete or paused', icon: AlertTriangle },
                 { label: 'Usage', value: summaryStats.aiCalls || summaryStats.totalSearches, detail: `${summaryStats.succeededAiCalls} model calls succeeded`, icon: Activity }
               ].map(item => {
