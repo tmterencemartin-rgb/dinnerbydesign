@@ -532,6 +532,56 @@ async function listAllAuthenticationIdentities() {
   return identities;
 }
 
+async function provisionMissingUserProfile(identity: {
+  uid: string;
+  email?: string | null;
+  displayName?: string | null;
+}) {
+  const db = getDb();
+  const profileRef = db.collection("users").doc(identity.uid);
+  const preferencesRef = profileRef.collection("profile").doc("preferences");
+  const email = String(identity.email || "").trim();
+  const displayName = String(identity.displayName || email || "User").trim();
+  const names = displayName.split(/\s+/).filter(Boolean);
+  const owner = ADMIN_EMAILS.has(email.toLowerCase());
+  const preferences = normaliseUserPreferences(null);
+  let provisioned = false;
+
+  await db.runTransaction(async transaction => {
+    const profileSnapshot = await transaction.get(profileRef);
+    const preferencesSnapshot = await transaction.get(preferencesRef);
+
+    if (!profileSnapshot.exists) {
+      transaction.create(profileRef, {
+        uid: identity.uid,
+        email,
+        displayName,
+        firstName: names[0] || (email ? email.split("@")[0] : "User"),
+        lastName: names.length > 1 ? names.slice(1).join(" ") : "",
+        phoneNumber: "",
+        preferences,
+        isPremium: owner,
+        accessStatus: owner ? "paid" : "trial",
+        trialStartedAt: FieldValue.serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+        searchOnboardingDismissed: false,
+        welcomeEmailSent: false,
+      });
+      provisioned = true;
+    }
+
+    if (!preferencesSnapshot.exists) {
+      transaction.create(preferencesRef, {
+        ...preferences,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+    }
+  });
+
+  return provisioned;
+}
+
 interface EmailEventMeta {
   type?: string;
   source?: string;
@@ -1383,6 +1433,43 @@ export function createApp() {
       return res.status(503).json({
         ok: false,
         error: "Account reconciliation is unavailable. Server-side Firebase administration must be configured.",
+      });
+    }
+  });
+
+  app.post("/api/admin/accounts/repair-profiles", express.json(), async (req, res) => {
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+
+    try {
+      const [identities, profileSnapshot] = await Promise.all([
+        listAllAuthenticationIdentities(),
+        getDb().collection("users").get(),
+      ]);
+      const profileIds = profileSnapshot.docs.map((profile: any) => profile.id);
+      const missingIdentities = findRegisteredIdentitiesWithoutProfiles(identities, profileIds);
+      let provisionedCount = 0;
+
+      for (const identity of missingIdentities) {
+        if (await provisionMissingUserProfile(identity)) provisionedCount += 1;
+      }
+
+      const remainingProfileSnapshot = await getDb().collection("users").get();
+      const remainingProfileIds = remainingProfileSnapshot.docs.map((profile: any) => profile.id);
+      const remainingCount = findRegisteredIdentitiesWithoutProfiles(identities, remainingProfileIds).length;
+
+      return res.json({
+        ok: true,
+        reviewedCount: missingIdentities.length,
+        provisionedCount,
+        skippedCount: missingIdentities.length - provisionedCount,
+        remainingCount,
+      });
+    } catch (error) {
+      console.error("[AdminAccounts] Profile repair failed:", error);
+      return res.status(500).json({
+        ok: false,
+        error: "The missing account profiles could not be created. Please try again.",
       });
     }
   });

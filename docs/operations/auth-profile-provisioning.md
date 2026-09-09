@@ -6,6 +6,7 @@ DinnerByDesign keeps a Firebase Authentication identity and a Firestore app prof
 - Anonymous identities intentionally remain browser-local and do not receive a Firestore profile.
 - The client also retries provisioning when a registered identity signs in without `users/{uid}`.
 - Existing orphaned identities can be reviewed with the repair script before applying changes.
+- Administrators can use the dashboard's `Create missing profiles` action to apply the same guarded repair against the live account register.
 
 ## Dry run
 
@@ -24,3 +25,5 @@ node scripts/repairOrphanedProfiles.mjs --apply
 ```
 
 The script creates only missing profiles and preference documents. It does not delete authentication identities or overwrite existing profile documents.
+
+The dashboard repair action follows the same rules and refreshes reconciliation after it completes. A remaining count above zero means an account still needs review rather than being silently moved or deleted.

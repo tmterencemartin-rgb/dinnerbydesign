@@ -361,6 +361,32 @@ export const AdminDashboard: React.FC = () => {
     return result as { deletedCount: number };
   }, [currentUser]);
 
+  const repairProfilelessRegisteredAccounts = React.useCallback(async () => {
+    if (!currentUser) {
+      throw new Error('Sign in as an administrator to repair account profiles.');
+    }
+
+    const token = await currentUser.getIdToken();
+    const response = await fetch(getApiUrl('/api/admin/accounts/repair-profiles'), {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      throw new Error(result?.error || 'The missing account profiles could not be created.');
+    }
+    return result as {
+      reviewedCount: number;
+      provisionedCount: number;
+      skippedCount: number;
+      remainingCount: number;
+    };
+  }, [currentUser]);
+
   useEffect(() => {
     if (!isAdmin) {
       setView('home');
@@ -594,6 +620,35 @@ export const AdminDashboard: React.FC = () => {
         } catch (error: any) {
           await refreshAccountReconciliation();
           showCustomAlert('Cleanup Stopped', error?.message || 'The registered sign-ins could not be deleted.');
+        } finally {
+          setActionLoading(null);
+        }
+      },
+    );
+  };
+
+  const handleRepairProfilelessRegisteredAccounts = () => {
+    const accounts = accountReconciliation?.registeredWithoutProfileAccounts || [];
+    if (accounts.length === 0) {
+      showCustomAlert('No Profiles to Create', 'All registered sign-ins already have app profiles.');
+      return;
+    }
+
+    showCustomConfirm(
+      'Create Missing Profiles?',
+      `This creates the default DinnerByDesign profile for the ${accounts.length} registered sign-ins listed here. Existing profiles and stored preferences are left unchanged.`,
+      async () => {
+        setActionLoading('repair-registered');
+        try {
+          const result = await repairProfilelessRegisteredAccounts();
+          await refreshAccountReconciliation();
+          showCustomAlert(
+            'Profile Repair Complete',
+            `${result.provisionedCount} missing profile${result.provisionedCount === 1 ? '' : 's'} created. ${result.remainingCount === 0 ? 'All registered sign-ins now have profiles.' : `${result.remainingCount} still need review.`}`,
+          );
+        } catch (error: any) {
+          await refreshAccountReconciliation();
+          showCustomAlert('Profile Repair Stopped', error?.message || 'The missing account profiles could not be created.');
         } finally {
           setActionLoading(null);
         }
@@ -1409,6 +1464,14 @@ export const AdminDashboard: React.FC = () => {
                               Review these individually. No account is repaired or deleted automatically.
                             </p>
                           </div>
+                          <button
+                            type="button"
+                            onClick={handleRepairProfilelessRegisteredAccounts}
+                            disabled={actionLoading !== null}
+                            className="w-fit shrink-0 rounded border border-amber-300 bg-amber-100 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-amber-900 hover:bg-amber-200 disabled:opacity-50"
+                          >
+                            {actionLoading === 'repair-registered' ? 'Creating…' : 'Create missing profiles'}
+                          </button>
                           <button
                             type="button"
                             onClick={handleCleanupProfilelessRegisteredAccounts}
