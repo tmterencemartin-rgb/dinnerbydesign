@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flag, Loader2, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Flag, Loader2, Sparkles, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
 import { getSearchSecurityHeaders } from '../../lib/searchAuth';
@@ -141,9 +141,30 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
     }
   };
 
+  const startNewSearch = () => {
+    setBrief('');
+    setChoices([]);
+    setHasPartialChoices(false);
+    setError(null);
+    setProblemChoiceKey(null);
+    setFeedbackState({});
+  };
+
   return (
     <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="ai-created-recipe-heading">
-      <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
+        {choices.length > 0 && (
+          <button
+            type="button"
+            onClick={startNewSearch}
+            className="inline-flex shrink-0 items-center gap-1 rounded border border-gray-200 bg-white px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-dbd-ink-2 transition-colors hover:border-dbd-accent hover:text-dbd-accent"
+          >
+            <X className="h-3.5 w-3.5" aria-hidden="true" />
+            Start a new search
+          </button>
+        )}
+      </div>
       <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
         Original recipes shaped around your brief and saved preferences, with UK metric quantities, timings and price estimates.
       </p>
