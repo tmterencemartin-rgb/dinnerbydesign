@@ -52,7 +52,7 @@ export default defineConfig(({mode}) => {
     test: {
       environment: 'jsdom',
       globals: true,
-      exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
+      exclude: ['e2e/**', 'node_modules/**', 'functions/**', 'dist/**'],
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

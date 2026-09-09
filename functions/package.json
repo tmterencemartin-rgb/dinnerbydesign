@@ -1,0 +1,16 @@
+{
+  "name": "dinnerbydesign-functions",
+  "private": true,
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.cjs",
+  "type": "commonjs",
+  "scripts": {
+    "lint": "node --check index.cjs && node --check profileProvisioning.cjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.2.0",
+    "firebase-functions": "^7.3.2"
+  }
+}

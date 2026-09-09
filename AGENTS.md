@@ -117,6 +117,10 @@ When a user lists ingredients:
 - Keep production and supported local domains authorised in Firebase.
 - Password reset first attempts the configured continuation URL, then retries the standard secure reset email if that attempt fails.
 - Use neutral password-reset messaging to reduce account enumeration risk.
+- Registered Firebase Authentication identities are provisioned server-side by the Firebase Auth `onCreate` trigger in `functions/index.cjs`.
+- The trigger creates `users/{uid}` and `users/{uid}/profile/preferences` transactionally, skips anonymous identities, preserves existing documents, and uses the same owner/trial defaults as the client.
+- `AuthContext.tsx` keeps a retrying client fallback for existing orphaned accounts and only creates missing profile or preferences documents with merge semantics.
+- `scripts/repairOrphanedProfiles.mjs` is a dry-run-by-default repair tool. Run it with Firebase Admin credentials and `--apply` only after reviewing the listed identities.
 
 ## Transactional email
 

@@ -176,6 +176,80 @@ const isOwnerEmail = (email?: string | null) => (
   !!email && OWNER_EMAILS.includes(email.toLowerCase())
 );
 
+type UserProfileDetails = {
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+};
+
+const buildInitialUserProfile = (firebaseUser: FirebaseUser, details: UserProfileDetails = {}): UserProfile => {
+  const email = firebaseUser.email || '';
+  const displayName = firebaseUser.displayName || email || 'User';
+  const names = firebaseUser.displayName?.split(/\s+/).filter(Boolean) || [];
+  const firstName = details.firstName ?? names[0] ?? (email ? email.split('@')[0] : 'User');
+  const lastName = details.lastName ?? (names.length > 1 ? names.slice(1).join(' ') : '');
+  const owner = isOwnerEmail(email);
+
+  return {
+    uid: firebaseUser.uid,
+    email,
+    displayName,
+    firstName,
+    lastName,
+    phoneNumber: details.phoneNumber ?? firebaseUser.phoneNumber ?? '',
+    preferences: normaliseUserPreferences(null),
+    isPremium: owner,
+    accessStatus: owner ? 'paid' : 'trial',
+    trialStartedAt: serverTimestamp(),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    searchOnboardingDismissed: false,
+    welcomeEmailSent: false
+  };
+};
+
+const provisionUserProfileDocument = async (
+  firebaseUser: FirebaseUser,
+  details: UserProfileDetails = {}
+): Promise<UserProfile> => {
+  const userDocRef = doc(db, 'users', firebaseUser.uid);
+  const initialProfile = buildInitialUserProfile(firebaseUser, details);
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      await withProfileLoadTimeout(
+        setDoc(userDocRef, initialProfile, { merge: true }),
+        'Profile provisioning'
+      );
+
+      const preferencesRef = doc(db, 'users', firebaseUser.uid, 'profile', 'preferences');
+      const preferencesSnapshot = await withProfileLoadTimeout(
+        getDoc(preferencesRef),
+        'Preferences check'
+      );
+      if (!preferencesSnapshot.exists()) {
+        await withProfileLoadTimeout(
+          setDoc(preferencesRef, {
+            ...initialProfile.preferences,
+            updatedAt: serverTimestamp()
+          }, { merge: true }),
+          'Preferences provisioning'
+        );
+      }
+
+      return initialProfile;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 2) {
+        await new Promise(resolve => setTimeout(resolve, 250 * (attempt + 1)));
+      }
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error('Profile provisioning failed.');
+};
+
 const hasPermanentAccess = (profile?: UserProfile | null) => profile?.permanentAccess === true;
 
 const readJsonStringArray = (stored: string | null): string[] => {
@@ -903,50 +977,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
           } else {
             addLog(`AUTH: No profile exists for ${firebaseUser.uid}. Creating...`);
-            const initialPrefs = normaliseUserPreferences(null);
-            const displayName = firebaseUser.displayName || firebaseUser.email || 'User';
-            let firstName = "";
-            let lastName = "";
-            if (firebaseUser.displayName) {
-              const names = firebaseUser.displayName.split(/\s+/);
-              if (names.length > 0) firstName = names[0];
-              if (names.length > 1) lastName = names.slice(1).join(' ');
-            } else if (firebaseUser.email) {
-              firstName = firebaseUser.email.split('@')[0];
-            } else {
-              firstName = "User";
-            }
-
-            const initialProfile: UserProfile = {
-              uid: firebaseUser.uid,
-              email: firebaseUser.email || '',
-              displayName: displayName,
-              firstName: firstName,
-              lastName: lastName,
-              phoneNumber: '',
-              preferences: initialPrefs,
-              isPremium: isOwnerEmail(firebaseUser.email),
-              accessStatus: isOwnerEmail(firebaseUser.email) ? 'paid' : 'trial',
-              trialStartedAt: serverTimestamp(),
-              createdAt: serverTimestamp(),
-              updatedAt: serverTimestamp(),
-              searchOnboardingDismissed: false,
-              welcomeEmailSent: false
-            };
-            
-            await setDoc(userDocRef, initialProfile);
+            const initialProfile = await provisionUserProfileDocument(firebaseUser);
             addLog('AUTH: User document created successfully.');
-            
-            // Also initialize the preferences subcollection doc for consistency
-            try {
-              await setDoc(doc(db, 'users', firebaseUser.uid, 'profile', 'preferences'), {
-                ...initialPrefs,
-                updatedAt: serverTimestamp()
-              });
-              addLog('AUTH: Preferences subcollection created.');
-            } catch (pErr: any) {
-              addLog(`AUTH_PREFS_INIT_FAIL: ${pErr?.message || pErr}`);
-            }
+            addLog('AUTH: Preferences subcollection checked.');
             
             setProfile(initialProfile);
 
@@ -2016,35 +2049,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await updateAuthProfile(credential.user, { displayName: fullname });
       
       // Explicitly create the user profile document to ensure lastName and phone are saved immediately
-      const userDocRef = doc(db, 'users', credential.user.uid);
-      const initialPrefs = normaliseUserPreferences(null);
-      const initialProfile: UserProfile = {
-        uid: credential.user.uid,
-        email: email,
-        displayName: fullname,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phone,
-        preferences: initialPrefs,
-        isPremium: isOwnerEmail(email),
-        accessStatus: isOwnerEmail(email) ? 'paid' : 'trial',
-        trialStartedAt: serverTimestamp(),
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        searchOnboardingDismissed: false,
-        welcomeEmailSent: false
-      };
-      
-      await setDoc(userDocRef, initialProfile);
+      const initialProfile = await provisionUserProfileDocument(credential.user, {
+        firstName,
+        lastName,
+        phoneNumber: phone
+      });
       
       // Trigger welcome email
       triggerWelcomeEmail(email, fullname);
-      
-      // Also initialize preferences subcollection
-      await setDoc(doc(db, 'users', credential.user.uid, 'profile', 'preferences'), {
-        ...initialPrefs,
-        updatedAt: serverTimestamp()
-      });
 
       await migrateGuestWorkspaceToAccount(credential.user);
 
