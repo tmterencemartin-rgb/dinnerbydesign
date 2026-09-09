@@ -68,10 +68,10 @@ const buildDefaultUserProfile = (user) => {
   };
 };
 
-const provisionUserProfile = async (user) => {
+const provisionUserProfile = async (user, providedDb = null) => {
   if (!isRegisteredUser(user)) return { provisioned: false, reason: 'anonymous' };
 
-  const db = getFirestore(FIRESTORE_DATABASE_ID);
+  const db = providedDb || getFirestore(FIRESTORE_DATABASE_ID);
   const profileRef = db.collection('users').doc(user.uid);
   const preferencesRef = profileRef.collection('profile').doc('preferences');
   const profile = buildDefaultUserProfile(user);

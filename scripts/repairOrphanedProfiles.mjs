@@ -45,7 +45,7 @@ if (!shouldApply) {
 }
 
 for (const user of orphanedUsers) {
-  await provisionUserProfile(user);
+  await provisionUserProfile(user, db);
 }
 
 console.log(`Provisioned ${orphanedUsers.length} missing profiles.`);
