@@ -973,7 +973,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {renderStrictIngredientToggle('h-9 px-3 text-[10px]')}
               </div>
 
-              {(!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
+              {source === 'cook' && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
                 <div className="text-[10.5px] leading-4 text-gray-600">
                   {source === 'cook' ? (
                     <span>
@@ -1005,7 +1005,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
 
               {source === 'ready-made' && (
-                <div className={`${isSpeechSupported ? 'pl-[42px]' : 'pl-[12px]'} pr-4`}>
+                <div className="w-full">
                   <button
                     type="button"
                     onClick={() => {

@@ -187,7 +187,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
           </button>
         </div>
       )}
-      <div className="flex w-full items-center gap-2">
+      <div className="flex w-full flex-nowrap items-center gap-2">
         <form
           onSubmit={event => {
             event.preventDefault();
@@ -282,7 +282,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
             <button
               type="button"
               onClick={onOpenPreferences}
-              className="flex h-11 items-center justify-center gap-2 rounded border border-gray-200 bg-white px-3 text-gray-500 transition-colors hover:border-gray-500 hover:text-gray-900"
+              className="flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded border border-gray-200 bg-white px-3 text-gray-500 transition-colors hover:border-gray-500 hover:text-gray-900"
               aria-label="Open search preferences"
               title="Open search preferences"
             >
