@@ -197,3 +197,9 @@ textarea:focus-visible,
   outline-offset: 0;
   box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--dbd-accent) 50%, transparent);
 }
+
+.ai-created-search-input:focus-visible {
+  outline: none !important;
+  outline-offset: 0;
+  box-shadow: none !important;
+}
