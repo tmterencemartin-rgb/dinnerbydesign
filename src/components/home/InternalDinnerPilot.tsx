@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { ChevronDown, Flag, Loader2, Mic, Sparkles, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { ChevronDown, Flag, Loader2, Mic, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
 import { getSearchSecurityHeaders } from '../../lib/searchAuth';
 import type { InternalDinnerChoice } from '../../lib/internalDinnerPilot';
 import { RecipeActionRow } from '../RecipeActionRow';
+import { CircleX } from '../ui/CircleX';
 import { useAuth } from '../../contexts/AuthContext';
 import { isSameRecipe } from '../../lib/recipeUtils';
 import { db } from '../../firebase';
@@ -160,10 +161,13 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   };
 
   return (
-    <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="ai-created-recipe-heading">
-      <div className="flex items-center justify-between gap-3">
-        <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
-        {choices.length > 0 && (
+    <section
+      className={choices.length > 0 ? 'rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5' : 'w-full'}
+      aria-label="AI-created recipe search"
+    >
+      {choices.length > 0 && (
+        <div className="flex items-center justify-between gap-3">
+          <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
           <button
             type="button"
             onClick={startNewSearch}
@@ -172,48 +176,77 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
             <X className="h-3.5 w-3.5" aria-hidden="true" />
             Start a new search
           </button>
-        )}
-      </div>
-      <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
-        Original recipes shaped around your brief and saved preferences, with UK metric quantities, timings and price estimates.
-      </p>
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-        <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
-        <div className="flex min-h-10 min-w-0 flex-1 items-center border-b border-gray-200/80 bg-gray-100/60 px-1 focus-within:border-dbd-accent">
-          {!isGenerating && isSpeechSupported && (
-            <button
-              type="button"
-              onClick={toggleVoiceSearch}
-              disabled={disabled}
-              aria-label={isListening ? 'Stop voice search' : 'Search by voice'}
-              title={isListening ? 'Stop voice search' : 'Search by voice'}
-              className={`rounded p-1.5 px-2 transition-colors ${isListening ? 'bg-dbd-accent text-white' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-600'}`}
-            >
-              <Mic className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
+        </div>
+      )}
+      <form
+        onSubmit={event => {
+          event.preventDefault();
+          void generateChoices();
+        }}
+        className={`grid grid-cols-2 gap-2 w-full items-stretch transition-all sm:flex sm:h-11 sm:gap-0 sm:overflow-hidden sm:rounded ${
+          disabled ? 'opacity-75 sm:bg-gray-100' : 'sm:bg-gray-50'
+        }`}
+      >
+        <label className="sr-only" htmlFor="internal-dinner-brief">Search recipes by ingredient, dish, cuisine or chef</label>
+        <div className={`col-span-2 flex h-11 min-w-0 items-center rounded border px-1 transition-all sm:h-auto sm:flex-1 sm:rounded-none ${
+          disabled ? 'border-gray-200 bg-gray-100' : 'border-gray-200/80 bg-gray-100/60'
+        }`}>
+          {isGenerating ? (
+            <Loader2 className="ml-2 h-3.5 w-3.5 animate-spin text-dbd-accent" aria-label="Searching" />
+          ) : (
+            isSpeechSupported && (
+              <button
+                type="button"
+                onClick={toggleVoiceSearch}
+                disabled={disabled}
+                aria-label={isListening ? 'Stop voice search' : 'Search by voice'}
+                title={isListening ? 'Stop voice search' : 'Search by voice'}
+                className={`rounded p-1.5 px-2 transition-all duration-200 ${
+                  isListening
+                    ? 'bg-dbd-accent text-white animate-pulse shadow-sm'
+                    : disabled ? 'text-gray-300' : 'text-gray-500 hover:text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Mic className={`h-3.5 w-3.5 ${isListening ? 'text-white' : ''}`} aria-hidden="true" />
+              </button>
+            )
           )}
           <input
             id="internal-dinner-brief"
+            type="text"
             value={input}
             onChange={event => setInput(event.target.value)}
-            onKeyDown={event => {
-              if (event.key === 'Enter') void generateChoices();
-            }}
-            placeholder={isListening ? 'Listening...' : 'For example: quick chicken dinner with peppers'}
-            className="ai-created-search-input min-h-9 min-w-0 flex-1 bg-transparent px-2 text-sm text-dbd-ink outline-none placeholder:text-gray-400"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            aria-label="Search recipes by ingredient, dish, cuisine or chef"
+            placeholder={isListening ? 'Listening...' : 'Search here by ingredient, dish, cuisine or chef'}
+            className={`search-query-input flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
             disabled={isGenerating || disabled}
           />
+          {input && !isGenerating && !disabled && (
+            <button
+              type="button"
+              onClick={() => setInput('')}
+              className="mr-0.5 p-1 text-gray-300 transition-colors hover:text-gray-500"
+              aria-label="Clear search"
+            >
+              <CircleX size={12} />
+            </button>
+          )}
         </div>
         <button
-          type="button"
-          onClick={() => void generateChoices()}
+          type="submit"
           disabled={!input.trim() || isGenerating || disabled || isListening}
-          className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded bg-dbd-accent px-4 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid disabled:cursor-not-allowed disabled:opacity-60"
+          aria-label={isGenerating ? 'Searching for dinner options' : 'Find dinner options'}
+          aria-busy={isGenerating}
+          className={`h-11 rounded px-3 text-white text-[10px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center sm:h-auto sm:rounded-none sm:px-5 sm:text-[11px] sm:border-l sm:border-gray-100 ${
+            disabled ? 'bg-gray-500' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
+          }`}
         >
-          {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Sparkles className="h-4 w-4" aria-hidden="true" />}
-          {isGenerating ? 'Creating' : 'Create three choices'}
+          {isGenerating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Find options'}
         </button>
-      </div>
+      </form>
       {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
       {hasPartialChoices && <p className="mt-3 text-[12px] font-medium text-dbd-ink-3">We found fewer than three distinct choices that meet your current preferences. You can use these, or try a broader brief for more variety.</p>}
 
