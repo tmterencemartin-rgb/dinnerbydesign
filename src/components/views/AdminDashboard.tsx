@@ -389,6 +389,35 @@ export const AdminDashboard: React.FC = () => {
     };
   }, [currentUser]);
 
+  const sendMissingWelcomeEmails = React.useCallback(async () => {
+    if (!currentUser) {
+      throw new Error('Sign in as an administrator to send welcome emails.');
+    }
+
+    const token = await currentUser.getIdToken();
+    const response = await fetch(getApiUrl('/api/admin/accounts/send-missing-welcome-emails'), {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result) {
+      throw new Error(result?.error || 'The missing welcome emails could not be sent.');
+    }
+    return result as {
+      candidateCount: number;
+      sentCount: number;
+      skippedCount: number;
+      failedCount: number;
+      sent: string[];
+      skipped: string[];
+      failed: Array<{ email: string; error: string }>;
+    };
+  }, [currentUser]);
+
   useEffect(() => {
     if (!isAdmin) {
       setView('home');
@@ -656,6 +685,41 @@ export const AdminDashboard: React.FC = () => {
         }
       },
       'Create profiles',
+    );
+  };
+
+  const handleSendMissingWelcomeEmails = () => {
+    const recipients = users
+      .filter(user => !user.welcomeEmailSent && !!user.email)
+      .map(user => user.email as string);
+    if (recipients.length === 0) {
+      showCustomAlert('No Welcome Emails to Send', 'Every profile with an email address is already marked as welcomed.');
+      return;
+    }
+
+    showCustomConfirm(
+      'Send Missing Welcome Emails?',
+      `This sends the standard DinnerByDesign welcome email to ${recipients.length} recipients:\n\n${recipients.join('\n')}`,
+      async () => {
+        setActionLoading('welcome-emails');
+        try {
+          const result = await sendMissingWelcomeEmails();
+          setUsers(previous => previous.map(user => (
+            user.email && result.sent.includes(user.email)
+              ? { ...user, welcomeEmailSent: true }
+              : user
+          )));
+          const failureText = result.failedCount > 0
+            ? ` ${result.failedCount} failed and remain marked as not sent.`
+            : '';
+          showCustomAlert('Welcome Email Run Complete', `${result.sentCount} welcome email${result.sentCount === 1 ? '' : 's'} sent.${failureText}`);
+        } catch (error: any) {
+          showCustomAlert('Welcome Email Run Stopped', error?.message || 'The missing welcome emails could not be sent.');
+        } finally {
+          setActionLoading(null);
+        }
+      },
+      'Send welcome emails',
     );
   };
 
@@ -1938,6 +2002,17 @@ export const AdminDashboard: React.FC = () => {
                 </span>
               </button>
               {userRegisterOpen && <div id="user-register-panel" className="bg-white">
+              <div className="flex flex-col gap-2 border-b border-gray-100 bg-gray-50/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                <p className="text-[11px] font-medium text-gray-500">Welcome email status is recorded only after the provider confirms delivery.</p>
+                <button
+                  type="button"
+                  onClick={handleSendMissingWelcomeEmails}
+                  disabled={actionLoading !== null}
+                  className="w-fit shrink-0 rounded border border-dbd-accent/30 bg-white px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-dbd-accent hover:bg-dbd-accent/5 disabled:opacity-50"
+                >
+                  {actionLoading === 'welcome-emails' ? 'Sending…' : 'Send missing welcome emails'}
+                </button>
+              </div>
               <div className="divide-y divide-gray-100">
                 {filteredUsers.map((user) => {
                   const subscription = user.subscription;

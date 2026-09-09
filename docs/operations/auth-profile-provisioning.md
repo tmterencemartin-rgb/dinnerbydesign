@@ -27,3 +27,7 @@ node scripts/repairOrphanedProfiles.mjs --apply
 The script creates only missing profiles and preference documents. It does not delete authentication identities or overwrite existing profile documents.
 
 The dashboard repair action follows the same rules and refreshes reconciliation after it completes. A remaining count above zero means an account still needs review rather than being silently moved or deleted.
+
+## Welcome email recovery
+
+The Admin Dashboard's `Send missing welcome emails` action targets only registered profiles with an email address whose `welcomeEmailSent` flag is not true. It records each send in `emailEvents`, marks the profile only after the provider accepts the send, and leaves failed attempts available for retry.

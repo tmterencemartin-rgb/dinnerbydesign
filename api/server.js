@@ -236059,6 +236059,26 @@ var AUTOMATIC_REFUND_WINDOW_MS = 14 * 24 * 60 * 60 * 1e3;
 var REFUND_REQUEST_LEASE_MS = 10 * 60 * 1e3;
 var escapeHtml12 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 var renderPublicSeoInitialHtml = (heading, description) => `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><h1>${escapeHtml12(heading)}</h1><p>${escapeHtml12(description)}</p></main></div>`;
+function renderWelcomeEmailHtml(displayName) {
+  const firstName = escapeHtml12(displayName.trim().split(/\s+/).filter(Boolean)[0] || "there");
+  const appUrl = `${PRODUCTION_APP_URL}/?view=home&from=email`;
+  return `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <p>Hi ${firstName},</p>
+  <p>DinnerByDesign helps you decide what to cook, search recipes you can actually make, and build a shopping list as you go \u2014 around your diet, budget and the time you have.</p>
+  <p>Get started in under a minute:</p>
+  <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+    <tr><td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;"><span style="font-size: 15px; font-weight: bold; color: #111;">1. Set your preferences</span><br><span style="color: #555; font-size: 13.5px;">On the search page, tap Preferences beside the search box to set dietary needs, portions, budget, calorie targets and any ingredients to exclude.</span></td></tr>
+    <tr><td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;"><span style="font-size: 15px; font-weight: bold; color: #111;">2. Find and schedule recipes</span><br><span style="color: #555; font-size: 13.5px;">Search by ingredients you have in, filter to your constraints, and tap Schedule to add a recipe to your planner.</span></td></tr>
+    <tr><td style="padding: 12px 0;"><span style="font-size: 15px; font-weight: bold; color: #111;">3. Build your shopping list</span><br><span style="color: #555; font-size: 13.5px;">Your list updates automatically, scaled to your portions \u2014 tick off what you already have and it adjusts.</span></td></tr>
+  </table>
+  <div style="margin: 32px 0; text-align: center;"><a href="${appUrl}" style="background-color: #111; color: #fff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block; font-size: 14px;">Find your first recipe \u2192</a></div>
+  <p>Questions or feedback? Reply to this email \u2014 we read and answer every one.</p>
+  <p style="margin-top: 24px; font-weight: 500; margin-bottom: 2px;">The DinnerByDesign team</p>
+  <p style="margin: 0; font-size: 13px; color: #666;"><a href="mailto:terence@dinnerbydesign.app" style="color: #666; text-decoration: underline;">terence@dinnerbydesign.app</a></p>
+</div>
+  `.trim();
+}
 function hasContactRateLimitCapacity(req) {
   const forwardedFor = req.get("x-forwarded-for");
   const client = (forwardedFor ? forwardedFor.split(",")[0] : req.ip || "unknown").trim();
@@ -237196,6 +237216,75 @@ function createApp() {
       return res.status(500).json({
         ok: false,
         error: "The missing account profiles could not be created. Please try again."
+      });
+    }
+  });
+  app2.post("/api/admin/accounts/send-missing-welcome-emails", import_express.default.json(), async (req, res) => {
+    const admin = await verifyAdminRequest(req, res);
+    if (!admin) return;
+    try {
+      const [identities, profileSnapshot] = await Promise.all([
+        listAllAuthenticationIdentities(),
+        getDb().collection("users").get()
+      ]);
+      const identitiesByUid = new Map(identities.map((identity) => [identity.uid, identity]));
+      const candidates = profileSnapshot.docs.map((profile) => ({ uid: profile.id, data: profile.data() || {} })).filter(({ uid, data }) => {
+        const identity = identitiesByUid.get(uid);
+        return data.welcomeEmailSent !== true && !!identity?.email;
+      }).map(({ uid, data }) => {
+        const identity = identitiesByUid.get(uid);
+        return {
+          uid,
+          email: String(identity.email || data.email || "").trim(),
+          displayName: String(data.displayName || identity.displayName || identity.email || "User").trim()
+        };
+      }).filter((candidate) => candidate.email.length > 0);
+      const sent = [];
+      const failed = [];
+      const skipped = [];
+      for (const candidate of candidates) {
+        const profileRef = getDb().collection("users").doc(candidate.uid);
+        const claimed = await claimUserEmailSend(profileRef, "welcomeEmailSent");
+        if (!claimed) {
+          skipped.push(candidate.email);
+          continue;
+        }
+        try {
+          await sendTrackedEmail({
+            to: candidate.email,
+            subject: "Welcome to DinnerByDesign",
+            html: renderWelcomeEmailHtml(candidate.displayName),
+            from: "DinnerByDesign <terence@dinnerbydesign.app>"
+          }, {
+            type: "welcome",
+            source: "admin_repair",
+            userId: candidate.uid
+          });
+          await completeUserEmailSend(profileRef, "welcomeEmailSent");
+          sent.push(candidate.email);
+        } catch (error) {
+          await releaseUserEmailSend(profileRef, "welcomeEmailSent");
+          failed.push({
+            email: candidate.email,
+            error: String(error?.message || "Email delivery failed.").slice(0, 240)
+          });
+        }
+      }
+      return res.json({
+        ok: failed.length === 0,
+        candidateCount: candidates.length,
+        sentCount: sent.length,
+        skippedCount: skipped.length,
+        failedCount: failed.length,
+        sent,
+        skipped,
+        failed
+      });
+    } catch (error) {
+      console.error("[AdminAccounts] Welcome email repair failed:", error);
+      return res.status(500).json({
+        ok: false,
+        error: "The missing welcome emails could not be sent. Please try again."
       });
     }
   });
