@@ -1157,6 +1157,7 @@ export const AdminDashboard: React.FC = () => {
     const weeklyPlanCalls = aiUsageEvents.filter(event => event.type === 'weekly_plan').length;
     const recipeSearchCalls = aiUsageEvents.filter(event => event.type === 'recipe_search').length;
     const readyMadeCalls = aiUsageEvents.filter(event => event.type === 'ready_made_search').length;
+    const otherAiCalls = Math.max(0, aiUsageEvents.length - recipeSearchCalls - readyMadeCalls - weeklyPlanCalls);
     const averageLatencyMs = succeededAiCalls.length
       ? Math.round(succeededAiCalls.reduce((sum, event) => sum + (event.latencyMs || 0), 0) / succeededAiCalls.length)
       : 0;
@@ -1182,6 +1183,7 @@ export const AdminDashboard: React.FC = () => {
       weeklyPlanCalls,
       recipeSearchCalls,
       readyMadeCalls,
+      otherAiCalls,
       averageLatencyMs,
       estimatedGrossRevenue,
       estimatedStripeFees,
@@ -1226,7 +1228,7 @@ export const AdminDashboard: React.FC = () => {
   }, [searchDeliveryEvents, searchWindow, searchSourceFilter, searchDeviceFilter]);
 
   const searchDeliverySummary = React.useMemo(() => {
-    const outcomeEvents = filteredSearchDeliveryEvents.filter(event => [
+    const terminalEvents = filteredSearchDeliveryEvents.filter(event => [
       'results_delivered',
       'no_results_delivered',
       'failed',
@@ -1237,7 +1239,8 @@ export const AdminDashboard: React.FC = () => {
     const failed = filteredSearchDeliveryEvents.filter(event => event.stage === 'failed').length;
     const cancelled = filteredSearchDeliveryEvents.filter(event => event.stage === 'cancelled').length;
     const reported = filteredSearchDeliveryEvents.filter(event => event.stage === 'user_reported').length;
-    const terminal = outcomeEvents.length;
+    const terminal = terminalEvents.length;
+    const bucketed = delivered + noResults + failed + cancelled + reported;
 
     return {
       delivered,
@@ -1246,7 +1249,8 @@ export const AdminDashboard: React.FC = () => {
       cancelled,
       reported,
       terminal,
-      deliveryRate: terminal > 0 ? Math.round(((delivered + noResults) / terminal) * 100) : null
+      bucketed,
+      deliveryRate: terminal > 0 ? Math.round((delivered / terminal) * 100) : null
     };
   }, [filteredSearchDeliveryEvents]);
 
@@ -1642,6 +1646,10 @@ export const AdminDashboard: React.FC = () => {
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.failed}</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Cancelled</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.cancelled}</p>
+                  </div>
+                  <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Reports</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{searchDeliverySummary.reported}</p>
                   </div>
@@ -1690,7 +1698,10 @@ export const AdminDashboard: React.FC = () => {
                   </select>
                 </label>
                 <span className="text-[10.5px] font-medium text-gray-500">
-                  {filteredSearchDeliveryEvents.length} events in view
+                  {searchDeliverySummary.bucketed} bucketed events in view
+                </span>
+                <span className="text-[10.5px] font-medium text-gray-500">
+                  Rate = results delivered / terminal search events
                 </span>
               </div>
             </div>
@@ -1862,8 +1873,8 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Call mix</p>
-                    <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.recipeSearchCalls}/{summaryStats.readyMadeCalls}/{summaryStats.weeklyPlanCalls}</p>
-                    <p className="text-[10.5px] text-gray-500 font-medium">Recipe / ready-made / weekly</p>
+                    <p className="text-lg font-bold text-gray-950 mt-0.5">{summaryStats.recipeSearchCalls}/{summaryStats.readyMadeCalls}/{summaryStats.weeklyPlanCalls}/{summaryStats.otherAiCalls}</p>
+                    <p className="text-[10.5px] text-gray-500 font-medium">Recipe / ready-made / weekly / other</p>
                   </div>
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Net snapshot</p>
