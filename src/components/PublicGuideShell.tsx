@@ -23,7 +23,7 @@ const PublicGuideFooter: React.FC = () => (
       <div className="space-y-1 text-[11px] leading-5 text-dbd-ink-3 sm:text-xs">
         <p>&copy; {new Date().getFullYear()} DinnerByDesign. All rights reserved.</p>
         <p className="font-semibold text-dbd-ink-3">Less searching. More relevant dinners.</p>
-        <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Contact DinnerByDesign" className="inline-block font-semibold text-dbd-accent hover:underline">
+        <a href="/contact" aria-label="Open contact form" className="inline-block font-semibold text-dbd-accent hover:underline">
           {CONTACT_EMAIL}
         </a>
       </div>

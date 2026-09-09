@@ -111,8 +111,8 @@ export const PricingMethodologyView: React.FC<PricingMethodologyViewProps> = ({ 
       </div>
 
       <div className="mt-10 border-t border-gray-100 pt-6 text-[14px] leading-relaxed text-gray-500">
-        Questions about the methodology can be sent to{' '}
-        <a href="mailto:terence@dinnerbydesign.app" className="font-semibold text-dbd-accent hover:underline">terence@dinnerbydesign.app</a>.
+        Questions about the methodology can be sent through the{' '}
+        <a href="/contact" className="font-semibold text-dbd-accent hover:underline">contact form</a>.
       </div>
     </motion.main>
   );

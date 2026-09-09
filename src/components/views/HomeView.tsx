@@ -755,7 +755,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     >
       <h1 className="sr-only">Find dinner options</h1>
         {/* Search Section */}
-      <div className={`w-full flex flex-col relative ${showCentredInitialSearch ? 'justify-start py-4 sm:min-h-[calc(100dvh-11rem)] sm:justify-center sm:py-12' : ''}`}>
+      <div className={`w-full flex flex-col relative ${showCentredInitialSearch ? 'justify-start py-4 sm:min-h-[calc(100dvh-11rem)] sm:justify-start sm:py-12' : ''}`}>
         <div className="flex flex-col">
           <div className="w-full max-w-4xl mx-auto space-y-4 my-2">
             {isGuestPreview && !SIMPLIFIED_GUEST_SEARCH_STATES && (

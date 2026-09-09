@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Mail,
   Loader2,
-  Check,
   Sliders,
   Apple,
   Utensils,
@@ -99,7 +98,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
   const [exclusionsDraft, setExclusionsDraft] = useState('');
   const [customApiUrl, setCustomApiUrl] = useState(() => (typeof window !== 'undefined' ? (safeStorage.getItem('CUSTOM_API_BASE_URL') || '') : ''));
   const [apiConfig, setApiConfigState] = useState(() => getApiConfig());
-  const [showEmailCopied, setShowEmailCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'security' | 'support' | 'privacy' | 'developer'>('profile');
   const [openFaqId, setOpenFaqId] = useState<string | null>('cancel');
 
@@ -1357,26 +1355,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     </p>
                   </div>
                   <div className="pt-2">
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText('terence@dinnerbydesign.app');
-                        setShowEmailCopied(true);
-                        setTimeout(() => setShowEmailCopied(false), 3000);
-                        const a = document.createElement('a');
-                        a.href = 'mailto:terence@dinnerbydesign.app';
-                        a.click();
-                      }}
+                    <a
+                      href="/contact"
                       className="w-full py-2 bg-gray-900 hover:bg-black text-white text-[11px] font-bold uppercase tracking-wider rounded transition-all flex items-center justify-center gap-2"
                     >
                       <Mail size={14} />
-                      Email terence@dinnerbydesign.app
-                    </button>
-                    {showEmailCopied && (
-                      <p className="text-[10px] text-emerald-600 font-bold mt-2 text-center flex items-center justify-center gap-1">
-                        <Check size={10} />
-                        Copied to clipboard
-                      </p>
-                    )}
+                      Open contact form
+                    </a>
                   </div>
                 </div>
 
