@@ -58,7 +58,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     if (isLeftoverMode) {
       return "What's in the fridge? Some leftover chicken or corned beef? A couple of red peppers?  Maybe some sticks of celery?";
     }
-    return "Search by ingredient, dish, cuisine or chef";
+    return "Search here by ingredient, dish, cuisine or chef";
   };
   return (
     <form
@@ -72,8 +72,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         isReadOnly ? 'opacity-75 sm:bg-gray-100' : 'sm:bg-gray-50'
       }`}
     >
-      <div className={`col-span-2 flex h-11 min-w-0 items-center rounded px-1 transition-all sm:h-auto sm:flex-1 sm:rounded-none ${
-        isReadOnly ? 'bg-gray-100' : 'bg-gray-50'
+      <div className={`col-span-2 flex h-11 min-w-0 items-center rounded border px-1 transition-all sm:h-auto sm:flex-1 sm:rounded-none ${
+        isReadOnly ? 'border-gray-200 bg-gray-100' : 'border-gray-200/80 bg-gray-100/60'
       }`}>
         {isGenerating ? (
           <button
