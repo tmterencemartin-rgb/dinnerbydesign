@@ -877,10 +877,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   showStrictIngredientToggle={source === 'cook' && !!ingredientIntent?.isIngredientLed}
                   strictIngredientMatch={strictIngredientMatch}
                   onStrictIngredientMatchChange={setStrictIngredientMatch}
-                  onOpenPreferences={() => {
-                    setShowFilters(true);
-                    setPreferencesError(null);
-                  }}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
                 />
               ) : (

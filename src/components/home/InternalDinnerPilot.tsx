@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { ChevronDown, Flag, Loader2, Mic, Settings, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { ChevronDown, Flag, Loader2, Mic, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
 import { getSearchSecurityHeaders } from '../../lib/searchAuth';
 import type { InternalDinnerChoice } from '../../lib/internalDinnerPilot';
 import { RecipeActionRow } from '../RecipeActionRow';
 import { CircleX } from '../ui/CircleX';
-import { Tooltip } from '../ui/Tooltip';
 import { useAuth } from '../../contexts/AuthContext';
 import { isSameRecipe } from '../../lib/recipeUtils';
 import { db } from '../../firebase';
@@ -22,7 +21,6 @@ interface AiCreatedDinnerSearchProps {
   showStrictIngredientToggle: boolean;
   strictIngredientMatch: boolean;
   onStrictIngredientMatchChange: (checked: boolean) => void;
-  onOpenPreferences: () => void;
   onGuestSearchDelivered?: () => void;
 }
 
@@ -53,7 +51,6 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   showStrictIngredientToggle,
   strictIngredientMatch,
   onStrictIngredientMatchChange,
-  onOpenPreferences,
   onGuestSearchDelivered
 }) => {
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
@@ -277,20 +274,6 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
             <span className="whitespace-nowrap">Only these ingredients</span>
           </label>
         )}
-        <div className="hidden shrink-0 sm:block">
-          <Tooltip text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
-            <button
-              type="button"
-              onClick={onOpenPreferences}
-              className="flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded border border-gray-200 bg-white px-3 text-gray-500 transition-colors hover:border-gray-500 hover:text-gray-900"
-              aria-label="Open search preferences"
-              title="Open search preferences"
-            >
-              <Settings className="h-4 w-4" />
-              <span className="text-[12px] font-bold font-ibm-plex-mono uppercase tracking-wider">Preferences</span>
-            </button>
-          </Tooltip>
-        </div>
       </div>
       {showStrictIngredientToggle && (
         <label
@@ -312,18 +295,6 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
           <span className="whitespace-nowrap">Only these ingredients</span>
         </label>
       )}
-      <div className="flex items-center px-1 sm:hidden">
-        <button
-          type="button"
-          onClick={onOpenPreferences}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded border border-gray-200 bg-white text-gray-600 transition-colors hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900"
-          aria-label="Open search preferences"
-          title="Open search preferences"
-        >
-          <Settings className="h-4 w-4" />
-          <span className="text-[10px] font-bold font-ibm-plex-mono uppercase tracking-[0.1em]">Preferences</span>
-        </button>
-      </div>
       {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
       {hasPartialChoices && <p className="mt-3 text-[12px] font-medium text-dbd-ink-3">We found fewer than three distinct choices that meet your current preferences. You can use these, or try a broader brief for more variety.</p>}
 
