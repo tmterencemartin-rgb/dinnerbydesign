@@ -179,7 +179,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
       </p>
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
-        <div className="flex min-h-10 min-w-0 flex-1 items-center rounded border border-gray-200 bg-white px-1 focus-within:border-dbd-accent">
+        <div className="flex min-h-10 min-w-0 flex-1 items-center border-b border-gray-200/80 bg-white px-1 focus-within:border-dbd-accent">
           {!isGenerating && isSpeechSupported && (
             <button
               type="button"
@@ -200,7 +200,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
               if (event.key === 'Enter') void generateChoices();
             }}
             placeholder={isListening ? 'Listening...' : 'For example: quick chicken dinner with peppers'}
-            className="min-h-9 min-w-0 flex-1 bg-transparent px-2 text-sm text-dbd-ink outline-none placeholder:text-gray-400"
+            className="search-query-input min-h-9 min-w-0 flex-1 bg-transparent px-2 text-sm text-dbd-ink outline-none placeholder:text-gray-400"
             disabled={isGenerating || disabled}
           />
         </div>
