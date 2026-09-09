@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Flag, Loader2, Sparkles, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { ChevronDown, Flag, Loader2, Mic, Sparkles, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
 import { getSearchSecurityHeaders } from '../../lib/searchAuth';
@@ -10,8 +10,13 @@ import { isSameRecipe } from '../../lib/recipeUtils';
 import { db } from '../../firebase';
 
 interface AiCreatedDinnerSearchProps {
+  input: string;
+  setInput: (value: string) => void;
   preferences: unknown;
   disabled?: boolean;
+  isSpeechSupported: boolean;
+  isListening: boolean;
+  toggleVoiceSearch: () => void;
   onGuestSearchDelivered?: () => void;
 }
 
@@ -32,11 +37,15 @@ const problemLabels: Record<ProblemType, string> = {
 };
 
 export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
+  input,
+  setInput,
   preferences,
   disabled = false,
+  isSpeechSupported,
+  isListening,
+  toggleVoiceSearch,
   onGuestSearchDelivered
 }) => {
-  const [brief, setBrief] = useState('');
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
   const [hasPartialChoices, setHasPartialChoices] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -111,7 +120,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   };
 
   const generateChoices = async () => {
-    const trimmedBrief = brief.trim();
+    const trimmedBrief = input.trim();
     if (!trimmedBrief || isGenerating || disabled) return;
 
     setIsGenerating(true);
@@ -142,7 +151,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   };
 
   const startNewSearch = () => {
-    setBrief('');
+    setInput('');
     setChoices([]);
     setHasPartialChoices(false);
     setError(null);
@@ -170,26 +179,40 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
       </p>
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <label className="sr-only" htmlFor="internal-dinner-brief">Dinner brief</label>
-            <input
-              id="internal-dinner-brief"
-              value={brief}
-              onChange={event => setBrief(event.target.value)}
-              onKeyDown={event => {
-                if (event.key === 'Enter') void generateChoices();
-              }}
-              placeholder="For example: quick chicken dinner with peppers"
-              className="min-h-10 min-w-0 flex-1 rounded border border-gray-200 bg-white px-3 text-sm text-dbd-ink outline-none transition-colors placeholder:text-gray-400 focus:border-dbd-accent"
-              disabled={isGenerating || disabled}
-            />
+        <div className="flex min-h-10 min-w-0 flex-1 items-center rounded border border-gray-200 bg-white px-1 focus-within:border-dbd-accent">
+          {!isGenerating && isSpeechSupported && (
             <button
               type="button"
-              onClick={() => void generateChoices()}
-              disabled={!brief.trim() || isGenerating || disabled}
-              className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded bg-dbd-accent px-4 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid disabled:cursor-not-allowed disabled:opacity-60"
+              onClick={toggleVoiceSearch}
+              disabled={disabled}
+              aria-label={isListening ? 'Stop voice search' : 'Search by voice'}
+              title={isListening ? 'Stop voice search' : 'Search by voice'}
+              className={`rounded p-1.5 px-2 transition-colors ${isListening ? 'bg-dbd-accent text-white' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-600'}`}
             >
-              {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Sparkles className="h-4 w-4" aria-hidden="true" />}
-              {isGenerating ? 'Creating' : 'Create three choices'}
+              <Mic className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
+          )}
+          <input
+            id="internal-dinner-brief"
+            value={input}
+            onChange={event => setInput(event.target.value)}
+            onKeyDown={event => {
+              if (event.key === 'Enter') void generateChoices();
+            }}
+            placeholder={isListening ? 'Listening...' : 'For example: quick chicken dinner with peppers'}
+            className="min-h-9 min-w-0 flex-1 bg-transparent px-2 text-sm text-dbd-ink outline-none placeholder:text-gray-400"
+            disabled={isGenerating || disabled}
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => void generateChoices()}
+          disabled={!input.trim() || isGenerating || disabled || isListening}
+          className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded bg-dbd-accent px-4 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Sparkles className="h-4 w-4" aria-hidden="true" />}
+          {isGenerating ? 'Creating' : 'Create three choices'}
+        </button>
       </div>
       {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
       {hasPartialChoices && <p className="mt-3 text-[12px] font-medium text-dbd-ink-3">We found fewer than three distinct choices that meet your current preferences. You can use these, or try a broader brief for more variety.</p>}

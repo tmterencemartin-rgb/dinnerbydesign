@@ -866,8 +866,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
               {isAiCreatedSearch ? (
                 <AiCreatedDinnerSearch
+                  input={input}
+                  setInput={setInput}
                   preferences={localPreferences}
                   disabled={isReadOnly || isGuestSearchLimitReached}
+                  isSpeechSupported={isSpeechSupported}
+                  isListening={isListening}
+                  toggleVoiceSearch={toggleVoiceSearch}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
                 />
               ) : (
