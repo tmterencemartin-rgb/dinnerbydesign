@@ -170,6 +170,7 @@ export const AdminDashboard: React.FC = () => {
     type: 'confirm_access' | 'confirm_delete' | 'confirm_delete_all' | 'alert';
     title: string;
     message: string;
+    confirmLabel?: string;
     onConfirm?: () => void;
   }>({
     isOpen: false,
@@ -210,12 +211,13 @@ export const AdminDashboard: React.FC = () => {
     });
   };
 
-  const showCustomConfirm = (title: string, message: string, onConfirm: () => void) => {
+  const showCustomConfirm = (title: string, message: string, onConfirm: () => void, confirmLabel = 'Confirm Delete') => {
     setModal({
       isOpen: true,
       type: 'confirm_delete',
       title,
       message,
+      confirmLabel,
       onConfirm
     });
   };
@@ -653,6 +655,7 @@ export const AdminDashboard: React.FC = () => {
           setActionLoading(null);
         }
       },
+      'Create profiles',
     );
   };
 
@@ -2171,7 +2174,7 @@ export const AdminDashboard: React.FC = () => {
                           : 'bg-dbd-accent hover:bg-dbd-accent/90'
                     }`}
                   >
-                    {modal.type === 'confirm_access' ? 'Confirm' : 'Confirm Delete'}
+                    {modal.confirmLabel || (modal.type === 'confirm_access' ? 'Confirm' : 'Confirm Delete')}
                   </button>
                 </>
               ) : (
