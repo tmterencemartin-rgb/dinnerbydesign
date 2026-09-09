@@ -144,7 +144,6 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   return (
     <section className="rounded border border-dbd-accent/30 bg-dbd-accent/[0.035] px-4 py-4 sm:px-5" aria-labelledby="ai-created-recipe-heading">
       <h2 id="ai-created-recipe-heading" className="text-sm font-semibold text-dbd-ink">AI-created recipes</h2>
-      <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-dbd-accent">Created by DinnerByDesign AI</p>
       <p className="mt-1 text-[12px] leading-5 text-dbd-ink-3">
         Original recipes shaped around your brief and saved preferences, with UK metric quantities, timings and price estimates.
       </p>
