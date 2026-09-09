@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flag, Loader2, Sparkles, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { ChevronDown, Flag, Loader2, Sparkles, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
 import { getSearchSecurityHeaders } from '../../lib/searchAuth';
@@ -207,11 +207,16 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
               <ul className="mt-1 space-y-1 text-[11px] leading-4 text-dbd-ink-2">
                 {choice.ingredients.map(ingredient => <li key={ingredient}>{ingredient}</li>)}
               </ul>
-              <p className="mt-3 text-[10px] font-medium uppercase tracking-wide text-dbd-ink-3">Method</p>
-              <ol className="mt-1 list-decimal space-y-1 pl-4 text-[11px] leading-4 text-dbd-ink-2">
-                {choice.instructions.map((step, stepIndex) => <li key={`${choice.title}-${stepIndex}`}>{step}</li>)}
-              </ol>
               <p className="mt-3 text-[10px] leading-4 text-dbd-ink-3">Estimates only. Check ingredients for allergies and cook meat, poultry and fish thoroughly before serving.</p>
+              <details open={index === 0} className="group mt-3 rounded border border-gray-100 bg-gray-50/50">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-2.5 py-2 text-[10px] font-semibold uppercase tracking-wide text-dbd-ink-3 outline-none transition-colors hover:text-dbd-accent focus-visible:ring-2 focus-visible:ring-dbd-accent">
+                  <span>View method</span>
+                  <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" aria-hidden="true" />
+                </summary>
+                <ol className="border-t border-gray-100 px-2.5 py-2 pl-7 text-[11px] leading-4 text-dbd-ink-2">
+                  {choice.instructions.map((step, stepIndex) => <li key={`${choice.title}-${stepIndex}`} className="mb-1 last:mb-0">{step}</li>)}
+                </ol>
+              </details>
               <div className="mt-3">
                 <RecipeActionRow
                   recipe={choice}
