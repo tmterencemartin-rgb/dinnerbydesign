@@ -126,6 +126,14 @@ When a user lists ingredients:
 - Maintain automatic email for welcome, trial ending, password change, account deletion, subscription activation, subscription cancellation, payment failure and permanent access.
 - User-requested recipe, shopping-list, test and administrator sends use the same delivery path but are not automatic lifecycle messages.
 
+## Automated refunds
+
+- A signed-in registered customer can request one full automatic refund for the latest successful subscription invoice when its payment date is within 14 days.
+- The server verifies the Firebase token, resolves the Stripe customer, checks for existing Stripe refunds, claims a deterministic Firestore `refundRequests` record, and creates an idempotent full Stripe refund against the invoice payment.
+- After a successful refund, the current Stripe subscription is set to cancel at the end of its paid period so the next renewal does not occur. If that update fails, the refund remains issued and the response directs the customer to Manage Billing or support.
+- Older payments, partial or existing refunds, missing payment identifiers and unusual access arrangements receive an actionable manual-review message.
+- Successful refunds are recorded in `refundRequests` and a tracked confirmation is sent through the existing email path when an email is available.
+
 ## Weekly planner
 
 - Planner protein choices inherit compatible dietary, allergen, exclusion, religious and ethical preferences.

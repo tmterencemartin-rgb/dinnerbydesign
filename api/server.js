@@ -236055,6 +236055,8 @@ var CLIENT_ERROR_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CLIENT_ERROR_RATE_LIMIT_MAXIMUM = 30;
 var clientErrorAttemptsByIp = /* @__PURE__ */ new Map();
 var MONITORING_ALERT_COOLDOWN_MS = 24 * 60 * 60 * 1e3;
+var AUTOMATIC_REFUND_WINDOW_MS = 14 * 24 * 60 * 60 * 1e3;
+var REFUND_REQUEST_LEASE_MS = 10 * 60 * 1e3;
 var escapeHtml12 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 var renderPublicSeoInitialHtml = (heading, description) => `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><h1>${escapeHtml12(heading)}</h1><p>${escapeHtml12(description)}</p></main></div>`;
 function hasContactRateLimitCapacity(req) {
@@ -237730,6 +237732,191 @@ function createApp() {
     } catch (error) {
       console.error("Stripe Portal Error:", error);
       res.status(500).json({ error: error.message });
+    }
+  });
+  app2.post("/api/request-refund", async (req, res) => {
+    try {
+      const authorization = req.get("authorization") || "";
+      const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+      if (!token) return res.status(401).json({ error: "A signed-in account is required." });
+      const decoded = await getAdminAuth().verifyIdToken(token);
+      if (decoded.firebase?.sign_in_provider === "anonymous") {
+        return res.status(403).json({ error: "A registered account is required to request a refund." });
+      }
+      const stripeClient = await getStripe();
+      const userRef = getDb().collection("users").doc(decoded.uid);
+      const profileSnapshot = await userRef.get();
+      const profile = profileSnapshot.data() || {};
+      let customerId = String(profile.subscription?.stripeCustomerId || "").trim();
+      if (!customerId && decoded.email) {
+        const customers = await stripeClient.customers.list({ email: decoded.email, limit: 100 });
+        const customersWithPaidSubscriptionInvoices = [];
+        for (const customer of customers.data || []) {
+          const invoices = await stripeClient.invoices.list({
+            customer: customer.id,
+            status: "paid",
+            limit: 20
+          });
+          if ((invoices.data || []).some((invoice) => invoice.subscription && invoice.amount_paid > 0)) {
+            customersWithPaidSubscriptionInvoices.push(customer.id);
+          }
+        }
+        if (customersWithPaidSubscriptionInvoices.length === 1) {
+          customerId = customersWithPaidSubscriptionInvoices[0];
+          if (profileSnapshot.exists) {
+            await userRef.set({
+              subscription: {
+                stripeCustomerId: customerId,
+                updatedAt: FieldValue.serverTimestamp()
+              },
+              updatedAt: FieldValue.serverTimestamp()
+            }, { merge: true });
+          }
+        }
+      }
+      if (!customerId) {
+        return res.status(404).json({ error: "Your billing details are not ready yet. Please try again shortly." });
+      }
+      const paidInvoices = await stripeClient.invoices.list({
+        customer: customerId,
+        status: "paid",
+        limit: 100
+      });
+      const subscriptionInvoices = (paidInvoices.data || []).filter((invoice) => invoice.subscription && invoice.amount_paid > 0).sort((a, b) => {
+        const aPaidAt = a.status_transitions?.paid_at || a.created || 0;
+        const bPaidAt = b.status_transitions?.paid_at || b.created || 0;
+        return bPaidAt - aPaidAt;
+      });
+      const latestInvoice = subscriptionInvoices[0];
+      if (!latestInvoice) {
+        return res.status(422).json({ error: "There is no successful subscription payment available for an automatic refund." });
+      }
+      const paidAtSeconds = latestInvoice.status_transitions?.paid_at || latestInvoice.created || 0;
+      const paidAtMillis = paidAtSeconds * 1e3;
+      if (!paidAtMillis || Date.now() - paidAtMillis > AUTOMATIC_REFUND_WINDOW_MS || Date.now() < paidAtMillis) {
+        return res.status(422).json({
+          error: "This payment is outside the 14-day automatic refund window. Please contact terence@dinnerbydesign.app for help.",
+          code: "refund_window_expired"
+        });
+      }
+      const paymentIntentId = typeof latestInvoice.payment_intent === "string" ? latestInvoice.payment_intent : latestInvoice.payment_intent?.id;
+      const chargeId = typeof latestInvoice.charge === "string" ? latestInvoice.charge : latestInvoice.charge?.id;
+      if (!paymentIntentId && !chargeId) {
+        return res.status(422).json({
+          error: "This payment needs a manual refund review. Please contact terence@dinnerbydesign.app.",
+          code: "manual_refund_review"
+        });
+      }
+      const refundLookup = paymentIntentId ? { payment_intent: paymentIntentId, limit: 100 } : { charge: chargeId, limit: 100 };
+      const existingRefunds = await stripeClient.refunds.list(refundLookup);
+      const refundedAmount = (existingRefunds.data || []).reduce((total, refund2) => total + Number(refund2.amount || 0), 0);
+      if (refundedAmount > 0) {
+        return res.status(409).json({
+          error: "A refund has already been issued or started for this payment. Please contact terence@dinnerbydesign.app if you need help.",
+          code: "refund_already_exists"
+        });
+      }
+      const refundRequestRef = getDb().collection("refundRequests").doc(`${decoded.uid}_${latestInvoice.id}`);
+      const claim = await getDb().runTransaction(async (transaction) => {
+        const snapshot = await transaction.get(refundRequestRef);
+        const current = snapshot.data() || {};
+        const requestedAtMillis = typeof current.requestedAt?.toMillis === "function" ? current.requestedAt.toMillis() : 0;
+        if (current.status === "refunded") return { status: "refunded" };
+        if (current.status === "processing" && requestedAtMillis && Date.now() - requestedAtMillis < REFUND_REQUEST_LEASE_MS) {
+          return { status: "processing" };
+        }
+        transaction.set(refundRequestRef, {
+          uid: decoded.uid,
+          customerId,
+          invoiceId: latestInvoice.id,
+          status: "processing",
+          requestedAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp()
+        }, { merge: true });
+        return { status: "claimed" };
+      });
+      if (claim.status === "refunded") {
+        return res.status(409).json({ error: "A refund has already been issued for this payment.", code: "refund_already_exists" });
+      }
+      if (claim.status === "processing") {
+        return res.status(409).json({ error: "A refund request for this payment is already being processed. Please check again shortly.", code: "refund_processing" });
+      }
+      let refund;
+      try {
+        refund = await stripeClient.refunds.create(
+          paymentIntentId ? { payment_intent: paymentIntentId, amount: latestInvoice.amount_paid, metadata: { userId: decoded.uid, invoiceId: latestInvoice.id } } : { charge: chargeId, amount: latestInvoice.amount_paid, metadata: { userId: decoded.uid, invoiceId: latestInvoice.id } },
+          { idempotencyKey: `dinnerbydesign-refund-${decoded.uid}-${latestInvoice.id}` }
+        );
+      } catch (error) {
+        await refundRequestRef.set({
+          status: "failed",
+          updatedAt: FieldValue.serverTimestamp(),
+          errorMessage: String(error?.message || "Stripe refund failed").slice(0, 500)
+        }, { merge: true });
+        console.error("[Refund] Stripe refund failed:", error);
+        return res.status(502).json({ error: "The refund could not be completed automatically. Please contact terence@dinnerbydesign.app for help.", code: "refund_failed" });
+      }
+      let renewalCancelled = false;
+      let cancellationError = false;
+      const subscriptionId = typeof latestInvoice.subscription === "string" ? latestInvoice.subscription : latestInvoice.subscription?.id;
+      if (subscriptionId) {
+        try {
+          const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+          if (["active", "trialing", "past_due", "unpaid"].includes(subscription.status)) {
+            if (!subscription.cancel_at_period_end) {
+              await stripeClient.subscriptions.update(subscriptionId, { cancel_at_period_end: true });
+            }
+            renewalCancelled = true;
+          }
+        } catch (error) {
+          cancellationError = true;
+          console.error("[Refund] Future renewal could not be cancelled:", error);
+        }
+      }
+      await refundRequestRef.set({
+        status: "refunded",
+        refundId: refund.id,
+        amount: latestInvoice.amount_paid,
+        currency: latestInvoice.currency,
+        renewalCancelled,
+        updatedAt: FieldValue.serverTimestamp()
+      }, { merge: true });
+      const recipient = String(decoded.email || profile.email || "").trim();
+      if (recipient) {
+        try {
+          const amountText = `\xA3${(Number(latestInvoice.amount_paid || 0) / 100).toFixed(2)}`;
+          await sendTrackedEmail({
+            to: recipient,
+            subject: "Your DinnerByDesign refund has been issued",
+            html: `
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6; padding: 20px;">
+  <h2 style="margin: 0 0 20px; color: #111;">Your refund has been issued</h2>
+  <p>We have issued a refund of <strong>${amountText}</strong> to your original payment method.</p>
+  <p>${renewalCancelled ? "Your next subscription renewal has also been cancelled." : "We could not confirm the future renewal change automatically. Please open Manage Billing in DinnerByDesign or contact support."}</p>
+  <p>Stripe may take additional time to return the funds to your account.</p>
+</div>
+            `.trim()
+          }, {
+            type: "subscription_refund_issued",
+            source: "stripe_refund",
+            userId: decoded.uid,
+            metadata: {
+              invoiceId: latestInvoice.id,
+              refundId: refund.id,
+              amount: latestInvoice.amount_paid,
+              currency: latestInvoice.currency,
+              renewalCancelled
+            }
+          });
+        } catch (error) {
+          console.error("[Refund] Confirmation email failed:", error);
+        }
+      }
+      const message2 = cancellationError ? "Your refund has been issued, but future renewal could not be cancelled automatically. Please open Manage Billing or contact terence@dinnerbydesign.app." : "Your refund has been issued to the original payment method and your next renewal has been cancelled. Stripe may take additional time to return the funds.";
+      return res.json({ ok: true, status: "refunded", message: message2, refundId: refund.id });
+    } catch (error) {
+      console.error("[Refund] Request failed:", error);
+      return res.status(500).json({ error: "The refund request could not be completed. Please contact terence@dinnerbydesign.app for help." });
     }
   });
   app2.post("/api/stripe-webhook", import_express.default.raw({ type: "application/json" }), async (req, res) => {

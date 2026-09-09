@@ -95,6 +95,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [isPortalLoading, setIsPortalLoading] = useState(false);
+  const [isRefundLoading, setIsRefundLoading] = useState(false);
   const [exclusionsDraft, setExclusionsDraft] = useState('');
   const [customApiUrl, setCustomApiUrl] = useState(() => (typeof window !== 'undefined' ? (safeStorage.getItem('CUSTOM_API_BASE_URL') || '') : ''));
   const [apiConfig, setApiConfigState] = useState(() => getApiConfig());
@@ -577,6 +578,37 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
       showToast(`Error: ${err.message}`);
     } finally {
       setIsPortalLoading(false);
+    }
+  };
+
+  const handleRequestRefund = async () => {
+    if (!user) {
+      showToast("Please sign in to request a refund.");
+      return;
+    }
+
+    const confirmed = window.confirm('Request a full refund for your latest successful subscription payment made within the last 14 days? If approved, your next renewal will be cancelled.');
+    if (!confirmed) return;
+
+    setIsRefundLoading(true);
+    try {
+      const response = await fetch(getApiUrl('/api/request-refund'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await user.getIdToken()}`,
+        },
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(result.error || 'The refund request could not be completed.');
+      }
+      showToast(result.message || 'Your refund has been issued.');
+    } catch (err: any) {
+      console.error('Refund request error:', err);
+      showToast(err.message || 'The refund request could not be completed.');
+    } finally {
+      setIsRefundLoading(false);
     }
   };
 
@@ -1136,18 +1168,32 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
                     )}
 
                     {canManageBilling && (
-                      <button
-                        onClick={handleManageBilling}
-                        disabled={isPortalLoading}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 text-[12px] font-bold rounded hover:bg-gray-50 transition-all font-bold disabled:opacity-50"
-                      >
-                        {isPortalLoading ? (
-                          <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
-                        ) : (
-                          <ExternalLink className="w-4 h-4 text-gray-500" />
-                        )}
-                        Manage or cancel subscription
-                      </button>
+                      <div className="space-y-3">
+                        <button
+                          onClick={handleManageBilling}
+                          disabled={isPortalLoading || isRefundLoading}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 text-[12px] font-bold rounded hover:bg-gray-50 transition-all font-bold disabled:opacity-50"
+                        >
+                          {isPortalLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
+                          ) : (
+                            <ExternalLink className="w-4 h-4 text-gray-500" />
+                          )}
+                          Manage or cancel subscription
+                        </button>
+                        <div className="rounded border border-amber-100 bg-amber-50/50 p-3 space-y-2">
+                          <p className="text-[11.5px] leading-relaxed text-gray-600">Automatic refunds cover the latest successful subscription payment made within 14 days. A successful refund cancels the next renewal. Older or unusual requests can be sent to support.</p>
+                          <button
+                            type="button"
+                            onClick={handleRequestRefund}
+                            disabled={isRefundLoading || isPortalLoading}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white border border-amber-200 text-gray-900 text-[12px] font-bold rounded hover:bg-amber-50 transition-all disabled:opacity-50"
+                          >
+                            {isRefundLoading && <Loader2 className="w-4 h-4 animate-spin text-gray-500" />}
+                            Request an automatic refund
+                          </button>
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}
