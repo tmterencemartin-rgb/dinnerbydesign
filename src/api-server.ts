@@ -1848,8 +1848,9 @@ export function createApp() {
     }
 
     const preferences = normaliseUserPreferences(req.body?.preferences);
+    const strictIngredientMatch = req.body?.strictIngredientMatch === true;
     try {
-      const choices = await generateInternalDinnerChoices(brief, preferences);
+      const choices = await generateInternalDinnerChoices(brief, preferences, strictIngredientMatch);
       if (choices.length === 0) {
         await recordAiUsageEvent({
           type: 'ai_created_dinner',

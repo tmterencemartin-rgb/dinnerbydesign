@@ -544,7 +544,8 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
 
 export async function generateInternalDinnerChoices(
   brief: string,
-  preferences: UserPreferences
+  preferences: UserPreferences,
+  strictIngredientMatch = false
 ): Promise<InternalDinnerChoice[]> {
   if (typeof window !== 'undefined') {
     throw new Error('AI-created dinners are available through the secure service only.');
@@ -554,6 +555,8 @@ export async function generateInternalDinnerChoices(
   if (!safeBrief) return [];
 
   const applicablePreferences = getAiCreatedRecipePreferences(preferences);
+  const strictIngredientIntent = strictIngredientMatch ? detectIngredientIntent(safeBrief) : null;
+  const strictIngredientEnabled = !!strictIngredientIntent?.isIngredientLed && (strictIngredientIntent.ingredients?.length || 0) > 0;
 
   const restrictions = [
     `Dietary rule: ${applicablePreferences.dietaryRule || 'none'}`,
@@ -569,7 +572,10 @@ export async function generateInternalDinnerChoices(
     `Cooking fats: ${(applicablePreferences.cookingFats || []).join(', ') || 'Any'}`,
     `Prefer simple recipes: ${applicablePreferences.isSimple ? 'Yes' : 'No'}`,
     `Prefer lower-cost recipes: ${applicablePreferences.isLowCost ? 'Yes' : 'No'}`,
-    `Offal: ${applicablePreferences.includeOffal ? 'Allowed' : 'Excluded'}`
+    `Offal: ${applicablePreferences.includeOffal ? 'Allowed' : 'Excluded'}`,
+    `Ingredient matching: ${strictIngredientEnabled
+      ? `Use every listed ingredient (${strictIngredientIntent?.ingredients.join(', ')}) and no non-pantry ingredients beyond that list.`
+      : 'Use the dinner brief as the ingredient and dish brief, with sensible supporting ingredients.'}`
   ].join('\n');
 
   const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use as many ingredients and steps as the recipe needs. Do not default every choice to four items: most should have five to eight ingredients and four to six steps, while a genuinely simple dinner may be shorter. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in °C only, between 120°C and 240°C. If a choice contains meat, poultry or fish, include clear cooking safety guidance. For poultry, including duck, say it is cooked all the way through, or give a safe core temperature such as 75°C for 30 seconds or 70°C for 2 minutes. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. A core ingredient may appear in more than one choice when the cooking approach or flavour direction is genuinely different.\n\nHARD RESTRICTIONS:\n${restrictions}\n\nReturn JSON only.`;
@@ -613,9 +619,15 @@ export async function generateInternalDinnerChoices(
     return payload?.choices;
   };
 
-  const initialChoices = validateInternalDinnerChoices(
-    await requestChoices(`Dinner brief: "${safeBrief}". Return exactly three choices.`, systemInstruction),
-    applicablePreferences
+  const validateChoices = (rawChoices: unknown, existingChoices: InternalDinnerChoice[] = []) => {
+    const validatedChoices = validateInternalDinnerChoices(rawChoices, applicablePreferences, existingChoices);
+    return strictIngredientEnabled
+      ? validatedChoices.filter(choice => matchesStrictIngredientSearch(choice, safeBrief))
+      : validatedChoices;
+  };
+
+  const initialChoices = validateChoices(
+    await requestChoices(`Dinner brief: "${safeBrief}". Return exactly three choices.`, systemInstruction)
   );
 
   if (initialChoices.length === 3) return initialChoices;
@@ -625,12 +637,11 @@ export async function generateInternalDinnerChoices(
   const excludedApproaches = initialChoices
     .map(choice => `${choice.title}: ${choice.instructions[0] || choice.cuisine}`)
     .join('; ') || 'None';
-  const recoveredChoices = validateInternalDinnerChoices(
+  const recoveredChoices = validateChoices(
     await requestChoices(
       `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Use a different cooking approach or flavour direction from: ${excludedApproaches}.`,
       `${systemInstruction}\n\nRECOVERY: The first response was under-filled after validation. Return exactly ${missingCount} additional, distinct choices that preserve every hard restriction.`
     ),
-    applicablePreferences,
     initialChoices
   );
 
@@ -641,12 +652,11 @@ export async function generateInternalDinnerChoices(
   // and retain every valid choice rather than returning an empty result.
   for (let attempt = 0; attempt < 2 && completedChoices.length < 3; attempt += 1) {
     const excluded = completedChoices.map(choice => choice.title).join('; ') || 'None';
-    const additionalChoice = validateInternalDinnerChoices(
+    const additionalChoice = validateChoices(
       await requestChoices(
         `Dinner brief: "${safeBrief}". Return exactly one additional choice. Do not repeat: ${excluded}. Use a clearly different cooking approach or flavour direction.`,
         `${systemInstruction}\n\nFINAL RECOVERY: Return exactly one practical, distinct choice that preserves every hard restriction.`
       ),
-      applicablePreferences,
       completedChoices
     );
     completedChoices = [...completedChoices, ...additionalChoice].slice(0, 3);

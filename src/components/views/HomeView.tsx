@@ -851,6 +851,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 mode={searchMode}
                 onModeChange={(mode) => {
                   setSearchMode(mode);
+                  if (mode === 'ai-created') setSource('cook');
                   if (mode === 'published') setSource('cook');
                   if (mode === 'ready-made') setSource('ready-made');
                 }}
@@ -873,6 +874,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   isSpeechSupported={isSpeechSupported}
                   isListening={isListening}
                   toggleVoiceSearch={toggleVoiceSearch}
+                  showStrictIngredientToggle={source === 'cook' && !!ingredientIntent?.isIngredientLed}
+                  strictIngredientMatch={strictIngredientMatch}
+                  onStrictIngredientMatchChange={setStrictIngredientMatch}
                   onOpenPreferences={() => {
                     setShowFilters(true);
                     setPreferencesError(null);
