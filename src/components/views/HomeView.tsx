@@ -1496,13 +1496,14 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             <div className="border-y border-dbd-rule/70 bg-white divide-y divide-dbd-rule/70">
               {source === 'cook' ? (
                 usePublishedSourceHandoff
-                  ? currentRecipes?.map(recipe => (
+                  ? currentRecipes?.map((recipe, index) => (
                     <PublishedRecipeLinkCard
                       key={recipe.id || `published-recipe-${recipe.title}`}
                       recipe={recipe}
                       query={resultsQuery}
                       isSaved={isSaved(recipe)}
                       onToggleSaved={() => handleToggleSaved(recipe, { stayOnSearch: true })}
+                      showExternalReturnNote={index === 0}
                     />
                   ))
                   : currentRecipes?.map(recipe => (

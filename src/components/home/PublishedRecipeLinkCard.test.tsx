@@ -43,4 +43,10 @@ describe('PublishedRecipeLinkCard', () => {
     fireEvent.click(saveButton);
     expect(onToggleSaved).toHaveBeenCalledTimes(1);
   });
+
+  it('can explain how to return after opening the original recipe', () => {
+    render(<PublishedRecipeLinkCard recipe={recipe} query="chicken and lemon" showExternalReturnNote />);
+
+    expect(screen.getByText('Opens the original recipe in a new tab. Close that tab to return here.')).toBeTruthy();
+  });
 });

@@ -9,6 +9,7 @@ interface PublishedRecipeLinkCardProps {
   query: string;
   isSaved?: boolean;
   onToggleSaved?: () => void | Promise<void>;
+  showExternalReturnNote?: boolean;
 }
 
 export const PublishedRecipeLinkCard: React.FC<PublishedRecipeLinkCardProps> = ({
@@ -16,6 +17,7 @@ export const PublishedRecipeLinkCard: React.FC<PublishedRecipeLinkCardProps> = (
   query,
   isSaved = false,
   onToggleSaved,
+  showExternalReturnNote = false,
 }) => {
   const sourceUrl = recipe.sourceUrl || '';
   const publisher = getRecipeSourcePublisher(sourceUrl);
@@ -29,7 +31,7 @@ export const PublishedRecipeLinkCard: React.FC<PublishedRecipeLinkCardProps> = (
         <a
           href={sourceUrl}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="inline-flex min-h-8 items-center gap-1.5 rounded border border-dbd-accent/30 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-dbd-accent transition-colors hover:bg-dbd-accent/5"
           aria-label={`Open ${recipe.title} at ${publisher}`}
         >
@@ -48,6 +50,11 @@ export const PublishedRecipeLinkCard: React.FC<PublishedRecipeLinkCardProps> = (
           </button>
         )}
       </div>
+      {showExternalReturnNote && (
+        <p className="mt-1.5 text-[10px] leading-4 text-dbd-ink-3">
+          Opens the original recipe in a new tab. Close that tab to return here.
+        </p>
+      )}
     </article>
   );
 };
