@@ -212,6 +212,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   }, [viewingPlannerEntry, isEnriching, updateRecipe]);
   const [showClearWeekConfirm, setShowClearWeekConfirm] = useState(false);
   const [isScheduledOpen, setIsScheduledOpen] = useState(planner.length > 0);
+  const [isCollectionOpen, setIsCollectionOpen] = useState(savedRecipes.some(recipe => !recipe.isArchived));
   const [showDeleteAllSavedConfirm, setShowDeleteAllSavedConfirm] = useState(false);
   const [targetPlannerDay, setTargetPlannerDay] = useState<string | null>(null);
   const [savedSearchQuery, setSavedSearchQuery] = useState('');
@@ -342,6 +343,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     () => savedRecipes.filter(r => !r.isArchived),
     [savedRecipes]
   );
+
+  useEffect(() => {
+    setIsCollectionOpen(activeSavedRecipes.length > 0);
+  }, [activeSavedRecipes.length]);
+
   const archivedSavedRecipes = React.useMemo(
     () => savedRecipes.filter(r => r.isArchived),
     [savedRecipes]
@@ -966,11 +972,20 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 {/* SECTION 1: SAVED (BACKLOG) */}
                 <div id="saved-recipes-section" className="space-y-2.5 relative z-20 scroll-mt-[150px]">
                   {/* SAVED HEADER ROW */}
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <div className="flex items-baseline gap-2 pl-1">
-                      <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">My collection</h3>
-                      <span className="text-[12px] text-gray-500 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
-                    </div>
+                  <div className="flex items-center justify-between gap-3 border-b border-gray-100 pb-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsCollectionOpen(previous => !previous)}
+                      aria-expanded={isCollectionOpen}
+                      aria-controls="collection-content"
+                      className="flex min-w-0 flex-1 items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-gray-50"
+                    >
+                      <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
+                        <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">My collection</span>
+                        <span className="text-[12px] text-gray-500 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
+                      </span>
+                      <ChevronDown className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${isCollectionOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                    </button>
                     <div className="flex items-center gap-2.5">
                       {activeSavedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
@@ -1016,6 +1031,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     </div>
                   </div>
 
+                  <AnimatePresence initial={false}>
+                  {isCollectionOpen && (
+                    <motion.div
+                      id="collection-content"
+                      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      transition={{ duration: shouldReduceMotion ? 0.01 : 0.2, ease: 'easeOut' }}
+                      className="space-y-2.5 overflow-hidden"
+                    >
                   <AnimatePresence initial={false}>
                   {builtWeekCost && (
                     <motion.div
@@ -1274,6 +1299,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       })()}
                     </div>
                   )}
+
+                    </motion.div>
+                  )}
+                  </AnimatePresence>
 
                 </div>
 
