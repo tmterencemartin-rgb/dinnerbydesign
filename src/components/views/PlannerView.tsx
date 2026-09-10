@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { serverTimestamp } from 'firebase/firestore';
 import { 
   ChevronLeft, 
+  ChevronDown,
   CircleX, 
   ArrowUpCircle, 
   Trash, 
@@ -210,6 +211,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     }
   }, [viewingPlannerEntry, isEnriching, updateRecipe]);
   const [showClearWeekConfirm, setShowClearWeekConfirm] = useState(false);
+  const [isScheduledOpen, setIsScheduledOpen] = useState(planner.length > 0);
   const [showDeleteAllSavedConfirm, setShowDeleteAllSavedConfirm] = useState(false);
   const [targetPlannerDay, setTargetPlannerDay] = useState<string | null>(null);
   const [savedSearchQuery, setSavedSearchQuery] = useState('');
@@ -240,6 +242,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
   const [planAlert, setPlanAlert] = useState<string | null>(null);
   const [isPlanningWeek, setIsPlanningWeek] = useState(false);
   const hasLoadedAffordabilityPreset = useRef(false);
+
+  useEffect(() => {
+    setIsScheduledOpen(planner.length > 0);
+  }, [planner.length]);
 
   useEffect(() => {
     const target = safeStorage.session.getItem('dbd_planner_target');
@@ -1276,16 +1282,25 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   {/* SCHEDULED HEADER ROW */}
                   <div className="flex flex-col gap-2 border-t border-gray-100 pt-4">
                     <div className="flex items-center justify-between gap-3">
-                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 pl-1">
-                        <h3 className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Scheduled</h3>
-                        <span className="text-[12px] text-gray-500 font-medium">
-                          {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
+                      <button
+                        type="button"
+                        onClick={() => setIsScheduledOpen(previous => !previous)}
+                        aria-expanded={isScheduledOpen}
+                        aria-controls="scheduled-content"
+                        className="flex min-w-0 flex-1 items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-gray-50"
+                      >
+                        <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
+                          <span className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Scheduled</span>
+                          <span className="text-[12px] text-gray-500 font-medium">
+                            {planner.length} {planner.length === 1 ? 'item' : 'items'} planned
+                          </span>
+                          <span className="text-[12px] text-gray-300">•</span>
+                          <span className="text-[12px] text-gray-500 font-medium">
+                            {Math.min(planner.length, 7)}/7 days filled
+                          </span>
                         </span>
-                        <span className="text-[12px] text-gray-300">•</span>
-                        <span className="text-[12px] text-gray-500 font-medium">
-                          {Math.min(planner.length, 7)}/7 days filled
-                        </span>
-                      </div>
+                        <ChevronDown className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${isScheduledOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                      </button>
                       {planner.length > 0 && (
                         <div className="flex items-center justify-end gap-2 min-w-0">
                           {showClearWeekConfirm ? (
@@ -1413,6 +1428,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     )}
                   </div>
 
+                  <AnimatePresence initial={false}>
+                  {isScheduledOpen && (
+                    <motion.div
+                      id="scheduled-content"
+                      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      transition={{ duration: shouldReduceMotion ? 0.01 : 0.2, ease: 'easeOut' }}
+                      className="overflow-hidden space-y-4"
+                    >
                   {/* WEEKLY SCHEDULE GRID */}
                   <div id="weekly-schedule-list" className="divide-y divide-gray-50 px-0">
                     {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(dayId => {
@@ -1739,6 +1764,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       )}
                     </div>
                   )}
+                    </motion.div>
+                  )}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
