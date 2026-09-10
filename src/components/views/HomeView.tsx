@@ -20,7 +20,7 @@ import { RecipeListActions } from '../RecipeListActions';
 import { NumberStepper } from '../ui/NumberStepper';
 import { RecipeCard } from '../RecipeCard';
 import { ReadyMealCard } from '../ReadyMealCard';
-import { SearchHeader } from '../home/SearchHeader';
+import { SEARCH_MODE_DESCRIPTIONS, SearchHeader } from '../home/SearchHeader';
 import { SearchInput } from '../home/SearchInput';
 import { SearchExamples } from '../home/SearchExamples';
 import { CriteriaChips } from '../home/CriteriaChips';
@@ -876,6 +876,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   showStrictIngredientToggle={source === 'cook' && !!ingredientIntent?.isIngredientLed}
                   strictIngredientMatch={strictIngredientMatch}
                   onStrictIngredientMatchChange={setStrictIngredientMatch}
+                  description={SEARCH_MODE_DESCRIPTIONS[searchMode]}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
                 />
               ) : (
@@ -967,6 +968,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <div className="flex items-center px-1 sm:hidden">
                 {renderStrictIngredientToggle('h-9 px-3 text-[10px]')}
               </div>
+
+              <p className="min-h-10 text-[11px] leading-4 text-gray-600 sm:min-h-8">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
 
               {source === 'cook' && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
                 <div className="text-[10.5px] leading-4 text-gray-600">

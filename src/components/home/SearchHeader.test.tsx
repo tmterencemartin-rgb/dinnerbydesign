@@ -37,8 +37,8 @@ describe('SearchHeader', () => {
     expect(screen.getByRole('button', { name: /AI-created recipes/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Published recipes/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Ready-made dinners/i })).toBeTruthy();
-    expect(screen.getByText('Original recipes shaped around your brief and preferences.')).toBeTruthy();
-    expect(screen.getByText('Published recipes opened at the original source.')).toBeTruthy();
-    expect(screen.getByText('Ready-made supermarket options from selected retailers.')).toBeTruthy();
+    expect(screen.queryByText('Original recipes shaped around your brief and preferences.')).toBeNull();
+    expect(screen.queryByText('Published recipes opened at the original source.')).toBeNull();
+    expect(screen.queryByText('Ready-made supermarket options from selected retailers.')).toBeNull();
   });
 });

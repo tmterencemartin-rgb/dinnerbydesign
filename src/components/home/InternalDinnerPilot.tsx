@@ -21,6 +21,7 @@ interface AiCreatedDinnerSearchProps {
   showStrictIngredientToggle: boolean;
   strictIngredientMatch: boolean;
   onStrictIngredientMatchChange: (checked: boolean) => void;
+  description: string;
   onGuestSearchDelivered?: () => void;
 }
 
@@ -51,6 +52,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   showStrictIngredientToggle,
   strictIngredientMatch,
   onStrictIngredientMatchChange,
+  description,
   onGuestSearchDelivered
 }) => {
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
@@ -306,6 +308,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
           <span className="whitespace-nowrap">Only these ingredients</span>
         </label>
       )}
+      <p className="mt-3 min-h-10 text-[11px] leading-4 text-gray-600 sm:min-h-8">{description}</p>
       {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
       {hasPartialChoices && <p className="mt-3 text-[12px] font-medium text-dbd-ink-3">We found fewer than three distinct choices that meet your current preferences. You can use these, or try a broader brief for more variety.</p>}
 

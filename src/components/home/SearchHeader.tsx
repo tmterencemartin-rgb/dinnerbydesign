@@ -4,6 +4,12 @@ import { DinnerSource } from '../../types';
 
 export type SearchMode = 'published' | 'ai-created' | 'ready-made';
 
+export const SEARCH_MODE_DESCRIPTIONS: Record<SearchMode, string> = {
+  'ai-created': 'Original recipes shaped around your brief and preferences.',
+  published: 'Published recipes opened at the original source.',
+  'ready-made': 'Ready-made supermarket options from selected retailers.'
+};
+
 interface SearchHeaderProps {
   source: DinnerSource;
   setSource: (source: DinnerSource) => void;
@@ -28,10 +34,10 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
   onModeChange
 }) => {
   if (threeWaySearch) {
-    const modes: Array<{ id: SearchMode; label: string; detail: string }> = [
-      { id: 'ai-created', label: 'AI-created recipes', detail: 'Original recipes shaped around your brief and preferences.' },
-      { id: 'published', label: 'Published recipes', detail: 'Published recipes opened at the original source.' },
-      { id: 'ready-made', label: 'Ready-made dinners', detail: 'Ready-made supermarket options from selected retailers.' }
+    const modes: Array<{ id: SearchMode; label: string }> = [
+      { id: 'ai-created', label: 'AI-created recipes' },
+      { id: 'published', label: 'Published recipes' },
+      { id: 'ready-made', label: 'Ready-made dinners' }
     ];
 
     return (
@@ -45,7 +51,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
                 id={`mode-${searchMode.id}`}
                 type="button"
                 onClick={() => onModeChange?.(searchMode.id)}
-                className="relative z-10 flex h-[5.5rem] min-w-0 flex-col items-center justify-center rounded px-1 py-2.5 text-center transition-colors sm:h-20 sm:px-2"
+                className="relative z-10 flex h-16 min-w-0 flex-col items-center justify-center rounded px-1 py-2.5 text-center transition-colors sm:px-2"
               >
                 {isActive && (
                   <motion.div
@@ -58,11 +64,6 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
                   isActive ? 'text-dbd-accent' : 'text-gray-500 hover:text-gray-600'
                 }`}>
                   {searchMode.label}
-                </span>
-                <span className={`mt-1 block max-w-[13rem] text-[9px] leading-3 sm:text-[10px] sm:leading-4 ${
-                  isActive ? 'text-dbd-accent' : 'text-gray-500'
-                }`}>
-                  {searchMode.detail}
                 </span>
               </button>
             );
