@@ -740,7 +740,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <h3 className="text-[13.5px] font-bold text-gray-950">
-                    {isPlannerEmpty ? 'Start building your week' : 'Plan a week automatically'}
+                    {isPlannerEmpty ? 'Start building your week' : 'Plan a week of dinners automatically'}
                   </h3>
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
                     {isPlannerEmpty
