@@ -29,9 +29,9 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
 }) => {
   if (threeWaySearch) {
     const modes: Array<{ id: SearchMode; label: string; detail: string }> = [
-      { id: 'ai-created', label: 'AI-created recipes', detail: 'tailored choices' },
-      { id: 'published', label: 'Published recipes', detail: 'open original source' },
-      { id: 'ready-made', label: 'Ready-made dinners', detail: 'supermarket options' }
+      { id: 'ai-created', label: 'AI-created recipes', detail: 'Original recipes shaped around your brief and preferences.' },
+      { id: 'published', label: 'Published recipes', detail: 'Published recipes opened at the original source.' },
+      { id: 'ready-made', label: 'Ready-made dinners', detail: 'Ready-made supermarket options from selected retailers.' }
     ];
 
     return (
@@ -45,7 +45,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
                 id={`mode-${searchMode.id}`}
                 type="button"
                 onClick={() => onModeChange?.(searchMode.id)}
-                className="relative z-10 min-w-0 rounded px-1 py-2.5 text-center transition-colors sm:px-2"
+                className="relative z-10 flex h-[5.5rem] min-w-0 flex-col items-center justify-center rounded px-1 py-2.5 text-center transition-colors sm:h-20 sm:px-2"
               >
                 {isActive && (
                   <motion.div
@@ -59,7 +59,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
                 }`}>
                   {searchMode.label}
                 </span>
-                <span className={`mt-1 block text-[9px] leading-tight sm:text-[10px] ${
+                <span className={`mt-1 block max-w-[13rem] text-[9px] leading-3 sm:text-[10px] sm:leading-4 ${
                   isActive ? 'text-dbd-accent' : 'text-gray-500'
                 }`}>
                   {searchMode.detail}
