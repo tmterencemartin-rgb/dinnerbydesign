@@ -967,26 +967,25 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
             /* Unified Save & Schedule Panel */
             <div className="mt-0 bg-white rounded border border-gray-100 overflow-visible flex flex-col">
               {/* Panel Content - Single scrollable flow */}
-              <div className="px-3 sm:px-5 py-3 sm:py-5 space-y-6">
+              <div className="px-3 sm:px-5 py-3 sm:py-4 space-y-6">
                 
                 {/* SECTION 1: SAVED (BACKLOG) */}
-                <div id="saved-recipes-section" className="space-y-2.5 relative z-20 scroll-mt-[150px]">
+                <div id="saved-recipes-section" className="space-y-1.5 relative z-20 scroll-mt-[150px]">
                   {/* SAVED HEADER ROW */}
-                  <div className="flex flex-col items-stretch gap-2 border-b border-gray-100 pb-2 xl:flex-row xl:items-center xl:justify-between">
+                  <div className="border-b border-gray-100 pb-1.5">
                     <button
                       type="button"
                       onClick={() => setIsCollectionOpen(previous => !previous)}
                       aria-expanded={isCollectionOpen}
                       aria-controls="collection-content"
-                      className="flex min-w-0 items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-gray-50 xl:flex-1"
+                      className="flex w-fit items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-gray-50"
                     >
-                      <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
-                        <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">My collection</span>
-                        <span className="text-[12px] text-gray-500 font-medium">{activeSavedRecipes.length} {activeSavedRecipes.length === 1 ? 'item' : 'items'}</span>
-                      </span>
+                      <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">My collection</span>
                       <ChevronDown className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${isCollectionOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                     </button>
-                    <div className="flex items-center gap-2.5 self-end xl:self-auto">
+                    <div className="mt-1 flex items-center justify-between gap-2">
+                      <span className="text-[12px] text-gray-500 font-medium">{activeSavedRecipes.length} {activeSavedRecipes.length === 1 ? 'item' : 'items'}</span>
+                      <div className="flex shrink-0 items-center gap-2.5">
                       {activeSavedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
                           {showDeleteAllSavedConfirm ? (
@@ -1028,6 +1027,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           )}
                         </div>
                       )}
+                      </div>
                     </div>
                   </div>
 
