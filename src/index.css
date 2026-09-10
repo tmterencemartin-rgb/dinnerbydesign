@@ -196,15 +196,19 @@
   vertical-align: top !important;
 }
 
-/* Keep keyboard focus visible on controls that use compact or outline-free styles. */
+/* Keep keyboard focus clear without drawing a second frame around bordered controls. */
 button:focus-visible,
 a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--dbd-accent) !important;
-  outline-offset: 2px;
+  outline-offset: -2px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none !important;
+  outline-offset: 0;
 }
 
 .search-query-input:focus-visible {
