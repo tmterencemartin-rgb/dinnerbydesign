@@ -36,15 +36,20 @@ export const ContactView: React.FC = () => {
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6 sm:py-14">
-      <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Contact</p>
-      <h1 className="mt-2 text-3xl font-bold leading-tight text-dbd-ink sm:text-4xl">Get in touch</h1>
-      <p className="mt-4 max-w-xl text-[15px] leading-7 text-dbd-ink-3">Questions, feedback or a problem with the app? Send a message and we will get back to you by email.</p>
+      {status !== 'sent' && (
+        <>
+          <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">Contact</p>
+          <h1 className="mt-2 text-3xl font-bold leading-tight text-dbd-ink sm:text-4xl">Get in touch</h1>
+          <p className="mt-4 max-w-xl text-[15px] leading-7 text-dbd-ink-3">Questions, feedback or a problem with the app? Send a message and we will get back to you by email.</p>
+        </>
+      )}
 
       {status === 'sent' ? (
-        <section className="mt-8 border border-dbd-accent/20 bg-white p-6" aria-live="polite">
+        <section className="border border-dbd-accent/20 bg-white p-6" aria-live="polite">
           <CheckCircle2 className="h-6 w-6 text-dbd-accent" aria-hidden="true" />
           <h2 className="mt-3 text-xl font-semibold text-dbd-ink">Your message has been sent</h2>
           <p className="mt-2 text-sm leading-6 text-dbd-ink-3">Thank you. We will reply to {email}.</p>
+          <a href="/?view=home" className="mt-5 inline-flex text-sm font-semibold text-dbd-accent hover:underline">Return to recipe search</a>
         </section>
       ) : (
         <form onSubmit={submit} className="mt-8 space-y-5" noValidate>

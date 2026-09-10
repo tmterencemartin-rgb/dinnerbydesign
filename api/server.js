@@ -219894,6 +219894,31 @@ var PREFERRED_SOURCES = [
     id: "good_housekeeping",
     label: "Good Housekeeping",
     description: "Test-kitchen recipes and practical cooking guidance from Good Housekeeping."
+  },
+  {
+    id: "easy_peasy_foodie",
+    label: "Easy Peasy Foodie",
+    description: "Straightforward family recipes with clear methods and everyday ingredients."
+  },
+  {
+    id: "love_pork",
+    label: "Love Pork",
+    description: "Pork recipes and cooking guidance from the UK's pork industry body."
+  },
+  {
+    id: "morrisons",
+    label: "Morrisons",
+    description: "Supermarket recipes with accessible ingredients and clear timings."
+  },
+  {
+    id: "marks_and_spencer",
+    label: "M&S Food",
+    description: "Seasonal and everyday recipes from M&S Food."
+  },
+  {
+    id: "abel_and_cole",
+    label: "Abel & Cole",
+    description: "Seasonal recipes focused on fruit, vegetables and organic ingredients."
   }
 ];
 
@@ -221912,7 +221937,12 @@ var APPROVED_RECIPE_PUBLISHER_HOSTS = [
   "sainsburysmagazine.co.uk",
   "olivemagazine.com",
   "greatbritishchefs.com",
-  "goodhousekeeping.com"
+  "goodhousekeeping.com",
+  "easypeasyfoodie.com",
+  "lovepork.com",
+  "groceries.morrisons.com",
+  "marksandspencer.com",
+  "abelandcole.co.uk"
 ];
 var TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set(APPROVED_RECIPE_PUBLISHER_HOSTS);
 var BLOCKED_RECIPE_PUBLISHER_HOSTS = /* @__PURE__ */ new Set([
@@ -223039,13 +223069,15 @@ async function callGeminiWithRetry(modelId, contents, config, retries = 4, delay
   }
   throw lastError;
 }
-async function generateInternalDinnerChoices(brief, preferences) {
+async function generateInternalDinnerChoices(brief, preferences, strictIngredientMatch = false) {
   if (typeof window !== "undefined") {
     throw new Error("AI-created dinners are available through the secure service only.");
   }
   const safeBrief = String(brief || "").replace(/\s+/g, " ").trim().slice(0, 500);
   if (!safeBrief) return [];
   const applicablePreferences = getAiCreatedRecipePreferences(preferences);
+  const strictIngredientIntent = strictIngredientMatch ? detectIngredientIntent(safeBrief) : null;
+  const strictIngredientEnabled = !!strictIngredientIntent?.isIngredientLed && (strictIngredientIntent.ingredients?.length || 0) > 0;
   const restrictions = [
     `Dietary rule: ${applicablePreferences.dietaryRule || "none"}`,
     `Allergies: ${(applicablePreferences.allergies || []).join(", ") || "None"}`,
@@ -223060,7 +223092,8 @@ async function generateInternalDinnerChoices(brief, preferences) {
     `Cooking fats: ${(applicablePreferences.cookingFats || []).join(", ") || "Any"}`,
     `Prefer simple recipes: ${applicablePreferences.isSimple ? "Yes" : "No"}`,
     `Prefer lower-cost recipes: ${applicablePreferences.isLowCost ? "Yes" : "No"}`,
-    `Offal: ${applicablePreferences.includeOffal ? "Allowed" : "Excluded"}`
+    `Offal: ${applicablePreferences.includeOffal ? "Allowed" : "Excluded"}`,
+    `Ingredient matching: ${strictIngredientEnabled ? `Use every listed ingredient (${strictIngredientIntent?.ingredients.join(", ")}) and no non-pantry ingredients beyond that list.` : "Use the dinner brief as the ingredient and dish brief, with sensible supporting ingredients."}`
   ].join("\n");
   const systemInstruction = `Create three distinct, practical home-cooking dinner choices for a UK household. These are AI-created DinnerByDesign concepts, not published recipes. Do not include source links, retailer claims, medical claims, nutrition claims, or a preamble. Each choice needs realistic, fully quantified ingredients, clear steps without leading numerals, an honest time estimate, an estimated cost per portion, and a short reason it fits. The app adds the method numbering. Use as many ingredients and steps as the recipe needs. Do not default every choice to four items: most should have five to eight ingredients and four to six steps, while a genuinely simple dinner may be shorter. Use common UK supermarket ingredients and UK metric measures: g, kg, ml and litres for weight or volume, with counts, tsp and tbsp where they are more natural. Never use cups, ounces, pounds or Fahrenheit. Give oven temperatures in \xB0C only, between 120\xB0C and 240\xB0C. If a choice contains meat, poultry or fish, include clear cooking safety guidance. For poultry, including duck, say it is cooked all the way through, or give a safe core temperature such as 75\xB0C for 30 seconds or 70\xB0C for 2 minutes. Costs are estimates, not guaranteed prices. Do not provide calorie or other nutrition figures, and never describe a choice as tested, allergen-safe or exact. List the main ingredient first. A core ingredient may appear in more than one choice when the cooking approach or flavour direction is genuinely different.
 
@@ -223106,35 +223139,36 @@ Return JSON only.`;
     const payload = parseModelJson(response?.text || "{}");
     return payload?.choices;
   };
-  const initialChoices = validateInternalDinnerChoices(
-    await requestChoices(`Dinner brief: "${safeBrief}". Return exactly three choices.`, systemInstruction),
-    applicablePreferences
+  const validateChoices = (rawChoices, existingChoices = []) => {
+    const validatedChoices = validateInternalDinnerChoices(rawChoices, applicablePreferences, existingChoices);
+    return strictIngredientEnabled ? validatedChoices.filter((choice) => matchesStrictIngredientSearch(choice, safeBrief)) : validatedChoices;
+  };
+  const initialChoices = validateChoices(
+    await requestChoices(`Dinner brief: "${safeBrief}". Return exactly three choices.`, systemInstruction)
   );
   if (initialChoices.length === 3) return initialChoices;
   const missingCount = 3 - initialChoices.length;
   const excludedTitles = initialChoices.map((choice) => choice.title).join("; ") || "None";
   const excludedApproaches = initialChoices.map((choice) => `${choice.title}: ${choice.instructions[0] || choice.cuisine}`).join("; ") || "None";
-  const recoveredChoices = validateInternalDinnerChoices(
+  const recoveredChoices = validateChoices(
     await requestChoices(
       `Dinner brief: "${safeBrief}". Generate exactly ${missingCount} additional choices. Do not repeat these titles: ${excludedTitles}. Use a different cooking approach or flavour direction from: ${excludedApproaches}.`,
       `${systemInstruction}
 
 RECOVERY: The first response was under-filled after validation. Return exactly ${missingCount} additional, distinct choices that preserve every hard restriction.`
     ),
-    applicablePreferences,
     initialChoices
   );
   let completedChoices = [...initialChoices, ...recoveredChoices].slice(0, 3);
   for (let attempt = 0; attempt < 2 && completedChoices.length < 3; attempt += 1) {
     const excluded = completedChoices.map((choice) => choice.title).join("; ") || "None";
-    const additionalChoice = validateInternalDinnerChoices(
+    const additionalChoice = validateChoices(
       await requestChoices(
         `Dinner brief: "${safeBrief}". Return exactly one additional choice. Do not repeat: ${excluded}. Use a clearly different cooking approach or flavour direction.`,
         `${systemInstruction}
 
 FINAL RECOVERY: Return exactly one practical, distinct choice that preserves every hard restriction.`
       ),
-      applicablePreferences,
       completedChoices
     );
     completedChoices = [...completedChoices, ...additionalChoice].slice(0, 3);
@@ -223598,7 +223632,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Hairy Bikers, Don't Go Bacon My Heart, Krumpli, Our Modern Kitchen, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, and Good Housekeeping. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+- sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Hairy Bikers, Don't Go Bacon My Heart, Krumpli, Our Modern Kitchen, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, Good Housekeeping, Easy Peasy Foodie, Love Pork, Morrisons, M&S Food, and Abel & Cole. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
 - FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
@@ -236045,7 +236079,7 @@ Details: ${details}`);
 }
 var PRODUCTION_APP_URL = "https://dinnerbydesign.app";
 var ADMIN_EMAILS = /* @__PURE__ */ new Set(["tmterencemartin@gmail.com", "qa-admin@dinnerbydesign.app"]);
-var CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
+var CONTACT_RECIPIENT = "tmterencemartin@gmail.com";
 var CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1e3;
 var CONTACT_RATE_LIMIT_MAXIMUM = 4;
 var contactAttempts = /* @__PURE__ */ new Map();
@@ -237513,8 +237547,9 @@ function createApp() {
       return res.status(400).json({ ok: false, error: "Add a dinner brief before generating choices." });
     }
     const preferences = normaliseUserPreferences(req.body?.preferences);
+    const strictIngredientMatch = req.body?.strictIngredientMatch === true;
     try {
-      const choices = await generateInternalDinnerChoices(brief, preferences);
+      const choices = await generateInternalDinnerChoices(brief, preferences, strictIngredientMatch);
       if (choices.length === 0) {
         await recordAiUsageEvent({
           type: "ai_created_dinner",

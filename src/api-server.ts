@@ -75,7 +75,7 @@ function logApiError(type: string, error: any) {
 
 const PRODUCTION_APP_URL = "https://dinnerbydesign.app";
 const ADMIN_EMAILS = new Set(["tmterencemartin@gmail.com", "qa-admin@dinnerbydesign.app"]);
-const CONTACT_RECIPIENT = "terence@dinnerbydesign.app";
+const CONTACT_RECIPIENT = "tmterencemartin@gmail.com";
 const CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const CONTACT_RATE_LIMIT_MAXIMUM = 4;
 const contactAttempts = new Map<string, number[]>();
