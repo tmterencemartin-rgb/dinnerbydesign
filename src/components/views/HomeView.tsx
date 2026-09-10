@@ -752,12 +752,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-6"
+      className={resultsCount > 0 ? 'space-y-3' : 'space-y-6'}
     >
       <h1 className="sr-only">Find dinner options</h1>
         {/* Search Section */}
       <div className={`w-full flex flex-col relative ${showCentredInitialSearch ? 'justify-start py-4 sm:min-h-[calc(100dvh-11rem)] sm:justify-center sm:py-12' : ''}`}>
-        <div className="flex flex-col sm:min-h-[20rem]">
+        <div className={`flex flex-col ${resultsCount > 0 ? '' : 'sm:min-h-[20rem]'}`}>
           <div className="w-full max-w-4xl mx-auto space-y-4 my-2">
             {isGuestPreview && !SIMPLIFIED_GUEST_SEARCH_STATES && (
               <div className={`rounded border px-3 py-2 text-[12px] font-medium ${
@@ -1052,7 +1052,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             )}
           </div>
 
-          <div className={`flex flex-col gap-4 max-w-4xl mx-auto w-full ${isAiCreatedSearch ? 'hidden' : ''}`}>
+          <div className={`flex flex-col ${resultsCount > 0 ? 'gap-2 sm:gap-3' : 'gap-4'} max-w-4xl mx-auto w-full ${isAiCreatedSearch ? 'hidden' : ''}`}>
             <SearchStatusRow 
               status={status}
               enriching={enriching}
@@ -1435,7 +1435,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-1.5 sm:space-y-3 pb-16 bg-transparent max-w-4xl mx-auto w-full"
+            className="space-y-1.5 sm:space-y-2 pb-16 bg-transparent max-w-4xl mx-auto w-full"
           >
             {resultsHeading && (
               <div className="border-b border-dbd-rule/60 px-1 pb-2 sm:px-1 sm:pb-2.5">
