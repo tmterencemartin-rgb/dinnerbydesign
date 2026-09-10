@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import type { Recipe } from '../../types';
 import { PublishedRecipeLinkCard } from './PublishedRecipeLinkCard';
 
@@ -32,5 +32,15 @@ describe('PublishedRecipeLinkCard', () => {
       .toBe(recipe.sourceUrl);
     expect(screen.queryByText('Chicken')).toBeNull();
     expect(screen.queryByText('A source method that must not appear in the hand-off card.')).toBeNull();
+  });
+
+  it('lets a user save a published recipe without opening the publisher page', () => {
+    const onToggleSaved = vi.fn();
+    render(<PublishedRecipeLinkCard recipe={recipe} query="chicken and lemon" onToggleSaved={onToggleSaved} />);
+
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    expect(saveButton.getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(saveButton);
+    expect(onToggleSaved).toHaveBeenCalledTimes(1);
   });
 });

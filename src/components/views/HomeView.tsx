@@ -552,7 +552,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     setSelectedItem(item);
   };
 
-  const handleToggleSaved = async (recipe: any) => {
+  const handleToggleSaved = async (recipe: any, options?: { stayOnSearch?: boolean }) => {
     if (isReadOnly) {
       showToast("Your trial has ended. Upgrade to save more recipes.", "Upgrade", () => setView('settings'));
       return;
@@ -568,8 +568,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
         if (!savedId) throw new Error('Save did not return a saved recipe id.');
         window.dispatchEvent(new CustomEvent('pwa-meaningful-action'));
         showToast(user && !user.isAnonymous ? "Recipe saved!" : "Recipe saved in this browser.");
-        setSelectedItem(null);
-        setView('planner');
+        if (!options?.stayOnSearch) {
+          setSelectedItem(null);
+          setView('planner');
+        }
       }
     } catch (err: any) {
       addLog?.(`UI ERROR: toggle saved recipe failed: ${err?.message || err}`);
@@ -1499,6 +1501,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       key={recipe.id || `published-recipe-${recipe.title}`}
                       recipe={recipe}
                       query={resultsQuery}
+                      isSaved={isSaved(recipe)}
+                      onToggleSaved={() => handleToggleSaved(recipe, { stayOnSearch: true })}
                     />
                   ))
                   : currentRecipes?.map(recipe => (
