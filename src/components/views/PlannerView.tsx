@@ -965,7 +965,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
             {!isPlannerEmpty && (
             /* Unified Save & Schedule Panel */
-            <div className="mt-0 bg-white rounded border border-gray-100 overflow-hidden flex flex-col">
+            <div className="mt-0 bg-white rounded border border-gray-100 overflow-visible flex flex-col">
               {/* Panel Content - Single scrollable flow */}
               <div className="px-3 sm:px-5 py-3 sm:py-5 space-y-6">
                 
@@ -1039,7 +1039,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
                       transition={{ duration: shouldReduceMotion ? 0.01 : 0.2, ease: 'easeOut' }}
-                      className="space-y-2.5 overflow-hidden"
+                      className="space-y-2.5 overflow-visible"
                     >
                   <AnimatePresence initial={false}>
                   {builtWeekCost && (
