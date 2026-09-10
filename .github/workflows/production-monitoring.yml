@@ -71,8 +71,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Run read-only production browser checks
         run: npx playwright test e2e/monitoring-safe.spec.ts

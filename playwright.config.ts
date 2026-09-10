@@ -13,22 +13,29 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL,
-    channel: 'chrome',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
   projects: [
     {
       name: 'desktop-chromium',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+      use: { ...devices['Desktop Chrome'], channel: 'chrome', viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'phone-chromium',
-      use: { ...devices['Pixel 7'] },
+      use: { ...devices['Pixel 7'], channel: 'chrome' },
     },
     {
       name: 'tablet-chromium',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1024, height: 768 }, isMobile: false },
+      use: { ...devices['Desktop Chrome'], channel: 'chrome', viewport: { width: 1024, height: 768 }, isMobile: false },
+    },
+    {
+      name: 'desktop-firefox',
+      use: { ...devices['Desktop Firefox'], viewport: { width: 1440, height: 900 } },
+    },
+    {
+      name: 'desktop-webkit',
+      use: { ...devices['Desktop Safari'], viewport: { width: 1440, height: 900 } },
     },
   ],
   webServer: useLocalPreview ? {
