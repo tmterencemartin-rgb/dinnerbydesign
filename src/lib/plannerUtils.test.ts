@@ -159,6 +159,35 @@ describe('plannerUtils', () => {
     expect(result.map(recipe => recipe.title)).toEqual(['Quick Lentil Pasta']);
   });
 
+  it('keeps a scheduled recipe in the collection when it matches the selected filters', () => {
+    const result = filterAndSortSavedRecipes({
+      recipes: [
+        baseRecipe({
+          title: 'Scheduled Lentil Pasta',
+          description: 'simple lentil pasta',
+          totalTime: 18,
+          isVegetarian: true,
+          mainProtein: 'lentils',
+          ingredients: ['lentils', 'tomatoes', 'pasta'],
+          scheduledDate: 'monday',
+          convenienceProfile: 'scratch',
+        }),
+      ],
+      preferences,
+      searchQuery: 'pasta',
+      quickPills: {
+        under20: true,
+        vegetarian: true,
+        highProtein: true,
+        batch: false,
+      },
+      convenienceFilter: 'scratch',
+      sortBy: 'newest',
+    });
+
+    expect(result.map(recipe => recipe.title)).toEqual(['Scheduled Lentil Pasta']);
+  });
+
   it('keeps saved dinners visible even when they conflict with current preferences', () => {
     const result = filterAndSortSavedRecipes({
       recipes: [

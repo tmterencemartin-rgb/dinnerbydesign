@@ -197,8 +197,6 @@ export const filterAndSortSavedRecipes = ({
 
   const processed = recipes
     .filter(recipe => {
-      if (recipe.scheduledDate) return false;
-
       if (query && !checkSearchMatch(recipe, query)) return false;
 
       if (quickPills.under20) {

@@ -425,7 +425,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3 min-h-[34px] w-full sm:relative">
         {/* Left Side: Scheduled Badge + Recipe Heading & Sub-stats */}
         <div className="flex items-start gap-2.5 flex-grow min-w-0">
-          {scheduledDate && !isBacklog && (
+          {scheduledDate && (
             <motion.div
               initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
