@@ -213,6 +213,13 @@ textarea:focus-visible,
   box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--dbd-accent) 50%, transparent);
 }
 
+/* Matches the other compact planner controls: one border, with a light accent on focus. */
+.planner-collection-search-input:focus-visible {
+  outline: none !important;
+  outline-offset: 0;
+  box-shadow: none !important;
+}
+
 .ai-created-search-input:focus-visible {
   outline: none !important;
   outline-offset: 0;

@@ -1110,7 +1110,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                               value={savedSearchQuery}
                               onChange={(e) => setSavedSearchQuery(e.target.value)}
                               placeholder="Search your collection..."
-                              className="w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[11.5px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 focus:border-accent/40 transition-all"
+                              className="planner-collection-search-input w-full h-8 bg-white border border-gray-100 rounded pl-8 pr-8 font-ibm-plex-mono text-[11.5px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 focus:border-accent/40 transition-all"
                             />
                             {savedSearchQuery && (
                               <button 
