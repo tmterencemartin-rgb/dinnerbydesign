@@ -223,7 +223,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
             {showStyledDefaultPlaceholder && (
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center truncate font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-500"
+                className="search-prompt-fade-in pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center truncate font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-500"
               >
                 <span className="text-dbd-accent">Search here</span><span className="ml-[0.35em]">by ingredient, dish, cuisine or chef</span>
               </span>
