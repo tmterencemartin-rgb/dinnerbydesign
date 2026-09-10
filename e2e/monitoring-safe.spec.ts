@@ -33,4 +33,44 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('button', { name: 'Quick chicken dinner under 30 minutes' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Low-cost vegetarian dinner for two' })).toBeVisible();
   });
+
+  test('search modes and their guidance switch without submitting a search', async ({ page }) => {
+    await page.goto('/?view=home');
+
+    const modes = [
+      ['AI-created recipes', 'Original recipes shaped around your brief and preferences.'],
+      ['Published recipes', 'Published recipes opened at the original source.'],
+      ['Ready-made dinners', 'Ready-made supermarket options from selected retailers.'],
+    ] as const;
+
+    for (const [label, guidance] of modes) {
+      await page.getByRole('button', { name: label, exact: true }).click();
+      await expect(page.getByText(guidance, { exact: true })).toBeVisible();
+    }
+
+    await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toHaveValue('');
+  });
+
+  test('contact and sign-in pages render without submitting forms', async ({ page }) => {
+    await page.goto('/contact');
+    await expect(page.getByRole('heading', { name: 'Get in touch' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Name' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Email address' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Message' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeEnabled();
+
+    await page.goto('/signin?mode=signin');
+    await expect(page.getByRole('heading', { name: 'Sign in to your account' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Email address' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();
+  });
+
+  test('planner and shopping views open without saving or scheduling a recipe', async ({ page }) => {
+    await page.goto('/?view=home');
+    await page.getByRole('button', { name: 'Save & Schedule' }).click();
+    await expect(page.getByRole('heading', { name: 'Save & Schedule' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Shopping', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Shopping list', exact: true })).toBeVisible();
+  });
 });

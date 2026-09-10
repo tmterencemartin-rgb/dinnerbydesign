@@ -39,7 +39,7 @@ ALLOWED_ORIGINS=https://dinnerbydesign.app,https://www.dinnerbydesign.app
 
 Set `FIREBASE_SERVICE_ACCOUNT_JSON` to the complete JSON credential for a dedicated Firebase service account used by protected administrator endpoints. It is required for authentication reconciliation and complete-account deletion. Keep it encrypted in Vercel and never commit it.
 
-Set `CRON_SECRET` to a random production-only secret. Vercel sends it as a bearer token when it runs `/api/monitor/search-canary` daily. The canary records pass/fail and latency without using a customer account or storing the canary query in telemetry. Real user searches continue to be observed continuously through delivery telemetry.
+Set `CRON_SECRET` to a random production-only secret. Vercel sends it as a bearer token when it runs `/api/monitor/search-canary` each Monday. The canary records pass/fail and latency without using a customer account or storing the canary query in telemetry. Real user searches continue to be observed continuously through delivery telemetry.
 
 Firestore backup monitoring is opt-in because it requires a Google Cloud backup schedule and an IAM permission that should not be granted to the application by default. When the schedule is ready, add these Vercel variables:
 
@@ -125,6 +125,12 @@ Then:
 5. Confirm the production deployment reaches `READY`.
 6. Run `npm run smoke:public` to verify the live public pages, sitemap, robots file and health endpoint.
 7. Verify that the local commit, remote branch and deployed source are aligned.
+
+## Daily production monitoring
+
+GitHub Actions runs a read-only production monitor each morning. It checks high and critical dependency vulnerabilities, public pages, the sitemap, robots file, shallow health, the three search-mode controls and guidance, contact and sign-in forms, and the guest planner and shopping views at desktop, tablet and phone widths. It does not submit a form, generate recipes, sign in, save recipes or schedule dinners. Browser traces and screenshots are retained only when a check fails.
+
+The weekly search canary is separate from the daily monitor because it uses the search service and records its outcome. The protected deep-health endpoint remains scheduled by Vercel for service readiness and alerting.
 
 ## Routine production acceptance checks
 
