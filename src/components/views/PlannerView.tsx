@@ -739,7 +739,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   <p className="mt-0.5 max-w-2xl text-[11.5px] text-gray-500 font-medium leading-relaxed">
                     {isPlannerEmpty
                       ? 'No recipes saved yet. Find recipes to save and they’ll appear here, ready to schedule. Or let DinnerByDesign build a week around your household, budget and available time.'
-                      : 'Use your preferences to generate a set of dinners and add them to your collection. Preferred proteins guide the mix; safe alternatives can fill any gaps.'}
+                      : 'Use your preferences to select and organise source-backed recipes and ready-made options. AI helps choose the mix, while dietary, allergy and ethical rules still apply.'}
                   </p>
                 </div>
                 <div className="flex max-w-full flex-wrap gap-2 self-start sm:self-auto">
@@ -902,7 +902,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       {AFFORDABILITY_PLANNER_PILOT && (planMinimiseCost || planReuseIngredients)
                         ? ` Selection also prioritises ${[planMinimiseCost ? 'lower shopping cost' : '', planReuseIngredients ? 'ingredient reuse' : ''].filter(Boolean).join(' and ')}.`
                         : ''}
-                      {' '}Results are added to Saved so you can schedule them yourself.
+                      {' '}Results are added to Saved so you can schedule them yourself. Recipes and ready-made options link back to their original sources.
                     </p>
                     <button
                       type="button"
