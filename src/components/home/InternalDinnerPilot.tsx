@@ -286,7 +286,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
                 {choice.ingredients.map(ingredient => <li key={ingredient}>{ingredient}</li>)}
               </ul>
               <p className="mt-3 text-[10px] leading-4 text-dbd-ink-3">Estimates only. Check ingredients for allergies and cook meat, poultry and fish thoroughly before serving.</p>
-              <details open={index === 0} className="group mt-3 rounded border border-gray-100 bg-gray-50/50">
+              <details className="group mt-3 rounded border border-gray-100 bg-gray-50/50">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-2.5 py-2 text-[10px] font-semibold uppercase tracking-wide text-dbd-ink-3 outline-none transition-colors hover:text-dbd-accent focus-visible:ring-2 focus-visible:ring-dbd-accent">
                   <span>View method</span>
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" aria-hidden="true" />
