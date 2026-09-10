@@ -972,7 +972,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 {/* SECTION 1: SAVED (BACKLOG) */}
                 <div id="saved-recipes-section" className="space-y-1.5 relative z-20 scroll-mt-[150px]">
                   {/* SAVED HEADER ROW */}
-                  <div className="border-b border-gray-100 pb-1.5">
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-0.5 border-b border-gray-100 pb-1.5">
                     <button
                       type="button"
                       onClick={() => setIsCollectionOpen(previous => !previous)}
@@ -981,10 +981,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                       className="flex w-fit items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-gray-50"
                     >
                       <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">My collection</span>
+                      <span className="hidden text-[12px] font-medium text-gray-500 sm:inline">{activeSavedRecipes.length} {activeSavedRecipes.length === 1 ? 'item' : 'items'}</span>
                       <ChevronDown className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${isCollectionOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                     </button>
-                    <div className="mt-1 flex items-center justify-between gap-2">
-                      <span className="text-[12px] text-gray-500 font-medium">{activeSavedRecipes.length} {activeSavedRecipes.length === 1 ? 'item' : 'items'}</span>
+                    <div className="order-3 col-span-2 flex items-center justify-between gap-2 px-1 sm:order-none sm:col-span-1 sm:px-0">
+                      <span className="text-[12px] font-medium text-gray-500 sm:hidden">{activeSavedRecipes.length} {activeSavedRecipes.length === 1 ? 'item' : 'items'}</span>
                       <div className="flex shrink-0 items-center gap-2.5">
                       {activeSavedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
