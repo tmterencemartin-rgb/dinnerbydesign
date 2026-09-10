@@ -57,7 +57,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
     return { qtyUnit: '', name: cleanIng };
   };
 
-  const { updatePlanner, planner, addLog, handlePrintRecipe, updateRecipe, profile, showToast, unscheduleRecipe } = useAuth();
+  const { updatePlanner, planner, addLog, handlePrintRecipe, updateRecipe, profile, showToast, unscheduleRecipe, accessStatus } = useAuth();
 
   const currentIngredients = (enrichedData?.ingredients || recipe.ingredients || [])
     .filter((ing: string) => ing && ing.trim().length > 0);
@@ -123,30 +123,43 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
       setIsChoosingDay(false);
       return;
     }
+    if (accessStatus === 'read_only') {
+      showToast('Your trial has ended. Upgrade to add recipes to your schedule.');
+      setIsChoosingDay(false);
+      return;
+    }
     const replacedRecipe = planner.find(p => p.scheduledDate === day && !isSameRecipe(p, recipe));
-    const result = await updatePlanner(day, recipe).catch(err => {
+    let result: Awaited<ReturnType<typeof updatePlanner>>;
+    try {
+      result = await updatePlanner(day, recipe);
+    } catch (err: any) {
       console.error("handleDaySelect (SavedRecipeItem) failed:", err);
       addLog(`UI ERROR: updatePlanner failed (SavedRecipeItem): ${err?.message || err}`);
-      return undefined;
-    });
-    const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
-    if (result) {
-      showToast(replacedRecipe ? `Replaced ${dayLabel}. Shopping list updated; previous recipe moved to saved.` : `Added to ${dayLabel}. Shopping list updated.`, "Undo", () => {
-        if (replacedRecipe) {
-          updatePlanner(day, replacedRecipe).catch(err => {
-            addLog(`UI ERROR: Undo restore failed (SavedRecipeItem): ${err?.message || err}`);
-            console.error("[SavedRecipeItem] Undo restore failed:", err);
-          });
-          return;
-        }
-        if (result.id) {
-          unscheduleRecipe(result.id).catch(err => {
-            addLog(`UI ERROR: Undo unschedule failed (SavedRecipeItem): ${err?.message || err}`);
-            console.error("[SavedRecipeItem] Undo unschedule failed:", err);
-          });
-        }
-      });
+      showToast('Could not add this recipe to your schedule. Please try again.');
+      setIsChoosingDay(false);
+      return;
     }
+    if (!result) {
+      showToast('Could not add this recipe to your schedule. Please try again.');
+      setIsChoosingDay(false);
+      return;
+    }
+    const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
+    showToast(replacedRecipe ? `Replaced ${dayLabel}. Shopping list updated; previous recipe moved to saved.` : `Added to ${dayLabel}. Shopping list updated.`, "Undo", () => {
+      if (replacedRecipe) {
+        updatePlanner(day, replacedRecipe).catch(err => {
+          addLog(`UI ERROR: Undo restore failed (SavedRecipeItem): ${err?.message || err}`);
+          console.error("[SavedRecipeItem] Undo restore failed:", err);
+        });
+        return;
+      }
+      if (result.id) {
+        unscheduleRecipe(result.id).catch(err => {
+          addLog(`UI ERROR: Undo unschedule failed (SavedRecipeItem): ${err?.message || err}`);
+          console.error("[SavedRecipeItem] Undo unschedule failed:", err);
+        });
+      }
+    });
     setToastMessage(null);
     setShowCheck(true);
     setTimeout(() => {

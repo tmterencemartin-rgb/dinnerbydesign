@@ -17,5 +17,10 @@ describe('getRecipeSourceLabel', () => {
     expect(getRecipeSourcePublisher('https://ottolenghi.co.uk/pages/recipes/example')).toBe('Ottolenghi');
     expect(getRecipeSourcePublisher('https://www.coop.co.uk/recipes/example')).toBe('Co-op');
     expect(getRecipeSourcePublisher('https://www.hairybikers.com/recipes/example')).toBe('Hairy Bikers');
+    expect(getRecipeSourcePublisher('https://www.easypeasyfoodie.com/chicken-tikka-kebabs/')).toBe('Easy Peasy Foodie');
+    expect(getRecipeSourcePublisher('https://www.lovepork.com/recipes/pork-and-apple-traybake')).toBe('Love Pork');
+    expect(getRecipeSourcePublisher('https://groceries.morrisons.com/recipes/chicken-traybake/example-recipe')).toBe('Morrisons');
+    expect(getRecipeSourcePublisher('https://www.marksandspencer.com/c/food-and-wine/cooking/recipes/chicken-traybake/')).toBe('M&S Food');
+    expect(getRecipeSourcePublisher('https://www.abelandcole.co.uk/recipes/chicken-and-bean-stew')).toBe('Abel & Cole');
   });
 });

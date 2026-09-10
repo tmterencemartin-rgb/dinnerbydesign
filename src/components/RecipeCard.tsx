@@ -333,6 +333,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           });
         }
       });
+    } else {
+      showToast('Could not add this recipe to your schedule. Please try again.');
     }
 
     setIsChoosingDay(false);

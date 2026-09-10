@@ -34,7 +34,12 @@ const PUBLISHER_LABELS: Array<[string, string]> = [
   ['krumpli.co.uk', 'Krumpli'],
   ['ourmodernkitchen.com', 'Our Modern Kitchen'],
   ['kitchensanctuary.com', 'Kitchen Sanctuary'],
-  ['diabetes.org.uk', 'Diabetes UK']
+  ['diabetes.org.uk', 'Diabetes UK'],
+  ['easypeasyfoodie.com', 'Easy Peasy Foodie'],
+  ['lovepork.com', 'Love Pork'],
+  ['groceries.morrisons.com', 'Morrisons'],
+  ['marksandspencer.com', 'M&S Food'],
+  ['abelandcole.co.uk', 'Abel & Cole']
 ];
 
 const sourceHost = (sourceUrl: unknown): string | null => {

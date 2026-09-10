@@ -39,7 +39,12 @@ export const APPROVED_RECIPE_PUBLISHER_HOSTS = [
   'sainsburysmagazine.co.uk',
   'olivemagazine.com',
   'greatbritishchefs.com',
-  'goodhousekeeping.com'
+  'goodhousekeeping.com',
+  'easypeasyfoodie.com',
+  'lovepork.com',
+  'groceries.morrisons.com',
+  'marksandspencer.com',
+  'abelandcole.co.uk'
 ] as const;
 
 const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set<string>(APPROVED_RECIPE_PUBLISHER_HOSTS);

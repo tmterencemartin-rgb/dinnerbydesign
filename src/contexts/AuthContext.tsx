@@ -1304,6 +1304,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (jsonErr: any) {
         setError(jsonErr.message);
       }
+      throw err;
     }
   };
 

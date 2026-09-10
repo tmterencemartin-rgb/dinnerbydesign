@@ -296,6 +296,8 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
           });
         }
       });
+    } else {
+      showToast('Could not add this recipe to your schedule. Please try again.');
     }
 
     setIsChoosingDay(false);

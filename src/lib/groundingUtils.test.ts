@@ -53,6 +53,11 @@ describe('grounded source URL reconciliation', () => {
     expect(isApprovedDirectRecipeUrl('https://www.thetimes.com/life-style/food-drink/recipe/chicken-pie-0')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.thesundaytimes.co.uk/thedish/recipe/chicken-pie')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.goodhousekeeping.com/uk/food/recipes/a12345/chicken-pie/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.easypeasyfoodie.com/chicken-tikka-kebabs/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.lovepork.com/recipes/pork-and-apple-traybake')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://groceries.morrisons.com/recipes/chicken-traybake/example-recipe')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.marksandspencer.com/c/food-and-wine/cooking/recipes/chicken-traybake/')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.abelandcole.co.uk/recipes/chicken-and-bean-stew')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.nigella.com/recipes/chicken-with-chorizo-and-cannellini-beans')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://foodnetwork.co.uk/recipes/roast-chicken')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://pinchofnom.com/recipes/chicken-curry-bakes/')).toBe(true);

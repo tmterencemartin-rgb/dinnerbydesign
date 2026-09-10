@@ -1414,8 +1414,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                                   if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
                                                   const day = option.scheduled.scheduledDate;
                                                   if (!day) return;
-                                                  await updatePlanner(day, option.replacement);
-                                                  showToast(`Swapped ${day} dinner.`);
+                                                  try {
+                                                    const result = await updatePlanner(day, option.replacement);
+                                                    if (!result) throw new Error('Swap did not return a recipe id.');
+                                                    showToast(`Swapped ${day} dinner.`);
+                                                  } catch (err: any) {
+                                                    addLog(`UI ERROR: swap scheduled dinner failed: ${err?.message || err}`);
+                                                    showToast('Could not swap this dinner. Please try again.');
+                                                  }
                                                 }}
                                                 className="h-7 px-2.5 rounded bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
                                               >
@@ -1444,8 +1450,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                 if (checkReadOnly("Your trial has ended. Upgrade to swap scheduled dinners.")) return;
                                 const day = bestCostSavingSwap.scheduled.scheduledDate;
                                 if (!day) return;
-                                await updatePlanner(day, bestCostSavingSwap.replacement);
-                                showToast(`Swapped ${day} dinner.`);
+                                try {
+                                  const result = await updatePlanner(day, bestCostSavingSwap.replacement);
+                                  if (!result) throw new Error('Swap did not return a recipe id.');
+                                  showToast(`Swapped ${day} dinner.`);
+                                } catch (err: any) {
+                                  addLog(`UI ERROR: swap scheduled dinner failed: ${err?.message || err}`);
+                                  showToast('Could not swap this dinner. Please try again.');
+                                }
                               }}
                               className="h-8 px-3 rounded bg-emerald-700 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shrink-0"
                             >
@@ -1665,11 +1677,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     compliantUnscheduledSavedRecipes.map(recipe => (
                                       <button 
                                         key={recipe.id}
-                                        onClick={() => {
-                                          updatePlanner(dayId, recipe).catch(err => {
+                                        onClick={async () => {
+                                          if (checkReadOnly("Your trial has ended. Upgrade to add recipes to your schedule.")) return;
+                                          try {
+                                            const result = await updatePlanner(dayId, recipe);
+                                            if (!result) throw new Error('Schedule did not return a recipe id.');
+                                            showToast(`Added to ${dayId}. Shopping list updated.`);
+                                            setTargetPlannerDay(null);
+                                          } catch (err: any) {
                                             addLog(`UI ERROR: New updatePlanner failed: ${err.message || String(err)}`);
-                                          });
-                                          setTargetPlannerDay(null);
+                                            showToast('Could not add this recipe to your schedule. Please try again.');
+                                          }
                                         }}
                                         className="w-full text-left px-2 py-1.5 text-[13px] text-gray-700 hover:bg-gray-50 rounded transition-colors truncate"
                                       >

@@ -179,5 +179,30 @@ export const PREFERRED_SOURCES: PreferredSource[] = [
     id: "good_housekeeping",
     label: "Good Housekeeping",
     description: "Test-kitchen recipes and practical cooking guidance from Good Housekeeping."
+  },
+  {
+    id: "easy_peasy_foodie",
+    label: "Easy Peasy Foodie",
+    description: "Straightforward family recipes with clear methods and everyday ingredients."
+  },
+  {
+    id: "love_pork",
+    label: "Love Pork",
+    description: "Pork recipes and cooking guidance from the UK's pork industry body."
+  },
+  {
+    id: "morrisons",
+    label: "Morrisons",
+    description: "Supermarket recipes with accessible ingredients and clear timings."
+  },
+  {
+    id: "marks_and_spencer",
+    label: "M&S Food",
+    description: "Seasonal and everyday recipes from M&S Food."
+  },
+  {
+    id: "abel_and_cole",
+    label: "Abel & Cole",
+    description: "Seasonal recipes focused on fruit, vegetables and organic ingredients."
   }
 ];
