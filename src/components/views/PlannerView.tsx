@@ -972,21 +972,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                 {/* SECTION 1: SAVED (BACKLOG) */}
                 <div id="saved-recipes-section" className="space-y-2.5 relative z-20 scroll-mt-[150px]">
                   {/* SAVED HEADER ROW */}
-                  <div className="flex items-center justify-between gap-3 border-b border-gray-100 pb-2">
+                  <div className="flex flex-col items-stretch gap-2 border-b border-gray-100 pb-2 xl:flex-row xl:items-center xl:justify-between">
                     <button
                       type="button"
                       onClick={() => setIsCollectionOpen(previous => !previous)}
                       aria-expanded={isCollectionOpen}
                       aria-controls="collection-content"
-                      className="flex min-w-0 flex-1 items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-gray-50"
+                      className="flex min-w-0 items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-gray-50 xl:flex-1"
                     >
                       <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
                         <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">My collection</span>
-                        <span className="text-[12px] text-gray-500 font-medium">{filteredSavedRecipes.length} {filteredSavedRecipes.length === 1 ? 'item' : 'items'}</span>
+                        <span className="text-[12px] text-gray-500 font-medium">{activeSavedRecipes.length} {activeSavedRecipes.length === 1 ? 'item' : 'items'}</span>
                       </span>
                       <ChevronDown className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${isCollectionOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                     </button>
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2.5 self-end xl:self-auto">
                       {activeSavedRecipes.length > 0 && (
                         <div className="flex items-center gap-2">
                           {showDeleteAllSavedConfirm ? (
@@ -1101,9 +1101,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     <div>
                       {/* Search and Organize Controls - Integrated Header */}
                       <div className="border-b border-gray-100 px-1.5 pb-2 sm:px-2">
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 h-auto">
+                        <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between xl:gap-3 h-auto">
                           {/* Left: Search Bar */}
-                          <div className="relative w-full sm:max-w-[340px]">
+                          <div className="relative w-full xl:max-w-[340px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
                             <input 
                               type="text"
@@ -1123,7 +1123,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           </div>
 
                           {/* Right: Unified Controls */}
-                          <div className="flex items-center gap-1.5 self-start sm:self-auto h-8 relative">
+                          <div className="flex flex-wrap items-center gap-1.5 self-start xl:self-auto h-auto min-h-8 relative">
                             {/* 1. Filters Dropdown */}
                             <div className="relative">
                               <button 
