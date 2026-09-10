@@ -5,6 +5,7 @@ import {
   getPublicPathwayForArticle,
 } from '../content/publicPathways';
 import { Wordmark } from './Wordmark';
+import { Menu, X } from 'lucide-react';
 
 const CONTACT_EMAIL = 'terence@dinnerbydesign.app';
 
@@ -67,22 +68,39 @@ const PublicGuideFooter: React.FC = () => (
 export const PublicGuideShell: React.FC<{ pathName: string; children: React.ReactNode }> = ({ pathName, children }) => {
   const breadcrumbs = getBreadcrumbs(pathName);
   const isCollection = pathName === '/guides' || Boolean(getPublicPathway(pathName));
+  const [isPublicNavOpen, setIsPublicNavOpen] = React.useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-[#faf9f7] text-dbd-ink">
       <header className="border-b border-dbd-rule/50 bg-dbd-surface">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-5 gap-y-3 px-4 py-3 sm:min-h-[88px] sm:flex-nowrap sm:py-0">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3 lg:min-h-[88px] lg:flex-nowrap lg:py-0">
           <a href="/" aria-label="DinnerByDesign home">
             <Wordmark className="text-[30.6px] sm:text-[36px]" />
           </a>
-          <nav aria-label="Public pathways" className="order-last flex w-full items-center justify-between gap-3 border-t border-dbd-rule/40 pt-2.5 text-[10px] font-semibold text-dbd-ink-2 sm:order-none sm:w-auto sm:border-0 sm:pt-0 sm:text-xs">
+          <div className="ml-auto flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setIsPublicNavOpen(previous => !previous)}
+              aria-expanded={isPublicNavOpen}
+              aria-controls="public-pathways"
+              className="inline-flex min-h-10 min-w-10 items-center justify-center rounded text-dbd-ink-2 transition-colors hover:bg-dbd-accent-light hover:text-dbd-accent focus:outline-none lg:hidden"
+            >
+              {isPublicNavOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+              <span className="sr-only">{isPublicNavOpen ? 'Close navigation' : 'Open navigation'}</span>
+            </button>
+            <a href="/signin?mode=signin" className="text-xs font-semibold text-dbd-accent hover:underline">Sign in</a>
+          </div>
+          <nav
+            id="public-pathways"
+            aria-label="Public pathways"
+            className={`${isPublicNavOpen ? 'flex' : 'hidden'} order-last w-full flex-col gap-2 border-t border-dbd-rule/40 pt-2.5 text-[11px] font-semibold text-dbd-ink-2 lg:order-none lg:flex lg:w-auto lg:flex-row lg:items-center lg:justify-between lg:gap-3 lg:border-0 lg:pt-0 lg:text-xs`}
+          >
             {PUBLIC_PATHWAYS.map(pathway => (
-              <a key={pathway.id} href={pathway.path} aria-current={pathName === pathway.path ? 'page' : undefined} className="text-center leading-4 hover:text-dbd-accent aria-[current=page]:text-dbd-accent">
+              <a key={pathway.id} href={pathway.path} aria-current={pathName === pathway.path ? 'page' : undefined} className="leading-4 hover:text-dbd-accent aria-[current=page]:text-dbd-accent lg:text-center">
                 {pathway.id === 'food-costs' ? 'Food-cost & waste' : pathway.title}
               </a>
             ))}
           </nav>
-          <a href="/signin?mode=signin" className="text-xs font-semibold text-dbd-accent hover:underline">Sign in</a>
         </div>
       </header>
 
