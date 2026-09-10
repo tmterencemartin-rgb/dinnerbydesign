@@ -376,7 +376,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     source === 'cook' && resultsCount === 3 && isNotBoringSummerSaladsQuery(resultsQuery);
   const showNotBoringSummerSaladsPrompt =
     source === 'cook' && resultsCount === 0 && (!resultsQuery.trim() || isNotBoringSummerSaladsQuery(resultsQuery));
-  const hasNearbyRetailers = source === 'ready-made' && supermarkets.length > 0;
   const useThreeWaySearch = THREE_WAY_SEARCH_PILOT;
   const isAiCreatedSearch = useThreeWaySearch && searchMode === 'ai-created';
   const usePublishedSourceHandoff = useThreeWaySearch && source === 'cook' && searchMode === 'published';
@@ -997,23 +996,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                       ? 'Add an ingredient or turn off strict search.'
                       : 'Try removing or replacing an ingredient, or search for fewer ingredients. For example, try “duck and potatoes” or “duck traybake”.'}
                   </span>
-                </div>
-              )}
-
-              {source === 'ready-made' && (
-                <div className="w-full">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowFilters(true);
-                      setPreferencesError(null);
-                    }}
-                    className="text-left text-[11.5px] text-gray-500 hover:text-gray-700 leading-relaxed font-semibold transition-colors"
-                  >
-                    {hasNearbyRetailers
-                      ? `Prioritising nearby retailers: ${supermarkets.slice(0, 3).join(', ')}${supermarkets.length > 3 ? '...' : ''}. Change this in search preferences.`
-                      : 'Want more relevant ready-made results? Add nearby retailers in preferences.'}
-                  </button>
                 </div>
               )}
 

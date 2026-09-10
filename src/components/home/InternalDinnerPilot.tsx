@@ -165,6 +165,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
     setProblemChoiceKey(null);
     setFeedbackState({});
   };
+  const showStyledDefaultPlaceholder = !input && !disabled && !isListening;
 
   return (
     <section
@@ -218,19 +219,29 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
               </button>
             )
           )}
-          <input
-            id="internal-dinner-brief"
-            type="text"
-            value={input}
-            onChange={event => setInput(event.target.value)}
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
-            aria-label="Search recipes by ingredient, dish, cuisine or chef"
-            placeholder={isListening ? 'Listening...' : 'Search here by ingredient, dish, cuisine or chef'}
-            className={`search-query-input flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
-            disabled={isGenerating || disabled}
-          />
+          <div className="relative min-w-0 flex-grow h-full">
+            {showStyledDefaultPlaceholder && (
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center truncate font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-500"
+              >
+                <span className="text-dbd-accent">Search here</span> by ingredient, dish, cuisine or chef
+              </span>
+            )}
+            <input
+              id="internal-dinner-brief"
+              type="text"
+              value={input}
+              onChange={event => setInput(event.target.value)}
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              aria-label="Search recipes by ingredient, dish, cuisine or chef"
+              placeholder={showStyledDefaultPlaceholder ? undefined : (isListening ? 'Listening...' : 'Search here by ingredient, dish, cuisine or chef')}
+              className={`search-query-input h-full w-full min-w-0 bg-transparent px-2 font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
+              disabled={isGenerating || disabled}
+            />
+          </div>
           {input && !isGenerating && !disabled && (
             <button
               type="button"

@@ -60,6 +60,16 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     }
     return "Search here by ingredient, dish, cuisine or chef";
   };
+  const showStyledDefaultPlaceholder = !input
+    && !isReadOnly
+    && !isListening
+    && !placeholderOverride
+    && !isLowCost
+    && !isLeftoverMode;
+  const inputPlaceholder = isReadOnly
+    ? (readOnlyPlaceholder || "Upgrade to search again")
+    : (showStyledDefaultPlaceholder ? undefined : getSearchPlaceholder());
+
   return (
     <form
       onSubmit={(e) => {
@@ -104,19 +114,29 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           )
         )}
 
-        <input 
-          ref={inputRef}
-          type="text" 
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={isReadOnly}
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
-          aria-label="Search recipes by ingredient, dish, cuisine or chef"
-          placeholder={isReadOnly ? (readOnlyPlaceholder || "Upgrade to search again") : getSearchPlaceholder()}
-          className={`search-query-input flex-grow min-w-0 px-2 bg-transparent font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 h-full ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
-        />
+        <div className="relative min-w-0 flex-grow h-full">
+          {showStyledDefaultPlaceholder && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center truncate font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-500"
+            >
+              <span className="text-dbd-accent">Search here</span> by ingredient, dish, cuisine or chef
+            </span>
+          )}
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={isReadOnly}
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            aria-label="Search recipes by ingredient, dish, cuisine or chef"
+            placeholder={inputPlaceholder}
+            className={`search-query-input h-full w-full min-w-0 bg-transparent px-2 font-ibm-plex-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-800 outline-none placeholder:text-gray-500 ${isListening ? 'placeholder:text-dbd-accent' : ''}`}
+          />
+        </div>
 
         {input && !isGenerating && !isReadOnly && (
           <button
