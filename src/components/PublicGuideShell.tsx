@@ -18,44 +18,46 @@ const getBreadcrumbs = (pathName: string) => {
 };
 
 const PublicGuideFooter: React.FC = () => (
-  <footer className="mt-auto border-t border-dbd-rule/50 bg-dbd-surface py-5 sm:py-6">
-    <div className="mx-auto grid w-full max-w-5xl gap-4 px-4 text-center sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:text-left">
-      <div className="space-y-1 text-[11px] leading-5 text-dbd-ink-3 sm:text-xs">
-        <p>&copy; {new Date().getFullYear()} DinnerByDesign. All rights reserved.</p>
-        <p className="font-semibold text-dbd-ink-3">Less searching. More relevant dinners.</p>
-        <a href="/contact" aria-label="Open contact form" className="inline-block font-semibold text-dbd-accent hover:underline">
-          {CONTACT_EMAIL}
-        </a>
+  <footer className="mt-auto border-t border-gray-100 bg-gray-50 py-4 sm:py-6">
+    <div className="mx-auto grid w-full max-w-6xl gap-x-8 gap-y-5 px-3 sm:px-4 md:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.8fr)] md:items-start lg:grid-cols-[minmax(340px,1.35fr)_repeat(3,minmax(0,1fr))] lg:gap-x-12 lg:px-6">
+      <div className="flex min-w-0 flex-col items-center md:items-start">
+        <div className="relative z-10 flex flex-col items-center gap-0.5 text-[11px] text-gray-500 sm:gap-1 sm:text-[13px] md:items-start">
+          <span>&copy; {new Date().getFullYear()} DinnerByDesign. All rights reserved.</span>
+          <span className="text-[10.5px] font-semibold text-gray-500 sm:text-[12px]">Less searching. More relevant dinners.</span>
+          <a href="/contact" aria-label="Open contact form" className="relative z-50 block py-0.5 text-[11px] font-semibold text-dbd-accent transition-colors hover:text-dbd-accent-mid hover:underline sm:text-xs">
+            {CONTACT_EMAIL}
+          </a>
+        </div>
       </div>
-      <nav aria-label="Footer" className="grid grid-cols-3 gap-x-3 gap-y-3 text-left text-[10.5px] leading-4 text-dbd-ink-3 sm:flex sm:max-w-xl sm:flex-wrap sm:justify-end sm:gap-x-5 sm:gap-y-1 sm:text-xs">
-        <div className="min-w-0 sm:contents">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Guides</p>
-          <div className="flex flex-col gap-1.5 sm:contents">
-            <a href="/dinner-plans" className="hover:text-dbd-accent">Affordable dinner plans</a>
-            <a href="/recipes" className="hover:text-dbd-accent">Recipes and cooking ideas</a>
-            <a href="/food-costs" className="hover:text-dbd-accent">Food-cost &amp; waste</a>
-            <a href="/why-dinnerbydesign" className="hover:text-dbd-accent">Why DinnerByDesign?</a>
+      <nav aria-label="Footer" className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-3 text-left sm:gap-x-6 sm:gap-y-0 md:justify-items-start lg:col-span-3">
+        <div className="min-w-0">
+          <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-500">Guides</p>
+          <div className="flex flex-col items-start gap-1.5 md:gap-2">
+            <a href="/dinner-plans" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Affordable dinner plans</a>
+            <a href="/recipes" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Recipes and cooking ideas</a>
+            <a href="/food-costs" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Food-cost &amp; waste</a>
+            <a href="/why-dinnerbydesign" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Why DinnerByDesign?</a>
           </div>
         </div>
-        <div className="min-w-0 sm:contents">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Information</p>
-          <div className="flex flex-col gap-1.5 sm:contents">
-            <a href="/contact" className="hover:text-dbd-accent">Contact us</a>
-            <a href="/pricing-methodology" className="hover:text-dbd-accent">How prices are calculated</a>
-            <a href="/food-safety" className="hover:text-dbd-accent">Food safety</a>
-            <a href="/recipe-methodology" className="hover:text-dbd-accent">Recipe information</a>
-            <a href="/nutrition-methodology" className="hover:text-dbd-accent">Nutrition estimates</a>
+        <div className="min-w-0">
+          <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-500">Information</p>
+          <div className="flex flex-col items-start gap-1.5 md:gap-2">
+            <a href="/contact" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Contact us</a>
+            <a href="/pricing-methodology" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">How prices are calculated</a>
+            <a href="/food-safety" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Food safety</a>
+            <a href="/recipe-methodology" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Recipe information</a>
+            <a href="/nutrition-methodology" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Nutrition estimates</a>
           </div>
         </div>
-        <div className="min-w-0 sm:contents">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Legal</p>
-          <div className="flex flex-col gap-1.5 sm:contents">
-            <a href="/privacy" className="hover:text-dbd-accent">Privacy &amp; cookies</a>
-            <a href="/terms" className="hover:text-dbd-accent">Terms of Service</a>
+        <div className="min-w-0">
+          <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-500">Legal</p>
+          <div className="flex flex-col items-start gap-1.5 md:gap-2">
+            <a href="/privacy" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Privacy &amp; cookies</a>
+            <a href="/terms" className="text-[10.5px] leading-4 text-gray-500 transition-colors hover:text-gray-900 sm:whitespace-nowrap sm:text-[13px]">Terms of Service</a>
           </div>
         </div>
       </nav>
-      <p className="border-t border-dbd-rule/40 pt-3 text-center text-[10px] leading-5 text-dbd-ink-3 sm:col-span-2 sm:text-left sm:text-[11px]">
+      <p className="border-t border-gray-200/50 pt-2.5 text-center text-[9.5px] leading-4 text-gray-500 sm:pt-3 sm:text-[11px] sm:leading-relaxed md:col-span-2 md:text-left lg:col-span-4">
         DinnerByDesign is an independent app and is not affiliated with, endorsed by, or partnered with any chef, restaurant, supermarket, or food brand mentioned on this platform. Names are used only as descriptive search filters. Recipes remain the property of their original publishers, with source attribution provided where available.
       </p>
     </div>
