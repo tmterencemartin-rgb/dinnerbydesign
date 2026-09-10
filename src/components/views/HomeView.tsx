@@ -873,9 +873,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   isSpeechSupported={isSpeechSupported}
                   isListening={isListening}
                   toggleVoiceSearch={toggleVoiceSearch}
-                  showStrictIngredientToggle={source === 'cook' && !!ingredientIntent?.isIngredientLed}
                   strictIngredientMatch={strictIngredientMatch}
-                  onStrictIngredientMatchChange={setStrictIngredientMatch}
                   description={SEARCH_MODE_DESCRIPTIONS[searchMode]}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
                 />

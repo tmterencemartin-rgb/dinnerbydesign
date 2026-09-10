@@ -18,9 +18,7 @@ interface AiCreatedDinnerSearchProps {
   isSpeechSupported: boolean;
   isListening: boolean;
   toggleVoiceSearch: () => void;
-  showStrictIngredientToggle: boolean;
   strictIngredientMatch: boolean;
-  onStrictIngredientMatchChange: (checked: boolean) => void;
   description: string;
   onGuestSearchDelivered?: () => void;
 }
@@ -49,9 +47,7 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   isSpeechSupported,
   isListening,
   toggleVoiceSearch,
-  showStrictIngredientToggle,
   strictIngredientMatch,
-  onStrictIngredientMatchChange,
   description,
   onGuestSearchDelivered
 }) => {
@@ -187,8 +183,10 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
           </button>
         </div>
       )}
-      <div className="flex w-full flex-nowrap items-center gap-2">
-        <form
+      {choices.length === 0 && (
+        <>
+          <div className="flex w-full flex-nowrap items-center gap-2">
+            <form
           onSubmit={event => {
             event.preventDefault();
             void generateChoices();
@@ -266,49 +264,11 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
         >
           {isGenerating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Find options'}
         </button>
-        </form>
-        {showStrictIngredientToggle && (
-          <label
-            className={`hidden h-11 shrink-0 cursor-pointer items-center gap-2 rounded border px-3 text-[10px] font-semibold transition-colors sm:inline-flex ${
-              strictIngredientMatch
-                ? 'border-dbd-accent/50 bg-dbd-accent/5 text-dbd-accent'
-                : 'border-gray-200 bg-white text-gray-500 hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900'
-            } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
-            title="Restrict this search to the ingredients entered above"
-          >
-            <input
-              type="checkbox"
-              checked={strictIngredientMatch}
-              onChange={event => onStrictIngredientMatchChange(event.target.checked)}
-              disabled={disabled}
-              className="h-3.5 w-3.5 shrink-0 accent-dbd-accent"
-              aria-label="Only these ingredients"
-            />
-            <span className="whitespace-nowrap">Only these ingredients</span>
-          </label>
-        )}
-      </div>
-      {showStrictIngredientToggle && (
-        <label
-          className={`mt-3 inline-flex h-9 cursor-pointer items-center gap-2 rounded border px-3 text-[10px] font-semibold transition-colors sm:hidden ${
-            strictIngredientMatch
-              ? 'border-dbd-accent/50 bg-dbd-accent/5 text-dbd-accent'
-              : 'border-gray-200 bg-white text-gray-500 hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900'
-          } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
-          title="Restrict this search to the ingredients entered above"
-        >
-          <input
-            type="checkbox"
-            checked={strictIngredientMatch}
-            onChange={event => onStrictIngredientMatchChange(event.target.checked)}
-            disabled={disabled}
-            className="h-3.5 w-3.5 shrink-0 accent-dbd-accent"
-            aria-label="Only these ingredients"
-          />
-          <span className="whitespace-nowrap">Only these ingredients</span>
-        </label>
+            </form>
+          </div>
+          <p className="mt-3 min-h-10 text-[11px] leading-4 text-gray-600 sm:min-h-8">{description}</p>
+        </>
       )}
-      <p className="mt-3 min-h-10 text-[11px] leading-4 text-gray-600 sm:min-h-8">{description}</p>
       {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
       {hasPartialChoices && <p className="mt-3 text-[12px] font-medium text-dbd-ink-3">We found fewer than three distinct choices that meet your current preferences. You can use these, or try a broader brief for more variety.</p>}
 
