@@ -15,6 +15,7 @@ interface RecipeDetailOverlayProps {
   onPlannerUpdate: (dayId: string) => void;
   query?: string;
   strictIngredientMatch?: boolean;
+  requestedServings?: number;
 }
 
 export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
@@ -25,8 +26,10 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
   onToggleSaved,
   onPlannerUpdate,
   query = '',
-  strictIngredientMatch = false
+  strictIngredientMatch = false,
+  requestedServings = 2
 }) => {
+  const contentRef = React.useRef<HTMLDivElement>(null);
   const seoTitle = item ? `${item.title} — DinnerByDesign` : '';
   const seoDescription = item ? `Dinner details for ${item.title}. ${item.description || ''}` : '';
   
@@ -85,6 +88,10 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  React.useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [item?.id, item?.title]);
+
   if (!item) return null;
 
   const mode = (item as any).retailer ? 'ready-made' : 'cook';
@@ -104,7 +111,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
         initial={{ y: '20%' }}
         animate={{ y: 0 }}
         exit={{ y: '20%' }}
-        className="relative w-full h-full sm:h-[90vh] sm:max-w-4xl bg-white sm:rounded-md shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
+        className="relative w-full h-full max-h-[100dvh] sm:h-[90vh] sm:max-h-[90vh] sm:max-w-4xl bg-white sm:rounded-md shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -126,7 +133,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
         </div>
 
         {/* Modal Content */}
-        <div className="flex-1 overflow-y-auto bg-white p-2 sm:p-8 overscroll-contain custom-scrollbar">
+        <div ref={contentRef} className="flex-1 overflow-y-auto bg-white p-2 sm:p-8 overscroll-contain custom-scrollbar">
           <div className="max-w-3xl mx-auto pb-24 sm:pb-20">
              {mode === 'cook' ? (
                 <RecipeCard 
@@ -147,6 +154,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
                   isScheduled={isScheduled}
                   onToggleSaved={onToggleSaved}
                   onPlannerUpdate={onPlannerUpdate}
+                  requestedServings={requestedServings}
                   initiallyExpanded={true}
                   isModal={true}
                 />

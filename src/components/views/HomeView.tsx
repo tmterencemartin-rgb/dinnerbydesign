@@ -1592,6 +1592,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             onPlannerUpdate={(dayId) => handlePlannerUpdate(dayId, selectedItem)}
             query={resultsQuery}
             strictIngredientMatch={strictIngredientMatch}
+            requestedServings={Number(servings) || 2}
           />
         )}
       </AnimatePresence>

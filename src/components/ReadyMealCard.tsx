@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarCheck, Loader2, ChevronUp, ChevronDown, ShoppingBag } from 'lucide-react';
+import { CalendarCheck, ChevronUp, ChevronDown, ShoppingBag } from 'lucide-react';
 import { ReadyMeal, ReadyMadeKitItem } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
@@ -27,6 +27,22 @@ interface ReadyMealCardProps {
   initiallyExpanded?: boolean;
   isModal?: boolean;
 }
+
+const getReadyMadeTimeLabel = (meal: ReadyMeal) => {
+  const timingText = [
+    meal.description,
+    ...(meal.instructions || []),
+    meal.readyMadeKit?.totalTimeNote || ''
+  ].join(' ');
+  const values = Array.from(timingText.matchAll(/\b(\d{1,3})\s*(?:minutes?|mins?)\b/gi))
+    .map(match => Number(match[1]))
+    .filter(value => value > 0 && value <= 240);
+  const uniqueValues = [...new Set(values)].sort((a, b) => a - b);
+  if (uniqueValues.length > 1) {
+    return `${uniqueValues[0]}–${uniqueValues[uniqueValues.length - 1]} mins`;
+  }
+  return `${uniqueValues[0] || meal.prepTime || meal.totalTime} mins`;
+};
 
 export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   meal,
@@ -122,7 +138,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
       coreProduct: title,
       sides: sides.slice(0, 2),
       upgrades,
-      totalTimeNote: meal.totalTime ? `Around ${meal.totalTime} mins plus any quick sides` : undefined,
+      totalTimeNote: meal.totalTime ? `Around ${getReadyMadeTimeLabel(meal)} plus any quick sides` : undefined,
       fitNote: 'Built for a complete dinner with minimal extra prep'
     };
   }, [meal.cuisine, meal.saladType, meal.title, meal.totalTime]);
@@ -133,6 +149,15 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
     sides: currentKit?.sides?.length ? currentKit.sides : fallbackKit.sides,
     upgrades: currentKit?.upgrades?.length ? currentKit.upgrades : fallbackKit.upgrades
   };
+  const displayTimeLabel = getReadyMadeTimeLabel(meal);
+  const servingLabel = meal.servingCount || meal.totalServings || 1;
+  const householdLabel = requestedServings === 1 ? '1 person' : `${requestedServings} people`;
+  const displayRealityChecks = (meal.realityChecks || []).map(check => (
+    /\b(?:ready|minutes?|mins?)\b/i.test(check.note)
+      ? { ...check, note: `Ready in ${displayTimeLabel}, depending on heating method.` }
+      : check
+  ));
+  const kitLabel = currentKit?.sides?.length ? 'Dish & sides' : 'Ready-made dish';
   const packCount = Math.ceil(requestedServings / (meal.totalServings || 1));
   const packLabel = packCount === 1 ? '1 pack' : `${packCount} packs`;
   const retailerPattern = meal.retailer ? new RegExp(`^${meal.retailer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+`, 'i') : null;
@@ -186,11 +211,11 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
           <div className="flex items-center gap-2">
             <ShoppingBag className="hidden sm:block w-4 h-4 text-accent shrink-0" />
             <h4 className="text-[13px] font-bold uppercase tracking-widest text-gray-900">
-              Dinner kit
+              {kitLabel}
             </h4>
           </div>
           <p className="text-[11px] text-gray-500 font-semibold mt-1">
-            Product, sides and quick finishes in one place.
+            {kitLabel === 'Dish & sides' ? 'Dish, sides and quick finishes in one place.' : 'A single supermarket dish with simple serving ideas.'}
           </p>
         </div>
         {dinnerKit.totalTimeNote && (
@@ -373,14 +398,14 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                         </span>
                       </Tooltip>
                     )}
-                    {requestedServings !== 1 && (
+                    {requestedServings > 1 && (
                       <span className="text-gray-500 font-bold text-[10px] uppercase tracking-tight whitespace-nowrap">
-                        Buy {packLabel}
+                        Buy {packLabel} for {householdLabel}
                       </span>
                     )}
                     {((meal.totalServings || requestedServings) > 0) && (
                       <span className="whitespace-nowrap">
-                        Serves {meal.servingCount || meal.totalServings || requestedServings}
+                        Serves {servingLabel}{packCount > 1 ? ' per pack' : ''}
                       </span>
                     )}
                     {(meal.caloriesPerPortion || meal.calories) && (
@@ -390,9 +415,9 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                         </span>
                       </Tooltip>
                     )}
-                    {meal.totalTime && (
+                    {displayTimeLabel && (
                       <span className="whitespace-nowrap">
-                        {meal.totalTime} mins
+                        {displayTimeLabel}
                       </span>
                     )}
                     {meal.saladType && meal.saladType !== 'none' && (
@@ -449,7 +474,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                 {kitPanel}
 
                 {!isExpanded && (
-                  <RecipeRealityChecks checks={meal.realityChecks} compact />
+                  <RecipeRealityChecks checks={displayRealityChecks} compact />
                 )}
 
               <AnimatePresence>
@@ -460,17 +485,15 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden space-y-3 sm:space-y-5"
                   >
-                    <RecipeRealityChecks checks={meal.realityChecks} />
+                    <RecipeRealityChecks checks={displayRealityChecks} />
 
                     <div className="pt-4 border-t border-gray-100">
                       <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
-                      {isEnriching && !currentServingSuggestion ? (
-                        <div className="flex items-center gap-2 py-4 text-[13px] text-gray-500 italic">
-                          <Loader2 className="w-4 h-4 animate-spin text-accent" />
-                          <span>Sourcing details...</span>
-                        </div>
-                      ) : (
-                        <p className="text-[14px] text-gray-700 leading-relaxed">{tidyKitText(currentServingSuggestion)}</p>
+                      <p className="text-[14px] text-gray-700 leading-relaxed">
+                        {tidyKitText(currentServingSuggestion) || `Heat ${tidyKitText(dinnerKit.coreProduct || meal.title)} according to the pack instructions, then serve with ${dinnerKit.sides?.slice(0, 2).map(item => tidyKitText(item.name)).join(' and ') || 'a simple side'}${dinnerKit.upgrades?.[0] ? ` and finish with ${tidyKitText(dinnerKit.upgrades[0].name)}.` : '.'}`}
+                      </p>
+                      {isEnriching && !currentServingSuggestion && (
+                        <p className="mt-1 text-[11px] text-gray-500 italic">Adding product-specific serving ideas...</p>
                       )}
                     </div>
 
