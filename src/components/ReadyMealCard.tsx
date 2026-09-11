@@ -4,7 +4,7 @@ import { CalendarCheck, ChevronUp, ChevronDown, ShoppingBag } from 'lucide-react
 import { ReadyMeal, ReadyMadeKitItem } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { enrichRecipe } from '../services/geminiService';
-import { getDisplayMatchReason, isSameRecipe } from '../lib/recipeUtils';
+import { isSameRecipe } from '../lib/recipeUtils';
 import { CircleX } from './ui/CircleX';
 import { Tooltip } from './ui/Tooltip';
 import { RetailerCtaLink } from './RetailerCtaLink';
@@ -66,7 +66,6 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 
   const currentServingSuggestion = enrichedData?.servingSuggestion || meal.servingSuggestion;
   const currentKit = enrichedData?.readyMadeKit || meal.readyMadeKit;
-  const displayMatchReason = getDisplayMatchReason(meal.matchReason, meal.title, query);
 
   const fallbackKit = React.useMemo(() => {
     const cuisine = (meal.cuisine || '').toLowerCase();
@@ -361,12 +360,6 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
               <p className={`text-[14px] text-gray-500 font-medium leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isModal ? '' : 'line-clamp-2'}`}>
                 {meal.description}
               </p>
-
-              {displayMatchReason && (
-                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-500 leading-snug">
-                  {displayMatchReason}
-                </p>
-              )}
 
               {scheduledDate && (
                 <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] text-accent font-bold bg-accent/5 px-2 py-0.5 rounded w-fit">

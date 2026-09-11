@@ -134,7 +134,7 @@ export const RecipeDetailOverlay: React.FC<RecipeDetailOverlayProps> = ({
 
         {/* Modal Content */}
         <div ref={contentRef} className="flex-1 overflow-y-auto bg-white p-2 sm:p-8 overscroll-contain custom-scrollbar">
-          <div className="max-w-3xl mx-auto pb-24 sm:pb-20">
+          <div className="max-w-3xl mx-auto pb-[calc(8rem+env(safe-area-inset-bottom))] sm:pb-28">
              {mode === 'cook' ? (
                 <RecipeCard 
                   recipe={item as Recipe}
