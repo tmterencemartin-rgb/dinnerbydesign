@@ -349,6 +349,14 @@ export const ShoppingListView = ({ setView }: ShoppingListViewProps) => {
 
   return (
     <div className="pb-20 space-y-4 -mt-4">
+      <button
+        type="button"
+        onClick={() => setView('home')}
+        className="fixed right-4 top-1/2 z-50 inline-flex min-h-9 -translate-y-1/2 items-center gap-1.5 rounded border border-gray-200 bg-white px-3 text-[11px] font-bold uppercase tracking-widest text-gray-700 shadow-sm transition-colors hover:border-dbd-accent hover:text-dbd-accent sm:right-6"
+      >
+        <ChevronLeft className="h-4 w-4 -ml-0.5" aria-hidden="true" />
+        Back to search
+      </button>
       {/* Header & Navigation */}
       <div className="space-y-1 pt-4 sm:pt-5">
         <div className="flex justify-between items-center">
