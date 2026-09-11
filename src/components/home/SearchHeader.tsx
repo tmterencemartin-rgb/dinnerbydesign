@@ -5,9 +5,9 @@ import { DinnerSource } from '../../types';
 export type SearchMode = 'published' | 'ai-created' | 'ready-made';
 
 export const SEARCH_MODE_DESCRIPTIONS: Record<SearchMode, string> = {
-  'ai-created': 'Original recipes shaped around your brief and preferences.',
-  published: 'Published recipes opened at the original source.',
-  'ready-made': 'Ready-made supermarket options from selected retailers.'
+  'ai-created': 'No searching. Just recipes built around your brief.',
+  published: 'Recipes from named UK publishers, linking out to the original page.',
+  'ready-made': 'Ready-made dishes from the supermarket, priced and ready to buy.'
 };
 
 interface SearchHeaderProps {
