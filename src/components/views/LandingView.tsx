@@ -531,7 +531,7 @@ export const LandingView: React.FC = () => {
                   </div>
                   <p className="mb-6 text-center text-[11px] leading-4 text-dbd-ink-3">
                     {sandboxSource === 'ai-created'
-                      ? 'AI-created recipes are original DinnerByDesign suggestions, shaped around your brief and preferences.'
+                      ? 'AI-created recipes are original DinnerByDesign suggestions, shaped around your choice of ingredients and preferences.'
                       : sandboxSource === 'published'
                         ? 'Published recipes open at their original source.'
                         : 'Ready-made dinners are supermarket options. Check the product page for ingredients, allergens and heating instructions.'}
