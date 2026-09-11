@@ -720,18 +720,15 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
           </div>
         ) : (
           <>
+            <button
+              type="button"
+              onClick={() => setView('home')}
+              className="fixed bottom-4 right-4 z-50 inline-flex min-h-9 items-center gap-1.5 rounded border border-gray-200 bg-white px-3 text-[11px] font-bold uppercase tracking-widest text-gray-700 shadow-sm transition-colors hover:border-dbd-accent hover:text-dbd-accent sm:bottom-6 sm:right-6"
+            >
+              <ChevronLeft className="h-4 w-4 -ml-0.5" aria-hidden="true" />
+              Back to search
+            </button>
             <div className="space-y-1 pt-4 sm:pt-5">
-              <div className="flex justify-between items-center">
-                <button 
-                  id="back-to-search-btn"
-                  onClick={() => setView('home')} 
-                  className="flex min-h-8 items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
-                >
-                  <ChevronLeft id="back-chevron" className="w-4 h-4 -ml-1" />
-                  <span id="back-text">Back to search</span>
-                </button>
-              </div>
-
               <div className="flex flex-col items-center pb-2 pt-0 space-y-2">
                 <h2 className="text-[20px] font-bold text-gray-900 text-center">Save & Schedule</h2>
                 <p className="text-[12px] text-gray-500 font-medium text-center max-w-md">
