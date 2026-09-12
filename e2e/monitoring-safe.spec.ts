@@ -48,6 +48,9 @@ test.describe('monitoring-safe production checks', () => {
       await expect(page.getByText(guidance, { exact: true })).toBeVisible();
     }
 
+    await expect(page.getByRole('button', { name: 'Indian', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Tagliatelle', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Prawns', exact: true })).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toHaveValue('');
   });
 

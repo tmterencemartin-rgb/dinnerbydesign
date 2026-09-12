@@ -123,6 +123,11 @@ const COMPACT_GUEST_SEARCH_STARTERS = [
   'Low-cost vegetarian dinner for two',
   NOT_BORING_SUMMER_SALADS_SEARCH_TITLE
 ];
+const READY_MADE_COMPACT_GUEST_STARTERS = [
+  'Indian',
+  'Tagliatelle',
+  'Prawns'
+];
 
 const isNotBoringSummerSaladsQuery = (query: string) =>
   [
@@ -1035,7 +1040,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               {!isAiCreatedSearch && showCompactGuestStarters && (
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
-                  {COMPACT_GUEST_SEARCH_STARTERS.map(suggestion => (
+                  {(source === 'ready-made' ? READY_MADE_COMPACT_GUEST_STARTERS : COMPACT_GUEST_SEARCH_STARTERS).map(suggestion => (
                     <button
                       key={suggestion}
                       type="button"
