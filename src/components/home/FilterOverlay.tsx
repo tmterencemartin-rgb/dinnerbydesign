@@ -648,7 +648,6 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                 <div className="flex items-center gap-2.5">
                   <Store className="w-4 h-4 text-gray-500" />
                   <span className="text-[12.5px] font-bold text-gray-800 tracking-[0.02em]">Sources & stores</span>
-                  <Info className="w-3 h-3 text-gray-300 ml-0.5 select-none" />
                   {(() => {
                     const cnt = source === 'cook' ? localPreferredSourceIds.length : localSupermarkets.length;
                     return cnt > 0 ? (
