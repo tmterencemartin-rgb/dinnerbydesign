@@ -110,7 +110,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
     ? 'AI-created recipes use the applicable dietary, ingredient, time, cost and cooking preferences. Calorie and nutrition targets are not used because their estimates are not verified.'
     : isReadyMadeMode
       ? 'Ready-made searches use the applicable dietary, ingredient, time, cost and retailer preferences. Check the retailer page and packaging before buying or preparing a product.'
-      : 'Published searches use the applicable preferences to narrow and rank original source links. Check the publisher page for the final ingredient and nutrition details.';
+      : 'Fewer filters return more dinners. Each dietary or culinary preference you add narrows the pool of matching recipes, so a single requirement might return dozens of dishes, while stacking three or four could leave you with a handful, or none. Start broad, then refine once you see what\'s on offer.';
 
   const dialogRef = React.useRef<HTMLDivElement>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -394,12 +394,6 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                 Clear all
               </button>
             )}
-          </div>
-          <div className="mt-3 flex items-start gap-2 rounded border border-gray-100 bg-gray-50/70 px-3 py-2.5">
-            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-500" />
-            <p className="text-[10.5px] font-medium leading-relaxed text-gray-500">
-              <span className="font-bold text-gray-600">Why results can narrow:</span> allergies and diet rules exclude unsuitable ingredients, while budget, time and sourcing choices narrow the remaining recipes. If no suitable recipe appears, remove one preference or broaden a limit.
-            </p>
           </div>
         </div>
 
