@@ -188,7 +188,7 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
   }, [localOffalAllowed, localIncludeOffal]);
 
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
-    dietary: true,
+    dietary: false,
     sources: isReadyMadeMode,
     timeBudget: false,
     cooking: false,
