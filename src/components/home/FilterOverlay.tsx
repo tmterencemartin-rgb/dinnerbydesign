@@ -682,9 +682,11 @@ export const FilterOverlay: React.FC<FilterOverlayProps> = (props) => {
                           className="w-full h-11 px-3 bg-gray-50/80 border border-gray-200 rounded text-[13px] outline-none focus:ring-2 focus:ring-accent/15 focus:border-gray-300 transition-all font-medium appearance-none"
                         >
                           <option value="">Add trusted source...</option>
-                          {PREFERRED_SOURCES.map(sourceOpt => (
-                            <option key={sourceOpt.id} value={sourceOpt.id}>{sourceOpt.label}</option>
-                          ))}
+                          {[...PREFERRED_SOURCES]
+                            .sort((a, b) => a.label.localeCompare(b.label, 'en-GB', { sensitivity: 'base' }))
+                            .map(sourceOpt => (
+                              <option key={sourceOpt.id} value={sourceOpt.id}>{sourceOpt.label}</option>
+                            ))}
                         </select>
                         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                       </div>
