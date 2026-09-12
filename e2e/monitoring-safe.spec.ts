@@ -38,9 +38,9 @@ test.describe('monitoring-safe production checks', () => {
     await page.goto('/?view=home');
 
     const modes = [
-      ['AI-created recipes', 'Original recipes shaped around your brief and preferences.'],
-      ['Published recipes', 'Published recipes opened at the original source.'],
-      ['Ready-made dinners', 'Ready-made supermarket options from selected retailers.'],
+      ['AI-created recipes', 'No searching. Just recipes built around your choice of ingredients and preferences.'],
+      ['Published recipes', 'Recipes from named UK publishers, linking out to the original page.'],
+      ['Ready-made dinners', 'Ready-made dinners from the supermarket.'],
     ] as const;
 
     for (const [label, guidance] of modes) {
