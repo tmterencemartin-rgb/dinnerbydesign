@@ -1011,9 +1011,11 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               </div>
 
-              <div className="flex items-center px-1 sm:hidden">
-                {renderStrictIngredientToggle('h-9 px-3 text-[10px]')}
-              </div>
+              {source === 'cook' && ingredientIntent?.isIngredientLed && (
+                <div className="flex items-center px-1 sm:hidden">
+                  {renderStrictIngredientToggle('h-9 px-3 text-[10px]')}
+                </div>
+              )}
 
               {hasIngredientNoResults && (
                 <div
@@ -1036,7 +1038,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
 
               <div>
-                <p className="text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
+                <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
                 <div className="text-[10.5px] leading-4 text-gray-600">
                   {source === 'cook' && !isAiCreatedSearch && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
                     <span>

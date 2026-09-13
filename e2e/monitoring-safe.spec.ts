@@ -43,11 +43,25 @@ test.describe('monitoring-safe production checks', () => {
       ['Published recipes', 'Recipes from named UK publishers, linking out to the original page.'],
       ['Ready-made dinners', 'Choose your favourite or closest supermarket in preferences'],
     ] as const;
+    const guidanceY: number[] = [];
+    const starterY: number[] = [];
 
     for (const [label, guidance] of modes) {
       await page.getByRole('button', { name: label, exact: true }).click();
-      await expect(page.getByText(guidance, { exact: true })).toBeVisible();
+      const guidanceLocator = page.getByText(guidance, { exact: true });
+      await expect(guidanceLocator).toBeVisible();
+      const guidanceBox = await guidanceLocator.boundingBox();
+      const starterBox = await page.getByText('Try a search', { exact: true }).boundingBox();
+      expect(guidanceBox).not.toBeNull();
+      expect(starterBox).not.toBeNull();
+      guidanceY.push(guidanceBox?.y ?? -1);
+      starterY.push(starterBox?.y ?? -1);
     }
+
+    expect(guidanceY[1]).toBeCloseTo(guidanceY[0], 1);
+    expect(guidanceY[2]).toBeCloseTo(guidanceY[0], 1);
+    expect(starterY[1]).toBeCloseTo(starterY[0], 1);
+    expect(starterY[2]).toBeCloseTo(starterY[0], 1);
 
     await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
     await expect(page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true })).toBeVisible();
