@@ -473,11 +473,11 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const showSimplifiedGuestLimit = useSimplifiedGuestSearchStates && isGuestSearchLimitReached && !isAiCreatedSearch;
   const showCompactGuestStarters =
     useSimplifiedGuestSearchStates &&
-    guestSearchCount === 0 &&
     !hasPerformedSearch &&
     !isSearching &&
     !currentRecipes?.length &&
-    !currentReadyMeals?.length;
+    !currentReadyMeals?.length &&
+    (guestSearchCount === 0 || !isAiCreatedSearch);
   const compactGuestStarters = searchMode === 'ai-created'
     ? AI_CREATED_COMPACT_GUEST_STARTERS
     : searchMode === 'published'

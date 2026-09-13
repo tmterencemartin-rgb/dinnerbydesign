@@ -65,6 +65,22 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toHaveValue('');
   });
 
+  test('guest starters remain available in other modes after an AI search is counted', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem('dbd_guest_search_count_v1', '1');
+    });
+    await page.goto('/?view=home');
+
+    await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'A fish dish by Jamie Oliver', exact: true })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Minced beef', exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Ready-made dinners', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Fancy something Oriental or Asian?', exact: true })).toBeVisible();
+  });
+
   test('contact and sign-in pages render without submitting forms', async ({ page }) => {
     await page.goto('/contact');
     await expect(page.getByRole('heading', { name: 'Get in touch' })).toBeVisible();
