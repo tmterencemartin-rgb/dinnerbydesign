@@ -985,7 +985,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {renderStrictIngredientToggle('h-9 px-3 text-[10px]')}
               </div>
 
-              <p className="min-h-10 text-[11px] leading-4 text-gray-600 sm:min-h-8">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
+              <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
 
               {source === 'cook' && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
                 <div className="text-[10.5px] leading-4 text-gray-600">
@@ -1049,7 +1049,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
 
               {!isAiCreatedSearch && showCompactGuestStarters && (
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
                   {compactGuestStarters.map(suggestion => (
                     <button

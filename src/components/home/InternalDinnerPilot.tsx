@@ -268,9 +268,9 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
         </button>
             </form>
           </div>
-          <p className="mt-3 min-h-10 text-[11px] leading-4 text-gray-600 sm:min-h-8">{description}</p>
+          <p className="mt-1 min-h-8 text-[11px] leading-4 text-gray-600">{description}</p>
           {guestStarters && guestStarters.length > 0 && (
-            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
               {guestStarters.map(suggestion => (
                 <button
