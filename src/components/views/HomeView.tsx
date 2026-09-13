@@ -923,6 +923,10 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   isListening={isListening}
                   toggleVoiceSearch={toggleVoiceSearch}
                   strictIngredientMatch={strictIngredientMatch}
+                  onOpenPreferences={() => {
+                    setShowFilters(true);
+                    setPreferencesError(null);
+                  }}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
                 />
               ) : (

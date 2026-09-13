@@ -50,6 +50,7 @@ test.describe('monitoring-safe production checks', () => {
       await page.getByRole('button', { name: label, exact: true }).click();
       const guidanceLocator = page.getByText(guidance, { exact: true });
       await expect(guidanceLocator).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
       const guidanceBox = await guidanceLocator.boundingBox();
       const starterBox = await page.getByText('Try a search', { exact: true }).boundingBox();
       expect(guidanceBox).not.toBeNull();

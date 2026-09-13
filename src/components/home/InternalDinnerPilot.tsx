@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { ChevronDown, Flag, Loader2, Mic, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { ChevronDown, Flag, Loader2, Mic, Settings, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { getApiUrl } from '../../lib/api';
 import { getSearchSecurityHeaders } from '../../lib/searchAuth';
 import type { InternalDinnerChoice } from '../../lib/internalDinnerPilot';
 import { RecipeActionRow } from '../RecipeActionRow';
 import { CircleX } from '../ui/CircleX';
+import { Tooltip } from '../ui/Tooltip';
 import { useAuth } from '../../contexts/AuthContext';
 import { isSameRecipe } from '../../lib/recipeUtils';
 import { db } from '../../firebase';
@@ -19,6 +20,7 @@ interface AiCreatedDinnerSearchProps {
   isListening: boolean;
   toggleVoiceSearch: () => void;
   strictIngredientMatch: boolean;
+  onOpenPreferences: () => void;
   onGuestSearchDelivered?: () => void;
 }
 
@@ -51,6 +53,7 @@ export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandl
   isListening,
   toggleVoiceSearch,
   strictIngredientMatch,
+  onOpenPreferences,
   onGuestSearchDelivered
 }, ref) => {
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
@@ -194,13 +197,13 @@ export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandl
       )}
       {choices.length === 0 && (
         <>
-          <div className="flex w-full flex-nowrap items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:flex-nowrap">
             <form
           onSubmit={event => {
             event.preventDefault();
             void generateChoices();
           }}
-          className={`grid min-w-0 flex-1 grid-cols-2 gap-2 items-stretch transition-all sm:flex sm:h-11 sm:gap-0 sm:overflow-hidden sm:rounded ${
+          className={`grid w-full min-w-0 flex-1 grid-cols-2 gap-2 items-stretch transition-all sm:w-auto sm:flex sm:h-11 sm:gap-0 sm:overflow-hidden sm:rounded ${
             disabled ? 'opacity-75 sm:bg-gray-100' : 'sm:bg-gray-50'
           }`}
         >
@@ -267,13 +270,41 @@ export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandl
           disabled={!input.trim() || isGenerating || disabled || isListening}
           aria-label={isGenerating ? 'Searching for dinner options' : 'Find dinner options'}
           aria-busy={isGenerating}
-          className={`h-11 rounded px-3 text-white text-[10px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center sm:h-auto sm:rounded-none sm:px-5 sm:text-[11px] sm:border-l sm:border-gray-100 ${
+          className={`col-start-1 row-start-2 h-11 rounded px-3 text-white text-[10px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center sm:h-auto sm:rounded-none sm:px-5 sm:text-[11px] sm:border-l sm:border-gray-100 ${
             disabled ? 'bg-gray-500' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
           }`}
         >
           {isGenerating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Find options'}
         </button>
+        <div className="col-start-2 row-start-2 h-11 sm:hidden">
+          <button
+            type="button"
+            onClick={onOpenPreferences}
+            className="flex h-11 w-full items-center justify-center gap-2 rounded border border-gray-200 bg-white text-gray-600 transition-colors hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900"
+            aria-label="Open search preferences"
+            title="Open search preferences"
+          >
+            <Settings className="h-4 w-4" />
+            <span className="font-ibm-plex-mono text-[10px] font-bold uppercase tracking-[0.1em]">
+              Preferences
+            </span>
+          </button>
+        </div>
             </form>
+            <Tooltip text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
+              <button
+                type="button"
+                onClick={onOpenPreferences}
+                className="hidden h-11 shrink-0 items-center justify-center gap-2 rounded border border-gray-200 bg-white px-3 text-gray-500 transition-colors hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900 sm:flex"
+                aria-label="Open search preferences"
+                title="Open search preferences"
+              >
+                <Settings className="h-4.5 w-4.5" />
+                <span className="font-ibm-plex-mono text-[12px] font-bold uppercase tracking-wider">
+                  Preferences
+                </span>
+              </button>
+            </Tooltip>
           </div>
         </>
       )}
