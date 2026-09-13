@@ -50,7 +50,7 @@ test.describe('monitoring-safe production checks', () => {
     }
 
     await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'A fish dish by Jamie Oliver', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true })).toBeVisible();
     await expect(page.getByText('AI-assisted search, with links to original recipe sources.', { exact: true })).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
@@ -72,7 +72,7 @@ test.describe('monitoring-safe production checks', () => {
     await page.goto('/?view=home');
 
     await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'A fish dish by Jamie Oliver', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true })).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Minced beef', exact: true })).toBeVisible();

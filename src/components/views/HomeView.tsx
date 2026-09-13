@@ -121,7 +121,7 @@ const NOT_BORING_SUMMER_SALADS_NEXT_PLACEHOLDER = 'Or maybe you fancy firing up 
 const AI_CREATED_COMPACT_GUEST_STARTERS = [
   'Quick chicken dinner under 30 minutes',
   'Low-cost vegetarian dinner for two',
-  'A fish dish by Jamie Oliver'
+  'A choice of Shellfish recipes'
 ];
 const PUBLISHED_COMPACT_GUEST_STARTERS = [
   'Minced beef',
