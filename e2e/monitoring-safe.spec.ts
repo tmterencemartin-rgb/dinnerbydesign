@@ -41,7 +41,7 @@ test.describe('monitoring-safe production checks', () => {
     const modes = [
       ['AI-created recipes', 'No searching. Just recipes built around your choice of ingredients and preferences.'],
       ['Published recipes', 'Recipes from named UK publishers, linking out to the original page.'],
-      ['Ready-made dinners', 'Choose your favourite or closest supermarket in preferences'],
+      ['Ready-made dinners', 'Choose your favourite or closest supermarket or retailer in preferences'],
     ] as const;
     const guidanceY: number[] = [];
     const starterY: number[] = [];

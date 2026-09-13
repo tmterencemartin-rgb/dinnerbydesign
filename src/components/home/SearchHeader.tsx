@@ -7,7 +7,7 @@ export type SearchMode = 'published' | 'ai-created' | 'ready-made';
 export const SEARCH_MODE_DESCRIPTIONS: Record<SearchMode, string> = {
   'ai-created': 'No searching. Just recipes built around your choice of ingredients and preferences.',
   published: 'Recipes from named UK publishers, linking out to the original page.',
-  'ready-made': 'Choose your favourite or closest supermarket in preferences'
+  'ready-made': 'Choose your favourite or closest supermarket or retailer in preferences'
 };
 
 interface SearchHeaderProps {
