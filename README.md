@@ -21,6 +21,7 @@ Start with the [documentation index](docs/README.md).
 - [Programmatic SEO publishing standard](docs/content/programmatic-seo.md)
 - [Operations and release guide](docs/operations/release-guide.md)
 - [Partner readiness pack](docs/commercial/partner-readiness.md)
+- [Published-recipe sourcing report](docs/commercial/published-recipe-sourcing-report.md)
 - [Engineering notes](docs/engineering/notes.md)
 - [Native iOS wrapper](docs/platform/ios.md)
 - [Active roadmap and technical debt](TODO.md)

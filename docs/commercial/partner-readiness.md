@@ -1,13 +1,29 @@
 # DinnerByDesign partner readiness pack
 
 **Status:** Internal working draft  
-**Reviewed:** 6 August 2026
+**Reviewed:** 13 September 2026
 
 ## Product in one paragraph
 
 DinnerByDesign helps people search for dinner ideas, organise suitable recipes, build a weekly plan and create a shopping list. It uses user-selected preferences, structured checks and automated generation to narrow results. It links to external recipe publishers and retailers where a relevant source is available.
 
 DinnerByDesign is independent. A source mention or external link does not mean that the named publisher, retailer, chef or brand has created, approved or endorsed the app.
+
+## Technology and service dependencies
+
+DinnerByDesign currently relies on the following services and platforms:
+
+- **Vercel** hosts the public website, serverless API and scheduled operational checks.
+- **Firebase** provides account authentication, Google sign-in, anonymous access and Cloud Firestore storage for profiles, preferences, saved recipes, weekly plans, shopping lists and selected operational records.
+- **Google Gemini API** supports recipe search, ready-made product search, weekly planning and recipe analysis. Requests may use Gemini's Google Search grounding to locate current publisher or retailer pages. This is not the same as presenting every AI-generated result as independently verified: DinnerByDesign applies its own source-link and result checks before delivery.
+- **Stripe** handles subscription checkout, billing status and payment webhooks.
+- **Resend** sends account, password, subscription and other transactional emails.
+
+The app links to external recipe publishers and retailer websites. These links may be validated publisher pages, validated retailer product pages or retailer search pages, depending on the result available. DinnerByDesign does not claim that a named publisher, retailer, chef or brand has approved or endorsed the app.
+
+Ingredient costs currently use a curated UK reference catalogue, with a separate path available for an approved licensed retailer price feed. Retailer prices, pack sizes, promotions, availability and product information remain subject to the relevant retailer's current page.
+
+GitHub is used for source-code management and release history. Capacitor is used for the optional iOS wrapper, which uses the same application and production API. Optional Google Cloud and Firebase administrative capabilities support server-side administration and Firestore backup monitoring where separately configured. No separate advertising or third-party analytics platform currently forms part of the production stack.
 
 ## What we can say today
 

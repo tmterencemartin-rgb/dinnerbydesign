@@ -128,7 +128,7 @@ Then:
 
 ## Daily production monitoring
 
-GitHub Actions runs a read-only production monitor each morning. It checks high and critical dependency vulnerabilities, public pages, the sitemap, robots file, shallow health, the three search-mode controls and guidance, contact and sign-in forms, and the guest planner and shopping views at Chrome desktop, tablet and phone widths, plus Firefox and WebKit desktop widths. It does not submit a form, generate recipes, sign in, save recipes or schedule dinners. Browser traces and screenshots are retained only when a check fails.
+GitHub Actions runs a read-only production monitor each morning. It checks high and critical dependency vulnerabilities, public pages, the sitemap, robots file, shallow health, the three search-mode controls and guidance, contact and sign-in forms, the guest planner and shopping views, and the shared `Back to search` treatment at Chrome desktop, tablet and phone widths, plus Firefox and WebKit desktop widths. It does not submit a form, generate recipes, sign in, save recipes or schedule dinners. Browser traces and screenshots are retained only when a check fails.
 
 The daily search canary is separate from the read-only browser monitor because it uses the search service and records its outcome. The protected deep-health endpoint remains scheduled by Vercel for service readiness and alerting.
 
