@@ -466,6 +466,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   const [hasPerformedSearch, setHasPerformedSearch] = React.useState(() => {
     return safeStorage.getItem('dbd_has_searched') === 'true';
   });
+  const [hasAiCreatedResults, setHasAiCreatedResults] = React.useState(false);
   const showBasicSearchGuidance =
     (!user || user.isAnonymous) &&
     (hasDismissedSearchOnboarding || isSearching);
@@ -483,6 +484,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     : searchMode === 'published'
       ? PUBLISHED_COMPACT_GUEST_STARTERS
       : READY_MADE_COMPACT_GUEST_STARTERS;
+  const hasSearchResultsForMode = isAiCreatedSearch
+    ? hasAiCreatedResults
+    : Boolean(source === 'cook' ? currentRecipes?.length : currentReadyMeals?.length);
   const showCentredInitialSearch =
     !isSearching &&
     !isAppending &&
@@ -898,6 +902,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 mode={searchMode}
                 onModeChange={(mode) => {
                   setSearchMode(mode);
+                  setHasAiCreatedResults(false);
                   if (mode === 'ai-created') setSource('cook');
                   if (mode === 'published') setSource('cook');
                   if (mode === 'ready-made') setSource('ready-made');
@@ -928,6 +933,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     setPreferencesError(null);
                   }}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
+                  onResultsChange={setHasAiCreatedResults}
                 />
               ) : (
               <div className="flex flex-col gap-3 relative w-full">
@@ -1042,16 +1048,20 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               )}
 
               <div>
-                <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
-                <div className="text-[10.5px] leading-4 text-gray-600">
-                  {source === 'cook' && !isAiCreatedSearch && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
-                    <span>
-                      {usePublishedSourceHandoff
-                        ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
-                        : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
-                    </span>
-                  )}
-                </div>
+                {!hasSearchResultsForMode && (
+                  <>
+                    <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
+                    <div className="text-[10.5px] leading-4 text-gray-600">
+                      {source === 'cook' && !isAiCreatedSearch && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
+                        <span>
+                          {usePublishedSourceHandoff
+                            ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
+                            : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
+                        </span>
+                      )}
+                    </div>
+                  </>
+                )}
                 {showCompactGuestStarters && (
                   <GuestSearchStarters
                     suggestions={compactGuestStarters}

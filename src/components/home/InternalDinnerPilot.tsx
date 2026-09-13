@@ -22,6 +22,7 @@ interface AiCreatedDinnerSearchProps {
   strictIngredientMatch: boolean;
   onOpenPreferences: () => void;
   onGuestSearchDelivered?: () => void;
+  onResultsChange?: (hasResults: boolean) => void;
 }
 
 export interface AiCreatedDinnerSearchHandle {
@@ -54,7 +55,8 @@ export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandl
   toggleVoiceSearch,
   strictIngredientMatch,
   onOpenPreferences,
-  onGuestSearchDelivered
+  onGuestSearchDelivered,
+  onResultsChange
 }, ref) => {
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
   const [hasPartialChoices, setHasPartialChoices] = useState(false);
@@ -150,11 +152,13 @@ export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandl
       if (!response.ok) throw new Error(payload?.error || 'AI-created dinners could not be completed.');
       const deliveredChoices = Array.isArray(payload?.choices) ? payload.choices : [];
       setChoices(deliveredChoices);
+      onResultsChange?.(deliveredChoices.length > 0);
       setHasPartialChoices(payload?.partial === true || (deliveredChoices.length > 0 && deliveredChoices.length < 3));
       onGuestSearchDelivered?.();
     } catch (requestError: any) {
       setError(requestError?.message || 'AI-created dinners could not be completed.');
       setChoices([]);
+      onResultsChange?.(false);
     } finally {
       setIsGenerating(false);
     }
@@ -170,6 +174,7 @@ export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandl
   const startNewSearch = () => {
     setInput('');
     setChoices([]);
+    onResultsChange?.(false);
     setHasPartialChoices(false);
     setError(null);
     setProblemChoiceKey(null);

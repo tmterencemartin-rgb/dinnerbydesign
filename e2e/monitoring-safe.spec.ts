@@ -111,6 +111,36 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('button', { name: 'Fancy something Oriental or Asian?', exact: true })).toBeVisible();
   });
 
+  test('mode guidance hides after results and returns for an unsearched mode', async ({ page }) => {
+    await page.route('**/api/ai-created-dinners', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          choices: [{
+            title: 'Test shellfish dinner',
+            description: 'A simple shellfish dinner for a weeknight at home.',
+            ingredients: ['200g prawns', '150g rice', '1 lemon'],
+            instructions: ['Cook the rice in 300ml water until tender.', 'Cook the prawns until opaque and piping hot.'],
+            cuisine: 'British',
+            totalServings: 2,
+            totalTime: 25,
+            costPerPortion: '£2.50'
+          }]
+        })
+      });
+    });
+    await page.goto('/?view=home');
+
+    await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
+    await page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true }).click();
+    await expect(page.getByText('Test shellfish dinner', { exact: true })).toBeVisible();
+    await expect(page.getByText('No searching. Just recipes built around your choice of ingredients and preferences.', { exact: true })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
+    await expect(page.getByText('Recipes from named UK publishers, linking out to the original page.', { exact: true })).toBeVisible();
+  });
+
   test('contact and sign-in pages render without submitting forms', async ({ page }) => {
     await page.goto('/contact');
     await expect(page.getByRole('heading', { name: 'Get in touch' })).toBeVisible();
