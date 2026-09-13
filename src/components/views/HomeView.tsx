@@ -1038,7 +1038,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               <div className="min-h-12">
                 <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
                 <div className="min-h-4 text-[10.5px] leading-4 text-gray-600">
-                  {source === 'cook' && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
+                  {source === 'cook' && !isAiCreatedSearch && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
                     <span>
                       {usePublishedSourceHandoff
                         ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
