@@ -1035,9 +1035,9 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
               )}
 
-              <div className="min-h-12">
-                <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
-                <div className="min-h-4 text-[10.5px] leading-4 text-gray-600">
+              <div>
+                <p className="text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
+                <div className="text-[10.5px] leading-4 text-gray-600">
                   {source === 'cook' && !isAiCreatedSearch && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
                     <span>
                       {usePublishedSourceHandoff
@@ -1046,6 +1046,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     </span>
                   )}
                 </div>
+                {showCompactGuestStarters && (
+                  <GuestSearchStarters
+                    suggestions={compactGuestStarters}
+                    onSelect={handleGuestStarterSelect}
+                    disabled={isReadOnly || isSearching}
+                  />
+                )}
               </div>
 
               {!isAiCreatedSearch && !useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
@@ -1075,13 +1082,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              {showCompactGuestStarters && (
-                <GuestSearchStarters
-                  suggestions={compactGuestStarters}
-                  onSelect={handleGuestStarterSelect}
-                  disabled={isReadOnly || isSearching}
-                />
-              )}
               </>
             )}
           </div>
