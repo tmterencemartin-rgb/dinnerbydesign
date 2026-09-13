@@ -87,7 +87,7 @@ describe('useSearch Hook Lifecycle', () => {
     expect(result.current.searchContradiction).toBe(null);
   });
 
-  it('should handle zero results and show empty state contradiction', async () => {
+  it('does not consume a free search when no usable result is delivered', async () => {
     (geminiService.generateDinnerSuggestions as any).mockResolvedValue({
       recipes: [],
       readyMeals: []
@@ -103,7 +103,8 @@ describe('useSearch Hook Lifecycle', () => {
     expect(result.current.currentRecipes).toEqual([]); 
     expect(result.current.searchContradiction).not.toBe(null);
     expect(result.current.searchContradiction?.type).toBe('no_results');
-    expect(result.current.guestSearchCount).toBe(1);
+    expect(result.current.guestSearchCount).toBe(0);
+    expect(window.localStorage.getItem('dbd_guest_search_count_v1')).toBe(null);
   });
 
   it('does not consume a free search when the service fails', async () => {
@@ -251,6 +252,55 @@ describe('useSearch Hook Lifecycle', () => {
     expect(result.current.guestSearchCount).toBe(2);
     expect(window.localStorage.getItem('dbd_guest_search_count_v1')).toBe('2');
     expect(geminiService.generateDinnerSuggestions).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not consume another free search when more choices returns nothing', async () => {
+    (geminiService.generateDinnerSuggestions as any)
+      .mockResolvedValueOnce({
+        recipes: [{
+          title: 'Mackerel One',
+          ingredients: ['Mackerel fillets', 'Lemon', 'Potatoes'],
+          cuisine: 'British',
+          totalTime: 25
+        }],
+        readyMeals: []
+      })
+      .mockResolvedValueOnce({ recipes: [], readyMeals: [] });
+
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.handleGenerate('mackerel');
+    });
+    await act(async () => {
+      await result.current.handleLoadMore();
+    });
+
+    expect(result.current.guestSearchCount).toBe(1);
+    expect(window.localStorage.getItem('dbd_guest_search_count_v1')).toBe('1');
+  });
+
+  it('rejects an unrelated substitute for a standalone mackerel search without using the allowance', async () => {
+    (geminiService.generateDinnerSuggestions as any).mockResolvedValue({
+      recipes: [{
+        title: 'Chickpea and tomato stew',
+        ingredients: ['Chickpeas', 'Chopped tomatoes', 'Onion'],
+        totalTime: 30,
+        cuisine: 'British'
+      }],
+      readyMeals: []
+    });
+
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.handleGenerate('mackerel');
+    });
+
+    expect(result.current.currentRecipes).toEqual([]);
+    expect(result.current.searchContradiction?.type).toBe('conflict');
+    expect(result.current.guestSearchCount).toBe(0);
+    expect(window.localStorage.getItem('dbd_guest_search_count_v1')).toBe(null);
   });
 
   it('blocks more choices when a guest has used all free searches', async () => {

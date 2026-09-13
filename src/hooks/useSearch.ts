@@ -35,7 +35,7 @@ const SEARCH_CACHE_TTL_MS = 15 * 60 * 1000;
 const SEARCH_CACHE_MAX_ENTRIES = 12;
 const GUEST_SEARCH_COUNT_KEY = 'dbd_guest_search_count_v1';
 const GUEST_SEARCH_LIMIT = 3;
-type SearchDeliveryStatus = 'delivered' | 'failed';
+type SearchDeliveryStatus = 'delivered' | 'no-results' | 'failed';
 const STRICT_INGREDIENT_NO_RESULTS_MESSAGE =
   'No exact matches found. Recipes may include unlisted ingredients such as garlic, herbs or lemon. Add those ingredients to your search or turn off “Use only these ingredients (strict)”.';
 const INGREDIENT_NO_RESULTS_MESSAGE =
@@ -465,7 +465,7 @@ export function useSearch() {
           resultCount: 0,
           errorCategory: 'budget_conflict'
         });
-        return 'delivered';
+        return 'no-results';
       } else if (contradiction) {
         addLog('SEARCH: Ignoring incomplete budget contradiction from Gemini.');
       }
@@ -548,7 +548,7 @@ export function useSearch() {
             resultCount: 0,
             errorCategory: 'client_filter'
           });
-          return 'delivered';
+          return 'no-results';
         }
 
         if (isReplacement && replacementIndex !== undefined) {
@@ -653,7 +653,7 @@ export function useSearch() {
         }
         return 'delivered';
       }
-      return 'delivered';
+      return 'no-results';
     } catch (error: any) {
       if (error.name === 'AbortError') {
         console.log(`[useSearch] performSearch ABORTED (searchId=${currentSearchId})`);
@@ -860,9 +860,6 @@ export function useSearch() {
         setLocalError(null);
         setCurrentRecipes([]);
         setCurrentReadyMeals([]);
-        if (shouldCountGuestSearch) {
-          recordGuestSearchDelivery();
-        }
         return;
       }
 
