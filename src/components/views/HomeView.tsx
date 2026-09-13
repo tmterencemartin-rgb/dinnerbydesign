@@ -802,13 +802,13 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={resultsCount > 0 ? 'space-y-3' : 'space-y-6'}
+      className="space-y-3"
     >
       <h1 className="sr-only">Find dinner options</h1>
         {/* Search Section */}
       <div className={`w-full flex flex-col relative ${showCentredInitialSearch ? 'justify-start py-4 sm:min-h-[calc(100dvh-11rem)] sm:justify-center sm:py-12' : ''}`}>
         <div className={`flex flex-col ${resultsCount > 0 ? '' : 'sm:min-h-[20rem]'}`}>
-          <div className="w-full max-w-4xl mx-auto space-y-4 my-2">
+          <div className="w-full max-w-4xl mx-auto space-y-2 my-2">
             {isGuestPreview && !SIMPLIFIED_GUEST_SEARCH_STATES && (
               <div className={`rounded border px-3 py-2 text-[12px] font-medium ${
                 isGuestSearchLimitReached 
@@ -1102,7 +1102,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             )}
           </div>
 
-          <div className={`flex flex-col ${resultsCount > 0 ? 'gap-2 sm:gap-3' : 'gap-4'} max-w-4xl mx-auto w-full ${isAiCreatedSearch ? 'hidden' : ''}`}>
+          <div className={`flex flex-col gap-2 max-w-4xl mx-auto w-full ${isAiCreatedSearch ? 'hidden' : ''}`}>
             <SearchStatusRow 
               status={status}
               enriching={enriching}
