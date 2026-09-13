@@ -30,8 +30,9 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
     await expect(page.getByText('Try a search')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Quick chicken dinner under 30 minutes' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Low-cost vegetarian dinner for two' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Minced beef' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Crab risotto' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Liver and bacon' })).toBeVisible();
   });
 
   test('search modes and their guidance switch without submitting a search', async ({ page }) => {
@@ -48,9 +49,18 @@ test.describe('monitoring-safe production checks', () => {
       await expect(page.getByText(guidance, { exact: true })).toBeVisible();
     }
 
-    await expect(page.getByRole('button', { name: 'Indian', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Tagliatelle', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Prawns', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'A fish dish by Jamie Oliver', exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Minced beef', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Crab risotto', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Liver and bacon', exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Ready-made dinners', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Fancy something Oriental or Asian?', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Mac and cheese?', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Or Paella perhaps?', exact: true })).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toHaveValue('');
   });
 

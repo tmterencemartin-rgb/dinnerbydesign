@@ -118,15 +118,20 @@ const NOT_BORING_SUMMER_SALADS_QUERY =
 const NOT_BORING_SUMMER_SALADS_RESULTS_COPY =
   'Three ways to prepare unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal and ready in under 30 minutes.';
 const NOT_BORING_SUMMER_SALADS_NEXT_PLACEHOLDER = 'Or maybe you fancy firing up the BBQ?';
-const COMPACT_GUEST_SEARCH_STARTERS = [
+const AI_CREATED_COMPACT_GUEST_STARTERS = [
   'Quick chicken dinner under 30 minutes',
   'Low-cost vegetarian dinner for two',
-  NOT_BORING_SUMMER_SALADS_SEARCH_TITLE
+  'A fish dish by Jamie Oliver'
+];
+const PUBLISHED_COMPACT_GUEST_STARTERS = [
+  'Minced beef',
+  'Crab risotto',
+  'Liver and bacon'
 ];
 const READY_MADE_COMPACT_GUEST_STARTERS = [
-  'Indian',
-  'Tagliatelle',
-  'Prawns'
+  'Fancy something Oriental or Asian?',
+  'Mac and cheese?',
+  'Or Paella perhaps?'
 ];
 
 const isNotBoringSummerSaladsQuery = (query: string) =>
@@ -452,6 +457,11 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     !isSearching &&
     !currentRecipes?.length &&
     !currentReadyMeals?.length;
+  const compactGuestStarters = searchMode === 'ai-created'
+    ? AI_CREATED_COMPACT_GUEST_STARTERS
+    : searchMode === 'published'
+      ? PUBLISHED_COMPACT_GUEST_STARTERS
+      : READY_MADE_COMPACT_GUEST_STARTERS;
   const showCentredInitialSearch =
     !isSearching &&
     !isAppending &&
@@ -882,6 +892,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   toggleVoiceSearch={toggleVoiceSearch}
                   strictIngredientMatch={strictIngredientMatch}
                   description={SEARCH_MODE_DESCRIPTIONS[searchMode]}
+                  guestStarters={showCompactGuestStarters ? compactGuestStarters : undefined}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
                 />
               ) : (
@@ -1040,7 +1051,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               {!isAiCreatedSearch && showCompactGuestStarters && (
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2.5">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
-                  {(source === 'ready-made' ? READY_MADE_COMPACT_GUEST_STARTERS : COMPACT_GUEST_SEARCH_STARTERS).map(suggestion => (
+                  {compactGuestStarters.map(suggestion => (
                     <button
                       key={suggestion}
                       type="button"
