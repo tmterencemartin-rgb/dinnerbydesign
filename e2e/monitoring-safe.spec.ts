@@ -45,6 +45,8 @@ test.describe('monitoring-safe production checks', () => {
     ] as const;
     const guidanceY: number[] = [];
     const starterY: number[] = [];
+    const mobileButtonWidths: Array<{ find: number; preferences: number }> = [];
+    const viewport = page.viewportSize();
 
     for (const [label, guidance] of modes) {
       await page.getByRole('button', { name: label, exact: true }).click();
@@ -53,16 +55,29 @@ test.describe('monitoring-safe production checks', () => {
       await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
       const guidanceBox = await guidanceLocator.boundingBox();
       const starterBox = await page.getByText('Try a search', { exact: true }).boundingBox();
+      const findBox = await page.getByRole('button', { name: 'Find dinner options' }).boundingBox();
+      const preferencesBox = await page.getByRole('button', { name: 'Open search preferences' }).boundingBox();
       expect(guidanceBox).not.toBeNull();
       expect(starterBox).not.toBeNull();
+      expect(findBox).not.toBeNull();
+      expect(preferencesBox).not.toBeNull();
       guidanceY.push(guidanceBox?.y ?? -1);
       starterY.push(starterBox?.y ?? -1);
+      if ((viewport?.width ?? 0) < 640) {
+        mobileButtonWidths.push({ find: findBox?.width ?? -1, preferences: preferencesBox?.width ?? -1 });
+      }
     }
 
     expect(guidanceY[1]).toBeCloseTo(guidanceY[0], 1);
     expect(guidanceY[2]).toBeCloseTo(guidanceY[0], 1);
     expect(starterY[1]).toBeCloseTo(starterY[0], 1);
     expect(starterY[2]).toBeCloseTo(starterY[0], 1);
+    if (mobileButtonWidths.length === modes.length) {
+      expect(mobileButtonWidths[0].find).toBeCloseTo(mobileButtonWidths[1].find, 1);
+      expect(mobileButtonWidths[0].find).toBeCloseTo(mobileButtonWidths[2].find, 1);
+      expect(mobileButtonWidths[0].preferences).toBeCloseTo(mobileButtonWidths[1].preferences, 1);
+      expect(mobileButtonWidths[0].preferences).toBeCloseTo(mobileButtonWidths[2].preferences, 1);
+    }
 
     await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
     await expect(page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true })).toBeVisible();

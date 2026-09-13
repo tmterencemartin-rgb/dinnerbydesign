@@ -291,7 +291,7 @@ export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandl
           </button>
         </div>
             </form>
-            <Tooltip text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
+            <Tooltip className="hidden sm:inline-block" text="Open search preferences to set dietary rules, portions, budget, calorie targets, nearby retailers and ingredients to exclude." position="bottom" align="right" maxWidth="max-w-[260px]">
               <button
                 type="button"
                 onClick={onOpenPreferences}
