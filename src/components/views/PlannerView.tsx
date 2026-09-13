@@ -20,6 +20,7 @@ import { DietaryRule, SavedRecipe, UserPreferences } from '../../types';
 import { RetailerCtaLink } from '../RetailerCtaLink';
 import { SavedRecipeItem } from '../SavedRecipeItem';
 import { PreferenceDropdown } from '../ui/PreferenceDropdown';
+import { BackToSearchButton } from '../ui/BackToSearchButton';
 import { buildSupermarketPlanSummary } from '../../lib/shoppingUtils';
 import { safeStorage } from '../../lib/storage';
 import {
@@ -720,14 +721,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
           </div>
         ) : (
           <>
-            <button
-              type="button"
-              onClick={() => setView('home')}
-              className="fixed right-4 top-1/2 z-50 inline-flex min-h-9 -translate-y-1/2 items-center gap-1.5 rounded border border-gray-200 bg-white px-3 text-[11px] font-bold uppercase tracking-widest text-gray-700 shadow-sm transition-colors hover:border-dbd-accent hover:text-dbd-accent sm:right-6"
-            >
-              <ChevronLeft className="h-4 w-4 -ml-0.5" aria-hidden="true" />
-              Back to search
-            </button>
+            <BackToSearchButton onClick={() => setView('home')} />
             <div className="space-y-1 pt-4 sm:pt-5">
               <div className="flex flex-col items-center pb-2 pt-0 space-y-2">
                 <h2 className="text-[20px] font-bold text-gray-900 text-center">Save & Schedule</h2>

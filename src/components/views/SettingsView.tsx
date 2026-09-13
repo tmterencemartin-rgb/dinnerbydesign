@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  ChevronLeft,
   ChevronRight,
   ChevronDown,
   Trash2,
@@ -38,6 +37,7 @@ import { OperationType } from '../../types';
 import { StripeCheckoutButton } from '../StripeCheckoutButton';
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
 import { AuthForm } from '../AuthForm';
+import { BackToSearchButton } from '../ui/BackToSearchButton';
 
 interface SettingsViewProps {
   setView: (view: AppView, openFilters?: boolean) => void;
@@ -646,14 +646,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ setView, highlight, 
     >
       <div className="space-y-1 pt-5 sm:pt-6">
         <div className="flex items-center justify-between">
-          <button
-            id="back-to-search-btn"
-            onClick={() => setView('home')}
-            className="flex min-h-8 items-center gap-1 text-[13px] font-normal text-accent hover:text-gray-900 transition-colors"
-          >
-            <ChevronLeft id="back-chevron" className="w-4 h-4 -ml-1" />
-            <span id="back-text">Back to search</span>
-          </button>
+          <BackToSearchButton id="back-to-search-btn" onClick={() => setView('home')} />
 
           <button
             onClick={() => setView('home')}

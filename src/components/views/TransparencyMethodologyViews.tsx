@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { AppView } from '../../types';
+import { BackToSearchButton } from '../ui/BackToSearchButton';
 
 interface MethodologyProps { setView: (view: AppView) => void; }
 
@@ -17,9 +18,13 @@ const MethodologyShell: React.FC<MethodologyProps & { eyebrow: string; title: st
   const isGuest = !user || user.isAnonymous;
   return (
     <motion.main initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="mx-auto max-w-2xl px-4 py-12 pb-20 select-text">
-      <button type="button" onClick={() => setView(isGuest ? 'landing' : 'home')} className="mb-6 rounded p-1.5 text-[12px] font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent">
-        ← {isGuest ? 'Back to DinnerByDesign' : 'Back to Search'}
-      </button>
+      {isGuest ? (
+        <button type="button" onClick={() => setView('landing')} className="mb-6 rounded p-1.5 text-[12px] font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-dbd-accent">
+          ← Back to DinnerByDesign
+        </button>
+      ) : (
+        <BackToSearchButton onClick={() => setView('home')} />
+      )}
       <header className="space-y-3">
         <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-dbd-accent">{eyebrow}</p>
         <h1 className="text-[24px] font-bold leading-9 text-gray-950">{title}</h1>

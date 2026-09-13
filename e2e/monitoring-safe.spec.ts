@@ -117,4 +117,39 @@ test.describe('monitoring-safe production checks', () => {
     await page.getByRole('button', { name: 'Shopping', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Shopping list', exact: true })).toBeVisible();
   });
+
+  test('back to search controls share the same floating treatment', async ({ page }) => {
+    let baselineStyle: Record<string, string> | null = null;
+    for (const route of ['/planner', '/shopping']) {
+      await page.goto(route);
+      const button = page.getByRole('button', { name: 'Back to search', exact: true });
+      await expect(button).toBeVisible();
+      const box = await button.boundingBox();
+      const viewport = page.viewportSize();
+      expect(box).not.toBeNull();
+      expect(viewport).not.toBeNull();
+
+      const style = await button.evaluate(element => {
+        const computed = window.getComputedStyle(element);
+        return {
+          position: computed.position,
+          top: computed.top,
+          right: computed.right,
+          color: computed.color,
+          fontWeight: computed.fontWeight,
+          textTransform: computed.textTransform
+        };
+      });
+
+      expect(style.position).toBe('fixed');
+      expect(Math.abs((box!.y + box!.height / 2) - viewport!.height / 2)).toBeLessThanOrEqual(1);
+      expect(style.fontWeight).toBe('700');
+      expect(style.textTransform).toBe('uppercase');
+      if (baselineStyle) {
+        expect(style).toEqual(baselineStyle);
+      } else {
+        baselineStyle = style;
+      }
+    }
+  });
 });
