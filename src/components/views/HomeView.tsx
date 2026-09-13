@@ -33,7 +33,7 @@ import { CompactRecipeItem } from '../CompactRecipeItem';
 import { RecipeDetailOverlay } from '../RecipeDetailOverlay';
 import { SearchOnboardingHelper } from '../home/SearchOnboardingHelper';
 import { RecipeCompareModal } from '../RecipeCompareModal';
-import { AiCreatedDinnerSearch } from '../home/InternalDinnerPilot';
+import { AiCreatedDinnerSearch, type AiCreatedDinnerSearchHandle } from '../home/InternalDinnerPilot';
 import { PublishedRecipeLinkCard } from '../home/PublishedRecipeLinkCard';
 
 import { PREFERRED_SOURCES } from '../../data/preferredSources';
@@ -133,6 +133,27 @@ const READY_MADE_COMPACT_GUEST_STARTERS = [
   'Mac and cheese?',
   'Or Paella perhaps?'
 ];
+
+const GuestSearchStarters: React.FC<{
+  suggestions: string[];
+  onSelect: (suggestion: string) => void;
+  disabled?: boolean;
+}> = ({ suggestions, onSelect, disabled = false }) => (
+  <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2">
+    <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
+    {suggestions.map(suggestion => (
+      <button
+        key={suggestion}
+        type="button"
+        onClick={() => onSelect(suggestion)}
+        disabled={disabled}
+        className="text-left text-[11.5px] font-medium leading-5 text-dbd-ink-2 underline decoration-gray-200 underline-offset-4 transition-colors hover:text-dbd-accent disabled:opacity-50"
+      >
+        {suggestion}
+      </button>
+    ))}
+  </div>
+);
 
 const isNotBoringSummerSaladsQuery = (query: string) =>
   [
@@ -611,6 +632,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
   };
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const aiCreatedSearchRef = useRef<AiCreatedDinnerSearchHandle>(null);
   const excludeInputRef = useRef<HTMLInputElement>(null);
   const omitInputRef = useRef<HTMLInputElement>(null);
 
@@ -650,6 +672,15 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     setPreferencesError,
     setShowFilters
   ]);
+
+  const handleGuestStarterSelect = React.useCallback((suggestion: string) => {
+    if (searchMode === 'ai-created') {
+      aiCreatedSearchRef.current?.submitSuggestedSearch(suggestion);
+      return;
+    }
+
+    handleCompactGuestStarter(suggestion);
+  }, [handleCompactGuestStarter, searchMode]);
 
   const handleClearSearchInput = React.useCallback(() => {
     setSearchPlaceholderOverride(undefined);
@@ -883,6 +914,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
               {isAiCreatedSearch ? (
                 <AiCreatedDinnerSearch
+                  ref={aiCreatedSearchRef}
                   input={input}
                   setInput={setInput}
                   preferences={localPreferences}
@@ -891,8 +923,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                   isListening={isListening}
                   toggleVoiceSearch={toggleVoiceSearch}
                   strictIngredientMatch={strictIngredientMatch}
-                  description={SEARCH_MODE_DESCRIPTIONS[searchMode]}
-                  guestStarters={showCompactGuestStarters ? compactGuestStarters : undefined}
                   onGuestSearchDelivered={isGuestPreview ? recordGuestSearchDelivery : undefined}
                 />
               ) : (
@@ -985,22 +1015,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 {renderStrictIngredientToggle('h-9 px-3 text-[10px]')}
               </div>
 
-              <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
-
-              {source === 'cook' && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
-                <div className="text-[10.5px] leading-4 text-gray-600">
-                  {source === 'cook' ? (
-                    <span>
-                      {usePublishedSourceHandoff
-                        ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
-                        : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
-                    </span>
-                  ) : (
-                    <span>AI-powered search. Avoid private information.</span>
-                  )}
-                </div>
-              )}
-
               {hasIngredientNoResults && (
                 <div
                   className="flex items-start gap-1.5 rounded border border-dbd-accent/20 bg-white px-3 py-2.5 text-[10.5px] leading-4 text-dbd-accent"
@@ -1020,6 +1034,19 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
               </div>
               )}
+
+              <div className="min-h-12">
+                <p className="min-h-8 text-[11px] leading-4 text-gray-600">{SEARCH_MODE_DESCRIPTIONS[searchMode]}</p>
+                <div className="min-h-4 text-[10.5px] leading-4 text-gray-600">
+                  {source === 'cook' && (!usePublishedSourceHandoff || showPublishedSourceHandoffNotice) && (
+                    <span>
+                      {usePublishedSourceHandoff
+                        ? 'Published recipes open on the publisher’s site. Close the new tab to return here, or use Back if it opens in the same tab.'
+                        : <>AI-assisted search, with links to original{' '}<a href="/recipe-methodology" className="font-semibold text-gray-500 hover:text-dbd-accent hover:underline">recipe sources</a>.</>}
+                    </span>
+                  )}
+                </div>
+              </div>
 
               {!isAiCreatedSearch && !useSimplifiedGuestSearchStates && (!hasPerformedSearch || !hasDismissedSearchOnboarding) && !currentRecipes?.length && !currentReadyMeals?.length && (
                 <div className="w-full select-none animate-fade-in flex flex-col gap-4">
@@ -1048,21 +1075,12 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              {!isAiCreatedSearch && showCompactGuestStarters && (
-                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
-                  {compactGuestStarters.map(suggestion => (
-                    <button
-                      key={suggestion}
-                      type="button"
-                      onClick={() => handleCompactGuestStarter(suggestion)}
-                      disabled={isReadOnly || isSearching}
-                      className="text-left text-[11.5px] font-medium leading-5 text-dbd-ink-2 underline decoration-gray-200 underline-offset-4 transition-colors hover:text-dbd-accent"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
-                </div>
+              {showCompactGuestStarters && (
+                <GuestSearchStarters
+                  suggestions={compactGuestStarters}
+                  onSelect={handleGuestStarterSelect}
+                  disabled={isReadOnly || isSearching}
+                />
               )}
               </>
             )}

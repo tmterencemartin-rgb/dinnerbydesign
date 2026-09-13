@@ -19,9 +19,11 @@ interface AiCreatedDinnerSearchProps {
   isListening: boolean;
   toggleVoiceSearch: () => void;
   strictIngredientMatch: boolean;
-  description: string;
-  guestStarters?: string[];
   onGuestSearchDelivered?: () => void;
+}
+
+export interface AiCreatedDinnerSearchHandle {
+  submitSuggestedSearch: (brief: string) => void;
 }
 
 const choiceMeta = (choice: InternalDinnerChoice) => [
@@ -40,7 +42,7 @@ const problemLabels: Record<ProblemType, string> = {
   other: 'Other'
 };
 
-export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
+export const AiCreatedDinnerSearch = React.forwardRef<AiCreatedDinnerSearchHandle, AiCreatedDinnerSearchProps>(({
   input,
   setInput,
   preferences,
@@ -49,10 +51,8 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
   isListening,
   toggleVoiceSearch,
   strictIngredientMatch,
-  description,
-  guestStarters,
   onGuestSearchDelivered
-}) => {
+}, ref) => {
   const [choices, setChoices] = useState<InternalDinnerChoice[]>([]);
   const [hasPartialChoices, setHasPartialChoices] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -156,6 +156,13 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
       setIsGenerating(false);
     }
   };
+
+  React.useImperativeHandle(ref, () => ({
+    submitSuggestedSearch: (brief: string) => {
+      setInput(brief);
+      void generateChoices(brief);
+    }
+  }));
 
   const startNewSearch = () => {
     setInput('');
@@ -268,26 +275,6 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
         </button>
             </form>
           </div>
-          <p className="mt-1 min-h-8 text-[11px] leading-4 text-gray-600">{description}</p>
-          {guestStarters && guestStarters.length > 0 && (
-            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
-              {guestStarters.map(suggestion => (
-                <button
-                  key={suggestion}
-                  type="button"
-                  onClick={() => {
-                    setInput(suggestion);
-                    void generateChoices(suggestion);
-                  }}
-                  disabled={disabled || isGenerating}
-                  className="text-left text-[11.5px] font-medium leading-5 text-dbd-ink-2 underline decoration-gray-200 underline-offset-4 transition-colors hover:text-dbd-accent disabled:opacity-50"
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          )}
         </>
       )}
       {error && <p className="mt-3 text-[12px] font-medium text-dbd-accent" role="alert">{error}</p>}
@@ -389,4 +376,4 @@ export const AiCreatedDinnerSearch: React.FC<AiCreatedDinnerSearchProps> = ({
       )}
     </section>
   );
-};
+});
