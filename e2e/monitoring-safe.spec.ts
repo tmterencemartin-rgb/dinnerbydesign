@@ -123,32 +123,38 @@ test.describe('monitoring-safe production checks', () => {
   });
 
   test('mode guidance hides after results and returns for an unsearched mode', async ({ page }) => {
-    await page.route(/\/api\/ai-created-dinners(?:\?.*)?$/, async route => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          choices: [{
-            title: 'Test shellfish dinner',
-            description: 'A simple shellfish dinner for a weeknight at home.',
-            ingredients: ['200g prawns', '150g rice', '1 lemon'],
-            instructions: ['Cook the rice in 300ml water until tender.', 'Cook the prawns until opaque and piping hot.'],
-            cuisine: 'British',
-            totalServings: 2,
-            totalTime: 25,
-            costPerPortion: '£2.50'
-          }]
-        })
-      });
+    await page.addInitScript(() => {
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = async (input, init) => {
+        const requestUrl = typeof input === 'string'
+          ? input
+          : input instanceof Request
+            ? input.url
+            : input.toString();
+        if (requestUrl.includes('/api/ai-created-dinners')) {
+          return new Response(JSON.stringify({
+            choices: [{
+              title: 'Test shellfish dinner',
+              description: 'A simple shellfish dinner for a weeknight at home.',
+              ingredients: ['200g prawns', '150g rice', '1 lemon'],
+              instructions: ['Cook the rice in 300ml water until tender.', 'Cook the prawns until opaque and piping hot.'],
+              cuisine: 'British',
+              totalServings: 2,
+              totalTime: 25,
+              costPerPortion: '£2.50'
+            }]
+          }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+        return originalFetch(input, init);
+      };
     });
     await page.goto('/?view=home');
 
     await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
-    const mockedAiSearchResponse = page.waitForResponse(response => (
-      response.url().includes('/api/ai-created-dinners') && response.status() === 200
-    ));
     await page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true }).click();
-    await mockedAiSearchResponse;
     await expect(page.getByText('Test shellfish dinner', { exact: true })).toBeVisible();
     await expect(page.getByText('No searching. Just recipes built around your choice of ingredients and preferences.', { exact: true })).toHaveCount(0);
 
