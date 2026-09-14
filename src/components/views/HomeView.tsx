@@ -864,35 +864,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
               </div>
             )}
 
-            {showSimplifiedGuestLimit ? (
-              <section className="rounded border border-dbd-accent/20 bg-white px-5 py-6 text-center sm:px-8 sm:py-7" aria-labelledby="guest-search-limit-heading">
-                <h2 id="guest-search-limit-heading" className="text-lg font-semibold text-dbd-ink sm:text-xl">
-                  Continue searching and keep your results
-                </h2>
-                <p className="mx-auto mt-2 max-w-xl text-[13px] leading-5 text-dbd-ink-3 sm:text-sm">
-                  Create an account to start your free, 7-day trial. No card required.
-                </p>
-                <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={goToSignUp}
-                    className="inline-flex min-h-10 w-full items-center justify-center rounded bg-dbd-accent px-5 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-dbd-accent-mid sm:w-auto"
-                  >
-                    Create account
-                  </button>
-                </div>
-                {isNativeTest && resetGuestSearchCount && (
-                  <button
-                    type="button"
-                    onClick={resetGuestSearchCount}
-                    className="mt-4 text-[10px] font-semibold text-dbd-ink-3 hover:text-dbd-accent hover:underline"
-                  >
-                    Reset test searches
-                  </button>
-                )}
-              </section>
-            ) : (
-              <>
+            <>
             <div className="flex items-center justify-center pb-1">
               <SearchHeader 
                 source={source}
@@ -1098,8 +1070,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 </div>
               )}
 
-              </>
-            )}
+            </>
           </div>
 
           <div className={`flex flex-col gap-2 max-w-4xl mx-auto w-full ${isAiCreatedSearch ? 'hidden' : ''}`}>

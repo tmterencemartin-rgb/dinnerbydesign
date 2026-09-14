@@ -111,6 +111,16 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('button', { name: 'Fancy something Oriental or Asian?', exact: true })).toBeVisible();
   });
 
+  test('exhausted guests keep the search shell without the continuation panel', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem('dbd_guest_search_count_v1', '3');
+    });
+    await page.goto('/?view=home');
+
+    await expect(page.getByRole('heading', { name: 'Continue searching and keep your results', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toBeVisible();
+  });
+
   test('mode guidance hides after results and returns for an unsearched mode', async ({ page }) => {
     await page.route('**/api/ai-created-dinners', async route => {
       await route.fulfill({
