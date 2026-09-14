@@ -492,7 +492,8 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     !isAppending &&
     !currentRecipes?.length &&
     !currentReadyMeals?.length &&
-    !showSimplifiedGuestLimit;
+    !showSimplifiedGuestLimit &&
+    !isGuestSearchLimitReached;
 
   React.useEffect(() => {
     if (profile && !user?.isAnonymous) {
@@ -866,7 +867,19 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
             {useSimplifiedGuestSearchStates && isGuestSearchLimitReached && (
               <div className="flex min-h-8 flex-col items-center justify-between gap-2 px-1 text-center text-[11.5px] font-medium text-dbd-accent sm:flex-row sm:text-left">
-                <span>You've used your 3 free searches. Create an account to continue.</span>
+                <span>
+                  You've used your 3 free searches.{' '}
+                  <a
+                    href="/signin?mode=signup"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      goToSignUp();
+                    }}
+                    className="font-semibold underline decoration-dbd-accent/50 underline-offset-2 hover:text-dbd-accent-mid"
+                  >
+                    Create an account
+                  </a>{' '}to continue.
+                </span>
               </div>
             )}
 
