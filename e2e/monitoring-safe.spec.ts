@@ -123,7 +123,7 @@ test.describe('monitoring-safe production checks', () => {
   });
 
   test('mode guidance hides after results and returns for an unsearched mode', async ({ page }) => {
-    await page.route('**/api/ai-created-dinners', async route => {
+    await page.route(/\/api\/ai-created-dinners(?:\?.*)?$/, async route => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
