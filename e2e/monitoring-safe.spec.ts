@@ -118,6 +118,7 @@ test.describe('monitoring-safe production checks', () => {
     await page.goto('/?view=home');
 
     await expect(page.getByRole('heading', { name: 'Continue searching and keep your results', exact: true })).toHaveCount(0);
+    await expect(page.getByText('Your 3 free searches have been used. Create an account to search again.', { exact: true })).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toBeVisible();
   });
 
