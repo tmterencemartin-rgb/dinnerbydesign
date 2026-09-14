@@ -30,7 +30,7 @@ const PublicGuideFooter: React.FC = () => (
           </a>
         </div>
       </div>
-      <nav aria-label="Footer" className="grid grid-cols-1 justify-items-start gap-x-3 gap-y-3 text-left sm:grid-cols-3 sm:justify-items-center sm:gap-x-6 sm:gap-y-0 md:justify-items-start lg:col-span-3">
+      <nav aria-label="Footer" className="grid grid-cols-3 justify-items-start gap-x-3 text-left sm:justify-items-center sm:gap-x-6 md:justify-items-start lg:col-span-3">
         <div className="min-w-0">
           <p className="mb-2 block text-[9px] font-bold uppercase tracking-widest text-gray-500">Guides</p>
           <div className="flex flex-col items-start gap-1.5 md:gap-2">
