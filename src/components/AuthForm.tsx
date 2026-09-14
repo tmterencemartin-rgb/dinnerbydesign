@@ -129,6 +129,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({
     }
   };
 
+  const handleClearForm = () => {
+    setError(null);
+    setEmail('');
+    setPassword('');
+    setFirstName('');
+    setLastName('');
+    setPhone('');
+    setCountryCode('+44');
+  };
+
   return (
     <div className={`space-y-3 ${className}`}>
       <div className={isSignUp ? '' : 'space-y-2'}>
@@ -209,6 +219,17 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             >
               {loading ? <Loader2 size={16} className="animate-spin" /> : (isSignUp ? 'Create account' : 'Sign in')}
             </button>
+
+            {isSignUp && (
+              <button
+                type="button"
+                onClick={handleClearForm}
+                disabled={loading}
+                className="w-full py-2 bg-white border border-gray-200 text-gray-600 rounded text-[12px] font-bold shadow-xs hover:bg-gray-50 transition-all"
+              >
+                Clear form
+              </button>
+            )}
 
             {!isSignUp && (
               <div className="text-center">
