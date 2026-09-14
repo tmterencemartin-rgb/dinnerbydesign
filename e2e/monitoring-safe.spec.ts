@@ -144,7 +144,11 @@ test.describe('monitoring-safe production checks', () => {
     await page.goto('/?view=home');
 
     await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
+    const mockedAiSearchResponse = page.waitForResponse(response => (
+      response.url().includes('/api/ai-created-dinners') && response.status() === 200
+    ));
     await page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true }).click();
+    await mockedAiSearchResponse;
     await expect(page.getByText('Test shellfish dinner', { exact: true })).toBeVisible();
     await expect(page.getByText('No searching. Just recipes built around your choice of ingredients and preferences.', { exact: true })).toHaveCount(0);
 
