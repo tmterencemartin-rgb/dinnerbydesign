@@ -1037,7 +1037,7 @@ export const LandingView: React.FC = () => {
             </div>
           </div>
 
-          <nav aria-label="Footer" className="mx-auto grid max-w-lg grid-cols-3 gap-x-3 gap-y-2 border-t border-dbd-rule/40 pt-3 sm:pt-4 text-left font-ibm-plex-mono text-[10.5px] font-semibold leading-4 text-dbd-ink-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:text-[11px]">
+          <nav aria-label="Footer" className="mx-auto grid max-w-lg grid-cols-1 gap-x-3 gap-y-2 border-t border-dbd-rule/40 pt-3 sm:pt-4 text-left font-ibm-plex-mono text-[10.5px] font-semibold leading-4 text-dbd-ink-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:text-[11px]">
             <div className="min-w-0 sm:contents">
               <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-dbd-ink-3 sm:hidden">Guides</p>
               <div className="flex flex-col gap-1.5 sm:contents">
