@@ -867,13 +867,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             {useSimplifiedGuestSearchStates && isGuestSearchLimitReached && (
               <div className="flex min-h-8 flex-col items-center justify-between gap-2 px-1 text-center text-[11.5px] font-medium text-dbd-accent sm:flex-row sm:text-left">
                 <span>You've used your 3 free searches. Create an account to continue.</span>
-                <button
-                  type="button"
-                  onClick={goToSignUp}
-                  className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-dbd-accent hover:underline"
-                >
-                  Create account
-                </button>
               </div>
             )}
 
