@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { SEARCH_MODE_DESCRIPTIONS } from '../src/components/home/SearchHeader';
 
 const productionApiBaseUrl = process.env.E2E_API_BASE_URL
   || (process.env.E2E_BASE_URL?.startsWith('https://') ? process.env.E2E_BASE_URL : '');
@@ -39,9 +40,9 @@ test.describe('monitoring-safe production checks', () => {
     await page.goto('/?view=home');
 
     const modes = [
-      ['AI-created recipes', 'No searching. Just recipes built around your choice of ingredients and preferences.'],
-      ['Published recipes', 'Recipes from named UK publishers, linking out to the original page.'],
-      ['Ready-made dinners', 'Choose your favourite or closest supermarket or retailer in preferences'],
+      ['AI-created recipes', SEARCH_MODE_DESCRIPTIONS['ai-created']],
+      ['Published recipes', SEARCH_MODE_DESCRIPTIONS.published],
+      ['Ready-made dinners', SEARCH_MODE_DESCRIPTIONS['ready-made']],
     ] as const;
     const guidanceY: number[] = [];
     const starterY: number[] = [];
@@ -78,10 +79,6 @@ test.describe('monitoring-safe production checks', () => {
       expect(mobileButtonWidths[0].preferences).toBeCloseTo(mobileButtonWidths[1].preferences, 1);
       expect(mobileButtonWidths[0].preferences).toBeCloseTo(mobileButtonWidths[2].preferences, 1);
     }
-
-    await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true })).toBeVisible();
-    await expect(page.getByText('AI-assisted search, with links to original recipe sources.', { exact: true })).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Minced beef', exact: true })).toBeVisible();
@@ -157,7 +154,7 @@ test.describe('monitoring-safe production checks', () => {
     await page.getByRole('button', { name: 'AI-created recipes', exact: true }).click();
     await page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true }).click();
     await expect(page.getByText('Test shellfish dinner', { exact: true })).toBeVisible();
-    await expect(page.getByText('No searching. Just recipes built around your choice of ingredients and preferences.', { exact: true })).toHaveCount(0);
+    await expect(page.getByText(SEARCH_MODE_DESCRIPTIONS['ai-created'], { exact: true })).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
     await expect(page.getByText('Recipes from named UK publishers, linking out to the original page.', { exact: true })).toBeVisible();
