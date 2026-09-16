@@ -6,7 +6,7 @@ export type SearchMode = 'published' | 'ai-created' | 'ready-made';
 
 export const SEARCH_MODE_DESCRIPTIONS: Record<SearchMode, string> = {
   'ai-created': 'Dishes built around your ingredients and preferences',
-  published: 'Recipes from trusted UK publishers, linking to the original page.',
+  published: "Recipes from trusted UK publishers, linking to each publisher's website.",
   'ready-made': 'Choose your favourite or closest supermarket or retailer in preferences'
 };
 
