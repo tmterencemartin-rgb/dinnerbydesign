@@ -45,6 +45,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
         <div className="w-full max-w-[620px] grid grid-cols-3 gap-1 rounded bg-gray-100/80 p-1">
           {modes.map(searchMode => {
             const isActive = mode === searchMode.id;
+            const [firstWord, ...remainingWords] = searchMode.label.split(' ');
             return (
               <button
                 key={searchMode.id}
@@ -63,12 +64,10 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
                 <span className={`block text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${
                   isActive ? 'text-dbd-accent' : 'text-gray-500 hover:text-gray-600'
                 }`}>
-                  {searchMode.id === 'published' ? (
-                    <>
-                      <span className="block sm:inline">Published</span>{' '}
-                      <span className="block sm:inline">recipes</span>
-                    </>
-                  ) : searchMode.label}
+                  <>
+                    <span className="block sm:inline">{firstWord}</span>{' '}
+                    <span className="block sm:inline">{remainingWords.join(' ')}</span>
+                  </>
                 </span>
               </button>
             );
