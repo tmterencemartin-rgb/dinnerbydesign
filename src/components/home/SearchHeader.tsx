@@ -63,7 +63,12 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
                 <span className={`block text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${
                   isActive ? 'text-dbd-accent' : 'text-gray-500 hover:text-gray-600'
                 }`}>
-                  {searchMode.label}
+                  {searchMode.id === 'published' ? (
+                    <>
+                      <span className="block sm:inline">Published</span>{' '}
+                      <span className="block sm:inline">recipes</span>
+                    </>
+                  ) : searchMode.label}
                 </span>
               </button>
             );
