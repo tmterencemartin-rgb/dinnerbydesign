@@ -4,11 +4,37 @@ import { DinnerSource } from '../../types';
 
 export type SearchMode = 'published' | 'ai-created' | 'ready-made';
 
+export const SEARCH_MODES: ReadonlyArray<{ id: SearchMode; label: string }> = [
+  { id: 'ai-created', label: 'AI-created recipes' },
+  { id: 'published', label: 'Published recipes' },
+  { id: 'ready-made', label: 'Ready-made dinners' }
+];
+
 export const SEARCH_MODE_DESCRIPTIONS: Record<SearchMode, string> = {
   'ai-created': 'Dishes built around your ingredients and preferences',
   published: "Recipes from trusted UK publishers, linking to each publisher's website.",
   'ready-made': 'Choose your favourite or closest supermarket or retailer in preferences'
 };
+
+export const SEARCH_MODE_STARTERS: Record<SearchMode, readonly string[]> = {
+  'ai-created': [
+    'Quick chicken dinner under 30 minutes',
+    'Low-cost vegetarian dinner for two',
+    'A choice of Shellfish recipes'
+  ],
+  published: [
+    'Minced beef',
+    'Crab risotto',
+    'Liver and bacon'
+  ],
+  'ready-made': [
+    'Fancy something Oriental or Asian?',
+    'Mac and cheese?',
+    'Or Paella perhaps?'
+  ]
+};
+
+export const SEARCH_STARTER_LABEL = 'Try a search';
 
 interface SearchHeaderProps {
   source: DinnerSource;
@@ -34,16 +60,10 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({
   onModeChange
 }) => {
   if (threeWaySearch) {
-    const modes: Array<{ id: SearchMode; label: string }> = [
-      { id: 'ai-created', label: 'AI-created recipes' },
-      { id: 'published', label: 'Published recipes' },
-      { id: 'ready-made', label: 'Ready-made dinners' }
-    ];
-
     return (
       <div className="w-full flex flex-col items-center">
         <div className="w-full max-w-[620px] grid grid-cols-3 gap-1 rounded bg-gray-100/80 p-1">
-          {modes.map(searchMode => {
+          {SEARCH_MODES.map(searchMode => {
             const isActive = mode === searchMode.id;
             const [firstWord, ...remainingWords] = searchMode.label.split(' ');
             return (

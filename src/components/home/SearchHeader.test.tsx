@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { SearchHeader } from './SearchHeader';
+import { SEARCH_MODE_DESCRIPTIONS, SearchHeader } from './SearchHeader';
 
 describe('SearchHeader', () => {
   it('names the published-source route', () => {
@@ -38,7 +38,7 @@ describe('SearchHeader', () => {
     expect(screen.getByRole('button', { name: /Published recipes/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Ready-made dinners/i })).toBeTruthy();
     expect(screen.queryByText('No searching. Just recipes built around your brief.')).toBeNull();
-    expect(screen.queryByText('Recipes from named UK publishers, linking out to the original page.')).toBeNull();
+    expect(screen.queryByText(SEARCH_MODE_DESCRIPTIONS.published)).toBeNull();
     expect(screen.queryByText('Ready-made dishes from the supermarket, priced and ready to buy.')).toBeNull();
   });
 });

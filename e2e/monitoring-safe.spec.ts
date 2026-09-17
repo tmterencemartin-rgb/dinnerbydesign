@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { SEARCH_MODE_DESCRIPTIONS } from '../src/components/home/SearchHeader';
+import {
+  SEARCH_MODE_DESCRIPTIONS,
+  SEARCH_MODE_STARTERS,
+  SEARCH_MODES,
+  SEARCH_STARTER_LABEL
+} from '../src/components/home/SearchHeader';
 
 const productionApiBaseUrl = process.env.E2E_API_BASE_URL
   || (process.env.E2E_BASE_URL?.startsWith('https://') ? process.env.E2E_BASE_URL : '');
@@ -30,20 +35,19 @@ test.describe('monitoring-safe production checks', () => {
     await page.goto('/?view=home');
     await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
-    await expect(page.getByText('Try a search')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Minced beef' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Crab risotto' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Liver and bacon' })).toBeVisible();
+    await expect(page.getByText(SEARCH_STARTER_LABEL)).toBeVisible();
+    for (const suggestion of SEARCH_MODE_STARTERS.published) {
+      await expect(page.getByRole('button', { name: suggestion })).toBeVisible();
+    }
   });
 
   test('search modes and their guidance switch without submitting a search', async ({ page }) => {
     await page.goto('/?view=home');
 
-    const modes = [
-      ['AI-created recipes', SEARCH_MODE_DESCRIPTIONS['ai-created']],
-      ['Published recipes', SEARCH_MODE_DESCRIPTIONS.published],
-      ['Ready-made dinners', SEARCH_MODE_DESCRIPTIONS['ready-made']],
-    ] as const;
+    const modes = SEARCH_MODES.map(searchMode => [
+      searchMode.label,
+      SEARCH_MODE_DESCRIPTIONS[searchMode.id]
+    ] as const);
     const guidanceY: number[] = [];
     const starterY: number[] = [];
     const mobileButtonWidths: Array<{ find: number; preferences: number }> = [];
@@ -55,7 +59,7 @@ test.describe('monitoring-safe production checks', () => {
       await expect(guidanceLocator).toBeVisible();
       await expect(page.getByRole('button', { name: 'Open search preferences' })).toBeVisible();
       const guidanceBox = await guidanceLocator.boundingBox();
-      const starterBox = await page.getByText('Try a search', { exact: true }).boundingBox();
+      const starterBox = await page.getByText(SEARCH_STARTER_LABEL, { exact: true }).boundingBox();
       const findBox = await page.getByRole('button', { name: 'Find dinner options' }).boundingBox();
       const preferencesBox = await page.getByRole('button', { name: 'Open search preferences' }).boundingBox();
       expect(guidanceBox).not.toBeNull();
@@ -81,14 +85,14 @@ test.describe('monitoring-safe production checks', () => {
     }
 
     await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Minced beef', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Crab risotto', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Liver and bacon', exact: true })).toBeVisible();
+    for (const suggestion of SEARCH_MODE_STARTERS.published) {
+      await expect(page.getByRole('button', { name: suggestion, exact: true })).toBeVisible();
+    }
 
     await page.getByRole('button', { name: 'Ready-made dinners', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Fancy something Oriental or Asian?', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Mac and cheese?', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Or Paella perhaps?', exact: true })).toBeVisible();
+    for (const suggestion of SEARCH_MODE_STARTERS['ready-made']) {
+      await expect(page.getByRole('button', { name: suggestion, exact: true })).toBeVisible();
+    }
     await expect(page.getByRole('textbox', { name: 'Search recipes by ingredient, dish, cuisine or chef' })).toHaveValue('');
   });
 
@@ -102,10 +106,14 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('button', { name: 'A choice of Shellfish recipes', exact: true })).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Minced beef', exact: true })).toBeVisible();
+    for (const suggestion of SEARCH_MODE_STARTERS.published) {
+      await expect(page.getByRole('button', { name: suggestion, exact: true })).toBeVisible();
+    }
 
     await page.getByRole('button', { name: 'Ready-made dinners', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Fancy something Oriental or Asian?', exact: true })).toBeVisible();
+    for (const suggestion of SEARCH_MODE_STARTERS['ready-made']) {
+      await expect(page.getByRole('button', { name: suggestion, exact: true })).toBeVisible();
+    }
   });
 
   test('exhausted guests keep the search shell without the continuation panel', async ({ page }) => {
@@ -157,7 +165,7 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByText(SEARCH_MODE_DESCRIPTIONS['ai-created'], { exact: true })).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Published recipes', exact: true }).click();
-    await expect(page.getByText('Recipes from named UK publishers, linking out to the original page.', { exact: true })).toBeVisible();
+    await expect(page.getByText(SEARCH_MODE_DESCRIPTIONS.published, { exact: true })).toBeVisible();
   });
 
   test('contact and sign-in pages render without submitting forms', async ({ page }) => {

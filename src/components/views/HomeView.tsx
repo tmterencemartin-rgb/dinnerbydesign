@@ -20,7 +20,12 @@ import { RecipeListActions } from '../RecipeListActions';
 import { NumberStepper } from '../ui/NumberStepper';
 import { RecipeCard } from '../RecipeCard';
 import { ReadyMealCard } from '../ReadyMealCard';
-import { SEARCH_MODE_DESCRIPTIONS, SearchHeader } from '../home/SearchHeader';
+import {
+  SEARCH_MODE_DESCRIPTIONS,
+  SEARCH_MODE_STARTERS,
+  SEARCH_STARTER_LABEL,
+  SearchHeader
+} from '../home/SearchHeader';
 import { SearchInput } from '../home/SearchInput';
 import { SearchExamples } from '../home/SearchExamples';
 import { CriteriaChips } from '../home/CriteriaChips';
@@ -118,29 +123,13 @@ const NOT_BORING_SUMMER_SALADS_QUERY =
 const NOT_BORING_SUMMER_SALADS_RESULTS_COPY =
   'Three ways to prepare unusual summer main course salads with interesting flavour combinations, substantial enough for dinner, fresh, seasonal and ready in under 30 minutes.';
 const NOT_BORING_SUMMER_SALADS_NEXT_PLACEHOLDER = 'Or maybe you fancy firing up the BBQ?';
-const AI_CREATED_COMPACT_GUEST_STARTERS = [
-  'Quick chicken dinner under 30 minutes',
-  'Low-cost vegetarian dinner for two',
-  'A choice of Shellfish recipes'
-];
-const PUBLISHED_COMPACT_GUEST_STARTERS = [
-  'Minced beef',
-  'Crab risotto',
-  'Liver and bacon'
-];
-const READY_MADE_COMPACT_GUEST_STARTERS = [
-  'Fancy something Oriental or Asian?',
-  'Mac and cheese?',
-  'Or Paella perhaps?'
-];
-
 const GuestSearchStarters: React.FC<{
-  suggestions: string[];
+  suggestions: readonly string[];
   onSelect: (suggestion: string) => void;
   disabled?: boolean;
 }> = ({ suggestions, onSelect, disabled = false }) => (
   <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-2">
-    <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">Try a search</span>
+    <span className="text-[10px] font-semibold uppercase tracking-wider text-dbd-ink-3">{SEARCH_STARTER_LABEL}</span>
     {suggestions.map(suggestion => (
       <button
         key={suggestion}
@@ -479,11 +468,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
     !currentRecipes?.length &&
     !currentReadyMeals?.length &&
     (guestSearchCount === 0 || !isAiCreatedSearch);
-  const compactGuestStarters = searchMode === 'ai-created'
-    ? AI_CREATED_COMPACT_GUEST_STARTERS
-    : searchMode === 'published'
-      ? PUBLISHED_COMPACT_GUEST_STARTERS
-      : READY_MADE_COMPACT_GUEST_STARTERS;
+  const compactGuestStarters = SEARCH_MODE_STARTERS[searchMode];
   const hasSearchResultsForMode = isAiCreatedSearch
     ? hasAiCreatedResults
     : Boolean(source === 'cook' ? currentRecipes?.length : currentReadyMeals?.length);
