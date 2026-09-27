@@ -79,13 +79,13 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ setView }) => {
       <h2 className="text-[18px] font-bold text-gray-900 mb-2">4. Cookies and browser storage</h2>
       <div className="space-y-3 text-[14px] leading-relaxed text-gray-600">
         <p>
-          DinnerByDesign may use cookies, local storage, IndexedDB, or similar browser storage where needed for sign-in, security, account continuity, saved app state, preferences, and core functionality.
+          DinnerByDesign may use cookies, local storage, IndexedDB, or similar browser storage where needed for sign-in, security, account continuity, saved app state, preferences, and core functionality. At present, the service does not load Google Analytics or any other non-essential analytics.
         </p>
         <p>
           These are used to provide the service you request. We do not use advertising cookies, tracking pixels, sponsor tracking, or behavioural ad profiling.
         </p>
         <p>
-          If non-essential analytics are added in future, they will be off unless you actively choose to allow them.
+          There are no advertising cookies, tracking pixels, sponsor tracking or behavioural analytics in the service. If that changes, we will update this notice and ask for permission before loading non-essential analytics.
         </p>
       </div>
 

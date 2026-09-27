@@ -15,7 +15,7 @@ export const ProgrammaticDisclosureList: React.FC<ProgrammaticDisclosureListProp
       <div className="space-y-4">
         {items.map(item => (
           <section key={item.key}>
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8b4c1f]">{item.title}</h2>
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b4c1f]">{item.title}</h2>
             <p className="mt-1.5 text-xs leading-5 text-dbd-ink-3">{item.body}</p>
           </section>
         ))}

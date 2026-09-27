@@ -87,7 +87,7 @@ export const AuthSignIn: React.FC<{ defaultMode?: 'signup' | 'signin' }> = ({ de
       <div className="w-full max-w-sm border border-gray-100 p-5 sm:p-6 rounded-xl shadow-sm">
         <div className="text-center mb-4">
           <Wordmark className="mx-auto mb-2 text-[29.33px]" />
-          <p className="text-[10px] text-gray-500 font-medium tracking-[0.01em] mb-4">Less searching. More relevant dinners.</p>
+          <p className="text-[12px] text-gray-500 font-medium tracking-[0.01em] mb-4">Less searching. More relevant dinners.</p>
           
           <h1 className="text-[19px] font-bold text-gray-900 tracking-tight leading-tight">
             {isSignUp ? 'Start your free 7-day trial.' : 'Sign in to your account'}

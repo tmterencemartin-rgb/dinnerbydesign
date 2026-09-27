@@ -29,7 +29,7 @@ export const RecipeRealityChecks: React.FC<RecipeRealityChecksProps> = ({ checks
   return (
     <div className="w-full space-y-1 sm:space-y-1.5">
       <div className="flex items-center gap-1.5">
-        <span className="text-[9.5px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+        <span className="text-[11px] sm:text-[12px] font-bold text-gray-500 uppercase tracking-wider">
           Reality check
         </span>
         <span className="h-px flex-1 bg-gray-100" />
@@ -44,7 +44,7 @@ export const RecipeRealityChecks: React.FC<RecipeRealityChecksProps> = ({ checks
               className={`flex items-start gap-1.5 sm:gap-2 rounded-none border-x-0 border-t-0 border-b px-0 py-1.5 sm:rounded sm:border sm:px-2 ${toneClasses[tone] || toneClasses.neutral}`}
             >
               <span className="mt-0.5 shrink-0">{toneIcons[tone] || toneIcons.neutral}</span>
-              <p className="min-w-0 text-[11px] sm:text-[11.5px] leading-snug">
+              <p className="min-w-0 text-[12px] sm:text-[13px] leading-snug">
                 <span className="font-bold">{check.label}:</span>{' '}
                 <span className="font-medium opacity-85">{check.note}</span>
               </p>

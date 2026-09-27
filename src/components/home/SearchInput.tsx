@@ -159,7 +159,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         disabled={isListening || isReadOnly || isGenerating}
         aria-label={isGenerating ? 'Searching for dinner options' : 'Find dinner options'}
         aria-busy={isGenerating}
-        className={`h-11 rounded px-3 text-white text-[10px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center sm:h-auto sm:rounded-none sm:px-5 sm:text-[11px] sm:border-l sm:border-gray-100 ${
+        className={`h-11 rounded px-3 text-white text-[12px] font-semibold uppercase tracking-[0.1em] transition-all flex items-center justify-center sm:h-auto sm:rounded-none sm:px-5 sm:text-[13px] sm:border-l sm:border-gray-100 ${
           isReadOnly ? 'bg-gray-500' : 'bg-dbd-accent hover:bg-dbd-accent-mid active:scale-[0.98]'
         }`}
       >

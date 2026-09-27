@@ -197,11 +197,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           </div>
         ) : showNotes ? (
           <div key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1.5 sm:rounded sm:bg-white sm:border sm:px-2">
-            <p className="text-[10.5px] font-bold text-gray-700 leading-snug">{tidyKitText(item.name)}</p>
-            <p className="mt-0.5 text-[10px] font-medium text-gray-500 leading-snug">{tidyKitText(item.note)}</p>
+            <p className="text-[12px] font-bold text-gray-700 leading-snug">{tidyKitText(item.name)}</p>
+            <p className="mt-0.5 text-[11.5px] font-medium text-gray-500 leading-snug">{tidyKitText(item.note)}</p>
           </div>
         ) : (
-          <span key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1 text-[10.5px] font-medium text-gray-700 leading-snug sm:rounded sm:bg-white sm:border sm:px-2 sm:py-0.5">
+          <span key={`${item.name}-${index}`} className="max-w-full border-b border-gray-100 px-0 py-1 text-[12px] font-medium text-gray-700 leading-snug sm:rounded sm:bg-white sm:border sm:px-2 sm:py-0.5">
             {tidyKitText(item.name)}
           </span>
         )
@@ -219,7 +219,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
               Dinner kit
             </h4>
           </div>
-          <p className="text-[11px] text-gray-500 font-semibold mt-1">
+          <p className="text-[12px] text-gray-500 font-semibold mt-1">
             Main dish, sides and quick finishes in one place.
           </p>
         </div>
@@ -227,7 +227,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
       <div className="grid gap-2.5 sm:gap-3">
         <div className="min-w-0 border-b border-dbd-rule/70 pb-2 sm:rounded sm:bg-white/75 sm:border sm:p-2.5">
-          <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1">
             Core dish
           </p>
           <p className="text-[14px] font-bold text-gray-900 leading-snug">
@@ -237,14 +237,14 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
         <div className="grid gap-2.5 sm:gap-3 sm:grid-cols-2">
           <div className="min-w-0">
-            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1">
               Add alongside
             </p>
             {renderKitItems(kitSides)}
           </div>
 
           <div className="min-w-0">
-            <p className="text-[9.5px] font-bold uppercase tracking-widest text-gray-500 mb-1">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-1">
               Easy upgrades
             </p>
             {renderKitItems(kitUpgrades, false, true)}
@@ -358,6 +358,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           onClick={() => setIsExpanded(false)}
           className="absolute top-4 right-4 z-10 p-1.5 bg-white/80 transition-colors"
           title="Close detail"
+          aria-label="Close recipe details"
         >
           <CircleX size={16} />
         </button>
@@ -372,18 +373,18 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 {recipe.title}
               </h3>
               
-              <p className={`text-[12px] sm:text-[14px] text-gray-500 font-medium leading-snug sm:leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isExpanded ? '' : 'line-clamp-2'}`}>
+              <p className={`text-[14px] sm:text-[14px] text-gray-500 font-medium leading-snug sm:leading-relaxed max-w-2xl lg:max-w-3xl mr-auto w-full text-left ${isExpanded ? '' : 'line-clamp-2'}`}>
                 {recipe.description}
               </p>
 
               {displayMatchReason && (
-                <p className="max-w-2xl lg:max-w-3xl text-[11px] sm:text-[11.5px] text-gray-500 leading-snug">
+                <p className="max-w-2xl lg:max-w-3xl text-[12px] sm:text-[13px] text-gray-500 leading-snug">
                   {displayMatchReason}
                 </p>
               )}
 
               {scheduledDate && (
-                <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] text-accent font-bold bg-accent/5 px-2 py-0.5 rounded w-fit">
+                <div className="flex items-center gap-1.5 text-[12px] sm:text-[13px] text-accent font-bold bg-accent/5 px-2 py-0.5 rounded w-fit">
                   <CalendarCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   <span className="capitalize tracking-tight">Scheduled for {scheduledDate}</span>
                 </div>
@@ -398,7 +399,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                 {/* Row 1: Primary Identity (Cuisine & Source) */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-h-6 justify-start">
                     {shouldShowCuisineLabel && (
-                      <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
+                      <span className="text-[11px] sm:text-[12px] text-gray-500 font-bold uppercase tracking-widest sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                         {recipe.cuisine}
                       </span>
                     )}
@@ -409,13 +410,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                           target="_blank"
                           rel="noreferrer"
                           onClick={(event) => event.stopPropagation()}
-                          className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px] hover:text-dbd-accent hover:underline"
+                          className="text-[11px] sm:text-[12px] text-gray-500 font-bold uppercase tracking-wider truncate max-w-[150px] sm:max-w-[200px] hover:text-dbd-accent hover:underline"
                           aria-label={`Open original recipe for ${recipe.title}`}
                         >
                           Original recipe: {getRecipeSourceLabel(recipe.sourceUrl)}
                         </a>
                       ) : (
-                        <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+                        <span className="text-[11px] sm:text-[12px] text-gray-500 font-bold uppercase tracking-wider">
                           Source unavailable
                         </span>
                       )
@@ -423,7 +424,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                   </div>
                 
                 {/* Row 2: Performance Stats (Nutrition, Price, Time) */}
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 min-h-7 text-[10.5px] sm:text-[11px] text-gray-600 font-medium tracking-tight justify-start">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 min-h-7 text-[12px] sm:text-[13px] text-gray-600 font-medium tracking-tight justify-start">
                     {(recipe.caloriesPerPortion || recipe.calories) && (
                         <Tooltip text="Estimated calories for one adult portion. Actual values vary with ingredients, quantities and brands.">
                         <span className="cursor-help whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
@@ -456,12 +457,12 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                       </span>
                     )}
                     {recipe.saladType && recipe.saladType !== 'none' && (
-                      <span className="text-gray-500 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
+                    <span className="text-gray-500 font-bold uppercase tracking-wider text-[11px] sm:text-[12px] whitespace-nowrap sm:bg-white/70 sm:px-1.5 sm:py-0.5 sm:rounded">
                         {recipe.saladType === 'main' ? 'main salad' : 'side salad'}
                       </span>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 pt-0.5 text-[9.5px] font-semibold leading-tight text-dbd-accent">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 pt-0.5 text-[11px] font-semibold leading-tight text-dbd-accent">
                     <a href="/recipe-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap text-left hover:underline">Recipe information</a>
                     <a href="/pricing-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap text-left hover:underline">Price estimates</a>
                     <a href="/nutrition-methodology" onClick={(e) => e.stopPropagation()} className="min-w-0 whitespace-nowrap text-left hover:underline">Nutrition estimates</a>
@@ -728,10 +729,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
                       {/* Right column: Instructions & Match Reason */}
                        <div className="w-full flex flex-col gap-2 sm:gap-3">
-                        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Preparation</h4>
+                        <h4 className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Preparation</h4>
                         <div>
                           {(recipe as any).totalServings && (
-                            <p className="text-[11px] text-gray-500 mb-1">Makes {(recipe as any).totalServings} adult portions</p>
+                            <p className="text-[12px] text-gray-500 mb-1">Makes {(recipe as any).totalServings} adult portions</p>
                           )}
                           {isEnriching && !currentInstructions.length ? (
                             <div className="flex items-center gap-1.5 py-3 text-[12px] text-gray-500 italic">
@@ -742,7 +743,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                             <ol className="text-[12.5px] text-gray-750 space-y-1.5 sm:space-y-2">
                               {currentInstructions.map((step, i) => (
                                 <li key={`${recipe.title.replace(/\s+/g, '-')}-step-${i}`} className="flex gap-2.5 sm:gap-3">
-                                  <span className="flex-shrink-0 w-5 h-5 rounded bg-gray-100 text-gray-600 text-[10.5px] font-bold flex items-center justify-center">
+                                  <span className="flex-shrink-0 w-5 h-5 rounded bg-gray-100 text-gray-600 text-[11px] font-bold flex items-center justify-center">
                                     {i + 1}
                                   </span>
                                   <span className="leading-snug">{step}</span>
@@ -758,7 +759,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
                     </div>
 
                     <div className="pt-3 sm:pt-4 border-t border-gray-100">
-                      <h4 className="text-[11px] sm:text-[12px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
+                      <h4 className="text-[12px] sm:text-[13px] font-display font-bold text-gray-700 uppercase tracking-widest mb-2">How to plate it</h4>
                       <p className="text-[13px] sm:text-[14px] text-gray-700 leading-relaxed">{tidyKitText(plateSuggestion)}</p>
                     </div>
 
@@ -786,7 +787,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
 
               <button 
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full py-1 text-[11px] text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100"
+                className="w-full py-1 text-[12px] text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all rounded flex items-center justify-center gap-1 border border-transparent hover:border-gray-100"
               >
                 {isExpanded ? (
                   <>Hide <ChevronUp className="w-3 h-3" /></>

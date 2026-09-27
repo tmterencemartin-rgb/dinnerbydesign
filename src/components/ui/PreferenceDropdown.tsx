@@ -56,14 +56,14 @@ export const PreferenceDropdown = ({
   return (
     <div className={`space-y-2 relative ${isOpen ? 'z-50' : 'z-0'}`}>
       <div className="flex items-center justify-between gap-2">
-        <label className={compact ? "block text-[10px] font-bold uppercase tracking-widest text-gray-500" : "block text-[12px] text-gray-500 font-normal"}>{label}</label>
-        {hint && <span className="text-[10px] font-semibold text-gray-500 whitespace-nowrap">{hint}</span>}
+        <label className={compact ? "block text-[11px] font-bold uppercase tracking-widest text-gray-500" : "block text-[12px] text-gray-500 font-normal"}>{label}</label>
+        {hint && <span className="text-[11px] font-semibold text-gray-500 whitespace-nowrap">{hint}</span>}
       </div>
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-full flex items-center justify-between bg-white border border-gray-100 text-gray-700 hover:bg-gray-50 transition-all ${compact ? 'h-10 px-3 text-[12px] font-semibold' : 'px-4 py-2.5 text-[13px]'}`}
+          className={`w-full flex items-center justify-between bg-white border border-gray-100 text-gray-700 hover:bg-gray-50 transition-all ${compact ? 'h-10 px-3 text-[13px] font-semibold' : 'px-4 py-2.5 text-[13px]'}`}
         >
           <span className={`truncate ${((isMulti ? (selected as string[])?.length : selected) ? 'text-gray-900' : 'text-gray-500')}`}>
             {getDisplayValue()}

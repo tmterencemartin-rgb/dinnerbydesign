@@ -194,7 +194,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
         <button 
           onClick={handleSaveAndSchedule}
           disabled={saveDisabled}
-          className={`w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 rounded-none sm:rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border-b sm:border disabled:cursor-not-allowed disabled:opacity-50 ${
+          className={`w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 rounded-none sm:rounded text-[12px] sm:text-[13px] font-bold uppercase tracking-wider transition-all whitespace-nowrap border-b sm:border disabled:cursor-not-allowed disabled:opacity-50 ${
             isSaved 
               ? 'bg-transparent sm:bg-accent text-accent sm:text-white border-accent hover:bg-accent/5 sm:hover:bg-accent/90'
               : 'bg-white text-gray-700 border-gray-100 hover:bg-gray-50'
@@ -215,7 +215,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
             type="button"
             onClick={handleSchedule}
             disabled={saveDisabled}
-            className="w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border-b sm:border border-gray-100 rounded-none sm:rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 whitespace-nowrap"
+            className="w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border-b sm:border border-gray-100 rounded-none sm:rounded text-[12px] sm:text-[13px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 whitespace-nowrap"
           >
             <CalendarCheck className="hidden sm:block w-3.5 h-3.5" />
             <span>{scheduledDate ? 'Reschedule' : 'Schedule'}</span>
@@ -225,7 +225,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
         <button 
           onClick={handleEmailRecipe}
           disabled={isEmailing}
-          className="w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border-b sm:border border-gray-100 rounded-none sm:rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap"
+          className="w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border-b sm:border border-gray-100 rounded-none sm:rounded text-[12px] sm:text-[13px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap"
         >
           {isEmailing ? <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin" /> : <Mail className="hidden sm:block w-3.5 h-3.5" />}
           <span>Email</span>
@@ -233,7 +233,7 @@ export const RecipeActionRow: React.FC<RecipeActionRowProps> = ({
         
         <button 
           onClick={() => handlePrintRecipe(recipe)}
-          className="w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border-b sm:border border-gray-100 rounded-none sm:rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 whitespace-nowrap"
+          className="w-full min-w-0 flex items-center justify-center gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-600 border-b sm:border border-gray-100 rounded-none sm:rounded text-[12px] sm:text-[13px] font-bold uppercase tracking-wider transition-all hover:bg-gray-50 whitespace-nowrap"
         >
           <Printer className="hidden sm:block w-3.5 h-3.5" />
           <span>Print</span>

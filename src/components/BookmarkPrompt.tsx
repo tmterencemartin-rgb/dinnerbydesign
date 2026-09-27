@@ -81,7 +81,7 @@ export const BookmarkPrompt: React.FC = () => {
                 <button
                   type="button"
                   onClick={dismissPermanently}
-                  className="text-[11px] font-bold uppercase tracking-widest text-gray-500 hover:text-dbd-accent transition-colors"
+                  className="text-[12px] font-bold uppercase tracking-widest text-gray-500 hover:text-dbd-accent transition-colors"
                 >
                   Do not show again
                 </button>
