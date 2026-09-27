@@ -76,6 +76,34 @@
       "destination": "https://gen-lang-client-0925408841.firebaseapp.com/__/auth/$1"
     },
     {
+      "source": "/.env",
+      "destination": "/api/missing-asset"
+    },
+    {
+      "source": "/.env.local",
+      "destination": "/api/missing-asset"
+    },
+    {
+      "source": "/.env.production",
+      "destination": "/api/missing-asset"
+    },
+    {
+      "source": "/.env.development",
+      "destination": "/api/missing-asset"
+    },
+    {
+      "source": "/.env.test",
+      "destination": "/api/missing-asset"
+    },
+    {
+      "source": "/.htaccess",
+      "destination": "/api/missing-asset"
+    },
+    {
+      "source": "/server.cts",
+      "destination": "/api/missing-asset"
+    },
+    {
       "source": "/assets/(.*)",
       "destination": "/api/missing-asset"
     },
