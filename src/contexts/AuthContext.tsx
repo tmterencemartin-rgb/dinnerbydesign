@@ -737,6 +737,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const currentFirebaseUser = auth.currentUser;
     const isAnonymous = currentFirebaseUser?.isAnonymous || false;
     const prefersRedirect = typeof window !== 'undefined' && (
+      window.innerWidth <= 768 ||
       window.matchMedia?.('(pointer: coarse)').matches ||
       /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
     );
