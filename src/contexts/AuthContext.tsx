@@ -88,6 +88,8 @@ import {
   updatePantryStapleDocument,
 } from '../lib/pantryWrites';
 import { isSameRecipe } from '../lib/recipeUtils';
+
+const AUTH_POPUP_TIMEOUT_MS = 10000;
 import { clearGuestWorkspace, getGuestRecipeDocumentId, GuestWorkspace, readGuestWorkspace, writeGuestWorkspace } from '../lib/guestWorkspace';
 
 const withProfileLoadTimeout = async <T,>(operation: Promise<T>, label: string): Promise<T> => {
@@ -206,6 +208,24 @@ const buildInitialUserProfile = (firebaseUser: FirebaseUser, details: UserProfil
     searchOnboardingDismissed: false,
     welcomeEmailSent: false
   };
+};
+
+const withPopupTimeout = async <T,>(operation: Promise<T>): Promise<T> => {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<T>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          const timeoutError = new Error('Google sign-in popup did not open');
+          (timeoutError as Error & { code?: string }).code = 'auth/popup-timeout';
+          reject(timeoutError);
+        }, AUTH_POPUP_TIMEOUT_MS);
+      })
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 };
 
 const provisionUserProfileDocument = async (
@@ -765,7 +785,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
           addLog("AUTH: Attempting to link anonymous account...");
           try {
-            const result = await linkWithPopup(currentFirebaseUser, provider);
+            const popupOperation = linkWithPopup(currentFirebaseUser, provider);
+            const result = await (prefersChromePopup ? withPopupTimeout(popupOperation) : popupOperation);
             await migrateGuestWorkspaceToAccount(result.user);
             setUser(result.user);
           addLog("AUTH: linkWithPopup SUCCESS.");
@@ -801,7 +822,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             // Fallback: If credential sign-in fails or is not available, try standard sign-in automatically
             addLog("AUTH: Falling back to automatic popup login...");
             try {
-              const result = await signInWithPopup(auth, provider);
+              const popupOperation = signInWithPopup(auth, provider);
+              const result = await (prefersChromePopup ? withPopupTimeout(popupOperation) : popupOperation);
               await migrateGuestWorkspaceToAccount(result.user);
               setUser(result.user);
               addLog(`AUTH: Automatic popup switch SUCCESS: ${result.user.email}`);
@@ -814,8 +836,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
           }
           
-          if (errorCode === 'auth/popup-blocked') {
-            showToast("Popup blocked. Redirecting to Google sign-in...");
+          if (errorCode === 'auth/popup-blocked' || errorCode === 'auth/popup-timeout') {
+            showToast("Google sign-in did not open. Redirecting to Google sign-in...");
             prepareRedirectUrl();
             await linkWithRedirect(currentFirebaseUser, provider);
             return false;
@@ -837,7 +859,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           addLog("AUTH: Using popup sign-in in Chrome mobile.");
         }
         addLog("AUTH: Standard sign-in...");
-        const result = await signInWithPopup(auth, provider);
+        const popupOperation = signInWithPopup(auth, provider);
+        const result = await (prefersChromePopup ? withPopupTimeout(popupOperation) : popupOperation);
         await migrateGuestWorkspaceToAccount(result.user);
         setUser(result.user);
         addLog(`AUTH: Standard SUCCESS: ${result.user.email}`);
@@ -848,8 +871,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const errorCode = err.code || "";
       const errorMessage = err.message || "";
 
-      if (errorCode === 'auth/popup-blocked') {
-        showToast("Popup blocked. Redirecting to Google sign-in...");
+      if (errorCode === 'auth/popup-blocked' || errorCode === 'auth/popup-timeout') {
+        showToast("Google sign-in did not open. Redirecting to Google sign-in...");
         prepareRedirectUrl();
         await signInWithRedirect(auth, provider);
         return false;
