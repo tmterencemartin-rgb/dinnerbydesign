@@ -741,6 +741,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       window.matchMedia?.('(pointer: coarse)').matches ||
       /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
     );
+    const prepareRedirectUrl = () => {
+      const redirectUrl = new URL(window.location.href);
+      redirectUrl.searchParams.set('authAttempt', String(Date.now()));
+      window.history.replaceState(window.history.state, '', redirectUrl.toString());
+    };
     
     try {
       addLog(`AUTH: Initiating Google Sign-In. User: ${currentFirebaseUser?.uid}, Anon: ${isAnonymous}`);
@@ -748,6 +753,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (currentFirebaseUser && isAnonymous) {
           if (prefersRedirect) {
             addLog("AUTH: Using redirect to link the browser workspace on a mobile device.");
+            prepareRedirectUrl();
             await linkWithRedirect(currentFirebaseUser, provider);
             return false;
           }
@@ -804,6 +810,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           
           if (errorCode === 'auth/popup-blocked') {
             showToast("Popup blocked. Redirecting to Google sign-in...");
+            prepareRedirectUrl();
             await linkWithRedirect(currentFirebaseUser, provider);
             return false;
           } else if (errorCode === 'auth/cancelled-popup-request' || errorCode === 'auth/popup-closed-by-user') {
@@ -816,6 +823,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         if (prefersRedirect) {
           addLog("AUTH: Using redirect sign-in on a mobile device.");
+          prepareRedirectUrl();
           await signInWithRedirect(auth, provider);
           return false;
         }
@@ -833,6 +841,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (errorCode === 'auth/popup-blocked') {
         showToast("Popup blocked. Redirecting to Google sign-in...");
+        prepareRedirectUrl();
         await signInWithRedirect(auth, provider);
         return false;
       } else if (errorCode === 'auth/cancelled-popup-request' || errorCode === 'auth/popup-closed-by-user') {
@@ -873,6 +882,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     getRedirectResult(auth)
       .then(async (result) => {
+        const returnUrl = new URL(window.location.href);
+        if (returnUrl.searchParams.has('authAttempt')) {
+          returnUrl.searchParams.delete('authAttempt');
+          window.history.replaceState(window.history.state, '', returnUrl.toString());
+        }
         if (!isCurrent || !result?.user) return;
         await migrateGuestWorkspaceToAccount(result.user);
         setUser(result.user);
@@ -880,6 +894,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       })
       .catch((redirectError: any) => {
         if (!isCurrent) return;
+        const returnUrl = new URL(window.location.href);
+        if (returnUrl.searchParams.has('authAttempt')) {
+          returnUrl.searchParams.delete('authAttempt');
+          window.history.replaceState(window.history.state, '', returnUrl.toString());
+        }
         addLog(`AUTH ERROR: Redirect result failed code: ${redirectError?.code || 'unknown'}`);
         setError('Google sign-in could not be completed. Please try again.');
       });
