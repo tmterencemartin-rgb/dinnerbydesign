@@ -8,6 +8,12 @@ import { getClientErrorKind, reportClientError } from './lib/clientErrorTelemetr
 
 configureNativeApp();
 
+const recoveryUrl = new URL(window.location.href);
+if (recoveryUrl.searchParams.has('appReload')) {
+  recoveryUrl.searchParams.delete('appReload');
+  window.history.replaceState(window.history.state, '', recoveryUrl.toString());
+}
+
 // Add global error handlers to help debug "Script error" issues
 window.addEventListener('error', (event) => {
   const { message, filename, lineno, colno, error } = event;

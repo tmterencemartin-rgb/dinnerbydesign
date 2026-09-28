@@ -70,12 +70,14 @@ export class AppErrorBoundary extends Component<Props, State> {
   private recoverFromStaleBundle = async () => {
     try {
       await clearStaleClientCaches();
-    } catch (recoveryError) {
-      console.warn('[AppErrorBoundary] Could not clear stale browser caches:', recoveryError);
-    } finally {
-      window.location.reload();
-    }
-  };
+  } catch (recoveryError) {
+    console.warn('[AppErrorBoundary] Could not clear stale browser caches:', recoveryError);
+  } finally {
+      const recoveryUrl = new URL(window.location.href);
+      recoveryUrl.searchParams.set('appReload', Date.now().toString());
+      window.location.replace(recoveryUrl.toString());
+  }
+};
 
   private handleReload = () => {
     if (isStaleBundleError(this.state.error)) {
