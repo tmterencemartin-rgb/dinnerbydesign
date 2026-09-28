@@ -15,6 +15,9 @@ test.describe('public accessibility', () => {
     test(`${route.name} has no WCAG 2 A/AA violations`, async ({ page }) => {
       await page.goto(route.path);
       await expect(page.getByRole('main')).toBeVisible();
+      await page.addStyleTag({
+        content: '*,:before,:after { animation: none !important; transition: none !important; }',
+      });
       await page.waitForTimeout(1000);
 
       const results = await new AxeBuilder({ page })
