@@ -485,7 +485,7 @@ export const LandingView: React.FC = () => {
       <section id="interactive-sandbox" className="order-2 pt-0 pb-10 px-4 sm:px-6 md:px-8">
         <div className="max-w-3xl mx-auto">
           
-          <div className="text-center mb-5 text-[11px] font-ibm-plex-mono font-bold uppercase tracking-[0.2em] text-dbd-accent-mid select-none">
+          <div className="text-center mb-5 text-[11px] font-ibm-plex-mono font-bold uppercase tracking-[0.2em] text-dbd-accent select-none">
             — See It Work —
           </div>
 
@@ -572,7 +572,7 @@ export const LandingView: React.FC = () => {
                     <button
                       key={tag}
                       onClick={() => selectSandboxTag(tag)}
-                      className={`inline-flex text-[11px] sm:text-[12px] font-mono px-0 py-0 sm:px-3 sm:py-2 border-0 sm:border rounded-none sm:rounded-sm underline underline-offset-2 sm:no-underline transition-all cursor-pointer ${sandboxQuery === tag ? 'text-dbd-accent font-bold sm:bg-dbd-accent/10 sm:border-dbd-accent' : 'text-dbd-accent sm:bg-white sm:border-dbd-rule/80 sm:text-dbd-ink-2 hover:text-dbd-accent-mid sm:hover:border-dbd-ink sm:hover:text-dbd-ink'}`}
+                      className={`inline-flex text-[11px] sm:text-[12px] font-mono px-0 py-0 sm:px-3 sm:py-2 border-0 sm:border rounded-none sm:rounded-sm underline underline-offset-2 sm:no-underline transition-all cursor-pointer ${sandboxQuery === tag ? 'text-dbd-accent font-bold sm:bg-dbd-accent-light sm:border-dbd-accent' : 'text-dbd-accent sm:bg-white sm:border-dbd-rule/80 sm:text-dbd-ink-2 hover:text-dbd-accent-mid sm:hover:border-dbd-ink sm:hover:text-dbd-ink'}`}
                     >
                       {tag}
                     </button>
@@ -747,9 +747,9 @@ export const LandingView: React.FC = () => {
                 <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <SearchIcon className="w-5 h-5" />
                 </div>
-                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent-mid font-bold sm:hidden">01</span>
+                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent font-bold sm:hidden">01</span>
                 <div className="flex items-center gap-2 mb-1 sm:mb-3">
-                  <span className="hidden text-[11px] font-mono text-dbd-accent-mid font-bold sm:inline">01</span>
+                  <span className="hidden text-[11px] font-mono text-dbd-accent font-bold sm:inline">01</span>
                   <h4 className="text-[14px] sm:text-[15px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-ink">
                     Search
                   </h4>
@@ -766,9 +766,9 @@ export const LandingView: React.FC = () => {
                 <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <CalendarIcon className="w-5 h-5" />
                 </div>
-                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent-mid font-bold sm:hidden">02</span>
+                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent font-bold sm:hidden">02</span>
                 <div className="flex items-center gap-2 mb-1 sm:mb-3">
-                  <span className="hidden text-[11px] font-mono text-dbd-accent-mid font-bold sm:inline">02</span>
+                  <span className="hidden text-[11px] font-mono text-dbd-accent font-bold sm:inline">02</span>
                   <h4 className="text-[14px] sm:text-[15px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-ink">
                     Save & Schedule
                   </h4>
@@ -785,9 +785,9 @@ export const LandingView: React.FC = () => {
                 <div className="hidden bg-dbd-accent-light text-dbd-accent w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:flex items-center justify-center sm:mb-6">
                   <ShoppingCartIcon className="w-5 h-5" />
                 </div>
-                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent-mid font-bold sm:hidden">03</span>
+                <span className="pt-0.5 text-[11px] font-mono text-dbd-accent font-bold sm:hidden">03</span>
                 <div className="flex items-center gap-2 mb-1 sm:mb-3">
-                  <span className="hidden text-[11px] font-mono text-dbd-accent-mid font-bold sm:inline">03</span>
+                  <span className="hidden text-[11px] font-mono text-dbd-accent font-bold sm:inline">03</span>
                   <h4 className="text-[14px] sm:text-[15px] font-ibm-plex-mono font-bold uppercase tracking-wider text-dbd-ink">
                     Shopping
                   </h4>

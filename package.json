@@ -26,8 +26,8 @@
     "express": "^5.2.1",
     "firebase": "^12.15.0",
     "firebase-admin": "^14.2.0",
-    "google-auth-library": "^10.6.2",
     "framer-motion": "^12.42.0",
+    "google-auth-library": "^10.6.2",
     "lucide-react": "^0.546.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -36,6 +36,7 @@
     "wouter": "^3.10.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@capacitor/browser": "^6.0.6",
     "@capacitor/cli": "^6.2.1",
     "@capacitor/core": "^6.2.1",

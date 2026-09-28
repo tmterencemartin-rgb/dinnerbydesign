@@ -41,6 +41,7 @@ const CapabilityMark: React.FC<{ available: boolean; compact?: boolean }> = ({ a
     className={compact
       ? `inline-flex items-center justify-center ${available ? 'text-emerald-700' : 'text-red-700'}`
       : `inline-flex h-7 w-7 items-center justify-center rounded-full ${available ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}
+    role="img"
     aria-label={available ? 'Included' : 'Not normally included'}
   >
     {available ? <Check size={compact ? 16 : 17} strokeWidth={2.5} aria-hidden="true" /> : <X size={compact ? 15 : 16} strokeWidth={2.5} aria-hidden="true" />}
