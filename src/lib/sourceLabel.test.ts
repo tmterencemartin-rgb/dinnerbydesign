@@ -11,6 +11,7 @@ describe('getRecipeSourceLabel', () => {
   });
 
   it('uses a readable publisher name when it is recognised', () => {
+    expect(getRecipeSourcePublisher('https://www.goodto.com/food/recipes/chicken-curry')).toBe('Goodto');
     expect(getRecipeSourcePublisher('https://www.bbcgoodfood.com/recipes/example')).toBe('BBC Good Food');
     expect(getRecipeSourcePublisher('https://www.nigella.com/recipes/example')).toBe('Nigella Lawson');
     expect(getRecipeSourcePublisher('https://www.recipetineats.com/example')).toBe('RecipeTin Eats');

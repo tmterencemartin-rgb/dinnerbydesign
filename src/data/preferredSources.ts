@@ -6,6 +6,11 @@ export type PreferredSource = {
 
 export const PREFERRED_SOURCES: PreferredSource[] = [
   {
+    id: "goodto",
+    label: "Goodto",
+    description: "Tested UK recipes with practical filters for ingredients, occasions and dietary needs."
+  },
+  {
     id: "bbc_good_food",
     label: "BBC Good Food",
     description: "Big, reliable collection of everyday UK recipes with sensible ingredients."

@@ -4,6 +4,7 @@ export type GroundedSource = {
 };
 
 export const APPROVED_RECIPE_PUBLISHER_HOSTS = [
+  'goodto.com',
   'bbcgoodfood.com',
   'bbc.co.uk',
   'tescorealfood.com',

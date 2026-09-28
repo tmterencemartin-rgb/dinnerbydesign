@@ -4,6 +4,7 @@ const INTERNAL_GROUNDING_HOSTS = new Set([
 ]);
 
 const PUBLISHER_LABELS: Array<[string, string]> = [
+  ['goodto.com', 'Goodto'],
   ['bbcgoodfood.com', 'BBC Good Food'],
   ['bbc.co.uk', 'BBC Food'],
   ['realfood.tesco.com', 'Tesco Real Food'],
