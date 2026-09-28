@@ -182,6 +182,13 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();
   });
 
+  test('mobile Google sign-in reaches the redirect handler without submitting credentials', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/signin?mode=signin');
+    await page.getByRole('button', { name: 'Continue with Google' }).click();
+    await expect(page).toHaveURL(/\/__\/auth\/handler/, { timeout: 12_000 });
+  });
+
   test('planner and shopping views open without saving or scheduling a recipe', async ({ page }) => {
     await page.goto('/?view=home');
     await page.getByRole('button', { name: 'Save & Schedule' }).click();
