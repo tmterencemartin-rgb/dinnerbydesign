@@ -741,6 +741,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       window.matchMedia?.('(pointer: coarse)').matches ||
       /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
     );
+    const prefersChromePopup = prefersRedirect &&
+      /Chrome|CriOS/i.test(navigator.userAgent) &&
+      !/Edg|OPR|SamsungBrowser/i.test(navigator.userAgent);
     const prepareRedirectUrl = () => {
       const redirectUrl = new URL(window.location.href);
       redirectUrl.searchParams.set('authAttempt', String(Date.now()));
@@ -751,11 +754,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       addLog(`AUTH: Initiating Google Sign-In. User: ${currentFirebaseUser?.uid}, Anon: ${isAnonymous}`);
       
       if (currentFirebaseUser && isAnonymous) {
-          if (prefersRedirect) {
+          if (prefersRedirect && !prefersChromePopup) {
             addLog("AUTH: Using redirect to link the browser workspace on a mobile device.");
             prepareRedirectUrl();
             await linkWithRedirect(currentFirebaseUser, provider);
             return false;
+          }
+          if (prefersChromePopup) {
+            addLog("AUTH: Using popup to link the browser workspace in Chrome mobile.");
           }
           addLog("AUTH: Attempting to link anonymous account...");
           try {
@@ -821,11 +827,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         }
       } else {
-        if (prefersRedirect) {
+        if (prefersRedirect && !prefersChromePopup) {
           addLog("AUTH: Using redirect sign-in on a mobile device.");
           prepareRedirectUrl();
           await signInWithRedirect(auth, provider);
           return false;
+        }
+        if (prefersChromePopup) {
+          addLog("AUTH: Using popup sign-in in Chrome mobile.");
         }
         addLog("AUTH: Standard sign-in...");
         const result = await signInWithPopup(auth, provider);

@@ -182,11 +182,18 @@ test.describe('monitoring-safe production checks', () => {
     await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();
   });
 
-  test('mobile Google sign-in continues past the redirect handler without submitting credentials', async ({ page }) => {
+  test('mobile Google sign-in opens the Google handoff without submitting credentials', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/signin?mode=signin');
+    const popupPromise = page.waitForEvent('popup', { timeout: 10_000 }).catch(() => null);
     await page.getByRole('button', { name: 'Continue with Google' }).click();
-    await expect(page).toHaveURL(/accounts\.google\.com/, { timeout: 12_000 });
+    const popup = await popupPromise;
+    if (popup) {
+      await expect(popup).toHaveURL(/accounts\.google\.com/, { timeout: 12_000 });
+      await popup.close();
+    } else {
+      await expect(page).toHaveURL(/accounts\.google\.com/, { timeout: 12_000 });
+    }
   });
 
   test('planner and shopping views open without saving or scheduling a recipe', async ({ page }) => {
