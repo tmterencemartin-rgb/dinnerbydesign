@@ -334,7 +334,7 @@ export const LandingView: React.FC = () => {
               >
                 <Wordmark className="text-[29.33px]" />
               </motion.div>
-              <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-center text-[11px] font-medium tracking-[0.035em] text-dbd-ink-3">
+              <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-left text-[11px] font-medium tracking-[0.035em] text-dbd-ink-3">
                 Less searching. More relevant dinners.
               </span>
             </div>

@@ -80,7 +80,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, view, setView, onNewSe
                 >
                   <Wordmark className="text-[29.33px]" />
                 </motion.div>
-                <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-center text-[9px] font-medium tracking-[0.035em] text-dbd-ink-3">Less searching. More relevant dinners.</span>
+                <span className="mt-1 ml-[28.75px] block w-[calc(100%-28.75px)] whitespace-nowrap text-left text-[9px] font-medium tracking-[0.035em] text-dbd-ink-3">Less searching. More relevant dinners.</span>
               </div>
             </button>
             
