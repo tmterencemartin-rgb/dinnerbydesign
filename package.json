@@ -66,6 +66,7 @@
   },
   "overrides": {
     "@xmldom/xmldom": "0.9.12",
+    "@grpc/grpc-js": "1.14.5",
     "browserslist": "4.28.8",
     "nanoid": "3.3.18",
     "qs": "6.16.0",
