@@ -5,7 +5,6 @@ export type GroundedSource = {
 
 export const APPROVED_RECIPE_PUBLISHER_HOSTS = [
   'goodto.com',
-  'bbcgoodfood.com',
   'bbc.co.uk',
   'tescorealfood.com',
   'realfood.tesco.com',
@@ -54,6 +53,8 @@ const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set<string>(APPROVED_RECIPE_PUBLISHER
 // They currently require a trial, payment or an app hand-off that cannot be
 // relied on to reach a usable recipe page for every visitor.
 const BLOCKED_RECIPE_PUBLISHER_HOSTS = new Set([
+  'bbcgoodfood.com',
+  'tollbit.bbcgoodfood.com',
   'mob.co.uk',
   'waitrose.com',
   'telegraph.co.uk',

@@ -37,14 +37,14 @@ describe('grounded source URL reconciliation', () => {
 
   it('accepts only recognised recipe-publisher domains when no grounding record is available', () => {
     expect(isTrustedRecipePublisherUrl('https://www.goodto.com/food/recipes/chicken-curry')).toBe(true);
-    expect(isTrustedRecipePublisherUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
+    expect(isTrustedRecipePublisherUrl('https://www.bbc.co.uk/food/recipes/haddock-potato-bake')).toBe(true);
     expect(isTrustedRecipePublisherUrl('https://realfood.tesco.com/recipes/example')).toBe(true);
     expect(isTrustedRecipePublisherUrl('https://example.com/haddock-potato-bake')).toBe(false);
   });
 
   it('accepts only direct recipe pages from approved publishers when grounding metadata is absent', () => {
     expect(isApprovedDirectRecipeUrl('https://www.goodto.com/food/recipes/chicken-curry')).toBe(true);
-    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(true);
+    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.kitchensanctuary.com/creamy-garlic-scallops/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.waitrose.com/ecom/recipes/roast-chicken')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.asda.com/good-living/recipes/sausage-and-bean-stew')).toBe(true);
@@ -97,10 +97,7 @@ describe('grounded source URL reconciliation', () => {
       'https://www.bbcgoodfood.com/recipes/healthy-one-pan-roast-chicken',
       request
     )).resolves.toBeNull();
-    expect(request).toHaveBeenCalledWith(
-      'https://www.bbcgoodfood.com/recipes/healthy-one-pan-roast-chicken',
-      expect.objectContaining({ method: 'HEAD', redirect: 'follow' })
-    );
+    expect(request).not.toHaveBeenCalled();
   });
 
   it('rejects untrusted and premium publisher URLs before making a network request', async () => {
@@ -156,10 +153,7 @@ describe('grounded source URL reconciliation', () => {
       });
 
     await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBeNull();
-    expect(request).toHaveBeenLastCalledWith(sourceUrl, expect.objectContaining({
-      method: 'GET',
-      redirect: 'follow'
-    }));
+    expect(request).not.toHaveBeenCalled();
   });
 
   it('rejects a page that reports it is missing despite a successful response', async () => {

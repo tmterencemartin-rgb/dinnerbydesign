@@ -212050,7 +212050,6 @@ var filterCookingFatsForDiet = (dietaryRule, fats) => fats.filter((fat) => dieta
 // src/lib/groundingUtils.ts
 var APPROVED_RECIPE_PUBLISHER_HOSTS = [
   "goodto.com",
-  "bbcgoodfood.com",
   "bbc.co.uk",
   "tescorealfood.com",
   "realfood.tesco.com",
@@ -212094,6 +212093,8 @@ var APPROVED_RECIPE_PUBLISHER_HOSTS = [
 ];
 var TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set(APPROVED_RECIPE_PUBLISHER_HOSTS);
 var BLOCKED_RECIPE_PUBLISHER_HOSTS = /* @__PURE__ */ new Set([
+  "bbcgoodfood.com",
+  "tollbit.bbcgoodfood.com",
   "mob.co.uk",
   "waitrose.com",
   "telegraph.co.uk",
