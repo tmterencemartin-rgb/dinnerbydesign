@@ -210615,6 +210615,7 @@ function parseAndNormaliseIngredients(query2) {
       "chuck roasts": "chuck roast",
       "braising steaks": "braising steak",
       "stewing steaks": "stewing steak",
+      "stewing steak": "beef stewing steak",
       "frying steaks": "frying steak",
       "minute steaks": "minute steak",
       "beef shins": "beef shin",
@@ -210879,6 +210880,8 @@ var UNSEPARATED_INGREDIENT_PHRASES = /* @__PURE__ */ new Set([
   "red bean",
   "butter bean",
   "butterbeans",
+  "stewing steak",
+  "beef stewing steak",
   "kidney bean",
   "black bean",
   "baked bean",
@@ -211254,6 +211257,7 @@ var PROTEIN_CATEGORY_TERMS = /* @__PURE__ */ new Set([
   "turkey",
   "venison",
   "white fish",
+  "stewing steak",
   "tempeh",
   "edamame",
   "quinoa",
@@ -211460,7 +211464,7 @@ function detectIngredientIntent(query2) {
   const ingredients = parseAndNormaliseIngredients(withoutLeadIn || categoryNormalisedQuery).map((item) => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, "").trim()).filter((item) => item.length > 1 && item.split(/\s+/).length <= 3);
   const shortIngredientQuery = withoutLeadIn || categoryNormalisedQuery;
   const recipeWordsRemovedQuery = cleanedQuery.replace(/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/gi, " ").replace(/\s+/g, " ").trim();
-  const standaloneIngredients = /\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/i.test(cleanedQuery) ? parseAndNormaliseIngredients(recipeWordsRemovedQuery) : ingredients;
+  const standaloneIngredients = ingredients;
   const unseparatedWords = shortIngredientQuery.split(/\s+/).filter((word) => !/^and$/i.test(word));
   const unseparatedIngredients = parseUnseparatedIngredientList(shortIngredientQuery);
   const categoryMetadata = Object.keys(categoryMinimums).length > 0 ? { categoryMinimums } : {};
@@ -211468,7 +211472,7 @@ function detectIngredientIntent(query2) {
   if (isShortUnseparatedIngredientList) {
     return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
   }
-  const isStandaloneIngredientSearch = !hasListPunctuation && !ingredientPhrases.test(trimmed) && (!/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery) || standaloneIngredients.length === 1 && recipeWordsRemovedQuery.split(/\s+/).length === 1) && standaloneIngredients.length === 1 && (unseparatedWords.length === 1 || recipeWordsRemovedQuery.split(/\s+/).length === 1) && UNSEPARATED_INGREDIENT_TERMS.has(standaloneIngredients[0]) && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(standaloneIngredients[0]);
+  const isStandaloneIngredientSearch = !hasListPunctuation && !ingredientPhrases.test(trimmed) && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery) && standaloneIngredients.length === 1 && unseparatedWords.length === 1 && UNSEPARATED_INGREDIENT_TERMS.has(standaloneIngredients[0]) && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(standaloneIngredients[0]);
   if (isStandaloneIngredientSearch) {
     return { isIngredientLed: true, ingredients: standaloneIngredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
   }
@@ -211911,18 +211915,20 @@ var CHICKEN_CUT_VARIANT_WORDS = /* @__PURE__ */ new Set([
   "heart",
   "neck"
 ]);
-var stripIngredientQuantity = (value) => value.replace(/^\s*\d+\s*x\s*\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\s*/i, "").replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:x\s*)?(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, "").replace(/\([^)]*\)/g, " ").replace(/^\s*(?:(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+)?(?:tin|tins|can|cans|jar|jars|pack|packs|packet|packets)\s+(?:of\s+)?/i, "").replace(/[•*]/g, " ").replace(/\s+/g, " ").trim();
+var stripIngredientQuantity = (value) => value.replace(/^\s*\d+\s*x\s*\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\s*/i, "").replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:x\s*)?(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, "").replace(/\([^)]*\)/g, " ").replace(/^\s*(?:(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+)?(?:tin|tins|can|cans|jar|jars|pack|packs|packet|packets)\s+(?:of\s+)?/i, "").replace(/^\s*(?:(?:large|medium|small|firm|block|whole)\s+)+/i, "").replace(/^\s*\d+(?:\.\d+)?\s+/i, "").replace(/[•*]/g, " ").replace(/\s+/g, " ").trim();
 var normaliseStrictIngredientLine = (value) => {
-  const stripped = stripIngredientQuantity(value);
+  const stripped = stripIngredientQuantity(value).replace(/^\s*\d+(?:\.\d+)?\s+/i, "");
   const parsed = parseAndNormaliseIngredients(stripped);
-  return parsed.length > 0 ? parsed : [stripped.toLowerCase()];
+  const cleaned = (parsed.length > 0 ? parsed : [stripped.toLowerCase()]).map((item) => item.replace(/^\s*\d+(?:\.\d+)?\s+/i, "").trim()).filter(Boolean);
+  return cleaned.length > 0 ? cleaned : [stripped.toLowerCase()];
 };
 var isPantryStaple = (value) => {
   const normalised = value.trim().toLowerCase();
   return PANTRY_STAPLE_PATTERN.test(normalised) || /^(?:(?:freshly|coarsely|finely)\s+)?ground\s+(?:black|white)?\s*pepper$/i.test(normalised) || /^(?:sea|fine|coarse)\s+salt$/i.test(normalised) || normalised.split(/\s+/).every((word) => INGREDIENT_MODIFIER_PATTERN.test(word));
 };
 var matchesAllowedIngredient = (value, allowed2) => {
-  const valueWithoutPreparation = extractIngredientPreparationPreferences(value).cleanedQuery;
+  const valueWithoutQuantity = value.replace(/^\s*\d+(?:\.\d+)?\s+/i, "");
+  const valueWithoutPreparation = extractIngredientPreparationPreferences(valueWithoutQuantity).cleanedQuery;
   const valueWords = valueWithoutPreparation.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedWords = allowed2.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedKey = allowedWords.join(" ");
@@ -211980,7 +211986,10 @@ function matchesRequestedIngredientSearch(item, query2) {
     item.description || ""
   ].filter(Boolean);
   if (ingredientLines.length === 0) return false;
-  const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const normalisedLines = ingredientLines.flatMap((line) => [
+    ...normaliseStrictIngredientLine(line),
+    ...parseAndNormaliseIngredients(line.replace(/^\s*\d+(?:\.\d+)?\s+/i, ""))
+  ]);
   const normalisedRecipeIngredients = recipeIngredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
   const requestedPreparation = intent.preparationPreferences;

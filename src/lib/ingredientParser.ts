@@ -297,6 +297,7 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       'chuck roasts': 'chuck roast',
       'braising steaks': 'braising steak',
       'stewing steaks': 'stewing steak',
+      'stewing steak': 'beef stewing steak',
       'frying steaks': 'frying steak',
       'minute steaks': 'minute steak',
       'beef shins': 'beef shin',
@@ -489,7 +490,7 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
 
 const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   // Vegetables, pulses and fruit
-  'green bean', 'red bean', 'butter bean', 'butterbeans', 'kidney bean', 'black bean', 'baked bean',
+  'green bean', 'red bean', 'butter bean', 'butterbeans', 'stewing steak', 'beef stewing steak', 'kidney bean', 'black bean', 'baked bean',
   'cannellini bean', 'haricot bean', 'broad bean', 'fava bean', 'mixed bean',
   'chickpea', 'sweetcorn', 'red pepper', 'green pepper', 'yellow pepper', 'bell pepper', 'sweet pepper', 'sugar snap', 'mange tout',
   'red onion', 'white onion', 'spring onion',
@@ -614,7 +615,7 @@ const PROTEIN_CATEGORY_TERMS = new Set([
   'anchovy', 'bacon', 'beef', 'bean', 'chickpea', 'chorizo', 'chicken', 'crab', 'duck', 'egg',
   'game', 'haddock', 'ham', 'hake', 'herring', 'lamb', 'lentil', 'lobster', 'mackerel', 'monkfish',
   'mussel', 'oyster', 'pancetta', 'pea', 'pork', 'prawn', 'rabbit', 'salmon', 'sausage', 'scallop',
-  'seitan', 'sardine', 'squid', 'tofu', 'trout', 'tuna', 'turkey', 'venison', 'white fish',
+  'seitan', 'sardine', 'squid', 'tofu', 'trout', 'tuna', 'turkey', 'venison', 'white fish', 'stewing steak',
   'tempeh', 'edamame', 'quinoa', 'almond', 'cashew', 'peanut', 'walnut', 'pistachio'
 ]);
 
@@ -767,9 +768,7 @@ export function detectIngredientIntent(query: string): {
     .replace(/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();
-  const standaloneIngredients = /\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/i.test(cleanedQuery)
-    ? parseAndNormaliseIngredients(recipeWordsRemovedQuery)
-    : ingredients;
+  const standaloneIngredients = ingredients;
   const unseparatedWords = shortIngredientQuery.split(/\s+/).filter(word => !/^and$/i.test(word));
   const unseparatedIngredients = parseUnseparatedIngredientList(shortIngredientQuery);
   const categoryMetadata = Object.keys(categoryMinimums).length > 0 ? { categoryMinimums } : {};
@@ -788,10 +787,9 @@ export function detectIngredientIntent(query: string): {
   const isStandaloneIngredientSearch =
     !hasListPunctuation
     && !ingredientPhrases.test(trimmed)
-    && (!/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery)
-      || (standaloneIngredients.length === 1 && recipeWordsRemovedQuery.split(/\s+/).length === 1))
+    && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery)
     && standaloneIngredients.length === 1
-    && (unseparatedWords.length === 1 || recipeWordsRemovedQuery.split(/\s+/).length === 1)
+    && unseparatedWords.length === 1
     && UNSEPARATED_INGREDIENT_TERMS.has(standaloneIngredients[0])
     && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(standaloneIngredients[0]);
 
@@ -961,14 +959,19 @@ const stripIngredientQuantity = (value: string) => value
   .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:x\s*)?(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, '')
   .replace(/\([^)]*\)/g, ' ')
   .replace(/^\s*(?:(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+)?(?:tin|tins|can|cans|jar|jars|pack|packs|packet|packets)\s+(?:of\s+)?/i, '')
+  .replace(/^\s*(?:(?:large|medium|small|firm|block|whole)\s+)+/i, '')
+  .replace(/^\s*\d+(?:\.\d+)?\s+/i, '')
   .replace(/[•*]/g, ' ')
   .replace(/\s+/g, ' ')
   .trim();
 
 const normaliseStrictIngredientLine = (value: string) => {
-  const stripped = stripIngredientQuantity(value);
+  const stripped = stripIngredientQuantity(value).replace(/^\s*\d+(?:\.\d+)?\s+/i, '');
   const parsed = parseAndNormaliseIngredients(stripped);
-  return parsed.length > 0 ? parsed : [stripped.toLowerCase()];
+  const cleaned = (parsed.length > 0 ? parsed : [stripped.toLowerCase()])
+    .map(item => item.replace(/^\s*\d+(?:\.\d+)?\s+/i, '').trim())
+    .filter(Boolean);
+  return cleaned.length > 0 ? cleaned : [stripped.toLowerCase()];
 };
 
 const isPantryStaple = (value: string) => {
@@ -980,7 +983,8 @@ const isPantryStaple = (value: string) => {
 };
 
 const matchesAllowedIngredient = (value: string, allowed: string) => {
-  const valueWithoutPreparation = extractIngredientPreparationPreferences(value).cleanedQuery;
+  const valueWithoutQuantity = value.replace(/^\s*\d+(?:\.\d+)?\s+/i, '');
+  const valueWithoutPreparation = extractIngredientPreparationPreferences(valueWithoutQuantity).cleanedQuery;
   const valueWords = valueWithoutPreparation.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedWords = allowed.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedKey = allowedWords.join(' ');
@@ -1077,7 +1081,10 @@ export function matchesRequestedIngredientSearch(item: { ingredients?: string[];
   ].filter(Boolean);
   if (ingredientLines.length === 0) return false;
 
-  const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const normalisedLines = ingredientLines.flatMap(line => [
+    ...normaliseStrictIngredientLine(line),
+    ...parseAndNormaliseIngredients(line.replace(/^\s*\d+(?:\.\d+)?\s+/i, ''))
+  ]);
   const normalisedRecipeIngredients = recipeIngredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
   const requestedPreparation = intent.preparationPreferences;
