@@ -92,6 +92,10 @@ const REFUND_REQUEST_LEASE_MS = 10 * 60 * 1000;
 const ENRICHMENT_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const ENRICHMENT_CACHE_MAX_ENTRIES = 500;
 const enrichmentCache = new Map<string, { result: any; expiresAt: number }>();
+const enrichmentInFlight = new Map<string, Promise<any>>();
+const isCacheableEnrichment = (result: any) =>
+  Array.isArray(result?.instructions) && result.instructions.length > 0
+  && Array.isArray(result?.ingredients) && result.ingredients.length > 0;
 
 const getEnrichmentCacheKey = (title: string, cuisine: string, mode: string, options: ReturnType<typeof parseEnrichmentRequestOptions>) => {
   const sourceUrl = canonicaliseGroundedUrl(options.sourceUrl);
@@ -470,6 +474,23 @@ async function verifySearchIdentity(req: express.Request, res: express.Response)
     return { uid: decoded.uid, isAnonymous: true, guestSearchCount: count };
   } catch (error) {
     console.error("[SearchAuth] Token verification failed:", error);
+    res.status(401).json({ ok: false, error: "Please refresh the page and try again." });
+    return null;
+  }
+}
+
+async function verifyRequestIdentity(req: express.Request, res: express.Response) {
+  const authorization = req.get("authorization") || "";
+  const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+  if (!token) {
+    res.status(401).json({ ok: false, error: "Please refresh the page and try again." });
+    return null;
+  }
+  try {
+    const decoded = await getAdminAuth().verifyIdToken(token);
+    return { uid: decoded.uid, isAnonymous: decoded.firebase?.sign_in_provider === "anonymous" };
+  } catch (error) {
+    console.error('[RequestAuth] Token verification failed:', error);
     res.status(401).json({ ok: false, error: "Please refresh the page and try again." });
     return null;
   }
@@ -2133,8 +2154,8 @@ export function createApp() {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
       if (!await verifySearchAppCheck(req, res)) return;
-      const searchIdentity = await verifySearchIdentity(req, res);
-      if (!searchIdentity) return;
+      const requestIdentity = await verifyRequestIdentity(req, res);
+      if (!requestIdentity) return;
       const validation = validateEnrichmentRequestPayload(req.body);
       if ('code' in validation) {
         return res.status(400).json({
@@ -2153,6 +2174,7 @@ export function createApp() {
       const cacheKey = getEnrichmentCacheKey(title, cuisine, mode, options);
       const cached = cacheKey ? enrichmentCache.get(cacheKey) : null;
       if (cached && cached.expiresAt > Date.now()) {
+        console.log(`[EnrichmentCache] cache_hit ${cacheKey}`);
         const checkedUrl = options.sourceUrl
           ? await confirmPublisherRecipePageUrl(options.sourceUrl)
           : options.sourceUrl;
@@ -2162,8 +2184,22 @@ export function createApp() {
         enrichmentCache.delete(cacheKey!);
       }
 
-      const result = await enrichRecipe(title, cuisine, mode, options);
-      if (cacheKey) {
+      if (cacheKey) console.log(`[EnrichmentCache] cache_miss ${cacheKey}`);
+
+      let pending = cacheKey ? enrichmentInFlight.get(cacheKey) : undefined;
+      const startedHere = !pending;
+      if (pending) console.log(`[EnrichmentCache] shared_inflight ${cacheKey}`);
+      if (!pending) {
+        pending = enrichRecipe(title, cuisine, mode, options);
+        if (cacheKey) enrichmentInFlight.set(cacheKey, pending);
+      }
+      let result: any;
+      try {
+        result = await pending;
+      } finally {
+        if (cacheKey && startedHere) enrichmentInFlight.delete(cacheKey);
+      }
+      if (cacheKey && startedHere && isCacheableEnrichment(result)) {
         const now = Date.now();
         for (const [key, entry] of enrichmentCache) {
           if (entry.expiresAt <= now) enrichmentCache.delete(key);
@@ -3347,8 +3383,8 @@ export function createApp() {
     console.log(`[API] Received request for /api/generate-rationales`);
     try {
       if (!await verifySearchAppCheck(req, res)) return;
-      const searchIdentity = await verifySearchIdentity(req, res);
-      if (!searchIdentity) return;
+      const requestIdentity = await verifyRequestIdentity(req, res);
+      if (!requestIdentity) return;
       const { items, searchParams, preferences } = req.body;
       const result = await generateMatchRationales(items, searchParams, preferences);
       res.json(result);
