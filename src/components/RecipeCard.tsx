@@ -255,7 +255,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   );
 
   useEffect(() => {
-    if (isExpanded && !currentInstructions?.length && !isEnriching) {
+    if (isExpanded && !currentInstructions?.length && !isEnriching && !enrichmentError) {
       setIsEnriching(true);
       enrichRecipe(recipe.title, recipe.cuisine, mode, {
         sourceUrl: recipe.sourceUrl,
@@ -265,6 +265,9 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
         } : {})
       })
         .then(data => {
+          if (!data?.instructions?.length) {
+            throw new Error('Recipe details came back without a method.');
+          }
           if (strictIngredientMatch && mode === 'cook' && !matchesStrictIngredientSearch(data, query)) {
             throw new Error('Recipe details did not pass the strict ingredient check.');
           }
@@ -280,7 +283,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           setIsEnriching(false);
         });
     }
-  }, [isExpanded, recipe.title, recipe.cuisine, currentInstructions.length, isEnriching, query, strictIngredientMatch]);
+  }, [isExpanded, recipe.title, recipe.cuisine, currentInstructions.length, isEnriching, enrichmentError, query, strictIngredientMatch]);
 
   const { updatePlanner, planner, removeRecipe, savedRecipes, showToast, unscheduleRecipe, addLog, unitSystem, setUnitSystem } = useAuth();
 
