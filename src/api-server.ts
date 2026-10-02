@@ -2122,6 +2122,9 @@ export function createApp() {
   app.post("/api/enrich-recipe", async (req, res) => {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
+      if (!await verifySearchAppCheck(req, res)) return;
+      const searchIdentity = await verifySearchIdentity(req, res);
+      if (!searchIdentity) return;
       const validation = validateEnrichmentRequestPayload(req.body);
       if ('code' in validation) {
         return res.status(400).json({
@@ -3308,6 +3311,9 @@ export function createApp() {
   app.post("/api/generate-rationales", async (req, res) => {
     console.log(`[API] Received request for /api/generate-rationales`);
     try {
+      if (!await verifySearchAppCheck(req, res)) return;
+      const searchIdentity = await verifySearchIdentity(req, res);
+      if (!searchIdentity) return;
       const { items, searchParams, preferences } = req.body;
       const result = await generateMatchRationales(items, searchParams, preferences);
       res.json(result);

@@ -214881,9 +214881,10 @@ async function fetchProxyEnrichment(title, cuisine, mode, options2) {
   try {
     const url = getApiUrl("/api/enrich-recipe");
     console.log(`[Diagnostic] Fetching ${url} (Origin: ${window.location.origin})`);
+    const searchSecurityHeaders = await getSearchSecurityHeaders2();
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...searchSecurityHeaders },
       body: JSON.stringify(buildEnrichmentRequestBody(title, cuisine, mode, options2)),
       signal: controller.signal
     });
@@ -215793,9 +215794,10 @@ async function generateMatchRationales(items, searchParams, preferences) {
   if (isBrowser2 && config.mode === "proxy") {
     try {
       const url = getApiUrl("/api/generate-rationales");
+      const searchSecurityHeaders = await getSearchSecurityHeaders2();
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...searchSecurityHeaders },
         body: JSON.stringify({ items, searchParams, preferences })
       });
       if (!response.ok) return {};
@@ -229313,6 +229315,9 @@ function createApp() {
   app2.post("/api/enrich-recipe", async (req, res) => {
     console.log(`[API] Received request for /api/enrich-recipe`);
     try {
+      if (!await verifySearchAppCheck(req, res)) return;
+      const searchIdentity = await verifySearchIdentity(req, res);
+      if (!searchIdentity) return;
       const validation = validateEnrichmentRequestPayload(req.body);
       if ("code" in validation) {
         return res.status(400).json({
@@ -230331,6 +230336,9 @@ function createApp() {
   app2.post("/api/generate-rationales", async (req, res) => {
     console.log(`[API] Received request for /api/generate-rationales`);
     try {
+      if (!await verifySearchAppCheck(req, res)) return;
+      const searchIdentity = await verifySearchIdentity(req, res);
+      if (!searchIdentity) return;
       const { items, searchParams, preferences } = req.body;
       const result = await generateMatchRationales(items, searchParams, preferences);
       res.json(result);

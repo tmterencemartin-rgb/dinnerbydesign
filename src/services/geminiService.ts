@@ -965,9 +965,10 @@ async function fetchProxyEnrichment(title: string, cuisine: string, mode: 'cook'
   try {
     const url = getApiUrl('/api/enrich-recipe');
     console.log(`[Diagnostic] Fetching ${url} (Origin: ${window.location.origin})`);
+    const searchSecurityHeaders = await getSearchSecurityHeaders();
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...searchSecurityHeaders },
       body: JSON.stringify(buildEnrichmentRequestBody(title, cuisine, mode, options)),
       signal: controller.signal
     });
@@ -2058,9 +2059,10 @@ export async function generateMatchRationales(
   if (isBrowser && config.mode === 'proxy') {
     try {
       const url = getApiUrl('/api/generate-rationales');
+      const searchSecurityHeaders = await getSearchSecurityHeaders();
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...searchSecurityHeaders },
         body: JSON.stringify({ items, searchParams, preferences })
       });
       if (!response.ok) return {};
