@@ -212156,6 +212156,11 @@ var isDirectHttpsContentUrl = (value) => {
   if (url.protocol !== "https:" || url.username || url.password || url.pathname === "/" || /\/(?:search|tag|category|topics?|cuisines?|collections?)(?:\/|$)/i.test(url.pathname)) {
     return false;
   }
+  if (/\.(?:avif|gif|jpe?g|png|svg|webp)(?:$|\/)/i.test(url.pathname)) return false;
+  const host = url.hostname.toLowerCase().replace(/^www\./, "");
+  if (host === "bbcgoodfood.com" && !/^\/recipes\/[^/]+(?:\/[^/]*)?$/i.test(url.pathname)) {
+    return false;
+  }
   return !["q", "query", "search", "s"].some((param) => url.searchParams.has(param));
 };
 var isApprovedDirectRecipeUrl = (value) => {
@@ -212174,7 +212179,7 @@ var samePublisher = (left, right) => {
 };
 var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
   const sourceUrl = canonicaliseGroundedUrl(value);
-  if (!sourceUrl || !isTrustedRecipePublisherUrl(sourceUrl)) return sourceUrl;
+  if (!sourceUrl || !isApprovedDirectRecipeUrl(sourceUrl)) return null;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
   try {
