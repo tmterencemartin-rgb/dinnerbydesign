@@ -244,6 +244,16 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(matchesStrictIngredientSearch({ ingredients: ['2 leeks', 'carrot', 'salt'] }, 'leek')).toBe(false);
   });
 
+  test('rejects combined ingredient lines that contain unrequested ingredients', () => {
+    for (const line of [
+      'leeks and carrots',
+      '2 leeks, plus extra carrot to serve',
+      '2 leeks, 1 carrot, 1 celery stick'
+    ]) {
+      expect(matchesStrictIngredientSearch({ ingredients: [line] }, 'leek'), line).toBe(false);
+    }
+  });
+
   test('does not use title or description text to satisfy category minimums', () => {
     expect(matchesRequestedIngredientSearch({
       title: 'Two vegetable stew',

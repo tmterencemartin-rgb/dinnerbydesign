@@ -1,4 +1,5 @@
 import express from "express";
+import { waitUntil } from "@vercel/functions";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
@@ -1109,6 +1110,10 @@ async function recordAiUsageEvent(details: Record<string, any>) {
   }
 }
 
+function scheduleAiUsageEvent(details: Record<string, any>) {
+  waitUntil(recordAiUsageEvent(details));
+}
+
 async function maybeSendAiFailureAlert(failedCategory: string) {
   try {
     const cutoff = Date.now() - 60 * 60 * 1000;
@@ -1852,7 +1857,7 @@ export function createApp() {
     try {
       const choices = await generateInternalDinnerChoices(brief, preferences, strictIngredientMatch);
       if (choices.length === 0) {
-        void recordAiUsageEvent({
+        scheduleAiUsageEvent({
           type: 'ai_created_dinner',
           source: 'ai-created',
           model: ACTIVE_GEMINI_MODEL,
@@ -1887,7 +1892,7 @@ export function createApp() {
         }
       }
 
-      void recordAiUsageEvent({
+      scheduleAiUsageEvent({
         type: 'ai_created_dinner',
         source: 'ai-created',
         model: ACTIVE_GEMINI_MODEL,
@@ -1904,7 +1909,7 @@ export function createApp() {
       return res.json({ choices, partial: partialChoices });
     } catch (error: any) {
       console.error('[AiCreatedDinners] Generation failed:', error);
-      void recordAiUsageEvent({
+      scheduleAiUsageEvent({
         type: 'ai_created_dinner',
         source: 'ai-created',
         model: ACTIVE_GEMINI_MODEL,
@@ -1961,7 +1966,7 @@ export function createApp() {
       }
       const result = await generateDinnerSuggestions(searchParams, preferences);
       if (!isDeliverableSearchResult(result)) {
-        void recordAiUsageEvent({
+        scheduleAiUsageEvent({
           requestId,
           type: classifyAiRequest(searchParams),
           source: searchParams.source || 'cook',
@@ -2021,7 +2026,7 @@ export function createApp() {
       const usage = result?.diagnostics?.usage || null;
       const inputTokens = usage?.inputTokensEstimate || estimateTokensFromChars((usage?.inputChars || 0) || String(searchParams.query || '').length);
       const outputTokens = usage?.outputTokensEstimate || estimateTokensFromChars(JSON.stringify(result || {}).length);
-      void recordAiUsageEvent({
+      scheduleAiUsageEvent({
         requestId,
         type: classifyAiRequest(searchParams),
         source: searchParams.source || 'cook',
@@ -2042,7 +2047,7 @@ export function createApp() {
       console.error("[Server API] Gemini Search Error:", error);
       logApiError("generate-suggestions", error);
       const failedSearchParams = req.body?.searchParams || {};
-      void recordAiUsageEvent({
+      scheduleAiUsageEvent({
         requestId,
         type: classifyAiRequest(failedSearchParams),
         source: failedSearchParams.source || 'cook',

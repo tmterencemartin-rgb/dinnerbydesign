@@ -970,9 +970,7 @@ const normaliseStrictIngredientLine = (value: string) => {
   const stripped = stripIngredientQuantity(value).replace(/^\s*\d+(?:\.\d+)?\s+/i, '');
   const parsed = parseAndNormaliseIngredients(stripped);
   const cleaned = (parsed.length > 0 ? parsed : [stripped.toLowerCase()])
-    .map(item => item.replace(/^\s*\d+(?:\.\d+)?\s+/i, '').trim()
-      .replace(/\bleeks\b/gi, 'leek')
-      .replace(/\bpotatoes\b/gi, 'potato'))
+    .map(item => item.replace(/^\s*\d+(?:\.\d+)?\s+/i, '').trim())
     .filter(Boolean);
   return cleaned.length > 0 ? cleaned : [stripped.toLowerCase()];
 };
@@ -1125,11 +1123,8 @@ export function matchesStrictIngredientSearch(item: { ingredients?: string[]; to
   const requestedIngredients = intent.ingredients;
   const requestedPreparation = intent.preparationPreferences;
   return ingredientLines.every(rawLine => {
-    const lineVariants = [
-      ...normaliseStrictIngredientLine(rawLine),
-      ...parseAndNormaliseIngredients(stripIngredientQuantity(rawLine))
-    ];
-    return lineVariants.some(line =>
+    const lineParts = normaliseStrictIngredientLine(rawLine);
+    return lineParts.every(line =>
       isPantryStaple(line) || requestedIngredients.some(requested =>
         matchesRequestedIngredient(line, requested)
         && matchesRequestedPreparation(line, requestedPreparation)
