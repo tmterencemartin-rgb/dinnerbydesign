@@ -206,7 +206,7 @@ export const confirmPublisherRecipePageUrl = async (
   request: PublisherPageRequest = fetch
 ): Promise<string | null> => {
   const sourceUrl = canonicaliseGroundedUrl(value);
-  if (!sourceUrl || !isTrustedRecipePublisherUrl(sourceUrl)) return sourceUrl;
+  if (!sourceUrl || !isApprovedDirectRecipeUrl(sourceUrl)) return null;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);

@@ -72,8 +72,10 @@ describe('grounded source URL reconciliation', () => {
     expect(isApprovedDirectRecipeUrl('https://www.dontgobaconmyheart.co.uk/creamy-tomato-pasta/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/collection/quick-dinners')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/premium/onepan-marry-me-butter-beans')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/howto/guide/beef-and-butter-beans')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/beef-and-butter-beans.jpg')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://tollbit.bbcgoodfood.com/recipes/cholent')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
   });
 
@@ -99,6 +101,14 @@ describe('grounded source URL reconciliation', () => {
       'https://www.bbcgoodfood.com/recipes/healthy-one-pan-roast-chicken',
       expect.objectContaining({ method: 'HEAD', redirect: 'follow' })
     );
+  });
+
+  it('rejects untrusted and premium publisher URLs before making a network request', async () => {
+    const request = vi.fn();
+
+    await expect(confirmPublisherRecipePageUrl('https://tollbit.bbcgoodfood.com/recipes/cholent', request)).resolves.toBeNull();
+    await expect(confirmPublisherRecipePageUrl('https://www.bbcgoodfood.com/premium/onepan-marry-me-butter-beans', request)).resolves.toBeNull();
+    expect(request).not.toHaveBeenCalled();
   });
 
   it('retains a trusted publisher page when an automated check is blocked', async () => {
