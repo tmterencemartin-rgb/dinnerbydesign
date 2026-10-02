@@ -48,7 +48,7 @@ For a broad published-recipe search, there can be an initial request and up to t
 | Control | Current position |
 | --- | --- |
 | Standard result request | Three published recipes |
-| Approved web domains | 41 domains, listed below |
+| Approved web domains | 40 domains, listed below |
 | Link requirement | Direct, accessible HTTPS recipe page |
 | Excluded page types | Search, category, topic and collection pages, home pages, paywalled, trial-only, sign-in-only and app-only content |
 | User constraints | Dietary rules, allergies, exclusions, ingredients, budget, time, cuisine, cooking method and source preferences |
@@ -81,7 +81,7 @@ No publisher should be described as a partner, supporter or endorser unless ther
 
 The present allow-list covers the following domains:
 
-- bbcgoodfood.com; bbc.co.uk
+- bbc.co.uk
 - tescorealfood.com; realfood.tesco.com; tesco.com
 - theguardian.com; deliciousmagazine.co.uk; thehappyfoodie.co.uk; deliaonline.com; nigella.com
 - foodnetwork.co.uk; pinchofnom.com; maryberry.co.uk; greatbritishrecipes.com; recipetineats.com

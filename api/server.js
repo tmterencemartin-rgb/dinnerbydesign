@@ -210180,6 +210180,7 @@ var MAIN_INGREDIENT_ALIAS_MAP = {
   "chick peas": "chickpea",
   "kidney beans": "kidney bean",
   "butter beans": "butter bean",
+  "butterbeans": "butter bean",
   "black beans": "black bean",
   "cannellini beans": "cannellini bean",
   "haricot beans": "haricot bean",
@@ -210874,6 +210875,7 @@ var UNSEPARATED_INGREDIENT_PHRASES = /* @__PURE__ */ new Set([
   "green bean",
   "red bean",
   "butter bean",
+  "butterbeans",
   "kidney bean",
   "black bean",
   "baked bean",
@@ -211461,9 +211463,9 @@ function detectIngredientIntent(query2) {
   if (isShortUnseparatedIngredientList) {
     return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
   }
-  const isStandaloneIngredientSearch = !hasListPunctuation && !ingredientPhrases.test(trimmed) && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery) && ingredients.length === 1 && unseparatedWords.length === 1 && UNSEPARATED_INGREDIENT_TERMS.has(ingredients[0]) && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(ingredients[0]);
+  const isStandaloneIngredientSearch = !hasListPunctuation && !ingredientPhrases.test(trimmed) && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery) && ingredients.length === 1 && unseparatedWords.length === 1 && (UNSEPARATED_INGREDIENT_TERMS.has(ingredients[0]) || /^butterbeans$/i.test(trimmed)) && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(ingredients[0]);
   if (isStandaloneIngredientSearch) {
-    return { isIngredientLed: true, ingredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
+    return { isIngredientLed: true, ingredients: /^butterbeans$/i.test(trimmed) ? ["butter bean"] : ingredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
   }
   if (ingredients.length >= 2 && ingredientPhrases.test(cleanedQuery)) {
     return { isIngredientLed: true, ingredients, reason: "phrase", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
@@ -211966,17 +211968,19 @@ var matchesRequestedPreparation = (value, requested) => {
 function matchesRequestedIngredientSearch(item, query2) {
   const intent = detectIngredientIntent(query2);
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
+  const recipeIngredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
   const ingredientLines = [
-    ...Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [],
+    ...recipeIngredientLines,
     item.title || "",
     item.description || ""
   ].filter(Boolean);
   if (ingredientLines.length === 0) return false;
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const normalisedRecipeIngredients = recipeIngredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
   const requestedPreparation = intent.preparationPreferences;
   return requestedIngredients.every(
-    (requested) => isIngredientCategory(requested) && (intent.categoryMinimums?.[requested] || 1) > 1 ? new Set(normalisedLines.filter(
+    (requested) => isIngredientCategory(requested) && (intent.categoryMinimums?.[requested] || 1) > 1 ? new Set(normalisedRecipeIngredients.filter(
       (line) => matchesRequestedIngredient(line, requested) && matchesRequestedPreparation(line, requestedPreparation)
     )).size >= (intent.categoryMinimums?.[requested] || 1) : normalisedLines.some(
       (line) => matchesRequestedIngredient(line, requested) && matchesRequestedPreparation(line, requestedPreparation)
@@ -213424,8 +213428,8 @@ var selectPublisherVariedRecipes = (items, count) => {
   return [...firstFromPublisher, ...remainingItems].slice(0, count);
 };
 var hasExplicitRecipeProteinIntent = (query2, isIngredientLed = false) => isIngredientLed || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|mackerel|prawn|shrimp|tofu|liver|offal|kidney|heart|tongue|tripe|sweetbreads|black pudding|blood sausage)\b/i.test(query2);
-var PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY.sort((left, right) => left.priority - right.priority).map((publisher) => publisher.host);
-var PUBLISHER_PROMPT_NAMES = RECIPE_PUBLISHER_REGISTRY.filter((publisher) => !isBlockedRecipePublisherUrl(`https://${publisher.host}/recipe`)).map((publisher) => publisher.name).join(", ");
+var PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY.slice().sort((left, right) => left.priority - right.priority).map((publisher) => publisher.host);
+var PUBLISHER_PROMPT_NAMES = RECIPE_PUBLISHER_REGISTRY.filter((publisher) => !isBlockedRecipePublisherUrl(`https://${publisher.host}/recipe`)).map((publisher) => publisher.name).filter((name6, index, names) => names.indexOf(name6) === index).join(", ");
 var buildPublisherFocusedRecoveryInstruction = (query2, usedPublishers = []) => {
   const used = new Set(usedPublishers.map((publisher) => publisher.toLowerCase()));
   const hosts = [
@@ -213976,7 +213980,14 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     }
     const data = parseModelJson(text);
     const parsedItems = Array.isArray(data.items) ? data.items : [];
-    const filterIngredientLedItems = (candidateItems) => ingredientIntent?.isIngredientLed && !isReadyMade ? candidateItems.filter((item) => matchesRequestedIngredientSearch(item, query2)) : candidateItems;
+    const filterIngredientLedItems = (candidateItems) => {
+      if (!ingredientIntent?.isIngredientLed || isReadyMade) return candidateItems;
+      return candidateItems.filter((item) => {
+        const matches = matchesRequestedIngredientSearch(item, query2);
+        if (!matches) logRejectedPublishedSource("ingredient_mismatch", item);
+        return matches;
+      });
+    };
     const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
     let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSourceMap(initialGroundedSources));
     if (!isReadyMade) rawItems = await filterUnavailablePublishedRecipeSources(rawItems);
@@ -214077,7 +214088,14 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       const seenTitles = /* @__PURE__ */ new Set();
       return itemsToDedupe.filter((item) => {
         const titleKey2 = String(item.title || "").trim().toLowerCase();
-        if (!titleKey2 || seenTitles.has(titleKey2)) return false;
+        if (!titleKey2) {
+          logRejectedPublishedSource("duplicate", item);
+          return false;
+        }
+        if (seenTitles.has(titleKey2)) {
+          logRejectedPublishedSource("duplicate", item);
+          return false;
+        }
         seenTitles.add(titleKey2);
         return true;
       });

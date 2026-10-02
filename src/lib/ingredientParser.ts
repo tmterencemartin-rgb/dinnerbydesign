@@ -53,7 +53,7 @@ const MAIN_INGREDIENT_ALIAS_MAP: Record<string, string> = {
   // Pulses, grains and starches
   'lentils': 'lentil', 'red lentils': 'red lentil', 'green lentils': 'green lentil',
   'chickpeas': 'chickpea', 'chick peas': 'chickpea', 'kidney beans': 'kidney bean',
-  'butter beans': 'butter bean', 'black beans': 'black bean', 'cannellini beans': 'cannellini bean',
+  'butter beans': 'butter bean', 'butterbeans': 'butter bean', 'black beans': 'black bean', 'cannellini beans': 'cannellini bean',
   'haricot beans': 'haricot bean', 'baked beans': 'baked bean', 'peas': 'pea',
   'oats': 'oat', 'noodles': 'noodle', 'egg noodles': 'egg noodle', 'rice noodles': 'rice noodle',
   'hen eggs': 'hen egg', 'chicken eggs': 'chicken egg', 'duck eggs': 'duck egg',
@@ -488,7 +488,7 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
 
 const UNSEPARATED_INGREDIENT_PHRASES = new Set([
   // Vegetables, pulses and fruit
-  'green bean', 'red bean', 'butter bean', 'kidney bean', 'black bean', 'baked bean',
+  'green bean', 'red bean', 'butter bean', 'butterbeans', 'kidney bean', 'black bean', 'baked bean',
   'cannellini bean', 'haricot bean', 'broad bean', 'fava bean', 'mixed bean',
   'chickpea', 'sweetcorn', 'red pepper', 'green pepper', 'yellow pepper', 'bell pepper', 'sweet pepper', 'sugar snap', 'mange tout',
   'red onion', 'white onion', 'spring onion',
@@ -783,11 +783,11 @@ export function detectIngredientIntent(query: string): {
     && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery)
     && ingredients.length === 1
     && unseparatedWords.length === 1
-    && UNSEPARATED_INGREDIENT_TERMS.has(ingredients[0])
+    && (UNSEPARATED_INGREDIENT_TERMS.has(ingredients[0]) || /^butterbeans$/i.test(trimmed))
     && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(ingredients[0]);
 
   if (isStandaloneIngredientSearch) {
-    return { isIngredientLed: true, ingredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    return { isIngredientLed: true, ingredients: /^butterbeans$/i.test(trimmed) ? ['butter bean'] : ingredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (ingredients.length >= 2 && ingredientPhrases.test(cleanedQuery)) {
@@ -1058,20 +1058,22 @@ export function matchesRequestedIngredientSearch(item: { ingredients?: string[];
   const intent = detectIngredientIntent(query);
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
 
+  const recipeIngredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
   const ingredientLines = [
-    ...(Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : []),
+    ...recipeIngredientLines,
     item.title || '',
     item.description || ''
   ].filter(Boolean);
   if (ingredientLines.length === 0) return false;
 
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
+  const normalisedRecipeIngredients = recipeIngredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
   const requestedPreparation = intent.preparationPreferences;
 
   return requestedIngredients.every(requested =>
     isIngredientCategory(requested) && (intent.categoryMinimums?.[requested] || 1) > 1
-      ? new Set(normalisedLines.filter(line =>
+      ? new Set(normalisedRecipeIngredients.filter(line =>
           matchesRequestedIngredient(line, requested)
           && matchesRequestedPreparation(line, requestedPreparation)
         )).size >= (intent.categoryMinimums?.[requested] || 1)

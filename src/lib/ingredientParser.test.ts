@@ -203,6 +203,22 @@ describe('Ingredient Parser & Normalizer', () => {
     expect(matchesRequestedIngredientSearch({ ingredients: ['Chickpea', 'tomato'] }, 'mackerel')).toBe(false);
   });
 
+  test('accepts butterbeans as the plural spelling of butter bean', () => {
+    expect(detectIngredientIntent('butterbeans')).toMatchObject({
+      isIngredientLed: true,
+      ingredients: ['butter bean']
+    });
+    expect(matchesRequestedIngredientSearch({ ingredients: ['butterbeans', 'tomato'] }, 'butter bean recipes')).toBe(true);
+  });
+
+  test('does not use title or description text to satisfy category minimums', () => {
+    expect(matchesRequestedIngredientSearch({
+      title: 'Two vegetable stew',
+      description: 'A dish with plenty of vegetables',
+      ingredients: ['chicken', 'carrot']
+    }, 'chicken and two vegetables')).toBe(false);
+  });
+
   test('detects compound ingredients in short searches without separators', () => {
     expect(detectIngredientIntent('chicken green beans')).toMatchObject({
       isIngredientLed: true,

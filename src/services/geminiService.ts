@@ -784,12 +784,14 @@ export const hasExplicitRecipeProteinIntent = (query: string, isIngredientLed = 
 );
 
 const PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY
+  .slice()
   .sort((left, right) => left.priority - right.priority)
   .map(publisher => publisher.host);
 
 const PUBLISHER_PROMPT_NAMES = RECIPE_PUBLISHER_REGISTRY
   .filter(publisher => !isBlockedRecipePublisherUrl(`https://${publisher.host}/recipe`))
   .map(publisher => publisher.name)
+  .filter((name, index, names) => names.indexOf(name) === index)
   .join(', ');
 
 export const buildPublisherFocusedRecoveryInstruction = (
@@ -1487,11 +1489,14 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
 
     const data = parseModelJson(text);
     const parsedItems = Array.isArray(data.items) ? data.items : [];
-    const filterIngredientLedItems = (candidateItems: any[]) => (
-      ingredientIntent?.isIngredientLed && !isReadyMade
-        ? candidateItems.filter(item => matchesRequestedIngredientSearch(item, query))
-        : candidateItems
-    );
+    const filterIngredientLedItems = (candidateItems: any[]) => {
+      if (!ingredientIntent?.isIngredientLed || isReadyMade) return candidateItems;
+      return candidateItems.filter(item => {
+        const matches = matchesRequestedIngredientSearch(item, query);
+        if (!matches) logRejectedPublishedSource('ingredient_mismatch', item);
+        return matches;
+      });
+    };
     const ingredientMatchedItems = filterIngredientLedItems(parsedItems);
     let rawItems = filterToGroundedSources(ingredientMatchedItems, groundedSourceMap(initialGroundedSources));
     if (!isReadyMade) rawItems = await filterUnavailablePublishedRecipeSources(rawItems);
@@ -1599,7 +1604,14 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       const seenTitles = new Set<string>();
       return itemsToDedupe.filter((item: any) => {
         const titleKey = String(item.title || '').trim().toLowerCase();
-        if (!titleKey || seenTitles.has(titleKey)) return false;
+        if (!titleKey) {
+          logRejectedPublishedSource('duplicate', item);
+          return false;
+        }
+        if (seenTitles.has(titleKey)) {
+          logRejectedPublishedSource('duplicate', item);
+          return false;
+        }
         seenTitles.add(titleKey);
         return true;
       });

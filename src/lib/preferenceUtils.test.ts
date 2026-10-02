@@ -49,7 +49,7 @@ describe('preferenceUtils', () => {
         preferredSourceIds: ['bbc_good_food', 'waitrose', 'the_telegraph', 'the_times_sunday_times']
       });
 
-      expect(normalised.preferredSourceIds).toEqual(['bbc_good_food']);
+      expect(normalised.preferredSourceIds).toEqual([]);
     });
 
     it('handles missing data with defaults', () => {
