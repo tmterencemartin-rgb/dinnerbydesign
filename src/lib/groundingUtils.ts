@@ -158,6 +158,13 @@ export const isDirectHttpsContentUrl = (value: unknown): boolean => {
     return false;
   }
 
+  if (/\.(?:avif|gif|jpe?g|png|svg|webp)(?:$|\/)/i.test(url.pathname)) return false;
+
+  const host = url.hostname.toLowerCase().replace(/^www\./, '');
+  if (host === 'bbcgoodfood.com' && !/^\/recipes\/[^/]+(?:\/[^/]*)?$/i.test(url.pathname)) {
+    return false;
+  }
+
   return !['q', 'query', 'search', 's'].some(param => url.searchParams.has(param));
 };
 

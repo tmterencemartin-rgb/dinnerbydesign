@@ -71,6 +71,9 @@ describe('grounded source URL reconciliation', () => {
     expect(isApprovedDirectRecipeUrl('https://www.hairybikers.com/recipes/chicken-curry')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.dontgobaconmyheart.co.uk/creamy-tomato-pasta/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/search?q=scallops')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/collection/quick-dinners')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/howto/guide/beef-and-butter-beans')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/beef-and-butter-beans.jpg')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://example.com/recipes/scallops')).toBe(false);
   });
 
