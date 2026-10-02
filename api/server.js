@@ -213476,6 +213476,8 @@ var isApprovedDirectRecipeUrl = (value) => {
   return !!canonicalUrl && !isInternalGroundingUrl(canonicalUrl) && !isBlockedRecipePublisherUrl(canonicalUrl) && isTrustedRecipePublisherUrl(canonicalUrl) && isDirectHttpsContentUrl(canonicalUrl);
 };
 var PUBLISHER_PAGE_TIMEOUT_MS = 4e3;
+var PUBLISHER_PAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1e3;
+var publisherPageCache = /* @__PURE__ */ new Map();
 var ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
 var MISSING_PAGE_PATTERN = /\b(?:page|recipe)\s+not\s+found\b|\b404\s+(?:error|not found)\b/i;
 var GENERIC_INDEX_TITLE_PATTERN = /^(?:recipes?|recipe archive|food & drink)\s*(?:[|–-]|$)/i;
@@ -213488,6 +213490,11 @@ var samePublisher = (left, right) => {
 var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
   const sourceUrl = canonicaliseGroundedUrl(value);
   if (!sourceUrl || !isApprovedDirectRecipeUrl(sourceUrl)) return null;
+  if (request === fetch) {
+    const cached = publisherPageCache.get(sourceUrl);
+    if (cached && cached.expiresAt > Date.now()) return cached.url;
+    if (cached) publisherPageCache.delete(sourceUrl);
+  }
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
   try {
@@ -213512,6 +213519,9 @@ var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
       const pageExcerpt = (await pageResponse.text()).slice(0, 65536);
       const pageTitle = extractPageTitle(pageExcerpt);
       if (ACCESS_BARRIER_PATTERN.test(pageExcerpt) || MISSING_PAGE_PATTERN.test(pageExcerpt) || GENERIC_INDEX_TITLE_PATTERN.test(pageTitle)) return null;
+    }
+    if (request === fetch) {
+      publisherPageCache.set(sourceUrl, { url: resolvedUrl, expiresAt: Date.now() + PUBLISHER_PAGE_CACHE_TTL_MS });
     }
     return resolvedUrl;
   } catch {

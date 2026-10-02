@@ -193,6 +193,8 @@ type PublisherPageResponse = Pick<Response, 'status' | 'url'> & Partial<Pick<Res
 type PublisherPageRequest = (url: string, init: RequestInit) => Promise<PublisherPageResponse>;
 
 const PUBLISHER_PAGE_TIMEOUT_MS = 4_000;
+const PUBLISHER_PAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const publisherPageCache = new Map<string, { url: string; expiresAt: number }>();
 const ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
 const MISSING_PAGE_PATTERN = /\b(?:page|recipe)\s+not\s+found\b|\b404\s+(?:error|not found)\b/i;
 const GENERIC_INDEX_TITLE_PATTERN = /^(?:recipes?|recipe archive|food & drink)\s*(?:[|–-]|$)/i;
@@ -219,6 +221,12 @@ export const confirmPublisherRecipePageUrl = async (
 ): Promise<string | null> => {
   const sourceUrl = canonicaliseGroundedUrl(value);
   if (!sourceUrl || !isApprovedDirectRecipeUrl(sourceUrl)) return null;
+
+  if (request === fetch) {
+    const cached = publisherPageCache.get(sourceUrl);
+    if (cached && cached.expiresAt > Date.now()) return cached.url;
+    if (cached) publisherPageCache.delete(sourceUrl);
+  }
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
@@ -259,6 +267,9 @@ export const confirmPublisherRecipePageUrl = async (
       ) return null;
     }
 
+    if (request === fetch) {
+      publisherPageCache.set(sourceUrl, { url: resolvedUrl, expiresAt: Date.now() + PUBLISHER_PAGE_CACHE_TTL_MS });
+    }
     return resolvedUrl;
   } catch {
     // BBC Good Food's access layer can return a visually plausible page while
