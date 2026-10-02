@@ -80,7 +80,7 @@ describe('Gemini search grounding filters', () => {
   it('uses unused approved publishers for a thin published-recipe search', () => {
     const instruction = buildPublisherFocusedRecoveryInstruction('liver recipes', ['bbcgoodfood.com']);
 
-    expect(instruction).toContain('site:hairybikers.com "liver recipes"');
+    expect(instruction).toContain('site:tesco.com "liver recipes"');
     expect(instruction).not.toContain('site:bbcgoodfood.com');
     expect(instruction).toContain('exact direct recipe page');
   });

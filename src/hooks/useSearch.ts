@@ -476,7 +476,13 @@ export function useSearch() {
 
       if (accumulatedRecipes.length === 0 && accumulatedReadyMeals.length === 0) {
         setStatus('noResults');
-        const filtersActive = !!(params.dietaryRule || (activePrefs && (activePrefs as any).dietaryRule) || params.isSimple || params.isLowCost || params.strictIngredientMatch);
+        const dietaryRule = params.dietaryRule || (activePrefs && (activePrefs as any).dietaryRule);
+        const filtersActive = Boolean(
+          (dietaryRule && dietaryRule !== 'none' && dietaryRule !== 'all')
+          || params.isSimple === true
+          || params.isLowCost === true
+          || params.strictIngredientMatch === true
+        );
         setSearchContradiction({
           type: filtersActive ? 'conflict' : 'no_results',
           content: filtersActive 
