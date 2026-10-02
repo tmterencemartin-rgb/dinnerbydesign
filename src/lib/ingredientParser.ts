@@ -956,10 +956,11 @@ const CHICKEN_CUT_VARIANT_WORDS = new Set([
 
 const stripIngredientQuantity = (value: string) => value
   .replace(/^\s*\d+\s*x\s*\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\s*/i, '')
-  .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:x\s*)?(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, '')
+  .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:x\s*)?(?:(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)(?=\s|$))?\s*/i, '')
   .replace(/\([^)]*\)/g, ' ')
   .replace(/^\s*(?:(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+)?(?:tin|tins|can|cans|jar|jars|pack|packs|packet|packets)\s+(?:of\s+)?/i, '')
   .replace(/^\s*(?:(?:large|medium|small|firm|block|whole)\s+)+/i, '')
+  .replace(/\s+(?:blocks?|pieces?|packs?)\s*$/i, '')
   .replace(/^\s*\d+(?:\.\d+)?\s+/i, '')
   .replace(/[•*]/g, ' ')
   .replace(/\s+/g, ' ')
@@ -969,7 +970,9 @@ const normaliseStrictIngredientLine = (value: string) => {
   const stripped = stripIngredientQuantity(value).replace(/^\s*\d+(?:\.\d+)?\s+/i, '');
   const parsed = parseAndNormaliseIngredients(stripped);
   const cleaned = (parsed.length > 0 ? parsed : [stripped.toLowerCase()])
-    .map(item => item.replace(/^\s*\d+(?:\.\d+)?\s+/i, '').trim())
+    .map(item => item.replace(/^\s*\d+(?:\.\d+)?\s+/i, '').trim()
+      .replace(/\bleeks\b/gi, 'leek')
+      .replace(/\bpotatoes\b/gi, 'potato'))
     .filter(Boolean);
   return cleaned.length > 0 ? cleaned : [stripped.toLowerCase()];
 };
@@ -988,6 +991,10 @@ const matchesAllowedIngredient = (value: string, allowed: string) => {
   const valueWords = valueWithoutPreparation.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedWords = allowed.toLowerCase().split(/\s+/).filter(Boolean);
   const allowedKey = allowedWords.join(' ');
+  if (allowedKey === 'beef') {
+    const parsedValues = parseAndNormaliseIngredients(valueWithoutPreparation);
+    if (parsedValues.some(candidate => BEEF_CUT_TERMS.has(candidate))) return true;
+  }
   if (valueWords.join(' ') === allowedWords.join(' ')) return true;
 
   const allowedStart = valueWords.findIndex((_, index) =>
@@ -1115,13 +1122,19 @@ export function matchesStrictIngredientSearch(item: { ingredients?: string[]; to
 
   const intent = detectIngredientIntent(query);
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
-  const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
   const requestedPreparation = intent.preparationPreferences;
-  return normalisedLines.every(line =>
-    isPantryStaple(line) || requestedIngredients.some(requested =>
-      matchesRequestedIngredient(line, requested)
-      && matchesRequestedPreparation(line, requestedPreparation)
-    )
+  return ingredientLines.every(rawLine => {
+    const lineVariants = [
+      ...normaliseStrictIngredientLine(rawLine),
+      ...parseAndNormaliseIngredients(stripIngredientQuantity(rawLine))
+    ];
+    return lineVariants.some(line =>
+      isPantryStaple(line) || requestedIngredients.some(requested =>
+        matchesRequestedIngredient(line, requested)
+        && matchesRequestedPreparation(line, requestedPreparation)
+      )
+    );
+  }
   );
 }

@@ -228,6 +228,22 @@ describe('Ingredient Parser & Normalizer', () => {
     }
   });
 
+  test('matches common cuts and trailing pack words in strict searches', () => {
+    for (const [line, query] of [
+      ['2 leeks', 'leek'],
+      ['2 large potatoes', 'potato'],
+      ['300g braising steak', 'beef'],
+      ['2 firm tofu blocks', 'tofu'],
+      ['chuck steak', 'beef'],
+      ['beef shin', 'beef'],
+      ['pork shoulder', 'pork'],
+      ['lamb leg', 'lamb']
+    ] as const) {
+      expect(matchesStrictIngredientSearch({ ingredients: [line, 'salt'] }, query), line).toBe(true);
+    }
+    expect(matchesStrictIngredientSearch({ ingredients: ['2 leeks', 'carrot', 'salt'] }, 'leek')).toBe(false);
+  });
+
   test('does not use title or description text to satisfy category minimums', () => {
     expect(matchesRequestedIngredientSearch({
       title: 'Two vegetable stew',
