@@ -279,6 +279,10 @@ export const confirmPublisherRecipePageUrl = async (
     }
     return resolvedUrl;
   } catch {
+    // BBC Good Food's access layer can return a visually plausible page while
+    // withholding the recipe behind a sign-in, trial or subscription prompt.
+    // If its page cannot be verified, fail closed rather than surfacing a link
+    // that may take the user straight to a paywall.
     const host = new URL(sourceUrl).hostname.toLowerCase().replace(/^www\./, '');
     return host === 'bbcgoodfood.com' ? null : sourceUrl;
   } finally {

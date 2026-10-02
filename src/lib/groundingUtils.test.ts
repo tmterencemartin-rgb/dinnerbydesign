@@ -209,4 +209,21 @@ describe('grounded source URL reconciliation', () => {
     expect(request).toHaveBeenNthCalledWith(1, sourceUrl, expect.objectContaining({ method: 'GET', headers: expect.objectContaining({ Range: 'bytes=0-65535' }) }));
     expect(request).toHaveBeenNthCalledWith(2, sourceUrl, expect.objectContaining({ method: 'GET', headers: { Accept: 'text/html,application/xhtml+xml' } }));
   });
+
+  it('caches successful production checks, does not cache failures, and expires entries', async () => {
+    vi.useFakeTimers();
+    const sourceUrl = 'https://www.kitchensanctuary.com/cache-test-recipe';
+    const request = vi.fn().mockResolvedValue({ status: 200, url: sourceUrl, text: async () => '<title>Cache test recipe</title>' });
+    vi.stubGlobal('fetch', request);
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl)).resolves.toBe(sourceUrl);
+    await expect(confirmPublisherRecipePageUrl(sourceUrl)).resolves.toBe(sourceUrl);
+    expect(request).toHaveBeenCalledTimes(1);
+
+    vi.advanceTimersByTime(24 * 60 * 60 * 1000 + 1);
+    await expect(confirmPublisherRecipePageUrl(sourceUrl)).resolves.toBe(sourceUrl);
+    expect(request).toHaveBeenCalledTimes(2);
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
 });
