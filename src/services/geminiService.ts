@@ -1869,6 +1869,8 @@ READY-MADE RECOVERY: The initial search was under-filled after source and produc
       }
     }
     console.error("[GeminiService] Search failed:", error);
+
+    if (error instanceof GeminiServiceError) throw error;
     
     const parsed = parseProviderError(error);
     let category: 'network' | 'quota' | 'model' | 'permission' = 'model';

@@ -1,8 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, RECIPE_PUBLISHER_REGISTRY, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
   const groundedSources = [
     { url: 'https://www.bbcgoodfood.com/recipes/haddock-potato-bake?b=2&a=1' },
     { url: 'https://www.tescorealfood.com/recipes/haddock-potatoes' },
@@ -210,9 +215,9 @@ describe('grounded source URL reconciliation', () => {
     expect(request).toHaveBeenNthCalledWith(2, sourceUrl, expect.objectContaining({ method: 'GET', headers: { Accept: 'text/html,application/xhtml+xml' } }));
   });
 
-  it('caches successful production checks, does not cache failures, and expires entries', async () => {
+  it('caches successful production checks and expires entries', async () => {
     vi.useFakeTimers();
-    const sourceUrl = 'https://www.kitchensanctuary.com/cache-test-recipe';
+    const sourceUrl = 'https://www.kitchensanctuary.com/cache-test-recipe-renamed';
     const request = vi.fn().mockResolvedValue({ status: 200, url: sourceUrl, text: async () => '<title>Cache test recipe</title>' });
     vi.stubGlobal('fetch', request);
 
@@ -223,7 +228,68 @@ describe('grounded source URL reconciliation', () => {
     vi.advanceTimersByTime(24 * 60 * 60 * 1000 + 1);
     await expect(confirmPublisherRecipePageUrl(sourceUrl)).resolves.toBe(sourceUrl);
     expect(request).toHaveBeenCalledTimes(2);
-    vi.unstubAllGlobals();
-    vi.useRealTimers();
+  });
+
+  it('does not cache failed checks', async () => {
+    const sourceUrl = 'https://www.kitchensanctuary.com/cache-failure-test';
+    const request = vi.fn()
+      .mockResolvedValueOnce({ status: 404, url: sourceUrl, text: async () => '' })
+      .mockResolvedValueOnce({ status: 200, url: sourceUrl, text: async () => '<title>Recovered recipe</title>' });
+    vi.stubGlobal('fetch', request);
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl)).resolves.toBeNull();
+    await expect(confirmPublisherRecipePageUrl(sourceUrl)).resolves.toBe(sourceUrl);
+    expect(request).toHaveBeenCalledTimes(2);
+  });
+
+  it('evicts the oldest cached entry at the size cap', async () => {
+    const request = vi.fn().mockImplementation(async (url: string) => ({
+      status: 200,
+      url,
+      text: async () => '<title>Cap test recipe</title>'
+    }));
+    vi.stubGlobal('fetch', request);
+
+    for (let index = 0; index < 3_100; index += 1) {
+      await confirmPublisherRecipePageUrl(`https://www.kitchensanctuary.com/cache-cap-${index}`);
+    }
+    const callsBeforeReplay = request.mock.calls.length;
+    await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-cap-0');
+    await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-cap-3099');
+
+    expect(request).toHaveBeenCalledTimes(callsBeforeReplay + 1);
+  });
+
+  it('sweeps expired entries when writing a new cache entry', async () => {
+    vi.useFakeTimers();
+    const request = vi.fn().mockImplementation(async (url: string) => ({
+      status: 200,
+      url,
+      text: async () => '<title>Expiry sweep recipe</title>'
+    }));
+    vi.stubGlobal('fetch', request);
+
+    for (let index = 0; index < 50; index += 1) {
+      await confirmPublisherRecipePageUrl(`https://www.kitchensanctuary.com/cache-expiry-${index}`);
+    }
+    vi.advanceTimersByTime(25 * 60 * 60 * 1000);
+    await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-expiry-new');
+    const callsBeforeOldEntry = request.mock.calls.length;
+    await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-expiry-0');
+
+    expect(request).toHaveBeenCalledTimes(callsBeforeOldEntry + 1);
+  });
+
+  it('logs cache misses and hits', async () => {
+    const sourceUrl = 'https://www.kitchensanctuary.com/cache-log-test';
+    const request = vi.fn().mockResolvedValue({ status: 200, url: sourceUrl, text: async () => '<title>Log test</title>' });
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.stubGlobal('fetch', request);
+
+    await confirmPublisherRecipePageUrl(sourceUrl);
+    await confirmPublisherRecipePageUrl(sourceUrl);
+
+    expect(log).toHaveBeenCalledWith(`[PublisherPageCheck] cache_miss ${sourceUrl}`);
+    expect(log).toHaveBeenCalledWith(`[PublisherPageCheck] cache_hit ${sourceUrl}`);
   });
 });
