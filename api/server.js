@@ -214899,6 +214899,12 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const { query: query2, count = 3, source, excludeTitles, cuisines: targetCuisines, cuisine: legacyCuisine, isLeftoverMode, ingredientIntent, strictIngredientMatch } = searchParams;
   const isReadyMade = source === "ready-made";
   const initialCandidateCount = !isReadyMade && ingredientIntent?.isIngredientLed ? Math.max(count, 8) : count;
+  const searchDeadlineAt = start + 28e3;
+  const callSearchGemini = (contents, config2, retries = 4, delay2 = 1e3) => withRequestTimeout(
+    callGeminiWithRetry(SEARCH_MODEL, contents, config2, retries, delay2),
+    Math.max(1e3, searchDeadlineAt - Date.now()),
+    "Published recipe search time budget"
+  );
   const appliedFilters = [];
   const activeDietaryRule = searchParams.dietaryRule || preferences?.dietaryRule || "none";
   const activeSaladPref = searchParams.saladPreference || preferences?.saladPreference || "all";
@@ -215273,7 +215279,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     };
     const aiConfig = getApiConfig();
     console.log(`[GeminiService] Calling model ${SEARCH_MODEL} (Mode: ${aiConfig.mode}) with prompt length: ${prompt.length}...`);
-    const response = await callGeminiWithRetry(SEARCH_MODEL, prompt, config2);
+    const response = await callSearchGemini(prompt, config2);
     const initialGroundedSources = rememberGroundedSources(response);
     const text = response.text;
     const geminiDuration = Date.now() - start;
@@ -215368,7 +215374,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       };
       try {
         const recoveryResponse = await withRequestTimeout(
-          callGeminiWithRetry(SEARCH_MODEL, recoveryPrompt, recoveryConfig, 1),
+          callSearchGemini(recoveryPrompt, recoveryConfig, 1),
           12e3,
           "Ingredient search recovery"
         );
@@ -215442,7 +215448,7 @@ ${publisherFocusedRecovery}`}`;
           systemInstruction: `${finalSystemInstruction}
 REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's source, exclusion and variety requirements.`
         };
-        const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt2, repairConfig);
+        const repairResponse = await callSearchGemini(repairPrompt2, repairConfig);
         const repairGroundedSources = rememberGroundedSources(repairResponse);
         const repairOutputText2 = repairResponse.text || "";
         repairOutputs.push(repairOutputText2);
@@ -215476,8 +215482,7 @@ Do not repeat these titles: ${existingTitles.join(", ") || "None"}.
 Preserve every hard dietary, allergy, ethical, budget and heating-time rule. Use Google Search grounding and provide an exact source product page URL for every result. Never use a generic search URL or a home-cooking recipe.`;
         repairPrompts.push(readyMadeRecoveryPrompt);
         try {
-          const readyMadeRecoveryResponse = await callGeminiWithRetry(
-            SEARCH_MODEL,
+          const readyMadeRecoveryResponse = await callSearchGemini(
             readyMadeRecoveryPrompt,
             {
               ...config2,

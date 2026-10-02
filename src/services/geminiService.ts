@@ -1030,6 +1030,13 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   const { query, count = 3, source, excludeTitles, cuisines: targetCuisines, cuisine: legacyCuisine, isLeftoverMode, ingredientIntent, strictIngredientMatch } = searchParams;
   const isReadyMade = source === 'ready-made';
   const initialCandidateCount = !isReadyMade && ingredientIntent?.isIngredientLed ? Math.max(count, 8) : count;
+  const searchDeadlineAt = start + 28_000;
+  const callSearchGemini = (contents: any, config: any, retries = 4, delay = 1000) =>
+    withRequestTimeout(
+      callGeminiWithRetry(SEARCH_MODEL, contents, config, retries, delay),
+      Math.max(1_000, searchDeadlineAt - Date.now()),
+      'Published recipe search time budget'
+    );
   
   const appliedFilters: string[] = [];
   const activeDietaryRule = searchParams.dietaryRule || preferences?.dietaryRule || 'none';
@@ -1476,7 +1483,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     const aiConfig = getApiConfig();
     console.log(`[GeminiService] Calling model ${SEARCH_MODEL} (Mode: ${aiConfig.mode}) with prompt length: ${prompt.length}...`);
     
-    const response = await callGeminiWithRetry(SEARCH_MODEL, prompt, config);
+    const response = await callSearchGemini(prompt, config);
     const initialGroundedSources = rememberGroundedSources(response);
 
     const text = response.text;
@@ -1580,7 +1587,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
 
       try {
         const recoveryResponse = await withRequestTimeout(
-          callGeminiWithRetry(SEARCH_MODEL, recoveryPrompt, recoveryConfig, 1),
+          callSearchGemini(recoveryPrompt, recoveryConfig, 1),
           12_000,
           'Ingredient search recovery'
         );
@@ -1663,7 +1670,7 @@ ${isReadyMade ? 'Return commercially available UK ready-made products only.' : `
           systemInstruction: `${finalSystemInstruction}
 REPAIR REQUEST: Generate exactly ${repairCount} additional results for this request. Follow the repair prompt's source, exclusion and variety requirements.`
         };
-        const repairResponse = await callGeminiWithRetry(SEARCH_MODEL, repairPrompt, repairConfig);
+        const repairResponse = await callSearchGemini(repairPrompt, repairConfig);
         const repairGroundedSources = rememberGroundedSources(repairResponse);
         const repairOutputText = repairResponse.text || '';
         repairOutputs.push(repairOutputText);
@@ -1707,8 +1714,7 @@ Preserve every hard dietary, allergy, ethical, budget and heating-time rule. Use
         repairPrompts.push(readyMadeRecoveryPrompt);
 
         try {
-          const readyMadeRecoveryResponse = await callGeminiWithRetry(
-            SEARCH_MODEL,
+          const readyMadeRecoveryResponse = await callSearchGemini(
             readyMadeRecoveryPrompt,
             {
               ...config,
