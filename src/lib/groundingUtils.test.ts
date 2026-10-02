@@ -111,11 +111,26 @@ describe('grounded source URL reconciliation', () => {
     expect(request).not.toHaveBeenCalled();
   });
 
-  it('retains a trusted publisher page when an automated check is blocked', async () => {
+  it('rejects a BBC Good Food page when an automated check is blocked', async () => {
     const request = vi.fn().mockRejectedValue(new Error('Blocked'));
     const sourceUrl = 'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake';
 
-    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBe(sourceUrl);
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBeNull();
+  });
+
+  it('rejects BBC Good Food when its page cannot be verified', async () => {
+    const request = vi.fn().mockRejectedValue(new Error('Blocked by publisher access layer'));
+    await expect(confirmPublisherRecipePageUrl(
+      'https://www.bbcgoodfood.com/recipes/chicken-red-pepper-almond-traybake',
+      request
+    )).resolves.toBeNull();
+  });
+
+  it('retains another trusted publisher page when an automated check is blocked', async () => {
+    const request = vi.fn().mockRejectedValue(new Error('Blocked'));
+    const sourceUrl = 'https://www.kitchensanctuary.com/creamy-garlic-scallops/';
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBe('https://www.kitchensanctuary.com/creamy-garlic-scallops');
   });
 
   it('rejects a publisher redirect that no longer resolves to a recipe page', async () => {

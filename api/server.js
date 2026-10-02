@@ -212207,7 +212207,8 @@ var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
     }
     return resolvedUrl;
   } catch {
-    return sourceUrl;
+    const host = new URL(sourceUrl).hostname.toLowerCase().replace(/^www\./, "");
+    return host === "bbcgoodfood.com" ? null : sourceUrl;
   } finally {
     clearTimeout(timeoutId);
   }
