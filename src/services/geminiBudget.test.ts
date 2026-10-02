@@ -33,6 +33,7 @@ describe('published recipe search time budget', () => {
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.useRealTimers();
     vi.restoreAllMocks();
   });
