@@ -213503,22 +213503,16 @@ var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
   try {
-    const headResponse = await request(sourceUrl, {
-      method: "HEAD",
-      redirect: "follow",
-      signal: controller.signal
-    });
-    if ([401, 402, 404, 410].includes(headResponse.status)) return null;
-    let resolvedUrl = canonicaliseGroundedUrl(headResponse.url) || sourceUrl;
-    if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
-    const pageResponse = await request(sourceUrl, {
+    const requestPage = (includeRange) => request(sourceUrl, {
       method: "GET",
       redirect: "follow",
-      headers: { Range: "bytes=0-65535", Accept: "text/html,application/xhtml+xml" },
+      ...includeRange ? { headers: { Range: "bytes=0-65535", Accept: "text/html,application/xhtml+xml" } } : { headers: { Accept: "text/html,application/xhtml+xml" } },
       signal: controller.signal
     });
+    let pageResponse = await requestPage(true);
+    if ([405, 416].includes(pageResponse.status)) pageResponse = await requestPage(false);
     if ([401, 402, 404, 410].includes(pageResponse.status)) return null;
-    resolvedUrl = canonicaliseGroundedUrl(pageResponse.url) || sourceUrl;
+    let resolvedUrl = canonicaliseGroundedUrl(pageResponse.url) || sourceUrl;
     if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
     if (typeof pageResponse.text === "function") {
       const pageExcerpt = (await pageResponse.text()).slice(0, 65536);

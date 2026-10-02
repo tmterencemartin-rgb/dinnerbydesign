@@ -237,31 +237,24 @@ export const confirmPublisherRecipePageUrl = async (
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
 
   try {
-    const headResponse = await request(sourceUrl, {
-      method: 'HEAD',
-      redirect: 'follow',
-      signal: controller.signal
-    });
-
-    if ([401, 402, 404, 410].includes(headResponse.status)) return null;
-
-    let resolvedUrl = canonicaliseGroundedUrl(headResponse.url) || sourceUrl;
-    if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
-
-    // A HEAD response never contains the visitor-facing content, even though
-    // the Fetch Response object exposes a text() method. Always follow a
-    // successful header check with a deliberately small page request.
-    const pageResponse = await request(sourceUrl, {
+    const requestPage = (includeRange: boolean) => request(sourceUrl, {
       method: 'GET',
       redirect: 'follow',
-      headers: { Range: 'bytes=0-65535', Accept: 'text/html,application/xhtml+xml' },
+      ...(includeRange ? { headers: { Range: 'bytes=0-65535', Accept: 'text/html,application/xhtml+xml' } } : { headers: { Accept: 'text/html,application/xhtml+xml' } }),
       signal: controller.signal
     });
+    let pageResponse = await requestPage(true);
+    if ([405, 416].includes(pageResponse.status)) pageResponse = await requestPage(false);
 
     if ([401, 402, 404, 410].includes(pageResponse.status)) return null;
-    resolvedUrl = canonicaliseGroundedUrl(pageResponse.url) || sourceUrl;
+    let resolvedUrl = canonicaliseGroundedUrl(pageResponse.url) || sourceUrl;
     if (!samePublisher(sourceUrl, resolvedUrl) || !isDirectHttpsContentUrl(resolvedUrl)) return null;
 
+    /*
+     * A ranged GET keeps page validation bounded while avoiding a separate
+     * HEAD request. Some publishers reject Range, so the fallback above
+     * retries the same page without it.
+     */
     if (typeof pageResponse.text === 'function') {
       const pageExcerpt = (await pageResponse.text()).slice(0, 65_536);
       const pageTitle = extractPageTitle(pageExcerpt);
@@ -286,10 +279,6 @@ export const confirmPublisherRecipePageUrl = async (
     }
     return resolvedUrl;
   } catch {
-    // BBC Good Food's access layer can return a visually plausible page while
-    // withholding the recipe behind a sign-in, trial or subscription prompt.
-    // If its page cannot be verified, fail closed rather than surfacing a link
-    // that may take the user straight to a paywall.
     const host = new URL(sourceUrl).hostname.toLowerCase().replace(/^www\./, '');
     return host === 'bbcgoodfood.com' ? null : sourceUrl;
   } finally {

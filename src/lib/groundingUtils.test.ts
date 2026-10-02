@@ -198,4 +198,15 @@ describe('grounded source URL reconciliation', () => {
 
     await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBeNull();
   });
+
+  it.each([405, 416])('retries a ranged GET without Range when the publisher returns %s', async (status) => {
+    const sourceUrl = 'https://www.kitchensanctuary.com/range-fallback-recipe';
+    const request = vi.fn()
+      .mockResolvedValueOnce({ status, url: sourceUrl, text: async () => '' })
+      .mockResolvedValueOnce({ status: 200, url: sourceUrl, text: async () => '<title>Range fallback recipe</title>' });
+
+    await expect(confirmPublisherRecipePageUrl(sourceUrl, request)).resolves.toBe(sourceUrl);
+    expect(request).toHaveBeenNthCalledWith(1, sourceUrl, expect.objectContaining({ method: 'GET', headers: expect.objectContaining({ Range: 'bytes=0-65535' }) }));
+    expect(request).toHaveBeenNthCalledWith(2, sourceUrl, expect.objectContaining({ method: 'GET', headers: { Accept: 'text/html,application/xhtml+xml' } }));
+  });
 });
