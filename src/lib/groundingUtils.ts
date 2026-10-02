@@ -194,6 +194,7 @@ type PublisherPageRequest = (url: string, init: RequestInit) => Promise<Publishe
 
 const PUBLISHER_PAGE_TIMEOUT_MS = 4_000;
 const PUBLISHER_PAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const PUBLISHER_PAGE_CACHE_MAX_ENTRIES = 3_000;
 const publisherPageCache = new Map<string, { url: string; expiresAt: number }>();
 const ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
 const MISSING_PAGE_PATTERN = /\b(?:page|recipe)\s+not\s+found\b|\b404\s+(?:error|not found)\b/i;
@@ -224,8 +225,12 @@ export const confirmPublisherRecipePageUrl = async (
 
   if (request === fetch) {
     const cached = publisherPageCache.get(sourceUrl);
-    if (cached && cached.expiresAt > Date.now()) return cached.url;
+    if (cached && cached.expiresAt > Date.now()) {
+      console.log(`[PublisherPageCheck] cache_hit ${sourceUrl}`);
+      return cached.url;
+    }
     if (cached) publisherPageCache.delete(sourceUrl);
+    console.log(`[PublisherPageCheck] cache_miss ${sourceUrl}`);
   }
 
   const controller = new AbortController();
@@ -268,6 +273,15 @@ export const confirmPublisherRecipePageUrl = async (
     }
 
     if (request === fetch) {
+      const now = Date.now();
+      for (const [cachedUrl, cached] of publisherPageCache) {
+        if (cached.expiresAt <= now) publisherPageCache.delete(cachedUrl);
+      }
+      while (publisherPageCache.size >= PUBLISHER_PAGE_CACHE_MAX_ENTRIES) {
+        const oldestUrl = publisherPageCache.keys().next().value;
+        if (!oldestUrl) break;
+        publisherPageCache.delete(oldestUrl);
+      }
       publisherPageCache.set(sourceUrl, { url: resolvedUrl, expiresAt: Date.now() + PUBLISHER_PAGE_CACHE_TTL_MS });
     }
     return resolvedUrl;

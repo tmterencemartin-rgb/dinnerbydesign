@@ -35,7 +35,7 @@ Every published-recipe result must have a direct HTTPS source link. The app acce
 - Where grounding metadata is not available, the fallback is limited to a direct page from the approved source list. This is source-backed validation, not a claim that the result was Google-grounded.
 - Duplicate titles are removed and the app aims to show different publishers where suitable alternatives exist.
 
-The app checks that the linked page remains usable before it is delivered. A candidate that fails these checks is excluded.
+The app checks that the linked page is usable before it is delivered. A successful publisher-page check is cached for up to 24 hours per server instance, so a page verified within that window is not re-checked on every search. A candidate that fails these checks is excluded.
 
 ### 4. Recovery is limited and preserves the brief
 

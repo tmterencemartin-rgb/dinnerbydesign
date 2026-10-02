@@ -213477,6 +213477,7 @@ var isApprovedDirectRecipeUrl = (value) => {
 };
 var PUBLISHER_PAGE_TIMEOUT_MS = 4e3;
 var PUBLISHER_PAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1e3;
+var PUBLISHER_PAGE_CACHE_MAX_ENTRIES = 3e3;
 var publisherPageCache = /* @__PURE__ */ new Map();
 var ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
 var MISSING_PAGE_PATTERN = /\b(?:page|recipe)\s+not\s+found\b|\b404\s+(?:error|not found)\b/i;
@@ -213492,8 +213493,12 @@ var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
   if (!sourceUrl || !isApprovedDirectRecipeUrl(sourceUrl)) return null;
   if (request === fetch) {
     const cached = publisherPageCache.get(sourceUrl);
-    if (cached && cached.expiresAt > Date.now()) return cached.url;
+    if (cached && cached.expiresAt > Date.now()) {
+      console.log(`[PublisherPageCheck] cache_hit ${sourceUrl}`);
+      return cached.url;
+    }
     if (cached) publisherPageCache.delete(sourceUrl);
+    console.log(`[PublisherPageCheck] cache_miss ${sourceUrl}`);
   }
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), PUBLISHER_PAGE_TIMEOUT_MS);
@@ -213521,6 +213526,15 @@ var confirmPublisherRecipePageUrl = async (value, request = fetch) => {
       if (ACCESS_BARRIER_PATTERN.test(pageExcerpt) || MISSING_PAGE_PATTERN.test(pageExcerpt) || GENERIC_INDEX_TITLE_PATTERN.test(pageTitle)) return null;
     }
     if (request === fetch) {
+      const now = Date.now();
+      for (const [cachedUrl, cached] of publisherPageCache) {
+        if (cached.expiresAt <= now) publisherPageCache.delete(cachedUrl);
+      }
+      while (publisherPageCache.size >= PUBLISHER_PAGE_CACHE_MAX_ENTRIES) {
+        const oldestUrl = publisherPageCache.keys().next().value;
+        if (!oldestUrl) break;
+        publisherPageCache.delete(oldestUrl);
+      }
       publisherPageCache.set(sourceUrl, { url: resolvedUrl, expiresAt: Date.now() + PUBLISHER_PAGE_CACHE_TTL_MS });
     }
     return resolvedUrl;
