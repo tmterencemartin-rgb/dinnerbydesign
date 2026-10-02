@@ -39,12 +39,14 @@ describe('grounded source URL reconciliation', () => {
     expect(isTrustedRecipePublisherUrl('https://www.goodto.com/food/recipes/chicken-curry')).toBe(true);
     expect(isTrustedRecipePublisherUrl('https://www.bbc.co.uk/food/recipes/haddock-potato-bake')).toBe(true);
     expect(isTrustedRecipePublisherUrl('https://realfood.tesco.com/recipes/example')).toBe(true);
+    expect(isTrustedRecipePublisherUrl('https://www.tesco.com/recipes/en-GB/recipe/corned-beef-and-butter-bean-stew')).toBe(true);
     expect(isTrustedRecipePublisherUrl('https://example.com/haddock-potato-bake')).toBe(false);
   });
 
   it('accepts only direct recipe pages from approved publishers when grounding metadata is absent', () => {
     expect(isApprovedDirectRecipeUrl('https://www.goodto.com/food/recipes/chicken-curry')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.bbcgoodfood.com/recipes/haddock-potato-bake')).toBe(false);
+    expect(isApprovedDirectRecipeUrl('https://www.tesco.com/recipes/en-GB/recipe/corned-beef-and-butter-bean-stew')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.kitchensanctuary.com/creamy-garlic-scallops/')).toBe(true);
     expect(isApprovedDirectRecipeUrl('https://www.waitrose.com/ecom/recipes/roast-chicken')).toBe(false);
     expect(isApprovedDirectRecipeUrl('https://www.asda.com/good-living/recipes/sausage-and-bean-stew')).toBe(true);

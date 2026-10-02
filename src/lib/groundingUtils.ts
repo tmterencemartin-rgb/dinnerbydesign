@@ -17,6 +17,7 @@ export const RECIPE_PUBLISHER_REGISTRY: readonly RecipePublisher[] = [
   { host: 'bbc.co.uk', name: 'BBC Food', tier: 'stable', priority: 20 },
   { host: 'realfood.tesco.com', name: 'Tesco Real Food', tier: 'stable', priority: 30 },
   { host: 'tescorealfood.com', name: 'Tesco Real Food', tier: 'stable', priority: 31 },
+  { host: 'tesco.com', name: 'Tesco Recipes', tier: 'stable', priority: 32 },
   { host: 'theguardian.com', name: 'The Guardian', tier: 'stable', priority: 40 },
   { host: 'deliaonline.com', name: 'Delia Online', tier: 'stable', priority: 50 },
   { host: 'nigella.com', name: 'Nigella Lawson', tier: 'stable', priority: 60 },
