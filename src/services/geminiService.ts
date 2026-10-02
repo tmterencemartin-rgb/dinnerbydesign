@@ -6,7 +6,7 @@ import { detectIngredientIntent, matchesRequestedIngredientSearch, matchesStrict
 import { dietaryRuleAllowsOffal } from '../lib/offalPreference';
 import { filterCookingFatsForDiet } from '../lib/preferenceCompatibility';
 import { buildEnrichmentRequestBody, type EnrichmentRequestOptions } from '../lib/enrichmentRequest';
-import { APPROVED_RECIPE_PUBLISHER_HOSTS, canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
+import { APPROVED_RECIPE_PUBLISHER_HOSTS, RECIPE_PUBLISHER_REGISTRY, canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, reconcileGroundedSourceUrl, type GroundedSource } from '../lib/groundingUtils';
 import { parseModelJson } from '../lib/parseModelJson';
 import { ACTIVE_GEMINI_MODEL, ENRICHMENT_GEMINI_MODEL } from '../config/aiModel';
 import { COOKING_METHOD_ALIASES } from '../constants';
@@ -761,19 +761,10 @@ export const hasExplicitRecipeProteinIntent = (query: string, isIngredientLed = 
   || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|mackerel|prawn|shrimp|tofu|liver|offal|kidney|heart|tongue|tripe|sweetbreads|black pudding|blood sausage)\b/i.test(query)
 );
 
-const PUBLISHER_RECOVERY_PRIORITY_HOSTS = [
-  'bbcgoodfood.com',
-  'bbc.co.uk',
-  'realfood.tesco.com',
-  'theguardian.com',
-  'deliciousmagazine.co.uk',
-  'thehappyfoodie.co.uk',
-  'deliaonline.com',
-  'nigella.com',
-  'hairybikers.com',
-  'greatbritishrecipes.com',
-  'jamesmartinchef.co.uk'
-] as const;
+const PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY
+  .filter(publisher => publisher.tier === 'stable')
+  .sort((left, right) => left.priority - right.priority)
+  .map(publisher => publisher.host);
 
 export const buildPublisherFocusedRecoveryInstruction = (
   query: string,

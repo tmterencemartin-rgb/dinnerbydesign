@@ -3,49 +3,59 @@ export type GroundedSource = {
   title?: string;
 };
 
-export const APPROVED_RECIPE_PUBLISHER_HOSTS = [
-  'goodto.com',
-  'bbc.co.uk',
-  'tescorealfood.com',
-  'realfood.tesco.com',
-  'tesco.com',
-  'theguardian.com',
-  'deliciousmagazine.co.uk',
-  'thehappyfoodie.co.uk',
-  'deliaonline.com',
-  'nigella.com',
-  'foodnetwork.co.uk',
-  'pinchofnom.com',
-  'maryberry.co.uk',
-  'greatbritishrecipes.com',
-  'recipetineats.com',
-  'gressinghamduck.co.uk',
-  'annaskitchentable.co.uk',
-  'independent.co.uk',
-  'recipesmadeeasy.co.uk',
-  'riverford.co.uk',
-  'ottolenghi.co.uk',
-  'coop.co.uk',
-  'jamesmartinchef.co.uk',
-  'hairybikers.com',
-  'dontgobaconmyheart.co.uk',
-  'krumpli.co.uk',
-  'ourmodernkitchen.com',
-  'kitchensanctuary.com',
-  'diabetes.org.uk',
-  'slimmingworld.co.uk',
-  'jamieoliver.com',
-  'asda.com',
-  'sainsburysmagazine.co.uk',
-  'olivemagazine.com',
-  'greatbritishchefs.com',
-  'goodhousekeeping.com',
-  'easypeasyfoodie.com',
-  'lovepork.com',
-  'groceries.morrisons.com',
-  'marksandspencer.com',
-  'abelandcole.co.uk'
+export type RecipePublisherTier = 'stable' | 'watch';
+
+export type RecipePublisher = {
+  host: string;
+  name: string;
+  tier: RecipePublisherTier;
+  priority: number;
+};
+
+export const RECIPE_PUBLISHER_REGISTRY: readonly RecipePublisher[] = [
+  { host: 'goodto.com', name: 'Goodto', tier: 'stable', priority: 10 },
+  { host: 'bbc.co.uk', name: 'BBC Food', tier: 'stable', priority: 20 },
+  { host: 'realfood.tesco.com', name: 'Tesco Real Food', tier: 'stable', priority: 30 },
+  { host: 'tescorealfood.com', name: 'Tesco Real Food', tier: 'stable', priority: 31 },
+  { host: 'theguardian.com', name: 'The Guardian', tier: 'stable', priority: 40 },
+  { host: 'deliaonline.com', name: 'Delia Online', tier: 'stable', priority: 50 },
+  { host: 'nigella.com', name: 'Nigella Lawson', tier: 'stable', priority: 60 },
+  { host: 'jamieoliver.com', name: 'Jamie Oliver', tier: 'stable', priority: 70 },
+  { host: 'kitchensanctuary.com', name: 'Kitchen Sanctuary', tier: 'stable', priority: 80 },
+  { host: 'pinchofnom.com', name: 'Pinch of Nom', tier: 'stable', priority: 90 },
+  { host: 'greatbritishrecipes.com', name: 'Great British Recipes', tier: 'stable', priority: 100 },
+  { host: 'recipetineats.com', name: 'RecipeTin Eats', tier: 'stable', priority: 110 },
+  { host: 'recipesmadeeasy.co.uk', name: 'Recipes Made Easy', tier: 'stable', priority: 120 },
+  { host: 'easypeasyfoodie.com', name: 'Easy Peasy Foodie', tier: 'stable', priority: 130 },
+  { host: 'goodhousekeeping.com', name: 'Good Housekeeping', tier: 'watch', priority: 140 },
+  { host: 'olivemagazine.com', name: 'Olive Magazine', tier: 'watch', priority: 150 },
+  { host: 'greatbritishchefs.com', name: 'Great British Chefs', tier: 'watch', priority: 160 },
+  { host: 'foodnetwork.co.uk', name: 'Food Network UK', tier: 'watch', priority: 170 },
+  { host: 'deliciousmagazine.co.uk', name: 'delicious. magazine', tier: 'watch', priority: 180 },
+  { host: 'thehappyfoodie.co.uk', name: 'The Happy Foodie', tier: 'watch', priority: 190 },
+  { host: 'maryberry.co.uk', name: 'Mary Berry', tier: 'watch', priority: 200 },
+  { host: 'riverford.co.uk', name: 'Riverford', tier: 'watch', priority: 210 },
+  { host: 'ottolenghi.co.uk', name: 'Ottolenghi', tier: 'watch', priority: 220 },
+  { host: 'coop.co.uk', name: 'Co-op', tier: 'watch', priority: 230 },
+  { host: 'hairybikers.com', name: 'Hairy Bikers', tier: 'watch', priority: 240 },
+  { host: 'dontgobaconmyheart.co.uk', name: "Don't Go Bacon My Heart", tier: 'watch', priority: 250 },
+  { host: 'ourmodernkitchen.com', name: 'Our Modern Kitchen', tier: 'watch', priority: 260 },
+  { host: 'annaskitchentable.co.uk', name: "Anna's Kitchen Table", tier: 'watch', priority: 270 },
+  { host: 'gressinghamduck.co.uk', name: 'Gressingham Duck', tier: 'watch', priority: 280 },
+  { host: 'independent.co.uk', name: 'The Independent', tier: 'watch', priority: 290 },
+  { host: 'diabetes.org.uk', name: 'Diabetes UK', tier: 'watch', priority: 300 },
+  { host: 'slimmingworld.co.uk', name: 'Slimming World', tier: 'watch', priority: 310 },
+  { host: 'asda.com', name: 'Asda', tier: 'watch', priority: 320 },
+  { host: 'sainsburysmagazine.co.uk', name: "Sainsbury's Magazine", tier: 'watch', priority: 330 },
+  { host: 'lovepork.com', name: 'Love Pork', tier: 'watch', priority: 340 },
+  { host: 'groceries.morrisons.com', name: 'Morrisons', tier: 'watch', priority: 350 },
+  { host: 'marksandspencer.com', name: 'M&S Food', tier: 'watch', priority: 360 },
+  { host: 'abelandcole.co.uk', name: 'Abel & Cole', tier: 'watch', priority: 370 },
+  { host: 'jamesmartinchef.co.uk', name: 'James Martin', tier: 'watch', priority: 380 },
+  { host: 'krumpli.co.uk', name: 'Krumpli', tier: 'watch', priority: 390 }
 ] as const;
+
+export const APPROVED_RECIPE_PUBLISHER_HOSTS = RECIPE_PUBLISHER_REGISTRY.map(({ host }) => host);
 
 const TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set<string>(APPROVED_RECIPE_PUBLISHER_HOSTS);
 
