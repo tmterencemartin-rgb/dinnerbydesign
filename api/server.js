@@ -213414,7 +213414,7 @@ var buildPublisherFocusedRecoveryInstruction = (query2, usedPublishers = []) => 
   const searchTerms = hosts.map((host) => `site:${host} "${quotedQuery}"`).join(", ");
   return `SOURCE-FOCUSED RECOVERY:
 - The initial published-recipe search is under-filled. Search unused approved publisher sites before returning fewer choices.
-- Use focused Google searches such as: ${searchTerms}.
+- Use focused Google searches such as: ${searchTerms}. If a search returns a collection or index page, use it only to discover named child recipes, then perform a second focused search for the individual recipe page before returning it.
 - Return only an exact direct recipe page that the current search grounds. Do not use a search page, category page, recipe collection, homepage or an invented URL.
 - Keep every dietary, allergy, ingredient, budget and time restriction from the original request.`;
 };
@@ -213776,6 +213776,7 @@ INTENT PARSING (CRITICAL):
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
   - sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: Goodto, BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Hairy Bikers, Don't Go Bacon My Heart, Krumpli, Our Modern Kitchen, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, Good Housekeeping, Easy Peasy Foodie, Love Pork, Morrisons, M&S Food, and Abel & Cole. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+  - A collection, category or index page may be used as discovery evidence only. Follow its named child recipes or run a second focused search, then return the exact individual recipe URL. Never return the collection or index URL itself.
 - FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
 - FOR RECIPES (HOMEMADE): You MUST provide an ACCURATE "totalIngredientsCount". The "totalIngredientsCount" is the total number of ingredients in a standard version of this recipe (e.g. usually between 5-15). Do NOT just count the stub ingredients you return.
