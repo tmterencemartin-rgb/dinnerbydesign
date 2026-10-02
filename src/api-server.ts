@@ -1852,7 +1852,7 @@ export function createApp() {
     try {
       const choices = await generateInternalDinnerChoices(brief, preferences, strictIngredientMatch);
       if (choices.length === 0) {
-        await recordAiUsageEvent({
+        void recordAiUsageEvent({
           type: 'ai_created_dinner',
           source: 'ai-created',
           model: ACTIVE_GEMINI_MODEL,
@@ -1887,7 +1887,7 @@ export function createApp() {
         }
       }
 
-      await recordAiUsageEvent({
+      void recordAiUsageEvent({
         type: 'ai_created_dinner',
         source: 'ai-created',
         model: ACTIVE_GEMINI_MODEL,
@@ -1904,7 +1904,7 @@ export function createApp() {
       return res.json({ choices, partial: partialChoices });
     } catch (error: any) {
       console.error('[AiCreatedDinners] Generation failed:', error);
-      await recordAiUsageEvent({
+      void recordAiUsageEvent({
         type: 'ai_created_dinner',
         source: 'ai-created',
         model: ACTIVE_GEMINI_MODEL,
@@ -1961,7 +1961,7 @@ export function createApp() {
       }
       const result = await generateDinnerSuggestions(searchParams, preferences);
       if (!isDeliverableSearchResult(result)) {
-        await recordAiUsageEvent({
+        void recordAiUsageEvent({
           requestId,
           type: classifyAiRequest(searchParams),
           source: searchParams.source || 'cook',
@@ -2021,7 +2021,7 @@ export function createApp() {
       const usage = result?.diagnostics?.usage || null;
       const inputTokens = usage?.inputTokensEstimate || estimateTokensFromChars((usage?.inputChars || 0) || String(searchParams.query || '').length);
       const outputTokens = usage?.outputTokensEstimate || estimateTokensFromChars(JSON.stringify(result || {}).length);
-      await recordAiUsageEvent({
+      void recordAiUsageEvent({
         requestId,
         type: classifyAiRequest(searchParams),
         source: searchParams.source || 'cook',
@@ -2042,7 +2042,7 @@ export function createApp() {
       console.error("[Server API] Gemini Search Error:", error);
       logApiError("generate-suggestions", error);
       const failedSearchParams = req.body?.searchParams || {};
-      await recordAiUsageEvent({
+      void recordAiUsageEvent({
         requestId,
         type: classifyAiRequest(failedSearchParams),
         source: failedSearchParams.source || 'cook',
