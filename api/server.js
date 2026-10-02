@@ -209868,11 +209868,6 @@ var PREFERRED_SOURCES = [
     description: "Tested UK recipes with practical filters for ingredients, occasions and dietary needs."
   },
   {
-    id: "bbc_good_food",
-    label: "BBC Good Food",
-    description: "Big, reliable collection of everyday UK recipes with sensible ingredients."
-  },
-  {
     id: "bbc_food",
     label: "BBC Food",
     description: "Recipes from BBC programmes and chefs, with strong basics and classics."
@@ -211971,7 +211966,11 @@ var matchesRequestedPreparation = (value, requested) => {
 function matchesRequestedIngredientSearch(item, query2) {
   const intent = detectIngredientIntent(query2);
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
-  const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
+  const ingredientLines = [
+    ...Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [],
+    item.title || "",
+    item.description || ""
+  ].filter(Boolean);
   if (ingredientLines.length === 0) return false;
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);
   const requestedIngredients = intent.ingredients;
@@ -213360,21 +213359,42 @@ var getGroundedSources = (response) => {
     return [{ url, title: typeof chunk?.web?.title === "string" ? chunk.web.title : void 0 }];
   });
 };
+var logRejectedPublishedSource = (reason, item) => {
+  console.info("[GeminiService] Published source rejected", {
+    reason,
+    sourceUrl: typeof item?.sourceUrl === "string" ? item.sourceUrl : null
+  });
+};
 var filterToGroundedSources = (items, sources) => items.filter((item) => {
   if (sources.size === 0) {
     const sourceUrl = canonicaliseGroundedUrl(item?.sourceUrl);
-    if (!sourceUrl || !isApprovedDirectRecipeUrl(sourceUrl)) return false;
+    if (!sourceUrl) {
+      logRejectedPublishedSource("invalid_url", item);
+      return false;
+    }
+    if (!isApprovedDirectRecipeUrl(sourceUrl)) {
+      logRejectedPublishedSource(isBlockedRecipePublisherUrl(sourceUrl) ? "blocked_host" : "not_approved_or_direct_url", item);
+      return false;
+    }
     item.sourceUrl = sourceUrl;
     return true;
   }
   const groundedSourceUrl = reconcileGroundedSourceUrl(item?.sourceUrl, [...sources.values()]);
-  if (!groundedSourceUrl || !isApprovedDirectRecipeUrl(groundedSourceUrl)) return false;
+  if (!groundedSourceUrl) {
+    logRejectedPublishedSource("not_grounded", item);
+    return false;
+  }
+  if (!isApprovedDirectRecipeUrl(groundedSourceUrl)) {
+    logRejectedPublishedSource(isBlockedRecipePublisherUrl(groundedSourceUrl) ? "blocked_host" : "not_approved_or_direct_url", item);
+    return false;
+  }
   item.sourceUrl = groundedSourceUrl;
   return true;
 });
 var filterUnavailablePublishedRecipeSources = async (items) => {
   const confirmedItems = await Promise.all(items.map(async (item) => {
     const sourceUrl = await confirmPublisherRecipePageUrl(item?.sourceUrl);
+    if (!sourceUrl) logRejectedPublishedSource("page_check", item);
     return sourceUrl ? { ...item, sourceUrl } : null;
   }));
   return confirmedItems.filter((item) => item !== null);
@@ -213405,6 +213425,7 @@ var selectPublisherVariedRecipes = (items, count) => {
 };
 var hasExplicitRecipeProteinIntent = (query2, isIngredientLed = false) => isIngredientLed || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|mackerel|prawn|shrimp|tofu|liver|offal|kidney|heart|tongue|tripe|sweetbreads|black pudding|blood sausage)\b/i.test(query2);
 var PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY.sort((left, right) => left.priority - right.priority).map((publisher) => publisher.host);
+var PUBLISHER_PROMPT_NAMES = RECIPE_PUBLISHER_REGISTRY.filter((publisher) => !isBlockedRecipePublisherUrl(`https://${publisher.host}/recipe`)).map((publisher) => publisher.name).join(", ");
 var buildPublisherFocusedRecoveryInstruction = (query2, usedPublishers = []) => {
   const used = new Set(usedPublishers.map((publisher) => publisher.toLowerCase()));
   const hosts = [
@@ -213570,6 +213591,7 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const start = Date.now();
   const { query: query2, count = 3, source, excludeTitles, cuisines: targetCuisines, cuisine: legacyCuisine, isLeftoverMode, ingredientIntent, strictIngredientMatch } = searchParams;
   const isReadyMade = source === "ready-made";
+  const initialCandidateCount = !isReadyMade && ingredientIntent?.isIngredientLed ? Math.max(count, 8) : count;
   const appliedFilters = [];
   const activeDietaryRule = searchParams.dietaryRule || preferences?.dietaryRule || "none";
   const activeSaladPref = searchParams.saladPreference || preferences?.saladPreference || "all";
@@ -213767,7 +213789,7 @@ ${categoryMinimumInstruction}
 - If no supported matches exist, return zero results rather than a near match.
 ${strictIngredientMatch ? "- Return the complete visible ingredient list for each recipe, not a shortened summary." : ""}
    - Keep extra ingredients to a minimum and separate obvious pantry staples from meaningful extra shopping in your reasoning.` : "";
-    const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${count} ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs based on the user's intent.
+    const systemInstruction = `You are an expert UK dinner assistant. Your goal is to generate exactly ${initialCandidateCount} ${isReadyMade ? "UK supermarket ready-made products" : "recipe"} stubs based on the user's intent.
 Target: UK audience, Metric units, UK English spelling.
 Portion Basis: ONE adult portion.
 
@@ -213776,7 +213798,7 @@ INTENT PARSING (CRITICAL):
 - If the query contains a name (e.g., "Jamie Oliver", "Delia"), assume the user wants that specific style or celebrity's recipes.
 - If the query is an ingredient list (e.g., "chicken, rice"), find dishes using those.
 - FOR EVERY RESULT: Use Google Search grounding to find a real UK recipe or product page.
-  - sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from one of these approved sources: Goodto, BBC Good Food, BBC Food, Tesco Real Food, The Guardian, delicious. magazine, The Happy Foodie, Delia Online, Nigella Lawson, Food Network UK, Pinch of Nom, Mary Berry, Great British Recipes, RecipeTin Eats, Gressingham Duck, Anna's Kitchen Table, The Independent, Recipes Made Easy, Riverford Organic Farmers, Ottolenghi, Co-op, James Martin, Hairy Bikers, Don't Go Bacon My Heart, Krumpli, Our Modern Kitchen, Kitchen Sanctuary, Diabetes UK, Slimming World, Jamie Oliver, Waitrose, Asda, Sainsbury's Magazine, Olive Magazine, Great British Chefs, The Telegraph, The Times or Sunday Times, Good Housekeeping, Easy Peasy Foodie, Love Pork, Morrisons, M&S Food, and Abel & Cole. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
+  - sourceUrl is required for every result. When Google provides a grounded page, it MUST be that page's exact recipe or product URL. If Google provides no usable grounding metadata, use only an exact direct HTTPS recipe or product page from these approved sources: ${PUBLISHER_PROMPT_NAMES}. Never use a publisher that requires sign-in, payment, a trial or an app before a visitor can use the recipe. Never invent a URL, use a generic search, category or collection page, return recipe-search, or omit sourceUrl.
   - A collection, category or index page may be used as discovery evidence only. Follow its named child recipes or run a second focused search, then return the exact individual recipe URL. Never return the collection or index URL itself.
 - FOR RECIPES (HOMEMADE): Give the user genuine publisher choice. Use no more than one recipe from each publisher whenever suitable alternatives exist.
 - Return complete JSON. Never use an ellipsis or placeholder such as "...". If no supported result exists, return an empty items array.
@@ -213833,7 +213855,7 @@ If the budget limit is too low for the ingredient/dish requested (e.g. "Steak" u
     ${activeMaxTime ? `Must be under ${activeMaxTime} mins.` : ""}
     ${excludeTitles?.length ? `MANDATORY EXCLUSION: Do NOT suggest any of these recipes: ${excludeTitles.join(", ")}.` : ""}
     ${shouldEncourageRecipeVariety ? "Return a varied set when the dish has both meat and vegetarian versions; do not make every result vegetarian unless the query requires it." : ""}
-    Generate ${count} stubs.`;
+    Generate ${initialCandidateCount} stubs.`;
     const config2 = {
       systemInstruction: finalSystemInstruction,
       temperature: 0.1,
@@ -214072,7 +214094,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       const recipeDomains = ["bbcgoodfood.com", "jamieoliver.com", "allrecipes.com", "simplyrecipes.com", "foodnetwork.com", "epicurious.com", "tasty.co", "delish.com"];
       return !recipeDomains.some((domain) => source2.includes(domain));
     };
-    const maxRepairAttempts = ingredientIntent?.isIngredientLed && !isReadyMade ? 0 : 3;
+    const maxRepairAttempts = ingredientIntent?.isIngredientLed && !isReadyMade ? 1 : 3;
     for (let repairAttempt = 0; repairAttempt < maxRepairAttempts; repairAttempt += 1) {
       rawItems = dedupeItems(rawItems);
       const missingCount = Math.max(0, count - rawItems.length);

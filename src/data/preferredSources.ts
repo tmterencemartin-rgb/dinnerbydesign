@@ -11,11 +11,6 @@ export const PREFERRED_SOURCES: PreferredSource[] = [
     description: "Tested UK recipes with practical filters for ingredients, occasions and dietary needs."
   },
   {
-    id: "bbc_good_food",
-    label: "BBC Good Food",
-    description: "Big, reliable collection of everyday UK recipes with sensible ingredients."
-  },
-  {
     id: "bbc_food",
     label: "BBC Food",
     description: "Recipes from BBC programmes and chefs, with strong basics and classics."

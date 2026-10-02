@@ -1054,11 +1054,15 @@ const matchesRequestedPreparation = (
  * Every listed ingredient must be present, while extra ingredients remain
  * allowed unless strict mode is enabled.
  */
-export function matchesRequestedIngredientSearch(item: { ingredients?: string[]; totalIngredientsCount?: number }, query: string): boolean {
+export function matchesRequestedIngredientSearch(item: { ingredients?: string[]; title?: string; description?: string; totalIngredientsCount?: number }, query: string): boolean {
   const intent = detectIngredientIntent(query);
   if (!intent?.isIngredientLed || intent.ingredients.length === 0) return true;
 
-  const ingredientLines = Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [];
+  const ingredientLines = [
+    ...(Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : []),
+    item.title || '',
+    item.description || ''
+  ].filter(Boolean);
   if (ingredientLines.length === 0) return false;
 
   const normalisedLines = ingredientLines.flatMap(normaliseStrictIngredientLine);

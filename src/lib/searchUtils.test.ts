@@ -227,7 +227,7 @@ describe('searchUtils', () => {
       preferredMode: 'cook',
       customCuisines: [],
       preferredSupermarkets: ['Tesco'],
-      preferredSourceIds: ['bbc_good_food']
+      preferredSourceIds: ['bbc_food']
     };
 
     const buildLabels = (params: any, prefs: UserPreferences | null = basePreferences) =>
@@ -253,7 +253,7 @@ describe('searchUtils', () => {
         'Italian',
         'Air fryer',
         'Olive oil',
-        'BBC Good Food',
+        'BBC Food',
         'Quick and easy recipes',
         'Wholesome recipes',
         'High Omega-3',
@@ -319,7 +319,7 @@ describe('searchUtils', () => {
         exclusions: ['Mushrooms'],
         cookingMethods: ['Air fryer'],
         cookingFats: ['Olive oil'],
-        preferredSourceIds: ['bbc_good_food']
+        preferredSourceIds: ['bbc_food']
       }, {
         ...basePreferences,
         exclusions: ['Mushrooms', 'Leeks']
@@ -330,7 +330,7 @@ describe('searchUtils', () => {
       expect(labels.filter(label => label.toLowerCase() === 'no leeks')).toHaveLength(1);
       expect(labels.filter(label => label === 'Air fryer')).toHaveLength(1);
       expect(labels.filter(label => label === 'Olive oil')).toHaveLength(1);
-      expect(labels.filter(label => label === 'BBC Good Food')).toHaveLength(1);
+      expect(labels.filter(label => label === 'BBC Food')).toHaveLength(1);
     });
 
     it('hides suppressed saved preferences but keeps unsuppressed ones visible', () => {
