@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, RECIPE_PUBLISHER_REGISTRY, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
+import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, getPublisherPageCacheSize, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, RECIPE_PUBLISHER_REGISTRY, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   afterEach(() => {
@@ -253,6 +253,7 @@ describe('grounded source URL reconciliation', () => {
     for (let index = 0; index < 3_100; index += 1) {
       await confirmPublisherRecipePageUrl(`https://www.kitchensanctuary.com/cache-cap-${index}`);
     }
+    expect(getPublisherPageCacheSize()).toBe(3_000);
     const callsBeforeReplay = request.mock.calls.length;
     await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-cap-0');
     await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-cap-3099');
@@ -274,6 +275,7 @@ describe('grounded source URL reconciliation', () => {
     }
     vi.advanceTimersByTime(25 * 60 * 60 * 1000);
     await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-expiry-new');
+    expect(getPublisherPageCacheSize()).toBe(1);
     const callsBeforeOldEntry = request.mock.calls.length;
     await confirmPublisherRecipePageUrl('https://www.kitchensanctuary.com/cache-expiry-0');
 

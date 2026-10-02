@@ -63,7 +63,7 @@ describe('published recipe search time budget', () => {
     expect(generateContent).toHaveBeenCalledTimes(2);
   });
 
-  it('does not start a retry after the deadline', async () => {
+  it('a first call that never returns makes one model call', async () => {
     generateContent.mockReturnValue(new Promise(() => {}));
     const result = generateDinnerSuggestions(searchParams());
 
