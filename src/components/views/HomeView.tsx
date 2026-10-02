@@ -1349,7 +1349,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center py-4 text-center h-full w-full"
+            className="flex flex-col items-center justify-center py-4 text-center w-full"
           >
             {!input ? (
               <div className="space-y-6 w-full max-w-xl mx-auto py-2">
