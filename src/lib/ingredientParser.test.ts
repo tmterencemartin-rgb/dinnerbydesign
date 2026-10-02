@@ -208,7 +208,16 @@ describe('Ingredient Parser & Normalizer', () => {
       isIngredientLed: true,
       ingredients: ['butter bean']
     });
-    expect(matchesRequestedIngredientSearch({ ingredients: ['butterbeans', 'tomato'] }, 'butter bean recipes')).toBe(true);
+    expect(matchesRequestedIngredientSearch({ ingredients: ['butterbeans', 'tomato'] }, 'butter bean, tomato')).toBe(true);
+    expect(matchesRequestedIngredientSearch({ ingredients: ['cannellini beans', 'tomato'] }, 'butter bean, tomato')).toBe(false);
+    expect(detectIngredientIntent('butterbeans recipes')).toMatchObject({ isIngredientLed: true, ingredients: ['butter bean'] });
+    expect(detectIngredientIntent('butterbeans and chorizo')).toMatchObject({ isIngredientLed: true, ingredients: ['butter bean', 'chorizo'] });
+  });
+
+  test('matches tinned and packed ingredient lines', () => {
+    for (const line of ['400g tin butter beans', 'tin of butter beans', '1 x 400g tin butter beans, drained', '2 tins butter beans', '400g butter beans', '1 tin butter beans (400g)', '1 can butter beans', '1 jar butter beans', '1 pack butter beans']) {
+      expect(matchesRequestedIngredientSearch({ ingredients: [line, 'tomato'] }, 'butter bean, tomato'), line).toBe(true);
+    }
   });
 
   test('does not use title or description text to satisfy category minimums', () => {

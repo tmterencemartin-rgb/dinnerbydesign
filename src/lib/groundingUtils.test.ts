@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
+import { readFileSync } from 'node:fs';
+import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl, isApprovedDirectRecipeUrl, isDirectHttpsContentUrl, isInternalGroundingUrl, isTrustedRecipePublisherUrl, RECIPE_PUBLISHER_REGISTRY, reconcileGroundedSourceUrl, retainCandidateSourceUrl } from './groundingUtils';
 
 describe('grounded source URL reconciliation', () => {
   const groundedSources = [
@@ -9,6 +10,13 @@ describe('grounded source URL reconciliation', () => {
 
   it('canonicalises fragments and trailing slashes', () => {
     expect(canonicaliseGroundedUrl('https://example.com/recipe/#ingredients')).toBe('https://example.com/recipe');
+  });
+
+  it('keeps the commercial sourcing report domain list aligned with the registry', () => {
+    const report = readFileSync('docs/commercial/published-recipe-sourcing-report.md', 'utf8');
+    const section = report.split('## Current approved source domains')[1].split('## Recommended additions')[0];
+    const reportHosts = [...section.matchAll(/\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b/g)].map(match => match[0]);
+    expect([...new Set(reportHosts)].sort()).toEqual(RECIPE_PUBLISHER_REGISTRY.map(({ host }) => host).sort());
   });
 
   it('matches a grounded URL despite harmless URL formatting differences', () => {

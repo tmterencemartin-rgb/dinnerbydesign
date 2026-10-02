@@ -1605,7 +1605,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       return itemsToDedupe.filter((item: any) => {
         const titleKey = String(item.title || '').trim().toLowerCase();
         if (!titleKey) {
-          logRejectedPublishedSource('duplicate', item);
+          logRejectedPublishedSource('missing_title', item);
           return false;
         }
         if (seenTitles.has(titleKey)) {

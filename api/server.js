@@ -210704,6 +210704,7 @@ function parseAndNormaliseIngredients(query2) {
       "green lentils": "green lentil",
       "beans": "bean",
       "butter beans": "butter bean",
+      "butterbeans": "butter bean",
       "kidney beans": "kidney bean",
       "black beans": "black bean",
       "cannellini beans": "cannellini bean",
@@ -210857,6 +210858,8 @@ var UNSEPARATED_INGREDIENT_TERMS = /* @__PURE__ */ new Set([
   "sweetcorn",
   "tofu",
   "tomato",
+  "butter bean",
+  "butterbeans",
   "tuna",
   "turkey",
   "turnip",
@@ -211456,6 +211459,8 @@ function detectIngredientIntent(query2) {
   const withoutLeadIn = lower2.replace(/\b(what can i make with|what can i cook with|i have|i've got|we have|use up|using up|leftover|left over|in the fridge|in my fridge|in the cupboard|with only)\b/gi, "").replace(/\b(?:only|just)\b/gi, " ").replace(/[?!.]/g, " ").trim();
   const ingredients = parseAndNormaliseIngredients(withoutLeadIn || categoryNormalisedQuery).map((item) => item.replace(/^(some|a bit of|a few|half a|one|two|three)\s+/i, "").trim()).filter((item) => item.length > 1 && item.split(/\s+/).length <= 3);
   const shortIngredientQuery = withoutLeadIn || categoryNormalisedQuery;
+  const recipeWordsRemovedQuery = cleanedQuery.replace(/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/gi, " ").replace(/\s+/g, " ").trim();
+  const standaloneIngredients = /\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/i.test(cleanedQuery) ? parseAndNormaliseIngredients(recipeWordsRemovedQuery) : ingredients;
   const unseparatedWords = shortIngredientQuery.split(/\s+/).filter((word) => !/^and$/i.test(word));
   const unseparatedIngredients = parseUnseparatedIngredientList(shortIngredientQuery);
   const categoryMetadata = Object.keys(categoryMinimums).length > 0 ? { categoryMinimums } : {};
@@ -211463,9 +211468,9 @@ function detectIngredientIntent(query2) {
   if (isShortUnseparatedIngredientList) {
     return { isIngredientLed: true, ingredients: unseparatedIngredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
   }
-  const isStandaloneIngredientSearch = !hasListPunctuation && !ingredientPhrases.test(trimmed) && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery) && ingredients.length === 1 && unseparatedWords.length === 1 && (UNSEPARATED_INGREDIENT_TERMS.has(ingredients[0]) || /^butterbeans$/i.test(trimmed)) && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(ingredients[0]);
+  const isStandaloneIngredientSearch = !hasListPunctuation && !ingredientPhrases.test(trimmed) && (!/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery) || standaloneIngredients.length === 1 && recipeWordsRemovedQuery.split(/\s+/).length === 1) && standaloneIngredients.length === 1 && (unseparatedWords.length === 1 || recipeWordsRemovedQuery.split(/\s+/).length === 1) && UNSEPARATED_INGREDIENT_TERMS.has(standaloneIngredients[0]) && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(standaloneIngredients[0]);
   if (isStandaloneIngredientSearch) {
-    return { isIngredientLed: true, ingredients: /^butterbeans$/i.test(trimmed) ? ["butter bean"] : ingredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
+    return { isIngredientLed: true, ingredients: standaloneIngredients, reason: "short-food-list", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
   }
   if (ingredients.length >= 2 && ingredientPhrases.test(cleanedQuery)) {
     return { isIngredientLed: true, ingredients, reason: "phrase", ...categoryMetadata, ...hasPreparation ? { preparationPreferences: preferences } : {} };
@@ -211906,7 +211911,7 @@ var CHICKEN_CUT_VARIANT_WORDS = /* @__PURE__ */ new Set([
   "heart",
   "neck"
 ]);
-var stripIngredientQuantity = (value) => value.replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, "").replace(/\([^)]*\)/g, " ").replace(/[•*]/g, " ").replace(/\s+/g, " ").trim();
+var stripIngredientQuantity = (value) => value.replace(/^\s*\d+\s*x\s*\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\s*/i, "").replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:x\s*)?(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, "").replace(/\([^)]*\)/g, " ").replace(/^\s*(?:(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+)?(?:tin|tins|can|cans|jar|jars|pack|packs|packet|packets)\s+(?:of\s+)?/i, "").replace(/[•*]/g, " ").replace(/\s+/g, " ").trim();
 var normaliseStrictIngredientLine = (value) => {
   const stripped = stripIngredientQuantity(value);
   const parsed = parseAndNormaliseIngredients(stripped);
@@ -214089,7 +214094,7 @@ RECOVERY REQUEST: Keep the response compact and valid. Include every requested i
       return itemsToDedupe.filter((item) => {
         const titleKey2 = String(item.title || "").trim().toLowerCase();
         if (!titleKey2) {
-          logRejectedPublishedSource("duplicate", item);
+          logRejectedPublishedSource("missing_title", item);
           return false;
         }
         if (seenTitles.has(titleKey2)) {

@@ -396,6 +396,7 @@ export function parseAndNormaliseIngredients(query: string): string[] {
       
       'beans': 'bean',
       'butter beans': 'butter bean',
+      'butterbeans': 'butter bean',
       'kidney beans': 'kidney bean',
       'black beans': 'black bean',
       'cannellini beans': 'cannellini bean',
@@ -481,7 +482,7 @@ const UNSEPARATED_INGREDIENT_TERMS = new Set([
   'striploin', 'porterhouse', 'tomahawk', 'medallion', 'gammon', 'pancetta', 'rasher', 'lardon',
   'drumstick', 'drumette', 'tenderloin', 'tender', 'strip', 'quarter', 'crown', 'piece', 'portion',
   'giblet', 'liver', 'heart', 'neck',
-  'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato',
+  'spinach', 'squash', 'steak', 'sweetcorn', 'tofu', 'tomato', 'butter bean', 'butterbeans',
   'tuna', 'turkey', 'turnip', 'vegetable', 'protein', 'carbohydrate', 'yogurt', 'yoghurt', 'lemongrass', 'buttermilk', 'chestnut',
   ...ADDITIONAL_MAIN_INGREDIENT_TERMS
 ]);
@@ -762,6 +763,13 @@ export function detectIngredientIntent(query: string): {
     .filter(item => item.length > 1 && item.split(/\s+/).length <= 3);
 
   const shortIngredientQuery = withoutLeadIn || categoryNormalisedQuery;
+  const recipeWordsRemovedQuery = cleanedQuery
+    .replace(/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const standaloneIngredients = /\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea)\b/i.test(cleanedQuery)
+    ? parseAndNormaliseIngredients(recipeWordsRemovedQuery)
+    : ingredients;
   const unseparatedWords = shortIngredientQuery.split(/\s+/).filter(word => !/^and$/i.test(word));
   const unseparatedIngredients = parseUnseparatedIngredientList(shortIngredientQuery);
   const categoryMetadata = Object.keys(categoryMinimums).length > 0 ? { categoryMinimums } : {};
@@ -780,14 +788,15 @@ export function detectIngredientIntent(query: string): {
   const isStandaloneIngredientSearch =
     !hasListPunctuation
     && !ingredientPhrases.test(trimmed)
-    && !/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery)
-    && ingredients.length === 1
-    && unseparatedWords.length === 1
-    && (UNSEPARATED_INGREDIENT_TERMS.has(ingredients[0]) || /^butterbeans$/i.test(trimmed))
-    && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(ingredients[0]);
+    && (!/\b(?:recipe|recipes|dish|dishes|dinner|dinners|ideas|idea|curry)\b/i.test(cleanedQuery)
+      || (standaloneIngredients.length === 1 && recipeWordsRemovedQuery.split(/\s+/).length === 1))
+    && standaloneIngredients.length === 1
+    && (unseparatedWords.length === 1 || recipeWordsRemovedQuery.split(/\s+/).length === 1)
+    && UNSEPARATED_INGREDIENT_TERMS.has(standaloneIngredients[0])
+    && !AMBIGUOUS_STANDALONE_DISH_TERMS.has(standaloneIngredients[0]);
 
   if (isStandaloneIngredientSearch) {
-    return { isIngredientLed: true, ingredients: /^butterbeans$/i.test(trimmed) ? ['butter bean'] : ingredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
+    return { isIngredientLed: true, ingredients: standaloneIngredients, reason: 'short-food-list', ...categoryMetadata, ...(hasPreparation ? { preparationPreferences: preferences } : {}) };
   }
 
   if (ingredients.length >= 2 && ingredientPhrases.test(cleanedQuery)) {
@@ -948,8 +957,10 @@ const CHICKEN_CUT_VARIANT_WORDS = new Set([
 ]);
 
 const stripIngredientQuantity = (value: string) => value
-  .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, '')
+  .replace(/^\s*\d+\s*x\s*\d+(?:\.\d+)?\s*(?:g|kg|ml|l)\s*/i, '')
+  .replace(/^\s*[\d¼½¾⅓⅔⅛⅜⅝⅞]+(?:[\d\/\s.-]+)?\s*(?:x\s*)?(?:g|kg|ml|l|oz|lb|tbsp|tsp|tablespoons?|teaspoons?|cups?|cloves?|slices?|pieces?|pcs|cans?|tins?|packets?|packs?|bunches?|sprigs?)?\s*/i, '')
   .replace(/\([^)]*\)/g, ' ')
+  .replace(/^\s*(?:(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten)\s+)?(?:tin|tins|can|cans|jar|jars|pack|packs|packet|packets)\s+(?:of\s+)?/i, '')
   .replace(/[•*]/g, ' ')
   .replace(/\s+/g, ' ')
   .trim();
