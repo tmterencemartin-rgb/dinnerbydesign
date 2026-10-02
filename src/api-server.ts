@@ -34,6 +34,7 @@ import { normaliseIncomingSearchParams } from "../src/lib/searchUtils";
 import { normaliseUserPreferences } from "../src/lib/preferenceUtils";
 import { THREE_WAY_SEARCH_PILOT } from "../src/config/features";
 import { validateSearchRequestPayload } from "../src/lib/searchRequestValidation";
+import { canonicaliseGroundedUrl, confirmPublisherRecipePageUrl } from "../src/lib/groundingUtils";
 import {
   GUEST_SEARCH_RATE_LIMIT_WINDOW_MS,
   createGuestSearchRateLimitId,
@@ -88,6 +89,15 @@ const clientErrorAttemptsByIp = new Map<string, number[]>();
 const MONITORING_ALERT_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 const AUTOMATIC_REFUND_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
 const REFUND_REQUEST_LEASE_MS = 10 * 60 * 1000;
+const ENRICHMENT_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const ENRICHMENT_CACHE_MAX_ENTRIES = 500;
+const enrichmentCache = new Map<string, { result: any; expiresAt: number }>();
+
+const getEnrichmentCacheKey = (title: string, cuisine: string, mode: string, options: ReturnType<typeof parseEnrichmentRequestOptions>) => {
+  const sourceUrl = canonicaliseGroundedUrl(options.sourceUrl);
+  if (options.strictIngredientMatch) return null;
+  return sourceUrl || JSON.stringify({ title: title.trim().toLowerCase(), cuisine: cuisine.trim().toLowerCase(), mode });
+};
 
 const escapeHtml = (value: string) => value
   .replace(/&/g, "&amp;")
@@ -2139,7 +2149,32 @@ export function createApp() {
         });
       }
       const { title, cuisine, mode } = req.body;
-      const result = await enrichRecipe(title, cuisine, mode, parseEnrichmentRequestOptions(req.body));
+      const options = parseEnrichmentRequestOptions(req.body);
+      const cacheKey = getEnrichmentCacheKey(title, cuisine, mode, options);
+      const cached = cacheKey ? enrichmentCache.get(cacheKey) : null;
+      if (cached && cached.expiresAt > Date.now()) {
+        const checkedUrl = options.sourceUrl
+          ? await confirmPublisherRecipePageUrl(options.sourceUrl)
+          : options.sourceUrl;
+        if (!options.sourceUrl || checkedUrl) return res.json(cached.result);
+        enrichmentCache.delete(cacheKey);
+      } else if (cached) {
+        enrichmentCache.delete(cacheKey!);
+      }
+
+      const result = await enrichRecipe(title, cuisine, mode, options);
+      if (cacheKey) {
+        const now = Date.now();
+        for (const [key, entry] of enrichmentCache) {
+          if (entry.expiresAt <= now) enrichmentCache.delete(key);
+        }
+        while (enrichmentCache.size >= ENRICHMENT_CACHE_MAX_ENTRIES) {
+          const oldestKey = enrichmentCache.keys().next().value;
+          if (!oldestKey) break;
+          enrichmentCache.delete(oldestKey);
+        }
+        enrichmentCache.set(cacheKey, { result, expiresAt: now + ENRICHMENT_CACHE_TTL_MS });
+      }
       res.json(result);
     } catch (error: any) {
       console.error("[Server API] Gemini Enrichment Error:", error);

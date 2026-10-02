@@ -227623,6 +227623,14 @@ var clientErrorAttemptsByIp = /* @__PURE__ */ new Map();
 var MONITORING_ALERT_COOLDOWN_MS = 24 * 60 * 60 * 1e3;
 var AUTOMATIC_REFUND_WINDOW_MS = 14 * 24 * 60 * 60 * 1e3;
 var REFUND_REQUEST_LEASE_MS = 10 * 60 * 1e3;
+var ENRICHMENT_CACHE_TTL_MS = 24 * 60 * 60 * 1e3;
+var ENRICHMENT_CACHE_MAX_ENTRIES = 500;
+var enrichmentCache = /* @__PURE__ */ new Map();
+var getEnrichmentCacheKey = (title, cuisine, mode, options2) => {
+  const sourceUrl = canonicaliseGroundedUrl(options2.sourceUrl);
+  if (options2.strictIngredientMatch) return null;
+  return sourceUrl || JSON.stringify({ title: title.trim().toLowerCase(), cuisine: cuisine.trim().toLowerCase(), mode });
+};
 var escapeHtml12 = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 var renderPublicSeoInitialHtml = (heading, description) => `<div id="root"><header><a href="/">DinnerByDesign</a></header><main><h1>${escapeHtml12(heading)}</h1><p>${escapeHtml12(description)}</p></main></div>`;
 function renderWelcomeEmailHtml(displayName) {
@@ -229332,7 +229340,29 @@ function createApp() {
         });
       }
       const { title, cuisine, mode } = req.body;
-      const result = await enrichRecipe(title, cuisine, mode, parseEnrichmentRequestOptions(req.body));
+      const options2 = parseEnrichmentRequestOptions(req.body);
+      const cacheKey = getEnrichmentCacheKey(title, cuisine, mode, options2);
+      const cached = cacheKey ? enrichmentCache.get(cacheKey) : null;
+      if (cached && cached.expiresAt > Date.now()) {
+        const checkedUrl = options2.sourceUrl ? await confirmPublisherRecipePageUrl(options2.sourceUrl) : options2.sourceUrl;
+        if (!options2.sourceUrl || checkedUrl) return res.json(cached.result);
+        enrichmentCache.delete(cacheKey);
+      } else if (cached) {
+        enrichmentCache.delete(cacheKey);
+      }
+      const result = await enrichRecipe(title, cuisine, mode, options2);
+      if (cacheKey) {
+        const now = Date.now();
+        for (const [key, entry] of enrichmentCache) {
+          if (entry.expiresAt <= now) enrichmentCache.delete(key);
+        }
+        while (enrichmentCache.size >= ENRICHMENT_CACHE_MAX_ENTRIES) {
+          const oldestKey = enrichmentCache.keys().next().value;
+          if (!oldestKey) break;
+          enrichmentCache.delete(oldestKey);
+        }
+        enrichmentCache.set(cacheKey, { result, expiresAt: now + ENRICHMENT_CACHE_TTL_MS });
+      }
       res.json(result);
     } catch (error) {
       console.error("[Server API] Gemini Enrichment Error:", error);
