@@ -81,6 +81,7 @@ describe('Gemini search grounding filters', () => {
     const instruction = buildPublisherFocusedRecoveryInstruction('liver recipes', ['bbcgoodfood.com']);
 
     expect(instruction).toContain('site:tesco.com "liver recipes"');
+    expect(instruction).toContain('site:olivemagazine.com "liver recipes"');
     expect(instruction).not.toContain('site:bbcgoodfood.com');
     expect(instruction).toContain('exact direct recipe page');
   });

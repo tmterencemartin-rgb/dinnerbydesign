@@ -762,7 +762,6 @@ export const hasExplicitRecipeProteinIntent = (query: string, isIngredientLed = 
 );
 
 const PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY
-  .filter(publisher => publisher.tier === 'stable')
   .sort((left, right) => left.priority - right.priority)
   .map(publisher => publisher.host);
 
@@ -776,7 +775,7 @@ export const buildPublisherFocusedRecoveryInstruction = (
     ...APPROVED_RECIPE_PUBLISHER_HOSTS
   ].filter((host, index, allHosts) => (
     !used.has(host) && allHosts.indexOf(host) === index
-  )).slice(0, 8);
+  )).slice(0, 20);
   const quotedQuery = query.replace(/["\r\n]/g, ' ').trim();
   const searchTerms = hosts.map(host => `site:${host} "${quotedQuery}"`).join(', ');
 

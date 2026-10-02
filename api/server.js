@@ -213404,13 +213404,13 @@ var selectPublisherVariedRecipes = (items, count) => {
   return [...firstFromPublisher, ...remainingItems].slice(0, count);
 };
 var hasExplicitRecipeProteinIntent = (query2, isIngredientLed = false) => isIngredientLed || /\b(vegetarian|vegan|plant[- ]based|meat[- ]free|beef|chicken|turkey|pork|lamb|fish|salmon|tuna|mackerel|prawn|shrimp|tofu|liver|offal|kidney|heart|tongue|tripe|sweetbreads|black pudding|blood sausage)\b/i.test(query2);
-var PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY.filter((publisher) => publisher.tier === "stable").sort((left, right) => left.priority - right.priority).map((publisher) => publisher.host);
+var PUBLISHER_RECOVERY_PRIORITY_HOSTS = RECIPE_PUBLISHER_REGISTRY.sort((left, right) => left.priority - right.priority).map((publisher) => publisher.host);
 var buildPublisherFocusedRecoveryInstruction = (query2, usedPublishers = []) => {
   const used = new Set(usedPublishers.map((publisher) => publisher.toLowerCase()));
   const hosts = [
     ...PUBLISHER_RECOVERY_PRIORITY_HOSTS,
     ...APPROVED_RECIPE_PUBLISHER_HOSTS
-  ].filter((host, index, allHosts) => !used.has(host) && allHosts.indexOf(host) === index).slice(0, 8);
+  ].filter((host, index, allHosts) => !used.has(host) && allHosts.indexOf(host) === index).slice(0, 20);
   const quotedQuery = query2.replace(/["\r\n]/g, " ").trim();
   const searchTerms = hosts.map((host) => `site:${host} "${quotedQuery}"`).join(", ");
   return `SOURCE-FOCUSED RECOVERY:
