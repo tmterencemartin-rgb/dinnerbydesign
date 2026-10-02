@@ -214480,6 +214480,9 @@ async function callGeminiWithRetry(modelId, contents, config, retries = 4, delay
   const modelClient = getAI();
   let lastError;
   for (let i2 = 0; i2 < retries; i2++) {
+    if (config?.searchDeadlineAt && Date.now() >= config.searchDeadlineAt) {
+      throw new GeminiServiceError("network", "Our search service is experiencing a temporary issue. Please try again.");
+    }
     try {
       let response = null;
       while (currentModelIndex < activeModels.length) {
@@ -214521,6 +214524,9 @@ async function callGeminiWithRetry(modelId, contents, config, retries = 4, delay
       const parsed = parseProviderError(error);
       if (parsed.isTemporary && i2 < retries - 1) {
         console.log(`[GeminiService Info] SDK attempt ${i2 + 1} met transient status (${parsed.status}) using model ${activeModels[currentModelIndex] || modelId}. Retrying in ${delay2}ms...`);
+        if (config?.searchDeadlineAt && Date.now() + delay2 >= config.searchDeadlineAt) {
+          throw new GeminiServiceError("network", "Our search service is experiencing a temporary issue. Please try again.");
+        }
         await new Promise((resolve) => setTimeout(resolve, delay2));
         delay2 *= 1.5;
         continue;
@@ -214900,11 +214906,23 @@ async function generateDinnerSuggestions(searchParams, preferences, signal) {
   const isReadyMade = source === "ready-made";
   const initialCandidateCount = !isReadyMade && ingredientIntent?.isIngredientLed ? Math.max(count, 8) : count;
   const searchDeadlineAt = start + 28e3;
-  const callSearchGemini = (contents, config2, retries = 4, delay2 = 1e3) => withRequestTimeout(
-    callGeminiWithRetry(SEARCH_MODEL, contents, config2, retries, delay2),
-    Math.max(1e3, searchDeadlineAt - Date.now()),
-    "Published recipe search time budget"
-  );
+  const callSearchGemini = async (contents, config2, retries = 4, delay2 = 1e3) => {
+    if (Date.now() >= searchDeadlineAt) {
+      throw new GeminiServiceError("network", "Our search service is experiencing a temporary issue. Please try again.");
+    }
+    try {
+      return await withRequestTimeout(
+        callGeminiWithRetry(SEARCH_MODEL, contents, { ...config2, searchDeadlineAt }, retries, delay2),
+        Math.max(1, searchDeadlineAt - Date.now()),
+        "Published recipe search time budget"
+      );
+    } catch (error) {
+      if (String(error?.message || "").includes("Published recipe search time budget timed out")) {
+        throw new GeminiServiceError("network", "Our search service is experiencing a temporary issue. Please try again.");
+      }
+      throw error;
+    }
+  };
   const appliedFilters = [];
   const activeDietaryRule = searchParams.dietaryRule || preferences?.dietaryRule || "none";
   const activeSaladPref = searchParams.saladPreference || preferences?.saladPreference || "all";

@@ -480,6 +480,9 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
   let lastError: any;
 
   for (let i = 0; i < retries; i++) {
+    if (config?.searchDeadlineAt && Date.now() >= config.searchDeadlineAt) {
+      throw new GeminiServiceError('network', 'Our search service is experiencing a temporary issue. Please try again.');
+    }
     try {
       let response = null;
       while (currentModelIndex < activeModels.length) {
@@ -531,6 +534,9 @@ async function callGeminiWithRetry(modelId: string, contents: any, config: any, 
 
       if (parsed.isTemporary && i < retries - 1) {
         console.log(`[GeminiService Info] SDK attempt ${i + 1} met transient status (${parsed.status}) using model ${activeModels[currentModelIndex] || modelId}. Retrying in ${delay}ms...`);
+        if (config?.searchDeadlineAt && Date.now() + delay >= config.searchDeadlineAt) {
+          throw new GeminiServiceError('network', 'Our search service is experiencing a temporary issue. Please try again.');
+        }
         await new Promise(resolve => setTimeout(resolve, delay));
         delay *= 1.5; 
         continue;
@@ -1031,12 +1037,23 @@ export async function generateDinnerSuggestions(searchParams: SearchParams, pref
   const isReadyMade = source === 'ready-made';
   const initialCandidateCount = !isReadyMade && ingredientIntent?.isIngredientLed ? Math.max(count, 8) : count;
   const searchDeadlineAt = start + 28_000;
-  const callSearchGemini = (contents: any, config: any, retries = 4, delay = 1000) =>
-    withRequestTimeout(
-      callGeminiWithRetry(SEARCH_MODEL, contents, config, retries, delay),
-      Math.max(1_000, searchDeadlineAt - Date.now()),
-      'Published recipe search time budget'
-    );
+  const callSearchGemini = async (contents: any, config: any, retries = 4, delay = 1000) => {
+    if (Date.now() >= searchDeadlineAt) {
+      throw new GeminiServiceError('network', 'Our search service is experiencing a temporary issue. Please try again.');
+    }
+    try {
+      return await withRequestTimeout(
+        callGeminiWithRetry(SEARCH_MODEL, contents, { ...config, searchDeadlineAt }, retries, delay),
+        Math.max(1, searchDeadlineAt - Date.now()),
+        'Published recipe search time budget'
+      );
+    } catch (error: any) {
+      if (String(error?.message || '').includes('Published recipe search time budget timed out')) {
+        throw new GeminiServiceError('network', 'Our search service is experiencing a temporary issue. Please try again.');
+      }
+      throw error;
+    }
+  };
   
   const appliedFilters: string[] = [];
   const activeDietaryRule = searchParams.dietaryRule || preferences?.dietaryRule || 'none';
