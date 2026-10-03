@@ -64,6 +64,14 @@ const PLAN_PROTEIN_OPTIONS = [
 
 const DEFAULT_PLAN_PROTEINS = ['chicken', 'seafood', 'vegetarian', 'beef', 'pork', 'turkey', 'pulses'];
 
+const plannerButtonBase = 'inline-flex min-h-9 items-center justify-center gap-2 rounded border px-3 text-[11px] font-bold uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-60';
+const plannerButtonPrimary = `${plannerButtonBase} border-gray-900 bg-gray-900 text-white hover:border-black hover:bg-black`;
+const plannerButtonSecondary = `${plannerButtonBase} border-gray-200 bg-white text-gray-700 hover:border-accent/40 hover:text-accent`;
+const plannerButtonQuiet = `${plannerButtonBase} border-transparent bg-transparent text-accent hover:border-accent/25 hover:bg-accent/5`;
+const plannerButtonDanger = `${plannerButtonBase} border-red-200 bg-red-50 text-red-700 hover:border-red-300 hover:bg-red-100`;
+const plannerIconButton = 'inline-flex h-8 w-8 items-center justify-center rounded border border-gray-200 bg-white text-gray-600 transition-colors hover:border-accent/40 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/25';
+const plannerIconDangerButton = 'inline-flex h-8 w-8 items-center justify-center rounded border border-red-200 bg-red-50 text-red-700 transition-colors hover:border-red-300 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300/40';
+
 const PLAN_PROTEIN_VALUES_BY_DIETARY_RULE: Record<DietaryRule, string[]> = {
   none: PLAN_PROTEIN_OPTIONS.map(option => option.value),
   keto: PLAN_PROTEIN_OPTIONS.map(option => option.value),
@@ -762,7 +770,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                     <button
                       type="button"
                       onClick={() => setView('home')}
-                      className="h-9 px-4 rounded border border-gray-200 bg-white text-[11px] font-bold uppercase tracking-widest text-gray-700 hover:border-gray-500 hover:text-gray-950 transition-colors"
+                      className={plannerButtonSecondary}
                     >
                       Find recipes to save
                     </button>
@@ -770,7 +778,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                   <button
                     type="button"
                     onClick={() => setShowPlanWeek(prev => !prev)}
-                    className="h-9 px-4 rounded bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-colors shrink-0"
+                    className={`${plannerButtonPrimary} shrink-0`}
                   >
                     {showPlanWeek ? 'Close' : 'Plan my week'}
                   </button>
@@ -1016,7 +1024,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     setShowDeleteAllSavedConfirm(false);
                                   }
                                 }}
-                                className="text-[11px] text-accent font-bold hover:underline"
+                                className={plannerButtonDanger}
                               >
                                 Yes
                               </button>
@@ -1132,10 +1140,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                             <div className="relative">
                               <button 
                                 onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-                                className={`text-[11px] font-semibold h-8 px-2 rounded border transition-all flex items-center gap-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 ${
+                                className={`${plannerButtonSecondary} min-h-9 px-3 ${
                                   isFilterDropdownOpen || hasActiveSavedFilters
                                     ? 'border-accent bg-accent/10 text-accent shadow-sm'
-                                    : 'border-orange-200 bg-orange-50 text-orange-800 hover:border-orange-300 hover:bg-orange-100/70 hover:text-orange-900'
+                                    : ''
                                 }`}
                               >
                                 <Settings className="w-3.5 h-3.5" />
@@ -1350,7 +1358,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                     setShowClearWeekConfirm(false);
                                   }
                                 }}
-                                className="text-[11px] text-accent font-bold hover:underline"
+                                className={plannerButtonDanger}
                               >
                                 Yes
                               </button>
@@ -1364,7 +1372,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           ) : (
                             <button 
                               onClick={() => setShowClearWeekConfirm(true)}
-                              className="text-[11px] font-bold text-accent uppercase tracking-widest hover:underline"
+                              className={plannerButtonQuiet}
                             >
                               clear schedule
                             </button>
@@ -1556,10 +1564,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         e.stopPropagation();
                                         openScheduledNoteEditor(entry);
                                       }}
-                                      className={`p-1.5 rounded transition-colors ${
+                                      className={`${plannerIconButton} ${
                                         scheduledPersonalNote
-                                          ? 'bg-orange-50 text-orange-800 hover:bg-orange-100'
-                                          : 'bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-accent'
+                                          ? 'border-orange-200 bg-orange-50 text-orange-800 hover:border-orange-300 hover:bg-orange-100'
+                                          : ''
                                       }`}
                                       title={scheduledPersonalNote ? 'Edit personal note' : 'Add personal note'}
                                     >
@@ -1570,7 +1578,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                         e.stopPropagation();
                                         handlePrintRecipe(entry);
                                       }}
-                                      className="p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-accent rounded transition-colors"
+                                      className={plannerIconButton}
                                       title="Print"
                                       aria-label={`Print ${entry.title}`}
                                     >
@@ -1588,7 +1596,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                           }
                                         }
                                       }}
-                                      className="p-1.5 bg-gray-50 hover:bg-accent/5 text-gray-500 hover:text-accent rounded transition-colors"
+                                      className={plannerIconButton}
                                       title="Remove from schedule"
                                       aria-label={`Remove ${entry.title} from schedule`}
                                     >
@@ -1607,7 +1615,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                           }
                                         }
                                       }}
-                                      className="p-1.5 bg-red-50 hover:bg-red-100 text-red-500 rounded transition-colors"
+                                      className={plannerIconDangerButton}
                                       title="Delete permanently"
                                       aria-label={`Permanently delete ${entry.title}`}
                                     >
@@ -1740,7 +1748,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                           <button
                             type="button"
                             onClick={() => setView('shopping')}
-                            className="h-9 px-3 rounded bg-gray-900 text-white text-[10.5px] font-bold uppercase tracking-widest hover:bg-black transition-colors"
+                            className={plannerButtonPrimary}
                           >
                             View shopping list
                           </button>
@@ -1755,7 +1763,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                         type="button"
                         onClick={() => setIsRecentlyRemovedOpen(prev => !prev)}
                         aria-expanded={isRecentlyRemovedOpen}
-                        className="inline-flex min-h-6 items-center gap-2 rounded px-1 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-accent"
+                        className={`${plannerButtonSecondary} min-h-8 justify-start px-2 text-left text-[10px] tracking-wider`}
                       >
                         {isRecentlyRemovedOpen ? 'Hide removed recipes' : `Show removed recipes (${archivedSavedRecipes.length})`}
                       </button>
@@ -1799,7 +1807,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
                                   <button
                                     type="button"
                                     onClick={() => handlePermanentlyDeleteSavedRecipe(recipe)}
-                                    className="p-1 text-gray-500 hover:text-red-500"
+                                    className={plannerIconDangerButton}
                                     title="Permanently delete"
                                     aria-label={`Permanently delete ${recipe.title}`}
                                   >
