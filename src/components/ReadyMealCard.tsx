@@ -61,6 +61,7 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded);
   const [isEnriching, setIsEnriching] = useState(false);
+  const [enrichmentFailed, setEnrichmentFailed] = useState(false);
   const [enrichedData, setEnrichedData] = useState<Partial<ReadyMeal> | null>(null);
   const [isChoosingDay, setIsChoosingDay] = useState(false);
 
@@ -275,19 +276,21 @@ export const ReadyMealCard: React.FC<ReadyMealCardProps> = ({
   );
 
   useEffect(() => {
-    if (isExpanded && !currentServingSuggestion && !isEnriching) {
+    if (isExpanded && !currentServingSuggestion && !isEnriching && !enrichmentFailed) {
       setIsEnriching(true);
       enrichRecipe(meal.title, meal.cuisine, 'ready-made', { sourceUrl: meal.sourceUrl })
         .then(data => {
           setEnrichedData(data);
+          if (!(data as any)?.servingSuggestion) setEnrichmentFailed(true);
           setIsEnriching(false);
         })
         .catch(err => {
           console.error("Enrichment failed:", err);
+          setEnrichmentFailed(true);
           setIsEnriching(false);
         });
     }
-  }, [isExpanded, meal.title, meal.cuisine, currentServingSuggestion, isEnriching]);
+  }, [isExpanded, meal.title, meal.cuisine, currentServingSuggestion, isEnriching, enrichmentFailed]);
 
   const { updatePlanner, planner, removeRecipe, savedRecipes, showToast, unscheduleRecipe, addLog } = useAuth();
 

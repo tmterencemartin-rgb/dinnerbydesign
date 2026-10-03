@@ -168,6 +168,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
 
   const [viewingPlannerEntry, setViewingPlannerEntry] = useState<SavedRecipe | null>(null);
   const [isEnriching, setIsEnriching] = useState(false);
+  const [enrichmentFailedKey, setEnrichmentFailedKey] = useState<string | null>(null);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
   const [editingScheduledNoteId, setEditingScheduledNoteId] = useState<string | null>(null);
   const [scheduledNoteDraft, setScheduledNoteDraft] = useState('');
@@ -184,33 +185,44 @@ export const PlannerView: React.FC<PlannerViewProps> = ({ setView }) => {
     const filteredIngredients = (viewingPlannerEntry?.ingredients || [])
       .filter((ing: string) => ing && ing.trim().length > 0);
 
-    const lacksData = viewingPlannerEntry && (
-      (viewingPlannerEntry.mode === 'cook' && (!viewingPlannerEntry.instructions?.length || filteredIngredients.length < 3)) ||
-      (viewingPlannerEntry.mode === 'ready-made' && !viewingPlannerEntry.servingSuggestion)
-    );
+    const lacksDetail = (entry: any) => {
+      const ingredients = (entry?.ingredients || []).filter((ing: string) => ing && ing.trim().length > 0);
+      return (entry?.mode === 'cook' && (!entry.instructions?.length || ingredients.length < 3)) ||
+        (entry?.mode === 'ready-made' && !entry.servingSuggestion);
+    };
+    const lacksData = viewingPlannerEntry && lacksDetail(viewingPlannerEntry);
+    const entryKey = viewingPlannerEntry ? `${viewingPlannerEntry.id || ''}|${viewingPlannerEntry.title}` : null;
 
-    if (viewingPlannerEntry && lacksData && !isEnriching) {
+    if (viewingPlannerEntry && lacksData && !isEnriching && enrichmentFailedKey !== entryKey) {
       setIsEnriching(true);
       import('../../services/geminiService').then(({ enrichRecipe }) => {
         enrichRecipe(viewingPlannerEntry.title, viewingPlannerEntry.cuisine || '', viewingPlannerEntry.mode, { sourceUrl: viewingPlannerEntry.sourceUrl })
           .then(data => {
             const updated = { ...viewingPlannerEntry, ...data };
+            if (lacksDetail(updated)) setEnrichmentFailedKey(entryKey);
             setViewingPlannerEntry(updated);
             setIsEnriching(false);
-            if (viewingPlannerEntry.id) {
+            const hasMethod = viewingPlannerEntry.mode === 'ready-made' ? !!(data as any)?.servingSuggestion : !!data?.instructions?.length;
+            if (viewingPlannerEntry.id && hasMethod) {
               updateRecipe(viewingPlannerEntry.id, data).catch(console.error);
             }
           })
           .catch(err => {
             console.error("Detail enrichment failed:", err);
+            setEnrichmentFailedKey(entryKey);
             setIsEnriching(false);
           });
       }).catch(err => {
         console.error("Failed to dynamically import geminiService module:", err);
+        setEnrichmentFailedKey(entryKey);
         setIsEnriching(false);
       });
     }
-  }, [viewingPlannerEntry, isEnriching, updateRecipe]);
+  }, [viewingPlannerEntry, isEnriching, enrichmentFailedKey, updateRecipe]);
+
+  useEffect(() => {
+    if (!viewingPlannerEntry) setEnrichmentFailedKey(null);
+  }, [viewingPlannerEntry]);
   const [showClearWeekConfirm, setShowClearWeekConfirm] = useState(false);
   const [isScheduledOpen, setIsScheduledOpen] = useState(planner.length > 0);
   const [isCollectionOpen, setIsCollectionOpen] = useState(savedRecipes.some(recipe => !recipe.isArchived));

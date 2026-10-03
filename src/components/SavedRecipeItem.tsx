@@ -29,6 +29,7 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isChoosingDay, setIsChoosingDay] = useState(false);
   const [isEnriching, setIsEnriching] = useState(false);
+  const [enrichmentFailed, setEnrichmentFailed] = useState(false);
   const [enrichedData, setEnrichedData] = useState<Partial<SavedRecipe> | null>(null);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
   const [isEditingNote, setIsEditingNote] = useState(false);
@@ -69,11 +70,16 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
   const shouldShowCuisineLabel = cuisineLabel.trim().toLowerCase() !== 'active cook';
 
   useEffect(() => {
-    if (isExpanded && (!currentInstructions.length || currentIngredients.length < totalCount) && !isEnriching) {
+    if (isExpanded && (!currentInstructions.length || currentIngredients.length < totalCount) && !isEnriching && !enrichmentFailed) {
       setIsEnriching(true);
       import('../services/geminiService').then(({ enrichRecipe }) => {
         enrichRecipe(recipe.title, recipe.cuisine, recipe.mode, { sourceUrl: recipe.sourceUrl })
           .then(data => {
+            if (!data?.instructions?.length) {
+              setEnrichmentFailed(true);
+              setIsEnriching(false);
+              return;
+            }
             setEnrichedData(data);
             setIsEnriching(false);
             // Optionally update the database with enriched data
@@ -85,14 +91,16 @@ export const SavedRecipeItem: React.FC<SavedRecipeItemProps> = ({
           })
           .catch(err => {
             console.error("Enrichment failed (SavedRecipeItem):", err);
+            setEnrichmentFailed(true);
             setIsEnriching(false);
           });
       }).catch(err => {
         console.error("Failed to dynamically import geminiService module:", err);
+        setEnrichmentFailed(true);
         setIsEnriching(false);
       });
     }
-  }, [isExpanded, recipe.title, recipe.cuisine, recipe.mode, currentInstructions.length, currentIngredients.length, isEnriching, recipe.id, updateRecipe]);
+  }, [isExpanded, recipe.title, recipe.cuisine, recipe.mode, currentInstructions.length, currentIngredients.length, isEnriching, enrichmentFailed, recipe.id, updateRecipe]);
 
   const scheduledDate = recipe.scheduledDate || planner.find(p => isSameRecipe(p, recipe))?.scheduledDate;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
