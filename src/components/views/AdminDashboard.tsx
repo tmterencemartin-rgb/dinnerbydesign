@@ -472,33 +472,29 @@ export const AdminDashboard: React.FC = () => {
         }));
         setDinnerStats(Object.fromEntries(statsEntries));
 
-        const webhookSnapshot = await getDocs(collection(db, 'stripeWebhookEvents'));
+        const webhookSnapshot = await getDocs(query(
+          collection(db, 'stripeWebhookEvents'),
+          orderBy('receivedAt', 'desc'),
+          limit(12)
+        ));
         const eventData = webhookSnapshot.docs.map(doc => ({
           ...doc.data(),
           eventId: doc.id
         })) as StripeWebhookHealthEvent[];
 
-        eventData.sort((a, b) => {
-          const dateA = toDate(a.updatedAt || a.receivedAt || a.stripeCreatedAt) || new Date(0);
-          const dateB = toDate(b.updatedAt || b.receivedAt || b.stripeCreatedAt) || new Date(0);
-          return dateB.getTime() - dateA.getTime();
-        });
+        setWebhookEvents(eventData);
 
-        setWebhookEvents(eventData.slice(0, 12));
-
-        const emailSnapshot = await getDocs(collection(db, 'emailEvents'));
+        const emailSnapshot = await getDocs(query(
+          collection(db, 'emailEvents'),
+          orderBy('createdAt', 'desc'),
+          limit(30)
+        ));
         const emailData = emailSnapshot.docs.map(doc => ({
           ...doc.data(),
           id: doc.id
         })) as EmailEvent[];
 
-        emailData.sort((a, b) => {
-          const dateA = toDate(a.createdAt) || new Date(0);
-          const dateB = toDate(b.createdAt) || new Date(0);
-          return dateB.getTime() - dateA.getTime();
-        });
-
-        setEmailEvents(emailData.slice(0, 30));
+        setEmailEvents(emailData);
 
         const canarySnapshot = await getDocs(query(
           collection(db, 'searchCanaryEvents'),
