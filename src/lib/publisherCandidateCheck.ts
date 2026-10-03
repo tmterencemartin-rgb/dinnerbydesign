@@ -105,6 +105,71 @@ export function ukSignals(html: string, host: string): string[] {
   return signals;
 }
 
+
+export type ContentLean = 'uk' | 'non-uk' | 'mixed' | 'none';
+
+export interface ContentSignals {
+  uk: string[];
+  nonUk: string[];
+  lean: ContentLean;
+}
+
+// Terms that are rare in the other usage. Metric units and Celsius are left out because the UK shares them with Australia.
+const UK_TERMS: Array<[string, RegExp]> = [
+  ['courgette', /\bcourgettes?\b/], ['aubergine', /\baubergines?\b/], ['plain flour', /\bplain flour\b/],
+  ['self-raising flour', /\bself[- ]raising flour\b/], ['caster sugar', /\bcaster sugar\b/], ['icing sugar', /\bicing sugar\b/],
+  ['double cream', /\bdouble cream\b/], ['spring onion', /\bspring onions?\b/], ['gas mark', /\bgas mark\b/],
+  ['hob', /\bhob\b/], ['bicarbonate of soda', /\bbicarbonate of soda\b/], ['beef mince', /\b(?:beef|pork|lamb) mince\b/]
+];
+const NON_UK_TERMS: Array<[string, RegExp]> = [
+  ['zucchini', /\bzucchinis?\b/], ['eggplant', /\beggplants?\b/], ['cilantro', /\bcilantro\b/],
+  ['all-purpose flour', /\ball[- ]purpose flour\b/], ['powdered sugar', /\b(?:powdered|confectioners'?) sugar\b/],
+  ['heavy cream', /\bheavy (?:whipping )?cream\b/], ['green onion', /\b(?:green onions?|scallions?)\b/], ['arugula', /\barugula\b/],
+  ['ground beef', /\bground (?:beef|pork|turkey)\b/], ['baking soda', /\bbaking soda\b/], ['capsicum', /\bcapsicums?\b/],
+  ['thickened cream', /\bthickened cream\b/], ['Fahrenheit', /(?:°|º|&deg;)\s?f\b|\b\d{3}\s?degrees f\b/],
+  ['cups', /\b\d+(?:\.\d+)?(?:\s?(?:¼|½|¾|\d\/\d))?\s?cups?\b|\b(?:¼|½|¾|\d\/\d) cups?\b/]
+];
+
+const visibleText = (html: string): string => html
+  .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+  .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+  .replace(/<[^>]+>/g, ' ')
+  .replace(/&nbsp;/gi, ' ')
+  .toLowerCase();
+
+const recipeIngredientText = (html: string): string => {
+  const parts: string[] = [];
+  for (const block of html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    try {
+      const walk = (node: any): void => {
+        if (!node || typeof node !== 'object') return;
+        if (Array.isArray(node)) { node.forEach(walk); return; }
+        if (Array.isArray(node.recipeIngredient)) node.recipeIngredient.forEach((item: unknown) => typeof item === 'string' && parts.push(item));
+        Object.values(node).forEach(walk);
+      };
+      walk(JSON.parse(block[1]));
+    } catch { /* ignore malformed blocks */ }
+  }
+  return parts.join(' ').toLowerCase();
+};
+
+const leanFrom = (uk: number, nonUk: number): ContentLean => {
+  if (uk + nonUk < 2) return 'none';
+  if (nonUk === 0) return 'uk';
+  if (uk === 0) return 'non-uk';
+  if (uk >= nonUk * 2) return 'uk';
+  if (nonUk >= uk * 2) return 'non-uk';
+  return 'mixed';
+};
+
+/** Counts distinct UK and non-UK usage terms in the visible text and the recipe ingredients. Evidence only. */
+export function contentSignals(html: string): ContentSignals {
+  const text = `${visibleText(html)} ${recipeIngredientText(html)}`;
+  const uk = UK_TERMS.filter(([, pattern]) => pattern.test(text)).map(([name]) => name);
+  const nonUk = NON_UK_TERMS.filter(([, pattern]) => pattern.test(text)).map(([name]) => name);
+  return { uk, nonUk, lean: leanFrom(uk.length, nonUk.length) };
+}
+
 const stripWww = (host: string) => host.toLowerCase().replace(/^www\./, '');
 
 export interface CandidatePageResult {
@@ -114,6 +179,7 @@ export interface CandidatePageResult {
   recipe: RecipeJsonLd;
   paywall: boolean;
   ukSignals: string[];
+  content: ContentSignals;
   problems: string[];
   ok: boolean;
 }
@@ -140,7 +206,7 @@ export function inspectCandidatePage(
 
   return {
     url: page.url, status: page.status, sameHost, recipe, paywall,
-    ukSignals: ukSignals(page.html, host), problems, ok: problems.length === 0
+    ukSignals: ukSignals(page.html, host), content: contentSignals(page.html), problems, ok: problems.length === 0
   };
 }
 
@@ -152,6 +218,7 @@ export interface CandidateReport {
   reasons: string[];
   robots: { fetched: boolean; decisions: Array<{ url: string; allowed: boolean; matchedRule: string | null }> };
   pages: CandidatePageResult[];
+  content: ContentSignals;
 }
 
 type FetchLike = (url: string, init?: RequestInit) => Promise<Pick<Response, 'status' | 'url' | 'text'>>;
@@ -160,7 +227,7 @@ const MIN_SAMPLE_PAGES = 3;
 
 export async function checkCandidate(host: string, sampleUrls: string[], request: FetchLike = fetch): Promise<CandidateReport> {
   const reasons: string[] = [];
-  const report: CandidateReport = { host, verdict: 'fail', reasons, robots: { fetched: false, decisions: [] }, pages: [] };
+  const report: CandidateReport = { host, verdict: 'fail', reasons, robots: { fetched: false, decisions: [] }, pages: [], content: { uk: [], nonUk: [], lean: 'none' } };
 
   if (isBlockedRecipePublisherUrl(`https://${host}/recipe`)) {
     reasons.push('host is on the blocked list');
@@ -186,7 +253,8 @@ export async function checkCandidate(host: string, sampleUrls: string[], request
     } catch (error: any) {
       report.pages.push({
         url: sample, status: 0, sameHost: false, recipe: { found: false, name: null, hasIngredients: false, hasInstructions: false },
-        paywall: false, ukSignals: [], problems: [`request failed: ${error?.message || 'unknown error'}`], ok: false
+        paywall: false, ukSignals: [], content: { uk: [], nonUk: [], lean: 'none' },
+        problems: [`request failed: ${error?.message || 'unknown error'}`], ok: false
       });
     }
   }
@@ -197,8 +265,15 @@ export async function checkCandidate(host: string, sampleUrls: string[], request
   report.pages.filter(page => !page.ok).forEach(page => reasons.push(`${page.url}: ${page.problems.join('; ')}`));
   if (sampleUrls.length < MIN_SAMPLE_PAGES) reasons.push(`only ${sampleUrls.length} sample pages, at least ${MIN_SAMPLE_PAGES} needed`);
 
+  const ukTerms = [...new Set(report.pages.flatMap(page => page.content.uk))];
+  const nonUkTerms = [...new Set(report.pages.flatMap(page => page.content.nonUk))];
+  report.content = { uk: ukTerms, nonUk: nonUkTerms, lean: leanFrom(ukTerms.length, nonUkTerms.length) };
+  if (report.content.lean !== 'uk') {
+    reasons.push(`content reads as ${report.content.lean === 'none' ? 'inconclusive' : report.content.lean} (UK terms: ${ukTerms.join(', ') || 'none'}; other terms: ${nonUkTerms.join(', ') || 'none'})`);
+  }
+
   if (okPages === 0 || disallowed.length === sampleUrls.length) report.verdict = 'fail';
-  else if (okPages === report.pages.length && disallowed.length === 0 && report.robots.fetched && sampleUrls.length >= MIN_SAMPLE_PAGES) report.verdict = 'pass';
+  else if (okPages === report.pages.length && disallowed.length === 0 && report.robots.fetched && sampleUrls.length >= MIN_SAMPLE_PAGES && report.content.lean === 'uk') report.verdict = 'pass';
   else report.verdict = 'review';
   return report;
 }

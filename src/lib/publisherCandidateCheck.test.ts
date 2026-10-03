@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { checkCandidate, findRecipeJsonLd, inspectCandidatePage, robotsAllows, ukSignals } from './publisherCandidateCheck';
+import { checkCandidate, contentSignals, findRecipeJsonLd, inspectCandidatePage, robotsAllows, ukSignals } from './publisherCandidateCheck';
 
 const recipeLd = (extra: Record<string, unknown> = {}) => JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Recipe', name: 'Leek soup',
   recipeIngredient: ['2 leeks', '1 potato'], recipeInstructions: [{ '@type': 'HowToStep', text: 'Cook.' }], ...extra
 });
+const UK_BODY = 'Sift the plain flour and caster sugar, then add the double cream and a courgette. Cook on the hob, or bake at gas mark 6.';
+const US_BODY = 'Whisk 2 cups all-purpose flour with powdered sugar and heavy cream. Add zucchini and cilantro. Bake at 350°F.';
 const page = (ld: string, body = '', lang = 'en-GB') =>
   `<html lang="${lang}"><head><script type="application/ld+json">${ld}</script></head><body>${body}</body></html>`;
 
@@ -98,7 +100,7 @@ describe('checkCandidate', () => {
       : { status, url, text: async () => html };
 
   it('passes when robots allow, every page has Recipe data and none is gated', async () => {
-    const report = await checkCandidate(host, urls, respond('User-agent: *\nDisallow: /admin/', page(recipeLd())) as any);
+    const report = await checkCandidate(host, urls, respond('User-agent: *\nDisallow: /admin/', page(recipeLd(), UK_BODY)) as any);
     expect(report.verdict).toBe('pass');
     expect(report.reasons).toEqual([]);
   });
@@ -132,5 +134,79 @@ describe('checkCandidate', () => {
     const report = await checkCandidate(host, urls, request as any);
     expect(report.verdict).toBe('fail');
     expect(report.pages[0].problems[0]).toMatch(/request failed: timeout/);
+  });
+});
+
+describe('contentSignals', () => {
+  it('leans UK for UK usage', () => {
+    const result = contentSignals(page(recipeLd(), UK_BODY));
+    expect(result.lean).toBe('uk');
+    expect(result.uk).toEqual(expect.arrayContaining(['plain flour', 'caster sugar', 'double cream', 'courgette', 'hob', 'gas mark']));
+    expect(result.nonUk).toEqual([]);
+  });
+  it('leans non-UK for US usage, including cups and Fahrenheit', () => {
+    const result = contentSignals(page(recipeLd(), US_BODY));
+    expect(result.lean).toBe('non-uk');
+    expect(result.nonUk).toEqual(expect.arrayContaining(['all-purpose flour', 'powdered sugar', 'heavy cream', 'zucchini', 'cilantro', 'Fahrenheit', 'cups']));
+  });
+  it('detects Australian usage that the UK does not share', () => {
+    expect(contentSignals(page(recipeLd(), 'Add the capsicum and thickened cream.')).nonUk).toEqual(['capsicum', 'thickened cream']);
+  });
+  it('is mixed when both usages appear in similar amounts', () => {
+    expect(contentSignals(page(recipeLd(), 'Use plain flour and a courgette, or zucchini and baking soda.')).lean).toBe('mixed');
+  });
+  it('is none when there is too little text to judge', () => {
+    expect(contentSignals(page(recipeLd(), 'Dinner.')).lean).toBe('none');
+    expect(contentSignals('').lean).toBe('none');
+  });
+  it('is none with a single term, because one term is not enough to judge', () => {
+    expect(contentSignals(page(recipeLd(), 'Cook on the hob.'))).toEqual({ uk: ['hob'], nonUk: [], lean: 'none' });
+    expect(contentSignals(page(recipeLd(), 'Add the zucchini.'))).toEqual({ uk: [], nonUk: ['zucchini'], lean: 'none' });
+  });
+  it('reads the Recipe ingredients as well as the visible text', () => {
+    const ld = JSON.stringify({ '@type': 'Recipe', name: 'Pie', recipeIngredient: ['200g plain flour', '2 courgettes'], recipeInstructions: ['Bake.'] });
+    expect(contentSignals(page(ld)).uk).toEqual(['courgette', 'plain flour']);
+  });
+  it('ignores terms that appear only in scripts and styles', () => {
+    const html = '<html><script>var a = "zucchini cilantro";</script><style>.hob{}</style><body>Dinner.</body></html>';
+    expect(contentSignals(html)).toEqual({ uk: [], nonUk: [], lean: 'none' });
+  });
+  it('does not match inside longer words or count unrelated cups', () => {
+    expect(contentSignals(page(recipeLd(), 'The hobby cook has a teacup and a rocket ship.'))).toEqual({ uk: [], nonUk: [], lean: 'none' });
+  });
+});
+
+describe('checkCandidate and content', () => {
+  const host = 'www.example.com';
+  const urls = [1, 2, 3].map(n => `https://${host}/recipes/${n}`);
+  const respond = (html: string) => async (url: string) =>
+    url.endsWith('/robots.txt')
+      ? { status: 200, url, text: async () => '' }
+      : { status: 200, url, text: async () => html };
+
+  it('asks for review, not a pass, when the content reads as US', async () => {
+    const report = await checkCandidate(host, urls, respond(page(recipeLd(), US_BODY, 'en-US')) as any);
+    expect(report.verdict).toBe('review');
+    expect(report.content.lean).toBe('non-uk');
+    expect(report.reasons.join()).toMatch(/content reads as non-uk/);
+  });
+  it('accepts a .com site whose content reads as UK', async () => {
+    const report = await checkCandidate(host, urls, respond(page(recipeLd(), UK_BODY)) as any);
+    expect(report.verdict).toBe('pass');
+    expect(report.content.lean).toBe('uk');
+  });
+  it('asks for review when the pages give too little to judge', async () => {
+    const report = await checkCandidate(host, urls, respond(page(recipeLd(), 'Dinner.')) as any);
+    expect(report.verdict).toBe('review');
+    expect(report.reasons.join()).toMatch(/inconclusive/);
+  });
+  it('combines terms across the sampled pages', async () => {
+    let n = 0;
+    const request = async (url: string) => url.endsWith('/robots.txt')
+      ? { status: 200, url, text: async () => '' }
+      : { status: 200, url, text: async () => page(recipeLd(), ++n === 1 ? 'Use plain flour and caster sugar.' : n === 2 ? 'Add the double cream and a courgette.' : 'Cook on the hob.') };
+    const report = await checkCandidate(host, urls, request as any);
+    expect(report.content.uk).toEqual(expect.arrayContaining(['plain flour', 'caster sugar', 'double cream', 'courgette', 'hob']));
+    expect(report.verdict).toBe('pass');
   });
 });

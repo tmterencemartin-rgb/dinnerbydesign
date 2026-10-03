@@ -12,6 +12,7 @@ checkCandidate(host.replace(/^https?:\/\//, '').replace(/\/.*$/, ''), samples).t
   console.log(`Candidate: ${report.host}`);
   console.log(`Verdict:   ${report.verdict.toUpperCase()}`);
   console.log(`robots.txt read: ${report.robots.fetched ? 'yes' : 'no'}`);
+  console.log(`Content leans: ${report.content.lean} · UK terms: ${report.content.uk.join(', ') || 'none'} · other terms: ${report.content.nonUk.join(', ') || 'none'}`);
   report.pages.forEach(page => {
     console.log(`\n${page.url}`);
     console.log(`  status ${page.status} · same host: ${page.sameHost} · Recipe data: ${page.recipe.found ? 'yes' : 'no'} · sign-in wording: ${page.paywall ? 'yes' : 'no'}`);
