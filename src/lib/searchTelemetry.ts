@@ -17,6 +17,7 @@ interface SearchTelemetryEvent {
   durationMs?: number | null;
   resultCount?: number;
   errorCategory?: string | null;
+  fromCache?: boolean;
 }
 
 export function createSearchRequestId(): string {

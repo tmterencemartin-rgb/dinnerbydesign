@@ -6,6 +6,7 @@ import { UserProfile, AccessStatus } from '../../types';
 import { ArrowLeft, Search, Download, ExternalLink, CreditCard, Trash2, Users, AlertTriangle, Activity, ShieldCheck, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getApiUrl } from '../../lib/api';
+import { summariseSearchTelemetry } from '../../lib/searchTelemetrySummary';
 import { IngredientPriceCatalogueAdmin } from '../admin/IngredientPriceCatalogueAdmin';
 import { PUBLISHED_ARTICLES } from '../../content/publicArticles';
 import { formatPublicArticleTitle, formatPublicNumber } from '../../content/publicPathways';
@@ -39,6 +40,7 @@ interface AiUsageEvent {
   resultCount?: number;
   latencyMs?: number | null;
   totalRoundTripMs?: number | null;
+  serverLatencyMs?: number | null;
   inputTokensEstimate?: number;
   outputTokensEstimate?: number;
   estimatedCostUsd?: number;
@@ -60,6 +62,7 @@ interface EmailEvent {
 interface SearchDeliveryEvent {
   id: string;
   requestId?: string;
+  fromCache?: boolean;
   stage?: 'started' | 'results_delivered' | 'no_results_delivered' | 'failed' | 'cancelled' | 'user_reported' | string;
   source?: string;
   durationMs?: number | null;
@@ -1257,31 +1260,18 @@ export const AdminDashboard: React.FC = () => {
   }, [filteredSearchDeliveryEvents]);
 
   const searchTelemetrySummary = React.useMemo(() => {
-    const percentile = (values: number[], fraction: number) => {
-      if (!values.length) return null;
-      const sorted = [...values].sort((a, b) => a - b);
-      return sorted[Math.min(sorted.length - 1, Math.ceil(sorted.length * fraction) - 1)];
-    };
-    const delivered = filteredSearchDeliveryEvents.filter(event => event.stage === 'results_delivered');
-    const byDevice = ['mobile', 'tablet', 'desktop'].map(device => {
-      const rows = delivered.filter(event => event.deviceClass === device && typeof event.durationMs === 'number');
-      const durations = rows.map(event => event.durationMs as number);
-      return { device, count: durations.length, p50: percentile(durations, 0.5), p95: percentile(durations, 0.95) };
-    });
-    const serverEvents = aiUsageEvents.filter(event => event.status === 'succeeded');
-    const serverTiming = {
-      geminiP50: percentile(serverEvents.map(event => event.latencyMs).filter((value): value is number => typeof value === 'number'), 0.5),
-      geminiP95: percentile(serverEvents.map(event => event.latencyMs).filter((value): value is number => typeof value === 'number'), 0.95),
-      roundTripP50: percentile(serverEvents.map(event => event.totalRoundTripMs).filter((value): value is number => typeof value === 'number'), 0.5),
-      roundTripP95: percentile(serverEvents.map(event => event.totalRoundTripMs).filter((value): value is number => typeof value === 'number'), 0.95),
-    };
-    const succeededIds = new Set(aiUsageEvents.filter(event => event.status === 'succeeded' && event.requestId).map(event => event.requestId));
-    const deliveredWithIds = delivered.filter(event => event.requestId);
-    const unmatched = deliveredWithIds.filter(event => !succeededIds.has(event.requestId)).length;
-    const preChange = aiUsageEvents.filter(event => event.dateKey && event.dateKey < '2026-10-02').length;
-    const postChange = aiUsageEvents.filter(event => event.dateKey && event.dateKey >= '2026-10-02').length;
-    return { byDevice, serverTiming, unmatched, matchedPopulation: deliveredWithIds.length, preChange, postChange };
-  }, [aiUsageEvents, filteredSearchDeliveryEvents]);
+    const sinceMs = searchWindow === '24h'
+      ? Date.now() - 24 * 60 * 60 * 1000
+      : searchWindow === '7d'
+        ? Date.now() - 7 * 24 * 60 * 60 * 1000
+        : 0;
+    const millis = (value: any) => toDate(value)?.getTime() ?? null;
+    return summariseSearchTelemetry(
+      filteredSearchDeliveryEvents.map(event => ({ ...event, createdAtMs: millis(event.createdAt) })),
+      aiUsageEvents.map(event => ({ ...event, createdAtMs: millis(event.createdAt) })),
+      { sinceMs }
+    );
+  }, [aiUsageEvents, filteredSearchDeliveryEvents, searchWindow]);
 
   const getCanaryStatusClass = (status?: SearchCanaryEvent['status']) => {
     if (status === 'passed') return 'bg-emerald-50 text-emerald-700';
@@ -1736,7 +1726,7 @@ export const AdminDashboard: React.FC = () => {
               <div className="mt-3 grid gap-3 border-t border-gray-100 pt-3 lg:grid-cols-[1.2fr_1fr]">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Browser delivery time</p>
-                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Results delivered only · p50 / p95 in milliseconds</p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Live searches only (device-cache hits excluded: {searchTelemetrySummary.matching.cacheHitsExcluded}) · p50 / p95 in milliseconds</p>
                   <div className="mt-2 grid grid-cols-3 gap-1.5">
                     {searchTelemetrySummary.byDevice.map(row => (
                       <div key={row.device} className="rounded border border-gray-100 bg-white p-2">
@@ -1746,12 +1736,27 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     ))}
                   </div>
+                  <p className="mt-2 text-[10.5px] font-medium text-gray-500">
+                    Browser minus server request time (network, tokens, cold starts): {searchTelemetrySummary.browserMinusServer.p50 ?? 'N/A'} / {searchTelemetrySummary.browserMinusServer.p95 ?? 'N/A'}ms · n={searchTelemetrySummary.browserMinusServer.count}
+                  </p>
                 </div>
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Server timing and writes</p>
-                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Gemini p50/p95: {searchTelemetrySummary.serverTiming.geminiP50 ?? 'N/A'} / {searchTelemetrySummary.serverTiming.geminiP95 ?? 'N/A'}ms · round trip: {searchTelemetrySummary.serverTiming.roundTripP50 ?? 'N/A'} / {searchTelemetrySummary.serverTiming.roundTripP95 ?? 'N/A'}ms</p>
-                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Matched delivery requests: {searchTelemetrySummary.matchedPopulation} · unmatched succeeded events: {searchTelemetrySummary.unmatched}</p>
-                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Usage events by dateKey: before 2 Oct {searchTelemetrySummary.preChange} · from 2 Oct {searchTelemetrySummary.postChange}</p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Same window, succeeded searches only (n={searchTelemetrySummary.server.sample}) · p50 / p95</p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">
+                    Gemini first call: {searchTelemetrySummary.server.gemini.p50 ?? 'N/A'} / {searchTelemetrySummary.server.gemini.p95 ?? 'N/A'}ms · search function: {searchTelemetrySummary.server.roundTrip.p50 ?? 'N/A'} / {searchTelemetrySummary.server.roundTrip.p95 ?? 'N/A'}ms · whole request: {searchTelemetrySummary.server.request.p50 ?? 'N/A'} / {searchTelemetrySummary.server.request.p95 ?? 'N/A'}ms
+                  </p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">
+                    Near the time budget (27s or more): {searchTelemetrySummary.nearBudget.count}{searchTelemetrySummary.nearBudget.share !== null ? ` (${Math.round(searchTelemetrySummary.nearBudget.share * 100)}%)` : ''}{searchTelemetrySummary.nearBudget.meanResultCount !== null ? ` · mean results ${searchTelemetrySummary.nearBudget.meanResultCount.toFixed(1)}` : ''}
+                  </p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">
+                    Delivered requests with an ID: {searchTelemetrySummary.matching.deliveredWithId} · without a matching usage event: {searchTelemetrySummary.matching.unmatched}{searchTelemetrySummary.matching.unmatchedShare !== null ? ` (${Math.round(searchTelemetrySummary.matching.unmatchedShare * 100)}%)` : ''}
+                  </p>
+                  {searchTelemetrySummary.perDay.length > 0 && (
+                    <p className="mt-1 text-[10.5px] font-medium text-gray-500">
+                      By day (delivered / unmatched): {searchTelemetrySummary.perDay.map(row => `${row.day.slice(5)} ${row.delivered}/${row.unmatched}`).join(' · ')}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

@@ -229036,6 +229036,7 @@ function createApp() {
         source,
         durationMs,
         resultCount,
+        fromCache: req.body?.fromCache === true,
         errorCategory: String(req.body?.errorCategory || "").slice(0, 80) || null,
         deviceClass: ["mobile", "tablet", "desktop"].includes(req.body?.deviceClass) ? req.body.deviceClass : "unknown",
         viewportWidth,

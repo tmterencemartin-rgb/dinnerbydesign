@@ -269,7 +269,7 @@ export function useSearch() {
   const telemetryRequestIdRef = useRef<string | null>(null);
   const telemetryStartedAtRef = useRef<number | null>(null);
 
-  const emitSearchTelemetry = useCallback((stage: Parameters<typeof sendSearchTelemetry>[0]['stage'], details: { durationMs?: number | null; resultCount?: number; errorCategory?: string | null } = {}) => {
+  const emitSearchTelemetry = useCallback((stage: Parameters<typeof sendSearchTelemetry>[0]['stage'], details: { durationMs?: number | null; resultCount?: number; errorCategory?: string | null; fromCache?: boolean } = {}) => {
     const requestId = telemetryRequestIdRef.current;
     if (!requestId) return;
     void sendSearchTelemetry({
@@ -427,7 +427,8 @@ export function useSearch() {
           setEnriching(false);
           emitSearchTelemetry('results_delivered', {
             durationMs: Date.now() - (telemetryStartedAtRef.current || Date.now()),
-            resultCount: cached.recipes.length + cached.readyMeals.length
+            resultCount: cached.recipes.length + cached.readyMeals.length,
+            fromCache: true
           });
           return 'delivered';
         }
