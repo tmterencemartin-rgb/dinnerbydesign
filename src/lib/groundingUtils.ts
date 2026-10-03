@@ -198,7 +198,7 @@ const PUBLISHER_PAGE_CACHE_MAX_ENTRIES = 3_000;
 const publisherPageCache = new Map<string, { url: string; expiresAt: number }>();
 /** Test-only visibility into the bounded in-process publisher-page cache. */
 export const getPublisherPageCacheSize = (): number => publisherPageCache.size;
-const ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
+export const ACCESS_BARRIER_PATTERN = /\b(?:start|begin)\s+(?:your\s+)?free\s+trial\b|\b(?:subscribe|sign\s*in|log\s*in)\s+to\s+(?:continue|view|read|access|unlock)\b|\b(?:this|the)\s+(?:content|recipe|page)\s+(?:is\s+)?(?:for|available to)\s+(?:subscribers|members)\b|\b(?:membership|subscription)\s+required\b/i;
 const MISSING_PAGE_PATTERN = /\b(?:page|recipe)\s+not\s+found\b|\b404\s+(?:error|not found)\b/i;
 const GENERIC_INDEX_TITLE_PATTERN = /^(?:recipes?|recipe archive|food & drink)\s*(?:[|–-]|$)/i;
 

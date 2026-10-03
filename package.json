@@ -15,6 +15,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "smoke:public": "tsx scripts/smokePublicPages.ts",
+    "check:publisher": "tsx scripts/checkPublisherCandidate.ts",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },
