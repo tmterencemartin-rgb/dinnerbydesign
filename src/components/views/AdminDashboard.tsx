@@ -30,6 +30,7 @@ interface StripeWebhookHealthEvent {
 
 interface AiUsageEvent {
   id: string;
+  requestId?: string;
   type?: 'recipe_search' | 'ready_made_search' | 'weekly_plan' | string;
   source?: string;
   model?: string;
@@ -58,6 +59,7 @@ interface EmailEvent {
 
 interface SearchDeliveryEvent {
   id: string;
+  requestId?: string;
   stage?: 'started' | 'results_delivered' | 'no_results_delivered' | 'failed' | 'cancelled' | 'user_reported' | string;
   source?: string;
   durationMs?: number | null;
@@ -1254,6 +1256,33 @@ export const AdminDashboard: React.FC = () => {
     };
   }, [filteredSearchDeliveryEvents]);
 
+  const searchTelemetrySummary = React.useMemo(() => {
+    const percentile = (values: number[], fraction: number) => {
+      if (!values.length) return null;
+      const sorted = [...values].sort((a, b) => a - b);
+      return sorted[Math.min(sorted.length - 1, Math.ceil(sorted.length * fraction) - 1)];
+    };
+    const delivered = filteredSearchDeliveryEvents.filter(event => event.stage === 'results_delivered');
+    const byDevice = ['mobile', 'tablet', 'desktop'].map(device => {
+      const rows = delivered.filter(event => event.deviceClass === device && typeof event.durationMs === 'number');
+      const durations = rows.map(event => event.durationMs as number);
+      return { device, count: durations.length, p50: percentile(durations, 0.5), p95: percentile(durations, 0.95) };
+    });
+    const serverEvents = aiUsageEvents.filter(event => event.status === 'succeeded');
+    const serverTiming = {
+      geminiP50: percentile(serverEvents.map(event => event.latencyMs).filter((value): value is number => typeof value === 'number'), 0.5),
+      geminiP95: percentile(serverEvents.map(event => event.latencyMs).filter((value): value is number => typeof value === 'number'), 0.95),
+      roundTripP50: percentile(serverEvents.map(event => event.totalRoundTripMs).filter((value): value is number => typeof value === 'number'), 0.5),
+      roundTripP95: percentile(serverEvents.map(event => event.totalRoundTripMs).filter((value): value is number => typeof value === 'number'), 0.95),
+    };
+    const succeededIds = new Set(aiUsageEvents.filter(event => event.status === 'succeeded' && event.requestId).map(event => event.requestId));
+    const deliveredWithIds = delivered.filter(event => event.requestId);
+    const unmatched = deliveredWithIds.filter(event => !succeededIds.has(event.requestId)).length;
+    const preChange = aiUsageEvents.filter(event => event.dateKey && event.dateKey < '2026-10-02').length;
+    const postChange = aiUsageEvents.filter(event => event.dateKey && event.dateKey >= '2026-10-02').length;
+    return { byDevice, serverTiming, unmatched, matchedPopulation: deliveredWithIds.length, preChange, postChange };
+  }, [aiUsageEvents, filteredSearchDeliveryEvents]);
+
   const getCanaryStatusClass = (status?: SearchCanaryEvent['status']) => {
     if (status === 'passed') return 'bg-emerald-50 text-emerald-700';
     if (status === 'failed') return 'bg-red-50 text-red-700';
@@ -1703,6 +1732,27 @@ export const AdminDashboard: React.FC = () => {
                 <span className="text-[10.5px] font-medium text-gray-500">
                   Rate = results delivered / terminal search events
                 </span>
+              </div>
+              <div className="mt-3 grid gap-3 border-t border-gray-100 pt-3 lg:grid-cols-[1.2fr_1fr]">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Browser delivery time</p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Results delivered only · p50 / p95 in milliseconds</p>
+                  <div className="mt-2 grid grid-cols-3 gap-1.5">
+                    {searchTelemetrySummary.byDevice.map(row => (
+                      <div key={row.device} className="rounded border border-gray-100 bg-white p-2">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">{row.device}</p>
+                        <p className="mt-1 text-[11px] font-semibold text-gray-800">{row.p50 ?? 'N/A'} / {row.p95 ?? 'N/A'}ms</p>
+                        <p className="text-[10px] font-medium text-gray-500">n={row.count}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Server timing and writes</p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Gemini p50/p95: {searchTelemetrySummary.serverTiming.geminiP50 ?? 'N/A'} / {searchTelemetrySummary.serverTiming.geminiP95 ?? 'N/A'}ms · round trip: {searchTelemetrySummary.serverTiming.roundTripP50 ?? 'N/A'} / {searchTelemetrySummary.serverTiming.roundTripP95 ?? 'N/A'}ms</p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Matched delivery requests: {searchTelemetrySummary.matchedPopulation} · unmatched succeeded events: {searchTelemetrySummary.unmatched}</p>
+                  <p className="mt-1 text-[10.5px] font-medium text-gray-500">Usage events by dateKey: before 2 Oct {searchTelemetrySummary.preChange} · from 2 Oct {searchTelemetrySummary.postChange}</p>
+                </div>
               </div>
             </div>
             <div className="rounded border border-gray-200 bg-gray-50/40 p-3">
