@@ -1354,8 +1354,10 @@ export function useSearch() {
         // Optionally show a user-friendly message for other errors
         if (error === 'not-allowed') {
           showToast("Microphone access was denied. Please check your browser settings.");
-        } else if (error === 'network') {
-          showToast("Speech recognition failed due to a network issue.");
+        } else if (error === 'network' || error === 'service-not-allowed') {
+          showToast("Voice input isn't available right now. You can type your search instead.");
+        } else if (error === 'audio-capture') {
+          showToast("Your microphone couldn't be reached. You can type your search instead.");
         }
       };
 
