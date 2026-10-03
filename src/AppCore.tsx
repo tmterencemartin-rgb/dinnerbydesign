@@ -93,6 +93,7 @@ const AppContent = () => {
     setView: setViewContext,
     highlight,
     clearHighlight,
+    clearError,
     toast,
     setToast
   } = useAuth();
@@ -307,6 +308,7 @@ const AppContent = () => {
   const isBudgetFamilySeoPreview = AFFORDABILITY_PLANNER_PILOT && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('design') === 'budget-family';
 
   const setView = (v: AppView, highlightOrFilters?: string | boolean | null) => {
+    clearError();
     startViewTransition(() => {
       if (typeof highlightOrFilters === 'string') {
         setViewContext(v, highlightOrFilters);
