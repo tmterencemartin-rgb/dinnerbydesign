@@ -16,7 +16,8 @@ vi.mock('firebase-admin/auth', () => ({ getAuth: () => ({ verifyIdToken: async (
 vi.mock('firebase-admin/app-check', () => ({ getAppCheck: () => ({ verifyToken: async () => ({}) }) }));
 vi.mock('google-auth-library', () => ({ GoogleAuth: class {} }));
 vi.mock('./services/geminiService', () => ({ generateDinnerSuggestions: vi.fn(), generateInternalDinnerChoices: vi.fn(), generateMatchRationales: (...args: any[]) => (rationales as any)(...args), enrichRecipe: (...args: any[]) => enrich(...args) }));
-vi.mock('./lib/groundingUtils', async importOriginal => ({ ...(await importOriginal() as any), confirmPublisherRecipePageUrl: async (url: string) => url }));
+const unusableLinks = new Set<string>();
+vi.mock('./lib/groundingUtils', async importOriginal => ({ ...(await importOriginal() as any), confirmPublisherRecipePageUrl: async (url: string) => unusableLinks.has(url) ? null : url }));
 
 let server: http.Server;
 let port = 0;
@@ -56,4 +57,16 @@ describe('enrichment and rationale endpoints', () => {
   it('bypasses the cache for strict ingredient requests', async () => { const strict = enrichBody('strict', { strictIngredientMatch: true, strictQuery: 'leek' }); await post('/api/enrich-recipe', strict, 'registered'); await post('/api/enrich-recipe', strict, 'registered'); expect(enrich).toHaveBeenCalledTimes(2); });
   it('does not cache a result with empty instructions', async () => { enrich.mockResolvedValue({ ...complete, instructions: [] }); await post('/api/enrich-recipe', enrichBody('empty-instructions'), 'registered'); await post('/api/enrich-recipe', enrichBody('empty-instructions'), 'registered'); expect(enrich).toHaveBeenCalledTimes(2); });
   it('shares one model call between simultaneous identical requests', async () => { enrich.mockImplementation(() => new Promise(resolve => setTimeout(() => resolve(complete), 150))); await Promise.all([1, 2, 3].map(() => post('/api/enrich-recipe', enrichBody('concurrent'), 'registered'))); expect(enrich).toHaveBeenCalledTimes(1); });
+  it('does not cache a result for a source link that fails the check', async () => {
+    const retired = enrichBody('retired-link');
+    unusableLinks.add(retired.sourceUrl);
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    await post('/api/enrich-recipe', retired, 'registered');
+    await post('/api/enrich-recipe', retired, 'registered');
+    const lines = log.mock.calls.map(call => String(call[0]));
+    log.mockRestore();
+    unusableLinks.delete(retired.sourceUrl);
+    expect(lines.some(line => line.includes('cache_hit') && line.includes('retired-link'))).toBe(false);
+    expect(enrich).toHaveBeenCalledTimes(2);
+  });
 });

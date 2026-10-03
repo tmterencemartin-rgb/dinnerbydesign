@@ -229383,7 +229383,11 @@ function createApp() {
       } finally {
         if (cacheKey && startedHere) enrichmentInFlight.delete(cacheKey);
       }
-      if (cacheKey && startedHere && isCacheableEnrichment(result)) {
+      const sourceLinkUsable = !options2.sourceUrl || !!await confirmPublisherRecipePageUrl(options2.sourceUrl);
+      if (cacheKey && startedHere && !sourceLinkUsable) {
+        console.log(`[EnrichmentCache] cache_skip_unusable_link ${cacheKey}`);
+      }
+      if (cacheKey && startedHere && sourceLinkUsable && isCacheableEnrichment(result)) {
         const now = Date.now();
         for (const [key, entry] of enrichmentCache) {
           if (entry.expiresAt <= now) enrichmentCache.delete(key);
