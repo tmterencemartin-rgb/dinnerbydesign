@@ -153,6 +153,14 @@ const recipeIngredientText = (html: string): string => {
   return parts.join(' ').toLowerCase();
 };
 
+/** Accepts well-formed recipe pages that do not publish schema.org JSON-LD. */
+const hasVisibleRecipeContent = (html: string): boolean => {
+  const text = visibleText(html).replace(/\s+/g, ' ');
+  const hasIngredients = /\b(?:ingredients|what you need)\b/i.test(text);
+  const hasMethod = /\b(?:method|instructions|directions|how to make)\b/i.test(text);
+  return hasIngredients && hasMethod && text.length >= 400;
+};
+
 const leanFrom = (uk: number, nonUk: number): ContentLean => {
   if (uk + nonUk < 2) return 'none';
   if (nonUk === 0) return 'uk';
@@ -193,12 +201,13 @@ export function inspectCandidatePage(
   try { finalHost = stripWww(new URL(page.finalUrl).hostname); } catch { /* handled below */ }
   const sameHost = finalHost === stripWww(host);
   const recipe = findRecipeJsonLd(page.html);
+  const hasRecipeContent = recipe.found || hasVisibleRecipeContent(page.html);
   const paywall = ACCESS_BARRIER_PATTERN.test(page.html);
 
   if (![200, 206].includes(page.status)) problems.push(`status ${page.status}`);
   if (!sameHost) problems.push(`redirects to ${finalHost || 'an invalid address'}`);
-  if (!recipe.found) problems.push('no schema.org Recipe data');
-  else {
+  if (!hasRecipeContent) problems.push('no recognisable recipe content');
+  else if (recipe.found) {
     if (!recipe.hasIngredients) problems.push('Recipe data has no ingredients');
     if (!recipe.hasInstructions) problems.push('Recipe data has no method');
   }

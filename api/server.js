@@ -213395,7 +213395,8 @@ var RECIPE_PUBLISHER_REGISTRY = [
   { host: "marksandspencer.com", name: "M&S Food", tier: "watch", priority: 360 },
   { host: "abelandcole.co.uk", name: "Abel & Cole", tier: "watch", priority: 370 },
   { host: "jamesmartinchef.co.uk", name: "James Martin", tier: "watch", priority: 380 },
-  { host: "krumpli.co.uk", name: "Krumpli", tier: "watch", priority: 390 }
+  { host: "krumpli.co.uk", name: "Krumpli", tier: "watch", priority: 390 },
+  { host: "audleyrestaurants.co.uk", name: "Audley Restaurants", tier: "watch", priority: 400 }
 ];
 var APPROVED_RECIPE_PUBLISHER_HOSTS = RECIPE_PUBLISHER_REGISTRY.map(({ host }) => host);
 var TRUSTED_RECIPE_PUBLISHER_HOSTS = new Set(APPROVED_RECIPE_PUBLISHER_HOSTS);

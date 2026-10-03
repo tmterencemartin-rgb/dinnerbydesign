@@ -48,7 +48,7 @@ For a broad published-recipe search, there can be an initial request and up to t
 | Control | Current position |
 | --- | --- |
 | Standard result request | Three published recipes |
-| Approved web domains | 41 domains, listed below |
+| Approved web domains | 42 domains, listed below |
 | Link requirement | Direct, accessible HTTPS recipe page |
 | Excluded page types | Search, category, topic and collection pages, home pages, paywalled, trial-only, sign-in-only and app-only content |
 | User constraints | Dietary rules, allergies, exclusions, ingredients, budget, time, cuisine, cooking method and source preferences |
@@ -89,7 +89,7 @@ The present allow-list covers the following domains:
 - ottolenghi.co.uk; coop.co.uk; jamesmartinchef.co.uk; hairybikers.com; dontgobaconmyheart.co.uk
 - krumpli.co.uk; ourmodernkitchen.com; kitchensanctuary.com; diabetes.org.uk; slimmingworld.co.uk
 - jamieoliver.com; asda.com; sainsburysmagazine.co.uk; olivemagazine.com; greatbritishchefs.com
-- goodhousekeeping.com; easypeasyfoodie.com; lovepork.com; groceries.morrisons.com; marksandspencer.com; abelandcole.co.uk
+- goodhousekeeping.com; easypeasyfoodie.com; lovepork.com; groceries.morrisons.com; marksandspencer.com; abelandcole.co.uk; audleyrestaurants.co.uk
 
 The allow-list is a product control, not a statement of endorsement or a commercial arrangement.
 

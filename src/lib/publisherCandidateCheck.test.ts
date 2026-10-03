@@ -87,7 +87,11 @@ describe('inspectCandidatePage', () => {
   });
   it('fails a missing page and a page without Recipe data', () => {
     expect(ok(page(recipeLd()), { status: 404 }).ok).toBe(false);
-    expect(ok('<html></html>').problems).toContain('no schema.org Recipe data');
+    expect(ok('<html></html>').problems).toContain('no recognisable recipe content');
+  });
+  it('accepts a complete visible recipe without schema.org data', () => {
+    const html = '<html><body><h1>Bubble and squeak</h1><p>A traditional recipe with a short preparation and cooking method for a family kitchen.</p><h2>Ingredients</h2><p>500g potatoes, sprouts, chestnuts and oil. Add salt and pepper to taste, with seasoned flour for coating.</p><h2>Method</h2><p>Mix everything, shape into patties and cook until crisp and brown. Serve hot with seasoning and a little oil. Keep the patties evenly sized so they cook through at the same time.</p></body></html>';
+    expect(ok(html).ok).toBe(true);
   });
 });
 
