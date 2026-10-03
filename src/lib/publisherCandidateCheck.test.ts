@@ -91,7 +91,88 @@ describe('inspectCandidatePage', () => {
   });
   it('accepts a complete visible recipe without schema.org data', () => {
     const html = '<html><body><h1>Bubble and squeak</h1><p>A traditional recipe with a short preparation and cooking method for a family kitchen.</p><h2>Ingredients</h2><p>500g potatoes, sprouts, chestnuts and oil. Add salt and pepper to taste, with seasoned flour for coating.</p><h2>Method</h2><p>Mix everything, shape into patties and cook until crisp and brown. Serve hot with seasoning and a little oil. Keep the patties evenly sized so they cook through at the same time.</p></body></html>';
-    expect(ok(html).ok).toBe(true);
+    const result = ok(html);
+    expect(result.ok).toBe(true);
+    expect(result.evidence).toBe('visible');
+    expect(result.notes.join()).toMatch(/no schema\.org Recipe data/);
+  });
+});
+
+describe('visible recipe structure without schema.org data', () => {
+  const inspect = (html: string) => inspectCandidatePage({ url: 'https://www.example.co.uk/x', status: 200, finalUrl: 'https://www.example.co.uk/x', html }, 'example.co.uk');
+  const filler = ' Our team has spent a long time thinking about how we cook and what we serve across our restaurants and bars, and we want to share a few thoughts with guests who visit throughout the year in every season.'.repeat(2);
+
+  it('rejects an article that only mentions ingredients and method in its text', () => {
+    const result = inspect(`<html><body><h1>Our approach</h1><p>Ingredients matter to us and so does method.${filler}</p></body></html>`);
+    expect(result.ok).toBe(false);
+    expect(result.evidence).toBe('none');
+    expect(result.problems).toContain('no recognisable recipe content');
+  });
+
+  it('rejects a category page whose navigation lists ingredients and method', () => {
+    const result = inspect(`<html><body><nav><a>Ingredients</a> | <a>Method</a> | <a>Collections</a></nav><h1>Soup recipes</h1><ul><li>Leek soup</li><li>Tomato soup</li><li>Pea soup</li></ul><p>Browse by ingredients or by cooking method.${filler}</p></body></html>`);
+    expect(result.ok).toBe(false);
+    expect(result.evidence).toBe('none');
+  });
+
+  it('rejects headings with nothing under them', () => {
+    const result = inspect(`<html><body><h1>Soup</h1><h2>Ingredients</h2><h2>Method</h2><p>${filler}</p></body></html>`);
+    expect(result.evidence).toBe('none');
+  });
+
+  it('rejects a method heading with almost nothing under it', () => {
+    const result = inspect(`<html><body><h1>Leek soup</h1><p>${filler}</p><h2>Ingredients</h2><ul><li>2 leeks</li><li>1 potato</li><li>stock</li></ul><h2>Method</h2><p>Cook it.</p></body></html>`);
+    expect(result.evidence).toBe('none');
+  });
+
+  it('rejects a page with too little text to be a recipe page, even with both headings', () => {
+    const result = inspect('<html><body><h2>Ingredients</h2><ul><li>2 leeks</li><li>1 potato</li><li>stock</li></ul><h2>Method</h2><ol><li>Chop.</li><li>Simmer.</li></ol></body></html>');
+    expect(result.evidence).toBe('none');
+  });
+
+  it('accepts ingredient and method lists under headings', () => {
+    const result = inspect(`<html><body><h1>Leek soup</h1><p>${filler}</p><h2>Ingredients</h2><ul><li>2 leeks</li><li>1 potato</li><li>stock</li></ul><h2>Method</h2><ol><li>Chop the leeks.</li><li>Simmer with the potato and stock.</li></ol></body></html>`);
+    expect(result.evidence).toBe('visible');
+    expect(result.ok).toBe(true);
+  });
+
+  it('accepts What you will need and Instructions headings with a curly apostrophe', () => {
+    const result = inspect(`<html><body><h1>Leek soup</h1><p>${filler}</p><h3>What you\u2019ll need:</h3><p>2 large leeks and 500ml stock.</p><h3>Instructions</h3><p>Chop the leeks, add the stock and simmer until the leeks are soft, then blend and season to taste.</p></body></html>`);
+    expect(result.evidence).toBe('visible');
+  });
+
+  it('prefers schema.org data when it is present', () => {
+    expect(inspect(page(recipeLd(), UK_BODY)).evidence).toBe('structured');
+  });
+});
+
+describe('checkCandidate and recipe evidence', () => {
+  const host = 'www.example.co.uk';
+  const urls = [1, 2, 3].map(n => `https://${host}/recipes/${n}`);
+  const visibleRecipe = '<html lang="en-GB"><body><h1>Leek soup</h1><p>A simple soup made with plain flour and a courgette, cooked on the hob. A traditional recipe with a short preparation and a method for a family kitchen at home. It keeps well in the fridge for two days and freezes in portions, so it is a useful dish to make ahead for a busy week when there is little time to cook in the evening.</p><h2>Ingredients</h2><p>500g leeks, 1 courgette and stock, with plain flour to thicken.</p><h2>Method</h2><p>Cook the leeks on the hob, add the stock and the courgette and simmer, then season and serve hot with bread.</p></body></html>';
+  const respond = (html: string) => async (url: string) =>
+    url.endsWith('/robots.txt') ? { status: 200, url, text: async () => '' } : { status: 200, url, text: async () => html };
+
+  it('gives review, not a pass, when pages have recipe structure but no schema.org data', async () => {
+    const report = await checkCandidate(host, urls, respond(visibleRecipe) as any);
+    expect(report.pages.every(pageResult => pageResult.ok)).toBe(true);
+    expect(report.verdict).toBe('review');
+    expect(report.reasons.join()).toMatch(/3 of 3 sample pages have no schema\.org Recipe data/);
+  });
+
+  it('still passes when every page has schema.org data', async () => {
+    const report = await checkCandidate(host, urls, respond(page(recipeLd(), UK_BODY)) as any);
+    expect(report.verdict).toBe('pass');
+  });
+
+  it('gives review when only some pages lack schema.org data', async () => {
+    let n = 0;
+    const request = async (url: string) => url.endsWith('/robots.txt')
+      ? { status: 200, url, text: async () => '' }
+      : { status: 200, url, text: async () => (++n === 2 ? visibleRecipe : page(recipeLd(), UK_BODY)) };
+    const report = await checkCandidate(host, urls, request as any);
+    expect(report.verdict).toBe('review');
+    expect(report.reasons.join()).toMatch(/1 of 3 sample pages/);
   });
 });
 

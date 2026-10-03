@@ -40,7 +40,14 @@ const PUBLISHER_LABELS: Array<[string, string]> = [
   ['lovepork.com', 'Love Pork'],
   ['groceries.morrisons.com', 'Morrisons'],
   ['marksandspencer.com', 'M&S Food'],
-  ['abelandcole.co.uk', 'Abel & Cole']
+  ['abelandcole.co.uk', 'Abel & Cole'],
+  ['tescorealfood.com', 'Tesco Real Food'],
+  ['tesco.com', 'Tesco Recipes'],
+  ['jamieoliver.com', 'Jamie Oliver'],
+  ['goodhousekeeping.com', 'Good Housekeeping'],
+  ['olivemagazine.com', 'Olive Magazine'],
+  ['slimmingworld.co.uk', 'Slimming World'],
+  ['audleyrestaurants.co.uk', 'Audley Restaurants']
 ];
 
 const sourceHost = (sourceUrl: unknown): string | null => {

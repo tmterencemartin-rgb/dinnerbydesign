@@ -153,12 +153,37 @@ const recipeIngredientText = (html: string): string => {
   return parts.join(' ').toLowerCase();
 };
 
-/** Accepts well-formed recipe pages that do not publish schema.org JSON-LD. */
-const hasVisibleRecipeContent = (html: string): boolean => {
-  const text = visibleText(html).replace(/\s+/g, ' ');
-  const hasIngredients = /\b(?:ingredients|what you need)\b/i.test(text);
-  const hasMethod = /\b(?:method|instructions|directions|how to make)\b/i.test(text);
-  return hasIngredients && hasMethod && text.length >= 400;
+/**
+ * Recipe structure read from the page itself, for sites with no schema.org data.
+ * It needs a heading for the ingredients and a heading for the method, with real content under each:
+ * a measurement or a list for the ingredients, and a list or a few sentences for the method.
+ * Words in navigation or running text do not count, so articles and category pages fail.
+ */
+const hasVisibleRecipeStructure = (html: string): boolean => {
+  const body = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ');
+  const headingPattern = /<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi;
+  const headings: Array<{ text: string; start: number; end: number }> = [];
+  for (const match of body.matchAll(headingPattern)) {
+    const text = match[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase().replace(/[:\u2013-]+$/, '').trim();
+    headings.push({ text, start: match.index ?? 0, end: (match.index ?? 0) + match[0].length });
+  }
+  const sectionAfter = (index: number) => {
+    const next = headings[index + 1];
+    return body.slice(headings[index].end, next ? next.start : body.length);
+  };
+  const plain = (section: string) => section.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/gi, ' ').replace(/\s+/g, ' ').trim();
+  const listItems = (section: string) => (section.match(/<li[\s>]/gi) || []).length;
+  const measurements = (text: string) => (text.match(/\b\d+(?:[.,]\d+)?\s?(?:g|kg|ml|l|tsp|tbsp|oz|lb|cm|litres?|grams?)\b|\b\d+\s?(?:x\s?)?(?:large|medium|small)\b/gi) || []).length;
+
+  const ingredientsAt = headings.findIndex(heading => /^(?:ingredients|what you(?:'|\u2019)ll need)$/.test(heading.text));
+  const methodAt = headings.findIndex(heading => /^(?:method|instructions|directions|steps)$/.test(heading.text));
+  if (ingredientsAt === -1 || methodAt === -1) return false;
+
+  const ingredientsSection = sectionAfter(ingredientsAt);
+  const methodSection = sectionAfter(methodAt);
+  const ingredientsOk = listItems(ingredientsSection) >= 3 || measurements(plain(ingredientsSection)) >= 1;
+  const methodOk = listItems(methodSection) >= 2 || plain(methodSection).length >= 80;
+  return ingredientsOk && methodOk && visibleText(html).replace(/\s+/g, ' ').length >= 400;
 };
 
 const leanFrom = (uk: number, nonUk: number): ContentLean => {
@@ -188,7 +213,10 @@ export interface CandidatePageResult {
   paywall: boolean;
   ukSignals: string[];
   content: ContentSignals;
+  /** structured: schema.org Recipe data. visible: recipe structure read from the page only. none: neither. */
+  evidence: 'structured' | 'visible' | 'none';
   problems: string[];
+  notes: string[];
   ok: boolean;
 }
 
@@ -201,13 +229,15 @@ export function inspectCandidatePage(
   try { finalHost = stripWww(new URL(page.finalUrl).hostname); } catch { /* handled below */ }
   const sameHost = finalHost === stripWww(host);
   const recipe = findRecipeJsonLd(page.html);
-  const hasRecipeContent = recipe.found || hasVisibleRecipeContent(page.html);
+  const evidence: CandidatePageResult['evidence'] = recipe.found ? 'structured' : hasVisibleRecipeStructure(page.html) ? 'visible' : 'none';
+  const notes: string[] = [];
   const paywall = ACCESS_BARRIER_PATTERN.test(page.html);
 
   if (![200, 206].includes(page.status)) problems.push(`status ${page.status}`);
   if (!sameHost) problems.push(`redirects to ${finalHost || 'an invalid address'}`);
-  if (!hasRecipeContent) problems.push('no recognisable recipe content');
-  else if (recipe.found) {
+  if (evidence === 'none') problems.push('no recognisable recipe content');
+  else if (evidence === 'visible') notes.push('recipe read from the page text only: no schema.org Recipe data');
+  else {
     if (!recipe.hasIngredients) problems.push('Recipe data has no ingredients');
     if (!recipe.hasInstructions) problems.push('Recipe data has no method');
   }
@@ -215,7 +245,7 @@ export function inspectCandidatePage(
 
   return {
     url: page.url, status: page.status, sameHost, recipe, paywall,
-    ukSignals: ukSignals(page.html, host), content: contentSignals(page.html), problems, ok: problems.length === 0
+    ukSignals: ukSignals(page.html, host), content: contentSignals(page.html), evidence, problems, notes, ok: problems.length === 0
   };
 }
 
@@ -262,7 +292,7 @@ export async function checkCandidate(host: string, sampleUrls: string[], request
     } catch (error: any) {
       report.pages.push({
         url: sample, status: 0, sameHost: false, recipe: { found: false, name: null, hasIngredients: false, hasInstructions: false },
-        paywall: false, ukSignals: [], content: { uk: [], nonUk: [], lean: 'none' },
+        paywall: false, ukSignals: [], content: { uk: [], nonUk: [], lean: 'none' }, evidence: 'none', notes: [],
         problems: [`request failed: ${error?.message || 'unknown error'}`], ok: false
       });
     }
@@ -270,8 +300,10 @@ export async function checkCandidate(host: string, sampleUrls: string[], request
 
   const disallowed = report.robots.decisions.filter(decision => !decision.allowed);
   const okPages = report.pages.filter(page => page.ok).length;
+  const visibleOnly = report.pages.filter(page => page.ok && page.evidence === 'visible').length;
   if (disallowed.length) reasons.push(`robots.txt disallows ${disallowed.length} of ${report.robots.decisions.length} sample pages`);
   report.pages.filter(page => !page.ok).forEach(page => reasons.push(`${page.url}: ${page.problems.join('; ')}`));
+  if (visibleOnly > 0) reasons.push(`${visibleOnly} of ${report.pages.length} sample pages have no schema.org Recipe data, so a person must confirm they are recipe pages`);
   if (sampleUrls.length < MIN_SAMPLE_PAGES) reasons.push(`only ${sampleUrls.length} sample pages, at least ${MIN_SAMPLE_PAGES} needed`);
 
   const ukTerms = [...new Set(report.pages.flatMap(page => page.content.uk))];
@@ -282,7 +314,7 @@ export async function checkCandidate(host: string, sampleUrls: string[], request
   }
 
   if (okPages === 0 || disallowed.length === sampleUrls.length) report.verdict = 'fail';
-  else if (okPages === report.pages.length && disallowed.length === 0 && report.robots.fetched && sampleUrls.length >= MIN_SAMPLE_PAGES && report.content.lean === 'uk') report.verdict = 'pass';
+  else if (okPages === report.pages.length && disallowed.length === 0 && report.robots.fetched && sampleUrls.length >= MIN_SAMPLE_PAGES && report.content.lean === 'uk' && visibleOnly === 0) report.verdict = 'pass';
   else report.verdict = 'review';
   return report;
 }
