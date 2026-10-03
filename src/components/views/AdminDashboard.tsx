@@ -7,6 +7,7 @@ import { ArrowLeft, Search, Download, ExternalLink, CreditCard, Trash2, Users, A
 import { motion } from 'framer-motion';
 import { getApiUrl } from '../../lib/api';
 import { summariseSearchTelemetry } from '../../lib/searchTelemetrySummary';
+import { TELEMETRY_WINDOWS, TelemetryWindow, estimateNetForWindow, telemetryWindowStartMs } from '../../lib/adminTelemetryWindow';
 import { IngredientPriceCatalogueAdmin } from '../admin/IngredientPriceCatalogueAdmin';
 import { PUBLISHED_ARTICLES } from '../../content/publicArticles';
 import { formatPublicArticleTitle, formatPublicNumber } from '../../content/publicPathways';
@@ -150,7 +151,7 @@ export const AdminDashboard: React.FC = () => {
   const [clientErrorsOpen, setClientErrorsOpen] = useState(false);
   const [aiRecipeFeedbackOpen, setAiRecipeFeedbackOpen] = useState(false);
   const [monitoringOpen, setMonitoringOpen] = useState(false);
-  const [searchWindow, setSearchWindow] = useState<'24h' | '7d' | 'all'>('24h');
+  const [searchWindow, setSearchWindow] = useState<TelemetryWindow>('24h');
   const [searchSourceFilter, setSearchSourceFilter] = useState<'all' | 'cook' | 'ready-made'>('all');
   const [searchDeviceFilter, setSearchDeviceFilter] = useState<'all' | 'mobile' | 'tablet' | 'desktop'>('all');
   const [dashboardUpdatedAt, setDashboardUpdatedAt] = useState<Date | null>(null);
@@ -432,12 +433,6 @@ export const AdminDashboard: React.FC = () => {
 
     const fetchDashboardData = async () => {
       try {
-        const telemetrySince = searchWindow === '24h'
-          ? new Date(Date.now() - 24 * 60 * 60 * 1000)
-          : searchWindow === '7d'
-            ? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-            : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-        const telemetryLimit = 5000;
         const usersQuery = query(collection(db, 'users'));
         const querySnapshot = await getDocs(usersQuery);
         const userData = querySnapshot.docs.map(doc => ({
@@ -505,33 +500,6 @@ export const AdminDashboard: React.FC = () => {
 
         setEmailEvents(emailData.slice(0, 30));
 
-        const usageSnapshot = await getDocs(query(collection(db, 'aiUsageEvents'), where('createdAt', '>=', Timestamp.fromDate(telemetrySince)), orderBy('createdAt', 'desc'), limit(telemetryLimit)));
-        const usageData = usageSnapshot.docs.map(doc => ({
-          ...doc.data(),
-          id: doc.id
-        })) as AiUsageEvent[];
-
-        usageData.sort((a, b) => {
-          const dateA = toDate(a.createdAt) || new Date(0);
-          const dateB = toDate(b.createdAt) || new Date(0);
-          return dateB.getTime() - dateA.getTime();
-        });
-
-        setAiUsageEvents(usageData);
-
-        const deliverySnapshot = await getDocs(query(
-          collection(db, 'searchDeliveryEvents'),
-          orderBy('createdAt', 'desc'),
-          where('createdAt', '>=', Timestamp.fromDate(telemetrySince)),
-          orderBy('createdAt', 'desc'),
-          limit(telemetryLimit)
-        ));
-        setTelemetryReadLimited({ usage: usageSnapshot.size >= telemetryLimit, delivery: deliverySnapshot.size >= telemetryLimit });
-        setSearchDeliveryEvents(deliverySnapshot.docs.map(doc => ({
-          ...doc.data(),
-          id: doc.id
-        })) as SearchDeliveryEvent[]);
-
         const canarySnapshot = await getDocs(query(
           collection(db, 'searchCanaryEvents'),
           orderBy('createdAt', 'desc'),
@@ -590,7 +558,34 @@ export const AdminDashboard: React.FC = () => {
     };
 
     fetchDashboardData();
-  }, [isAdmin, refreshAccountReconciliation, setView, searchWindow]);
+  }, [isAdmin, refreshAccountReconciliation, setView]);
+
+  // Telemetry reads follow the selected window and run on their own, so changing the window
+  // does not reload users, saved recipes, webhooks or account reconciliation.
+  useEffect(() => {
+    if (!isAdmin) return;
+    let cancelled = false;
+    const telemetryLimit = 5000;
+
+    const loadTelemetry = async () => {
+      try {
+        const since = Timestamp.fromMillis(telemetryWindowStartMs(searchWindow));
+        const [usageSnapshot, deliverySnapshot] = await Promise.all([
+          getDocs(query(collection(db, 'aiUsageEvents'), where('createdAt', '>=', since), orderBy('createdAt', 'desc'), limit(telemetryLimit))),
+          getDocs(query(collection(db, 'searchDeliveryEvents'), where('createdAt', '>=', since), orderBy('createdAt', 'desc'), limit(telemetryLimit)))
+        ]);
+        if (cancelled) return;
+        setAiUsageEvents(usageSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as AiUsageEvent[]);
+        setSearchDeliveryEvents(deliverySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as SearchDeliveryEvent[]);
+        setTelemetryReadLimited({ usage: usageSnapshot.size >= telemetryLimit, delivery: deliverySnapshot.size >= telemetryLimit });
+      } catch (err) {
+        console.error('Error fetching admin telemetry:', err);
+      }
+    };
+
+    loadTelemetry();
+    return () => { cancelled = true; };
+  }, [isAdmin, searchWindow]);
 
   useEffect(() => {
     if (!isAdmin || !currentUser) return;
@@ -1176,9 +1171,10 @@ export const AdminDashboard: React.FC = () => {
     const averageLatencyMs = succeededAiCalls.length
       ? Math.round(succeededAiCalls.reduce((sum, event) => sum + (event.latencyMs || 0), 0) / succeededAiCalls.length)
       : 0;
-    const estimatedGrossRevenue = paid * 2.99;
-    const estimatedStripeFees = paid * ((2.99 * 0.015) + 0.2);
-    const estimatedNetAfterStripeAndAi = estimatedGrossRevenue - estimatedStripeFees - estimatedAiCostGbp;
+    const periodEstimate = estimateNetForWindow(paid, estimatedAiCostGbp, TELEMETRY_WINDOWS[searchWindow].days);
+    const estimatedGrossRevenue = periodEstimate.grossRevenue;
+    const estimatedStripeFees = periodEstimate.stripeFees;
+    const estimatedNetAfterStripeAndAi = periodEstimate.net;
 
     return {
       total: users.length,
@@ -1204,7 +1200,7 @@ export const AdminDashboard: React.FC = () => {
       estimatedStripeFees,
       estimatedNetAfterStripeAndAi
     };
-  }, [users, aiUsageEvents]);
+  }, [users, aiUsageEvents, searchWindow]);
 
   const latestWebhookEvent = webhookEvents[0];
   const latestEmailEvent = emailEvents[0];
@@ -1227,15 +1223,11 @@ export const AdminDashboard: React.FC = () => {
   const recentFirestoreEvents = React.useMemo(() => recentClientErrorEvents.filter(event => (event.source || '').startsWith('firestore')), [recentClientErrorEvents]);
   const latestAdminAccess = adminAccessEvents[0];
   const filteredSearchDeliveryEvents = React.useMemo(() => {
-    const cutoff = searchWindow === '24h'
-      ? Date.now() - 24 * 60 * 60 * 1000
-      : searchWindow === '7d'
-        ? Date.now() - 7 * 24 * 60 * 60 * 1000
-        : 0;
+    const cutoff = telemetryWindowStartMs(searchWindow);
 
     return searchDeliveryEvents.filter(event => {
       const eventDate = toDate(event.createdAt);
-      const matchesWindow = cutoff === 0 || (eventDate ? eventDate.getTime() >= cutoff : false);
+      const matchesWindow = eventDate ? eventDate.getTime() >= cutoff : false;
       const matchesSource = searchSourceFilter === 'all' || event.source === searchSourceFilter;
       const matchesDevice = searchDeviceFilter === 'all' || event.deviceClass === searchDeviceFilter;
       return matchesWindow && matchesSource && matchesDevice;
@@ -1270,11 +1262,7 @@ export const AdminDashboard: React.FC = () => {
   }, [filteredSearchDeliveryEvents]);
 
   const searchTelemetrySummary = React.useMemo(() => {
-    const sinceMs = searchWindow === '24h'
-      ? Date.now() - 24 * 60 * 60 * 1000
-      : searchWindow === '7d'
-        ? Date.now() - 7 * 24 * 60 * 60 * 1000
-        : 0;
+    const sinceMs = telemetryWindowStartMs(searchWindow);
     const millis = (value: any) => toDate(value)?.getTime() ?? null;
     return summariseSearchTelemetry(
       filteredSearchDeliveryEvents.map(event => ({ ...event, createdAtMs: millis(event.createdAt) })),
@@ -1696,9 +1684,9 @@ export const AdminDashboard: React.FC = () => {
                     onChange={event => setSearchWindow(event.target.value as typeof searchWindow)}
                     className="rounded border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold normal-case tracking-normal text-gray-700"
                   >
-                    <option value="24h">Last 24 hours</option>
-                    <option value="7d">Last 7 days</option>
-                    <option value="all">All recorded</option>
+                    {(Object.keys(TELEMETRY_WINDOWS) as TelemetryWindow[]).map(windowKey => (
+                      <option key={windowKey} value={windowKey}>{TELEMETRY_WINDOWS[windowKey].label}</option>
+                    ))}
                   </select>
                 </label>
                 <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
@@ -1927,7 +1915,7 @@ export const AdminDashboard: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-[11px] leading-tight text-gray-500 font-medium max-w-2xl">
-                    Tracks server-side Gemini calls from the point this monitor was added. Token and cost figures are estimates based on prompt and response size.
+                    Server-side Gemini calls for the selected window ({TELEMETRY_WINDOWS[searchWindow].label.toLowerCase()}), up to 5,000 events. Token and cost figures are estimates based on prompt and response size. The net snapshot prorates monthly subscription value to the same window.
                   </p>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 w-full lg:max-w-4xl">
@@ -1949,16 +1937,16 @@ export const AdminDashboard: React.FC = () => {
                   <div className="bg-gray-50/60 border border-gray-100 rounded p-2">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Net snapshot</p>
                     <p className="text-lg font-bold text-gray-950 mt-0.5">{formatCurrency(summaryStats.estimatedNetAfterStripeAndAi)}</p>
-                    <p className="text-[10.5px] text-gray-500 font-medium">After Stripe + Gemini est.</p>
+                    <p className="text-[10.5px] text-gray-500 font-medium">After Stripe + Gemini est., {TELEMETRY_WINDOWS[searchWindow].label.toLowerCase()}</p>
                   </div>
                 </div>
               </div>
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[11px] text-gray-500">
                 <div className="border-t border-gray-100 pt-1">
-                  <span className="font-bold text-gray-700">Gross subscription value:</span> {formatCurrency(summaryStats.estimatedGrossRevenue)}
+                  <span className="font-bold text-gray-700">Gross subscription value (prorated):</span> {formatCurrency(summaryStats.estimatedGrossRevenue)}
                 </div>
                 <div className="border-t border-gray-100 pt-1">
-                  <span className="font-bold text-gray-700">Stripe fees estimate:</span> {formatCurrency(summaryStats.estimatedStripeFees)}
+                  <span className="font-bold text-gray-700">Stripe fees estimate (prorated):</span> {formatCurrency(summaryStats.estimatedStripeFees)}
                 </div>
                 <div className="border-t border-gray-100 pt-1">
                   <span className="font-bold text-gray-700">Average Gemini time:</span> {summaryStats.averageLatencyMs ? `${(summaryStats.averageLatencyMs / 1000).toFixed(1)}s` : 'N/A'}
