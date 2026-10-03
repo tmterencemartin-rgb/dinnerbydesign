@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, updateDoc, serverTimestamp, Timestamp, orderBy, limit } from 'firebase/firestore';
+import { collection, query, getDocs, doc, updateDoc, serverTimestamp, Timestamp, orderBy, limit, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile, AccessStatus } from '../../types';
@@ -142,6 +142,7 @@ export const AdminDashboard: React.FC = () => {
   const [emailEvents, setEmailEvents] = useState<EmailEvent[]>([]);
   const [aiUsageEvents, setAiUsageEvents] = useState<AiUsageEvent[]>([]);
   const [searchDeliveryEvents, setSearchDeliveryEvents] = useState<SearchDeliveryEvent[]>([]);
+  const [telemetryReadLimited, setTelemetryReadLimited] = useState({ usage: false, delivery: false });
   const [searchCanaryEvents, setSearchCanaryEvents] = useState<SearchCanaryEvent[]>([]);
   const [clientErrorEvents, setClientErrorEvents] = useState<ClientErrorEvent[]>([]);
   const [aiRecipeFeedbackEvents, setAiRecipeFeedbackEvents] = useState<AiRecipeFeedbackEvent[]>([]);
@@ -431,6 +432,12 @@ export const AdminDashboard: React.FC = () => {
 
     const fetchDashboardData = async () => {
       try {
+        const telemetrySince = searchWindow === '24h'
+          ? new Date(Date.now() - 24 * 60 * 60 * 1000)
+          : searchWindow === '7d'
+            ? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const telemetryLimit = 5000;
         const usersQuery = query(collection(db, 'users'));
         const querySnapshot = await getDocs(usersQuery);
         const userData = querySnapshot.docs.map(doc => ({
@@ -498,7 +505,7 @@ export const AdminDashboard: React.FC = () => {
 
         setEmailEvents(emailData.slice(0, 30));
 
-        const usageSnapshot = await getDocs(collection(db, 'aiUsageEvents'));
+        const usageSnapshot = await getDocs(query(collection(db, 'aiUsageEvents'), where('createdAt', '>=', Timestamp.fromDate(telemetrySince)), orderBy('createdAt', 'desc'), limit(telemetryLimit)));
         const usageData = usageSnapshot.docs.map(doc => ({
           ...doc.data(),
           id: doc.id
@@ -510,13 +517,16 @@ export const AdminDashboard: React.FC = () => {
           return dateB.getTime() - dateA.getTime();
         });
 
-        setAiUsageEvents(usageData.slice(0, 500));
+        setAiUsageEvents(usageData);
 
         const deliverySnapshot = await getDocs(query(
           collection(db, 'searchDeliveryEvents'),
           orderBy('createdAt', 'desc'),
-          limit(120)
+          where('createdAt', '>=', Timestamp.fromDate(telemetrySince)),
+          orderBy('createdAt', 'desc'),
+          limit(telemetryLimit)
         ));
+        setTelemetryReadLimited({ usage: usageSnapshot.size >= telemetryLimit, delivery: deliverySnapshot.size >= telemetryLimit });
         setSearchDeliveryEvents(deliverySnapshot.docs.map(doc => ({
           ...doc.data(),
           id: doc.id
@@ -580,7 +590,7 @@ export const AdminDashboard: React.FC = () => {
     };
 
     fetchDashboardData();
-  }, [isAdmin, refreshAccountReconciliation, setView]);
+  }, [isAdmin, refreshAccountReconciliation, setView, searchWindow]);
 
   useEffect(() => {
     if (!isAdmin || !currentUser) return;
@@ -1723,6 +1733,11 @@ export const AdminDashboard: React.FC = () => {
                   Rate = results delivered / terminal search events
                 </span>
               </div>
+              {(telemetryReadLimited.usage || telemetryReadLimited.delivery) && (
+                <p className="mt-2 rounded border border-amber-200 bg-amber-50 px-2.5 py-2 text-[10.5px] font-medium text-amber-800">
+                  This telemetry view reached its 5,000-event limit, so the figures may be truncated. Narrow the time window before comparing results.
+                </p>
+              )}
               <div className="mt-3 grid gap-3 border-t border-gray-100 pt-3 lg:grid-cols-[1.2fr_1fr]">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Browser delivery time</p>
